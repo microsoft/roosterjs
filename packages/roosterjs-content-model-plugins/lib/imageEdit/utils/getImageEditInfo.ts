@@ -1,7 +1,7 @@
 import { getMetadata } from './imageMetadata';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
-export function getImageEditInfo(editor: IEditor, image: HTMLImageElement): ImageMetadataFormat {
+export function getImageEditInfo(image: HTMLImageElement): ImageMetadataFormat {
     const imageEditInfo = getMetadata(image);
     return (
         imageEditInfo ?? {

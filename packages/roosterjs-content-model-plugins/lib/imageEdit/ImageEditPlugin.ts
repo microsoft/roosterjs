@@ -7,10 +7,11 @@ import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { ImageEditOptions } from './types/ImageEditOptions';
+import { ResizeHandle } from './Resizer/createImageResizer';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { startDropAndDragHelpers } from './utils/startDropAndDragHelpers';
-import { updateRotateHandle } from './Rotator/updateRotateHandle';
+import { updateWrapper } from './utils/updateWrapper';
 
 import type {
     EditorPlugin,
@@ -72,14 +73,8 @@ export class ImageEditPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
-        this.dndHelpers.forEach(helper => helper.dispose());
-        this.dndHelpers = [];
-        this.selectedImage = null;
-        this.shadowSpan = null;
-        this.wrapper = null;
-        this.imageEditInfo = null;
-        this.imageHTMLOptions = null;
-        this.initialEditInfo = null;
+
+        this.cleanInfo();
     }
 
     /**
@@ -115,7 +110,7 @@ export class ImageEditPlugin implements EditorPlugin {
     }
 
     private startEditing(editor: IEditor, image: HTMLImageElement) {
-        this.imageEditInfo = getImageEditInfo(editor, image);
+        this.imageEditInfo = getImageEditInfo(image);
         this.initialEditInfo = { ...this.imageEditInfo };
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const { handles, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
@@ -130,24 +125,36 @@ export class ImageEditPlugin implements EditorPlugin {
         this.wrapper = wrapper;
 
         if (handles.length > 0) {
-            this.dndHelpers = [
-                ...startDropAndDragHelpers(
-                    handles,
-                    this.imageEditInfo,
-                    this.options,
-                    ImageEditElementClass.ResizeHandle,
-                    Resizer,
-                    (context: DragAndDropContext, _handle?: HTMLElement) => {
-                        this.resizeImage(context, imageClone);
-                    }
-                ),
-            ];
+            handles.forEach(({ handle }) => {
+                if (this.imageEditInfo) {
+                    this.dndHelpers.push(
+                        startDropAndDragHelpers(
+                            handle,
+                            this.imageEditInfo,
+                            this.options,
+                            ImageEditElementClass.ResizeHandle,
+                            Resizer,
+                            (context: DragAndDropContext, _handle?: HTMLElement) => {
+                                this.resizeImage(
+                                    editor,
+                                    context,
+                                    imageClone,
+                                    handles,
+                                    rotators?.rotator,
+                                    rotators?.rotatorHandle,
+                                    !!this.imageHTMLOptions?.isSmallImage
+                                );
+                            }
+                        )
+                    );
+                }
+            });
         }
 
         if (rotators) {
             this.dndHelpers.push(
-                ...startDropAndDragHelpers(
-                    [rotators.rotator],
+                startDropAndDragHelpers(
+                    rotators.rotator,
                     this.imageEditInfo,
                     this.options,
                     ImageEditElementClass.RotateHandle,
@@ -159,23 +166,39 @@ export class ImageEditPlugin implements EditorPlugin {
                             imageClone,
                             rotators.rotator,
                             rotators.rotatorHandle,
+                            handles,
                             !!this.imageHTMLOptions?.isSmallImage
                         );
                     }
                 )
             );
-            this.updateRotateHandleState(
-                editor,
-                this.imageEditInfo,
-                wrapper,
-                rotators.rotator,
-                rotators.rotatorHandle,
-                this.imageHTMLOptions.isSmallImage
-            );
         }
+
+        updateWrapper(
+            editor,
+            this.imageEditInfo.angleRad ?? 0,
+            this.wrapper,
+            rotators?.rotator,
+            rotators?.rotatorHandle,
+            handles,
+            !!this.imageHTMLOptions?.isSmallImage
+        );
+
+        editor.setDOMSelection({
+            type: 'image',
+            image: image,
+        });
     }
 
-    private resizeImage(context: DragAndDropContext, image?: HTMLImageElement) {
+    private resizeImage(
+        editor: IEditor,
+        context: DragAndDropContext,
+        image: HTMLImageElement,
+        handles: ResizeHandle[],
+        rotator?: HTMLElement,
+        rotatorHandle?: HTMLElement,
+        isSmallImage?: boolean
+    ) {
         if (image && this.wrapper && this.imageEditInfo) {
             const { widthPx, heightPx } = context.editInfo;
             image.style.width = `${widthPx}px`;
@@ -184,25 +207,13 @@ export class ImageEditPlugin implements EditorPlugin {
             this.wrapper.style.height = `${heightPx}px`;
             this.imageEditInfo.widthPx = widthPx;
             this.imageEditInfo.heightPx = heightPx;
-        }
-    }
-
-    private updateRotateHandleState(
-        editor: IEditor,
-        editInfo: ImageMetadataFormat,
-        wrapper: HTMLSpanElement,
-        rotator: HTMLElement,
-        rotatorHandle: HTMLElement,
-        isSmallImage: boolean
-    ) {
-        const viewport = editor.getVisibleViewport();
-        if (viewport) {
-            updateRotateHandle(
-                viewport,
-                editInfo.angleRad ?? 0,
-                wrapper,
+            updateWrapper(
+                editor,
+                this.imageEditInfo.angleRad ?? 0,
+                this.wrapper,
                 rotator,
                 rotatorHandle,
+                handles,
                 isSmallImage
             );
         }
@@ -214,21 +225,34 @@ export class ImageEditPlugin implements EditorPlugin {
         image: HTMLImageElement,
         rotator: HTMLElement,
         rotatorHandle: HTMLElement,
-        isSmallImage: boolean
+        handles?: ResizeHandle[],
+        isSmallImage?: boolean
     ) {
         if (image && this.wrapper && this.imageEditInfo && this.shadowSpan && this.selectedImage) {
             const { angleRad } = context.editInfo;
-            this.shadowSpan.style.transform = `rotate(${angleRad}rad)`;
+            this.wrapper.style.transform = `rotate(${angleRad}rad)`;
             this.imageEditInfo.angleRad = angleRad;
-            this.updateRotateHandleState(
+            updateWrapper(
                 editor,
-                this.imageEditInfo,
+                angleRad ?? 0,
                 this.wrapper,
                 rotator,
                 rotatorHandle,
+                handles,
                 isSmallImage
             );
         }
+    }
+
+    private cleanInfo() {
+        this.selectedImage = null;
+        this.shadowSpan = null;
+        this.wrapper = null;
+        this.imageEditInfo = null;
+        this.imageHTMLOptions = null;
+        this.initialEditInfo = null;
+        this.dndHelpers.forEach(helper => helper.dispose());
+        this.dndHelpers = [];
     }
 
     private removeImageWrapper(
@@ -243,8 +267,6 @@ export class ImageEditPlugin implements EditorPlugin {
             helper.unwrap(this.shadowSpan);
         }
         resizeHelpers.forEach(helper => helper.dispose());
-        this.selectedImage = null;
-        this.shadowSpan = null;
-        this.wrapper = null;
+        this.cleanInfo();
     }
 }

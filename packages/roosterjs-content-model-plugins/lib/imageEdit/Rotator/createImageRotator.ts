@@ -10,6 +10,11 @@ import {
     ROTATE_WIDTH,
 } from '../constants/constants';
 
+export interface ImageRotator {
+    rotator: HTMLDivElement;
+    rotatorHandle: HTMLDivElement;
+}
+
 /**
  * @internal
  * Get HTML for rotate elements, including the rotate handle with icon, and a line between the handle and the image
@@ -18,7 +23,7 @@ export function createImageRotator(
     editor: IEditor,
     borderColor: string,
     rotateHandleBackColor: string
-): { rotator: HTMLDivElement; rotatorHandle: HTMLDivElement } {
+): ImageRotator {
     const doc = editor.getDocument();
     const rotator = doc.createElement('div');
     rotator.className = ImageEditElementClass.RotateCenter;

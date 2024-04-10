@@ -6,26 +6,24 @@ import { ImageEditOptions } from 'roosterjs-content-model-plugins/lib';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 export function startDropAndDragHelpers(
-    handles: HTMLDivElement[],
+    handle: HTMLDivElement,
     editInfo: ImageMetadataFormat,
     options: ImageEditOptions,
     elementClass: ImageEditElementClass,
     helper: DragAndDropHandler<DragAndDropContext, any>,
     updateWrapper: (context: DragAndDropContext, _handle: HTMLElement) => void
-): DragAndDropHelper<DragAndDropContext, any>[] {
-    return handles.map(handle => {
-        return new DragAndDropHelper<DragAndDropContext, any>(
-            handle,
-            {
-                elementClass,
-                editInfo: editInfo,
-                options: options,
-                x: handle.dataset.x as DNDDirectionX,
-                y: handle.dataset.y as DnDDirectionY,
-            },
-            updateWrapper,
-            helper,
-            1
-        );
-    });
+): DragAndDropHelper<DragAndDropContext, any> {
+    return new DragAndDropHelper<DragAndDropContext, any>(
+        handle,
+        {
+            elementClass,
+            editInfo: editInfo,
+            options: options,
+            x: handle.dataset.x as DNDDirectionX,
+            y: handle.dataset.y as DnDDirectionY,
+        },
+        updateWrapper,
+        helper,
+        1
+    );
 }

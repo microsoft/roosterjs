@@ -15,31 +15,36 @@ const HANDLES: { x: DNDDirectionX; y: DnDDirectionY }[] = [
     { x: 'e', y: 's' },
 ];
 
-export function createImageResizer(editor: IEditor): HTMLDivElement[] {
+export interface ResizeHandle {
+    handleWrapper: HTMLDivElement;
+    handle: HTMLDivElement;
+}
+
+export function createImageResizer(editor: IEditor): ResizeHandle[] {
     return HANDLES.map(handle => createHandles(editor, handle.y, handle.x));
 }
 
-const createHandles = (editor: IEditor, y: DnDDirectionY, x: DNDDirectionX): HTMLDivElement => {
+const createHandles = (editor: IEditor, y: DnDDirectionY, x: DNDDirectionX): ResizeHandle => {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const leftOrRightValue = x == '' ? '50%' : '0px';
     const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
     const doc = editor.getDocument();
-    const handle = doc.createElement('div');
-    handle.setAttribute(
+    const handleWrapper = doc.createElement('div');
+    handleWrapper.setAttribute(
         'style',
         `position:absolute;${leftOrRight}:${leftOrRightValue};${topOrBottom}:${topOrBottomValue}`
     );
-    handle.className = ImageEditElementClass.ResizeHandle;
 
-    const handleChild = doc.createElement('div');
-    handle.appendChild(handleChild);
-    handleChild.setAttribute(
+    const handle = doc.createElement('div');
+    handle.className = ImageEditElementClass.ResizeHandle;
+    handleWrapper.appendChild(handle);
+    handle.setAttribute(
         'style',
         `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;border: 2px solid #bfbfbf;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`
     );
-    handleChild.dataset.x = x;
-    handleChild.dataset.y = y;
-    return handle;
+    handle.dataset.x = x;
+    handle.dataset.y = y;
+    return { handleWrapper, handle };
 };
