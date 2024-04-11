@@ -1,12 +1,14 @@
 import { updateMetadata } from './updateMetadata';
 import {
+    createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
 } from './definitionCreators';
 import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 
-const NumberDefinition = createNumberDefinition();
+const NumberDefinition = createNumberDefinition(true);
+const BooleanDefinition = createBooleanDefinition(true);
 
 export const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
     widthPx: NumberDefinition,
@@ -19,6 +21,8 @@ export const ImageMetadataFormatDefinition = createObjectDefinition<Required<Ima
     src: createStringDefinition(),
     naturalHeight: NumberDefinition,
     naturalWidth: NumberDefinition,
+    flippedHorizontal: BooleanDefinition,
+    flippedVertical: BooleanDefinition,
 });
 
 /**

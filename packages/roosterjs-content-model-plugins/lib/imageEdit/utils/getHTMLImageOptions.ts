@@ -9,6 +9,9 @@ import { MIN_HEIGHT_WIDTH } from '../constants/constants';
 const LIGHT_MODE_BGCOLOR = 'white';
 const DARK_MODE_BGCOLOR = '#333';
 
+/**
+ * @internal
+ */
 export const getHTMLImageOptions = (
     editor: IEditor,
     options: ImageEditOptions,

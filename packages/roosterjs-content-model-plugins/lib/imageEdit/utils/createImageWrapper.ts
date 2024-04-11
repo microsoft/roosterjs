@@ -1,33 +1,43 @@
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
-import { createImageResizer, ResizeHandle } from '../Resizer/createImageResizer';
-import { createImageRotator, ImageRotator } from '../Rotator/createImageRotator';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
+import { createImageCropper } from '../Cropper/createImageCropper';
+import { createImageResizer } from '../Resizer/createImageResizer';
+import { createImageRotator } from '../Rotator/createImageRotator';
+import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { ImageEditOptions } from '../types/ImageEditOptions';
 
+/**
+ * @internal
+ */
 export function createImageWrapper(
     editor: IEditor,
     image: HTMLImageElement,
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
-    htmlOptions: ImageHtmlOptions
+    htmlOptions: ImageHtmlOptions,
+    operation?: 'resize' | 'rotate' | 'resizeAndRotate' | 'crop'
 ) {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
-
-    let rotators: ImageRotator | undefined;
-    if (
-        !options.disableRotate &&
-        (options.onSelectState === 'resizeAndRotate' || options.onSelectState === 'rotate')
-    ) {
-        rotators = createImageRotator(
-            editor,
-            htmlOptions.borderColor,
-            htmlOptions.rotateHandleBackColor
-        );
+    if (editInfo.src) {
+        imageClone.src = editInfo.src;
     }
-    let handles: ResizeHandle[] = [];
-    if (options.onSelectState === 'resize' || options.onSelectState === 'resizeAndRotate') {
-        handles = createImageResizer(editor);
+    const doc = editor.getDocument();
+    if (!operation) {
+        operation = options.onSelectState ?? 'resizeAndRotate';
+    }
+
+    let rotators: HTMLDivElement[] = [];
+    if (!options.disableRotate && (operation === 'resizeAndRotate' || operation === 'rotate')) {
+        rotators = createImageRotator(doc, htmlOptions);
+    }
+    let resizers: HTMLDivElement[] = [];
+    if (operation === 'resize' || operation === 'resizeAndRotate') {
+        resizers = createImageResizer(doc, htmlOptions);
+    }
+
+    let croppers: HTMLDivElement[] = [];
+    if (operation === 'crop') {
+        croppers = createImageCropper(doc);
     }
 
     const wrapper = createWrapper(
@@ -35,11 +45,12 @@ export function createImageWrapper(
         imageClone,
         options,
         editInfo,
-        handles,
-        rotators?.rotator
+        resizers,
+        rotators,
+        croppers
     );
     const shadowSpan = createShadowSpan(editor, wrapper, image);
-    return { wrapper, handles, rotators, shadowSpan, imageClone };
+    return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
 const createShadowSpan = (editor: IEditor, wrapper: HTMLElement, image: HTMLImageElement) => {
@@ -59,12 +70,14 @@ const createWrapper = (
     image: HTMLImageElement,
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
-    handles?: ResizeHandle[],
-    rotator?: Element
+    resizers?: HTMLDivElement[],
+    rotators?: HTMLDivElement[],
+    cropper?: HTMLDivElement[]
 ) => {
     const doc = editor.getDocument();
     const wrapper = doc.createElement('span');
     const imageBox = doc.createElement('div');
+
     imageBox.setAttribute(
         `style`,
         `position:relative;width:100%;height:100%;overflow:hidden;transform:scale(1);`
@@ -72,21 +85,29 @@ const createWrapper = (
     imageBox.appendChild(image);
     wrapper.setAttribute(
         'style',
-        `max-width: 100%; position: relative; display: inline-flex; font-size: 24px; margin: 0px; transform: rotate(${editInfo.angleRad}rad); text-align: left;`
+        `max-width: 100%; position: relative; display: inline-flex; font-size: 24px; margin: 0px; transform: rotate(${
+            editInfo.angleRad ?? 0
+        }rad); text-align: left;`
     );
-    setWrapperSizeDimensions(wrapper, image, editInfo.widthPx ?? 0, editInfo.heightPx ?? 0);
 
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);
     wrapper.appendChild(border);
 
-    if (handles && handles?.length > 0) {
-        handles.forEach(handle => {
-            wrapper.appendChild(handle.handleWrapper);
+    if (resizers && resizers?.length > 0) {
+        resizers.forEach(resizer => {
+            wrapper.appendChild(resizer);
         });
     }
-    if (rotator) {
-        wrapper.appendChild(rotator);
+    if (rotators && rotators.length > 0) {
+        rotators.forEach(r => {
+            wrapper.appendChild(r);
+        });
+    }
+    if (cropper && cropper.length > 0) {
+        cropper.forEach(c => {
+            wrapper.appendChild(c);
+        });
     }
 
     return wrapper;
@@ -101,24 +122,3 @@ const createBorder = (editor: IEditor, borderColor?: string) => {
     );
     return resizeBorder;
 };
-
-function setWrapperSizeDimensions(
-    wrapper: HTMLElement,
-    image: HTMLImageElement,
-    width: number,
-    height: number
-) {
-    const hasBorder = image.style.borderStyle;
-    if (hasBorder) {
-        const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
-        wrapper.style.width = getPx(width + borderWidth);
-        wrapper.style.height = getPx(height + borderWidth);
-        return;
-    }
-    wrapper.style.width = getPx(width);
-    wrapper.style.height = getPx(height);
-}
-
-function getPx(value: number): string {
-    return value + 'px';
-}

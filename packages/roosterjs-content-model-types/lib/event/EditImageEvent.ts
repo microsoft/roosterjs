@@ -26,4 +26,6 @@ export interface EditImageEvent extends BasePluginEvent<'editImage'> {
      * Plugin can modify this string so that the modified one will be set to the image element
      */
     newSrc: string;
+
+    startCropping?: boolean;
 }

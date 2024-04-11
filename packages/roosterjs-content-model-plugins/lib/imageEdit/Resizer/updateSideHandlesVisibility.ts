@@ -1,10 +1,8 @@
-import { ResizeHandle } from './createImageResizer';
-
 /**
  * @internal
  */
-export function updateSideHandlesVisibility(handles: ResizeHandle[], isSmall: boolean) {
-    handles.forEach(({ handle }) => {
+export function updateSideHandlesVisibility(handles: HTMLDivElement[], isSmall: boolean) {
+    handles.forEach(handle => {
         const { y, x } = handle.dataset;
         const coordinate = (y ?? '') + (x ?? '');
         const directions = ['n', 's', 'e', 'w'];

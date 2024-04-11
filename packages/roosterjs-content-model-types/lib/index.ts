@@ -59,6 +59,7 @@ export {
     ImageCropMetadataFormat,
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
+    ImageFlipMetadataFormat,
 } from './format/metadata/ImageMetadataFormat';
 export { TableCellMetadataFormat } from './format/metadata/TableCellMetadataFormat';
 

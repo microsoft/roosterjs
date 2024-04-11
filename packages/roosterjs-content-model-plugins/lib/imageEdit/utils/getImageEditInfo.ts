@@ -1,6 +1,9 @@
 import { getMetadata } from './imageMetadata';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
+/**
+ * @internal
+ */
 export function getImageEditInfo(image: HTMLImageElement): ImageMetadataFormat {
     const imageEditInfo = getMetadata(image);
     return (
@@ -14,7 +17,7 @@ export function getImageEditInfo(image: HTMLImageElement): ImageMetadataFormat {
             rightPercent: 0,
             topPercent: 0,
             bottomPercent: 0,
-            angleRad: parseInt(image.style.rotate) || 0,
+            angleRad: 0,
         }
     );
 }

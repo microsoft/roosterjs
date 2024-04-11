@@ -3,11 +3,13 @@ import { ImageEditOptions } from './ImageEditOptions';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 /**
+ * @internal
  * Horizontal direction types for image edit
  */
 export type DNDDirectionX = 'w' | '' | 'e';
 
 /**
+ * @internal
  * Vertical direction types for image edit
  */
 export type DnDDirectionY = 'n' | '' | 's';

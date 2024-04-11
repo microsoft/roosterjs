@@ -27,3 +27,4 @@ export { WatermarkFormat } from './watermark/WatermarkFormat';
 export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
+export { cropImage } from './imageEdit/editingApis/cropImage';

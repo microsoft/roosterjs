@@ -1,5 +1,3 @@
-import { ResizeHandle } from './createImageResizer';
-
 const PI = Math.PI;
 const DIRECTIONS = 8;
 const DirectionRad = (PI * 2) / DIRECTIONS;
@@ -23,8 +21,8 @@ function rotateHandles(angleRad: number, y: string = '', x: string = ''): string
  * @param handles The resizer handles.
  * @param angleRad The angle that the image was rotated.
  */
-export function updateResizeHandles(handles: ResizeHandle[], angleRad: number) {
-    handles.forEach(({ handle }) => {
+export function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
+    handles.forEach(handle => {
         const { y, x } = handle.dataset;
         handle.style.cursor = `${rotateHandles(angleRad, y, x)}-resize`;
     });

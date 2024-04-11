@@ -59,7 +59,7 @@ export interface ImageEditOptions {
      * Which operations will be executed when image is selected
      * @default resizeAndRotate
      */
-    onSelectState?: 'resize' | 'rotate' | 'resizeAndRotate';
+    onSelectState?: 'resize' | 'rotate' | 'resizeAndRotate' | 'crop';
 
     /**
      * Apply changes when mouse upp

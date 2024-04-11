@@ -200,7 +200,7 @@ export default class ImageEdit implements EditorPlugin {
                     this.options &&
                     this.options.onSelectState !== undefined
                 ) {
-                    this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
+                    this.setEditingImage(e.selectionRangeEx.image, ImageEditOperation.Crop);
                 }
 
                 break;

@@ -2,12 +2,13 @@ import DragAndDropContext from './types/DragAndDropContext';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { applyChanges } from './utils/applyChanges';
 import { createImageWrapper } from './utils/createImageWrapper';
+import { Cropper } from './Cropper/cropperContext';
 import { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { ImageEditOptions } from './types/ImageEditOptions';
-import { ResizeHandle } from './Resizer/createImageResizer';
+import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { startDropAndDragHelpers } from './utils/startDropAndDragHelpers';
@@ -36,6 +37,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
  * - Resize image
  * - Crop image
  * - Rotate image
+ * - Flip image
  */
 export class ImageEditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
@@ -46,6 +48,7 @@ export class ImageEditPlugin implements EditorPlugin {
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
     private initialEditInfo: ImageMetadataFormat | null = null;
+    private clonedImage: HTMLImageElement | null = null;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -97,7 +100,19 @@ export class ImageEditPlugin implements EditorPlugin {
                     ) {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
-
+                    break;
+                case 'contentChanged':
+                case 'keyDown':
+                    if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
+                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                    }
+                    break;
+                case 'editImage':
+                    if (event.image === this.selectedImage) {
+                        if (event.startCropping) {
+                            this.startCropping(this.editor, event.image);
+                        }
+                    }
                     break;
             }
         }
@@ -111,9 +126,10 @@ export class ImageEditPlugin implements EditorPlugin {
 
     private startEditing(editor: IEditor, image: HTMLImageElement) {
         this.imageEditInfo = getImageEditInfo(image);
+        console.log(this.imageEditInfo);
         this.initialEditInfo = { ...this.imageEditInfo };
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
-        const { handles, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
+        const { resizers, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
             editor,
             image,
             this.options,
@@ -123,65 +139,82 @@ export class ImageEditPlugin implements EditorPlugin {
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
         this.wrapper = wrapper;
+        this.clonedImage = imageClone;
 
-        if (handles.length > 0) {
-            handles.forEach(({ handle }) => {
-                if (this.imageEditInfo) {
-                    this.dndHelpers.push(
-                        startDropAndDragHelpers(
-                            handle,
-                            this.imageEditInfo,
-                            this.options,
-                            ImageEditElementClass.ResizeHandle,
-                            Resizer,
-                            (context: DragAndDropContext, _handle?: HTMLElement) => {
-                                this.resizeImage(
+        if (resizers.length > 0) {
+            resizers.forEach(resizer => {
+                const resizeHandle = resizer.firstElementChild;
+                if (this.imageEditInfo && resizeHandle) {
+                    const dndHelper = startDropAndDragHelpers(
+                        resizeHandle,
+                        this.imageEditInfo,
+                        this.options,
+                        ImageEditElementClass.ResizeHandle,
+                        Resizer,
+                        (context: DragAndDropContext, _handle?: HTMLElement) => {
+                            if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                                updateWrapper(
                                     editor,
-                                    context,
+                                    this.imageEditInfo,
+                                    this.options,
+                                    this.selectedImage,
                                     imageClone,
-                                    handles,
-                                    rotators?.rotator,
-                                    rotators?.rotatorHandle,
-                                    !!this.imageHTMLOptions?.isSmallImage
+                                    this.wrapper,
+                                    rotators,
+                                    resizers,
+                                    undefined
                                 );
                             }
-                        )
+                        }
                     );
+                    if (dndHelper) {
+                        this.dndHelpers.push(dndHelper);
+                    }
                 }
             });
         }
 
-        if (rotators) {
-            this.dndHelpers.push(
-                startDropAndDragHelpers(
-                    rotators.rotator,
+        if (rotators.length > 0) {
+            const rotateHandle = rotators[0].firstElementChild;
+            if (rotateHandle) {
+                const dndHelper = startDropAndDragHelpers(
+                    rotateHandle,
                     this.imageEditInfo,
                     this.options,
                     ImageEditElementClass.RotateHandle,
                     Rotator,
                     (context: DragAndDropContext, _handle?: HTMLElement) => {
-                        this.rotateImage(
-                            editor,
-                            context,
-                            imageClone,
-                            rotators.rotator,
-                            rotators.rotatorHandle,
-                            handles,
-                            !!this.imageHTMLOptions?.isSmallImage
-                        );
+                        if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                            updateWrapper(
+                                editor,
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                imageClone,
+                                this.wrapper,
+                                rotators,
+                                resizers,
+                                undefined
+                            );
+                        }
                     }
-                )
-            );
+                );
+                if (dndHelper) {
+                    this.dndHelpers.push(dndHelper);
+                }
+            }
         }
 
         updateWrapper(
             editor,
-            this.imageEditInfo.angleRad ?? 0,
+            this.imageEditInfo,
+            this.options,
+            this.selectedImage,
+            imageClone,
             this.wrapper,
-            rotators?.rotator,
-            rotators?.rotatorHandle,
-            handles,
-            !!this.imageHTMLOptions?.isSmallImage
+            rotators,
+            resizers,
+            undefined
         );
 
         editor.setDOMSelection({
@@ -190,58 +223,64 @@ export class ImageEditPlugin implements EditorPlugin {
         });
     }
 
-    private resizeImage(
-        editor: IEditor,
-        context: DragAndDropContext,
-        image: HTMLImageElement,
-        handles: ResizeHandle[],
-        rotator?: HTMLElement,
-        rotatorHandle?: HTMLElement,
-        isSmallImage?: boolean
-    ) {
-        if (image && this.wrapper && this.imageEditInfo) {
-            const { widthPx, heightPx } = context.editInfo;
-            image.style.width = `${widthPx}px`;
-            image.style.height = `${heightPx}px`;
-            this.wrapper.style.width = `${widthPx}px`;
-            this.wrapper.style.height = `${heightPx}px`;
-            this.imageEditInfo.widthPx = widthPx;
-            this.imageEditInfo.heightPx = heightPx;
-            updateWrapper(
-                editor,
-                this.imageEditInfo.angleRad ?? 0,
-                this.wrapper,
-                rotator,
-                rotatorHandle,
-                handles,
-                isSmallImage
-            );
+    private startCropping(editor: IEditor, image: HTMLImageElement) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
         }
-    }
 
-    private rotateImage(
-        editor: IEditor,
-        context: DragAndDropContext,
-        image: HTMLImageElement,
-        rotator: HTMLElement,
-        rotatorHandle: HTMLElement,
-        handles?: ResizeHandle[],
-        isSmallImage?: boolean
-    ) {
-        if (image && this.wrapper && this.imageEditInfo && this.shadowSpan && this.selectedImage) {
-            const { angleRad } = context.editInfo;
-            this.wrapper.style.transform = `rotate(${angleRad}rad)`;
-            this.imageEditInfo.angleRad = angleRad;
-            updateWrapper(
-                editor,
-                angleRad ?? 0,
-                this.wrapper,
-                rotator,
-                rotatorHandle,
-                handles,
-                isSmallImage
-            );
-        }
+        this.imageEditInfo = getImageEditInfo(image);
+        this.initialEditInfo = { ...this.imageEditInfo };
+        this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+        const { wrapper, shadowSpan, imageClone, croppers } = createImageWrapper(
+            editor,
+            image,
+            this.options,
+            this.imageEditInfo,
+            this.imageHTMLOptions,
+            'crop'
+        );
+
+        this.shadowSpan = shadowSpan;
+        this.selectedImage = image;
+        this.wrapper = wrapper;
+        croppers[0].childNodes.forEach(crop => {
+            if (
+                isNodeOfType(crop, 'ELEMENT_NODE') &&
+                this.imageEditInfo &&
+                crop.className == ImageEditElementClass.CropHandle
+            ) {
+                const dndHelper = startDropAndDragHelpers(
+                    crop,
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.CropHandle,
+                    Cropper,
+                    (context: DragAndDropContext, _handle?: HTMLElement) => {
+                        if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                            updateWrapper(
+                                editor,
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                imageClone,
+                                this.wrapper,
+                                undefined,
+                                undefined,
+                                croppers
+                            );
+                        }
+                    }
+                );
+                if (dndHelper) {
+                    this.dndHelpers.push(dndHelper);
+                }
+            }
+        });
+
+        editor.setDOMSelection({
+            type: 'image',
+            image: image,
+        });
     }
 
     private cleanInfo() {
@@ -253,14 +292,20 @@ export class ImageEditPlugin implements EditorPlugin {
         this.initialEditInfo = null;
         this.dndHelpers.forEach(helper => helper.dispose());
         this.dndHelpers = [];
+        this.clonedImage = null;
     }
 
     private removeImageWrapper(
         editor: IEditor,
         resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
     ) {
-        if (this.selectedImage && this.imageEditInfo && this.initialEditInfo) {
-            applyChanges(this.selectedImage, this.imageEditInfo, this.initialEditInfo);
+        if (this.selectedImage && this.imageEditInfo && this.initialEditInfo && this.clonedImage) {
+            applyChanges(
+                this.selectedImage,
+                this.imageEditInfo,
+                this.initialEditInfo,
+                this.clonedImage
+            );
         }
         const helper = editor.getDOMHelper();
         if (this.shadowSpan && this.shadowSpan.parentElement) {

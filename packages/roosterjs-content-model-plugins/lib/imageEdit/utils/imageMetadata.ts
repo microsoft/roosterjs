@@ -6,6 +6,7 @@ import {
 import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * Get metadata object from an HTML element
  * @param element The HTML element to get metadata object from
  * @param definition The type definition of this metadata used for validate this metadata object.
@@ -32,6 +33,7 @@ export function getMetadata(element: HTMLElement): ImageMetadataFormat | null {
 }
 
 /**
+ * @internal
  * Set metadata object into an HTML element
  * @param element The HTML element to set metadata object to
  * @param metadata The metadata object to set
@@ -47,6 +49,7 @@ export function setMetadata<T>(element: HTMLElement, metadata: ImageMetadataForm
 }
 
 /**
+ * @internal
  * Remove metadata from the given element if any
  * @param element The element to remove metadata from
  * @param metadataKey The metadata key to remove, if none provided it will delete all metadata
