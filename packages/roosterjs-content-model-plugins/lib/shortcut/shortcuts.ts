@@ -80,6 +80,7 @@ export const ShortcutClearFormat: ShortcutCommand = {
         which: Keys.SPACE,
     },
     onClick: editor => clearFormat(editor),
+    environment: 'nonMac',
 };
 
 /**
@@ -227,4 +228,5 @@ export const ShortcutOutdentList: ShortcutCommand = {
     onClick: editor => {
         setShortcutIndentationCommand(editor, 'outdent');
     },
+    environment: 'nonMac',
 };
