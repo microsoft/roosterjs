@@ -4,7 +4,10 @@ import type { RibbonButton } from '../roosterjsReact/ribbon';
 /**
  * Key of localized strings of Zoom button
  */
-export type ExportButtonStringKey = 'buttonNameExport';
+export type ExportButtonStringKey =
+    | 'buttonNameExport'
+    | 'menuNameExportHTML'
+    | 'menuNameExportText';
 
 /**
  * "Export content" button on the format ribbon
@@ -14,9 +17,22 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
     unlocalizedText: 'Export',
     iconName: 'Export',
     flipWhenRtl: true,
-    onClick: editor => {
+    dropDownMenu: {
+        items: {
+            menuNameExportHTML: 'as HTML',
+            menuNameExportText: 'as Plain Text',
+        },
+    },
+    onClick: (editor, key) => {
         const win = editor.getDocument().defaultView.open();
-        const html = exportContent(editor);
+        let html = '';
+
+        if (key == 'menuNameExportHTML') {
+            html = exportContent(editor);
+        } else if (key == 'menuNameExportText') {
+            html = `<pre>${exportContent(editor, 'PlainText')}</pre>`;
+        }
+
         win.document.write(editor.getTrustedHTMLHandler()(html));
     },
     commandBarProperties: {

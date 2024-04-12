@@ -1,5 +1,5 @@
-import { createLinkAfterSpace } from '../../../lib/autoFormat/link/createLinkAfterSpace';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
+import { transformHyphen } from '../../../lib/autoFormat/hyphen/transformHyphen';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -7,21 +7,21 @@ import {
     FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 
-describe('createLinkAfterSpace', () => {
+describe('transformHyphen', () => {
     function runTest(
         previousSegment: ContentModelText,
         paragraph: ContentModelParagraph,
         context: FormatContentModelContext,
         expectedResult: boolean
     ) {
-        const result = createLinkAfterSpace(previousSegment, paragraph, context);
+        const result = transformHyphen(previousSegment, paragraph, context);
         expect(result).toBe(expectedResult);
     }
 
-    it('with link', () => {
+    it('with hyphen', () => {
         const segment: ContentModelText = {
             segmentType: 'Text',
-            text: 'test http://bing.com',
+            text: 'test--test',
             format: {},
         };
         const paragraph: ContentModelParagraph = {
@@ -32,7 +32,7 @@ describe('createLinkAfterSpace', () => {
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
     });
 
-    it('No link', () => {
+    it('No hyphen', () => {
         const segment: ContentModelText = {
             segmentType: 'Text',
             text: 'test',
@@ -46,10 +46,93 @@ describe('createLinkAfterSpace', () => {
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
 
-    it('with  text after link ', () => {
+    it('with hyphen between spaces', () => {
         const segment: ContentModelText = {
             segmentType: 'Text',
-            text: 'http://bing.com test',
+            text: 'test -- test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with hyphen at the end', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test--',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+    it('with hyphen at the start', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '--test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with hyphen and space right', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test-- test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with hyphen and space left', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test --test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with hyphen and more text', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'testing hyphen test test--test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('text after dashes', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test--test testing hyphen test',
             format: {},
         };
         const paragraph: ContentModelParagraph = {
@@ -61,7 +144,7 @@ describe('createLinkAfterSpace', () => {
     });
 });
 
-describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => {
+describe('formatTextSegmentBeforeSelectionMarker - transformHyphen', () => {
     function runTest(
         input: ContentModelDocument,
         expectedModel: ContentModelDocument,
@@ -85,7 +168,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                 formatContentModel: formatWithContentModelSpy,
             } as any,
             (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return createLinkAfterSpace(previousSegment, paragraph, context);
+                return transformHyphen(previousSegment, paragraph, context);
             }
         );
 
@@ -93,7 +176,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
         expect(input).toEqual(expectedModel);
     }
 
-    it('no link segment', () => {
+    it('No hyphen', () => {
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -116,11 +199,12 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
             ],
             format: {},
         };
-
         runTest(input, input, false);
     });
 
-    it('link segment with WWW', () => {
+    it('with hyphen', () => {
+        const text = 'test--test';
+        spyOn(text, 'split').and.returnValue(['test--test ']);
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -129,7 +213,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: text,
                             format: {},
                         },
                         {
@@ -152,16 +236,134 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: 'test—tes',
                             format: {},
                             isSelected: undefined,
-                            link: {
-                                format: {
-                                    href: 'http://www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 't',
+                            format: {},
+                            isSelected: undefined,
+                        },
+
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, expected, true);
+    });
+
+    it('with hyphen and left space', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test-- test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(input, input, false);
+    });
+
+    it('with hyphen and left space', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test --test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(input, input, false);
+    });
+
+    it('with hyphen between spaces', () => {
+        const text = 'test -- test';
+        spyOn(text, 'split').and.returnValue(['test', '--', 'test']);
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test -- test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test ',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '—',
+                            format: {},
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' test',
+                            format: {},
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -177,7 +379,9 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
         runTest(input, expected, true);
     });
 
-    it('link segment with hyperlink', () => {
+    it('with hyphen and multiple words', () => {
+        const text = 'testing test--test';
+        spyOn(text, 'split').and.returnValue(['testing', 'test--test ']);
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -186,15 +390,8 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: text,
                             format: {},
-                            link: {
-                                format: {
-                                    href: 'www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -208,32 +405,6 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
             format: {},
         };
 
-        runTest(input, input, true);
-    });
-
-    it('link with text', () => {
-        const input: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'this is the link www.bing.com',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
         const expected: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -242,136 +413,23 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'this is the link ',
+                            text: 'testing ',
                             format: {},
                             isSelected: undefined,
                         },
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: 'test—tes',
                             format: {},
                             isSelected: undefined,
-                            link: {
-                                format: {
-                                    underline: true,
-                                    href: 'http://www.bing.com',
-                                },
-                                dataset: {},
-                            },
                         },
                         {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            segmentType: 'Text',
+                            text: 't',
                             format: {},
+                            isSelected: undefined,
                         },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
 
-        runTest(input, expected, true);
-    });
-
-    it('link before text', () => {
-        const input: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'www.bing.com this is the link',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-        runTest(input, input, false);
-    });
-
-    it('link after link', () => {
-        const input: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'www.bing.com',
-                            format: {},
-                            link: {
-                                format: {
-                                    href: 'www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: ' www.bing.com',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-        const expected: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'www.bing.com',
-                            format: {},
-                            link: {
-                                format: {
-                                    href: 'www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: ' ',
-                            format: {},
-                            isSelected: undefined,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'www.bing.com',
-                            format: {},
-                            isSelected: undefined,
-                            link: {
-                                format: {
-                                    href: 'http://www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
-                        },
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,

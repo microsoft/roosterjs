@@ -1,9 +1,22 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { createLink } from '../../../lib/autoFormat/link/createLink';
+import { formatTextSegmentBeforeSelectionMarker } from '../../../lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
+import {
+    ContentModelDocument,
+    ContentModelParagraph,
+    ContentModelSegmentFormat,
+    ContentModelText,
+    FormatContentModelContext,
+} from 'roosterjs-content-model-types';
 
-describe('createLink', () => {
+describe('formatTextSegmentBeforeSelectionMarker', () => {
     function runTest(
         input: ContentModelDocument,
+        callback: (
+            model: ContentModelDocument,
+            previousSegment: ContentModelText,
+            paragraph: ContentModelParagraph,
+            markerFormat: ContentModelSegmentFormat,
+            context: FormatContentModelContext
+        ) => boolean,
         expectedModel: ContentModelDocument,
         expectedResult: boolean
     ) {
@@ -14,20 +27,24 @@ describe('createLink', () => {
                     newEntities: [],
                     deletedEntities: [],
                     newImages: [],
+                    canUndoByBackspace: true,
                 });
                 expect(result).toBe(expectedResult);
             });
 
-        createLink({
-            focus: () => {},
-            formatContentModel: formatWithContentModelSpy,
-        } as any);
+        formatTextSegmentBeforeSelectionMarker(
+            {
+                focus: () => {},
+                formatContentModel: formatWithContentModelSpy,
+            } as any,
+            callback
+        );
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         expect(input).toEqual(expectedModel);
     }
 
-    it('no selected segments', () => {
+    it('no selection marker', () => {
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -43,12 +60,57 @@ describe('createLink', () => {
                     format: {},
                 },
             ],
-            format: {},
         };
-        runTest(input, input, false);
+        runTest(input, () => true, input, false);
     });
 
-    it('no link segment', () => {
+    it('no previous segment', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        runTest(input, () => true, input, false);
+    });
+
+    it('previous segment is not text', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        runTest(input, () => true, input, false);
+    });
+
+    it('format segment', () => {
         const input: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -57,7 +119,12 @@ describe('createLink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test',
+                            text: 'first',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'second',
                             format: {},
                         },
                         {
@@ -69,13 +136,8 @@ describe('createLink', () => {
                     format: {},
                 },
             ],
-            format: {},
         };
-        runTest(input, input, false);
-    });
-
-    it('link segment with WWW', () => {
-        const input: ContentModelDocument = {
+        const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -83,37 +145,14 @@ describe('createLink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: 'first',
                             format: {},
                         },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        const expected: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
-                            format: {},
-                            link: {
-                                format: {
-                                    href: 'http://www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
+                            text: 'second',
+                            format: {
+                                textColor: 'red',
                             },
                         },
                         {
@@ -125,42 +164,15 @@ describe('createLink', () => {
                     format: {},
                 },
             ],
-            format: {},
         };
-        runTest(input, expected, true);
-    });
-
-    it('link segment with hyperlink', () => {
-        const input: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'www.bing.com',
-                            format: {},
-                            link: {
-                                format: {
-                                    href: 'www.bing.com',
-                                    underline: true,
-                                },
-                                dataset: {},
-                            },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        runTest(input, input, false);
+        runTest(
+            input,
+            (_model, previousSegment) => {
+                previousSegment.format = { textColor: 'red' };
+                return true;
+            },
+            expectedModel,
+            true
+        );
     });
 });

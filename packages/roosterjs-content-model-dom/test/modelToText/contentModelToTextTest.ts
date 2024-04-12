@@ -63,6 +63,21 @@ describe('modelToText', () => {
         expect(text).toBe('text1\r\ntext2');
     });
 
+    it('model with empty lines (BR only in paragraph)', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+
+        para1.segments.push(createBr());
+        para2.segments.push(createBr());
+
+        model.blocks.push(para1, para2);
+
+        const text = contentModelToText(model);
+
+        expect(text).toBe('\r\n');
+    });
+
     it('model with paragraph and image', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph();
@@ -76,7 +91,7 @@ describe('modelToText', () => {
         expect(text).toBe('text1 text2');
     });
 
-    it('model with divider', () => {
+    it('model with divider (DIV)', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -89,6 +104,21 @@ describe('modelToText', () => {
         const text = contentModelToText(model);
 
         expect(text).toBe('text1\r\n\r\ntext2');
+    });
+
+    it('model with divider (HR)', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+
+        para1.segments.push(createText('text1'));
+        para2.segments.push(createText('text2'));
+
+        model.blocks.push(para1, createDivider('hr'), para2);
+
+        const text = contentModelToText(model);
+
+        expect(text).toBe('text1\r\n________________________________________\r\ntext2');
     });
 
     it('model with list', () => {

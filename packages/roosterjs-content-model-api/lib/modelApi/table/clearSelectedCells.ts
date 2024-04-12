@@ -3,7 +3,6 @@ import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-con
 
 /**
  * Clear selection of a table.
- * @internal
  * @param table The table model where the selection is to be cleared
  * @param sel The selection coordinates to be cleared
  */

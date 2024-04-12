@@ -1,66 +1,61 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelCodeFormat,
+    ContentModelSegmentFormat,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function setFormat(editor: IEditor, character: string, format: ContentModelSegmentFormat) {
-    editor.formatContentModel((model, context) => {
-        const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
-            model,
-            false /*includeFormatHolder*/
-        );
+export function setFormat(
+    editor: IEditor,
+    character: string,
+    format: ContentModelSegmentFormat,
+    codeFormat?: ContentModelCodeFormat
+) {
+    formatTextSegmentBeforeSelectionMarker(
+        editor,
+        (_model, previousSegment, paragraph, markerFormat, context) => {
+            if (previousSegment.text[previousSegment.text.length - 1] == character) {
+                const textBeforeMarker = previousSegment.text.slice(0, -1);
+                context.newPendingFormat = {
+                    ...markerFormat,
+                    strikethrough: !!markerFormat.strikethrough,
+                    italic: !!markerFormat.italic,
+                    fontWeight: markerFormat?.fontWeight ? 'bold' : undefined,
+                };
+                if (textBeforeMarker.indexOf(character) > -1) {
+                    const lastCharIndex = previousSegment.text.length;
+                    const firstCharIndex = previousSegment.text
+                        .substring(0, lastCharIndex - 1)
+                        .lastIndexOf(character);
 
-        if (selectedSegmentsAndParagraphs.length > 0 && selectedSegmentsAndParagraphs[0][1]) {
-            const marker = selectedSegmentsAndParagraphs[0][0];
-            context.newPendingFormat = {
-                ...marker.format,
-                strikethrough: !!marker.format.strikethrough,
-                italic: !!marker.format.italic,
-                fontWeight: marker.format?.fontWeight ? 'bold' : undefined,
-            };
+                    const formattedText = splitTextSegment(
+                        previousSegment,
+                        paragraph,
+                        firstCharIndex,
+                        lastCharIndex
+                    );
 
-            const paragraph = selectedSegmentsAndParagraphs[0][1];
-            if (marker.segmentType == 'SelectionMarker') {
-                const markerIndex = paragraph.segments.indexOf(marker);
-                if (markerIndex > 0 && paragraph.segments[markerIndex - 1]) {
-                    const segmentBeforeMarker = paragraph.segments[markerIndex - 1];
-
-                    if (
-                        segmentBeforeMarker.segmentType == 'Text' &&
-                        segmentBeforeMarker.text[segmentBeforeMarker.text.length - 1] == character
-                    ) {
-                        const textBeforeMarker = segmentBeforeMarker.text.slice(0, -1);
-                        if (textBeforeMarker.indexOf(character) > -1) {
-                            const lastCharIndex = segmentBeforeMarker.text.length;
-                            const firstCharIndex = segmentBeforeMarker.text
-                                .substring(0, lastCharIndex - 1)
-                                .lastIndexOf(character);
-
-                            const formattedText = splitTextSegment(
-                                segmentBeforeMarker,
-                                paragraph,
-                                firstCharIndex,
-                                lastCharIndex
-                            );
-
-                            formattedText.text = formattedText.text
-                                .replace(character, '')
-                                .slice(0, -1);
-                            formattedText.format = {
-                                ...formattedText.format,
-                                ...format,
-                            };
-
-                            context.canUndoByBackspace = true;
-                            return true;
-                        }
+                    formattedText.text = formattedText.text.replace(character, '').slice(0, -1);
+                    formattedText.format = {
+                        ...formattedText.format,
+                        ...format,
+                    };
+                    if (codeFormat) {
+                        formattedText.code = {
+                            format: codeFormat,
+                        };
                     }
+
+                    context.canUndoByBackspace = true;
+                    return true;
                 }
             }
+            return false;
         }
-        return false;
-    });
+    );
 }

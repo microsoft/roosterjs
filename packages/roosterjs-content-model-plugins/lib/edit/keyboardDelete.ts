@@ -1,12 +1,12 @@
+import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
+import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
+import { deleteList } from './deleteSteps/deleteList';
 import {
     ChangeSource,
     deleteSelection,
     isModifierKey,
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
-import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
-import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
-import { deleteList } from './deleteSteps/deleteList';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -73,8 +73,8 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     return [
         deleteAllSegmentBeforeStep,
         deleteWordSelection,
+        isForward ? null : deleteList,
         deleteCollapsedSelection,
-        deleteList,
         deleteQuote,
     ];
 }
