@@ -71,7 +71,7 @@ export const ShortcutUnderline: ShortcutCommand = {
 /**
  * Shortcut command for Clear Format
  * Windows: Ctrl + Space
- * MacOS: Meta + Space
+ * MacOS: N/A
  */
 export const ShortcutClearFormat: ShortcutCommand = {
     shortcutKey: {
@@ -201,7 +201,7 @@ export const ShortcutDecreaseFont: ShortcutCommand = {
 /**
  * Shortcut command for Intent list
  * Windows: Alt + Shift + Arrow Right
- * MacOS: Option + Shift+ Arrow Right
+ * MacOS: N/A
  */
 export const ShortcutIndentList: ShortcutCommand = {
     shortcutKey: {
@@ -212,12 +212,13 @@ export const ShortcutIndentList: ShortcutCommand = {
     onClick: editor => {
         setShortcutIndentationCommand(editor, 'indent');
     },
+    environment: 'nonMac',
 };
 
 /**
  * Shortcut command for Outdent list
  * Windows: Alt + Shift + Arrow Left
- * MacOS: Option + Shift+ Arrow Left
+ * MacOS: N/A
  */
 export const ShortcutOutdentList: ShortcutCommand = {
     shortcutKey: {
