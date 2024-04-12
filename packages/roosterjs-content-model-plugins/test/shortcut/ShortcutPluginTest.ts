@@ -318,6 +318,48 @@ describe('ShortcutPlugin', () => {
 
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
         });
+
+        it('indent list', () => {
+            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowRight, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'indent');
+        });
+
+        it('outdent list', () => {
+            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.ArrowLeft, false, true, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledTimes(1);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'outdent');
+        });
     });
 
     describe('Mac', () => {
@@ -392,26 +434,6 @@ describe('ShortcutPlugin', () => {
             const event: PluginEvent = {
                 eventType: 'keyDown',
                 rawEvent: createMockedEvent(Keys.U, false, false, false, true),
-            };
-
-            plugin.initialize(mockedEditor);
-
-            const exclusively = plugin.willHandleEventExclusively(event);
-
-            expect(exclusively).toBeTrue();
-            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
-
-            plugin.onPluginEvent(event);
-
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
-        });
-
-        it('clear format', () => {
-            const apiSpy = spyOn(clearFormat, 'clearFormat');
-            const plugin = new ShortcutPlugin();
-            const event: PluginEvent = {
-                eventType: 'keyDown',
-                rawEvent: createMockedEvent(Keys.SPACE, false, false, false, true),
             };
 
             plugin.initialize(mockedEditor);
@@ -587,48 +609,6 @@ describe('ShortcutPlugin', () => {
             plugin.onPluginEvent(event);
 
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'decrease');
-        });
-
-        it('indent list', () => {
-            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
-            const plugin = new ShortcutPlugin();
-            const event: PluginEvent = {
-                eventType: 'keyDown',
-                rawEvent: createMockedEvent(Keys.ArrowRight, false, true, true, false),
-            };
-
-            plugin.initialize(mockedEditor);
-
-            const exclusively = plugin.willHandleEventExclusively(event);
-
-            expect(exclusively).toBeTrue();
-            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
-
-            plugin.onPluginEvent(event);
-
-            expect(apiSpy).toHaveBeenCalledTimes(1);
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'indent');
-        });
-
-        it('outdent list', () => {
-            const apiSpy = spyOn(setShortcutIndentationCommand, 'setShortcutIndentationCommand');
-            const plugin = new ShortcutPlugin();
-            const event: PluginEvent = {
-                eventType: 'keyDown',
-                rawEvent: createMockedEvent(Keys.ArrowLeft, false, true, true, false),
-            };
-
-            plugin.initialize(mockedEditor);
-
-            const exclusively = plugin.willHandleEventExclusively(event);
-
-            expect(exclusively).toBeTrue();
-            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
-
-            plugin.onPluginEvent(event);
-
-            expect(apiSpy).toHaveBeenCalledTimes(1);
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, 'outdent');
         });
     });
 });
