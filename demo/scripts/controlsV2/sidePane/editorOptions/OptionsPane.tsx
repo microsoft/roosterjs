@@ -127,7 +127,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             linkTitle: this.state.linkTitle,
             watermarkText: this.state.watermarkText,
             pluginList: { ...this.state.pluginList },
-            contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
             forcePreserveRatio: this.state.forcePreserveRatio,
             applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
@@ -139,6 +138,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             tableMenu: this.state.tableMenu,
             imageMenu: this.state.imageMenu,
             autoFormatOptions: { ...this.state.autoFormatOptions },
+            markdownOptions: { ...this.state.markdownOptions },
         };
 
         if (callback) {
