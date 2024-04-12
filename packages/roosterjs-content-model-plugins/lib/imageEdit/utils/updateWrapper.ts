@@ -57,18 +57,18 @@ export function updateWrapper(
     const cropTopPx = originalHeight * (topPercent || 0);
     const cropBottomPx = originalHeight * (bottomPercent || 0);
 
-    // Update size and margin of the wrapper
-    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
-    wrapper.style.transform = `rotate(${angleRad}rad)`;
-    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
-
-    // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
-    // or if the direction is Right To Left
-    wrapper.style.textAlign = 'left';
-
-    // Update size of the image
-    clonedImage.style.width = getPx(originalWidth);
-    clonedImage.style.height = getPx(originalHeight);
+    updateImageSize(
+        wrapper,
+        image,
+        clonedImage,
+        marginVertical,
+        marginHorizontal,
+        visibleHeight,
+        visibleWidth,
+        originalHeight,
+        originalWidth,
+        angleRad ?? 0
+    );
 
     //Update flip direction
     setFlipped(clonedImage.parentElement, flippedHorizontal, flippedVertical);
@@ -95,6 +95,19 @@ export function updateWrapper(
         const clientHeight = wrapper.clientHeight;
 
         doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
+
+        updateImageSize(
+            wrapper,
+            image,
+            clonedImage,
+            marginVertical,
+            marginHorizontal,
+            visibleHeight,
+            visibleWidth,
+            originalHeight,
+            originalWidth,
+            angleRad ?? 0
+        );
 
         const resizeHandles = resizers
             .map(resizer => {
@@ -139,4 +152,30 @@ export function updateWrapper(
             updateHandleCursor(croppers, angleRad);
         }
     }
+}
+
+function updateImageSize(
+    wrapper: HTMLSpanElement,
+    image: HTMLImageElement,
+    clonedImage: HTMLImageElement,
+    marginVertical: number,
+    marginHorizontal: number,
+    visibleHeight: number,
+    visibleWidth: number,
+    originalHeight: number,
+    originalWidth: number,
+    angleRad: number
+) {
+    // Update size and margin of the wrapper
+    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
+    wrapper.style.transform = `rotate(${angleRad}rad)`;
+    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
+
+    // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
+    // or if the direction is Right To Left
+    wrapper.style.textAlign = 'left';
+
+    // Update size of the image
+    clonedImage.style.width = getPx(originalWidth);
+    clonedImage.style.height = getPx(originalHeight);
 }

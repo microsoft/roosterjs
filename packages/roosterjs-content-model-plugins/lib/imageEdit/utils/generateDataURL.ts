@@ -1,4 +1,4 @@
-import getGeneratedImageSize from './generateImageSize';
+import GeneratedImageSize from '../types/GeneratedImageSize';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 /**
@@ -14,12 +14,9 @@ import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
  */
 export default function generateDataURL(
     image: HTMLImageElement,
-    editInfo: ImageMetadataFormat
-): string | undefined {
-    const generatedImageSize = getGeneratedImageSize(editInfo);
-    if (!generatedImageSize) {
-        return;
-    }
+    editInfo: ImageMetadataFormat,
+    generatedImageSize: GeneratedImageSize
+): string {
     const {
         angleRad,
         widthPx,
@@ -36,11 +33,13 @@ export default function generateDataURL(
     const right = rightPercent || 0;
     const top = topPercent || 0;
     const bottom = bottomPercent || 0;
-    const height = naturalHeight || 0;
-    const width = naturalWidth || 0;
+    const nHeight = naturalHeight || image.naturalHeight;
+    const nWidth = naturalWidth || image.naturalHeight;
+    const width = widthPx || image.clientWidth;
+    const height = heightPx || image.clientHeight;
 
-    const imageWidth = width * (1 - left - right);
-    const imageHeight = height * (1 - top - bottom);
+    const imageWidth = nWidth * (1 - left - right);
+    const imageHeight = nHeight * (1 - top - bottom);
 
     // Adjust the canvas size and scaling for high display resolution
     const devicePixelRatio = window.devicePixelRatio || 1;
@@ -50,21 +49,21 @@ export default function generateDataURL(
     canvas.height = targetHeight * devicePixelRatio;
 
     const context = canvas.getContext('2d');
-    if (context && widthPx && heightPx) {
+    if (context) {
         context.scale(devicePixelRatio, devicePixelRatio);
         context.translate(targetWidth / 2, targetHeight / 2);
         context.rotate(angle);
         context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
         context.drawImage(
             image,
-            width * left,
-            height * top,
+            nWidth * left,
+            nHeight * top,
             imageWidth,
             imageHeight,
-            -widthPx / 2,
-            -heightPx / 2,
-            widthPx,
-            heightPx
+            -width / 2,
+            -height / 2,
+            width,
+            height
         );
     }
 

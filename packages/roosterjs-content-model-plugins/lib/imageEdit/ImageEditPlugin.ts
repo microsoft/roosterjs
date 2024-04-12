@@ -243,6 +243,7 @@ export class ImageEditPlugin implements EditorPlugin {
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
         this.wrapper = wrapper;
+        this.clonedImage = imageClone;
         croppers[0].childNodes.forEach(crop => {
             if (
                 isNodeOfType(crop, 'ELEMENT_NODE') &&

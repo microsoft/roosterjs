@@ -1,4 +1,5 @@
 import generateDataURL from './generateDataURL';
+import getGeneratedImageSize from './generateImageSize';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { setMetadata } from './imageMetadata';
 
@@ -11,18 +12,26 @@ export function applyChanges(
     initial: ImageMetadataFormat,
     clonedImaged?: HTMLImageElement
 ) {
-    if (editInfo.widthPx !== initial.widthPx || editInfo.heightPx !== initial.heightPx) {
-        image.style.width = `${editInfo.widthPx}px`;
-        image.style.height = `${editInfo.heightPx}px`;
-    }
-
-    if (cropOrRotated(editInfo, initial)) {
-        const newSrc = generateDataURL(clonedImaged ?? image, editInfo);
-        if (newSrc) {
-            image.src = newSrc;
+    // Write back the change to image, and set its new size
+    const generatedImageSize = getGeneratedImageSize(editInfo);
+    if (generatedImageSize) {
+        if (cropOrRotated(editInfo, initial)) {
+            const newSrc = generateDataURL(clonedImaged ?? image, editInfo, generatedImageSize);
+            if (newSrc) {
+                image.src = newSrc;
+            }
+            setMetadata(image, editInfo);
         }
+
+        const { targetWidth, targetHeight } = generatedImageSize;
+        image.width = targetWidth;
+        image.height = targetHeight;
+        // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
+        image.style.removeProperty('width');
+        image.style.removeProperty('height');
+        image.style.removeProperty('max-width');
+        image.style.removeProperty('max-height');
     }
-    setMetadata(image, editInfo);
 }
 
 function cropOrRotated(editInfo: ImageMetadataFormat, initial: ImageMetadataFormat) {
