@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Callout } from '@fluentui/react/lib/Callout';
-import { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
+import { DOMInsertPoint } from 'roosterjs-content-model-types';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { ReactEditorPlugin, UIUtilities } from '../roosterjsReact/common';
 import {
-    IPickerPlugin,
     PickerDirection,
     PickerHandler,
+    PickerHelper,
     PickerPlugin,
     PickerSelectionChangMode,
     getDOMInsertPointRect,
@@ -31,14 +31,18 @@ const selectedItemStyle = mergeStyles({
     fontWeight: 'bold',
 });
 
-export class SamplePickerPlugin extends PickerPlugin<SamplePickerHandler>
-    implements ReactEditorPlugin {
+export class SamplePickerPlugin extends PickerPlugin implements ReactEditorPlugin {
+    private pickerHandler: SamplePickerHandler;
+
     constructor() {
-        super('@', new SamplePickerHandler());
+        const pickerHandler = new SamplePickerHandler();
+        super('@', pickerHandler);
+
+        this.pickerHandler = pickerHandler;
     }
 
     setUIUtilities(uiUtilities: UIUtilities): void {
-        this.handler.setUIUtilities(uiUtilities);
+        this.pickerHandler.setUIUtilities(uiUtilities);
     }
 }
 
@@ -49,17 +53,14 @@ class SamplePickerHandler implements PickerHandler {
     private queryString: string;
     private items: IContextualMenuItem[] = [];
     private onClose: (() => void) | null = null;
-    private editor: IEditor | null = null;
-    private pickerPlugin: IPickerPlugin<PickerHandler> | null = null;
+    private helper: PickerHelper | null = null;
 
-    onInitialize(editor: IEditor, pickerPlugin: IPickerPlugin<PickerHandler>) {
-        this.editor = editor;
-        this.pickerPlugin = pickerPlugin;
+    onInitialize(helper: PickerHelper) {
+        this.helper = helper;
     }
 
     onDispose() {
-        this.editor = null;
-        this.pickerPlugin = null;
+        this.helper = null;
     }
 
     setUIUtilities(uiUtilities: UIUtilities): void {
@@ -71,7 +72,7 @@ class SamplePickerHandler implements PickerHandler {
         this.queryString = queryString;
         this.items = buildItems(queryString, this.index);
 
-        const rect = getDOMInsertPointRect(this.editor.getDocument(), pos);
+        const rect = getDOMInsertPointRect(this.helper.editor.getDocument(), pos);
 
         if (rect) {
             this.onClose = this.uiUtilities.renderComponent(
@@ -129,7 +130,7 @@ class SamplePickerHandler implements PickerHandler {
         const text = this.items[this.index]?.text;
 
         if (text) {
-            const span = this.editor.getDocument().createElement('span');
+            const span = this.helper.editor.getDocument().createElement('span');
             span.textContent = '@' + text;
             span.style.textDecoration = 'underline';
             span.style.color = 'blue';
@@ -141,7 +142,7 @@ class SamplePickerHandler implements PickerHandler {
             paragraph.segments.push(entity);
             doc.blocks.push(paragraph);
 
-            this.pickerPlugin?.replaceQueryString(
+            this.helper.replaceQueryString(
                 doc,
                 {
                     changeSource: 'SamplePicker',
@@ -153,7 +154,7 @@ class SamplePickerHandler implements PickerHandler {
         this.onClose?.();
         this.onClose = null;
         this.ref = null;
-        this.pickerPlugin?.closePicker();
+        this.helper.closePicker();
     }
 
     onQueryStringChanged(queryString: string): void {
@@ -161,7 +162,7 @@ class SamplePickerHandler implements PickerHandler {
 
         if (queryString.length > 100 || queryString.split(' ').length > 4) {
             // Querystring is too long, so close picker
-            this.pickerPlugin?.closePicker();
+            this.helper.closePicker();
         } else {
             this.items = buildItems(this.queryString, this.index);
             this.ref?.setMenuItems(this.items);
@@ -193,7 +194,7 @@ const PickerMenu = React.forwardRef(
         }));
 
         return (
-            <Callout target={{ left: props.x, top: props.y }} gapSpace={10}>
+            <Callout target={{ left: props.x, top: props.y }} isBeakVisible={false} gapSpace={10}>
                 {items.map(item => (
                     <div className={itemStyle + (item.checked ? ' ' + selectedItemStyle : '')}>
                         {item.text}

@@ -1,5 +1,5 @@
-import type { IPickerPlugin } from './IPickerPlugin';
-import type { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
+import type { PickerHelper } from './PickerHelper';
+import type { DOMInsertPoint } from 'roosterjs-content-model-types';
 
 /**
  * Direction option for picker
@@ -92,7 +92,7 @@ export interface PickerHandler {
      * @param editor The editor instance
      * @param pickerPlugin The PickerPlugin instance
      */
-    onInitialize: (editor: IEditor, pickerPlugin: IPickerPlugin<PickerHandler>) => void;
+    onInitialize: (helper: PickerHelper) => void;
 
     /**
      * Dispose the picker handler

@@ -1,6 +1,7 @@
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as mergeModel from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { replaceQueryString } from '../../lib/picker/replaceQueryString';
+import { PickerHandler } from '../../lib/picker/PickerHandler';
+import { PickerHelperImpl } from '../../lib/picker/PickerHelperImpl';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -10,7 +11,7 @@ import {
     IEditor,
 } from 'roosterjs-content-model-types';
 
-describe('replaceQueryString', () => {
+describe('PickerHelperImpl.replaceQueryString', () => {
     let formatTextSegmentBeforeSelectionMarkerSpy: jasmine.Spy;
     let editor: IEditor;
     let focusSpy: jasmine.Spy;
@@ -55,8 +56,9 @@ describe('replaceQueryString', () => {
 
         const mockedModel = 'MODEL' as any;
         const options = 'OPTIONS' as any;
+        const helper = new PickerHelperImpl(editor, null!, '@');
 
-        replaceQueryString(editor, '@', mockedModel, options, true);
+        helper.replaceQueryString(mockedModel, options, true);
 
         expect(focusSpy).toHaveBeenCalledWith();
         expect(formatTextSegmentBeforeSelectionMarkerSpy).toHaveBeenCalledWith(
@@ -130,5 +132,46 @@ describe('replaceQueryString', () => {
                 },
             ],
         });
+    });
+});
+
+describe('PickerHelperImpl.closePicker', () => {
+    it('picker was closed', () => {
+        const onClosePickerSpy = jasmine.createSpy('onClosePicker');
+        const handler: PickerHandler = {
+            onClosePicker: onClosePickerSpy,
+        } as any;
+        const helper = new PickerHelperImpl(null!, handler, '@');
+
+        helper.closePicker();
+
+        expect(helper.direction).toBeFalsy();
+        expect(onClosePickerSpy).not.toHaveBeenCalled();
+    });
+
+    it('picker was open', () => {
+        const onClosePickerSpy = jasmine.createSpy('onClosePicker');
+        const handler: PickerHandler = {
+            onClosePicker: onClosePickerSpy,
+        } as any;
+        const helper = new PickerHelperImpl(null!, handler, '@');
+
+        helper.direction = 'both';
+
+        helper.closePicker();
+
+        expect(helper.direction).toBeNull();
+        expect(onClosePickerSpy).toHaveBeenCalled();
+    });
+
+    it('no onClosePicker callback', () => {
+        const handler: PickerHandler = {} as any;
+        const helper = new PickerHelperImpl(null!, handler, '@');
+
+        helper.direction = 'both';
+
+        helper.closePicker();
+
+        expect(helper.direction).toBeNull();
     });
 });

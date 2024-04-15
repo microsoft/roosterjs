@@ -1,14 +1,11 @@
 import { ChangeSource, isCursorMovingKey, isPunctuation } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { getQueryString } from './getQueryString';
-import { replaceQueryString } from './replaceQueryString';
-import type { IPickerPlugin } from './IPickerPlugin';
-import type { PickerDirection, PickerHandler } from './PickerHandler';
+import { PickerHelperImpl } from './PickerHelperImpl';
+import type { PickerHandler } from './PickerHandler';
 import type {
-    ContentModelDocument,
     DOMInsertPoint,
     EditorPlugin,
-    FormatContentModelOptions,
     IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -22,18 +19,17 @@ import type {
  *
  * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
  */
-export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPickerPlugin<T> {
-    protected editor: IEditor | null = null;
+export class PickerPlugin implements EditorPlugin {
     private isMac: boolean = false;
     private lastQueryString = '';
-    private direction: PickerDirection | null = null;
+    private helper: PickerHelperImpl | null = null;
 
     /**
      * Construct a new instance of PickerPlugin class
      * @param triggerCharacter The character to trigger a picker to be shown
      * @param handler Picker handler for receiving picker state change events
      */
-    constructor(private triggerCharacter: string, public readonly handler: T) {}
+    constructor(private triggerCharacter: string, private readonly handler: PickerHandler) {}
 
     /**
      * Get a friendly name
@@ -47,49 +43,17 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
      * @param editor Editor instance
      */
     initialize(editor: IEditor) {
-        this.editor = editor;
-        this.isMac = !!this.editor.getEnvironment().isMac;
+        this.isMac = !!editor.getEnvironment().isMac;
+        this.helper = new PickerHelperImpl(editor, this.handler, this.triggerCharacter);
+        this.handler.onInitialize(this.helper);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor = null;
-        this.direction = null;
-    }
-
-    /**
-     * Replace the query string with a given Content Model.
-     * This is used for commit a change from picker and insert the committed content into editor.
-     * @param model The Content Model to insert
-     * @param options Options for formatting content model
-     * @param canUndoByBackspace Whether this change can be undone using Backspace key
-     */
-    replaceQueryString(
-        model: ContentModelDocument,
-        options?: FormatContentModelOptions,
-        canUndoByBackspace?: boolean
-    ): void {
-        if (this.editor) {
-            replaceQueryString(
-                this.editor,
-                this.triggerCharacter,
-                model,
-                options,
-                canUndoByBackspace
-            );
-        }
-    }
-
-    /**
-     * Notify Picker Plugin that picker is closed from the handler code, so picker plugin can quit the suggesting state
-     */
-    closePicker() {
-        if (this.direction) {
-            this.direction = null;
-            this.handler.onClosePicker?.();
-        }
+        this.handler.onDispose();
+        this.helper = null;
     }
 
     /**
@@ -102,7 +66,12 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
      */
     willHandleEventExclusively(event: PluginEvent) {
         return (
-            !!this.direction && event.eventType == 'keyDown' && isCursorMovingKey(event.rawEvent)
+            !!this.helper?.direction &&
+            event.eventType == 'keyDown' &&
+            (isCursorMovingKey(event.rawEvent) ||
+                event.rawEvent.key == 'Enter' ||
+                event.rawEvent.key == 'Tab' ||
+                event.rawEvent.key == 'Escape')
         );
     }
 
@@ -111,57 +80,51 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (!this.editor) {
+        if (!this.helper) {
             return;
         }
 
         switch (event.eventType) {
             case 'contentChanged':
-                if (event.source == ChangeSource.SetContent) {
-                    this.closePicker();
-                } else if (this.direction) {
-                    this.onSuggestingInput(this.editor);
+                if (this.helper.direction) {
+                    if (event.source == ChangeSource.SetContent) {
+                        this.helper.closePicker();
+                    } else {
+                        this.onSuggestingInput(this.helper);
+                    }
                 }
                 break;
 
             case 'keyDown':
-                if (this.direction) {
-                    this.onSuggestingKeyDown(this.editor, this.direction, event.rawEvent);
+                if (this.helper.direction) {
+                    this.onSuggestingKeyDown(this.helper, event.rawEvent);
                 }
                 break;
 
             case 'input':
-                if (this.direction) {
-                    this.onSuggestingInput(this.editor);
+                if (this.helper.direction) {
+                    this.onSuggestingInput(this.helper);
                 } else {
-                    this.onInput(this.editor, event.rawEvent);
+                    this.onInput(this.helper, event.rawEvent);
                 }
                 break;
 
             case 'mouseUp':
-                if (this.direction) {
-                    this.closePicker();
+                if (this.helper.direction) {
+                    this.helper.closePicker();
                 }
-                break;
-
-            case 'editorReady':
-                this.handler.onInitialize(this.editor, this);
-                break;
-
-            case 'beforeDispose':
-                this.handler.onDispose();
                 break;
         }
     }
 
-    private onSuggestingKeyDown(editor: IEditor, direction: PickerDirection, event: KeyboardEvent) {
+    private onSuggestingKeyDown(helper: PickerHelperImpl, event: KeyboardEvent) {
         switch (event.key) {
             case 'ArrowLeft':
             case 'ArrowRight':
-                if (direction == 'horizontal' || direction == 'both') {
+                if (helper.direction == 'horizontal' || helper.direction == 'both') {
                     let isIncrement = event.key == 'ArrowRight';
 
-                    if (editor.getDOMHelper().isRightToLeft()) {
+                    if (helper.editor.getDOMHelper().isRightToLeft()) {
                         isIncrement = !isIncrement;
                     }
 
@@ -175,9 +138,9 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
                 {
                     const isIncrement = event.key == 'ArrowDown';
 
-                    if (direction != 'horizontal') {
+                    if (helper.direction != 'horizontal') {
                         this.handler.onSelectionChanged?.(
-                            direction == 'both'
+                            helper.direction == 'both'
                                 ? isIncrement
                                     ? 'nextRow'
                                     : 'previousRow'
@@ -214,7 +177,7 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
                 event.preventDefault();
                 break;
             case 'Escape':
-                this.closePicker();
+                helper.closePicker();
                 event.preventDefault();
                 break;
 
@@ -226,9 +189,9 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
         }
     }
 
-    private onSuggestingInput(editor: IEditor) {
+    private onSuggestingInput(helper: PickerHelperImpl) {
         if (
-            !formatTextSegmentBeforeSelectionMarker(editor, (_, segment, paragraph) => {
+            !formatTextSegmentBeforeSelectionMarker(helper.editor, (_, segment, paragraph) => {
                 const newQueryString = getQueryString(
                     this.triggerCharacter,
                     paragraph,
@@ -246,19 +209,19 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
                     this.lastQueryString = newQueryString;
                     this.handler.onQueryStringChanged?.(newQueryString);
                 } else {
-                    this.closePicker();
+                    helper.closePicker();
                 }
 
                 return false;
             })
         ) {
-            this.closePicker();
+            helper.closePicker();
         }
     }
 
-    private onInput(editor: IEditor, event: InputEvent) {
+    private onInput(helper: PickerHelperImpl, event: InputEvent) {
         if (event.inputType == 'insertText' && event.data == this.triggerCharacter) {
-            formatTextSegmentBeforeSelectionMarker(editor, (_, segment) => {
+            formatTextSegmentBeforeSelectionMarker(helper.editor, (_, segment) => {
                 if (segment.text.endsWith(this.triggerCharacter)) {
                     const charBeforeTrigger = segment.text[segment.text.length - 2];
 
@@ -267,7 +230,7 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
                         !charBeforeTrigger.trim() ||
                         isPunctuation(charBeforeTrigger)
                     ) {
-                        const selection = editor.getDOMSelection();
+                        const selection = helper.editor.getDOMSelection();
                         const pos: DOMInsertPoint | null =
                             selection?.type == 'range' && selection.range.collapsed
                                 ? {
@@ -278,7 +241,7 @@ export class PickerPlugin<T extends PickerHandler> implements EditorPlugin, IPic
 
                         if (pos) {
                             this.lastQueryString = this.triggerCharacter;
-                            this.direction = this.handler.onTrigger(this.lastQueryString, pos);
+                            helper.direction = this.handler.onTrigger(this.lastQueryString, pos);
                         }
                     }
                 }

@@ -1,17 +1,17 @@
 import type {
     ContentModelDocument,
     FormatContentModelOptions,
+    IEditor,
 } from 'roosterjs-content-model-types';
-import type { PickerHandler } from './PickerHandler';
 
 /**
  * Represents the interface of picker plugin, provides necessary utility functions for pickers
  */
-export interface IPickerPlugin<T extends PickerHandler> {
+export interface PickerHelper {
     /**
-     * Get the picker handler connected to this plugin
+     * The editor instance
      */
-    readonly handler: T;
+    readonly editor: IEditor;
 
     /**
      * Replace the query string with a given Content Model.
