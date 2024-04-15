@@ -7,6 +7,7 @@ import type { DefaultImplicitFormatMap } from 'roosterjs-content-model-types';
 export const defaultContentModelFormatMap: DefaultImplicitFormatMap = {
     a: {
         underline: true,
+        textColor: undefined, // Set to undefined to force override color from parent element so we can write correct link color if any, because browser will assign a default color for link if it doesn't have one
     },
     blockquote: {
         marginTop: '1em',
