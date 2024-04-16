@@ -282,4 +282,41 @@ describe('DOMHelperImpl', () => {
             expect(result).toBeTrue();
         });
     });
+
+    describe('getEditorDivWidth', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+                clientWidth: 1000,
+            } as any;
+        });
+
+        it('getEditorDivWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                paddingLeft: '10px',
+                paddingRight: '10px',
+            });
+
+            expect(domHelper.getEditorDivWidth()).toBe(980);
+        });
+
+        it('getEditorDivWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({});
+
+            expect(domHelper.getEditorDivWidth()).toBe(1000);
+        });
+    });
 });

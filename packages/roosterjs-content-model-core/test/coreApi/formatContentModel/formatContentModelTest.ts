@@ -19,6 +19,7 @@ describe('formatContentModel', () => {
     let triggerEvent: jasmine.Spy;
     let getDOMSelection: jasmine.Spy;
     let hasFocus: jasmine.Spy;
+    let getEditorDivWidth: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -38,6 +39,7 @@ describe('formatContentModel', () => {
         triggerEvent = jasmine.createSpy('triggerEvent');
         getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
         hasFocus = jasmine.createSpy('hasFocus');
+        getEditorDivWidth = jasmine.createSpy('getEditorDivWidth');
 
         core = ({
             api: {
@@ -56,6 +58,7 @@ describe('formatContentModel', () => {
             },
             domHelper: {
                 hasFocus,
+                getEditorDivWidth,
             },
         } as any) as EditorCore;
     });
@@ -443,10 +446,6 @@ describe('formatContentModel', () => {
         it('Has image', () => {
             const image = createImage('test');
             const rawEvent = 'RawEvent' as any;
-            const getVisibleViewportSpy = jasmine
-                .createSpy('getVisibleViewport')
-                .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
-            core.api.getVisibleViewport = getVisibleViewportSpy;
 
             formatContentModel(
                 core,
@@ -460,7 +459,7 @@ describe('formatContentModel', () => {
                 }
             );
 
-            expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
+            expect(getEditorDivWidth).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);

@@ -70,6 +70,17 @@ class DOMHelperImpl implements DOMHelper {
 
         return style?.direction == 'rtl';
     }
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getEditorDivWidth(): number {
+        const contentDiv = this.contentDiv;
+        const style = contentDiv.ownerDocument.defaultView?.getComputedStyle(contentDiv);
+        const paddingLeft = parseInt(style?.paddingLeft || '0');
+        const paddingRight = parseInt(style?.paddingRight || '0');
+        return this.contentDiv.clientWidth - (paddingLeft + paddingRight);
+    }
 }
 
 /**

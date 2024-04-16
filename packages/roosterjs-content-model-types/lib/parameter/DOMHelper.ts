@@ -86,4 +86,9 @@ export interface DOMHelper {
      * Check if the root element is in RTL mode
      */
     isRightToLeft(): boolean;
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getEditorDivWidth(): number;
 }
