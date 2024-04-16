@@ -127,12 +127,18 @@ function reconcileSelection(
                     collapsed,
                 } = newRange;
 
+                delete model.hasRevertedRangeSelection;
+
                 if (collapsed) {
                     return !!reconcileNodeSelection(startContainer, startOffset);
                 } else if (
                     startContainer == endContainer &&
                     isNodeOfType(startContainer, 'TEXT_NODE')
                 ) {
+                    if (newSelection.isReverted) {
+                        model.hasRevertedRangeSelection = true;
+                    }
+
                     return (
                         isIndexedSegment(startContainer) &&
                         !!reconcileTextSelection(startContainer, startOffset, endOffset)
@@ -142,6 +148,10 @@ function reconcileSelection(
                     const marker2 = reconcileNodeSelection(endContainer, endOffset);
 
                     if (marker1 && marker2) {
+                        if (newSelection.isReverted) {
+                            model.hasRevertedRangeSelection = true;
+                        }
+
                         setSelection(model, marker1, marker2);
                         return true;
                     } else {
