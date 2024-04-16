@@ -141,6 +141,16 @@ export class EditPlugin implements EditorPlugin {
 
         if (handled) {
             rawEvent.preventDefault();
+
+            // Restore the selection to avoid the cursor jump issue
+            // See: https://issues.chromium.org/issues/330596261
+            const selection = editor.getDOMSelection();
+            const doc = this.editor?.getDocument();
+            doc?.defaultView?.requestAnimationFrame(() => {
+                if (this.editor) {
+                    this.editor.setDOMSelection(selection);
+                }
+            });
         }
     }
 }
