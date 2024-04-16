@@ -877,7 +877,7 @@ describe('setAlignment in list', () => {
                     },
                 ],
                 blocks: [],
-                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                 format: {},
             },
             'center',
@@ -917,7 +917,7 @@ describe('setAlignment in list', () => {
                         ],
                     },
                 ],
-                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                 format: {},
             },
             'left',
@@ -953,7 +953,7 @@ describe('setAlignment in list', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {
@@ -993,7 +993,7 @@ describe('setAlignment in list', () => {
                         ],
                     },
                 ],
-                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                 format: {},
             },
             'center',
@@ -1029,7 +1029,7 @@ describe('setAlignment in list', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {
@@ -1069,7 +1069,7 @@ describe('setAlignment in list', () => {
                         ],
                     },
                 ],
-                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                 format: {
                     textAlign: 'end',
                 },
@@ -1107,7 +1107,7 @@ describe('setAlignment in list', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {
@@ -1149,7 +1149,7 @@ describe('setAlignment in list', () => {
                         ],
                     },
                 ],
-                formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                 format: {
                     textAlign: 'end',
                 },
@@ -1187,7 +1187,7 @@ describe('setAlignment in list', () => {
                 ],
                 formatHolder: {
                     segmentType: 'SelectionMarker',
-                    isSelected: true,
+                    isSelected: false,
                     format: {},
                 },
                 format: {

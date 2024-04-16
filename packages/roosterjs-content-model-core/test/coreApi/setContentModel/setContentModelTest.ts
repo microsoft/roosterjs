@@ -186,6 +186,7 @@ describe('setContentModel', () => {
     it('restore range selection ', () => {
         const mockedRange = {
             type: 'range',
+            range: document.createRange(),
         } as any;
 
         contentModelToDomSpy.and.returnValue(mockedRange);

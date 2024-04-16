@@ -1,5 +1,5 @@
 import { areSameSelection } from '../../../lib/corePlugin/cache/areSameSelection';
-import { DOMSelection } from 'roosterjs-content-model-types';
+import { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
 
 describe('areSameSelection', () => {
     const startContainer = 'MockedStartContainer' as any;
@@ -9,7 +9,7 @@ describe('areSameSelection', () => {
     const table = 'MockedTable' as any;
     const image = 'MockedImage' as any;
 
-    function runTest(r1: DOMSelection, r2: DOMSelection, result: boolean) {
+    function runTest(r1: DOMSelection, r2: CacheSelection, result: boolean) {
         expect(areSameSelection(r1, r2)).toBe(result);
     }
 
@@ -32,12 +32,14 @@ describe('areSameSelection', () => {
             },
             {
                 type: 'range',
-                range: {
-                    startContainer,
-                    endContainer,
-                    startOffset,
-                    endOffset,
-                } as any,
+                start: {
+                    node: startContainer,
+                    offset: startOffset,
+                },
+                end: {
+                    node: endContainer,
+                    offset: endOffset,
+                },
                 isReverted: false,
             },
             true
@@ -156,12 +158,14 @@ describe('areSameSelection', () => {
             },
             {
                 type: 'range',
-                range: {
-                    startContainer: 'Container 2' as any,
-                    endContainer,
-                    startOffset,
-                    endOffset,
-                } as any,
+                start: {
+                    node: 'Container 2' as any,
+                    offset: startOffset,
+                },
+                end: {
+                    node: endContainer,
+                    offset: endOffset,
+                },
                 isReverted: false,
             },
             false
@@ -182,12 +186,14 @@ describe('areSameSelection', () => {
             },
             {
                 type: 'range',
-                range: {
-                    startContainer,
-                    endContainer: 'Container 2' as any,
-                    startOffset,
-                    endOffset,
-                } as any,
+                start: {
+                    node: startContainer,
+                    offset: startOffset,
+                },
+                end: {
+                    node: 'Container 2' as any,
+                    offset: endOffset,
+                },
                 isReverted: false,
             },
             false
@@ -208,12 +214,14 @@ describe('areSameSelection', () => {
             },
             {
                 type: 'range',
-                range: {
-                    startContainer,
-                    endContainer,
-                    startOffset: 3,
-                    endOffset,
-                } as any,
+                start: {
+                    node: startContainer,
+                    offset: 3,
+                },
+                end: {
+                    node: endContainer,
+                    offset: endOffset,
+                },
                 isReverted: false,
             },
             false
@@ -234,12 +242,14 @@ describe('areSameSelection', () => {
             },
             {
                 type: 'range',
-                range: {
-                    startContainer,
-                    endContainer,
-                    startOffset,
-                    endOffset: 4,
-                } as any,
+                start: {
+                    node: startContainer,
+                    offset: startOffset,
+                },
+                end: {
+                    node: endContainer,
+                    offset: 4,
+                },
                 isReverted: false,
             },
             false

@@ -1121,7 +1121,7 @@ describe('iterateSelections', () => {
             {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
         ]);
     });
@@ -1167,7 +1167,7 @@ describe('iterateSelections', () => {
             {
                 segmentType: 'SelectionMarker',
                 format: {},
-                isSelected: true,
+                isSelected: false,
             },
         ]);
     });

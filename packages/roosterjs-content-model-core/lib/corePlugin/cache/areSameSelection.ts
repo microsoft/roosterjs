@@ -1,10 +1,10 @@
-import type { DOMSelection } from 'roosterjs-content-model-types';
+import type { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Check if the given selections are the same
  */
-export function areSameSelection(sel1: DOMSelection, sel2: DOMSelection): boolean {
+export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection): boolean {
     if (sel1 == sel2) {
         return true;
     }
@@ -25,17 +25,12 @@ export function areSameSelection(sel1: DOMSelection, sel2: DOMSelection): boolea
 
         case 'range':
         default:
-            return sel2.type == 'range' && areSameRanges(sel2.range, sel1.range);
+            return (
+                sel2.type == 'range' &&
+                sel1.range.startContainer == sel2.start.node &&
+                sel1.range.endContainer == sel2.end.node &&
+                sel1.range.startOffset == sel2.start.offset &&
+                sel1.range.endOffset == sel2.end.offset
+            );
     }
-}
-
-function areSameRanges(r1?: Range, r2?: Range): boolean {
-    return !!(
-        r1 &&
-        r2 &&
-        r1.startContainer == r2.startContainer &&
-        r1.startOffset == r2.startOffset &&
-        r1.endContainer == r2.endContainer &&
-        r1.endOffset == r2.endOffset
-    );
 }

@@ -120,9 +120,12 @@ describe('CachePlugin', () => {
 
         it('Other key with collapsed selection', () => {
             const state = plugin.getState();
+            const node = 'NODE' as any;
+            const offset = 0;
             state.cachedSelection = {
                 type: 'range',
-                range: { collapsed: true } as any,
+                start: { node, offset },
+                end: { node, offset },
                 isReverted: false,
             };
 
@@ -141,9 +144,11 @@ describe('CachePlugin', () => {
 
         it('Expanded selection with arrow input', () => {
             const state = plugin.getState();
+            const node = 'NODE' as any;
             state.cachedSelection = {
                 type: 'range',
-                range: { collapsed: false } as any,
+                start: { node, offset: 0 },
+                end: { node, offset: 1 },
                 isReverted: false,
             };
 

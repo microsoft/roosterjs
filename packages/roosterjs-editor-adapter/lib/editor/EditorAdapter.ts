@@ -772,8 +772,10 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
             if (selection?.type == 'range') {
                 core.undo.snapshotsManager.hasNewContent = false;
-                core.undo.posContainer = selection.range.startContainer;
-                core.undo.posOffset = selection.range.startOffset;
+                core.undo.autoCompleteInsertPoint = {
+                    node: selection.range.startContainer,
+                    offset: selection.range.startOffset,
+                };
             }
         }
     }
@@ -1120,9 +1122,12 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     private retrieveFormatState(): ContentModelFormatState {
         const pendingFormat = this.getPendingFormat();
         const result: ContentModelFormatState = {};
-        const model = this.getContentModelCopy('reduced');
 
-        retrieveModelFormatState(model, pendingFormat, result);
+        this.formatContentModel(model => {
+            retrieveModelFormatState(model, pendingFormat, result);
+
+            return false;
+        });
 
         return result;
     }
