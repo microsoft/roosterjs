@@ -76,6 +76,7 @@
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.hyperlinkplugin.html" class="tsd-kind-icon">Hyperlink<wbr>Plugin</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.markdownplugin.html" class="tsd-kind-icon">Markdown<wbr>Plugin</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.pasteplugin.html" class="tsd-kind-icon">Paste<wbr>Plugin</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.pickerplugin.html" class="tsd-kind-icon">Picker<wbr>Plugin</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.shortcutplugin.html" class="tsd-kind-icon">Shortcut<wbr>Plugin</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-kind-icon">Table<wbr>Edit<wbr>Plugin</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_content_model_plugins.watermarkplugin.html" class="tsd-kind-icon">Watermark<wbr>Plugin</a></li>
@@ -86,6 +87,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/roosterjs_content_model_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/roosterjs_content_model_plugins.markdownoptions.html" class="tsd-kind-icon">Markdown<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/roosterjs_content_model_plugins.pickerhandler.html" class="tsd-kind-icon">Picker<wbr>Handler</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/roosterjs_content_model_plugins.pickerhelper.html" class="tsd-kind-icon">Picker<wbr>Helper</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-kind-icon">Shortcut<wbr>Command</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/roosterjs_content_model_plugins.shortcutkeydefinition.html" class="tsd-kind-icon">Shortcut<wbr>Key<wbr>Definition</a></li>
 							</ul>
@@ -95,6 +98,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-kind-icon">Auto<wbr>Format<wbr>Options</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#hyperlinktooltip" class="tsd-kind-icon">Hyperlink<wbr>Tool<wbr>Tip</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#pickerdirection" class="tsd-kind-icon">Picker<wbr>Direction</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#pickerselectionchangmode" class="tsd-kind-icon">Picker<wbr>Selection<wbr>Chang<wbr>Mode</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#watermarkformat" class="tsd-kind-icon">Watermark<wbr>Format</a></li>
 							</ul>
 						</section>
@@ -117,6 +122,12 @@
 								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#shortcutundo2" class="tsd-kind-icon">Shortcut<wbr>Undo2</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_plugins.html#getdominsertpointrect" class="tsd-kind-icon">getDOMInsert<wbr>Point<wbr>Rect</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -128,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">Auto<wbr>Format<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>autoBullet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>autoHyphen<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>autoLink<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>autoNumbering<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>autoUnlink<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L19">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L19">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -188,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">Hyperlink<wbr>Tool<wbr>Tip<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/hyperlink/HyperlinkToolTip.ts#L7">roosterjs-content-model-plugins/lib/hyperlink/HyperlinkToolTip.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/hyperlink/HyperlinkToolTip.ts#L7">roosterjs-content-model-plugins/lib/hyperlink/HyperlinkToolTip.ts:7</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -201,12 +212,42 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="pickerdirection" class="tsd-anchor"></a>
+					<h3>Picker<wbr>Direction</h3>
+					<div class="tsd-signature tsd-kind-icon">Picker<wbr>Direction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;horizontal&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;vertical&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;both&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/picker/PickerHandler.ts#L7">roosterjs-content-model-plugins/lib/picker/PickerHandler.ts:7</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Direction option for picker</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="pickerselectionchangmode" class="tsd-anchor"></a>
+					<h3>Picker<wbr>Selection<wbr>Chang<wbr>Mode</h3>
+					<div class="tsd-signature tsd-kind-icon">Picker<wbr>Selection<wbr>Chang<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;next&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;previous&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nextRow&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;previousRow&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nextPage&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;previousPage&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;firstInRow&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;lastInRow&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;first&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;last&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/picker/PickerHandler.ts#L25">roosterjs-content-model-plugins/lib/picker/PickerHandler.ts:25</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Change mode that PickerPlugin will pass to child class</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="watermarkformat" class="tsd-anchor"></a>
 					<h3>Watermark<wbr>Format</h3>
 					<div class="tsd-signature tsd-kind-icon">Watermark<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.html#fontfamilyformat" class="tsd-signature-type" data-tsd-kind="Type alias">FontFamilyFormat</a><span class="tsd-signature-symbol"> &amp; </span><a href="roosterjs_content_model_types.html#fontsizeformat" class="tsd-signature-type" data-tsd-kind="Type alias">FontSizeFormat</a><span class="tsd-signature-symbol"> &amp; </span><a href="roosterjs_content_model_types.html#textcolorformat" class="tsd-signature-type" data-tsd-kind="Type alias">TextColorFormat</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/watermark/WatermarkFormat.ts#L10">roosterjs-content-model-plugins/lib/watermark/WatermarkFormat.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/watermark/WatermarkFormat.ts#L10">roosterjs-content-model-plugins/lib/watermark/WatermarkFormat.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -224,7 +265,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Bold<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L34">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L34">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -241,7 +282,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Bullet<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L150">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:150</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L150">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:150</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -258,7 +299,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Clear<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L76">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L76">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:76</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -275,7 +316,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Decrease<wbr>Font<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L192">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:192</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L192">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:192</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -292,7 +333,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Increase<wbr>Font<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L178">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:178</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L178">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:178</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -309,7 +350,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Indent<wbr>List<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L206">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:206</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L206">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:206</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -326,7 +367,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Italic<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L48">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L48">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -343,7 +384,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Numbering<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L164">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:164</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L164">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:164</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -360,7 +401,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Outdent<wbr>List<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L223">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:223</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L223">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:223</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -377,7 +418,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Redo<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L120">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:120</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L120">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:120</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -394,7 +435,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Redo<wbr>MacOS<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L135">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:135</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L135">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:135</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -411,7 +452,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Underline<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L62">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L62">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:62</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -428,7 +469,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Undo<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L91">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L91">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:91</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -445,7 +486,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shortcut<wbr>Undo2<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-signature-type" data-tsd-kind="Interface">ShortcutCommand</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/70684a4/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L105">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts#L105">roosterjs-content-model-plugins/lib/shortcut/shortcuts.ts:105</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -455,6 +496,46 @@
 							MacOS: N/A</p>
 						</div>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getdominsertpointrect" class="tsd-anchor"></a>
+					<h3>getDOMInsert<wbr>Point<wbr>Rect</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">getDOMInsert<wbr>Point<wbr>Rect<span class="tsd-signature-symbol">(</span>doc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Document</span>, pos<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.dominsertpoint.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMInsertPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.rect.html" class="tsd-signature-type" data-tsd-kind="Interface">Rect</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/74bc863/packages/roosterjs-content-model-plugins/lib/pluginUtils/Rect/getDOMInsertPointRect.ts#L9">roosterjs-content-model-plugins/lib/pluginUtils/Rect/getDOMInsertPointRect.ts:9</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get bounding rect of the given DOM insert point</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>doc: <span class="tsd-signature-type">Document</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The document object</p>
+									</div>
+								</li>
+								<li>
+									<h5>pos: <a href="../interfaces/roosterjs_content_model_types.dominsertpoint.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMInsertPoint</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The input DOM insert point</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.rect.html" class="tsd-signature-type" data-tsd-kind="Interface">Rect</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -532,6 +613,9 @@
 						<a href="../classes/roosterjs_content_model_plugins.pasteplugin.html" class="tsd-kind-icon">Paste<wbr>Plugin</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/roosterjs_content_model_plugins.pickerplugin.html" class="tsd-kind-icon">Picker<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/roosterjs_content_model_plugins.shortcutplugin.html" class="tsd-kind-icon">Shortcut<wbr>Plugin</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -547,6 +631,12 @@
 						<a href="../interfaces/roosterjs_content_model_plugins.markdownoptions.html" class="tsd-kind-icon">Markdown<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/roosterjs_content_model_plugins.pickerhandler.html" class="tsd-kind-icon">Picker<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/roosterjs_content_model_plugins.pickerhelper.html" class="tsd-kind-icon">Picker<wbr>Helper</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-kind-icon">Shortcut<wbr>Command</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -557,6 +647,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="roosterjs_content_model_plugins.html#hyperlinktooltip" class="tsd-kind-icon">Hyperlink<wbr>Tool<wbr>Tip</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="roosterjs_content_model_plugins.html#pickerdirection" class="tsd-kind-icon">Picker<wbr>Direction</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="roosterjs_content_model_plugins.html#pickerselectionchangmode" class="tsd-kind-icon">Picker<wbr>Selection<wbr>Chang<wbr>Mode</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="roosterjs_content_model_plugins.html#watermarkformat" class="tsd-kind-icon">Watermark<wbr>Format</a>
@@ -602,6 +698,9 @@
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-module">
 						<a href="roosterjs_content_model_plugins.html#shortcutundo2" class="tsd-kind-icon">Shortcut<wbr>Undo2</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_content_model_plugins.html#getdominsertpointrect" class="tsd-kind-icon">getDOMInsert<wbr>Point<wbr>Rect</a>
 					</li>
 				</ul>
 			</nav>

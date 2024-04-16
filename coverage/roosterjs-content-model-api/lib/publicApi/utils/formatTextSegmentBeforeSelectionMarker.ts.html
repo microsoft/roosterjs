@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -102,7 +102,19 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,6 +139,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,10 +157,15 @@
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
@@ -154,6 +174,7 @@ import type {
     ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
+    FormatContentModelOptions,
     IEditor,
 } from 'roosterjs-content-model-types';
 &nbsp;
@@ -161,6 +182,7 @@ import type {
  * Invoke a callback to format the text segment before the selection marker using Content Model
  * @param editor The editor object
  * @param callback The callback to format the text segment.
+ * @returns True if the segment before cursor is found and callback is called, otherwise false
  */
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
@@ -170,8 +192,11 @@ export function formatTextSegmentBeforeSelectionMarker(
         paragraph: ContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
         context: FormatContentModelContext
-    ) =&gt; boolean
-) {
+    ) =&gt; boolean,
+    options?: FormatContentModelOptions
+): boolean {
+    let result = false;
+&nbsp;
     editor.formatContentModel((model, context) =&gt; {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
@@ -185,12 +210,17 @@ export function formatTextSegmentBeforeSelectionMarker(
             if (marker.segmentType === 'SelectionMarker' &amp;&amp; markerIndex &gt; 0) {
                 const previousSegment = paragraph.segments[markerIndex - 1];
                 if (previousSegment &amp;&amp; previousSegment.segmentType === 'Text') {
+                    result = true;
+&nbsp;
                     return callback(model, previousSegment, paragraph, marker.format, context);
                 }
             }
         }
+&nbsp;
         return false;
-    });
+    }, options);
+&nbsp;
+    return result;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -199,7 +229,7 @@ export function formatTextSegmentBeforeSelectionMarker(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 16 2024 17:17:51 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 16 2024 17:40:39 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
