@@ -27,6 +27,10 @@ export function contentModelToDom(
 
     const range = extractSelectionRange(doc, context);
 
+    if (model.hasRevertedRangeSelection && range?.type == 'range') {
+        range.isReverted = true;
+    }
+
     root.normalize();
 
     return range;
