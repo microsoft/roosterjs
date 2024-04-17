@@ -7,4 +7,9 @@ import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
  */
 export interface ContentModelDocument
     extends ContentModelBlockGroupBase<'Document'>,
-        Partial<ContentModelWithFormat<ContentModelSegmentFormat>> {}
+        Partial<ContentModelWithFormat<ContentModelSegmentFormat>> {
+    /**
+     * Whether the selection in model (if any) is a revert selection (end is before start)
+     */
+    hasRevertedRangeSelection?: boolean;
+}

@@ -14,6 +14,10 @@ export function domToContentModel(
 ): ContentModelDocument {
     const model = createContentModelDocument(context.defaultFormat);
 
+    if (context.selection?.type == 'range' && context.selection.isReverted) {
+        model.hasRevertedRangeSelection = true;
+    }
+
     context.elementProcessors.child(model, root, context);
 
     normalizeContentModel(model);

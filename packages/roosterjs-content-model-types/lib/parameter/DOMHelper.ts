@@ -83,6 +83,16 @@ export interface DOMHelper {
     hasFocus(): boolean;
 
     /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean;
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getClientWidth(): number;
+
+    /**
      * Wrap a node with a wrapper element
      * @param node The node to wrap
      * @param tag The tag name of the wrapper element

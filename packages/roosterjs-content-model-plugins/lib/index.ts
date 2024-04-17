@@ -25,6 +25,12 @@ export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/Con
 export { WatermarkPlugin } from './watermark/WatermarkPlugin';
 export { WatermarkFormat } from './watermark/WatermarkFormat';
 export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
+export { HyperlinkPlugin } from './hyperlink/HyperlinkPlugin';
+export { HyperlinkToolTip } from './hyperlink/HyperlinkToolTip';
+export { PickerPlugin } from './picker/PickerPlugin';
+export { PickerHelper } from './picker/PickerHelper';
+export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './picker/PickerHandler';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
 export { cropImage } from './imageEdit/editingApis/cropImage';
+export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';

@@ -6,12 +6,18 @@ import {
     createNumberDefinition,
     createObjectDefinition,
 } from './definitionCreators';
-import type { ContentModelWithDataset, ListMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelWithDataset,
+    ListMetadataFormat,
+    ObjectDefinition,
+} from 'roosterjs-content-model-types';
 
 /**
  * Metadata definition for List
  */
-export const ListMetadataDefinition = createObjectDefinition<ListMetadataFormat>(
+export const ListMetadataDefinition: ObjectDefinition<ListMetadataFormat> = createObjectDefinition<
+    ListMetadataFormat
+>(
     {
         orderedStyleType: createNumberDefinition(
             true /** isOptional */,

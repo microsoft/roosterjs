@@ -194,6 +194,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on non-indexed text, collapsed', () => {
@@ -208,6 +209,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, collapsed', () => {
@@ -255,6 +257,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             ],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, expanded on same node', () => {
@@ -300,6 +303,53 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
+    it('no old range, normal range on indexed text, expanded on same node, reverted', () => {
+        const node = document.createTextNode('test') as any;
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 1, node, 3),
+            isReverted: true,
+        };
+        const paragraph = createParagraph();
+        const segment = createText('');
+
+        paragraph.segments.push(segment);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
+
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'es',
+            format: {},
+            isSelected: true,
+        };
+        const segment3: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1, segment2, segment3],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment2, segment3],
+        });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeTrue();
     });
 
     it('no old range, normal range on indexed text, expanded on different node', () => {
@@ -370,6 +420,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [paragraph],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, expanded on other type of node', () => {
@@ -430,6 +481,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [paragraph],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, image range on indexed text', () => {
@@ -472,6 +524,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             format: {},
             dataset: {},
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, table range on indexed text', () => {
@@ -516,6 +569,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [tableModel],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, collapsed range after last node', () => {
@@ -548,6 +602,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment, createSelectionMarker({ fontFamily: 'Arial' })],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('has old range - collapsed, expanded new range', () => {
@@ -606,6 +661,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('has old range - expanded, expanded new range', () => {
@@ -664,5 +720,6 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, createSelectionMarker(), segment2],
         });
         expect(setSelectionSpy).toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 });

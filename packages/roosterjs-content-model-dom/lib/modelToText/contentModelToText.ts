@@ -1,5 +1,7 @@
 import type { ContentModelBlockGroup, ContentModelDocument } from 'roosterjs-content-model-types';
 
+const TextForHR = '________________________________________';
+
 /**
  * Convert Content Model to plain text
  * @param model The source Content Model
@@ -46,10 +48,16 @@ function contentModelToTextArray(group: ContentModelBlockGroup, textArray: strin
                             break;
                     }
                 });
-                textArray.push(text);
+
+                if (text) {
+                    textArray.push(text);
+                }
+
                 break;
 
             case 'Divider':
+                textArray.push(block.tagName == 'hr' ? TextForHR : '');
+                break;
             case 'Entity':
                 textArray.push('');
                 break;

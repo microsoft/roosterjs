@@ -32,27 +32,28 @@ export function setFormat(
                     const firstCharIndex = previousSegment.text
                         .substring(0, lastCharIndex - 1)
                         .lastIndexOf(character);
+                    if (lastCharIndex - firstCharIndex > 2) {
+                        const formattedText = splitTextSegment(
+                            previousSegment,
+                            paragraph,
+                            firstCharIndex,
+                            lastCharIndex
+                        );
 
-                    const formattedText = splitTextSegment(
-                        previousSegment,
-                        paragraph,
-                        firstCharIndex,
-                        lastCharIndex
-                    );
-
-                    formattedText.text = formattedText.text.replace(character, '').slice(0, -1);
-                    formattedText.format = {
-                        ...formattedText.format,
-                        ...format,
-                    };
-                    if (codeFormat) {
-                        formattedText.code = {
-                            format: codeFormat,
+                        formattedText.text = formattedText.text.replace(character, '').slice(0, -1);
+                        formattedText.format = {
+                            ...formattedText.format,
+                            ...format,
                         };
-                    }
+                        if (codeFormat) {
+                            formattedText.code = {
+                                format: codeFormat,
+                            };
+                        }
 
-                    context.canUndoByBackspace = true;
-                    return true;
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
                 }
             }
             return false;
