@@ -129,6 +129,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
+                    let apiName = '';
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
                         (model, previousSegment, paragraph, _markerFormat, context) => {
@@ -140,6 +141,17 @@ export class AutoFormatPlugin implements EditorPlugin {
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
+                            let shouldList = false;
+
+                            if (autoBullet || autoNumbering) {
+                                shouldList = keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                );
+                            }
 
                             if (autoLink) {
                                 shouldLink = createLinkAfterSpace(
@@ -153,19 +165,18 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldHyphen = transformHyphen(previousSegment, paragraph, context);
                             }
 
-                            return (
-                                keyboardListTrigger(
-                                    model,
-                                    paragraph,
-                                    context,
-                                    autoBullet,
-                                    autoNumbering
-                                ) ||
-                                shouldHyphen ||
-                                shouldLink
-                            );
+                            apiName = getApiName(shouldList, shouldHyphen);
+
+                            return shouldList || shouldHyphen || shouldLink;
                         }
                     );
+                    if (apiName) {
+                        editor.triggerEvent('contentChanged', {
+                            source: 'autoFormat',
+                            formatApiName: apiName,
+                        });
+                    }
+
                     break;
             }
         }
@@ -191,3 +202,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 }
+
+const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
+    return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+};

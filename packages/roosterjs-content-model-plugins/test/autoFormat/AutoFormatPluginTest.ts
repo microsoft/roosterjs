@@ -19,12 +19,14 @@ import {
 describe('Content Model Auto Format Plugin Test', () => {
     let editor: IEditor;
     let formatTextSegmentBeforeSelectionMarkerSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         formatTextSegmentBeforeSelectionMarkerSpy = spyOn(
             formatTextSegmentBeforeSelectionMarker,
             'formatTextSegmentBeforeSelectionMarker'
         );
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
         editor = ({
             focus: () => {},
             getDOMSelection: () =>
@@ -35,6 +37,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     },
                 } as any), // Force return invalid range to go through content model code
             formatContentModel: () => {},
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
     });
 
@@ -51,6 +54,8 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             plugin.onPluginEvent(event);
 
+            let apiName: string | undefined;
+
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
                 expect(callback).toBe(
                     editor,
@@ -60,16 +65,25 @@ describe('Content Model Auto Format Plugin Test', () => {
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return keyboardListTrigger(
+                        const result = keyboardListTrigger(
                             model,
                             paragraph,
                             context,
                             options!.autoBullet,
                             options!.autoNumbering
                         );
+                        apiName = result ? 'autoToggleList' : '';
+                        return result;
                     }
                 );
             });
+
+            if (apiName) {
+                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
+                    source: 'autoFormat',
+                    apiName: apiName,
+                });
+            }
         }
 
         it('should trigger keyboardListTrigger', () => {
@@ -311,8 +325,8 @@ describe('Content Model Auto Format Plugin Test', () => {
         ) {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
-
             plugin.onPluginEvent(event);
+            let apiName: string | undefined;
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
                 expect(callback).toBe(
                     editor,
@@ -322,14 +336,24 @@ describe('Content Model Auto Format Plugin Test', () => {
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return (
-                            options &&
-                            options.autoHyphen &&
-                            transformHyphen(previousSegment, paragraph, context)
-                        );
+                        let result = false;
+
+                        if (options && options.autoHyphen) {
+                            result = transformHyphen(previousSegment, paragraph, context);
+                        }
+
+                        apiName = result ? 'autoHyphen' : '';
+                        return result;
                     }
                 );
             });
+
+            if (apiName) {
+                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
+                    source: 'autoFormat',
+                    apiName: apiName,
+                });
+            }
         }
 
         it('should call transformHyphen', () => {
