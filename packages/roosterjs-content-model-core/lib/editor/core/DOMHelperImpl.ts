@@ -1,4 +1,4 @@
-import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { isNodeOfType, parseValueWithUnit, toArray } from 'roosterjs-content-model-dom';
 import type { DOMHelper } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
@@ -74,11 +74,11 @@ class DOMHelperImpl implements DOMHelper {
     /**
      * Get the width of the editable area of the editor content div
      */
-    getEditorDivWidth(): number {
+    getClientWidth(): number {
         const contentDiv = this.contentDiv;
         const style = contentDiv.ownerDocument.defaultView?.getComputedStyle(contentDiv);
-        const paddingLeft = parseInt(style?.paddingLeft || '0');
-        const paddingRight = parseInt(style?.paddingRight || '0');
+        const paddingLeft = parseValueWithUnit(style?.paddingLeft);
+        const paddingRight = parseValueWithUnit(style?.paddingRight);
         return this.contentDiv.clientWidth - (paddingLeft + paddingRight);
     }
 }

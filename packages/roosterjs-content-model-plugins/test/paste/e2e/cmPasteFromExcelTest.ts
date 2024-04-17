@@ -45,7 +45,7 @@ describe(ID, () => {
         paste(editor, clipboardData, 'asImage');
 
         const model = editor.getContentModelCopy('connected');
-        const width = editor.getDOMHelper().getEditorDivWidth();
+        const width = editor.getDOMHelper().getClientWidth();
 
         expect(model).toEqual({
             blockGroupType: 'Document',

@@ -283,7 +283,7 @@ describe('DOMHelperImpl', () => {
         });
     });
 
-    describe('getEditorDivWidth', () => {
+    describe('getClientWidth', () => {
         let div: HTMLDivElement;
         let getComputedStyleSpy: jasmine.Spy;
 
@@ -300,7 +300,7 @@ describe('DOMHelperImpl', () => {
             } as any;
         });
 
-        it('getEditorDivWidth', () => {
+        it('getClientWidth', () => {
             const domHelper = createDOMHelper(div);
 
             getComputedStyleSpy.and.returnValue({
@@ -308,15 +308,15 @@ describe('DOMHelperImpl', () => {
                 paddingRight: '10px',
             });
 
-            expect(domHelper.getEditorDivWidth()).toBe(980);
+            expect(domHelper.getClientWidth()).toBe(980);
         });
 
-        it('getEditorDivWidth', () => {
+        it('getClientWidth', () => {
             const domHelper = createDOMHelper(div);
 
             getComputedStyleSpy.and.returnValue({});
 
-            expect(domHelper.getEditorDivWidth()).toBe(1000);
+            expect(domHelper.getClientWidth()).toBe(1000);
         });
     });
 });

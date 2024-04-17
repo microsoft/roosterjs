@@ -90,5 +90,5 @@ export interface DOMHelper {
     /**
      * Get the width of the editable area of the editor content div
      */
-    getEditorDivWidth(): number;
+    getClientWidth(): number;
 }
