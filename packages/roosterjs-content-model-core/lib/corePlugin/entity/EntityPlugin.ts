@@ -8,11 +8,7 @@ import {
     parseEntityFormat,
     transformColor,
 } from 'roosterjs-content-model-dom';
-import {
-    handleCompositionEndEvent,
-    handleDelimiterContentChangedEvent,
-    handleDelimiterKeyDownEvent,
-} from './entityDelimiterUtils';
+import { handleCompositionEndEvent, handleDelimiterKeyDownEvent } from './entityDelimiterUtils';
 import type {
     ChangedEntity,
     ContentChangedEvent,
@@ -179,8 +175,6 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                 );
             }
         });
-
-        handleDelimiterContentChangedEvent(editor);
     }
 
     private getChangedEntities(editor: IEditor): ChangedEntity[] {

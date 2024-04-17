@@ -1,8 +1,6 @@
 import { normalizePos } from '../selection/normalizePos';
 import {
-    addDelimiters,
     createBr,
-    createModelToDomContext,
     createParagraph,
     isEntityDelimiter,
     isEntityElement,
@@ -17,7 +15,6 @@ import type {
     ContentModelBlockGroup,
     ContentModelFormatter,
     ContentModelParagraph,
-    ContentModelSegmentFormat,
     IEditor,
     KeyDownEvent,
     RangeSelection,
@@ -27,8 +24,6 @@ const DelimiterBefore = 'entityDelimiterBefore';
 const DelimiterAfter = 'entityDelimiterAfter';
 const DelimiterSelector = '.' + DelimiterAfter + ',.' + DelimiterBefore;
 const ZeroWidthSpace = '\u200B';
-const EntityInfoName = '_Entity';
-const InlineEntitySelector = 'span.' + EntityInfoName;
 const BlockEntityContainer = '_E_EBlockEntityContainer';
 const BlockEntityContainerSelector = '.' + BlockEntityContainer;
 
@@ -58,24 +53,6 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
             context.skipUndoSnapshot = true;
 
             return true;
-        });
-    }
-}
-
-function addDelimitersIfNeeded(
-    nodes: Element[] | NodeListOf<Element>,
-    format: ContentModelSegmentFormat | null
-) {
-    if (nodes.length > 0) {
-        const context = createModelToDomContext();
-        nodes.forEach(node => {
-            if (
-                isNodeOfType(node, 'ELEMENT_NODE') &&
-                isEntityElement(node) &&
-                !node.isContentEditable
-            ) {
-                addDelimiters(node.ownerDocument, node as HTMLElement, format, context);
-            }
         });
     }
 }
@@ -158,15 +135,6 @@ function getFocusedElement(
         node = node.nextSibling;
     }
     return isNodeOfType(node, 'ELEMENT_NODE') ? node : null;
-}
-
-/**
- * @internal
- */
-export function handleDelimiterContentChangedEvent(editor: IEditor) {
-    const helper = editor.getDOMHelper();
-    removeInvalidDelimiters(helper.queryElements(DelimiterSelector));
-    addDelimitersIfNeeded(helper.queryElements(InlineEntitySelector), editor.getPendingFormat());
 }
 
 /**

@@ -1,4 +1,3 @@
-import { addDelimiters } from '../../domUtils/entityUtils';
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
@@ -6,12 +5,11 @@ import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
     ContentModelEntity,
-    ContentModelSegmentFormat,
     ContentModelSegmentHandler,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
-const BlockEntityContainer = '_E_EBlockEntityContainer';
+const DelimiterClassName = '_EntityDelimiter';
+const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
  * @internal
@@ -27,21 +25,20 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
 
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
-    const isCursorAroundEntity =
+    const needDelimiter =
         context.addDelimiterForEntity &&
         wrapper.style.display == 'inline-block' &&
         wrapper.style.width == '100%';
-    const isContained = wrapper.parentElement?.classList.contains(BlockEntityContainer);
-    const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
+    const isContained = wrapper.parentElement?.classList.contains(DelimiterClassName);
+    const elementToReuse =
+        isContained && needDelimiter && wrapper.parentElement ? wrapper.parentElement : wrapper;
 
     refNode = reuseCachedElement(parent, elementToReuse, refNode);
 
-    if (isCursorAroundEntity) {
-        if (!isContained) {
-            const element = wrap(doc, wrapper, 'div');
-            element.classList.add(BlockEntityContainer);
-        }
-        addDelimiters(doc, wrapper, getSegmentFormat(context), context);
+    if (needDelimiter && !isContained) {
+        const containerElement = wrap(doc, wrapper, 'div');
+
+        addDelimiter(doc, containerElement, wrapper);
     }
 
     context.onNodeCreated?.(entityModel, wrapper);
@@ -64,30 +61,27 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     parent.appendChild(wrapper);
     newSegments?.push(wrapper);
 
-    if (getObjectKeys(format).length > 0) {
-        const span = wrap(doc, wrapper, 'span');
-
-        applyFormat(span, context.formatAppliers.segment, format, context);
-    }
-
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
-    if (context.addDelimiterForEntity && entityFormat.isReadonly) {
-        const [after, before] = addDelimiters(doc, wrapper, getSegmentFormat(context), context);
+    const hasFormat = getObjectKeys(format).length > 0;
+    const needDelimiter = context.addDelimiterForEntity && entityFormat.isReadonly;
+    const containerElement = hasFormat || needDelimiter ? wrap(doc, wrapper, 'span') : wrapper;
 
-        newSegments?.push(after, before);
-        context.regularSelection.current.segment = after;
-    } else {
-        context.regularSelection.current.segment = wrapper;
+    if (hasFormat) {
+        applyFormat(containerElement, context.formatAppliers.segment, format, context);
     }
+
+    if (needDelimiter) {
+        addDelimiter(doc, containerElement, wrapper);
+    }
+
+    context.regularSelection.current.segment = containerElement;
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
-function getSegmentFormat(
-    context: ModelToDomContext
-): ContentModelSegmentFormat | null | undefined {
-    return {
-        ...context.pendingFormat?.format,
-        ...context.defaultFormat,
-    };
+
+function addDelimiter(doc: Document, containerElement: HTMLElement, entityWrapper: HTMLElement) {
+    containerElement.className = DelimiterClassName;
+    containerElement.insertBefore(doc.createTextNode(ZERO_WIDTH_SPACE), entityWrapper);
+    containerElement.appendChild(doc.createTextNode(ZERO_WIDTH_SPACE));
 }

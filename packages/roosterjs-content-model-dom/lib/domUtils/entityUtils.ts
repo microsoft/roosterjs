@@ -1,13 +1,7 @@
-import { applyFormat } from '../modelToDom/utils/applyFormat';
 import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
 import { toArray } from './toArray';
-import type {
-    ContentModelEntityFormat,
-    ContentModelSegmentFormat,
-    DOMHelper,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
+import type { ContentModelEntityFormat, DOMHelper } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
@@ -111,62 +105,4 @@ export function isEntityDelimiter(element: HTMLElement): boolean {
             element.classList.contains(DELIMITER_BEFORE)) &&
         element.textContent === ZERO_WIDTH_SPACE
     );
-}
-
-/**
- * Adds delimiters to the element provided. If the delimiters already exists, will not be added
- * @param element the node to add the delimiters
- * @param format format to set to the delimiters, so when typing inside of one the format is not lost
- * @param context Model to Dom context to use.
- */
-export function addDelimiters(
-    doc: Document,
-    element: HTMLElement,
-    format?: ContentModelSegmentFormat | null,
-    context?: ModelToDomContext
-): HTMLElement[] {
-    let [delimiterAfter, delimiterBefore] = getDelimiters(element);
-
-    if (!delimiterAfter) {
-        delimiterAfter = insertDelimiter(doc, element, true /*isAfter*/);
-        if (context && format) {
-            applyFormat(delimiterAfter, context.formatAppliers.segment, format, context);
-        }
-    }
-
-    if (!delimiterBefore) {
-        delimiterBefore = insertDelimiter(doc, element, false /*isAfter*/);
-        if (context && format) {
-            applyFormat(delimiterBefore, context.formatAppliers.segment, format, context);
-        }
-    }
-
-    return [delimiterAfter, delimiterBefore];
-}
-
-function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
-    const result: (HTMLElement | undefined)[] = [];
-    const { nextElementSibling, previousElementSibling } = entityWrapper;
-    result.push(
-        isDelimiter(nextElementSibling, DELIMITER_AFTER),
-        isDelimiter(previousElementSibling, DELIMITER_BEFORE)
-    );
-
-    return result;
-}
-
-function isDelimiter(el: Element | null, className: string): HTMLElement | undefined {
-    return el?.classList.contains(className) && el.textContent == ZERO_WIDTH_SPACE
-        ? (el as HTMLElement)
-        : undefined;
-}
-
-function insertDelimiter(doc: Document, element: Element, isAfter: boolean) {
-    const span = doc.createElement('span');
-
-    span.className = isAfter ? DELIMITER_AFTER : DELIMITER_BEFORE;
-    span.appendChild(doc.createTextNode(ZERO_WIDTH_SPACE));
-    element.parentNode?.insertBefore(span, isAfter ? element.nextSibling : element);
-
-    return span;
 }

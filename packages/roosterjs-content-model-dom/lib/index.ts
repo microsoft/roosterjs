@@ -28,7 +28,6 @@ export {
     getAllEntityWrappers,
     parseEntityFormat,
     generateEntityClassNames,
-    addDelimiters,
     isEntityDelimiter,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
