@@ -105,7 +105,6 @@ export const formatContentModel: FormatContentModel = (
 function handleImages(core: EditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
         const width = core.domHelper.getClientWidth();
-        console.log('handleImages', width);
         const minMaxImageSize = 10;
         const maxWidth = Math.max(width, minMaxImageSize);
         context.newImages.forEach(image => {
