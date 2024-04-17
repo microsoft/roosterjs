@@ -41,6 +41,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
     function runTest(
         selections: SelectionInfo[],
         includingFormatHolder: boolean,
+        includingEntity: boolean,
         expectedResult: [ContentModelSegment, ContentModelParagraph | null][]
     ) {
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -51,13 +52,17 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             return false;
         });
 
-        const result = getSelectedSegmentsAndParagraphs(null!, includingFormatHolder);
+        const result = getSelectedSegmentsAndParagraphs(
+            null!,
+            includingFormatHolder,
+            includingEntity
+        );
 
         expect(result).toEqual(expectedResult);
     }
 
     it('Empty result', () => {
-        runTest([], false, []);
+        runTest([], false, false, []);
     });
 
     it('Add segments', () => {
@@ -81,6 +86,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                     segments: [s3, s4],
                 },
             ],
+            false,
             false,
             [
                 [s1, p1],
@@ -111,6 +117,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             false,
+            false,
             []
         );
     });
@@ -135,6 +142,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             true,
+            false,
             [
                 [s3, null],
                 [s4, null],
@@ -176,6 +184,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             true,
+            false,
             [
                 [m1, p1],
                 [s2, p2],
@@ -201,7 +210,32 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             false,
+            false,
             [[e2, p1]]
+        );
+    });
+
+    it('Include entity', () => {
+        const e1 = createEntity(null!);
+        const e2 = createEntity(null!, false);
+        const p1 = createParagraph();
+
+        p1.segments.push(e1, e2);
+
+        runTest(
+            [
+                {
+                    path: [],
+                    block: p1,
+                    segments: [e1, e2],
+                },
+            ],
+            false,
+            true,
+            [
+                [e1, p1],
+                [e2, p1],
+            ]
         );
     });
 });

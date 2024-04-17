@@ -11,6 +11,9 @@ import {
     findClosestEntityWrapper,
     iterateSelections,
     isCharacterValue,
+    getSelectedSegmentsAndParagraphs,
+    createSelectionMarker,
+    setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
@@ -195,58 +198,157 @@ export function handleCompositionEndEvent(editor: IEditor, event: CompositionEnd
 export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
     const selection = editor.getDOMSelection();
 
-    const { rawEvent } = event;
     if (!selection || selection.type != 'range') {
         return;
     }
-    const isEnter = rawEvent.key === 'Enter';
-    const helper = editor.getDOMHelper();
-    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
-        const helper = editor.getDOMHelper();
-        const node = getFocusedElement(selection);
-        if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
-            const blockEntityContainer = node.closest(BlockEntityContainerSelector);
-            if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
-                const isAfter = node.classList.contains(DelimiterAfter);
 
-                if (isAfter) {
-                    selection.range.setStartAfter(blockEntityContainer);
-                } else {
-                    selection.range.setStartBefore(blockEntityContainer);
-                }
-                selection.range.collapse(true /* toStart */);
+    const { rawEvent } = event;
+    const { range, isReverted } = selection;
 
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                }
-
-                editor.formatContentModel(handleKeyDownInBlockDelimiter, {
-                    selectionOverride: {
-                        type: 'range',
-                        isReverted: false,
-                        range: selection.range,
-                    },
-                });
+    switch (rawEvent.key) {
+        case 'Enter':
+            if (range.collapsed) {
+                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
             } else {
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                    editor.formatContentModel(handleEnterInlineEntity);
-                } else {
-                    editor.takeSnapshot();
-                    editor
-                        .getDocument()
-                        .defaultView?.requestAnimationFrame(() =>
-                            preventTypeInDelimiter(node, editor)
-                        );
+                const helper = editor.getDOMHelper();
+                const entity = findClosestEntityWrapper(range.startContainer, helper);
+
+                if (
+                    entity &&
+                    isNodeOfType(entity, 'ELEMENT_NODE') &&
+                    helper.isNodeInEditor(entity)
+                ) {
+                    triggerEntityEventOnEnter(editor, entity, rawEvent);
                 }
             }
-        }
-    } else if (isEnter) {
-        const entity = findClosestEntityWrapper(selection.range.startContainer, helper);
-        if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
-            triggerEntityEventOnEnter(editor, entity, rawEvent);
+            break;
+
+        case 'ArrowLeft':
+        case 'ArrowRight':
+            handleMovingOnDelimiter(editor, isReverted, rawEvent);
+            break;
+
+        default:
+            if (isCharacterValue(rawEvent) && range.collapsed) {
+                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
+            }
+
+            break;
+    }
+}
+
+function handleInputOnDelimiter(
+    editor: IEditor,
+    range: Range,
+    focusedNode: HTMLElement | null,
+    rawEvent: KeyboardEvent
+) {
+    const helper = editor.getDOMHelper();
+
+    if (focusedNode && isEntityDelimiter(focusedNode) && helper.isNodeInEditor(focusedNode)) {
+        const blockEntityContainer = focusedNode.closest(BlockEntityContainerSelector);
+        const isEnter = rawEvent.key === 'Enter';
+
+        if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
+            const isAfter = focusedNode.classList.contains(DelimiterAfter);
+
+            if (isAfter) {
+                range.setStartAfter(blockEntityContainer);
+            } else {
+                range.setStartBefore(blockEntityContainer);
+            }
+
+            range.collapse(true /* toStart */);
+
+            if (isEnter) {
+                rawEvent.preventDefault();
+            }
+
+            editor.formatContentModel(handleKeyDownInBlockDelimiter, {
+                selectionOverride: {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+            });
+        } else {
+            if (isEnter) {
+                rawEvent.preventDefault();
+                editor.formatContentModel(handleEnterInlineEntity);
+            } else {
+                editor.takeSnapshot();
+                editor
+                    .getDocument()
+                    .defaultView?.requestAnimationFrame(() =>
+                        preventTypeInDelimiter(focusedNode, editor)
+                    );
+            }
         }
     }
+}
+
+function handleMovingOnDelimiter(editor: IEditor, isReverted: boolean, rawEvent: KeyboardEvent) {
+    editor.formatContentModel(model => {
+        const selections = getSelectedSegmentsAndParagraphs(
+            model,
+            false /*includingFormatHolder*/,
+            true /*includingEntity*/
+        );
+        const selection = isReverted ? selections[0] : selections[selections.length - 1];
+
+        if (selection?.[1]) {
+            const [segment, paragraph] = selection;
+            const movingBefore =
+                (rawEvent.key == 'ArrowLeft') != (paragraph.format.direction == 'rtl');
+            const isShrinking =
+                rawEvent.shiftKey &&
+                segment.segmentType != 'SelectionMarker' &&
+                movingBefore != isReverted;
+            const index = paragraph.segments.indexOf(segment);
+            const targetIndex = isShrinking
+                ? index
+                : index >= 0
+                ? movingBefore
+                    ? index - 1
+                    : index + 1
+                : -1;
+            const targetSegment = targetIndex >= 0 ? paragraph.segments[targetIndex] : null;
+
+            if (targetSegment?.segmentType == 'Entity') {
+                if (rawEvent.shiftKey) {
+                    targetSegment.isSelected = !isShrinking;
+
+                    if (!isShrinking && movingBefore) {
+                        model.hasRevertedRangeSelection = true;
+                    }
+                }
+
+                if (!rawEvent.shiftKey || (isShrinking && selections.length == 1)) {
+                    const formatSegment =
+                        paragraph.segments[movingBefore ? targetIndex - 1 : targetIndex + 1];
+                    const marker = createSelectionMarker(
+                        formatSegment?.format ?? targetSegment.format
+                    );
+
+                    paragraph.segments.splice(
+                        movingBefore ? targetIndex : targetIndex + 1,
+                        0,
+                        marker
+                    );
+
+                    setSelection(model, marker);
+                }
+
+                rawEvent.preventDefault();
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    });
 }
 
 /**

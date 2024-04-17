@@ -1365,3 +1365,410 @@ describe('handleEnterInlineEntity', () => {
         });
     });
 });
+
+describe('Move cursor in delimiter', () => {
+    let mockedEditor: any;
+    let context: any;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let formatContentModelSpy: jasmine.Spy;
+    const entityWrapper = document.createElement('span');
+
+    beforeEach(() => {
+        context = {};
+
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        mockedEditor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: getDOMSelectionSpy,
+        } as Partial<IEditor>;
+    });
+
+    function runTest(
+        inputModel: ContentModelDocument,
+        key: string,
+        shiftKey: boolean,
+        isReverted: boolean,
+        expectedModel: ContentModelDocument,
+        defaultPrevented: boolean
+    ) {
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: { collapsed: true },
+            isReverted,
+        });
+        formatContentModelSpy.and.callFake(formatter => {
+            const result = formatter(inputModel, context);
+
+            expect(result).toBe(defaultPrevented);
+        });
+
+        handleDelimiterKeyDownEvent(mockedEditor, {
+            eventType: 'keyDown',
+            rawEvent: {
+                key,
+                shiftKey,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(defaultPrevented ? 1 : 0);
+        expect(inputModel).toEqual(expectedModel);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+    }
+
+    it('After entity, move left, LTR', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            createEntity(entityWrapper, true),
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowLeft',
+            false,
+            false,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    id: undefined,
+                                    entityType: undefined,
+                                    isReadonly: true,
+                                },
+                                wrapper: entityWrapper,
+                            },
+                        ],
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('Before entity, move right, LTR', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            createEntity(entityWrapper, true),
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowRight',
+            false,
+            false,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    id: undefined,
+                                    entityType: undefined,
+                                    isReadonly: true,
+                                },
+                                wrapper: entityWrapper,
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('Before entity, move shift+right, LTR', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            createEntity(entityWrapper, true),
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowRight',
+            true,
+            false,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    isReadonly: true,
+                                    id: undefined,
+                                    entityType: undefined,
+                                },
+                                wrapper: entityWrapper,
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('After entity, move shift+left, LTR', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            createEntity(entityWrapper, true),
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowLeft',
+            true,
+            true,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    isReadonly: true,
+                                    id: undefined,
+                                    entityType: undefined,
+                                },
+                                wrapper: entityWrapper,
+                                isSelected: true,
+                            },
+                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+                hasRevertedRangeSelection: true,
+            },
+            true
+        );
+    });
+
+    it('Entity is selected, move right, not reverted, LTR', () => {
+        const entity = createEntity(entityWrapper, true);
+
+        entity.isSelected = true;
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [entity],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowRight',
+            true,
+            false,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    isReadonly: true,
+                                    id: undefined,
+                                    entityType: undefined,
+                                },
+                                wrapper: entityWrapper,
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            false
+        );
+    });
+
+    it('Entity is selected, move left, not reverted, LTR', () => {
+        const entity = createEntity(entityWrapper, true);
+
+        entity.isSelected = true;
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [entity],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowLeft',
+            true,
+            false,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    isReadonly: true,
+                                    id: undefined,
+                                    entityType: undefined,
+                                },
+                                wrapper: entityWrapper,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('Entity is selected, move right, reverted, LTR', () => {
+        const entity = createEntity(entityWrapper, true);
+
+        entity.isSelected = true;
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [entity],
+                        format: {},
+                    },
+                ],
+            },
+            'ArrowRight',
+            true,
+            true,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                format: {},
+                                entityFormat: {
+                                    isReadonly: true,
+                                    id: undefined,
+                                    entityType: undefined,
+                                },
+                                wrapper: entityWrapper,
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
+});
