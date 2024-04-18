@@ -20,20 +20,14 @@ export function keyboardListTrigger(
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ) {
-    if (shouldSearchForBullet || shouldSearchForNumbering) {
-        const listStyleType = getListTypeStyle(
-            model,
-            shouldSearchForBullet,
-            shouldSearchForNumbering
-        );
-        if (listStyleType) {
-            paragraph.segments.splice(0, 1);
-            const { listType, styleType, index } = listStyleType;
-            triggerList(model, listType, styleType, index);
-            context.canUndoByBackspace = true;
+    const listStyleType = getListTypeStyle(model, shouldSearchForBullet, shouldSearchForNumbering);
+    if (listStyleType) {
+        paragraph.segments.splice(0, 1);
+        const { listType, styleType, index } = listStyleType;
+        triggerList(model, listType, styleType, index);
+        context.canUndoByBackspace = true;
 
-            return true;
-        }
+        return true;
     }
     return false;
 }
