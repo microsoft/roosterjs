@@ -80,10 +80,15 @@ export class EditPlugin implements EditorPlugin {
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
                 case 'Backspace':
+                    keyboardDelete(editor, rawEvent);
+                    break;
+
                 case 'Delete':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    keyboardDelete(editor, rawEvent);
+                    if (!event.rawEvent.shiftKey) {
+                        keyboardDelete(editor, rawEvent);
+                    }
                     break;
 
                 case 'Tab':
