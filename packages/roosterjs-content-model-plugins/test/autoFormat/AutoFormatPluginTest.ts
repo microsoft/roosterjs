@@ -1,6 +1,7 @@
 import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as unlink from '../../lib/autoFormat/link/unlink';
+import exp from 'constants';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
 import { createLinkAfterSpace } from '../../lib/autoFormat/link/createLinkAfterSpace';
 import { keyboardListTrigger } from '../../lib/autoFormat/list/keyboardListTrigger';
@@ -54,9 +55,10 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             plugin.onPluginEvent(event);
 
-            let apiName: string | undefined;
-
-            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            const formatOptions = {
+                apiName: '',
+            };
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 expect(callback).toBe(
                     editor,
                     (
@@ -72,18 +74,15 @@ describe('Content Model Auto Format Plugin Test', () => {
                             options!.autoBullet,
                             options!.autoNumbering
                         );
-                        apiName = result ? 'autoToggleList' : '';
+                        formatOptions.apiName = result ? 'autoToggleList' : '';
                         return result;
                     }
                 );
-            });
-
-            if (apiName) {
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'autoFormat',
-                    apiName: apiName,
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOptions.apiName,
                 });
-            }
+            });
         }
 
         it('should trigger keyboardListTrigger', () => {
@@ -326,8 +325,10 @@ describe('Content Model Auto Format Plugin Test', () => {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
-            let apiName: string | undefined;
-            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            const formatOption = {
+                apiName: '',
+            };
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 expect(callback).toBe(
                     editor,
                     (
@@ -342,18 +343,15 @@ describe('Content Model Auto Format Plugin Test', () => {
                             result = transformHyphen(previousSegment, paragraph, context);
                         }
 
-                        apiName = result ? 'autoHyphen' : '';
+                        formatOption.apiName = result ? 'autoHyphen' : '';
                         return result;
                     }
                 );
-            });
-
-            if (apiName) {
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'autoFormat',
-                    apiName: apiName,
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOption.apiName,
                 });
-            }
+            });
         }
 
         it('should call transformHyphen', () => {

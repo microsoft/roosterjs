@@ -1,3 +1,4 @@
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
@@ -8,6 +9,7 @@ import type {
     ContentChangedEvent,
     EditorInputEvent,
     EditorPlugin,
+    FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
     PluginEvent,
@@ -129,7 +131,10 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
-                    let apiName = '';
+                    const formatOptions: FormatContentModelOptions = {
+                        changeSource: ChangeSource.AutoFormat,
+                        apiName: '',
+                    };
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
                         (model, previousSegment, paragraph, _markerFormat, context) => {
@@ -165,17 +170,12 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldHyphen = transformHyphen(previousSegment, paragraph, context);
                             }
 
-                            apiName = getApiName(shouldList, shouldHyphen);
+                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
 
                             return shouldList || shouldHyphen || shouldLink;
-                        }
+                        },
+                        formatOptions
                     );
-                    if (apiName) {
-                        editor.triggerEvent('contentChanged', {
-                            source: 'autoFormat',
-                            formatApiName: apiName,
-                        });
-                    }
 
                     break;
             }
