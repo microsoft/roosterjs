@@ -11,6 +11,11 @@ import type {
     ContentModelListItem,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Get announce data for list item
+ * @param path Content model path that include the list item
+ * @returns Announce data of current list item if any, or null
+ */
 export function getListAnnounceData(path: ContentModelBlockGroup[]): AnnounceData | null {
     const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
