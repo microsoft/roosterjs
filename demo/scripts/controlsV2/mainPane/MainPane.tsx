@@ -2,7 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
-import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
+import {
+    Border,
+    ContentModelDocument,
+    EditorOptions,
+    KnownAnnounceStrings,
+} from 'roosterjs-content-model-types';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
@@ -46,6 +51,7 @@ import {
     createTableEditMenuProvider,
 } from '../roosterjsReact/contextMenu';
 import {
+    AnnouncePlugin,
     AutoFormatPlugin,
     EditPlugin,
     HyperlinkPlugin,
@@ -504,8 +510,17 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         ? url => linkTitle.replace(UrlPlaceholder, url)
                         : linkTitle
                 ),
+            pluginList.announce && new AnnouncePlugin(getDefaultStringsMap()),
         ].filter(x => !!x);
     }
+}
+
+function getDefaultStringsMap(): Map<KnownAnnounceStrings, string> {
+    return new Map<KnownAnnounceStrings, string>([
+        ['announceListItemBullet', 'Autocorrected Bullet'],
+        ['announceListItemNumbering', 'Autocorrected {0}'],
+        ['announceOnFocusLastCell', 'Warning, pressing tab here adds an extra row.'],
+    ]);
 }
 
 export function mount(parent: HTMLElement) {

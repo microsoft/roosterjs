@@ -1,8 +1,4 @@
-import type {
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelListItem,
-} from 'roosterjs-content-model-types';
+import type { ContentModelBlockGroup, ContentModelListItem } from 'roosterjs-content-model-types';
 
 /**
  * @param model The content model
@@ -10,12 +6,12 @@ import type {
  * Search for all list items in the same thread as the current list item
  */
 export function findListItemsInSameThread(
-    model: ContentModelDocument,
+    group: ContentModelBlockGroup,
     currentItem: ContentModelListItem
 ): ContentModelListItem[] {
     const items: (ContentModelListItem | null)[] = [];
 
-    findListItems(model, items);
+    findListItems(group, items);
 
     return filterListItems(items, currentItem);
 }

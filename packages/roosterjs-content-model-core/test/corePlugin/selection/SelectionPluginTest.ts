@@ -698,6 +698,7 @@ describe('SelectionPlugin handle table selection', () => {
     let requestAnimationFrameSpy: jasmine.Spy;
     let getComputedStyleSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -707,6 +708,7 @@ describe('SelectionPlugin handle table selection', () => {
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
             defaultView: {
@@ -735,6 +737,7 @@ describe('SelectionPlugin handle table selection', () => {
                     return focusDisposer;
                 }
             },
+            triggerEvent: triggerEventSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);

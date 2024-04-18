@@ -17,11 +17,11 @@ const initialState: OptionState = {
         sampleEntity: true,
         markdown: true,
         hyperlink: true,
+        announce: true,
 
         // Legacy plugins
         imageEdit: false,
         customReplace: false,
-        announce: false,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
