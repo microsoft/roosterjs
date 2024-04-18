@@ -89,3 +89,8 @@ export const YS_CROP: DnDDirectionY[] = ['s', 'n'];
  * @internal
  */
 export const MIN_HEIGHT_WIDTH = 3 * RESIZE_HANDLE_SIZE + 2 * RESIZE_HANDLE_MARGIN;
+
+/**
+ * @internal
+ */
+export const RESIZE_IMAGE = 'resizeImage';

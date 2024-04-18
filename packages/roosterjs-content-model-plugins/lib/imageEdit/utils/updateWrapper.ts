@@ -1,17 +1,19 @@
 import getGeneratedImageSize from './generateImageSize';
 import { doubleCheckResize } from './doubleCheckResize';
-import { getPx } from './getPx';
 import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { ImageEditOptions } from '../types/ImageEditOptions';
-import { isASmallImage } from './isSmallImage';
 import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
-import { setFlipped } from './setFlipped';
-import { setSize } from '../Cropper/setSize';
-import { setWrapperSizeDimensions } from './setWrapperSizeDimensions';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateRotateHandle } from '../Rotator/updateRotateHandle';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
+import {
+    getPx,
+    isASmallImage,
+    setFlipped,
+    setSize,
+    setWrapperSizeDimensions,
+} from './imageEditUtils';
 
 /**
  * @internal
@@ -56,19 +58,6 @@ export function updateWrapper(
     const cropRightPx = originalWidth * (rightPercent || 0);
     const cropTopPx = originalHeight * (topPercent || 0);
     const cropBottomPx = originalHeight * (bottomPercent || 0);
-
-    updateImageSize(
-        wrapper,
-        image,
-        clonedImage,
-        marginVertical,
-        marginHorizontal,
-        visibleHeight,
-        visibleWidth,
-        originalHeight,
-        originalWidth,
-        angleRad ?? 0
-    );
 
     //Update flip direction
     setFlipped(clonedImage.parentElement, flippedHorizontal, flippedVertical);
@@ -151,6 +140,19 @@ export function updateWrapper(
         if (angleRad) {
             updateHandleCursor(croppers, angleRad);
         }
+
+        updateImageSize(
+            wrapper,
+            image,
+            clonedImage,
+            marginVertical,
+            marginHorizontal,
+            visibleHeight,
+            visibleWidth,
+            originalHeight,
+            originalWidth,
+            angleRad ?? 0
+        );
     }
 }
 

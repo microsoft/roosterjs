@@ -1,4 +1,4 @@
-import GeneratedImageSize from '../types/GeneratedImageSize';
+import getGeneratedImageSize from './generateImageSize';
 import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 
 /**
@@ -14,9 +14,13 @@ import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
  */
 export default function generateDataURL(
     image: HTMLImageElement,
-    editInfo: ImageMetadataFormat,
-    generatedImageSize: GeneratedImageSize
+    editInfo: ImageMetadataFormat
 ): string {
+    const generatedImageSize = getGeneratedImageSize(editInfo);
+    if (!generatedImageSize) {
+        return '';
+    }
+
     const {
         angleRad,
         widthPx,

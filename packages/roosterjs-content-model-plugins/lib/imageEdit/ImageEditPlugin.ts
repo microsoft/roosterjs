@@ -1,17 +1,18 @@
 import DragAndDropContext from './types/DragAndDropContext';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
-import { applyChanges } from './utils/applyChanges';
+import { applyChange } from './utils/applyChange';
+import { checkIfImageWasResized } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { ImageEditOptions } from './types/ImageEditOptions';
-import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
+import { RESIZE_IMAGE } from './constants/constants';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
-import { startDropAndDragHelpers } from './utils/startDropAndDragHelpers';
 import { updateWrapper } from './utils/updateWrapper';
 
 import type {
@@ -47,8 +48,10 @@ export class ImageEditPlugin implements EditorPlugin {
     private imageEditInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
-    private initialEditInfo: ImageMetadataFormat | null = null;
     private clonedImage: HTMLImageElement | null = null;
+    private lastSrc: string | null = null;
+    private wasImageResized: boolean = false;
+    private isCropMode: boolean = false;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -102,6 +105,15 @@ export class ImageEditPlugin implements EditorPlugin {
                     }
                     break;
                 case 'contentChanged':
+                    if (
+                        event.source != RESIZE_IMAGE &&
+                        this.selectedImage &&
+                        this.imageEditInfo &&
+                        this.shadowSpan
+                    ) {
+                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                    }
+                    break;
                 case 'keyDown':
                     if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
@@ -126,84 +138,71 @@ export class ImageEditPlugin implements EditorPlugin {
 
     private startEditing(editor: IEditor, image: HTMLImageElement) {
         this.imageEditInfo = getImageEditInfo(image);
-        console.log(this.imageEditInfo);
-        this.initialEditInfo = { ...this.imageEditInfo };
+        this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const { resizers, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
             editor,
             image,
             this.options,
             this.imageEditInfo,
-            this.imageHTMLOptions
+            this.imageHTMLOptions,
+            undefined /* operation */
         );
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
         this.wrapper = wrapper;
         this.clonedImage = imageClone;
-
-        if (resizers.length > 0) {
-            resizers.forEach(resizer => {
-                const resizeHandle = resizer.firstElementChild;
-                if (this.imageEditInfo && resizeHandle) {
-                    const dndHelper = startDropAndDragHelpers(
-                        resizeHandle,
-                        this.imageEditInfo,
-                        this.options,
-                        ImageEditElementClass.ResizeHandle,
-                        Resizer,
-                        (context: DragAndDropContext, _handle?: HTMLElement) => {
-                            if (this.imageEditInfo && this.selectedImage && this.wrapper) {
-                                updateWrapper(
-                                    editor,
-                                    this.imageEditInfo,
-                                    this.options,
-                                    this.selectedImage,
-                                    imageClone,
-                                    this.wrapper,
-                                    rotators,
-                                    resizers,
-                                    undefined
-                                );
-                            }
-                        }
-                    );
-                    if (dndHelper) {
-                        this.dndHelpers.push(dndHelper);
+        this.wasImageResized = checkIfImageWasResized(image);
+        const zoomScale = editor.getDOMHelper().calculateZoomScale();
+        this.dndHelpers = [
+            ...getDropAndDragHelpers(
+                wrapper,
+                this.imageEditInfo,
+                this.options,
+                ImageEditElementClass.ResizeHandle,
+                Resizer,
+                () => {
+                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                        updateWrapper(
+                            editor,
+                            this.imageEditInfo,
+                            this.options,
+                            this.selectedImage,
+                            imageClone,
+                            this.wrapper,
+                            rotators,
+                            resizers,
+                            undefined
+                        );
+                        this.wasImageResized = true;
                     }
-                }
-            });
-        }
-
-        if (rotators.length > 0) {
-            const rotateHandle = rotators[0].firstElementChild;
-            if (rotateHandle) {
-                const dndHelper = startDropAndDragHelpers(
-                    rotateHandle,
-                    this.imageEditInfo,
-                    this.options,
-                    ImageEditElementClass.RotateHandle,
-                    Rotator,
-                    (context: DragAndDropContext, _handle?: HTMLElement) => {
-                        if (this.imageEditInfo && this.selectedImage && this.wrapper) {
-                            updateWrapper(
-                                editor,
-                                this.imageEditInfo,
-                                this.options,
-                                this.selectedImage,
-                                imageClone,
-                                this.wrapper,
-                                rotators,
-                                resizers,
-                                undefined
-                            );
-                        }
+                },
+                zoomScale
+            ),
+            ...getDropAndDragHelpers(
+                wrapper,
+                this.imageEditInfo,
+                this.options,
+                ImageEditElementClass.RotateHandle,
+                Rotator,
+                () => {
+                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                        updateWrapper(
+                            editor,
+                            this.imageEditInfo,
+                            this.options,
+                            this.selectedImage,
+                            imageClone,
+                            this.wrapper,
+                            rotators,
+                            resizers,
+                            undefined
+                        );
                     }
-                );
-                if (dndHelper) {
-                    this.dndHelpers.push(dndHelper);
-                }
-            }
-        }
+                },
+                zoomScale
+            ),
+        ];
 
         updateWrapper(
             editor,
@@ -227,10 +226,10 @@ export class ImageEditPlugin implements EditorPlugin {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             this.removeImageWrapper(editor, this.dndHelpers);
         }
-
+        this.lastSrc = image.getAttribute('src');
         this.imageEditInfo = getImageEditInfo(image);
-        this.initialEditInfo = { ...this.imageEditInfo };
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+        const zoomScale = editor.getDOMHelper().calculateZoomScale();
         const { wrapper, shadowSpan, imageClone, croppers } = createImageWrapper(
             editor,
             image,
@@ -239,44 +238,36 @@ export class ImageEditPlugin implements EditorPlugin {
             this.imageHTMLOptions,
             'crop'
         );
-
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
         this.wrapper = wrapper;
         this.clonedImage = imageClone;
-        croppers[0].childNodes.forEach(crop => {
-            if (
-                isNodeOfType(crop, 'ELEMENT_NODE') &&
-                this.imageEditInfo &&
-                crop.className == ImageEditElementClass.CropHandle
-            ) {
-                const dndHelper = startDropAndDragHelpers(
-                    crop,
-                    this.imageEditInfo,
-                    this.options,
-                    ImageEditElementClass.CropHandle,
-                    Cropper,
-                    (context: DragAndDropContext, _handle?: HTMLElement) => {
-                        if (this.imageEditInfo && this.selectedImage && this.wrapper) {
-                            updateWrapper(
-                                editor,
-                                this.imageEditInfo,
-                                this.options,
-                                this.selectedImage,
-                                imageClone,
-                                this.wrapper,
-                                undefined,
-                                undefined,
-                                croppers
-                            );
-                        }
+        this.dndHelpers = [
+            ...getDropAndDragHelpers(
+                wrapper,
+                this.imageEditInfo,
+                this.options,
+                ImageEditElementClass.CropHandle,
+                Cropper,
+                () => {
+                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                        updateWrapper(
+                            editor,
+                            this.imageEditInfo,
+                            this.options,
+                            this.selectedImage,
+                            imageClone,
+                            this.wrapper,
+                            undefined,
+                            undefined,
+                            croppers
+                        );
+                        this.isCropMode = true;
                     }
-                );
-                if (dndHelper) {
-                    this.dndHelpers.push(dndHelper);
-                }
-            }
-        });
+                },
+                zoomScale
+            ),
+        ];
 
         editor.setDOMSelection({
             type: 'image',
@@ -290,21 +281,25 @@ export class ImageEditPlugin implements EditorPlugin {
         this.wrapper = null;
         this.imageEditInfo = null;
         this.imageHTMLOptions = null;
-        this.initialEditInfo = null;
         this.dndHelpers.forEach(helper => helper.dispose());
         this.dndHelpers = [];
         this.clonedImage = null;
+        this.lastSrc = null;
+        this.wasImageResized = false;
+        this.isCropMode = false;
     }
 
     private removeImageWrapper(
         editor: IEditor,
         resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
     ) {
-        if (this.selectedImage && this.imageEditInfo && this.initialEditInfo && this.clonedImage) {
-            applyChanges(
+        if (this.lastSrc && this.selectedImage && this.imageEditInfo && this.clonedImage) {
+            applyChange(
+                editor,
                 this.selectedImage,
                 this.imageEditInfo,
-                this.initialEditInfo,
+                this.lastSrc,
+                this.wasImageResized || this.isCropMode,
                 this.clonedImage
             );
         }

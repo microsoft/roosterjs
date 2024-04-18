@@ -20,6 +20,11 @@ export function createImageWrapper(
     imageClone.style.removeProperty('transform');
     if (editInfo.src) {
         imageClone.src = editInfo.src;
+        imageClone.removeAttribute('id');
+        imageClone.style.removeProperty('max-width');
+        imageClone.style.removeProperty('max-height');
+        imageClone.style.width = editInfo.widthPx + 'px';
+        imageClone.style.height = editInfo.heightPx + 'px';
     }
     const doc = editor.getDocument();
     if (!operation) {
@@ -89,6 +94,7 @@ const createWrapper = (
             editInfo.angleRad ?? 0
         }rad); text-align: left;`
     );
+    wrapper.style.display = editor.getEnvironment().isSafari ? 'inline-block' : 'inline-flex';
 
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);
