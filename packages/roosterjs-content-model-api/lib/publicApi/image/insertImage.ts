@@ -4,6 +4,8 @@ import {
     addSegment,
     createContentModelDocument,
     createImage,
+    isNodeOfType,
+    isElementOfType,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -27,9 +29,11 @@ export function insertImage(editor: IEditor, imageFileOrSrc: File | string) {
 }
 
 function insertImageWithSrc(editor: IEditor, src: string) {
+    const image = createImage(src, { backgroundColor: '' });
+    let imageNode: HTMLImageElement | undefined;
+
     editor.formatContentModel(
         (model, context) => {
-            const image = createImage(src, { backgroundColor: '' });
             const doc = createContentModelDocument();
 
             addSegment(doc, image);
@@ -41,6 +45,22 @@ function insertImageWithSrc(editor: IEditor, src: string) {
         },
         {
             apiName: 'insertImage',
+            onNodeCreated: (model, node) => {
+                if (
+                    model == image &&
+                    isNodeOfType(node, 'ELEMENT_NODE') &&
+                    isElementOfType(node, 'img')
+                ) {
+                    imageNode = node;
+                }
+            },
         }
     );
+
+    if (imageNode) {
+        editor.setDOMSelection({
+            type: 'image',
+            image: imageNode,
+        });
+    }
 }
