@@ -24,6 +24,8 @@ import {
 export function editTable(editor: IEditor, operation: TableOperation) {
     editor.focus();
 
+    fixUpSafariSelection(editor);
+
     formatTableWithContentModel(editor, 'editTable', tableModel => {
         switch (operation) {
             case 'alignCellLeft':
@@ -87,4 +89,22 @@ export function editTable(editor: IEditor, operation: TableOperation) {
                 break;
         }
     });
+}
+
+// In safari, when open context menu under a table, it may expand the range selection to the beginning of next table cell.
+// So we make a workaround here to collapse the selection when need, to avoid unexpected table editing behavior
+// (e.g. insert two columns but actually need one only)
+function fixUpSafariSelection(editor: IEditor) {
+    if (editor.getEnvironment().isSafari) {
+        const selection = editor.getDOMSelection();
+
+        if (selection?.type == 'range' && !selection.range.collapsed) {
+            selection.range.collapse(true /*toStart*/);
+            editor.setDOMSelection({
+                type: 'range',
+                range: selection.range,
+                isReverted: false,
+            });
+        }
+    }
 }
