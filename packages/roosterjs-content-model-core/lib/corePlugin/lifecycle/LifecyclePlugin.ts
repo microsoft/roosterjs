@@ -92,7 +92,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         const announceContainer = this.state.announceContainer;
 
         if (announceContainer) {
-            announceContainer.parentNode?.removeChild(announceContainer);
+            announceContainer.parentElement?.removeChild(announceContainer);
             delete this.state.announceContainer;
         }
 

@@ -33,8 +33,10 @@ function formatString(text: string | undefined, formatStrings: string[]) {
         return text;
     }
 
-    formatStrings.forEach((value, index) => {
-        text = text?.replace(`{${index}}`, value);
+    text = text.replace(/\{(\d+)\}/g, (_, sub: string) => {
+        const index = parseInt(sub);
+        const replace = formatStrings[index];
+        return replace ?? '';
     });
 
     return text;
