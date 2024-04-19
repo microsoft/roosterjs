@@ -7,6 +7,8 @@ import { transformHyphen } from './hyphen/transformHyphen';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
+    ContentModelParagraph,
+    ContentModelText,
     EditorInputEvent,
     EditorPlugin,
     FormatContentModelOptions,
@@ -16,39 +18,56 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
+ *
+ */
+
+export interface AutoReplace {
+    stringToReplace: string;
+    replacementString: string;
+    replacementHandler: (
+        previousSegment: ContentModelText,
+        stringToReplace: string,
+        replacementString: string,
+        paragraph?: ContentModelParagraph
+    ) => boolean;
+}
+
+/**
  * Options to customize the Content Model Auto Format Plugin
  */
 export type AutoFormatOptions = {
     /**
      * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
      */
-    autoBullet: boolean;
+    autoBullet?: boolean;
 
     /**
      * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
      */
-    autoNumbering: boolean;
+    autoNumbering?: boolean;
 
     /**
      * When press backspace before a link, remove the hyperlink
      */
-    autoUnlink: boolean;
+    autoUnlink?: boolean;
 
     /**
      * When paste content, create hyperlink for the pasted link
      */
-    autoLink: boolean;
+    autoLink?: boolean;
 
     /**
      * Transform -- into hyphen, if typed between two words
      */
-    autoHyphen: boolean;
+    autoHyphen?: boolean;
+
+    customAutoReplace?: AutoReplace[];
 };
 
 /**
  * @internal
  */
-const DefaultOptions: Required<AutoFormatOptions> = {
+const DefaultOptions: Partial<AutoFormatOptions> = {
     autoBullet: false,
     autoNumbering: false,
     autoUnlink: false,
@@ -143,10 +162,12 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 autoNumbering,
                                 autoLink,
                                 autoHyphen,
+                                customAutoReplace,
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
                             let shouldList = false;
+                            let shouldReplace = false;
 
                             if (autoBullet || autoNumbering) {
                                 shouldList = keyboardListTrigger(
@@ -170,9 +191,26 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldHyphen = transformHyphen(previousSegment, paragraph, context);
                             }
 
+                            if (customAutoReplace && customAutoReplace.length > 0) {
+                                shouldReplace = customAutoReplace.some(
+                                    ({
+                                        stringToReplace,
+                                        replacementString,
+                                        replacementHandler,
+                                    }) => {
+                                        return replacementHandler(
+                                            previousSegment,
+                                            stringToReplace,
+                                            replacementString,
+                                            paragraph
+                                        );
+                                    }
+                                );
+                            }
+
                             formatOptions.apiName = getApiName(shouldList, shouldHyphen);
 
-                            return shouldList || shouldHyphen || shouldLink;
+                            return shouldList || shouldHyphen || shouldLink || shouldReplace;
                         },
                         formatOptions
                     );

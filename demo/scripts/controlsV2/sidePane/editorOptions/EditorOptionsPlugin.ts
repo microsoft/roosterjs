@@ -1,3 +1,4 @@
+import { emojiReplacements } from './getCustomReplacements';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -45,6 +46,7 @@ const initialState: OptionState = {
         autoNumbering: true,
         autoUnlink: false,
         autoHyphen: true,
+        customAutoReplace: emojiReplacements,
     },
     markdownOptions: {
         bold: true,
