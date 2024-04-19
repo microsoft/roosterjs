@@ -1,6 +1,6 @@
-import { Announce, CustomReplace, ImageEdit } from 'roosterjs-editor-plugins';
-import { EditorPlugin as LegacyEditorPlugin, KnownAnnounceStrings } from 'roosterjs-editor-types';
+import { CustomReplace, ImageEdit } from 'roosterjs-editor-plugins';
 import { LegacyPluginList, OptionState } from '../sidePane/editorOptions/OptionState';
+import { EditorPlugin as LegacyEditorPlugin } from 'roosterjs-editor-types';
 
 export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[] {
     const { pluginList } = initState;
@@ -13,19 +13,7 @@ export function createLegacyPlugins(initState: OptionState): LegacyEditorPlugin[
               })
             : null,
         customReplace: pluginList.customReplace ? new CustomReplace() : null,
-        announce: pluginList.announce ? new Announce(getDefaultStringsMap()) : null,
     };
 
     return Object.values(plugins).filter(x => !!x);
-}
-
-function getDefaultStringsMap(): Map<KnownAnnounceStrings, string> {
-    return new Map<KnownAnnounceStrings, string>([
-        [KnownAnnounceStrings.AnnounceListItemBullet, 'Autocorrected Bullet'],
-        [KnownAnnounceStrings.AnnounceListItemNumbering, 'Autocorrected {0}'],
-        [
-            KnownAnnounceStrings.AnnounceOnFocusLastCell,
-            'Warning, pressing tab here adds an extra row.',
-        ],
-    ]);
 }
