@@ -30,7 +30,5 @@ export { HyperlinkToolTip } from './hyperlink/HyperlinkToolTip';
 export { PickerPlugin } from './picker/PickerPlugin';
 export { PickerHelper } from './picker/PickerHelper';
 export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './picker/PickerHandler';
-export { AnnounceFeature } from './announce/AnnounceFeature';
-export { AnnouncePlugin } from './announce/AnnouncePlugin';
 
 export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';

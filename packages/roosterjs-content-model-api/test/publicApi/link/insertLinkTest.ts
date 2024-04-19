@@ -348,7 +348,6 @@ describe('insertLink', () => {
             contentModel: jasmine.anything(),
             selection: jasmine.anything(),
             changedEntities: [],
-            announceData: undefined,
         });
 
         document.body.removeChild(div);

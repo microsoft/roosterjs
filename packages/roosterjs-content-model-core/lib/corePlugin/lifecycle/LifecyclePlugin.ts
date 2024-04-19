@@ -48,6 +48,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             isDarkMode: !!options.inDarkMode,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: options.announcerStringGetter,
         };
     }
 
@@ -87,6 +88,13 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             element.parentElement?.removeChild(element);
             delete this.state.styleElements[key];
         });
+
+        const announceContainer = this.state.announceContainer;
+
+        if (announceContainer) {
+            announceContainer.parentNode?.removeChild(announceContainer);
+            delete this.state.announceContainer;
+        }
 
         if (this.disposer) {
             this.disposer();

@@ -71,7 +71,6 @@ export const formatContentModel: FormatContentModel = (
                 data: getChangeData?.(),
                 formatApiName: apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
-                announceData: context.announceData ?? undefined,
             };
 
             core.api.triggerEvent(core, eventData, true /*broadcast*/);
@@ -100,6 +99,10 @@ export const formatContentModel: FormatContentModel = (
         }
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
+    }
+
+    if (context.announceData) {
+        core.api.announce(core, context.announceData);
     }
 };
 

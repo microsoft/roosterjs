@@ -17,7 +17,6 @@ const initialState: OptionState = {
         sampleEntity: true,
         markdown: true,
         hyperlink: true,
-        announce: true,
 
         // Legacy plugins
         imageEdit: false,

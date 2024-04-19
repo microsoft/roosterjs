@@ -278,7 +278,6 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                             (state, value) => (state.linkTitle = value)
                         )
                     )}
-                    {this.renderPluginItem('announce', 'Announce')}
                 </tbody>
             </table>
         );

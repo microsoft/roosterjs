@@ -2,12 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
-import {
-    Border,
-    ContentModelDocument,
-    EditorOptions,
-    KnownAnnounceStrings,
-} from 'roosterjs-content-model-types';
 import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
@@ -47,11 +41,16 @@ import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
 import {
+    Border,
+    ContentModelDocument,
+    EditorOptions,
+    KnownAnnounceStrings,
+} from 'roosterjs-content-model-types';
+import {
     createContextMenuPlugin,
     createTableEditMenuProvider,
 } from '../roosterjsReact/contextMenu';
 import {
-    AnnouncePlugin,
     AutoFormatPlugin,
     EditPlugin,
     HyperlinkPlugin,
@@ -366,6 +365,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
                             disableCache={this.state.initState.disableCache}
+                            announcerStringGetter={getAnnouncingString}
                         />
                     )}
                 </div>
@@ -510,17 +510,18 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         ? url => linkTitle.replace(UrlPlaceholder, url)
                         : linkTitle
                 ),
-            pluginList.announce && new AnnouncePlugin(getDefaultStringsMap()),
         ].filter(x => !!x);
     }
 }
 
-function getDefaultStringsMap(): Map<KnownAnnounceStrings, string> {
-    return new Map<KnownAnnounceStrings, string>([
-        ['announceListItemBullet', 'Autocorrected Bullet'],
-        ['announceListItemNumbering', 'Autocorrected {0}'],
-        ['announceOnFocusLastCell', 'Warning, pressing tab here adds an extra row.'],
-    ]);
+const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
+    announceListItemBullet: 'Auto corrected Bullet',
+    announceListItemNumbering: 'Auto corrected {0}',
+    announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
+};
+
+function getAnnouncingString(key: KnownAnnounceStrings) {
+    return AnnounceStringMap[key];
 }
 
 export function mount(parent: HTMLElement) {

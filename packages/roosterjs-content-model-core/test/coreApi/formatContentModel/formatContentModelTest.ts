@@ -112,7 +112,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -148,7 +147,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -180,7 +178,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -221,7 +218,6 @@ describe('formatContentModel', () => {
                     data: returnData,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -259,7 +255,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -322,7 +317,6 @@ describe('formatContentModel', () => {
                             rawEvent: 'RawEvent',
                         },
                     ],
-                    announceData: undefined,
                 },
                 true
             );
@@ -383,7 +377,6 @@ describe('formatContentModel', () => {
                             rawEvent: 'RawEvent',
                         },
                     ],
-                    announceData: undefined,
                 },
                 true
             );
@@ -413,7 +406,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -446,7 +438,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -483,7 +474,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );
@@ -515,7 +505,6 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
-                    announceData: undefined,
                 },
                 true
             );

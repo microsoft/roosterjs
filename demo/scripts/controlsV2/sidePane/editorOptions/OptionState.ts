@@ -20,7 +20,6 @@ export interface NewPluginList {
     sampleEntity: boolean;
     markdown: boolean;
     hyperlink: boolean;
-    announce: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
