@@ -366,7 +366,6 @@ export class TableEditor {
             };
 
             this.editor.setDOMSelection(selection);
-            this.editor.triggerEvent('contentChanged', { source: 'TableEditor' });
         }
     };
 
