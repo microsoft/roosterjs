@@ -46,6 +46,7 @@ export function getAutoListStyleType(
     existingStyleType?: string
 ): number | undefined {
     const { orderedStyleType, unorderedStyleType, applyListStyleFromLevel } = metadata;
+
     if (listType == 'OL') {
         return typeof orderedStyleType == 'number'
             ? orderedStyleType
