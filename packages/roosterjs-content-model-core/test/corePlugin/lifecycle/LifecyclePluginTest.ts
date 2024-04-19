@@ -21,6 +21,7 @@ describe('LifecyclePlugin', () => {
             isDarkMode: false,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: undefined,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -35,6 +36,7 @@ describe('LifecyclePlugin', () => {
 
     it('init with options', () => {
         const mockedModel = 'MODEL' as any;
+        const mockedAnnouncerStringGetter = 'ANNOUNCE' as any;
         const div = document.createElement('div');
         const plugin = createLifecyclePlugin(
             {
@@ -42,6 +44,7 @@ describe('LifecyclePlugin', () => {
                     fontFamily: 'arial',
                 },
                 initialModel: mockedModel,
+                announcerStringGetter: mockedAnnouncerStringGetter,
             },
             div
         );
@@ -59,6 +62,7 @@ describe('LifecyclePlugin', () => {
             isDarkMode: false,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: mockedAnnouncerStringGetter,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -134,6 +138,7 @@ describe('LifecyclePlugin', () => {
             isDarkMode: false,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: undefined,
         });
 
         plugin.onPluginEvent({
@@ -165,6 +170,7 @@ describe('LifecyclePlugin', () => {
             isDarkMode: false,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: undefined,
         });
 
         const mockedIsDarkColor = 'Dark' as any;
@@ -218,6 +224,7 @@ describe('LifecyclePlugin', () => {
             isDarkMode: false,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: undefined,
         });
 
         const mockedIsDarkColor = 'Dark' as any;
@@ -249,16 +256,29 @@ describe('LifecyclePlugin', () => {
             },
         } as any;
 
+        const removeChildSpy2 = jasmine.createSpy('removeChild');
+        const mockedContainer = {
+            parentElement: {
+                removeChild: removeChildSpy2,
+            },
+        } as any;
+
         state.styleElements.a = style;
+        state.announceContainer = mockedContainer;
 
         plugin.dispose();
 
         expect(removeChildSpy).toHaveBeenCalledTimes(1);
         expect(removeChildSpy).toHaveBeenCalledWith(style);
+
+        expect(removeChildSpy2).toHaveBeenCalledTimes(1);
+        expect(removeChildSpy2).toHaveBeenCalledWith(mockedContainer);
+
         expect(state).toEqual({
             styleElements: {},
             isDarkMode: false,
             shadowEditFragment: null,
+            announcerStringGetter: undefined,
         });
     });
 });
