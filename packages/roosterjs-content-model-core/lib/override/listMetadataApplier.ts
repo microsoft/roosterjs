@@ -1,8 +1,9 @@
 import {
-    getObjectKeys,
     ListMetadataDefinition,
     OrderedListStyleMap,
     UnorderedListStyleMap,
+    getAutoListStyleType,
+    getOrderedListNumberStr,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItemFormat,
@@ -11,91 +12,30 @@ import type {
     MetadataApplier,
 } from 'roosterjs-content-model-types';
 
-const DefaultOrderedListStyles = ['decimal', 'lower-alpha', 'lower-roman'];
-const DefaultUnorderedListStyles = ['disc', 'circle', 'square'];
 const OrderedMapPlaceholderRegex = /\$\{(\w+)\}/;
-const CharCodeOfA = 65;
-const RomanValues: Record<string, number> = {
-    M: 1000,
-    CM: 900,
-    D: 500,
-    CD: 400,
-    C: 100,
-    XC: 90,
-    L: 50,
-    XL: 40,
-    X: 10,
-    IX: 9,
-    V: 5,
-    IV: 4,
-    I: 1,
-};
 
-function getOrderedListStyleValue(
-    template: string | undefined,
-    listNumber: number
+function getListStyleValue(
+    listType: 'OL' | 'UL',
+    listStyleType: number,
+    listNumber?: number
 ): string | undefined {
-    return template
-        ? template.replace(OrderedMapPlaceholderRegex, (_, subStr) => {
-              switch (subStr) {
-                  case 'Number':
-                      return listNumber + '';
-                  case 'LowerAlpha':
-                      return convertDecimalsToAlpha(listNumber, true /*isLowerCase*/);
-                  case 'UpperAlpha':
-                      return convertDecimalsToAlpha(listNumber, false /*isLowerCase*/);
-                  case 'LowerRoman':
-                      return convertDecimalsToRoman(listNumber, true /*isLowerCase*/);
-                  case 'UpperRoman':
-                      return convertDecimalsToRoman(listNumber, false /*isLowerCase*/);
-              }
-
-              return '';
-          })
-        : undefined;
-}
-
-function convertDecimalsToAlpha(decimal: number, isLowerCase?: boolean): string {
-    let alpha = '';
-    decimal--;
-
-    while (decimal >= 0) {
-        alpha = String.fromCharCode((decimal % 26) + CharCodeOfA) + alpha;
-        decimal = Math.floor(decimal / 26) - 1;
-    }
-    return isLowerCase ? alpha.toLowerCase() : alpha;
-}
-
-function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
-    let romanValue = '';
-
-    for (const i of getObjectKeys(RomanValues)) {
-        const timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
-        decimal = decimal - timesRomanCharAppear * RomanValues[i];
-        romanValue = romanValue + i.repeat(timesRomanCharAppear);
-    }
-    return isLowerCase ? romanValue.toLocaleLowerCase() : romanValue;
-}
-
-function shouldApplyToItem(listStyleType: string) {
-    return listStyleType.indexOf('"') >= 0;
-}
-
-function getRawListStyleType(listType: 'OL' | 'UL', metadata: ListMetadataFormat, depth: number) {
-    const { orderedStyleType, unorderedStyleType, applyListStyleFromLevel } = metadata;
     if (listType == 'OL') {
-        return typeof orderedStyleType == 'number'
-            ? OrderedListStyleMap[orderedStyleType]
-            : applyListStyleFromLevel
-            ? DefaultOrderedListStyles[depth % DefaultOrderedListStyles.length]
-            : undefined;
+        const numberStr = getOrderedListNumberStr(listStyleType, listNumber ?? 1);
+        const template = OrderedListStyleMap[listStyleType];
+
+        return template ? template.replace(OrderedMapPlaceholderRegex, numberStr) : undefined;
     } else {
-        return typeof unorderedStyleType == 'number'
-            ? UnorderedListStyleMap[unorderedStyleType]
-            : applyListStyleFromLevel
-            ? DefaultUnorderedListStyles[depth % DefaultUnorderedListStyles.length]
-            : undefined;
+        return UnorderedListStyleMap[listStyleType];
     }
+}
+
+function shouldApplyToItem(listStyleType: number, listType: 'OL' | 'UL') {
+    const style =
+        listType == 'OL'
+            ? OrderedListStyleMap[listStyleType]
+            : UnorderedListStyleMap[listStyleType];
+
+    return style?.indexOf('"') >= 0;
 }
 
 /**
@@ -111,17 +51,15 @@ export const listItemMetadataApplier: MetadataApplier<
 
         if (depth >= 0) {
             const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
-            const listStyleType = getRawListStyleType(listType, metadata ?? {}, depth);
+            const listStyleType = getAutoListStyleType(listType, metadata ?? {}, depth);
 
-            if (listStyleType) {
-                if (shouldApplyToItem(listStyleType)) {
-                    format.listStyleType =
-                        listType == 'OL'
-                            ? getOrderedListStyleValue(
-                                  listStyleType,
-                                  context.listFormat.threadItemCounts[depth]
-                              )
-                            : listStyleType;
+            if (listStyleType !== undefined) {
+                if (shouldApplyToItem(listStyleType, listType)) {
+                    format.listStyleType = getListStyleValue(
+                        listType,
+                        listStyleType,
+                        context.listFormat.threadItemCounts[depth]
+                    );
                 } else {
                     delete format.listStyleType;
                 }
@@ -143,11 +81,19 @@ export const listLevelMetadataApplier: MetadataApplier<
 
         if (depth >= 0) {
             const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
-            const listStyleType = getRawListStyleType(listType, metadata ?? {}, depth);
+            const listStyleType = getAutoListStyleType(listType, metadata ?? {}, depth);
 
-            if (listStyleType) {
-                if (!shouldApplyToItem(listStyleType)) {
-                    format.listStyleType = listStyleType;
+            if (listStyleType !== undefined) {
+                if (!shouldApplyToItem(listStyleType, listType)) {
+                    const listStyleTypeFormat = getListStyleValue(
+                        listType,
+                        listStyleType,
+                        context.listFormat.threadItemCounts[depth]
+                    );
+
+                    if (listStyleTypeFormat) {
+                        format.listStyleType = listStyleTypeFormat;
+                    }
                 } else {
                     delete format.listStyleType;
                 }
