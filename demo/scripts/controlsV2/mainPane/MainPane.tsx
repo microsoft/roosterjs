@@ -30,6 +30,7 @@ import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
 import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
 import { Rooster } from '../roosterjsReact/rooster';
+import { SamplePickerPlugin } from '../plugins/SamplePickerPlugin';
 import { SidePane } from '../sidePane/SidePane';
 import { SidePanePlugin } from '../sidePane/SidePanePlugin';
 import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
@@ -88,6 +89,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
+    private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
 
     protected sidePane = React.createRef<SidePane>();
@@ -125,6 +127,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
+        this.samplePickerPlugin = new SamplePickerPlugin();
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -327,6 +330,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         const plugins: EditorPlugin[] = [
             this.ribbonPlugin,
             this.formatPainterPlugin,
+            this.samplePickerPlugin,
             ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,

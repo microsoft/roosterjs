@@ -239,4 +239,84 @@ describe('DOMHelperImpl', () => {
             expect(result).toBe(false);
         });
     });
+
+    describe('isRightToLeft', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+            } as any;
+        });
+
+        it('LTR', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'ltr',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeFalse();
+        });
+
+        it('RTL', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'rtl',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeTrue();
+        });
+    });
+
+    describe('getClientWidth', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+                clientWidth: 1000,
+            } as any;
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                paddingLeft: '10px',
+                paddingRight: '10px',
+            });
+
+            expect(domHelper.getClientWidth()).toBe(980);
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({});
+
+            expect(domHelper.getClientWidth()).toBe(1000);
+        });
+    });
 });
