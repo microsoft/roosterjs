@@ -1,11 +1,11 @@
 import { AutoFormatCode } from './AutoFormatCode';
 import { CodeElement } from './CodeElement';
+import { CustomReplaceCode } from './CustomReplaceCode';
 import { HyperLinkCode } from './HyperLinkCode';
 import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
 import {
-    CustomReplaceCode,
     EditPluginCode,
     ImageEditCode,
     PastePluginCode,
@@ -46,6 +46,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
+            pluginList.customReplace && new CustomReplaceCode(state.customReplacements),
         ]);
     }
 }
@@ -54,10 +55,7 @@ export class LegacyPluginCode extends PluginsCodeBase {
     constructor(state: OptionState) {
         const pluginList = state.pluginList;
 
-        const plugins: CodeElement[] = [
-            pluginList.imageEdit && new ImageEditCode(),
-            pluginList.customReplace && new CustomReplaceCode(),
-        ];
+        const plugins: CodeElement[] = [pluginList.imageEdit && new ImageEditCode()];
 
         super(plugins);
     }
