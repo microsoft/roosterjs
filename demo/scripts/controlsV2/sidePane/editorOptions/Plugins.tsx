@@ -137,6 +137,8 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private autoLink = React.createRef<HTMLInputElement>();
     private autoUnlink = React.createRef<HTMLInputElement>();
     private autoHyphen = React.createRef<HTMLInputElement>();
+    private autoFraction = React.createRef<HTMLInputElement>();
+    private autoOrdinals = React.createRef<HTMLInputElement>();
     private markdownBold = React.createRef<HTMLInputElement>();
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
@@ -180,6 +182,18 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                                 this.autoHyphen,
                                 this.props.state.autoFormatOptions.autoHyphen,
                                 (state, value) => (state.autoFormatOptions.autoHyphen = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Fraction',
+                                this.autoFraction,
+                                this.props.state.autoFormatOptions.autoFraction,
+                                (state, value) => (state.autoFormatOptions.autoFraction = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Ordinals',
+                                this.autoOrdinals,
+                                this.props.state.autoFormatOptions.autoOrdinals,
+                                (state, value) => (state.autoFormatOptions.autoOrdinals = value)
                             )}
                         </>
                     )}
