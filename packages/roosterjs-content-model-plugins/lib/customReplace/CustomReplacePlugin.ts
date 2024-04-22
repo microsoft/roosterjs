@@ -12,8 +12,24 @@ import type {
  * The CustomReplace interface defines a custom replacement that can be used in CustomReplacePlugin.
  */
 export interface CustomReplace {
+    /**
+     * The string to replace in the editor.
+     */
     stringToReplace: string;
+
+    /**
+     * The string to replace with.
+     */
     replacementString: string;
+
+    /**
+     * The handler to replace the string.
+     * @param previousSegment The text segment to replace.
+     * @param stringToReplace The string to replace.
+     * @param replacementString The string to replace with.
+     * @param paragraph The paragraph that contains the text segment.
+     * @returns True if the string is replaced successfully, otherwise false.
+     */
     replacementHandler: (
         previousSegment: ContentModelText,
         stringToReplace: string,
@@ -29,6 +45,10 @@ export class CustomReplacePlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private triggerKeys: string[] = [];
 
+    /**
+     * @param customReplacements Custom replacement rules.
+     * Ex: [{ stringToReplace: ':)', replacementString: '🙂', replacementHandler: replaceEmojis }]
+     */
     constructor(private customReplacements: CustomReplace[]) {}
 
     /**
