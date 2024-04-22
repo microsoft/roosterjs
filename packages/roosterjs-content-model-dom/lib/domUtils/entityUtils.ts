@@ -102,13 +102,17 @@ export function generateEntityClassNames(format: ContentModelEntityFormat): stri
 /**
  * Checks whether the node provided is a Entity delimiter
  * @param node the node to check
+ * @param isBefore True to match delimiter before entity only, false to match delimiter after entity, or undefined means match both
  * @return true if it is a delimiter
  */
-export function isEntityDelimiter(element: HTMLElement): boolean {
+export function isEntityDelimiter(element: HTMLElement, isBefore?: boolean): boolean {
+    const matchBefore = isBefore === undefined || isBefore;
+    const matchAfter = isBefore === undefined || !isBefore;
+
     return (
         isElementOfType(element, 'span') &&
-        (element.classList.contains(DELIMITER_AFTER) ||
-            element.classList.contains(DELIMITER_BEFORE)) &&
+        ((matchAfter && element.classList.contains(DELIMITER_AFTER)) ||
+            (matchBefore && element.classList.contains(DELIMITER_BEFORE))) &&
         element.textContent === ZERO_WIDTH_SPACE
     );
 }

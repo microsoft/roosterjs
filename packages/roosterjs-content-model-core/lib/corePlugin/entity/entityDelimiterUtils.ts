@@ -12,8 +12,6 @@ import {
     iterateSelections,
     isCharacterValue,
     getSelectedSegmentsAndParagraphs,
-    createSelectionMarker,
-    setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
@@ -203,7 +201,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
     }
 
     const { rawEvent } = event;
-    const { range, isReverted } = selection;
+    const { range } = selection;
 
     switch (rawEvent.key) {
         case 'Enter':
@@ -225,7 +223,7 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
 
         case 'ArrowLeft':
         case 'ArrowRight':
-            handleMovingOnDelimiter(editor, isReverted, rawEvent);
+            handleMovingOnDelimiter(editor, rawEvent);
             break;
 
         default:
@@ -235,6 +233,96 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
 
             break;
     }
+}
+
+function handleMovingOnDelimiter(editor: IEditor, rawEvent: KeyboardEvent) {
+    editor.getDocument().defaultView?.requestAnimationFrame(() => {
+        if (editor.isDisposed()) {
+            return;
+        }
+
+        const selection = editor.getDOMSelection();
+
+        if (!selection || selection.type != 'range') {
+            return;
+        }
+
+        const { range, isReverted } = selection;
+        const anchorNode = isReverted ? range.startContainer : range.endContainer;
+        const offset = isReverted ? range.startOffset : range.endOffset;
+        const delimiter = isNodeOfType(anchorNode, 'ELEMENT_NODE')
+            ? anchorNode
+            : anchorNode.parentElement;
+        const isRtl =
+            delimiter &&
+            editor.getDocument().defaultView?.getComputedStyle(delimiter).direction == 'rtl';
+        const movingBefore = (rawEvent.key == 'ArrowLeft') != !!isRtl;
+
+        if (
+            delimiter &&
+            isEntityDelimiter(delimiter, !movingBefore) &&
+            ((movingBefore && offset == 0) || (!movingBefore && offset == 1))
+        ) {
+            editor.formatContentModel(model => {
+                const allSel = getSelectedSegmentsAndParagraphs(
+                    model,
+                    false /*includingFormatHolder*/,
+                    true
+                );
+                const sel = allSel[isReverted ? 0 : allSel.length - 1];
+                const index = sel?.[1]?.segments.indexOf(sel[0]) ?? -1;
+
+                if (sel && sel[1] && index >= 0) {
+                    const isShrinking =
+                        rawEvent.shiftKey && !range.collapsed && movingBefore != !!isReverted;
+                    const entity = isShrinking
+                        ? sel[0]
+                        : sel[1].segments[movingBefore ? index - 1 : index + 1];
+                    const pairedDelimiter =
+                        entity?.segmentType == 'Entity'
+                            ? movingBefore
+                                ? entity.wrapper.previousElementSibling
+                                : entity.wrapper.nextElementSibling
+                            : null;
+
+                    if (
+                        pairedDelimiter &&
+                        isEntityDelimiter(pairedDelimiter as HTMLElement, movingBefore)
+                    ) {
+                        const newRange = range.cloneRange();
+
+                        if (isShrinking) {
+                            if (movingBefore) {
+                                newRange.setEndBefore(pairedDelimiter);
+                            } else {
+                                newRange.setStartAfter(pairedDelimiter);
+                            }
+                        } else {
+                            if (movingBefore) {
+                                newRange.setStartBefore(pairedDelimiter);
+                            } else {
+                                newRange.setEndAfter(pairedDelimiter);
+                            }
+                            if (!rawEvent.shiftKey) {
+                                if (movingBefore) {
+                                    newRange.setEndBefore(pairedDelimiter);
+                                } else {
+                                    newRange.setStartAfter(pairedDelimiter);
+                                }
+                            }
+                        }
+                        editor.setDOMSelection({
+                            type: 'range',
+                            range: newRange,
+                            isReverted: newRange.collapsed ? false : isReverted,
+                        });
+                    }
+                }
+
+                return false;
+            });
+        }
+    });
 }
 
 function handleInputOnDelimiter(
@@ -285,70 +373,6 @@ function handleInputOnDelimiter(
             }
         }
     }
-}
-
-function handleMovingOnDelimiter(editor: IEditor, isReverted: boolean, rawEvent: KeyboardEvent) {
-    editor.formatContentModel(model => {
-        const selections = getSelectedSegmentsAndParagraphs(
-            model,
-            false /*includingFormatHolder*/,
-            true /*includingEntity*/
-        );
-        const selection = isReverted ? selections[0] : selections[selections.length - 1];
-
-        if (selection?.[1]) {
-            const [segment, paragraph] = selection;
-            const movingBefore =
-                (rawEvent.key == 'ArrowLeft') != (paragraph.format.direction == 'rtl');
-            const isShrinking =
-                rawEvent.shiftKey &&
-                segment.segmentType != 'SelectionMarker' &&
-                movingBefore != isReverted;
-            const index = paragraph.segments.indexOf(segment);
-            const targetIndex = isShrinking
-                ? index
-                : index >= 0
-                ? movingBefore
-                    ? index - 1
-                    : index + 1
-                : -1;
-            const targetSegment = targetIndex >= 0 ? paragraph.segments[targetIndex] : null;
-
-            if (targetSegment?.segmentType == 'Entity') {
-                if (rawEvent.shiftKey) {
-                    targetSegment.isSelected = !isShrinking;
-
-                    if (!isShrinking && movingBefore) {
-                        model.hasRevertedRangeSelection = true;
-                    }
-                }
-
-                if (!rawEvent.shiftKey || (isShrinking && selections.length == 1)) {
-                    const formatSegment =
-                        paragraph.segments[movingBefore ? targetIndex - 1 : targetIndex + 1];
-                    const marker = createSelectionMarker(
-                        formatSegment?.format ?? targetSegment.format
-                    );
-
-                    paragraph.segments.splice(
-                        movingBefore ? targetIndex : targetIndex + 1,
-                        0,
-                        marker
-                    );
-
-                    setSelection(model, marker);
-                }
-
-                rawEvent.preventDefault();
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return false;
-    });
 }
 
 /**
