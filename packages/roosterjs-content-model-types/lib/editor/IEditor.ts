@@ -1,3 +1,4 @@
+import type { AnnounceData } from '../parameter/AnnounceData';
 import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
@@ -218,4 +219,10 @@ export interface IEditor {
         cssRule: string | null,
         subSelectors?: 'before' | 'after' | string[]
     ): void;
+
+    /**
+     * Announce the given data
+     * @param announceData Data to announce
+     */
+    announce(announceData: AnnounceData): void;
 }

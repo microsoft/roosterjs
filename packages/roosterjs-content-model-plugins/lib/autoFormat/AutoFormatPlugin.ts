@@ -1,3 +1,4 @@
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
@@ -8,6 +9,7 @@ import type {
     ContentChangedEvent,
     EditorInputEvent,
     EditorPlugin,
+    FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
     PluginEvent,
@@ -129,6 +131,10 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
+                    const formatOptions: FormatContentModelOptions = {
+                        changeSource: ChangeSource.AutoFormat,
+                        apiName: '',
+                    };
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
                         (model, previousSegment, paragraph, _markerFormat, context) => {
@@ -140,6 +146,17 @@ export class AutoFormatPlugin implements EditorPlugin {
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
+                            let shouldList = false;
+
+                            if (autoBullet || autoNumbering) {
+                                shouldList = keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                );
+                            }
 
                             if (autoLink) {
                                 shouldLink = createLinkAfterSpace(
@@ -153,19 +170,13 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldHyphen = transformHyphen(previousSegment, paragraph, context);
                             }
 
-                            return (
-                                keyboardListTrigger(
-                                    model,
-                                    paragraph,
-                                    context,
-                                    autoBullet,
-                                    autoNumbering
-                                ) ||
-                                shouldHyphen ||
-                                shouldLink
-                            );
-                        }
+                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
+
+                            return shouldList || shouldHyphen || shouldLink;
+                        },
+                        formatOptions
                     );
+
                     break;
             }
         }
@@ -191,3 +202,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 }
+
+const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
+    return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+};
