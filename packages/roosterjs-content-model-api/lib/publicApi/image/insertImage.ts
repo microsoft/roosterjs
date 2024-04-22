@@ -4,6 +4,7 @@ import {
     addSegment,
     createContentModelDocument,
     createImage,
+    setSelection,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -36,6 +37,8 @@ function insertImageWithSrc(editor: IEditor, src: string) {
             mergeModel(model, doc, context, {
                 mergeFormat: 'mergeAll',
             });
+            image.isSelected = true;
+            setSelection(model, image);
 
             return true;
         },
