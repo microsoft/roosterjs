@@ -16,6 +16,10 @@ class DOMHelperImpl implements DOMHelper {
         return this.contentDiv.contains(node);
     }
 
+    isNodeEditor(node: Node): boolean {
+        return node == this.contentDiv;
+    }
+
     calculateZoomScale(): number {
         const originalWidth = this.contentDiv.getBoundingClientRect()?.width || 0;
         const visualWidth = this.contentDiv.offsetWidth;

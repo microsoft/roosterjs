@@ -19,6 +19,25 @@ describe('DOMHelperImpl', () => {
         });
     });
 
+    describe('isNodeEditor', () => {
+        it('isNodeEditor - Node is editor', () => {
+            const div = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+
+            const result = domHelper.isNodeEditor(div);
+            expect(result).toBeTrue();
+        });
+
+        it('isNodeEditor - Node is not editor', () => {
+            const div = document.createElement('div');
+            const div2 = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+
+            const result = domHelper.isNodeEditor(div2);
+            expect(result).toBeFalse();
+        });
+    });
+
     describe('queryElements', () => {
         it('queryElements', () => {
             const mockedResult = ['RESULT'] as any;
