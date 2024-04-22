@@ -18,6 +18,9 @@ describe('editTable', () => {
     let editor: IEditor;
     let focusSpy: jasmine.Spy;
     let formatTableWithContentModelSpy: jasmine.Spy;
+    let getEnvironmentSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let setDOMSelectionSpy: jasmine.Spy;
     const mockedTable = 'TABLE' as any;
 
     function runTest(operation: TableOperation, expectedSpy: jasmine.Spy, ...parameters: string[]) {
@@ -29,10 +32,15 @@ describe('editTable', () => {
             jasmine.anything()
         );
         expect(expectedSpy).toHaveBeenCalledWith(mockedTable, ...parameters);
+        expect(getDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     }
 
     beforeEach(() => {
         focusSpy = jasmine.createSpy('focus');
+        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({});
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         formatTableWithContentModelSpy = spyOn(
             formatTableWithContentModel,
             'formatTableWithContentModel'
@@ -42,6 +50,9 @@ describe('editTable', () => {
 
         editor = {
             focus: focusSpy,
+            getEnvironment: getEnvironmentSpy,
+            getDOMSelection: getDOMSelectionSpy,
+            setDOMSelection: setDOMSelectionSpy,
         } as any;
     });
 
@@ -239,5 +250,38 @@ describe('editTable', () => {
         it('splitVertically', () => {
             runTest('splitVertically', spy);
         });
+    });
+
+    it('edit in safar', () => {
+        const spy = spyOn(alignTableCell, 'alignTableCellHorizontally');
+        const collapseSpy = jasmine.createSpy('collapse');
+        const mockedRange = {
+            collapsed: false,
+            collapse: collapseSpy,
+        };
+
+        getEnvironmentSpy.and.returnValue({
+            isSafari: true,
+        });
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: mockedRange,
+        });
+
+        editTable(editor, 'alignCellLeft');
+
+        expect(formatTableWithContentModelSpy).toHaveBeenCalledWith(
+            editor,
+            'editTable',
+            jasmine.anything()
+        );
+        expect(spy).toHaveBeenCalledWith(mockedTable, 'alignCellLeft');
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range: mockedRange,
+            isReverted: false,
+        });
+        expect(collapseSpy).toHaveBeenCalledWith(true);
     });
 });
