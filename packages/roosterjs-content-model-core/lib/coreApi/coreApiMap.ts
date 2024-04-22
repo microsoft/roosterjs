@@ -1,5 +1,5 @@
-import type { CoreApiMap } from 'roosterjs-content-model-types';
 import { addUndoSnapshot } from './addUndoSnapshot/addUndoSnapshot';
+import { announce } from './announce/announce';
 import { attachDomEvent } from './attachDomEvent/attachDomEvent';
 import { createContentModel } from './createContentModel/createContentModel';
 import { createEditorContext } from './createEditorContext/createEditorContext';
@@ -14,6 +14,7 @@ import { setEditorStyle } from './setEditorStyle/setEditorStyle';
 import { setLogicalRoot } from './setLogicalRoot/setLogicalRoot';
 import { switchShadowEdit } from './switchShadowEdit/switchShadowEdit';
 import { triggerEvent } from './triggerEvent/triggerEvent';
+import type { CoreApiMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -39,4 +40,6 @@ export const coreApiMap: CoreApiMap = {
     switchShadowEdit: switchShadowEdit,
     getVisibleViewport: getVisibleViewport,
     setEditorStyle: setEditorStyle,
+
+    announce: announce,
 };
