@@ -7,7 +7,8 @@ function replaceEmojis(
     replacement: string
 ) {
     const { text } = previousSegment;
-    if (text === stringToReplace) {
+    const queryString = text.split(' ').pop();
+    if (queryString === stringToReplace) {
         previousSegment.text = text.replace(stringToReplace, replacement);
         return true;
     }
