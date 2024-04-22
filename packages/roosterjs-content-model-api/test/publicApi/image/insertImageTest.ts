@@ -1,6 +1,9 @@
+import * as createImage from 'roosterjs-content-model-dom/lib/modelApi/creators/createImage';
 import * as readFile from 'roosterjs-content-model-dom/lib/domUtils/readFile';
-import { IEditor } from 'roosterjs-content-model-types';
+import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
+import { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 import { insertImage } from '../../../lib/publicApi/image/insertImage';
+
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -23,6 +26,16 @@ describe('insertImage', () => {
         calledTimes: number
     ) {
         let formatResult: boolean | undefined;
+        const image = <ContentModelImage>{
+            segmentType: 'Image',
+            src: testUrl,
+            format: {
+                backgroundColor: '',
+            },
+            dataset: {},
+        };
+        spyOn(createImage, 'createImage').and.returnValue(image);
+        spyOn(setSelection, 'setSelection').and.callThrough();
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -46,6 +59,9 @@ describe('insertImage', () => {
         expect(formatContentModel.calls.argsFor(0)[1]).toEqual({
             apiName,
         });
+        expect(setSelection.setSelection).toHaveBeenCalledTimes(1);
+        expect(setSelection.setSelection).toHaveBeenCalledWith(model, image);
+        expect(image.isSelected).toBeTrue();
         expect(formatResult).toBe(calledTimes > 0);
     }
 
@@ -101,10 +117,7 @@ describe('insertImage', () => {
                                     backgroundColor: '',
                                 },
                                 dataset: {},
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
+                                isSelectedAsImageSelection: true,
                                 isSelected: true,
                             },
                         ],
@@ -142,10 +155,7 @@ describe('insertImage', () => {
                                     backgroundColor: '',
                                 },
                                 dataset: {},
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
+                                isSelectedAsImageSelection: true,
                                 isSelected: true,
                             },
                         ],
@@ -189,12 +199,7 @@ describe('insertImage', () => {
                                     backgroundColor: '',
                                 },
                                 dataset: {},
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontSize: '20px',
-                                },
+                                isSelectedAsImageSelection: true,
                                 isSelected: true,
                             },
                         ],
