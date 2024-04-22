@@ -1,6 +1,5 @@
-import * as createImage from 'roosterjs-content-model-dom/lib/modelApi/creators/createImage';
 import * as readFile from 'roosterjs-content-model-dom/lib/domUtils/readFile';
-import { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { insertImage } from '../../../lib/publicApi/image/insertImage';
 import {
     ContentModelDocument,
@@ -24,16 +23,6 @@ describe('insertImage', () => {
         calledTimes: number
     ) {
         let formatResult: boolean | undefined;
-        const image = <ContentModelImage>{
-            segmentType: 'Image',
-            src: testUrl,
-            format: {
-                backgroundColor: '',
-            },
-            dataset: {},
-        };
-        const imageNode = document.createElement('img');
-        spyOn(createImage, 'createImage').and.returnValue(image);
 
         const formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -43,15 +32,11 @@ describe('insertImage', () => {
                     deletedEntities: [],
                     newImages: [],
                 });
-
-                options.onNodeCreated?.(image, imageNode);
             });
-
         const editor = ({
             focus: jasmine.createSpy(),
             isDisposed: () => false,
             formatContentModel,
-            setDOMSelection: jasmine.createSpy(),
         } as any) as IEditor;
 
         executionCallback(editor);
@@ -60,13 +45,8 @@ describe('insertImage', () => {
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatContentModel.calls.argsFor(0)[1]).toEqual({
             apiName,
-            onNodeCreated: jasmine.anything(),
         });
         expect(formatResult).toBe(calledTimes > 0);
-        expect(editor.setDOMSelection).toHaveBeenCalledWith({
-            type: 'image',
-            image: imageNode,
-        });
     }
 
     beforeEach(() => {
