@@ -1086,6 +1086,37 @@ describe('Editor', () => {
 
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.getVisibleViewport()).toThrow();
+        expect(() => editor.setEditorStyle('key', 'rule', ['rule1', 'rule2'])).toThrow();
+    });
+
+    it('announce', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const announceSpy = jasmine.createSpy('announce');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                announce: announceSpy,
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const mockedData = 'ANNOUNCE' as any;
+
+        editor.announce(mockedData);
+
+        expect(announceSpy).toHaveBeenCalledWith(mockedCore, mockedData);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.announce(mockedData)).toThrow();
     });
 });

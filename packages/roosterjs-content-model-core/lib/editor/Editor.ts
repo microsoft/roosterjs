@@ -31,6 +31,7 @@ import type {
     EntityState,
     CachedElementHandler,
     DomToModelOptionForCreateModel,
+    AnnounceData,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -400,6 +401,16 @@ export class Editor implements IEditor {
         const core = this.getCore();
 
         core.api.setEditorStyle(core, key, cssRule, subSelectors);
+    }
+
+    /**
+     * Announce the given data
+     * @param announceData Data to announce
+     */
+    announce(announceData: AnnounceData): void {
+        const core = this.getCore();
+
+        core.api.announce(core, announceData);
     }
 
     /**

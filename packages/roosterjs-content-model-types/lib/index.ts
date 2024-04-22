@@ -226,6 +226,7 @@ export {
     RestoreUndoSnapshot,
     GetVisibleViewport,
     SetEditorStyle,
+    Announce,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';
