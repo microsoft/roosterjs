@@ -1,6 +1,13 @@
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
-import { ContentModelText, EditorInputEvent, IEditor } from 'roosterjs-content-model-types';
 import { CustomReplace, CustomReplacePlugin } from '../../lib/customReplace/CustomReplacePlugin';
+import {
+    ContentModelDocument,
+    ContentModelParagraph,
+    ContentModelSegmentFormat,
+    ContentModelText,
+    FormatContentModelContext,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 function replaceEmojis(
     previousSegment: ContentModelText,
@@ -18,7 +25,6 @@ function replaceEmojis(
 describe('Content Model Custom Replace Plugin Test', () => {
     let editor: IEditor;
     let formatTextSegmentBeforeSelectionMarkerSpy: jasmine.Spy;
-    let triggerEventSpy: jasmine.Spy;
     let customReplacePlugin: CustomReplacePlugin;
     const customReplacements: CustomReplace[] = [
         {
@@ -49,7 +55,6 @@ describe('Content Model Custom Replace Plugin Test', () => {
                     },
                 } as any), // Force return invalid range to go through content model code
             formatContentModel: () => {},
-            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         customReplacePlugin = new CustomReplacePlugin(customReplacements);
@@ -66,16 +71,46 @@ describe('Content Model Custom Replace Plugin Test', () => {
             eventType: 'input',
             rawEvent: {
                 inputType: 'insertText',
-                data: ':)',
+                data: ':',
             } as any,
         });
 
-        expect(formatTextSegmentBeforeSelectionMarkerSpy).toHaveBeenCalledWith(
-            editor,
-            (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return true;
-            }
-        );
+        customReplacePlugin.onPluginEvent({
+            eventType: 'input',
+            rawEvent: {
+                inputType: 'insertText',
+                data: ')',
+            } as any,
+        });
+
+        formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            expect(callback).toBe(
+                editor,
+                (
+                    _model: ContentModelDocument,
+                    previousSegment: ContentModelText,
+                    paragraph: ContentModelParagraph,
+                    _markerFormat: ContentModelSegmentFormat,
+                    context: FormatContentModelContext
+                ) => {
+                    const replaced = customReplacements.some(
+                        ({ stringToReplace, replacementString, replacementHandler }) => {
+                            return replacementHandler(
+                                previousSegment,
+                                stringToReplace,
+                                replacementString,
+                                paragraph
+                            );
+                        }
+                    );
+                    if (replaced) {
+                        context.canUndoByBackspace = true;
+                        return true;
+                    }
+                    return false;
+                }
+            );
+        });
     });
 
     it('replaceEmojis not should replace the text with emoji', () => {
@@ -83,15 +118,9 @@ describe('Content Model Custom Replace Plugin Test', () => {
             eventType: 'input',
             rawEvent: {
                 inputType: 'insertText',
-                data: ':(',
+                data: '(',
             } as any,
         });
-
-        expect(formatTextSegmentBeforeSelectionMarkerSpy).toHaveBeenCalledWith(
-            editor,
-            (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return false;
-            }
-        );
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
     });
 });

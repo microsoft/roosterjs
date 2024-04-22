@@ -8,6 +8,9 @@ import type {
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
+/**
+ * The CustomReplace interface defines a custom replacement that can be used in CustomReplacePlugin.
+ */
 export interface CustomReplace {
     stringToReplace: string;
     replacementString: string;
