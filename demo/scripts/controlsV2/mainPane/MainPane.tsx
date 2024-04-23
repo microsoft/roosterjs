@@ -42,11 +42,8 @@ import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
 import {
-    createContextMenuPlugin,
-    createTableEditMenuProvider,
-} from '../roosterjsReact/contextMenu';
-import {
     AutoFormatPlugin,
+    CustomReplacePlugin,
     EditPlugin,
     HyperlinkPlugin,
     MarkdownPlugin,
@@ -55,6 +52,10 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
+import {
+    createContextMenuPlugin,
+    createTableEditMenuProvider,
+} from '../roosterjsReact/contextMenu';
 
 const styles = require('./MainPane.scss');
 
@@ -482,6 +483,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             markdownOptions,
             autoFormatOptions,
             linkTitle,
+            customReplacements,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
@@ -504,6 +506,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         ? url => linkTitle.replace(UrlPlaceholder, url)
                         : linkTitle
                 ),
+            pluginList.customReplace && new CustomReplacePlugin(customReplacements),
         ].filter(x => !!x);
     }
 }
