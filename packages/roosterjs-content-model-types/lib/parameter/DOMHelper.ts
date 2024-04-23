@@ -9,6 +9,12 @@ export interface DOMHelper {
     isNodeInEditor(node: Node): boolean;
 
     /**
+     * Check if the given DOM node is the editor
+     * @param node The node to check
+     */
+    isNodeEditor(node: Node): boolean;
+
+    /**
      * Query HTML elements in editor by tag name.
      * Be careful of this function since it will also return element under entity.
      * @param tag Tag name of the element to query
