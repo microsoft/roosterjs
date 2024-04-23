@@ -47,7 +47,7 @@ export function adjustSelectionAroundEntity(
             const allSel = getSelectedSegmentsAndParagraphs(
                 model,
                 false /*includingFormatHolder*/,
-                true
+                true /*includingEntity*/
             );
             const sel = allSel[isReverted ? 0 : allSel.length - 1];
             const index = sel?.[1]?.segments.indexOf(sel[0]) ?? -1;
