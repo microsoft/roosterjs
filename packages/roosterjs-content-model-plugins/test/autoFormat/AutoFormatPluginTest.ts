@@ -2,6 +2,7 @@ import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
+import { ChangeSource } from '../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { createLinkAfterSpace } from '../../lib/autoFormat/link/createLinkAfterSpace';
 import { keyboardListTrigger } from '../../lib/autoFormat/list/keyboardListTrigger';
 import { transformFraction } from '../../lib/autoFormat/numbers/transformFraction';
@@ -289,6 +290,9 @@ describe('Content Model Auto Format Plugin Test', () => {
                 text: 'www.test.com',
                 format: {},
             };
+            const formatOptions = {
+                changeSource: '',
+            };
 
             plugin.onPluginEvent(event);
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
@@ -304,7 +308,10 @@ describe('Content Model Auto Format Plugin Test', () => {
                             options &&
                             options.autoLink &&
                             createLinkAfterSpace(segment, paragraph, context);
+
                         expect(result).toBe(expectResult);
+
+                        formatOptions.changeSource = result ? ChangeSource.AutoLink : '';
                         return result;
                     }
                 );

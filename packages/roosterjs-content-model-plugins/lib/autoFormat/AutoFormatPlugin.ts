@@ -148,7 +148,7 @@ export class AutoFormatPlugin implements EditorPlugin {
             switch (rawEvent.data) {
                 case ' ':
                     const formatOptions: FormatContentModelOptions = {
-                        changeSource: ChangeSource.AutoFormat,
+                        changeSource: '',
                         apiName: '',
                     };
                     formatTextSegmentBeforeSelectionMarker(
@@ -207,6 +207,11 @@ export class AutoFormatPlugin implements EditorPlugin {
                             }
 
                             formatOptions.apiName = getApiName(shouldList, shouldHyphen);
+                            formatOptions.changeSource = getChangeSource(
+                                shouldList,
+                                shouldHyphen,
+                                shouldLink
+                            );
 
                             return (
                                 shouldList ||
@@ -247,4 +252,12 @@ export class AutoFormatPlugin implements EditorPlugin {
 
 const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
     return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+};
+
+const getChangeSource = (shouldList: boolean, shouldHyphen: boolean, shouldLink: boolean) => {
+    return shouldList || shouldHyphen
+        ? ChangeSource.AutoFormat
+        : shouldLink
+        ? ChangeSource.AutoLink
+        : '';
 };
