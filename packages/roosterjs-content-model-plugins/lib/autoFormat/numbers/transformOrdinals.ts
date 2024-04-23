@@ -33,7 +33,7 @@ export function transformOrdinals(
                 previousSegment.text.length - 3,
                 previousSegment.text.length - 1
             );
-            console.log('ordinalSegment', ordinalSegment);
+
             ordinalSegment.format.superOrSubScriptSequence = 'super';
             context.canUndoByBackspace = true;
             return true;

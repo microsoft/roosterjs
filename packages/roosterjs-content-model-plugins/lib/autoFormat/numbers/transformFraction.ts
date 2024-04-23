@@ -21,7 +21,6 @@ export function transformFraction(
 ): boolean {
     const fraction = previousSegment.text.split(' ').pop()?.trim();
     if (fraction && FRACTIONS[fraction]) {
-        console.log('fraction', previousSegment);
         const textLength = previousSegment.text.length - 1;
         const textIndex = textLength - fraction.length;
         const textSegment = splitTextSegment(previousSegment, paragraph, textIndex, textLength);
