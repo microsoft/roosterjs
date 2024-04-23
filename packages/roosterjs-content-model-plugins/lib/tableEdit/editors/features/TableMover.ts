@@ -191,8 +191,7 @@ function onDragEnd(
     } else {
         // Check if table was dragged on itself
         if (table.contains(event.target as Node)) {
-            context.onEnd();
-            return false;
+            return cancelMove(context);
         }
         const element = event.target as HTMLElement;
 
@@ -215,10 +214,13 @@ function onDragEnd(
                                     range.setStart(parent, index + 1);
                                 }
                             });
+                            if (!range) {
+                                // Child not found in parent, cancel operation
+                                return cancelMove(context);
+                            }
                         } else {
                             // Element has no parent, cancel operation
-                            context.onEnd();
-                            return false;
+                            return cancelMove(context);
                         }
                     } else {
                         // Set to end of element
@@ -246,7 +248,7 @@ function onDragEnd(
                     ) {
                         const paragraph = SPArray[0][1];
                         paragraph.segments.forEach(segment => {
-                            if (segment == SPArray[0][0]) {
+                            if (segment == SPArray[0][0] && initValue.cmTable) {
                                 const doc = createContentModelDocument();
                                 doc.blocks.push(initValue.cmTable);
                                 insertionSuccess = !!mergeModel(model, doc, context, {
@@ -315,4 +317,9 @@ function getTextPosition(element: HTMLElement, event: MouseEvent) {
             }
         }
     }
+}
+
+function cancelMove(context: TableMoverContext) {
+    context.onEnd();
+    return false;
 }
