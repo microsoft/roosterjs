@@ -8,7 +8,7 @@ import type { RibbonButton } from '../roosterjsReact/ribbon';
 export const imageCropButton: RibbonButton<'buttonNameCropImage'> = {
     key: 'buttonNameCropImage',
     unlocalizedText: 'Crop Image',
-    iconName: 'ImageSearch',
+    iconName: 'Crop',
     isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: editor => {
         cropImage(editor);

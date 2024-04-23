@@ -22,6 +22,9 @@ import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
 import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
 import { imageCropButton } from '../demoButtons/imageCropButton';
+import { imageFlipButton } from '../demoButtons/imageFlipButton';
+import { imageResizeByPercentageButton } from '../demoButtons/imageResizeByPercentageButton';
+import { imageRotateButton } from '../demoButtons/imageRotateButton';
 import { increaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/increaseFontSizeButton';
 import { increaseIndentButton } from '../roosterjsReact/ribbon/buttons/increaseIndentButton';
 import { insertImageButton } from '../roosterjsReact/ribbon/buttons/insertImageButton';
@@ -102,6 +105,9 @@ const imageButtons: RibbonButton<any>[] = [
     changeImageButton,
     imageBoxShadowButton,
     imageCropButton,
+    imageFlipButton,
+    imageRotateButton,
+    imageResizeByPercentageButton,
 ];
 
 const insertButtons: RibbonButton<any>[] = [

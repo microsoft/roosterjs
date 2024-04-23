@@ -4,7 +4,7 @@ import { IEditor } from 'roosterjs-content-model-types';
  *
  * @param editor The editor instance
  */
-export function cropImage(editor: IEditor) {
+export function rotateImage(editor: IEditor, degree: number) {
     const selection = editor.getDOMSelection();
     if (selection?.type === 'image') {
         editor.triggerEvent('editImage', {
@@ -13,8 +13,13 @@ export function cropImage(editor: IEditor) {
             newSrc: selection.image.src,
             originalSrc: selection.image.src,
             apiOperation: {
-                action: 'crop',
+                action: 'rotate',
+                angleRad: degreesToRadians(degree),
             },
         });
     }
+}
+
+function degreesToRadians(degrees: number) {
+    return degrees * (Math.PI / 180);
 }

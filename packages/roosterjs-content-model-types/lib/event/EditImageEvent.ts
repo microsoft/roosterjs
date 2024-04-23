@@ -27,5 +27,14 @@ export interface EditImageEvent extends BasePluginEvent<'editImage'> {
      */
     newSrc: string;
 
-    startCropping?: boolean;
+    /**
+     * Action triggered by user to edit the image
+     */
+    apiOperation?: ImageEditApiOperation;
+}
+
+interface ImageEditApiOperation {
+    action: 'crop' | 'flip' | 'rotate' | 'resize';
+    flipDirection?: 'horizontal' | 'vertical';
+    angleRad?: number;
 }

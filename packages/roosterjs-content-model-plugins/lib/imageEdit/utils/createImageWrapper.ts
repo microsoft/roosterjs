@@ -14,7 +14,7 @@ export function createImageWrapper(
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
-    operation?: 'resize' | 'rotate' | 'resizeAndRotate' | 'crop'
+    operation?: 'resize' | 'rotate' | 'resizeAndRotate' | 'crop' | 'flip'
 ) {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
@@ -27,9 +27,6 @@ export function createImageWrapper(
         imageClone.style.height = editInfo.heightPx + 'px';
     }
     const doc = editor.getDocument();
-    if (!operation) {
-        operation = options.onSelectState ?? 'resizeAndRotate';
-    }
 
     let rotators: HTMLDivElement[] = [];
     if (!options.disableRotate && (operation === 'resizeAndRotate' || operation === 'rotate')) {

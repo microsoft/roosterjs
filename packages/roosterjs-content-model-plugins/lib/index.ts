@@ -33,4 +33,7 @@ export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './pick
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
 export { cropImage } from './imageEdit/editingApis/cropImage';
+export { flipImage } from './imageEdit/editingApis/flipImage';
+export { rotateImage } from './imageEdit/editingApis/rotateImage';
+export { resizeByPercentage } from './imageEdit/editingApis/resizeByPercentage';
 export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';

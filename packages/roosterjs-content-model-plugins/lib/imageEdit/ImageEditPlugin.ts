@@ -52,6 +52,10 @@ export class ImageEditPlugin implements EditorPlugin {
     private lastSrc: string | null = null;
     private wasImageResized: boolean = false;
     private isCropMode: boolean = false;
+    private resizers: HTMLDivElement[] = [];
+    private rotators: HTMLDivElement[] = [];
+    private croppers: HTMLDivElement[] = [];
+    private zoomScale: number = 1;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -120,11 +124,21 @@ export class ImageEditPlugin implements EditorPlugin {
                     }
                     break;
                 case 'editImage':
-                    if (event.image === this.selectedImage) {
-                        if (event.startCropping) {
-                            this.startCropping(this.editor, event.image);
-                        }
+                    if (event.apiOperation?.action === 'crop') {
+                        this.startCropping(this.editor, event.image);
                     }
+
+                    if (event.apiOperation?.action === 'flip' && event.apiOperation.flipDirection) {
+                        this.flipImage(this.editor, event.image, event.apiOperation.flipDirection);
+                    }
+
+                    if (
+                        event.apiOperation?.action === 'rotate' &&
+                        event.apiOperation.angleRad !== undefined
+                    ) {
+                        this.rotateImage(this.editor, event.image, event.apiOperation.angleRad);
+                    }
+
                     break;
             }
         }
@@ -132,140 +146,167 @@ export class ImageEditPlugin implements EditorPlugin {
 
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
         if (event.newSelection?.type == 'image' && !this.selectedImage) {
-            this.startEditing(editor, event.newSelection.image);
+            this.startRotateAndResize(editor, event.newSelection.image);
         }
     }
 
-    private startEditing(editor: IEditor, image: HTMLImageElement) {
+    private startEditing(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation?: 'resize' | 'rotate' | 'crop' | 'flip'
+    ) {
         this.imageEditInfo = getImageEditInfo(image);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
-        const { resizers, rotators, wrapper, shadowSpan, imageClone } = createImageWrapper(
+        const {
+            resizers,
+            rotators,
+            wrapper,
+            shadowSpan,
+            imageClone,
+            croppers,
+        } = createImageWrapper(
             editor,
             image,
             this.options,
             this.imageEditInfo,
             this.imageHTMLOptions,
-            undefined /* operation */
+            apiOperation || this.options.onSelectState
         );
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
         this.wrapper = wrapper;
         this.clonedImage = imageClone;
         this.wasImageResized = checkIfImageWasResized(image);
-        const zoomScale = editor.getDOMHelper().calculateZoomScale();
-        this.dndHelpers = [
-            ...getDropAndDragHelpers(
-                wrapper,
+        this.resizers = resizers;
+        this.rotators = rotators;
+        this.croppers = croppers;
+        this.zoomScale = editor.getDOMHelper().calculateZoomScale();
+    }
+
+    private startRotateAndResize(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation?: 'resize' | 'rotate'
+    ) {
+        this.startEditing(editor, image, apiOperation);
+        if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
+            this.dndHelpers = [
+                ...getDropAndDragHelpers(
+                    this.wrapper,
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.ResizeHandle,
+                    Resizer,
+                    () => {
+                        if (
+                            this.imageEditInfo &&
+                            this.selectedImage &&
+                            this.wrapper &&
+                            this.clonedImage
+                        ) {
+                            updateWrapper(
+                                editor,
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                this.clonedImage,
+                                this.wrapper,
+                                this.rotators,
+                                this.resizers,
+                                undefined
+                            );
+                            this.wasImageResized = true;
+                        }
+                    },
+                    this.zoomScale
+                ),
+                ...getDropAndDragHelpers(
+                    this.wrapper,
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.RotateHandle,
+                    Rotator,
+                    () => {
+                        if (
+                            this.imageEditInfo &&
+                            this.selectedImage &&
+                            this.wrapper &&
+                            this.clonedImage
+                        ) {
+                            updateWrapper(
+                                editor,
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                this.clonedImage,
+                                this.wrapper,
+                                this.rotators,
+                                this.resizers,
+                                undefined
+                            );
+                        }
+                    },
+                    this.zoomScale
+                ),
+            ];
+
+            updateWrapper(
+                editor,
                 this.imageEditInfo,
                 this.options,
-                ImageEditElementClass.ResizeHandle,
-                Resizer,
-                () => {
-                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
-                        updateWrapper(
-                            editor,
-                            this.imageEditInfo,
-                            this.options,
-                            this.selectedImage,
-                            imageClone,
-                            this.wrapper,
-                            rotators,
-                            resizers,
-                            undefined
-                        );
-                        this.wasImageResized = true;
-                    }
-                },
-                zoomScale
-            ),
-            ...getDropAndDragHelpers(
-                wrapper,
-                this.imageEditInfo,
-                this.options,
-                ImageEditElementClass.RotateHandle,
-                Rotator,
-                () => {
-                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
-                        updateWrapper(
-                            editor,
-                            this.imageEditInfo,
-                            this.options,
-                            this.selectedImage,
-                            imageClone,
-                            this.wrapper,
-                            rotators,
-                            resizers,
-                            undefined
-                        );
-                    }
-                },
-                zoomScale
-            ),
-        ];
+                this.selectedImage,
+                this.clonedImage,
+                this.wrapper,
+                this.rotators,
+                this.resizers,
+                undefined
+            );
 
-        updateWrapper(
-            editor,
-            this.imageEditInfo,
-            this.options,
-            this.selectedImage,
-            imageClone,
-            this.wrapper,
-            rotators,
-            resizers,
-            undefined
-        );
-
-        editor.setDOMSelection({
-            type: 'image',
-            image: image,
-        });
+            editor.setDOMSelection({
+                type: 'image',
+                image: image,
+            });
+        }
     }
 
     private startCropping(editor: IEditor, image: HTMLImageElement) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             this.removeImageWrapper(editor, this.dndHelpers);
         }
-        this.lastSrc = image.getAttribute('src');
-        this.imageEditInfo = getImageEditInfo(image);
-        this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
-        const zoomScale = editor.getDOMHelper().calculateZoomScale();
-        const { wrapper, shadowSpan, imageClone, croppers } = createImageWrapper(
-            editor,
-            image,
-            this.options,
-            this.imageEditInfo,
-            this.imageHTMLOptions,
-            'crop'
-        );
-        this.shadowSpan = shadowSpan;
-        this.selectedImage = image;
-        this.wrapper = wrapper;
-        this.clonedImage = imageClone;
+        this.startEditing(editor, image, 'crop');
+        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
+            return;
+        }
         this.dndHelpers = [
             ...getDropAndDragHelpers(
-                wrapper,
+                this.wrapper,
                 this.imageEditInfo,
                 this.options,
                 ImageEditElementClass.CropHandle,
                 Cropper,
                 () => {
-                    if (this.imageEditInfo && this.selectedImage && this.wrapper) {
+                    if (
+                        this.imageEditInfo &&
+                        this.selectedImage &&
+                        this.wrapper &&
+                        this.clonedImage
+                    ) {
                         updateWrapper(
                             editor,
                             this.imageEditInfo,
                             this.options,
                             this.selectedImage,
-                            imageClone,
+                            this.clonedImage,
                             this.wrapper,
                             undefined,
                             undefined,
-                            croppers
+                            this.croppers
                         );
                         this.isCropMode = true;
                     }
                 },
-                zoomScale
+                this.zoomScale
             ),
         ];
 
@@ -287,6 +328,9 @@ export class ImageEditPlugin implements EditorPlugin {
         this.lastSrc = null;
         this.wasImageResized = false;
         this.isCropMode = false;
+        this.resizers = [];
+        this.rotators = [];
+        this.croppers = [];
     }
 
     private removeImageWrapper(
@@ -309,5 +353,60 @@ export class ImageEditPlugin implements EditorPlugin {
         }
         resizeHelpers.forEach(helper => helper.dispose());
         this.cleanInfo();
+    }
+
+    private flipImage(
+        editor: IEditor,
+        image: HTMLImageElement,
+        direction: 'horizontal' | 'vertical'
+    ) {
+        this.startEditing(editor, image, 'flip');
+        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
+            return;
+        }
+        const angleRad = this.imageEditInfo.angleRad || 0;
+        const isInVerticalPostion =
+            (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
+            (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
+        if (isInVerticalPostion) {
+            if (direction === 'horizontal') {
+                this.imageEditInfo.flippedVertical = !this.imageEditInfo.flippedVertical;
+            } else {
+                this.imageEditInfo.flippedHorizontal = !this.imageEditInfo.flippedHorizontal;
+            }
+        } else {
+            if (direction === 'vertical') {
+                this.imageEditInfo.flippedVertical = !this.imageEditInfo.flippedVertical;
+            } else {
+                this.imageEditInfo.flippedHorizontal = !this.imageEditInfo.flippedHorizontal;
+            }
+        }
+        updateWrapper(
+            editor,
+            this.imageEditInfo,
+            this.options,
+            this.selectedImage,
+            this.clonedImage,
+            this.wrapper
+        );
+        this.removeImageWrapper(editor, this.dndHelpers);
+    }
+
+    private rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
+        this.startEditing(editor, image, 'rotate');
+        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
+            return;
+        }
+        this.imageEditInfo.angleRad = (this.imageEditInfo.angleRad || 0) + angleRad;
+
+        updateWrapper(
+            editor,
+            this.imageEditInfo,
+            this.options,
+            this.selectedImage,
+            this.clonedImage,
+            this.wrapper
+        );
+        this.removeImageWrapper(editor, this.dndHelpers);
     }
 }

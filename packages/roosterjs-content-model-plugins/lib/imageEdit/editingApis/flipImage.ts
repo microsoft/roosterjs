@@ -4,7 +4,7 @@ import { IEditor } from 'roosterjs-content-model-types';
  *
  * @param editor The editor instance
  */
-export function cropImage(editor: IEditor) {
+export function flipImage(editor: IEditor, direction: 'horizontal' | 'vertical') {
     const selection = editor.getDOMSelection();
     if (selection?.type === 'image') {
         editor.triggerEvent('editImage', {
@@ -13,7 +13,8 @@ export function cropImage(editor: IEditor) {
             newSrc: selection.image.src,
             originalSrc: selection.image.src,
             apiOperation: {
-                action: 'crop',
+                action: 'flip',
+                flipDirection: direction,
             },
         });
     }
