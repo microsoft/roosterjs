@@ -25,13 +25,17 @@ export function getSelectedSegmentsAndParagraphs(
     model: ContentModelDocument,
     includingFormatHolder: boolean,
     includingEntity?: boolean
-): [ContentModelSegment, ContentModelParagraph | null][] {
+): [ContentModelSegment, ContentModelParagraph | null, ContentModelBlockGroup[]][] {
     const selections = collectSelections(model, {
         includeListFormatHolder: includingFormatHolder ? 'allSegments' : 'never',
     });
-    const result: [ContentModelSegment, ContentModelParagraph | null][] = [];
+    const result: [
+        ContentModelSegment,
+        ContentModelParagraph | null,
+        ContentModelBlockGroup[]
+    ][] = [];
 
-    selections.forEach(({ segments, block }) => {
+    selections.forEach(({ segments, block, path }) => {
         if (segments && ((includingFormatHolder && !block) || block?.blockType == 'Paragraph')) {
             segments.forEach(segment => {
                 if (
@@ -39,7 +43,7 @@ export function getSelectedSegmentsAndParagraphs(
                     segment.segmentType != 'Entity' ||
                     !segment.entityFormat.isReadonly
                 ) {
-                    result.push([segment, block?.blockType == 'Paragraph' ? block : null]);
+                    result.push([segment, block?.blockType == 'Paragraph' ? block : null, path]);
                 }
             });
         }

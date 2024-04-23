@@ -1,3 +1,4 @@
+import { adjustSelectionAroundEntity } from './adjustSelectionAroundEntity';
 import { normalizePos } from '../selection/normalizePos';
 import {
     addDelimiters,
@@ -11,7 +12,7 @@ import {
     findClosestEntityWrapper,
     iterateSelections,
     isCharacterValue,
-    getSelectedSegmentsAndParagraphs,
+    findClosestBlockEntityContainer,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
@@ -30,8 +31,6 @@ const DelimiterSelector = '.' + DelimiterAfter + ',.' + DelimiterBefore;
 const ZeroWidthSpace = '\u200B';
 const EntityInfoName = '_Entity';
 const InlineEntitySelector = 'span.' + EntityInfoName;
-const BlockEntityContainer = '_E_EBlockEntityContainer';
-const BlockEntityContainerSelector = '.' + BlockEntityContainer;
 
 /**
  * @internal exported only for unit test
@@ -200,10 +199,11 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
         return;
     }
 
-    const { rawEvent } = event;
-    const { range } = selection;
+    const rawEvent = event.rawEvent;
+    const range = selection.range;
+    const key = rawEvent.key;
 
-    switch (rawEvent.key) {
+    switch (key) {
         case 'Enter':
             if (range.collapsed) {
                 handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
@@ -223,7 +223,12 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
 
         case 'ArrowLeft':
         case 'ArrowRight':
-            handleMovingOnDelimiter(editor, rawEvent);
+            if (!rawEvent.altKey && !rawEvent.ctrlKey && !rawEvent.metaKey) {
+                // Handle in async so focus is already moved, this makes us easier to check if we should adjust the selection
+                editor.getDocument().defaultView?.requestAnimationFrame(() => {
+                    adjustSelectionAroundEntity(editor, key, rawEvent.shiftKey);
+                });
+            }
             break;
 
         default:
@@ -235,96 +240,6 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
     }
 }
 
-function handleMovingOnDelimiter(editor: IEditor, rawEvent: KeyboardEvent) {
-    editor.getDocument().defaultView?.requestAnimationFrame(() => {
-        if (editor.isDisposed()) {
-            return;
-        }
-
-        const selection = editor.getDOMSelection();
-
-        if (!selection || selection.type != 'range') {
-            return;
-        }
-
-        const { range, isReverted } = selection;
-        const anchorNode = isReverted ? range.startContainer : range.endContainer;
-        const offset = isReverted ? range.startOffset : range.endOffset;
-        const delimiter = isNodeOfType(anchorNode, 'ELEMENT_NODE')
-            ? anchorNode
-            : anchorNode.parentElement;
-        const isRtl =
-            delimiter &&
-            editor.getDocument().defaultView?.getComputedStyle(delimiter).direction == 'rtl';
-        const movingBefore = (rawEvent.key == 'ArrowLeft') != !!isRtl;
-
-        if (
-            delimiter &&
-            isEntityDelimiter(delimiter, !movingBefore) &&
-            ((movingBefore && offset == 0) || (!movingBefore && offset == 1))
-        ) {
-            editor.formatContentModel(model => {
-                const allSel = getSelectedSegmentsAndParagraphs(
-                    model,
-                    false /*includingFormatHolder*/,
-                    true
-                );
-                const sel = allSel[isReverted ? 0 : allSel.length - 1];
-                const index = sel?.[1]?.segments.indexOf(sel[0]) ?? -1;
-
-                if (sel && sel[1] && index >= 0) {
-                    const isShrinking =
-                        rawEvent.shiftKey && !range.collapsed && movingBefore != !!isReverted;
-                    const entity = isShrinking
-                        ? sel[0]
-                        : sel[1].segments[movingBefore ? index - 1 : index + 1];
-                    const pairedDelimiter =
-                        entity?.segmentType == 'Entity'
-                            ? movingBefore
-                                ? entity.wrapper.previousElementSibling
-                                : entity.wrapper.nextElementSibling
-                            : null;
-
-                    if (
-                        pairedDelimiter &&
-                        isEntityDelimiter(pairedDelimiter as HTMLElement, movingBefore)
-                    ) {
-                        const newRange = range.cloneRange();
-
-                        if (isShrinking) {
-                            if (movingBefore) {
-                                newRange.setEndBefore(pairedDelimiter);
-                            } else {
-                                newRange.setStartAfter(pairedDelimiter);
-                            }
-                        } else {
-                            if (movingBefore) {
-                                newRange.setStartBefore(pairedDelimiter);
-                            } else {
-                                newRange.setEndAfter(pairedDelimiter);
-                            }
-                            if (!rawEvent.shiftKey) {
-                                if (movingBefore) {
-                                    newRange.setEndBefore(pairedDelimiter);
-                                } else {
-                                    newRange.setStartAfter(pairedDelimiter);
-                                }
-                            }
-                        }
-                        editor.setDOMSelection({
-                            type: 'range',
-                            range: newRange,
-                            isReverted: newRange.collapsed ? false : isReverted,
-                        });
-                    }
-                }
-
-                return false;
-            });
-        }
-    });
-}
-
 function handleInputOnDelimiter(
     editor: IEditor,
     range: Range,
@@ -334,7 +249,7 @@ function handleInputOnDelimiter(
     const helper = editor.getDOMHelper();
 
     if (focusedNode && isEntityDelimiter(focusedNode) && helper.isNodeInEditor(focusedNode)) {
-        const blockEntityContainer = focusedNode.closest(BlockEntityContainerSelector);
+        const blockEntityContainer = findClosestBlockEntityContainer(focusedNode, helper);
         const isEnter = rawEvent.key === 'Enter';
 
         if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {

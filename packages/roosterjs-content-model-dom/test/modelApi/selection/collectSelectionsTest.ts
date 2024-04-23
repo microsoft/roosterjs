@@ -42,7 +42,11 @@ describe('getSelectedSegmentsAndParagraphs', () => {
         selections: SelectionInfo[],
         includingFormatHolder: boolean,
         includingEntity: boolean,
-        expectedResult: [ContentModelSegment, ContentModelParagraph | null][]
+        expectedResult: [
+            ContentModelSegment,
+            ContentModelParagraph | null,
+            ContentModelBlockGroup[]
+        ][]
     ) {
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             selections.forEach(({ path, tableContext, block, segments }) => {
@@ -89,10 +93,10 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             false,
             false,
             [
-                [s1, p1],
-                [s2, p1],
-                [s3, p2],
-                [s4, p2],
+                [s1, p1, []],
+                [s2, p1, []],
+                [s3, p2, []],
+                [s4, p2, []],
             ]
         );
     });
@@ -144,8 +148,8 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             true,
             false,
             [
-                [s3, null],
-                [s4, null],
+                [s3, null, []],
+                [s4, null, []],
             ]
         );
     });
@@ -186,10 +190,10 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             true,
             false,
             [
-                [m1, p1],
-                [s2, p2],
-                [s3, p2],
-                [m2, p3],
+                [m1, p1, []],
+                [s2, p2, []],
+                [s3, p2, []],
+                [m2, p3, []],
             ]
         );
     });
@@ -211,7 +215,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             ],
             false,
             false,
-            [[e2, p1]]
+            [[e2, p1, []]]
         );
     });
 
@@ -233,8 +237,8 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             false,
             true,
             [
-                [e1, p1],
-                [e2, p1],
+                [e1, p1, []],
+                [e2, p1, []],
             ]
         );
     });

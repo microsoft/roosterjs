@@ -10,12 +10,15 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
+const ENTITY_INFO_SELECTOR = '.' + ENTITY_INFO_NAME;
 const ENTITY_TYPE_PREFIX = '_EType_';
 const ENTITY_ID_PREFIX = '_EId_';
 const ENTITY_READONLY_PREFIX = '_EReadonly_';
 const ZERO_WIDTH_SPACE = '\u200B';
 const DELIMITER_BEFORE = 'entityDelimiterBefore';
 const DELIMITER_AFTER = 'entityDelimiterAfter';
+const BLOCK_ENTITY_CONTAINER = '_E_EBlockEntityContainer';
+const BLOCK_ENTITY_CONTAINER_SELECTOR = '.' + BLOCK_ENTITY_CONTAINER;
 
 /**
  * Check if the given DOM Node is an entity wrapper element
@@ -33,7 +36,20 @@ export function findClosestEntityWrapper(
     startNode: Node,
     domHelper: DOMHelper
 ): HTMLElement | null {
-    return domHelper.findClosestElementAncestor(startNode, `.${ENTITY_INFO_NAME}`);
+    return domHelper.findClosestElementAncestor(startNode, ENTITY_INFO_SELECTOR);
+}
+
+/**
+ * Find the closest block entity wrapper element from a given DOM node
+ * @param node The node to start looking for entity container
+ * @param domHelper The DOM helper
+ * @returns
+ */
+export function findClosestBlockEntityContainer(
+    node: Node,
+    domHelper: DOMHelper
+): HTMLElement | null {
+    return domHelper.findClosestElementAncestor(node, BLOCK_ENTITY_CONTAINER_SELECTOR);
 }
 
 /**
@@ -115,6 +131,15 @@ export function isEntityDelimiter(element: HTMLElement, isBefore?: boolean): boo
             (matchBefore && element.classList.contains(DELIMITER_BEFORE))) &&
         element.textContent === ZERO_WIDTH_SPACE
     );
+}
+
+/**
+ * Check if the given element is a container element of block entity
+ * @param element The element to check
+ * @returns True if the element is a block entity container, otherwise false
+ */
+export function isBlockEntityContainer(element: HTMLElement): boolean {
+    return isElementOfType(element, 'div') && element.classList.contains(BLOCK_ENTITY_CONTAINER);
 }
 
 /**
