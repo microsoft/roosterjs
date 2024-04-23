@@ -3,19 +3,31 @@ import { DOMHelper } from 'roosterjs-content-model-types';
 
 describe('DOMHelperImpl', () => {
     describe('isNodeInEditor', () => {
-        it('isNodeInEditor', () => {
-            const mockedResult = 'RESULT' as any;
-            const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
-            const mockedDiv = {
-                contains: containsSpy,
-            } as any;
+        it('isNodeInEditor - contains element', () => {
+            const mockedDiv = document.createElement('div');
+            const mockedParagraph = document.createElement('p');
+            mockedDiv.appendChild(mockedParagraph);
+
             const domHelper = createDOMHelper(mockedDiv);
-            const mockedNode = 'NODE' as any;
+            const result = domHelper.isNodeInEditor(mockedParagraph as Node);
 
-            const result = domHelper.isNodeInEditor(mockedNode);
+            expect(result).toBeTrue();
+        });
+        it('isNodeInEditor - no element', () => {
+            const mockedDiv = document.createElement('div');
+            const mockedParagraph = document.createElement('p');
 
-            expect(result).toBe(mockedResult);
-            expect(containsSpy).toHaveBeenCalledWith(mockedNode);
+            const domHelper = createDOMHelper(mockedDiv);
+            const result = domHelper.isNodeInEditor(mockedParagraph);
+
+            expect(result).toBeFalse();
+        });
+        it('isNodeInEditor - Node is editor', () => {
+            const mockedDiv = document.createElement('div');
+            const domHelper = createDOMHelper(mockedDiv);
+            const result = domHelper.isNodeInEditor(mockedDiv);
+
+            expect(result).toBeFalse();
         });
     });
 
