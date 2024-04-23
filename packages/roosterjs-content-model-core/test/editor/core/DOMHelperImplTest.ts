@@ -3,30 +3,37 @@ import { DOMHelper } from 'roosterjs-content-model-types';
 
 describe('DOMHelperImpl', () => {
     describe('isNodeInEditor', () => {
-        it('isNodeInEditor - contains element', () => {
-            const mockedDiv = document.createElement('div');
-            const mockedParagraph = document.createElement('p');
-            mockedDiv.appendChild(mockedParagraph);
-
+        it('isNodeInEditor', () => {
+            const mockedResult = 'RESULT' as any;
+            const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
+            const mockedDiv = {
+                contains: containsSpy,
+            } as any;
             const domHelper = createDOMHelper(mockedDiv);
-            const result = domHelper.isNodeInEditor(mockedParagraph as Node);
+            const mockedNode = 'NODE' as any;
 
+            const result = domHelper.isNodeInEditor(mockedNode);
+
+            expect(result).toBe(mockedResult);
+            expect(containsSpy).toHaveBeenCalledWith(mockedNode);
+        });
+    });
+
+    describe('isNodeEditor', () => {
+        it('isNodeEditor - Node is editor', () => {
+            const div = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+
+            const result = domHelper.isNodeEditor(div);
             expect(result).toBeTrue();
         });
-        it('isNodeInEditor - no element', () => {
-            const mockedDiv = document.createElement('div');
-            const mockedParagraph = document.createElement('p');
 
-            const domHelper = createDOMHelper(mockedDiv);
-            const result = domHelper.isNodeInEditor(mockedParagraph);
+        it('isNodeEditor - Node is not editor', () => {
+            const div = document.createElement('div');
+            const div2 = document.createElement('div');
+            const domHelper = createDOMHelper(div);
 
-            expect(result).toBeFalse();
-        });
-        it('isNodeInEditor - Node is editor', () => {
-            const mockedDiv = document.createElement('div');
-            const domHelper = createDOMHelper(mockedDiv);
-            const result = domHelper.isNodeInEditor(mockedDiv);
-
+            const result = domHelper.isNodeEditor(div2);
             expect(result).toBeFalse();
         });
     });
@@ -249,6 +256,86 @@ describe('DOMHelperImpl', () => {
             let result = domHelper.hasFocus();
 
             expect(result).toBe(false);
+        });
+    });
+
+    describe('isRightToLeft', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+            } as any;
+        });
+
+        it('LTR', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'ltr',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeFalse();
+        });
+
+        it('RTL', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'rtl',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeTrue();
+        });
+    });
+
+    describe('getClientWidth', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+                clientWidth: 1000,
+            } as any;
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                paddingLeft: '10px',
+                paddingRight: '10px',
+            });
+
+            expect(domHelper.getClientWidth()).toBe(980);
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({});
+
+            expect(domHelper.getClientWidth()).toBe(1000);
         });
     });
 });

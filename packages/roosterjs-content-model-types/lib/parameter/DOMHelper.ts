@@ -9,7 +9,7 @@ export interface DOMHelper {
     isNodeInEditor(node: Node): boolean;
 
     /**
-     * Check if the given DOM node is the editor
+     * Check if the given DOM node is the editor itself
      * @param node The node to check
      */
     isNodeEditor(node: Node): boolean;
@@ -87,4 +87,14 @@ export interface DOMHelper {
      * @returns True if the editor has focus, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean;
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getClientWidth(): number;
 }
