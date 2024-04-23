@@ -2,6 +2,7 @@ import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
+import { ChangeSource } from '../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { createLinkAfterSpace } from '../../lib/autoFormat/link/createLinkAfterSpace';
 import { keyboardListTrigger } from '../../lib/autoFormat/list/keyboardListTrigger';
 import { transformHyphen } from '../../lib/autoFormat/hyphen/transformHyphen';
@@ -259,6 +260,10 @@ describe('Content Model Auto Format Plugin Test', () => {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
 
+            const formatOptions = {
+                changeSource: '',
+            };
+
             plugin.onPluginEvent(event);
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
                 expect(callback).toBe(
@@ -269,11 +274,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return (
+                        const result =
                             options &&
                             options.autoLink &&
-                            createLinkAfterSpace(previousSegment, paragraph, context)
-                        );
+                            createLinkAfterSpace(previousSegment, paragraph, context);
+                        formatOptions.changeSource = result ? ChangeSource.AutoLink : '';
+                        return result;
                     }
                 );
             });
