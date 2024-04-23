@@ -118,7 +118,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
-                    {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem('announce', 'Announce')}
                 </tbody>
             </table>
@@ -293,6 +292,7 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                             (state, value) => (state.linkTitle = value)
                         )
                     )}
+                    {this.renderPluginItem('customReplace', 'Custom Replace')}
                 </tbody>
             </table>
         );

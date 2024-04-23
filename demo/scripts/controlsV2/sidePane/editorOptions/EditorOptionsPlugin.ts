@@ -1,3 +1,4 @@
+import { emojiReplacements } from './getReplacements';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -17,10 +18,10 @@ const initialState: OptionState = {
         sampleEntity: true,
         markdown: true,
         hyperlink: true,
+        customReplace: true,
 
         // Legacy plugins
         imageEdit: false,
-        customReplace: false,
         announce: false,
     },
     defaultFormat: {
@@ -54,6 +55,7 @@ const initialState: OptionState = {
         strikethrough: true,
         codeFormat: {},
     },
+    customReplacements: emojiReplacements,
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

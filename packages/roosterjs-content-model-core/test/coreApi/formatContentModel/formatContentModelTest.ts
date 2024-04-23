@@ -20,6 +20,7 @@ describe('formatContentModel', () => {
     let getDOMSelection: jasmine.Spy;
     let hasFocus: jasmine.Spy;
     let getClientWidth: jasmine.Spy;
+    let announce: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -40,6 +41,7 @@ describe('formatContentModel', () => {
         getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
         hasFocus = jasmine.createSpy('hasFocus');
         getClientWidth = jasmine.createSpy('getClientWidth');
+        announce = jasmine.createSpy('announce');
 
         core = ({
             api: {
@@ -50,6 +52,7 @@ describe('formatContentModel', () => {
                 getFocusedPosition,
                 triggerEvent,
                 getDOMSelection,
+                announce,
             },
             lifecycle: {},
             cache: {},
@@ -83,6 +86,7 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Callback return true', () => {
@@ -115,6 +119,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Skip undo snapshot', () => {
@@ -150,6 +155,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Customize change source', () => {
@@ -181,6 +187,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Customize change source, getChangeData and skip undo snapshot', () => {
@@ -221,6 +228,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has onNodeCreated', () => {
@@ -258,6 +266,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has entity got deleted', () => {
@@ -320,6 +329,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has new entity in dark mode', () => {
@@ -381,6 +391,7 @@ describe('formatContentModel', () => {
                 true
             );
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('With selectionOverride', () => {
@@ -409,6 +420,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('With domToModelOptions', () => {
@@ -441,6 +453,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has image', () => {
@@ -477,6 +490,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has shouldClearCachedModel', () => {
@@ -508,6 +522,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has shouldClearCachedModel, and callback return false', () => {
@@ -532,6 +547,7 @@ describe('formatContentModel', () => {
                 cachedModel: undefined,
                 cachedSelection: undefined,
             });
+            expect(announce).not.toHaveBeenCalled();
         });
     });
 
@@ -888,6 +904,42 @@ describe('formatContentModel', () => {
                     hasNewContent: true,
                 },
             } as any);
+        });
+    });
+
+    describe('Has announce data', () => {
+        it('callback returns false', () => {
+            const mockedData = 'ANNOUNCE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.announceData = mockedData;
+                    return false;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(triggerEvent).not.toHaveBeenCalled();
+            expect(announce).toHaveBeenCalledWith(core, mockedData);
+        });
+
+        it('callback returns true', () => {
+            const mockedData = 'ANNOUNCE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.announceData = mockedData;
+                    return true;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalled();
+            expect(triggerEvent).toHaveBeenCalled();
+            expect(announce).toHaveBeenCalledWith(core, mockedData);
         });
     });
 });
