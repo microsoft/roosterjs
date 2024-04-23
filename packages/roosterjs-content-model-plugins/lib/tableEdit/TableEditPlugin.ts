@@ -18,8 +18,19 @@ export class TableEditPlugin implements EditorPlugin {
      * @param anchorContainerSelector An optional selector string to specify the container to host the plugin.
      * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
      * If not specified, the plugin will be inserted in document.body
+     * @param onTableEditorCreated An optional callback to customize the Table Editors elements when created.
      */
-    constructor(private anchorContainerSelector?: string) {}
+    constructor(
+        private anchorContainerSelector?: string,
+        private onTableEditorCreated?: (
+            editorType:
+                | 'HorizontalTableInserter'
+                | 'VerticalTableInserter'
+                | 'TableMover'
+                | 'TableResizer',
+            element: HTMLElement
+        ) => () => void
+    ) {}
 
     /**
      * Get a friendly name of this plugin
@@ -66,6 +77,7 @@ export class TableEditPlugin implements EditorPlugin {
         this.disposeTableEditor();
         this.editor = null;
         this.onMouseMoveDisposer = null;
+        this.onTableEditorCreated = undefined;
     }
 
     /**
@@ -140,7 +152,8 @@ export class TableEditPlugin implements EditorPlugin {
                 table,
                 this.invalidateTableRects,
                 isNodeOfType(container, 'ELEMENT_NODE') ? container : undefined,
-                event?.currentTarget
+                event?.currentTarget,
+                this.onTableEditorCreated
             );
         }
     }

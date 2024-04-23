@@ -4,6 +4,7 @@ import { createTableMover } from './features/TableMover';
 import { createTableResizer } from './features/TableResizer';
 import { disposeTableEditFeature } from './features/TableEditFeature';
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { OnTableEditorCreatedCallback } from '../OnTableEditorCreatedCallback';
 import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
 
@@ -65,7 +66,8 @@ export class TableEditor {
         public readonly table: HTMLTableElement,
         private onChanged: () => void,
         private anchorContainer?: HTMLElement,
-        private contentDiv?: EventTarget | null
+        private contentDiv?: EventTarget | null,
+        private onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
         this.isRTL = editor.getDocument().defaultView?.getComputedStyle(table).direction == 'rtl';
         this.setEditorFeatures();
@@ -100,7 +102,6 @@ export class TableEditor {
         // Get whole table rect
         const tableRect = normalizeRect(this.table.getBoundingClientRect());
 
-        //console.log('>>>tableRect', tableRect);
         if (!tableRect) {
             return;
         }
@@ -193,9 +194,9 @@ export class TableEditor {
                 this.editor,
                 this.isRTL,
                 this.onSelect,
-                this.getOnMouseOut,
                 this.contentDiv,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onEditorCreated
             );
         }
 
@@ -207,10 +208,33 @@ export class TableEditor {
                 this.onStartTableResize,
                 this.onFinishEditing,
                 this.contentDiv,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onTableEditorCreated
             );
         }
     }
+
+    private onEditorCreated = (
+        editorType:
+            | 'HorizontalTableInserter'
+            | 'VerticalTableInserter'
+            | 'TableMover'
+            | 'TableResizer',
+        element: HTMLElement
+    ) => {
+        const disposer = this.onTableEditorCreated?.(editorType, element);
+        const onMouseOut = element && this.getOnMouseOut(element);
+        if (onMouseOut) {
+            element.addEventListener('mouseout', onMouseOut);
+        }
+
+        return () => {
+            disposer?.();
+            if (onMouseOut) {
+                element.removeEventListener('mouseout', onMouseOut);
+            }
+        };
+    };
 
     private setResizingTd(td: HTMLTableCellElement) {
         if (this.horizontalResizer && this.horizontalResizer.node != td) {
@@ -259,8 +283,8 @@ export class TableEditor {
                 this.isRTL,
                 !!isHorizontal,
                 this.onInserted,
-                this.getOnMouseOut,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onEditorCreated
             );
             if (isHorizontal) {
                 this.horizontalInserter = newInserter;
