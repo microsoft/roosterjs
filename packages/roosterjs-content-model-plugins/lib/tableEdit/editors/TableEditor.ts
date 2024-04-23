@@ -193,7 +193,8 @@ export class TableEditor {
                 this.editor,
                 this.isRTL,
                 this.onSelect,
-                this.getOnMouseOut,
+                this.onStartTableMove,
+                this.onEndTableMove,
                 this.contentDiv,
                 this.anchorContainer
             );
@@ -331,6 +332,13 @@ export class TableEditor {
         this.onStartResize();
     };
 
+    private onStartTableMove = () => {
+        this.isCurrentlyEditing = true;
+        this.disposeTableResizer();
+        this.disposeTableInserter();
+        this.disposeCellResizers();
+    };
+
     private onStartResize() {
         this.isCurrentlyEditing = true;
         const range = this.editor.getDOMSelection();
@@ -341,6 +349,11 @@ export class TableEditor {
 
         this.editor.takeSnapshot();
     }
+
+    private onEndTableMove = () => {
+        this.disposeTableMover();
+        return this.onFinishEditing();
+    };
 
     private onInserted = () => {
         this.disposeTableResizer();
