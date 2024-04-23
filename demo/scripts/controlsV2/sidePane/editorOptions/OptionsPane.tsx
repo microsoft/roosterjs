@@ -140,6 +140,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             autoFormatOptions: { ...this.state.autoFormatOptions },
             markdownOptions: { ...this.state.markdownOptions },
             hyperlink: this.state.hyperlink,
+            customReplacements: this.state.customReplacements,
         };
 
         if (callback) {

@@ -1,10 +1,9 @@
-import { AutoFormatOptions, MarkdownOptions } from 'roosterjs-content-model-plugins';
+import { AutoFormatOptions, CustomReplace, MarkdownOptions } from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 export interface LegacyPluginList {
     imageEdit: boolean;
-    customReplace: boolean;
     announce: boolean;
 }
 
@@ -22,6 +21,7 @@ export interface NewPluginList {
     markdown: boolean;
     imageEditPlugin: boolean;
     hyperlink: boolean;
+    customReplace: boolean;
 }
 
 export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
@@ -38,6 +38,7 @@ export interface OptionState {
     autoFormatOptions: AutoFormatOptions;
     markdownOptions: MarkdownOptions;
     hyperlink: boolean;
+    customReplacements: CustomReplace[];
 
     // Legacy plugin options
     defaultFormat: ContentModelSegmentFormat;

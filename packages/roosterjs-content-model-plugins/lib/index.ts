@@ -36,4 +36,6 @@ export { cropImage } from './imageEdit/editingApis/cropImage';
 export { flipImage } from './imageEdit/editingApis/flipImage';
 export { rotateImage } from './imageEdit/editingApis/rotateImage';
 export { resizeByPercentage } from './imageEdit/editingApis/resizeByPercentage';
+export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
+
 export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';

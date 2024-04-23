@@ -3,8 +3,8 @@ import { CodeElement } from './CodeElement';
 import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
+
 import {
-    CustomReplaceCode,
     EditPluginCode,
     ImageEditCode,
     PastePluginCode,
@@ -54,10 +54,7 @@ export class LegacyPluginCode extends PluginsCodeBase {
     constructor(state: OptionState) {
         const pluginList = state.pluginList;
 
-        const plugins: CodeElement[] = [
-            pluginList.imageEdit && new ImageEditCode(),
-            pluginList.customReplace && new CustomReplaceCode(),
-        ];
+        const plugins: CodeElement[] = [pluginList.imageEdit && new ImageEditCode()];
 
         super(plugins);
     }

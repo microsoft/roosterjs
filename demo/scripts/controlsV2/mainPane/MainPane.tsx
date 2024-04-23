@@ -39,15 +39,14 @@ import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
+import { UrlPlaceholder } from 'demo/scripts/controls/BuildInPluginState';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
 import {
-    createContextMenuPlugin,
-    createTableEditMenuProvider,
-} from '../roosterjsReact/contextMenu';
-import {
     AutoFormatPlugin,
+    CustomReplacePlugin,
     EditPlugin,
+    HyperlinkPlugin,
     ImageEditPlugin,
     MarkdownPlugin,
     PastePlugin,
@@ -55,6 +54,10 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
+import {
+    createContextMenuPlugin,
+    createTableEditMenuProvider,
+} from '../roosterjsReact/contextMenu';
 
 const styles = require('./MainPane.scss');
 
@@ -481,6 +484,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             watermarkText,
             markdownOptions,
             autoFormatOptions,
+            linkTitle,
+            customReplacements,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
@@ -498,6 +503,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
             pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),
+            pluginList.hyperlink &&
+                new HyperlinkPlugin(
+                    linkTitle?.indexOf(UrlPlaceholder) >= 0
+                        ? url => linkTitle.replace(UrlPlaceholder, url)
+                        : linkTitle
+                ),
+            pluginList.customReplace && new CustomReplacePlugin(customReplacements),
         ].filter(x => !!x);
     }
 }
