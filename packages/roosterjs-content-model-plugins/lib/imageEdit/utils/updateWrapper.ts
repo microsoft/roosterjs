@@ -3,10 +3,14 @@ import { doubleCheckResize } from './doubleCheckResize';
 import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { ImageEditOptions } from '../types/ImageEditOptions';
-import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateRotateHandle } from '../Rotator/updateRotateHandle';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
+import {
+    getSelectedSegmentsAndParagraphs,
+    isElementOfType,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import {
     getPx,
     isASmallImage,
@@ -59,64 +63,36 @@ export function updateWrapper(
     const cropTopPx = originalHeight * (topPercent || 0);
     const cropBottomPx = originalHeight * (bottomPercent || 0);
 
+    // Update size and margin of the wrapper
+    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
+    wrapper.style.transform = `rotate(${angleRad}rad)`;
+    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
+
+    // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
+    // or if the direction is Right To Left
+    if (isRTL(editor)) {
+        wrapper.style.textAlign = 'right';
+        if (!croppers) {
+            clonedImage.style.left = getPx(cropLeftPx);
+            clonedImage.style.right = getPx(-cropRightPx);
+        }
+    } else {
+        wrapper.style.textAlign = 'left';
+    }
+
+    // Update size of the image
+    clonedImage.style.width = getPx(originalWidth);
+    clonedImage.style.height = getPx(originalHeight);
+    clonedImage.style.verticalAlign = 'bottom';
+    clonedImage.style.position = 'absolute';
+
     //Update flip direction
     setFlipped(clonedImage.parentElement, flippedHorizontal, flippedVertical);
     const smallImage = isASmallImage(visibleWidth, visibleWidth);
 
-    const viewport = editor.getVisibleViewport();
-    if (viewport && rotators && rotators.length > 0) {
-        const rotator = rotators[0];
-        const rotatorHandle = rotator.firstElementChild;
-        if (isNodeOfType(rotatorHandle, 'ELEMENT_NODE') && isElementOfType(rotatorHandle, 'div')) {
-            updateRotateHandle(
-                viewport,
-                angleRad ?? 0,
-                wrapper,
-                rotator,
-                rotatorHandle,
-                smallImage
-            );
-        }
-    }
-
-    if (resizers) {
-        const clientWidth = wrapper.clientWidth;
-        const clientHeight = wrapper.clientHeight;
-
-        doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
-
-        updateImageSize(
-            wrapper,
-            image,
-            clonedImage,
-            marginVertical,
-            marginHorizontal,
-            visibleHeight,
-            visibleWidth,
-            originalHeight,
-            originalWidth,
-            angleRad ?? 0
-        );
-
-        const resizeHandles = resizers
-            .map(resizer => {
-                const resizeHandle = resizer.firstElementChild;
-                if (
-                    isNodeOfType(resizeHandle, 'ELEMENT_NODE') &&
-                    isElementOfType(resizeHandle, 'div')
-                ) {
-                    return resizeHandle;
-                }
-            })
-            .filter(handle => !!handle) as HTMLDivElement[];
-        if (angleRad) {
-            updateHandleCursor(resizeHandles, angleRad);
-        }
-
+    if (!croppers) {
         // For rotate/resize, set the margin of the image so that cropped part won't be visible
         clonedImage.style.margin = `${-cropTopPx}px 0 0 ${-cropLeftPx}px`;
-
-        updateSideHandlesVisibility(resizeHandles, smallImage);
     }
 
     if (croppers && croppers.length > 0) {
@@ -124,6 +100,7 @@ export function updateWrapper(
         const cropOverlays = croppers.filter(
             cropper => cropper.className === ImageEditElementClass.CropOverlay
         );
+
         setSize(
             cropContainer,
             cropLeftPx,
@@ -140,44 +117,55 @@ export function updateWrapper(
         if (angleRad) {
             updateHandleCursor(croppers, angleRad);
         }
+    }
 
-        updateImageSize(
-            wrapper,
-            image,
-            clonedImage,
-            marginVertical,
-            marginHorizontal,
-            visibleHeight,
-            visibleWidth,
-            originalHeight,
-            originalWidth,
-            angleRad ?? 0
-        );
+    if (resizers) {
+        const clientWidth = wrapper.clientWidth;
+        const clientHeight = wrapper.clientHeight;
+
+        doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
+
+        const resizeHandles = resizers
+            .map(resizer => {
+                const resizeHandle = resizer.firstElementChild;
+                if (
+                    isNodeOfType(resizeHandle, 'ELEMENT_NODE') &&
+                    isElementOfType(resizeHandle, 'div')
+                ) {
+                    return resizeHandle;
+                }
+            })
+            .filter(handle => !!handle) as HTMLDivElement[];
+
+        if (angleRad) {
+            updateHandleCursor(resizeHandles, angleRad);
+        }
+
+        updateSideHandlesVisibility(resizeHandles, smallImage);
+    }
+
+    const viewport = editor.getVisibleViewport();
+    if (viewport && rotators && rotators.length > 0) {
+        const rotator = rotators[0];
+        const rotatorHandle = rotator.firstElementChild;
+        if (isNodeOfType(rotatorHandle, 'ELEMENT_NODE') && isElementOfType(rotatorHandle, 'div')) {
+            updateRotateHandle(
+                viewport,
+                angleRad ?? 0,
+                wrapper,
+                rotator,
+                rotatorHandle,
+                smallImage
+            );
+        }
     }
 }
 
-function updateImageSize(
-    wrapper: HTMLSpanElement,
-    image: HTMLImageElement,
-    clonedImage: HTMLImageElement,
-    marginVertical: number,
-    marginHorizontal: number,
-    visibleHeight: number,
-    visibleWidth: number,
-    originalHeight: number,
-    originalWidth: number,
-    angleRad: number
-) {
-    // Update size and margin of the wrapper
-    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
-    wrapper.style.transform = `rotate(${angleRad}rad)`;
-    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
-
-    // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
-    // or if the direction is Right To Left
-    wrapper.style.textAlign = 'left';
-
-    // Update size of the image
-    clonedImage.style.width = getPx(originalWidth);
-    clonedImage.style.height = getPx(originalHeight);
-}
+const isRTL = (editor: IEditor) => {
+    const model = editor.getContentModelCopy('disconnected');
+    const paragraph = getSelectedSegmentsAndParagraphs(
+        model,
+        false /** includingFormatHolder */
+    )[0][1];
+    return paragraph?.format?.direction === 'rtl';
+};

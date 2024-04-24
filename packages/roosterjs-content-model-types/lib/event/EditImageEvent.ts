@@ -34,7 +34,7 @@ export interface EditImageEvent extends BasePluginEvent<'editImage'> {
 }
 
 interface ImageEditApiOperation {
-    action: 'crop' | 'flip' | 'rotate' | 'resize';
+    action: 'crop' | 'flip' | 'rotate' | 'resize' | 'reset';
     flipDirection?: 'horizontal' | 'vertical';
     angleRad?: number;
 }

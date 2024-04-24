@@ -99,15 +99,6 @@ export class ImageEditPlugin implements EditorPlugin {
                 case 'selectionChanged':
                     this.handleSelectionChangedEvent(this.editor, event);
                     break;
-                case 'mouseDown':
-                    if (
-                        this.selectedImage &&
-                        this.imageEditInfo &&
-                        this.shadowSpan !== event.rawEvent.target
-                    ) {
-                        this.removeImageWrapper(this.editor, this.dndHelpers);
-                    }
-                    break;
                 case 'contentChanged':
                     if (
                         event.source != RESIZE_IMAGE &&
@@ -139,14 +130,30 @@ export class ImageEditPlugin implements EditorPlugin {
                         this.rotateImage(this.editor, event.image, event.apiOperation.angleRad);
                     }
 
+                    if (event.apiOperation?.action === 'reset') {
+                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                    }
+
+                    if (event.apiOperation?.action === 'resize') {
+                        this.wasImageResized = true;
+                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                    }
+
                     break;
             }
         }
     }
 
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
-        if (event.newSelection?.type == 'image' && !this.selectedImage) {
-            this.startRotateAndResize(editor, event.newSelection.image);
+        if (event.newSelection?.type == 'image') {
+            if (this.selectedImage && this.selectedImage !== event.newSelection.image) {
+                this.removeImageWrapper(editor, this.dndHelpers);
+            }
+            if (!this.selectedImage) {
+                this.startRotateAndResize(editor, event.newSelection.image);
+            }
+        } else if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
         }
     }
 
@@ -189,6 +196,9 @@ export class ImageEditPlugin implements EditorPlugin {
         image: HTMLImageElement,
         apiOperation?: 'resize' | 'rotate'
     ) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
+        }
         this.startEditing(editor, image, apiOperation);
         if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
             this.dndHelpers = [
@@ -310,10 +320,17 @@ export class ImageEditPlugin implements EditorPlugin {
             ),
         ];
 
-        editor.setDOMSelection({
-            type: 'image',
-            image: image,
-        });
+        updateWrapper(
+            editor,
+            this.imageEditInfo,
+            this.options,
+            this.selectedImage,
+            this.clonedImage,
+            this.wrapper,
+            undefined,
+            undefined,
+            this.croppers
+        );
     }
 
     private cleanInfo() {
@@ -347,6 +364,7 @@ export class ImageEditPlugin implements EditorPlugin {
                 this.clonedImage
             );
         }
+
         const helper = editor.getDOMHelper();
         if (this.shadowSpan && this.shadowSpan.parentElement) {
             helper.unwrap(this.shadowSpan);
@@ -360,6 +378,9 @@ export class ImageEditPlugin implements EditorPlugin {
         image: HTMLImageElement,
         direction: 'horizontal' | 'vertical'
     ) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
+        }
         this.startEditing(editor, image, 'flip');
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
@@ -393,6 +414,9 @@ export class ImageEditPlugin implements EditorPlugin {
     }
 
     private rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
+        }
         this.startEditing(editor, image, 'rotate');
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;

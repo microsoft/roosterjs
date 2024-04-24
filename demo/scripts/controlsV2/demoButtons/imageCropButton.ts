@@ -1,4 +1,3 @@
-import { cropImage } from 'roosterjs-content-model-plugins';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
@@ -11,6 +10,17 @@ export const imageCropButton: RibbonButton<'buttonNameCropImage'> = {
     iconName: 'Crop',
     isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: editor => {
-        cropImage(editor);
+        const selection = editor.getDOMSelection();
+        if (selection?.type === 'image') {
+            editor.triggerEvent('editImage', {
+                image: selection.image,
+                previousSrc: selection.image.src,
+                newSrc: selection.image.src,
+                originalSrc: selection.image.src,
+                apiOperation: {
+                    action: 'crop',
+                },
+            });
+        }
     },
 };

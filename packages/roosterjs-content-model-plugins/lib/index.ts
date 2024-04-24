@@ -32,9 +32,7 @@ export { PickerHelper } from './picker/PickerHelper';
 export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './picker/PickerHandler';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
-export { cropImage } from './imageEdit/editingApis/cropImage';
-export { flipImage } from './imageEdit/editingApis/flipImage';
-export { rotateImage } from './imageEdit/editingApis/rotateImage';
+export { resetImage } from './imageEdit/editingApis/resetImage';
 export { resizeByPercentage } from './imageEdit/editingApis/resizeByPercentage';
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 

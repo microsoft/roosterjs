@@ -1,4 +1,3 @@
-import { flipImage } from 'roosterjs-content-model-plugins';
 import { IEditor } from 'roosterjs-content-model-types';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
@@ -21,10 +20,22 @@ export const imageFlipButton: RibbonButton<'buttonNameFlipImage'> = {
     },
     isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: (editor, direction) => {
-        setFlipImage(editor, direction as 'horizontal' | 'vertical');
+        flipImage(editor, direction as 'horizontal' | 'vertical');
     },
 };
 
-const setFlipImage = (editor: IEditor, direction: 'horizontal' | 'vertical') => {
-    flipImage(editor, direction);
+const flipImage = (editor: IEditor, direction: 'horizontal' | 'vertical') => {
+    const selection = editor.getDOMSelection();
+    if (selection?.type === 'image') {
+        editor.triggerEvent('editImage', {
+            image: selection.image,
+            previousSrc: selection.image.src,
+            newSrc: selection.image.src,
+            originalSrc: selection.image.src,
+            apiOperation: {
+                action: 'flip',
+                flipDirection: direction,
+            },
+        });
+    }
 };

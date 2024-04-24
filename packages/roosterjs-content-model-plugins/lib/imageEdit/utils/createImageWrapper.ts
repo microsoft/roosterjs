@@ -96,6 +96,7 @@ const createWrapper = (
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);
     wrapper.appendChild(border);
+    wrapper.style.userSelect = 'none';
 
     if (resizers && resizers?.length > 0) {
         resizers.forEach(resizer => {
