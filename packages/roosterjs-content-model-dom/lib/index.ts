@@ -30,6 +30,8 @@ export {
     generateEntityClassNames,
     addDelimiters,
     isEntityDelimiter,
+    isBlockEntityContainer,
+    findClosestBlockEntityContainer,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';

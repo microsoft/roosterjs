@@ -1,13 +1,12 @@
 import {
     getAllEntityWrappers,
+    isBlockEntityContainer,
     isEntityElement,
     isNodeOfType,
     parseEntityFormat,
     reuseCachedElement,
 } from 'roosterjs-content-model-dom';
 import type { Snapshot, EditorCore, KnownEntityItem } from 'roosterjs-content-model-types';
-
-const BlockEntityContainer = '_E_EBlockEntityContainer';
 
 /**
  * @internal
@@ -83,10 +82,6 @@ function tryGetEntityElement(
     }
 
     return result;
-}
-
-function isBlockEntityContainer(node: HTMLElement) {
-    return node.classList.contains(BlockEntityContainer);
 }
 
 function tryGetEntityFromContainer(

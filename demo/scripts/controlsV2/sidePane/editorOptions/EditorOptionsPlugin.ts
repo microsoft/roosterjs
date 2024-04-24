@@ -23,7 +23,6 @@ const initialState: OptionState = {
 
         // Legacy plugins
         imageEdit: false,
-        announce: false,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -47,6 +46,8 @@ const initialState: OptionState = {
         autoNumbering: true,
         autoUnlink: false,
         autoHyphen: true,
+        autoFraction: true,
+        autoOrdinals: true,
     },
     markdownOptions: {
         bold: true,
