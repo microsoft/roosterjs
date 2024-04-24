@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.72% </span>
+                <span class="strong">96.76% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>295/305</span>
+                <span class='fraction'>299/309</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.11% </span>
+                <span class="strong">83.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>310/373</span>
+                <span class='fraction'>324/389</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.58% </span>
+                <span class="strong">96.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>282/292</span>
+                <span class='fraction'>286/296</span>
             </div>
         
             
@@ -729,7 +729,20 @@
 <a name='L670'></a><a href='#L670'>670</a>
 <a name='L671'></a><a href='#L671'>671</a>
 <a name='L672'></a><a href='#L672'>672</a>
-<a name='L673'></a><a href='#L673'>673</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L673'></a><a href='#L673'>673</a>
+<a name='L674'></a><a href='#L674'>674</a>
+<a name='L675'></a><a href='#L675'>675</a>
+<a name='L676'></a><a href='#L676'>676</a>
+<a name='L677'></a><a href='#L677'>677</a>
+<a name='L678'></a><a href='#L678'>678</a>
+<a name='L679'></a><a href='#L679'>679</a>
+<a name='L680'></a><a href='#L680'>680</a>
+<a name='L681'></a><a href='#L681'>681</a>
+<a name='L682'></a><a href='#L682'>682</a>
+<a name='L683'></a><a href='#L683'>683</a>
+<a name='L684'></a><a href='#L684'>684</a>
+<a name='L685'></a><a href='#L685'>685</a>
+<a name='L686'></a><a href='#L686'>686</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1153,6 +1166,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -1160,6 +1176,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1278,7 +1304,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">119x</span>
-<span class="cline-any cline-yes">12491x</span>
+<span class="cline-any cline-yes">10466x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1825,13 +1851,26 @@ class SelectionPlugin implements PluginWithState&lt;SelectionPluginState&gt; {
                             col = reverse ? <span class="branch-0 cbranch-no" title="branch not covered" >parsedTable[row].length - 1 </span>: 0;
                         }
                         const cell = parsedTable[row][col];
+&nbsp;
                         <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof cell != 'string') {
                             this.setRangeSelectionInTable(cell, 0, this.editor);
+                            lastCo.row = row;
+                            lastCo.col = col;
                             break;
                         }
                     }
                 } else {
                     this.state.tableSelection = null;
+                }
+&nbsp;
+                if (
+                    collapsed &amp;&amp;
+                    (lastCo.col != oldCo.col || lastCo.row != oldCo.row) &amp;&amp;
+                    lastCo.row &gt;= 0 &amp;&amp;
+                    lastCo.row == parsedTable.length - 1 &amp;&amp;
+                    lastCo.col == parsedTable[lastCo.row]<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength - 1
+                ) {
+                    this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>nnounce({ defaultStrings: 'announceOnFocusLastCell' });
                 }
             }
 &nbsp;
@@ -2080,7 +2119,7 @@ export function createSelectionPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 23 2024 17:02:55 GMT+0000 (Coordinated Universal Time)
+                at Wed Apr 24 2024 15:41:03 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
