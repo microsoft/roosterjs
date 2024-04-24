@@ -1,3 +1,4 @@
+import { adjustSelectionAroundEntity } from './adjustSelectionAroundEntity';
 import { normalizePos } from '../selection/normalizePos';
 import {
     addDelimiters,
@@ -11,6 +12,7 @@ import {
     findClosestEntityWrapper,
     iterateSelections,
     isCharacterValue,
+    findClosestBlockEntityContainer,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
@@ -29,8 +31,6 @@ const DelimiterSelector = '.' + DelimiterAfter + ',.' + DelimiterBefore;
 const ZeroWidthSpace = '\u200B';
 const EntityInfoName = '_Entity';
 const InlineEntitySelector = 'span.' + EntityInfoName;
-const BlockEntityContainer = '_E_EBlockEntityContainer';
-const BlockEntityContainerSelector = '.' + BlockEntityContainer;
 
 /**
  * @internal exported only for unit test
@@ -195,56 +195,97 @@ export function handleCompositionEndEvent(editor: IEditor, event: CompositionEnd
 export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
     const selection = editor.getDOMSelection();
 
-    const { rawEvent } = event;
     if (!selection || selection.type != 'range') {
         return;
     }
-    const isEnter = rawEvent.key === 'Enter';
-    const helper = editor.getDOMHelper();
-    if (selection.range.collapsed && (isCharacterValue(rawEvent) || isEnter)) {
-        const helper = editor.getDOMHelper();
-        const node = getFocusedElement(selection);
-        if (node && isEntityDelimiter(node) && helper.isNodeInEditor(node)) {
-            const blockEntityContainer = node.closest(BlockEntityContainerSelector);
-            if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
-                const isAfter = node.classList.contains(DelimiterAfter);
 
-                if (isAfter) {
-                    selection.range.setStartAfter(blockEntityContainer);
-                } else {
-                    selection.range.setStartBefore(blockEntityContainer);
-                }
-                selection.range.collapse(true /* toStart */);
+    const rawEvent = event.rawEvent;
+    const range = selection.range;
+    const key = rawEvent.key;
 
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                }
-
-                editor.formatContentModel(handleKeyDownInBlockDelimiter, {
-                    selectionOverride: {
-                        type: 'range',
-                        isReverted: false,
-                        range: selection.range,
-                    },
-                });
+    switch (key) {
+        case 'Enter':
+            if (range.collapsed) {
+                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
             } else {
-                if (isEnter) {
-                    event.rawEvent.preventDefault();
-                    editor.formatContentModel(handleEnterInlineEntity);
-                } else {
-                    editor.takeSnapshot();
-                    editor
-                        .getDocument()
-                        .defaultView?.requestAnimationFrame(() =>
-                            preventTypeInDelimiter(node, editor)
-                        );
+                const helper = editor.getDOMHelper();
+                const entity = findClosestEntityWrapper(range.startContainer, helper);
+
+                if (
+                    entity &&
+                    isNodeOfType(entity, 'ELEMENT_NODE') &&
+                    helper.isNodeInEditor(entity)
+                ) {
+                    triggerEntityEventOnEnter(editor, entity, rawEvent);
                 }
             }
-        }
-    } else if (isEnter) {
-        const entity = findClosestEntityWrapper(selection.range.startContainer, helper);
-        if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
-            triggerEntityEventOnEnter(editor, entity, rawEvent);
+            break;
+
+        case 'ArrowLeft':
+        case 'ArrowRight':
+            if (!rawEvent.altKey && !rawEvent.ctrlKey && !rawEvent.metaKey) {
+                // Handle in async so focus is already moved, this makes us easier to check if we should adjust the selection
+                editor.getDocument().defaultView?.requestAnimationFrame(() => {
+                    adjustSelectionAroundEntity(editor, key, rawEvent.shiftKey);
+                });
+            }
+            break;
+
+        default:
+            if (isCharacterValue(rawEvent) && range.collapsed) {
+                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
+            }
+
+            break;
+    }
+}
+
+function handleInputOnDelimiter(
+    editor: IEditor,
+    range: Range,
+    focusedNode: HTMLElement | null,
+    rawEvent: KeyboardEvent
+) {
+    const helper = editor.getDOMHelper();
+
+    if (focusedNode && isEntityDelimiter(focusedNode) && helper.isNodeInEditor(focusedNode)) {
+        const blockEntityContainer = findClosestBlockEntityContainer(focusedNode, helper);
+        const isEnter = rawEvent.key === 'Enter';
+
+        if (blockEntityContainer && helper.isNodeInEditor(blockEntityContainer)) {
+            const isAfter = focusedNode.classList.contains(DelimiterAfter);
+
+            if (isAfter) {
+                range.setStartAfter(blockEntityContainer);
+            } else {
+                range.setStartBefore(blockEntityContainer);
+            }
+
+            range.collapse(true /* toStart */);
+
+            if (isEnter) {
+                rawEvent.preventDefault();
+            }
+
+            editor.formatContentModel(handleKeyDownInBlockDelimiter, {
+                selectionOverride: {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+            });
+        } else {
+            if (isEnter) {
+                rawEvent.preventDefault();
+                editor.formatContentModel(handleEnterInlineEntity);
+            } else {
+                editor.takeSnapshot();
+                editor
+                    .getDocument()
+                    .defaultView?.requestAnimationFrame(() =>
+                        preventTypeInDelimiter(focusedNode, editor)
+                    );
+            }
         }
     }
 }
