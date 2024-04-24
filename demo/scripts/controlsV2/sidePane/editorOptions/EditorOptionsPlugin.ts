@@ -22,7 +22,6 @@ const initialState: OptionState = {
 
         // Legacy plugins
         imageEdit: false,
-        announce: false,
     },
     defaultFormat: {
         fontFamily: 'Calibri',

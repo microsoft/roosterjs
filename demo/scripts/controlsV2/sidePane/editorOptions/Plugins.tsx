@@ -118,7 +118,6 @@ export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
-                    {this.renderPluginItem('announce', 'Announce')}
                 </tbody>
             </table>
         );

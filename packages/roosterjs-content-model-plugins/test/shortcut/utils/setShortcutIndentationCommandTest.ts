@@ -49,7 +49,12 @@ describe('setShortcutIndentationCommand', () => {
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         if (shouldIndent) {
             expect(setModelIndentationSpy).toHaveBeenCalledTimes(1);
-            expect(setModelIndentationSpy).toHaveBeenCalledWith(model, operation);
+            expect(setModelIndentationSpy).toHaveBeenCalledWith(
+                model,
+                operation,
+                undefined,
+                context
+            );
         } else {
             expect(setModelIndentationSpy).not.toHaveBeenCalled();
         }

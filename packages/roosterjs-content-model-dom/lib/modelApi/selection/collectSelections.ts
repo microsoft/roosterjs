@@ -85,20 +85,20 @@ export function getSelectedParagraphs(model: ContentModelDocument): ContentModel
 
 /**
  * Get an array of block group - block pair that is of the expected block group type from selection
- * @param model The Content Model to get selection from
+ * @param group The root block group to search
  * @param blockGroupTypes The expected block group types
  * @param stopTypes Block group types that will stop searching when hit
  * @param deepFirst True means search in deep first, otherwise wide first
  */
 export function getOperationalBlocks<T extends ContentModelBlockGroup>(
-    model: ContentModelDocument,
+    group: ContentModelBlockGroup,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[],
     deepFirst?: boolean
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
-    const selections = collectSelections(model, {
+    const selections = collectSelections(group, {
         includeListFormatHolder: 'never',
         contentUnderSelectedTableCell: 'ignoreForTable', // When whole table is selected, we treat the table as a single block
     });
@@ -191,13 +191,13 @@ interface SelectionInfo {
 }
 
 function collectSelections(
-    model: ContentModelDocument,
+    group: ContentModelBlockGroup,
     option?: IterateSelectionsOption
 ): SelectionInfo[] {
     const selections: SelectionInfo[] = [];
 
     iterateSelections(
-        model,
+        group,
         (path, tableContext, block, segments) => {
             selections.push({
                 path,

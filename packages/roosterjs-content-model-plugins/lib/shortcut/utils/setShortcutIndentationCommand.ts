@@ -6,7 +6,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @internal
  */
 export function setShortcutIndentationCommand(editor: IEditor, operation: 'indent' | 'outdent') {
-    editor.formatContentModel(model => {
+    editor.formatContentModel((model, context) => {
         const listItem = getFirstSelectedListItem(model);
 
         if (
@@ -14,7 +14,7 @@ export function setShortcutIndentationCommand(editor: IEditor, operation: 'inden
             listItem.blocks[0].blockType == 'Paragraph' &&
             listItem.blocks[0].segments[0].segmentType == 'SelectionMarker'
         ) {
-            setModelIndentation(model, operation);
+            setModelIndentation(model, operation, undefined /*length*/, context);
             return true;
         }
         return false;
