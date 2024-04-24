@@ -1,5 +1,5 @@
 import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { keyboardTab } from '../../lib/edit/keyboardTab';
 
@@ -18,14 +18,15 @@ describe('keyboardTab', () => {
         shiftKey: boolean,
         expectedResult: boolean
     ) {
+        const context: FormatContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
             .and.callFake((callback, options) => {
-                const result = callback(input, {
-                    newEntities: [],
-                    deletedEntities: [],
-                    newImages: [],
-                });
+                const result = callback(input, context);
                 expect(result).toBe(expectedResult);
             });
 
@@ -54,7 +55,12 @@ describe('keyboardTab', () => {
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         if (indent) {
-            expect(setModelIndentationSpy).toHaveBeenCalledWith(input as any, indent);
+            expect(setModelIndentationSpy).toHaveBeenCalledWith(
+                input as any,
+                indent,
+                undefined,
+                context
+            );
         } else {
             expect(setModelIndentationSpy).not.toHaveBeenCalled();
         }

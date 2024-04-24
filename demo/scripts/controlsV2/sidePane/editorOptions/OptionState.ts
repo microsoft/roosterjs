@@ -4,7 +4,6 @@ import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 export interface LegacyPluginList {
     imageEdit: boolean;
-    announce: boolean;
 }
 
 export interface NewPluginList {

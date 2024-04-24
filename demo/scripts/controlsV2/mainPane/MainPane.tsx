@@ -2,8 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
-import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
-import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
@@ -41,6 +39,16 @@ import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
+import {
+    Border,
+    Colors,
+    ContentModelDocument,
+    EditorOptions,
+    EditorPlugin,
+    IEditor,
+    KnownAnnounceStrings,
+    Snapshots,
+} from 'roosterjs-content-model-types';
 import {
     AutoFormatPlugin,
     CustomReplacePlugin,
@@ -361,6 +369,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
                             disableCache={this.state.initState.disableCache}
+                            announcerStringGetter={getAnnouncingString}
                         />
                     )}
                 </div>
@@ -509,6 +518,16 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.customReplace && new CustomReplacePlugin(customReplacements),
         ].filter(x => !!x);
     }
+}
+
+const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
+    announceListItemBullet: 'Auto corrected Bullet',
+    announceListItemNumbering: 'Auto corrected {0}',
+    announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
+};
+
+function getAnnouncingString(key: KnownAnnounceStrings) {
+    return AnnounceStringMap[key];
 }
 
 export function mount(parent: HTMLElement) {

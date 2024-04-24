@@ -698,6 +698,7 @@ describe('SelectionPlugin handle table selection', () => {
     let requestAnimationFrameSpy: jasmine.Spy;
     let getComputedStyleSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
+    let announceSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -707,6 +708,7 @@ describe('SelectionPlugin handle table selection', () => {
         requestAnimationFrameSpy = jasmine.createSpy('requestAnimationFrame');
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
+        announceSpy = jasmine.createSpy('announce');
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
             defaultView: {
@@ -735,6 +737,7 @@ describe('SelectionPlugin handle table selection', () => {
                     return focusDisposer;
                 }
             },
+            announce: announceSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -1205,6 +1208,7 @@ describe('SelectionPlugin handle table selection', () => {
                 imageSelectionBorderColor: undefined,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Right', () => {
@@ -1245,6 +1249,7 @@ describe('SelectionPlugin handle table selection', () => {
                 imageSelectionBorderColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Tab', () => {
@@ -1306,6 +1311,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(td2, 0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Tab', () => {
@@ -1368,6 +1374,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Tab - Next Row', () => {
@@ -1429,6 +1436,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(td3, 0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, First cell - Press Shift+Tab', () => {
@@ -1491,6 +1499,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Last cell - Press Tab', () => {
@@ -1552,6 +1561,7 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 1);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Down', () => {
@@ -1613,6 +1623,9 @@ describe('SelectionPlugin handle table selection', () => {
                 isReverted: false,
             });
             expect(setStartSpy).toHaveBeenCalledWith(td4, 0);
+            expect(announceSpy).toHaveBeenCalledWith({
+                defaultStrings: 'announceOnFocusLastCell',
+            });
         });
 
         it('From Range, Press Shift+Up', () => {
@@ -1677,6 +1690,7 @@ describe('SelectionPlugin handle table selection', () => {
                 lastRow: 0,
                 lastColumn: 1,
             });
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down', () => {
@@ -1741,6 +1755,7 @@ describe('SelectionPlugin handle table selection', () => {
                 lastRow: 1,
                 lastColumn: 1,
             });
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down to ouside of table', () => {
@@ -1796,6 +1811,7 @@ describe('SelectionPlugin handle table selection', () => {
                 imageSelectionBorderColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Press A', () => {
@@ -1840,6 +1856,7 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Press Left', () => {
@@ -1893,6 +1910,7 @@ describe('SelectionPlugin handle table selection', () => {
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
             expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Press Shift+Left', () => {
@@ -1948,6 +1966,7 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 0,
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Press Shift+Up', () => {
@@ -2003,6 +2022,7 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 1,
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
         });
     });
 });
