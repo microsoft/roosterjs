@@ -160,8 +160,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     }
 
                     cleanUpAndRestoreSelection(tempDiv);
-                    this.editor.focus();
                     this.editor.setDOMSelection(selection);
+                    this.editor.focus();
 
                     if (isCut) {
                         this.editor.formatContentModel(

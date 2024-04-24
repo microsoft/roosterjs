@@ -54,7 +54,7 @@ describe('handleTabOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -96,7 +96,7 @@ describe('handleTabOnList', () => {
             ],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},
@@ -150,7 +150,7 @@ describe('handleTabOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -192,7 +192,7 @@ describe('handleTabOnList', () => {
             ],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},
@@ -246,7 +246,7 @@ describe('handleTabOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -288,7 +288,7 @@ describe('handleTabOnList', () => {
             ],
             formatHolder: {
                 segmentType: 'SelectionMarker',
-                isSelected: true,
+                isSelected: false,
                 format: {},
             },
             format: {},

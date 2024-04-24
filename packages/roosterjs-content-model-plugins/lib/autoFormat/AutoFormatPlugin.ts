@@ -1,11 +1,17 @@
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
+import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
+import { transformFraction } from './numbers/transformFraction';
+import { transformHyphen } from './hyphen/transformHyphen';
+import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
     EditorInputEvent,
     EditorPlugin,
+    FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
     PluginEvent,
@@ -18,32 +24,50 @@ export type AutoFormatOptions = {
     /**
      * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
      */
-    autoBullet: boolean;
+    autoBullet?: boolean;
 
     /**
      * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
      */
-    autoNumbering: boolean;
+    autoNumbering?: boolean;
 
     /**
      * When press backspace before a link, remove the hyperlink
      */
-    autoUnlink: boolean;
+    autoUnlink?: boolean;
 
     /**
      * When paste content, create hyperlink for the pasted link
      */
-    autoLink: boolean;
+    autoLink?: boolean;
+
+    /**
+     * Transform -- into hyphen, if typed between two words
+     */
+    autoHyphen?: boolean;
+
+    /**
+     * Transform 1/2, 1/4, 3/4 into fraction character
+     */
+    autoFraction?: boolean;
+
+    /**
+     * Transform ordinal numbers into superscript
+     */
+    autoOrdinals?: boolean;
 };
 
 /**
  * @internal
  */
-const DefaultOptions: Required<AutoFormatOptions> = {
-    autoBullet: true,
-    autoNumbering: true,
+const DefaultOptions: Partial<AutoFormatOptions> = {
+    autoBullet: false,
+    autoNumbering: false,
     autoUnlink: false,
-    autoLink: true,
+    autoLink: false,
+    autoHyphen: false,
+    autoFraction: false,
+    autoOrdinals: false,
 };
 
 /**
@@ -52,11 +76,15 @@ const DefaultOptions: Required<AutoFormatOptions> = {
  */
 export class AutoFormatPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
-     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to true.
-     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to true.
+     *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
+     *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
+     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
+     *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
+     *  - autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.
+     *  - autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -110,11 +138,92 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
-        if (rawEvent.inputType === 'insertText') {
+        const selection = editor.getDOMSelection();
+        if (
+            rawEvent.inputType === 'insertText' &&
+            selection &&
+            selection.type === 'range' &&
+            selection.range.collapsed
+        ) {
             switch (rawEvent.data) {
                 case ' ':
-                    const { autoBullet, autoNumbering } = this.options;
-                    keyboardListTrigger(editor, autoBullet, autoNumbering);
+                    const formatOptions: FormatContentModelOptions = {
+                        changeSource: '',
+                        apiName: '',
+                    };
+                    formatTextSegmentBeforeSelectionMarker(
+                        editor,
+                        (model, previousSegment, paragraph, _markerFormat, context) => {
+                            const {
+                                autoBullet,
+                                autoNumbering,
+                                autoLink,
+                                autoHyphen,
+                                autoFraction,
+                                autoOrdinals,
+                            } = this.options;
+                            let shouldHyphen = false;
+                            let shouldLink = false;
+                            let shouldList = false;
+                            let shouldFraction = false;
+                            let shouldOrdinals = false;
+
+                            if (autoBullet || autoNumbering) {
+                                shouldList = keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                );
+                            }
+
+                            if (autoLink) {
+                                shouldLink = createLinkAfterSpace(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            if (autoHyphen) {
+                                shouldHyphen = transformHyphen(previousSegment, paragraph, context);
+                            }
+
+                            if (autoFraction) {
+                                shouldFraction = transformFraction(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            if (autoOrdinals) {
+                                shouldOrdinals = transformOrdinals(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
+                            formatOptions.changeSource = getChangeSource(
+                                shouldList,
+                                shouldHyphen,
+                                shouldLink
+                            );
+
+                            return (
+                                shouldList ||
+                                shouldHyphen ||
+                                shouldLink ||
+                                shouldFraction ||
+                                shouldOrdinals
+                            );
+                        },
+                        formatOptions
+                    );
+
                     break;
             }
         }
@@ -124,11 +233,6 @@ export class AutoFormatPlugin implements EditorPlugin {
         const rawEvent = event.rawEvent;
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
-                case ' ':
-                    if (this.options.autoLink) {
-                        createLinkAfterSpace(editor);
-                    }
-                    break;
                 case 'Backspace':
                     if (this.options.autoUnlink) {
                         unlink(editor, rawEvent);
@@ -145,3 +249,15 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 }
+
+const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
+    return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+};
+
+const getChangeSource = (shouldList: boolean, shouldHyphen: boolean, shouldLink: boolean) => {
+    return shouldList || shouldHyphen
+        ? ChangeSource.AutoFormat
+        : shouldLink
+        ? ChangeSource.AutoLink
+        : '';
+};

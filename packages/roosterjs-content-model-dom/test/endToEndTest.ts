@@ -82,7 +82,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 fontSize: '11pt',
                                 textColor: 'black',
                             },
-                            isSelected: true,
+                            isSelected: false,
                         },
                     },
                     {
@@ -129,7 +129,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 fontSize: '11pt',
                                 textColor: 'black',
                             },
-                            isSelected: true,
+                            isSelected: false,
                         },
                     },
                 ],
@@ -159,7 +159,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -181,7 +181,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -206,7 +206,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -225,7 +225,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         format: {},
@@ -2082,7 +2082,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
-                            isSelected: true,
+                            isSelected: false,
                             format: {},
                         },
                         levels: [
@@ -2103,6 +2103,47 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             },
             'test',
             '<ol start="1"><ol start="1" style="list-style-type: &quot;1) &quot;;"><li>test</li></ol></ol>'
+        );
+    });
+
+    it('link with color', () => {
+        runTest(
+            '<div style="font-family: Calibri; font-size: 11pt; color: rgb(0, 0, 0);"><span style="color: rgb(245, 212, 39);"><a href="http://www.bing.com" style="color: rgb(245, 212, 39);">www.bing.com</a></span></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(245, 212, 39)',
+                                },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                        textColor: 'rgb(245, 212, 39)',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                            textColor: 'rgb(245, 212, 39)',
+                        },
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<div style="font-family: Calibri; font-size: 11pt; color: rgb(245, 212, 39);"><a href="http://www.bing.com" style="color: rgb(245, 212, 39);">www.bing.com</a></div>'
         );
     });
 });

@@ -1,3 +1,4 @@
+import { ChangeSource } from '../../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createLink } from '../../../lib/autoFormat/link/createLink';
 
@@ -16,6 +17,7 @@ describe('createLink', () => {
                     newImages: [],
                 });
                 expect(result).toBe(expectedResult);
+                expect(options.changeSource).toBe(ChangeSource.AutoLink);
             });
 
         createLink({
@@ -110,7 +112,7 @@ describe('createLink', () => {
                             format: {},
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'http://www.bing.com',
                                     underline: true,
                                 },
                                 dataset: {},

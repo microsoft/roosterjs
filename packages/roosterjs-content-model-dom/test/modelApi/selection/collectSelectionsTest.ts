@@ -41,7 +41,12 @@ describe('getSelectedSegmentsAndParagraphs', () => {
     function runTest(
         selections: SelectionInfo[],
         includingFormatHolder: boolean,
-        expectedResult: [ContentModelSegment, ContentModelParagraph | null][]
+        includingEntity: boolean,
+        expectedResult: [
+            ContentModelSegment,
+            ContentModelParagraph | null,
+            ContentModelBlockGroup[]
+        ][]
     ) {
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             selections.forEach(({ path, tableContext, block, segments }) => {
@@ -51,13 +56,17 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             return false;
         });
 
-        const result = getSelectedSegmentsAndParagraphs(null!, includingFormatHolder);
+        const result = getSelectedSegmentsAndParagraphs(
+            null!,
+            includingFormatHolder,
+            includingEntity
+        );
 
         expect(result).toEqual(expectedResult);
     }
 
     it('Empty result', () => {
-        runTest([], false, []);
+        runTest([], false, false, []);
     });
 
     it('Add segments', () => {
@@ -82,11 +91,12 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             false,
+            false,
             [
-                [s1, p1],
-                [s2, p1],
-                [s3, p2],
-                [s4, p2],
+                [s1, p1, []],
+                [s2, p1, []],
+                [s3, p2, []],
+                [s4, p2, []],
             ]
         );
     });
@@ -110,6 +120,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                     segments: [s3, s4],
                 },
             ],
+            false,
             false,
             []
         );
@@ -135,9 +146,10 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             true,
+            false,
             [
-                [s3, null],
-                [s4, null],
+                [s3, null, []],
+                [s4, null, []],
             ]
         );
     });
@@ -176,11 +188,12 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             true,
+            false,
             [
-                [m1, p1],
-                [s2, p2],
-                [s3, p2],
-                [m2, p3],
+                [m1, p1, []],
+                [s2, p2, []],
+                [s3, p2, []],
+                [m2, p3, []],
             ]
         );
     });
@@ -201,7 +214,32 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 },
             ],
             false,
-            [[e2, p1]]
+            false,
+            [[e2, p1, []]]
+        );
+    });
+
+    it('Include entity', () => {
+        const e1 = createEntity(null!);
+        const e2 = createEntity(null!, false);
+        const p1 = createParagraph();
+
+        p1.segments.push(e1, e2);
+
+        runTest(
+            [
+                {
+                    path: [],
+                    block: p1,
+                    segments: [e1, e2],
+                },
+            ],
+            false,
+            true,
+            [
+                [e1, p1, []],
+                [e2, p1, []],
+            ]
         );
     });
 });

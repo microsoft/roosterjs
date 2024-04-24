@@ -13,6 +13,7 @@ export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelecti
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
+export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
 export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
@@ -29,6 +30,8 @@ export {
     generateEntityClassNames,
     addDelimiters,
     isEntityDelimiter,
+    isBlockEntityContainer,
+    findClosestBlockEntityContainer,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
@@ -55,6 +58,7 @@ export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
+export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
@@ -65,6 +69,8 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr';
+export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';

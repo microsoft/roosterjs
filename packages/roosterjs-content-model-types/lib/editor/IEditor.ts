@@ -1,3 +1,5 @@
+import type { AnnounceData } from '../parameter/AnnounceData';
+import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
 import type { PluginEventType } from '../event/PluginEventType';
@@ -30,14 +32,10 @@ export interface IEditor {
      * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
      * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
-     * - reduced: Returns a reduced Content Model that only contains the model of current selection. If there is already a up-to-date cached model, use it
-     * instead to improve performance. This is mostly used for retrieve current format state.
      * - clean: Similar with disconnected, this will return a disconnected model, the difference is "clean" mode will not include any selection info.
      * This is usually used for exporting content
      */
-    getContentModelCopy(
-        mode: 'connected' | 'disconnected' | 'reduced' | 'clean'
-    ): ContentModelDocument;
+    getContentModelCopy(mode: 'connected' | 'disconnected' | 'clean'): ContentModelDocument;
 
     /**
      * Get current running environment, such as if editor is running on Mac
@@ -72,7 +70,11 @@ export interface IEditor {
      * @param formatter Formatter function, see ContentModelFormatter
      * @param options More options, see FormatContentModelOptions
      */
-    formatContentModel(formatter: ContentModelFormatter, options?: FormatContentModelOptions): void;
+    formatContentModel(
+        formatter: ContentModelFormatter,
+        options?: FormatContentModelOptions,
+        domToModelOption?: DomToModelOptionForCreateModel
+    ): void;
 
     /**
      * Get pending format of editor if any, or return null
@@ -217,4 +219,10 @@ export interface IEditor {
         cssRule: string | null,
         subSelectors?: 'before' | 'after' | string[]
     ): void;
+
+    /**
+     * Announce the given data
+     * @param announceData Data to announce
+     */
+    announce(announceData: AnnounceData): void;
 }

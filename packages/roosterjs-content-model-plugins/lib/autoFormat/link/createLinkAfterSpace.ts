@@ -1,41 +1,41 @@
-import { createText, getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
-import type { IEditor } from 'roosterjs-content-model-types';
+import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import type {
+    ContentModelParagraph,
+    ContentModelText,
+    FormatContentModelContext,
+    LinkData,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createLinkAfterSpace(editor: IEditor) {
-    editor.formatContentModel(model => {
-        const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
-            model,
-            false /* includingFormatHolder */
+export function createLinkAfterSpace(
+    previousSegment: ContentModelText,
+    paragraph: ContentModelParagraph,
+    context: FormatContentModelContext
+) {
+    const link = previousSegment.text.split(' ').pop();
+    const url = link?.trim();
+    let linkData: LinkData | null = null;
+    if (url && link && (linkData = matchLink(url))) {
+        const linkSegment = splitTextSegment(
+            previousSegment,
+            paragraph,
+            previousSegment.text.length - link.trimLeft().length,
+            previousSegment.text.trimRight().length
         );
-        if (selectedSegmentsAndParagraphs[0] && selectedSegmentsAndParagraphs[0][1]) {
-            const length = selectedSegmentsAndParagraphs[0][1].segments.length;
-            const marker = selectedSegmentsAndParagraphs[0][1].segments[length - 1];
-            const textSegment = selectedSegmentsAndParagraphs[0][1].segments[length - 2];
-            if (
-                marker.segmentType == 'SelectionMarker' &&
-                textSegment.segmentType == 'Text' &&
-                !textSegment.link
-            ) {
-                const link = textSegment.text.split(' ').pop();
-                if (link && matchLink(link)) {
-                    textSegment.text = textSegment.text.replace(link, '');
-                    const linkSegment = createText(link, marker.format, {
-                        format: {
-                            href: link,
-                            underline: true,
-                        },
-                        dataset: {},
-                    });
-                    selectedSegmentsAndParagraphs[0][1].segments.splice(length - 1, 0, linkSegment);
-                    return true;
-                }
-            }
-        }
+        linkSegment.link = {
+            format: {
+                href: linkData.normalizedUrl,
+                underline: true,
+            },
+            dataset: {},
+        };
 
-        return false;
-    });
+        context.canUndoByBackspace = true;
+
+        return true;
+    }
+    return false;
 }

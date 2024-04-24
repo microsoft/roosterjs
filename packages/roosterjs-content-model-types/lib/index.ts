@@ -183,7 +183,11 @@ export {
     ContentModelSegmentHandler,
     ContentModelBlockHandler,
 } from './context/ContentModelHandler';
-export { DomToModelOption, DomToModelOptionForSanitizing } from './context/DomToModelOption';
+export {
+    DomToModelOption,
+    DomToModelOptionForSanitizing,
+    DomToModelOptionForCreateModel,
+} from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
 export { DomIndexer } from './context/DomIndexer';
 export { TextMutationObserver } from './context/TextMutationObserver';
@@ -222,6 +226,7 @@ export {
     RestoreUndoSnapshot,
     GetVisibleViewport,
     SetEditorStyle,
+    Announce,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
 export { EditorPlugin } from './editor/EditorPlugin';

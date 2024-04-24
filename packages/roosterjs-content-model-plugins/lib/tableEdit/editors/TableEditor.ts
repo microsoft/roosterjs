@@ -3,7 +3,7 @@ import { createTableInserter } from './features/TableInserter';
 import { createTableMover } from './features/TableMover';
 import { createTableResizer } from './features/TableResizer';
 import { disposeTableEditFeature } from './features/TableEditFeature';
-import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import { isNodeOfType, normalizeRect, parseTableCells } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
 
@@ -368,12 +368,13 @@ export class TableEditor {
         this.editor.focus();
 
         if (table) {
+            const parsedTable = parseTableCells(table);
             const selection: TableSelection = {
                 table: table,
                 firstRow: 0,
                 firstColumn: 0,
-                lastRow: table.rows.length - 1,
-                lastColumn: table.rows[table.rows.length - 1].cells.length - 1,
+                lastRow: parsedTable.length - 1,
+                lastColumn: (parsedTable[0]?.length ?? 0) - 1,
                 type: 'table',
             };
 

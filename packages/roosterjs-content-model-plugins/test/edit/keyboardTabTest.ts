@@ -1,5 +1,5 @@
 import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { keyboardTab } from '../../lib/edit/keyboardTab';
 
@@ -18,14 +18,15 @@ describe('keyboardTab', () => {
         shiftKey: boolean,
         expectedResult: boolean
     ) {
+        const context: FormatContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
             .and.callFake((callback, options) => {
-                const result = callback(input, {
-                    newEntities: [],
-                    deletedEntities: [],
-                    newImages: [],
-                });
+                const result = callback(input, context);
                 expect(result).toBe(expectedResult);
             });
 
@@ -54,7 +55,12 @@ describe('keyboardTab', () => {
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
         if (indent) {
-            expect(setModelIndentationSpy).toHaveBeenCalledWith(input as any, indent);
+            expect(setModelIndentationSpy).toHaveBeenCalledWith(
+                input as any,
+                indent,
+                undefined,
+                context
+            );
         } else {
             expect(setModelIndentationSpy).not.toHaveBeenCalled();
         }
@@ -151,7 +157,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -204,7 +210,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -241,7 +247,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -278,7 +284,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -331,7 +337,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -368,7 +374,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -405,7 +411,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -452,7 +458,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -494,7 +500,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -531,7 +537,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -583,7 +589,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -620,7 +626,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -657,7 +663,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -666,6 +672,156 @@ describe('keyboardTab', () => {
             format: {},
         };
         runTest(model, undefined, false, true);
+    });
+
+    it('tab on the start first item on the list while list is in table cell', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 20,
+                            format: {},
+                            cells: [
+                                {
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: true,
+                                                            format: {},
+                                                        },
+                                                        {
+                                                            segmentType: 'Text',
+                                                            text: 'test',
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                    isImplicit: true,
+                                                },
+                                            ],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        marginTop: '0px',
+                                                        marginBottom: '0px',
+                                                        listStyleType: 'decimal',
+                                                    },
+                                                    dataset: {
+                                                        editingInfo: '{"orderedStyleType":1}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {},
+                                            },
+                                            format: {},
+                                        },
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'Text',
+                                                            text: 'test',
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                    isImplicit: true,
+                                                },
+                                            ],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        marginTop: '0px',
+                                                        marginBottom: '0px',
+                                                        listStyleType: 'decimal',
+                                                    },
+                                                    dataset: {
+                                                        editingInfo: '{"orderedStyleType":1}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {},
+                                            },
+                                            format: {},
+                                        },
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'Text',
+                                                            text: 'test',
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                    isImplicit: true,
+                                                },
+                                            ],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        marginTop: '0px',
+                                                        marginBottom: '0px',
+                                                        listStyleType: 'decimal',
+                                                    },
+                                                    dataset: {
+                                                        editingInfo: '{"orderedStyleType":1}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {},
+                                            },
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [20],
+                    dataset: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, 'indent', false, true);
     });
 
     it('shift tab on empty list item', () => {
@@ -705,7 +861,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -757,7 +913,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -794,7 +950,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -851,7 +1007,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -888,7 +1044,7 @@ describe('keyboardTab', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1665,7 +1821,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1697,7 +1853,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1729,7 +1885,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1784,7 +1940,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1816,7 +1972,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1848,7 +2004,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {

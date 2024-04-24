@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
+import { getDOMInsertPointRect } from 'roosterjs-content-model-plugins';
 import { getLocalizedString } from '../../common/index';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { getPositionRect } from '../utils/getPositionRect';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
 import { useTheme } from '@fluentui/react/lib/Theme';
+import { useWindow } from '@fluentui/react/lib/WindowProvider';
 import type { LocalizedStrings, UIUtilities } from '../../common/index';
 import type { Theme } from '@fluentui/react/lib/Theme';
 import type { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
@@ -106,7 +107,7 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
     const classNames = getPasteOptionClassNames(theme);
     const [selectedKey, setSelectedKey] = React.useState<PasteOptionButtonKeys | null>(null);
 
-    const rect = getPositionRect(container, offset);
+    const rect = getDOMInsertPointRect(useWindow().document, { node: container, offset });
     const target = rect && { x: props.isRtl ? rect.left : rect.right, y: rect.bottom };
 
     React.useImperativeHandle(

@@ -18,10 +18,15 @@ import type {
  * @param formatter Formatter function, see ContentModelFormatter
  * @param options More options, see FormatContentModelOptions
  */
-export const formatContentModel: FormatContentModel = (core, formatter, options) => {
+export const formatContentModel: FormatContentModel = (
+    core,
+    formatter,
+    options,
+    domToModelOptions
+) => {
     const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
         options || {};
-    const model = core.api.createContentModel(core, undefined /*option*/, selectionOverride);
+    const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
         newEntities: [],
         deletedEntities: [],
@@ -71,8 +76,10 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
             core.api.triggerEvent(core, eventData, true /*broadcast*/);
 
             if (canUndoByBackspace && selection?.type == 'range') {
-                core.undo.posContainer = selection.range.startContainer;
-                core.undo.posOffset = selection.range.startOffset;
+                core.undo.autoCompleteInsertPoint = {
+                    node: selection.range.startContainer,
+                    offset: selection.range.startOffset,
+                };
             }
 
             if (shouldAddSnapshot) {
@@ -93,20 +100,20 @@ export const formatContentModel: FormatContentModel = (core, formatter, options)
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
+
+    if (context.announceData) {
+        core.api.announce(core, context.announceData);
+    }
 };
 
 function handleImages(core: EditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
-        const viewport = core.api.getVisibleViewport(core);
-
-        if (viewport) {
-            const { left, right } = viewport;
-            const minMaxImageSize = 10;
-            const maxWidth = Math.max(right - left, minMaxImageSize);
-            context.newImages.forEach(image => {
-                image.format.maxWidth = `${maxWidth}px`;
-            });
-        }
+        const width = core.domHelper.getClientWidth();
+        const minMaxImageSize = 10;
+        const maxWidth = Math.max(width, minMaxImageSize);
+        context.newImages.forEach(image => {
+            image.format.maxWidth = `${maxWidth}px`;
+        });
     }
 }
 
@@ -123,8 +130,10 @@ function handlePendingFormat(
     if (pendingFormat && selection?.type == 'range' && selection.range.collapsed) {
         core.format.pendingFormat = {
             format: { ...pendingFormat },
-            posContainer: selection.range.startContainer,
-            posOffset: selection.range.startOffset,
+            insertPoint: {
+                node: selection.range.startContainer,
+                offset: selection.range.startOffset,
+            },
         };
     }
 }

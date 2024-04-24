@@ -8,6 +8,8 @@ import type { EditorContext, CreateEditorContext } from 'roosterjs-content-model
 export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
     const { lifecycle, format, darkColorHandler, logicalRoot, cache, domHelper } = core;
 
+    saveIndex = saveIndex && !core.lifecycle.shadowEditFragment;
+
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
         defaultFormat: format.defaultFormat,
@@ -20,15 +22,9 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
-    checkRootRtl(logicalRoot, context);
+    if (core.domHelper.isRightToLeft()) {
+        context.isRootRtl = true;
+    }
 
     return context;
 };
-
-function checkRootRtl(element: HTMLElement, context: EditorContext) {
-    const style = element?.ownerDocument.defaultView?.getComputedStyle(element);
-
-    if (style?.direction == 'rtl') {
-        context.isRootRtl = true;
-    }
-}

@@ -163,9 +163,9 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             const selection = this.editor.getDOMSelection();
             const range =
                 selection?.type == 'range' && selection.range.collapsed ? selection.range : null;
-            const { posContainer, posOffset } = this.state.pendingFormat;
+            const { node, offset } = this.state.pendingFormat.insertPoint;
 
-            if (range && range.startContainer == posContainer && range.startOffset == posOffset) {
+            if (range && range.startContainer == node && range.startOffset == offset) {
                 result = true;
             }
         }

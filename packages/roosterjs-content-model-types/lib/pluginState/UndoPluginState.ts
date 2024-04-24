@@ -1,4 +1,5 @@
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
+import type { DOMInsertPoint } from '../selection/DOMSelection';
 
 /**
  * The state object for UndoPlugin
@@ -20,14 +21,9 @@ export interface UndoPluginState {
     isNested: boolean;
 
     /**
-     * Container after last auto complete. Undo autoComplete only works if the current position matches this one
+     * Insert point after last auto complete. Undo autoComplete only works if the current position matches this one
      */
-    posContainer: Node | null;
-
-    /**
-     * Offset after last auto complete. Undo autoComplete only works if the current position matches this one
-     */
-    posOffset: number | null;
+    autoCompleteInsertPoint: DOMInsertPoint | null;
 
     /**
      * Last key user pressed

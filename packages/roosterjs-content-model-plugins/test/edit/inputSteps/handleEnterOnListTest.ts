@@ -1,20 +1,58 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import * as getListAnnounceData from 'roosterjs-content-model-api/lib/modelApi/list/getListAnnounceData';
 import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { editingTestCommon } from '../editingTestCommon';
 import { handleEnterOnList } from '../../../lib/edit/inputSteps/handleEnterOnList';
 import { keyboardInput } from '../../../lib/edit/keyboardInput';
+import {
+    ContentModelDocument,
+    ContentModelListItem,
+    FormatContentModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('handleEnterOnList', () => {
+    let getListAnnounceDataSpy: jasmine.Spy;
+    const mockedAnnounceData = 'ANNOUNCE' as any;
+
+    beforeEach(() => {
+        getListAnnounceDataSpy = spyOn(getListAnnounceData, 'getListAnnounceData').and.returnValue(
+            mockedAnnounceData
+        );
+    });
+
     function runTest(
         model: ContentModelDocument,
         expectedModel: ContentModelDocument,
-        expectedResult: 'notDeleted' | 'range'
+        expectedResult: 'notDeleted' | 'range',
+        expectedListItem: ContentModelListItem | null
     ) {
-        const result = deleteSelection(model, [handleEnterOnList]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        const result = deleteSelection(model, [handleEnterOnList], context);
         normalizeContentModel(model);
 
         expect(model).toEqual(expectedModel);
         expect(result.deleteResult).toBe(expectedResult);
+
+        if (expectedListItem) {
+            expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
+            expect(getListAnnounceDataSpy).toHaveBeenCalledWith([expectedListItem, model]);
+            expect(context).toEqual({
+                deletedEntities: [],
+                newEntities: [],
+                newImages: [],
+                announceData: mockedAnnounceData,
+            });
+        } else {
+            expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+            expect(context).toEqual({
+                deletedEntities: [],
+                newEntities: [],
+                newImages: [],
+            });
+        }
     }
 
     it('no list item', () => {
@@ -34,7 +72,7 @@ describe('handleEnterOnList', () => {
                 },
             ],
         };
-        runTest(model, model, 'notDeleted');
+        runTest(model, model, 'notDeleted', null);
     });
 
     it('empty list item', () => {
@@ -72,7 +110,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -112,7 +150,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -154,7 +192,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -177,7 +215,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', null);
     });
 
     it('enter on middle list item', () => {
@@ -225,12 +263,55 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
                 },
             ],
+            format: {},
+        };
+        const expectedListItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        listStyleType: 'decimal',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":1}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
             format: {},
         };
         const expectedModel: ContentModelDocument = {
@@ -267,57 +348,16 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'st',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                                listStyleType: 'decimal',
-                                startNumberOverride: undefined,
-                            },
-                            dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    format: {},
-                },
+                expectedListItem,
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', expectedListItem);
     });
 
     it('enter on last list item', () => {
@@ -360,12 +400,54 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
                 },
             ],
+            format: {},
+        };
+        const expectedListItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        listStyleType: 'decimal',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":1}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
             format: {},
         };
 
@@ -403,57 +485,17 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Br',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                                listStyleType: 'decimal',
-                                startNumberOverride: undefined,
-                            },
-                            dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    format: {},
-                },
+                expectedListItem,
             ],
             format: {},
         };
 
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', expectedListItem);
     });
 
     it('enter on last list item of second list', () => {
@@ -490,7 +532,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -527,7 +569,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -575,7 +617,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -617,7 +659,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -625,6 +667,47 @@ describe('handleEnterOnList', () => {
                     },
                 },
             ],
+            format: {},
+        };
+        const expectedListItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":10}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
             format: {},
         };
 
@@ -661,7 +744,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -698,7 +781,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -746,7 +829,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -783,58 +866,19 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
                         listStyleType: '"B) "',
                     },
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Br',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                                startNumberOverride: undefined,
-                            },
-                            dataset: {
-                                editingInfo: '{"orderedStyleType":10}',
-                            },
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    format: {},
-                },
+                expectedListItem,
             ],
             format: {},
         };
 
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', expectedListItem);
     });
 
     it('enter on list item with selected text', () => {
@@ -873,7 +917,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -909,7 +953,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -955,7 +999,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -992,7 +1036,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1000,7 +1044,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', null);
     });
 
     it('enter on multiple list items with selected text', () => {
@@ -1038,7 +1082,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1080,7 +1124,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1122,7 +1166,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1158,7 +1202,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1200,7 +1244,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1240,7 +1284,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1277,7 +1321,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1285,7 +1329,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', null);
     });
 
     it('expanded range mixed list with paragraph', () => {
@@ -1329,7 +1373,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1384,7 +1428,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1426,7 +1470,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1468,7 +1512,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1476,7 +1520,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', null);
     });
 
     it('expanded range with mixed list with paragraph | different styles', () => {
@@ -1519,7 +1563,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1576,7 +1620,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1617,7 +1661,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {
@@ -1661,7 +1705,7 @@ describe('handleEnterOnList', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1669,7 +1713,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range');
+        runTest(model, expectedModel, 'range', null);
     });
 });
 
@@ -1746,7 +1790,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1787,7 +1831,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1829,7 +1873,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1865,7 +1909,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1898,6 +1942,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
                                 startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
@@ -1906,7 +1951,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1952,7 +1997,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -1988,7 +2033,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2028,7 +2073,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2070,7 +2115,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2106,7 +2151,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2167,7 +2212,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2208,7 +2253,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2250,7 +2295,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},
@@ -2291,7 +2336,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     ],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        isSelected: true,
+                        isSelected: false,
                         format: {},
                     },
                     format: {},

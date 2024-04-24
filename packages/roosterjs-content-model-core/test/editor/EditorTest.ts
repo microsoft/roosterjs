@@ -1,11 +1,19 @@
 import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
+import * as createDomToModelContextWithConfig from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
-import { CachedElementHandler, EditorCore, Rect } from 'roosterjs-content-model-types';
 import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
-import { reducedModelChildProcessor } from '../../lib/override/reducedModelChildProcessor';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
+import {
+    CachedElementHandler,
+    ContentModelDocument,
+    ContentModelEntity,
+    EditorCore,
+    Rect,
+} from 'roosterjs-content-model-types';
 
 describe('Editor', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -130,24 +138,10 @@ describe('Editor', () => {
         const model1 = editor.getContentModelCopy('connected');
 
         expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor, // Use the original table processor to create Content Model with real table content but not just an entity
-            },
-        });
-
-        const model2 = editor.getContentModelCopy('reduced');
-
-        expect(model2).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                child: reducedModelChildProcessor,
-            },
-        });
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, { tryGetFromCache: true });
 
         editor.dispose();
         expect(() => editor.getContentModelCopy('connected')).toThrow();
-        expect(() => editor.getContentModelCopy('reduced')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
@@ -208,7 +202,12 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+            tryGetFromCache: false,
+        });
         expect(transformColorSpy).not.toHaveBeenCalled();
 
         // Clone in dark mode
@@ -217,7 +216,12 @@ describe('Editor', () => {
         expect(cloneNodeSpy).toHaveBeenCalledWith(true);
 
         expect(model).toBe(mockedClonedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, undefined, undefined);
+        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
+            processorOverride: {
+                table: tableProcessor,
+            },
+            tryGetFromCache: false,
+        });
         expect(transformColorSpy).toHaveBeenCalledWith(
             clonedNode,
             true,
@@ -234,6 +238,134 @@ describe('Editor', () => {
         editor.dispose();
         expect(() => editor.getContentModelCopy('disconnected')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
+    });
+
+    it('getContentModelCopy, clean, custom logical root', () => {
+        const div = document.createElement('div');
+        const mockedEditorContext = 'EDITORCONTEXT' as any;
+        const mockedModelContext = 'MODELCONTEXT' as any;
+        const mockedModel = 'MODEL' as any;
+        const createEditorContextSpy = jasmine
+            .createSpy('createEditorContext')
+            .and.returnValue(mockedEditorContext);
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            logicalRoot: 'LOGICAL',
+            physicalRoot: 'PHYSICAL',
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            lifecycle: {
+                isDarkMode: false,
+            },
+            api: {
+                createEditorContext: createEditorContextSpy,
+                setContentModel: setContentModelSpy,
+            },
+            environment: {
+                domToModelSettings: {
+                    calculated: undefined,
+                },
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const createDomToModelContextWithConfigSpy = spyOn(
+            createDomToModelContextWithConfig,
+            'createDomToModelContextWithConfig'
+        ).and.returnValue(mockedModelContext);
+        const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            mockedModel
+        );
+
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+
+        const model = editor.getContentModelCopy('clean');
+        expect(model).toBe(mockedModel);
+        expect(createDomToModelContextWithConfigSpy).toHaveBeenCalledWith(
+            mockedCore.environment.domToModelSettings.calculated,
+            mockedEditorContext
+        );
+        expect(cloneModelSpy).toHaveBeenCalledWith(mockedModel, {
+            includeCachedElement: jasmine.anything() as any,
+        });
+        expect(domToContentModelSpy).toHaveBeenCalledWith(
+            mockedCore.physicalRoot,
+            mockedModelContext
+        );
+    });
+
+    it('getContentModelCopy, clean with entity', () => {
+        const div = document.createElement('div');
+        const entityDiv = document.createElement('div');
+
+        entityDiv.style.color = 'var(--darkColor_red, red)';
+
+        const initialModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    wrapper: entityDiv,
+                    format: {},
+                    entityFormat: {
+                        entityType: 'A',
+                        id: 'B',
+                        isReadonly: true,
+                    },
+                },
+            ],
+        };
+        const editor = new Editor(div, {
+            initialModel,
+            inDarkMode: true,
+            knownColors: {
+                red: {
+                    darkModeColor: 'blue',
+                    lightModeColor: 'red',
+                },
+            },
+        });
+
+        expectHtml(div.innerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>',
+            '<div style="color: var(--darkColor_red, red);" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
+
+        const model = editor.getContentModelCopy('clean');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    format: {},
+                    wrapper: jasmine.anything(),
+                    entityFormat: {
+                        entityType: 'A',
+                        id: 'B',
+                        isReadonly: true,
+                    },
+                    isSelected: undefined,
+                },
+            ],
+            format: {},
+        });
+        expectHtml((model.blocks[0] as ContentModelEntity).wrapper.outerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: red; background-color: inherit;"></div>',
+            '<div style="color: red; background-color: inherit;" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
+        expectHtml(div.innerHTML, [
+            '<div class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false" style="color: var(--darkColor_red, red);"></div>',
+            '<div style="color: var(--darkColor_red, red);" class="_Entity _EType_A _EId_B _EReadonly_1" contenteditable="false"></div>',
+        ]);
     });
 
     it('getEnvironment', () => {
@@ -354,14 +486,20 @@ describe('Editor', () => {
 
         editor.formatContentModel(mockedFormatter);
 
-        expect(formatContentModelSpy).toHaveBeenCalledWith(mockedCore, mockedFormatter, undefined);
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            mockedCore,
+            mockedFormatter,
+            undefined,
+            undefined
+        );
 
         editor.formatContentModel(mockedFormatter, mockedOptions);
 
         expect(formatContentModelSpy).toHaveBeenCalledWith(
             mockedCore,
             mockedFormatter,
-            mockedOptions
+            mockedOptions,
+            undefined
         );
 
         editor.dispose();
@@ -948,6 +1086,37 @@ describe('Editor', () => {
 
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.getVisibleViewport()).toThrow();
+        expect(() => editor.setEditorStyle('key', 'rule', ['rule1', 'rule2'])).toThrow();
+    });
+
+    it('announce', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const announceSpy = jasmine.createSpy('announce');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                announce: announceSpy,
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const mockedData = 'ANNOUNCE' as any;
+
+        editor.announce(mockedData);
+
+        expect(announceSpy).toHaveBeenCalledWith(mockedCore, mockedData);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.announce(mockedData)).toThrow();
     });
 });

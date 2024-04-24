@@ -10,12 +10,6 @@ class SimplePluginCode extends CodeElement {
     }
 }
 
-export class AutoFormatPluginCode extends SimplePluginCode {
-    constructor() {
-        super('AutoFormatPlugin');
-    }
-}
-
 export class EditPluginCode extends SimplePluginCode {
     constructor() {
         super('EditPlugin');
@@ -43,11 +37,5 @@ export class TableEditPluginCode extends SimplePluginCode {
 export class ImageEditCode extends SimplePluginCode {
     constructor() {
         super('ImageEdit', 'roosterjsLegacy');
-    }
-}
-
-export class CustomReplaceCode extends SimplePluginCode {
-    constructor() {
-        super('CustomReplace', 'roosterjsLegacy');
     }
 }

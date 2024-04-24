@@ -1,3 +1,4 @@
+import type { AnnounceData } from '../parameter/AnnounceData';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
@@ -8,7 +9,7 @@ import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
-import type { DomToModelOption } from '../context/DomToModelOption';
+import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
@@ -36,7 +37,7 @@ export type CreateEditorContext = (core: EditorCore, saveIndex: boolean) => Edit
  */
 export type CreateContentModel = (
     core: EditorCore,
-    option?: DomToModelOption,
+    option?: DomToModelOptionForCreateModel,
     selectionOverride?: DOMSelection | 'none'
 ) => ContentModelDocument;
 
@@ -91,7 +92,8 @@ export type SetLogicalRoot = (core: EditorCore, logicalRoot: HTMLDivElement | nu
 export type FormatContentModel = (
     core: EditorCore,
     formatter: ContentModelFormatter,
-    options?: FormatContentModelOptions
+    options?: FormatContentModelOptions,
+    domToModelOptions?: DomToModelOptionForCreateModel
 ) => void;
 
 /**
@@ -169,6 +171,13 @@ export type SetEditorStyle = (
     subSelectors?: 'before' | 'after' | string[],
     maxRuleLength?: number
 ) => void;
+
+/**
+ * Announce the given data
+ * @param core The EditorCore object
+ * @param announceData Data to announce
+ */
+export type Announce = (core: EditorCore, announceData: AnnounceData) => void;
 
 /**
  * The interface for the map of core API for Editor.
@@ -291,6 +300,13 @@ export interface CoreApiMap {
      * combined with root selector together to build a separate rule.
      */
     setEditorStyle: SetEditorStyle;
+
+    /**
+     * Announce the given data
+     * @param core The EditorCore object
+     * @param announceData Data to announce
+     */
+    announce: Announce;
 }
 
 /**
