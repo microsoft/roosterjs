@@ -1,3 +1,5 @@
+import * as getListAnnounceData from '../../../lib/modelApi/list/getListAnnounceData';
+import { FormatContentModelContext } from 'roosterjs-content-model-types';
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
 import {
     createContentModelDocument,
@@ -9,30 +11,61 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('indent', () => {
+    let getListAnnounceDataSpy: jasmine.Spy;
+    const mockedAnnounceData = 'ANNOUNCE' as any;
+
+    beforeEach(() => {
+        getListAnnounceDataSpy = spyOn(getListAnnounceData, 'getListAnnounceData').and.returnValue(
+            mockedAnnounceData
+        );
+    });
+
     it('Empty group', () => {
         const group = createContentModelDocument();
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
         });
         expect(result).toBeFalse();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group without selection', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         group.blocks.push(para);
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para],
         });
         expect(result).toBeFalse();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected paragraph', () => {
@@ -43,6 +76,11 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -53,7 +91,7 @@ describe('indent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -77,6 +115,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected indented paragraph', () => {
@@ -87,6 +131,11 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -99,7 +148,7 @@ describe('indent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -127,6 +176,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected indented paragraph in RTL', () => {
@@ -137,13 +192,18 @@ describe('indent', () => {
             direction: 'rtl',
         });
         const text1 = createText('test1');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         group.blocks.push(para1);
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -159,6 +219,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with multiple selected paragraph - 1', () => {
@@ -169,6 +235,11 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -180,7 +251,7 @@ describe('indent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -206,6 +277,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with multiple selected paragraph - 2', () => {
@@ -216,6 +293,11 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -227,7 +309,7 @@ describe('indent', () => {
         text1.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -253,6 +335,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with paragraph under OL', () => {
@@ -264,6 +352,11 @@ describe('indent', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const listItem = createListItem([createListLevel('OL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -275,7 +368,7 @@ describe('indent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -299,6 +392,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with paragraph under OL with formats', () => {
@@ -320,6 +419,11 @@ describe('indent', () => {
                 }
             ),
         ]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -331,7 +435,7 @@ describe('indent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -361,6 +465,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with paragraph and multiple OL', () => {
@@ -370,6 +480,11 @@ describe('indent', () => {
         const listItem1 = createListItem([createListLevel('OL')]);
         const listItem2 = createListItem([createListLevel('OL')]);
         const listItem3 = createListItem([createListLevel('OL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para2.segments.push(text2);
         listItem2.blocks.push(para2);
@@ -379,7 +494,7 @@ describe('indent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -404,6 +519,14 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            announceData: mockedAnnounceData,
+        });
+        expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
+        expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
     });
 
     it('Group with multiple selected paragraph and multiple OL', () => {
@@ -417,6 +540,11 @@ describe('indent', () => {
         const listItem1 = createListItem([createListLevel('OL')]);
         const listItem2 = createListItem([createListLevel('OL')]);
         const listItem3 = createListItem([createListLevel('OL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -432,7 +560,7 @@ describe('indent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -471,6 +599,15 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            announceData: mockedAnnounceData,
+        });
+        expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(2);
+        expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
+        expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem3, group]);
     });
 
     it('Group with multiple selected paragraph and UL and OL', () => {
@@ -484,6 +621,11 @@ describe('indent', () => {
         const listItem1 = createListItem([createListLevel('OL')]);
         const listItem2 = createListItem([createListLevel('OL')]);
         const listItem3 = createListItem([createListLevel('UL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -499,7 +641,7 @@ describe('indent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -539,6 +681,14 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            announceData: mockedAnnounceData,
+        });
+        expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
+        expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
     });
 
     it('Mixed with paragraph, list item and quote', () => {
@@ -552,6 +702,11 @@ describe('indent', () => {
         const text3 = createText('test3');
         const listItem1 = createListItem([createListLevel('OL')]);
         const listItem2 = createListItem([createListLevel('UL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -568,7 +723,7 @@ describe('indent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -615,6 +770,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected indented paragraph, outdent with different length', () => {
@@ -623,13 +784,18 @@ describe('indent', () => {
             marginLeft: '60px',
         });
         const text1 = createText('test1');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         group.blocks.push(para1);
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'indent', 15);
+        const result = setModelIndentation(group, 'indent', 15, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -643,6 +809,12 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with list with first item selected', () => {
@@ -656,6 +828,12 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+
         text1.isSelected = true;
         text2.isSelected = true;
         text3.isSelected = true;
@@ -669,7 +847,7 @@ describe('indent', () => {
         group.blocks.push(listItem2);
         group.blocks.push(listItem3);
 
-        const result = setModelIndentation(group, 'indent');
+        const result = setModelIndentation(group, 'indent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -714,34 +892,71 @@ describe('indent', () => {
         });
 
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 });
 
 describe('outdent', () => {
+    let getListAnnounceDataSpy: jasmine.Spy;
+    const mockedAnnounceData = 'ANNOUNCE' as any;
+
+    beforeEach(() => {
+        getListAnnounceDataSpy = spyOn(getListAnnounceData, 'getListAnnounceData').and.returnValue(
+            mockedAnnounceData
+        );
+    });
+
     it('Empty group', () => {
         const group = createContentModelDocument();
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
         });
         expect(result).toBeFalse();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group without selection', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         group.blocks.push(para);
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para],
         });
         expect(result).toBeFalse();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected paragraph that cannot outdent', () => {
@@ -752,6 +967,11 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -762,12 +982,18 @@ describe('outdent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para1, para2, para3],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected single indented paragraph', () => {
@@ -784,6 +1010,11 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -794,7 +1025,7 @@ describe('outdent', () => {
 
         text2.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -822,6 +1053,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected 2 indented paragraph', () => {
@@ -834,6 +1071,11 @@ describe('outdent', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -847,7 +1089,7 @@ describe('outdent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -882,6 +1124,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected multiple indented paragraph', () => {
@@ -892,6 +1140,11 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -903,7 +1156,7 @@ describe('outdent', () => {
         text1.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -931,6 +1184,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected list item', () => {
@@ -938,6 +1197,11 @@ describe('outdent', () => {
         const para1 = createParagraph();
         const text1 = createText('test1');
         const listItem = createListItem([createListLevel('OL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         listItem.blocks.push(para1);
@@ -945,7 +1209,7 @@ describe('outdent', () => {
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -956,6 +1220,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected multiple level list item', () => {
@@ -972,6 +1242,11 @@ describe('outdent', () => {
             ),
             createListLevel('UL'),
         ]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         listItem.blocks.push(para1);
@@ -979,7 +1254,7 @@ describe('outdent', () => {
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1003,6 +1278,14 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            announceData: mockedAnnounceData,
+        });
+        expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
+        expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem, group]);
     });
 
     it('Group with mixed list item, quote and paragraph', () => {
@@ -1014,6 +1297,11 @@ describe('outdent', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const listItem = createListItem([createListLevel('UL')]);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -1029,7 +1317,7 @@ describe('outdent', () => {
         text2.isSelected = true;
         text3.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1054,6 +1342,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected indented paragraph in RTL', () => {
@@ -1064,13 +1358,18 @@ describe('outdent', () => {
             direction: 'rtl',
         });
         const text1 = createText('test1');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         group.blocks.push(para1);
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1086,6 +1385,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with selected indented paragraph, outdent with different length', () => {
@@ -1094,13 +1399,18 @@ describe('outdent', () => {
             marginLeft: '60px',
         });
         const text1 = createText('test1');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         para1.segments.push(text1);
         group.blocks.push(para1);
 
         text1.isSelected = true;
 
-        const result = setModelIndentation(group, 'outdent', 15);
+        const result = setModelIndentation(group, 'outdent', 15, context);
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1114,6 +1424,12 @@ describe('outdent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Group with list with no indention selected', () => {
@@ -1127,6 +1443,12 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+
         text1.isSelected = true;
         text2.isSelected = true;
         text3.isSelected = true;
@@ -1140,7 +1462,7 @@ describe('outdent', () => {
         group.blocks.push(listItem2);
         group.blocks.push(listItem3);
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -1161,6 +1483,12 @@ describe('outdent', () => {
         });
 
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Outdent parent format container, ltr', () => {
@@ -1172,6 +1500,11 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         text2.isSelected = true;
         formatContainer.format.marginLeft = '100px';
@@ -1184,7 +1517,7 @@ describe('outdent', () => {
         formatContainer.blocks.push(para1, para2);
         group.blocks.push(formatContainer, para3);
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -1223,6 +1556,12 @@ describe('outdent', () => {
         });
 
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 
     it('Outdent parent format container, rtl', () => {
@@ -1234,6 +1573,11 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
 
         text1.isSelected = true;
         text2.isSelected = true;
@@ -1248,7 +1592,7 @@ describe('outdent', () => {
         formatContainer.blocks.push(para1, para2);
         group.blocks.push(formatContainer, para3);
 
-        const result = setModelIndentation(group, 'outdent');
+        const result = setModelIndentation(group, 'outdent', undefined, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -1294,5 +1638,11 @@ describe('outdent', () => {
         });
 
         expect(result).toBeTrue();
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        });
+        expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
     });
 });

@@ -277,4 +277,27 @@ describe('findListItemsInSameThread', () => {
 
         expect(result).toEqual([item1, item2]);
     });
+
+    it('Multiple deeper OL under different groups', () => {
+        const group = createContentModelDocument();
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const item4 = createListItem([createListLevel('OL')]);
+        const item5 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const item6 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+
+        item1.format.lineHeight = '1';
+        item1.format.lineHeight = '2';
+        item1.format.lineHeight = '3';
+        item1.format.lineHeight = '4';
+        item1.format.lineHeight = '5';
+        item1.format.lineHeight = '6';
+
+        group.blocks.push(item1, item2, item3, item4, item5, item6);
+
+        const result = findListItemsInSameThread(group, item6);
+
+        expect(result).toEqual([item5, item6]);
+    });
 });

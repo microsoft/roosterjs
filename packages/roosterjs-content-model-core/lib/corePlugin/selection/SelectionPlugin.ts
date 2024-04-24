@@ -422,13 +422,26 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             col = reverse ? parsedTable[row].length - 1 : 0;
                         }
                         const cell = parsedTable[row][col];
+
                         if (typeof cell != 'string') {
                             this.setRangeSelectionInTable(cell, 0, this.editor);
+                            lastCo.row = row;
+                            lastCo.col = col;
                             break;
                         }
                     }
                 } else {
                     this.state.tableSelection = null;
+                }
+
+                if (
+                    collapsed &&
+                    (lastCo.col != oldCo.col || lastCo.row != oldCo.row) &&
+                    lastCo.row >= 0 &&
+                    lastCo.row == parsedTable.length - 1 &&
+                    lastCo.col == parsedTable[lastCo.row]?.length - 1
+                ) {
+                    this.editor?.announce({ defaultStrings: 'announceOnFocusLastCell' });
                 }
             }
 
