@@ -51,7 +51,28 @@ export function createTableMover(
     div.style.width = `${TABLE_MOVER_LENGTH}px`;
     div.style.height = `${TABLE_MOVER_LENGTH}px`;
 
-    (anchorContainer || document.body).appendChild(div);
+    //(anchorContainer || document.body).appendChild(div);
+
+    // Broswer Drag Drop Attempt
+    const div2 = createElement(createElementData, document) as HTMLDivElement;
+    div2.id = TABLE_MOVER_ID;
+    div2.style.width = `${TABLE_MOVER_LENGTH}px`;
+    div2.style.height = `${TABLE_MOVER_LENGTH}px`;
+    div2.style.backgroundColor = 'gray';
+    (anchorContainer || document.body).appendChild(div2);
+    div2.draggable = true;
+    div2.addEventListener('dragstart', event => {
+        event.dataTransfer?.setData('text/html', table.outerHTML);
+        event.dataTransfer?.setDragImage(table, 0, 0);
+        console.log('>>DStart');
+    });
+    div2.addEventListener('drag', event => {
+        console.log('>>DDrag');
+    });
+    div2.addEventListener('dragend', event => {
+        table.remove();
+        console.log('>>DEnd');
+    });
 
     const context: TableMoverContext = {
         table,
@@ -65,7 +86,7 @@ export function createTableMover(
         onEnd,
     };
 
-    setDivPosition(context, div);
+    setDivPosition(context, div2);
 
     const featureHandler = new DragAndDropHelper<TableMoverContext, TableMoverInitValue>(
         div,
@@ -80,7 +101,7 @@ export function createTableMover(
         editor.getEnvironment().isMobileOrTablet
     );
 
-    return { node: table, div, featureHandler };
+    return { node: table, div: div2, featureHandler };
 }
 
 interface TableMoverContext {
