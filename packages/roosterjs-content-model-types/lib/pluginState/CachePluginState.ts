@@ -1,5 +1,5 @@
 import type { TextMutationObserver } from '../context/TextMutationObserver';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DomIndexer } from '../context/DomIndexer';
 import type {
     DOMInsertPoint,

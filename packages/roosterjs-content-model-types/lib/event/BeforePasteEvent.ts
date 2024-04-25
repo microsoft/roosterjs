@@ -2,7 +2,7 @@ import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption'
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
 
 /**
