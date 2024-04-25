@@ -40,7 +40,7 @@ describe('exportContent', () => {
 
         expect(text).toBe(mockedText);
         expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
-        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel);
+        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel, undefined, undefined);
     });
 
     it('PlainText with callback', () => {
@@ -62,7 +62,7 @@ describe('exportContent', () => {
 
         expect(text).toBe(mockedText);
         expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
-        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel, '\r\n', mockedCallbacks);
+        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel, undefined, mockedCallbacks);
     });
 
     it('HTML', () => {
