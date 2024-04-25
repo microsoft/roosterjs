@@ -1,3 +1,4 @@
+import { getListAnnounceData } from 'roosterjs-content-model-api';
 import {
     createBr,
     createListItem,
@@ -39,9 +40,12 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
+
             if (deleteResult == 'range' && nextBlock) {
                 normalizeContentModel(listParent);
+
                 const nextListItem = listParent.blocks[listIndex + 1];
+
                 if (
                     isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
                     nextListItem.levels[0]
@@ -52,8 +56,10 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                             ? listItem.levels[index].dataset
                             : {};
                     });
+
                     const lastParagraph = listItem.blocks[listItem.blocks.length - 1];
                     const nextParagraph = nextListItem.blocks[0];
+
                     if (
                         nextParagraph.blockType === 'Paragraph' &&
                         lastParagraph.blockType === 'Paragraph' &&
@@ -66,15 +72,24 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                             createSelectionMarker(insertPoint.marker.format)
                         );
                     }
+
                     context.lastParagraph = undefined;
                 }
             } else if (deleteResult !== 'range') {
                 if (isEmptyListItem(listItem)) {
                     listItem.levels.pop();
                 } else {
-                    createNewListItem(context, listItem, listParent);
+                    const newListItem = createNewListItem(context, listItem, listParent);
+
+                    if (context.formatContext) {
+                        context.formatContext.announceData = getListAnnounceData([
+                            newListItem,
+                            ...path.slice(index + 1),
+                        ]);
+                    }
                 }
             }
+
             rawEvent?.preventDefault();
             context.deleteResult = 'range';
         }
@@ -106,6 +121,8 @@ const createNewListItem = (
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
+
+    return newListItem;
 };
 
 const createNewListLevel = (listItem: ContentModelListItem) => {
