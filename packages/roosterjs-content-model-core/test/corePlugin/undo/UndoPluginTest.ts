@@ -941,5 +941,23 @@ describe('UndoPlugin', () => {
             expect(mockedSnapshotsManager.hasNewContent).toBeTrue();
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
+
+        it('LogicalRootChanged addUndoSnapshot if there is new content', () => {
+            const state = plugin.getState();
+
+            plugin.onPluginEvent({
+                eventType: 'logicalRootChanged',
+            } as any);
+
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
+
+            state.snapshotsManager.hasNewContent = true;
+
+            plugin.onPluginEvent({
+                eventType: 'logicalRootChanged',
+            } as any);
+
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
+        });
     });
 });
