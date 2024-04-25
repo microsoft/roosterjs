@@ -1,8 +1,11 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { ensureUniqueId } from 'roosterjs-content-model-core/lib/coreApi/setEditorStyle/ensureUniqueId';
+import { paste } from 'roosterjs-content-model-core/lib';
 import {
     createContentModelDocument,
     createSelectionMarker,
+    extractClipboardItems,
     getFirstSelectedTable,
     getSelectedSegmentsAndParagraphs,
     isNodeOfType,
@@ -10,12 +13,56 @@ import {
     normalizeRect,
     setParagraphNotImplicit,
     setSelection,
+    toArray,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, DOMSelection, IEditor, Rect } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTable,
+    DOMInsertPoint,
+    DOMSelection,
+    IEditor,
+    Rect,
+} from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';
 
 const TABLE_MOVER_LENGTH = 12;
 const TABLE_MOVER_ID = '_Table_Mover';
+
+let workaroundChecker = false;
+
+// Get range from coordinate. This is copied from OWA virtual edit code
+function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMInsertPoint | null {
+    const doc = editor.getDocument();
+    const domHelper = editor.getDOMHelper();
+
+    if (doc.caretRangeFromPoint) {
+        // Chrome, Edge, Safari, Opera
+        const range = doc.caretRangeFromPoint(x, y);
+        if (range && domHelper.isNodeInEditor(range.startContainer)) {
+            return { node: range.startContainer, offset: range.startOffset };
+        }
+    }
+
+    if ('caretPositionFromPoint' in doc) {
+        // Firefox
+        const pos = (doc as any).caretPositionFromPoint(x, y);
+        if (pos && domHelper.isNodeEditor(pos.offsetNode)) {
+            return { node: pos.offsetNode, offset: pos.offset };
+        }
+    }
+
+    if (doc.elementFromPoint) {
+        // Fallback
+        const element = doc.elementFromPoint(x, y);
+        if (element && domHelper.isNodeEditor(element)) {
+            return { node: element, offset: 0 };
+        }
+    }
+
+    return null;
+}
+
+const TableIdKey = 'table-id';
+const TableIdContentType = 'text/' + TableIdKey;
 
 /**
  * @internal
@@ -62,17 +109,57 @@ export function createTableMover(
     (anchorContainer || document.body).appendChild(div2);
     div2.draggable = true;
     div2.addEventListener('dragstart', event => {
+        const id = ensureUniqueId(table, 'table');
+
         event.dataTransfer?.setData('text/html', table.outerHTML);
+        event.dataTransfer?.setData(TableIdContentType, id);
         event.dataTransfer?.setDragImage(table, 0, 0);
         console.log('>>DStart');
     });
-    div2.addEventListener('drag', event => {
-        console.log('>>DDrag');
-    });
-    div2.addEventListener('dragend', event => {
-        table.remove();
-        console.log('>>DEnd');
-    });
+
+    if (!workaroundChecker) {
+        workaroundChecker = true;
+        editor.attachDomEvent({
+            drop: {
+                beforeDispatch: e => {
+                    //  console.log('drop');
+                    const dragEvent = e as DragEvent;
+                    const pos = getNodePositionFromEvent(editor, dragEvent.x, dragEvent.y);
+
+                    if (pos && dragEvent.dataTransfer) {
+                        dragEvent.preventDefault();
+
+                        const range = editor.getDocument().createRange();
+
+                        range.setStart(pos.node, pos.offset);
+                        range.collapse(true);
+
+                        editor.setDOMSelection({ type: 'range', range, isReverted: false });
+
+                        const isCopy = dragEvent.ctrlKey || dragEvent.metaKey;
+
+                        extractClipboardItems(toArray(dragEvent.dataTransfer.items), [
+                            TableIdKey,
+                        ]).then(clipboard => {
+                            if (!editor.isDisposed()) {
+                                const tableId = clipboard.customValues[TableIdKey];
+
+                                if (tableId && !isCopy) {
+                                    const table = editor
+                                        .getDOMHelper()
+                                        .queryElements('#' + tableId)[0];
+
+                                    table?.parentNode?.removeChild(table);
+                                }
+
+                                paste(editor, clipboard, 'normal');
+                            }
+                        });
+                    }
+                },
+            },
+        });
+    }
 
     const context: TableMoverContext = {
         table,
