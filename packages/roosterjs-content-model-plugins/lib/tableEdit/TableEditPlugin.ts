@@ -1,5 +1,6 @@
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { TableEditor } from './editors/TableEditor';
+import type { OnTableEditorCreatedCallback } from './OnTableEditorCreatedCallback';
 import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 
 const TABLE_RESIZER_LENGTH = 12;
@@ -22,14 +23,7 @@ export class TableEditPlugin implements EditorPlugin {
      */
     constructor(
         private anchorContainerSelector?: string,
-        private onTableEditorCreated?: (
-            editorType:
-                | 'HorizontalTableInserter'
-                | 'VerticalTableInserter'
-                | 'TableMover'
-                | 'TableResizer',
-            element: HTMLElement
-        ) => () => void
+        private onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {}
 
     /**
