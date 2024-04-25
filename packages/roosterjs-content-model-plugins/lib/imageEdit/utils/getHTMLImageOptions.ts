@@ -1,7 +1,7 @@
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
-import { ImageEditOptions } from '../types/ImageEditOptions';
 import { MIN_HEIGHT_WIDTH } from '../constants/constants';
+import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageEditOptions } from '../types/ImageEditOptions';
+import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
 /**
  * Default background colors for rotate handle

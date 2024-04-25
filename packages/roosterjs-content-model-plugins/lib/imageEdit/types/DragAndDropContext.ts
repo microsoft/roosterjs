@@ -1,6 +1,6 @@
 import { ImageEditElementClass } from './ImageEditElementClass';
 import { ImageEditOptions } from './ImageEditOptions';
-import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
+import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -18,7 +18,7 @@ export type DnDDirectionY = 'n' | '' | 's';
  * @internal
  * Context object of image editing for DragAndDropHelper
  */
-export default interface DragAndDropContext {
+export interface DragAndDropContext {
     /**
      * The CSS class name of this editing element
      */

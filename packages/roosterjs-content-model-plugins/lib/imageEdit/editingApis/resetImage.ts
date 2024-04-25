@@ -1,6 +1,6 @@
 import { getImageEditInfo } from '../utils/getImageEditInfo';
-import { IEditor } from 'roosterjs-content-model-types/lib';
 import { removeMetadata } from '../utils/imageMetadata';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Remove all image editing properties from an image

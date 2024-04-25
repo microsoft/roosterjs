@@ -1,4 +1,12 @@
-import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ */
+export interface ImageSize {
+    width: number;
+    height: number;
+}
 
 /**
  * @internal
@@ -10,7 +18,7 @@ import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
 export default function getTargetSizeByPercentage(
     editInfo: ImageMetadataFormat,
     percentage: number
-): { width: number; height: number } {
+): ImageSize {
     const {
         naturalWidth,
         naturalHeight,

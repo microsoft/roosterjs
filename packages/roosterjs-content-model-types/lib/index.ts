@@ -49,7 +49,6 @@ export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStyleFormat } from './format/formatParts/ListStyleFormat';
 export { FloatFormat } from './format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
-export { RotateFormat } from './format/formatParts/RotateFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
@@ -320,7 +319,7 @@ export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEve
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
 export { ContextMenuEvent } from './event/ContextMenuEvent';
-export { EditImageEvent } from './event/EditImageEvent';
+export { EditImageEvent, EditAction, ImageEditApiOperation } from './event/EditImageEvent';
 export { EditorReadyEvent } from './event/EditorReadyEvent';
 export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
 export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';

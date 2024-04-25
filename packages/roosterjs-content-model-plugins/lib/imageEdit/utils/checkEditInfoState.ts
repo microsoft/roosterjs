@@ -1,9 +1,9 @@
-import {
+import type {
     ImageCropMetadataFormat,
     ImageMetadataFormat,
     ImageResizeMetadataFormat,
     ImageRotateMetadataFormat,
-} from 'roosterjs-content-model-types/lib';
+} from 'roosterjs-content-model-types';
 
 const RESIZE_KEYS: (keyof ImageResizeMetadataFormat)[] = ['widthPx', 'heightPx'];
 const ROTATE_KEYS: (keyof ImageRotateMetadataFormat)[] = ['angleRad'];

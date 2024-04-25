@@ -1,5 +1,5 @@
 import getGeneratedImageSize from './generateImageSize';
-import { ImageMetadataFormat } from 'roosterjs-content-model-types/lib';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

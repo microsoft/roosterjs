@@ -1,10 +1,10 @@
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
-import { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import { DragAndDropHelper } from '../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { ImageEditOptions } from '../types/ImageEditOptions';
-import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { toArray } from 'roosterjs-content-model-dom';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageEditOptions } from '../types/ImageEditOptions';
+import type { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type { DragAndDropContext, DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 
 /**
  * @internal

@@ -32,9 +32,18 @@ export interface EditImageEvent extends BasePluginEvent<'editImage'> {
      */
     apiOperation?: ImageEditApiOperation;
 }
+/**
+ * Represents an event that will be fired when an inline image is edited by user
+ */
+export type EditAction = 'crop' | 'flip' | 'rotate' | 'resize' | 'reset' | 'resizeAndRotate';
 
-interface ImageEditApiOperation {
-    action: 'crop' | 'flip' | 'rotate' | 'resize' | 'reset';
+/**
+ * Represents an operation to edit an image
+ */
+export interface ImageEditApiOperation {
+    action: EditAction;
     flipDirection?: 'horizontal' | 'vertical';
     angleRad?: number;
+    widthPx?: number;
+    heightPx?: number;
 }

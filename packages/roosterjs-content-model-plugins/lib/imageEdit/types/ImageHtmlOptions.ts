@@ -2,7 +2,7 @@
  * @internal
  * Options for retrieve HTML string for image editing
  */
-export default interface ImageHtmlOptions {
+export interface ImageHtmlOptions {
     /**
      * Border and handle color of resize and rotate handle
      */

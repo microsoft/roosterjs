@@ -10,6 +10,9 @@ import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-m
 const NumberDefinition = createNumberDefinition(true);
 const BooleanDefinition = createBooleanDefinition(true);
 
+/**
+ * Definition of ImageMetadataFormat
+ */
 export const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
     widthPx: NumberDefinition,
     heightPx: NumberDefinition,

@@ -1,4 +1,3 @@
-import { RotateFormat } from './formatParts/RotateFormat';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
@@ -152,11 +151,6 @@ export interface FormatHandlerTypeMap {
      * Format for PaddingFormat
      */
     padding: PaddingFormat;
-
-    /**
-     * Format for RotateFormat
-     */
-    rotate: RotateFormat;
 
     /**
      * Format for SizeFormat

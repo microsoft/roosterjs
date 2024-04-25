@@ -2,6 +2,7 @@ import getTargetSizeByPercentage from '../utils/getTargetSizeByPercentage';
 import { getImageEditInfo } from '../utils/getImageEditInfo';
 
 /**
+ * @internal
  * Check if the image is already resized to the given percentage
  * @param image The image to check
  * @param percentage The percentage to check

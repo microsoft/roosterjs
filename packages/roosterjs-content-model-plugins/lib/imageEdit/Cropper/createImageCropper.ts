@@ -1,8 +1,8 @@
 import { createElement } from '../../pluginUtils/CreateElement/createElement';
-import { CreateElementData } from 'roosterjs-content-model-plugins/lib/pluginUtils/CreateElement/CreateElementData';
-import { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom/lib';
+import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import type { CreateElementData } from '../../pluginUtils/CreateElement/CreateElementData';
+import type { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import {
     CROP_HANDLE_SIZE,
     CROP_HANDLE_WIDTH,

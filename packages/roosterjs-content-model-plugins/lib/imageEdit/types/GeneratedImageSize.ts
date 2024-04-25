@@ -1,7 +1,7 @@
 /**
  * @internal The result structure for getGeneratedImageSize()
  */
-export default interface GeneratedImageSize {
+export interface GeneratedImageSize {
     /**
      * Final image width after rotate and crop
      */

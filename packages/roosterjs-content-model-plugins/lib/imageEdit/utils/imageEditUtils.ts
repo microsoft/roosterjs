@@ -1,4 +1,6 @@
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { MIN_HEIGHT_WIDTH } from '../constants/constants';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -32,6 +34,9 @@ export function rotateCoordinate(x: number, y: number, angle: number): [number, 
     return [hypotenuse * Math.cos(angle), hypotenuse * Math.sin(angle)];
 }
 
+/**
+ * @internal
+ */
 export function setFlipped(
     element: HTMLElement | null,
     flippedHorizontally?: boolean,
@@ -44,6 +49,9 @@ export function setFlipped(
     }
 }
 
+/**
+ * @internal
+ */
 export function setWrapperSizeDimensions(
     wrapper: HTMLElement,
     image: HTMLImageElement,
@@ -82,6 +90,7 @@ export function setSize(
 }
 
 /**
+ * @internal
  * Check if the current image was resized by the user
  * @param image the current image
  * @returns if the user resized the image, returns true, otherwise, returns false
@@ -99,6 +108,18 @@ export function checkIfImageWasResized(image: HTMLImageElement): boolean {
         return false;
     }
 }
+
+/**
+ * @internal
+ */
+export const isRTL = (editor: IEditor) => {
+    const model = editor.getContentModelCopy('disconnected');
+    const paragraph = getSelectedSegmentsAndParagraphs(
+        model,
+        false /** includingFormatHolder */
+    )[0][1];
+    return paragraph?.format?.direction === 'rtl';
+};
 
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;

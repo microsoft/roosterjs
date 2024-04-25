@@ -34,6 +34,7 @@ export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
 export { resetImage } from './imageEdit/editingApis/resetImage';
 export { resizeByPercentage } from './imageEdit/editingApis/resizeByPercentage';
+export { canRegenerateImage } from './imageEdit/editingApis/canRegenerateImage';
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 
 export { getDOMInsertPointRect } from './pluginUtils/Rect/getDOMInsertPointRect';

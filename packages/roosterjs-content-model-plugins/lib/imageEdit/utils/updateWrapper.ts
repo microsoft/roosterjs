@@ -1,19 +1,16 @@
 import getGeneratedImageSize from './generateImageSize';
 import { doubleCheckResize } from './doubleCheckResize';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { ImageEditOptions } from '../types/ImageEditOptions';
+import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateRotateHandle } from '../Rotator/updateRotateHandle';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
-import {
-    getSelectedSegmentsAndParagraphs,
-    isElementOfType,
-    isNodeOfType,
-} from 'roosterjs-content-model-dom';
+import type { ImageEditOptions } from '../types/ImageEditOptions';
+import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     getPx,
     isASmallImage,
+    isRTL,
     setFlipped,
     setSize,
     setWrapperSizeDimensions,
@@ -160,12 +157,3 @@ export function updateWrapper(
         }
     }
 }
-
-const isRTL = (editor: IEditor) => {
-    const model = editor.getContentModelCopy('disconnected');
-    const paragraph = getSelectedSegmentsAndParagraphs(
-        model,
-        false /** includingFormatHolder */
-    )[0][1];
-    return paragraph?.format?.direction === 'rtl';
-};

@@ -1,5 +1,5 @@
 import { getMetadata } from './imageMetadata';
-import { ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,11 +1,13 @@
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { createElement } from '../../pluginUtils/CreateElement/createElement';
-import { CreateElementData } from '../../pluginUtils/CreateElement/CreateElementData';
-import { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { Xs, Ys } from '../constants/constants';
-
+import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
+import type { CreateElementData } from '../../pluginUtils/CreateElement/CreateElementData';
+import type { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
+/**
+ * @internal
+ */
 export interface OnShowResizeHandle {
     (elementData: CreateElementData, x: DNDDirectionX, y: DnDDirectionY): void;
 }

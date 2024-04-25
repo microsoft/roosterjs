@@ -22,7 +22,6 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
-import { rotateFormatHandler } from './block/rotateFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
@@ -75,7 +74,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
-    rotate: rotateFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
@@ -144,7 +142,6 @@ export const defaultFormatKeysPerCategory: {
         'textColor',
         'backgroundColor',
         'lineHeight',
-        'rotate',
     ],
     segmentOnBlock: [...styleBasedSegmentFormats, ...elementBasedSegmentFormats, 'textColor'],
     segmentOnTableCell: [

@@ -4,7 +4,7 @@
  * @param img The image element to test
  * @returns True when we can regenerate the edited image, otherwise false
  */
-export default function canRegenerateImage(img: HTMLImageElement): boolean {
+export function canRegenerateImage(img: HTMLImageElement): boolean {
     if (!img) {
         return false;
     }

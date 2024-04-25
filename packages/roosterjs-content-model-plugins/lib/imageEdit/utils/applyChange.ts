@@ -2,8 +2,8 @@ import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
 import getGeneratedImageSize from './generateImageSize';
 import { getImageEditInfo } from './getImageEditInfo';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { removeMetadata, setMetadata } from './imageMetadata';
+import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

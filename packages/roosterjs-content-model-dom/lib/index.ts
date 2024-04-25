@@ -15,7 +15,11 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
-export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
+export {
+    updateMetadata,
+    hasMetadata,
+    EditingInfoDatasetName,
+} from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
@@ -137,7 +141,6 @@ export { updateTableCellMetadata } from './modelApi/metadata/updateTableCellMeta
 export { updateTableMetadata } from './modelApi/metadata/updateTableMetadata';
 export { updateListMetadata, ListMetadataDefinition } from './modelApi/metadata/updateListMetadata';
 export { validate } from './modelApi/metadata/validate';
-export { EditingInfoDatasetName } from './modelApi/metadata/updateMetadata';
 
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';

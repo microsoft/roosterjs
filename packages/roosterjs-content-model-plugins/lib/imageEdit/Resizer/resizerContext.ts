@@ -1,7 +1,7 @@
-import DragAndDropContext from '../types/DragAndDropContext';
-import { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import { ImageResizeMetadataFormat } from 'roosterjs-content-model-types/lib';
 import { rotateCoordinate } from '../utils/imageEditUtils';
+import type { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type { ImageResizeMetadataFormat } from 'roosterjs-content-model-types';
+import type { DragAndDropContext } from '../types/DragAndDropContext';
 
 /**
  * @internal

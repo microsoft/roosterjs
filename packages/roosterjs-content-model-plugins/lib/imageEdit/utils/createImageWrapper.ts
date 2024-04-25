@@ -1,9 +1,21 @@
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
-import { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
-import { ImageEditOptions } from '../types/ImageEditOptions';
+import type { EditAction, IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageEditOptions } from '../types/ImageEditOptions';
+import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
+
+/**
+ * @internal
+ */
+export interface WrapperElements {
+    wrapper: HTMLSpanElement;
+    shadowSpan: HTMLElement;
+    imageClone: HTMLImageElement;
+    resizers: HTMLDivElement[];
+    rotators: HTMLDivElement[];
+    croppers: HTMLDivElement[];
+}
 
 /**
  * @internal
@@ -14,8 +26,8 @@ export function createImageWrapper(
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
-    operation?: 'resize' | 'rotate' | 'resizeAndRotate' | 'crop' | 'flip'
-) {
+    operation?: EditAction
+): WrapperElements {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
     if (editInfo.src) {

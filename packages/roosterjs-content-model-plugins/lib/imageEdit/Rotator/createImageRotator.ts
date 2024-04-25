@@ -1,8 +1,8 @@
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { createElement } from '../../pluginUtils/CreateElement/createElement';
-import { CreateElementData } from '../../pluginUtils/CreateElement/CreateElementData';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import type { CreateElementData } from '../../pluginUtils/CreateElement/CreateElementData';
+import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 import {
     ROTATE_GAP,
     ROTATE_HANDLE_TOP,
@@ -29,8 +29,9 @@ export function createImageRotator(doc: Document, htmlOptions: ImageHtmlOptions)
 /**
  * @internal
  * Get HTML for rotate elements, including the rotate handle with icon, and a line between the handle and the image
+ * EXPORTED FOR TESTING PURPOSES ONLY
  */
-function getRotateHTML({
+export function getRotateHTML({
     borderColor,
     rotateHandleBackColor,
 }: ImageHtmlOptions): CreateElementData[] {

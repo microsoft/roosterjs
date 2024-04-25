@@ -1,21 +1,22 @@
-import DragAndDropContext from './types/DragAndDropContext';
-import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { applyChange } from './utils/applyChange';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { checkIfImageWasResized } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
-import { ImageEditOptions } from './types/ImageEditOptions';
 import { RESIZE_IMAGE } from './constants/constants';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateWrapper } from './utils/updateWrapper';
-
+import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
+import type { DragAndDropContext } from './types/DragAndDropContext';
+import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
+import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    EditAction,
     EditorPlugin,
     IEditor,
     ImageMetadataFormat,
@@ -83,7 +84,6 @@ export class ImageEditPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
-
         this.cleanInfo();
     }
 
@@ -134,9 +134,18 @@ export class ImageEditPlugin implements EditorPlugin {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
 
-                    if (event.apiOperation?.action === 'resize') {
+                    if (
+                        event.apiOperation?.action === 'resize' &&
+                        event.apiOperation.widthPx &&
+                        event.apiOperation.heightPx
+                    ) {
                         this.wasImageResized = true;
-                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                        this.resizeImage(
+                            this.editor,
+                            event.image,
+                            event.apiOperation.widthPx,
+                            event.apiOperation.heightPx
+                        );
                     }
 
                     break;
@@ -157,11 +166,7 @@ export class ImageEditPlugin implements EditorPlugin {
         }
     }
 
-    private startEditing(
-        editor: IEditor,
-        image: HTMLImageElement,
-        apiOperation?: 'resize' | 'rotate' | 'crop' | 'flip'
-    ) {
+    private startEditing(editor: IEditor, image: HTMLImageElement, apiOperation?: EditAction) {
         this.imageEditInfo = getImageEditInfo(image);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
@@ -191,7 +196,11 @@ export class ImageEditPlugin implements EditorPlugin {
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
     }
 
-    private startRotateAndResize(
+    /**
+     * @internal
+     * EXPORTED FOR TESTING
+     */
+    public startRotateAndResize(
         editor: IEditor,
         image: HTMLImageElement,
         apiOperation?: 'resize' | 'rotate'
@@ -288,6 +297,7 @@ export class ImageEditPlugin implements EditorPlugin {
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
         }
+
         this.dndHelpers = [
             ...getDropAndDragHelpers(
                 this.wrapper,
@@ -331,6 +341,33 @@ export class ImageEditPlugin implements EditorPlugin {
             undefined,
             this.croppers
         );
+    }
+
+    private editImage(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation: EditAction,
+        operation: (imageEditInfo: ImageMetadataFormat) => void
+    ) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            this.removeImageWrapper(editor, this.dndHelpers);
+        }
+        this.startEditing(editor, image, apiOperation);
+        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
+            return;
+        }
+
+        operation(this.imageEditInfo);
+
+        updateWrapper(
+            editor,
+            this.imageEditInfo,
+            this.options,
+            this.selectedImage,
+            this.clonedImage,
+            this.wrapper
+        );
+        this.removeImageWrapper(editor, this.dndHelpers);
     }
 
     private cleanInfo() {
@@ -378,59 +415,47 @@ export class ImageEditPlugin implements EditorPlugin {
         image: HTMLImageElement,
         direction: 'horizontal' | 'vertical'
     ) {
-        if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            this.removeImageWrapper(editor, this.dndHelpers);
-        }
-        this.startEditing(editor, image, 'flip');
-        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
-            return;
-        }
-        const angleRad = this.imageEditInfo.angleRad || 0;
-        const isInVerticalPostion =
-            (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
-            (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
-        if (isInVerticalPostion) {
-            if (direction === 'horizontal') {
-                this.imageEditInfo.flippedVertical = !this.imageEditInfo.flippedVertical;
+        this.editImage(editor, image, 'flip', imageEditInfo => {
+            const angleRad = imageEditInfo.angleRad || 0;
+            const isInVerticalPostion =
+                (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
+                (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
+            if (isInVerticalPostion) {
+                if (direction === 'horizontal') {
+                    imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
+                } else {
+                    imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
+                }
             } else {
-                this.imageEditInfo.flippedHorizontal = !this.imageEditInfo.flippedHorizontal;
+                if (direction === 'vertical') {
+                    imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
+                } else {
+                    imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
+                }
             }
-        } else {
-            if (direction === 'vertical') {
-                this.imageEditInfo.flippedVertical = !this.imageEditInfo.flippedVertical;
-            } else {
-                this.imageEditInfo.flippedHorizontal = !this.imageEditInfo.flippedHorizontal;
-            }
-        }
-        updateWrapper(
-            editor,
-            this.imageEditInfo,
-            this.options,
-            this.selectedImage,
-            this.clonedImage,
-            this.wrapper
-        );
-        this.removeImageWrapper(editor, this.dndHelpers);
+        });
     }
 
     private rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
-        if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            this.removeImageWrapper(editor, this.dndHelpers);
-        }
-        this.startEditing(editor, image, 'rotate');
-        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
-            return;
-        }
-        this.imageEditInfo.angleRad = (this.imageEditInfo.angleRad || 0) + angleRad;
+        this.editImage(editor, image, 'rotate', imageEditInfo => {
+            imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
+        });
+    }
 
-        updateWrapper(
-            editor,
-            this.imageEditInfo,
-            this.options,
-            this.selectedImage,
-            this.clonedImage,
-            this.wrapper
-        );
-        this.removeImageWrapper(editor, this.dndHelpers);
+    private resizeImage(
+        editor: IEditor,
+        image: HTMLImageElement,
+        widthPx: number,
+        heightPx: number
+    ) {
+        this.editImage(editor, image, 'resize', imageEditInfo => {
+            imageEditInfo.widthPx = widthPx;
+            imageEditInfo.heightPx = heightPx;
+            this.wasImageResized = true;
+        });
+
+        editor.triggerEvent('contentChanged', {
+            source: ChangeSource.ImageResize,
+        });
     }
 }
