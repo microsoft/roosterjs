@@ -1,5 +1,5 @@
-import generateDataURL from './generateDataURL';
 import { checkEditInfoState } from './checkEditInfoState';
+import { generateDataURL } from './generateDataURL';
 import { getGeneratedImageSize } from './generateImageSize';
 import { updateImageEditInfo } from './updateImageEditInfo';
 import type {

@@ -36,7 +36,6 @@ function createImageRotateButton(handler: ImageEditor): RibbonButton<'buttonName
         iconName: 'Rotate',
         dropDownMenu: {
             items: directions,
-            allowLivePreview: true,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
         onClick: editor => {
@@ -64,7 +63,6 @@ function createImageFlipButton(handler: ImageEditor): RibbonButton<'buttonNameFl
         iconName: 'ImagePixel',
         dropDownMenu: {
             items: flipDirections,
-            allowLivePreview: true,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
         onClick: (editor, flipDirection) => {

@@ -12,10 +12,7 @@ import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
  * the code, so better check canRegenerateImage() of the image first.
  * @throws Exception when fail to generate dataURL from canvas
  */
-export default function generateDataURL(
-    image: HTMLImageElement,
-    editInfo: ImageMetadataFormat
-): string {
+export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadataFormat): string {
     const generatedImageSize = getGeneratedImageSize(editInfo);
     if (!generatedImageSize) {
         return '';

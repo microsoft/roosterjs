@@ -4,7 +4,6 @@ import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-m
 /**
  * @internal
  */
-
 export function updateImageEditInfo(
     image: HTMLImageElement,
     contentModelImage: ContentModelImage,
@@ -19,6 +18,7 @@ export function updateImageEditInfo(
               }
             : undefined
     );
+
     return imageInfo || getInitialEditInfo(image);
 }
 
