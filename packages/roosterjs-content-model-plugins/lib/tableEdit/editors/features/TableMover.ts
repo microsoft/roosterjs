@@ -1,4 +1,5 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
+import { DragAndDropHandler } from 'roosterjs-content-model-plugins/lib/pluginUtils/DragAndDrop/DragAndDropHandler';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import {
     createContentModelDocument,
@@ -74,7 +75,7 @@ export function createTableMover(
 
     setDivPosition(context, div);
 
-    const featureHandler = new DragAndDropHelper<TableMoverContext, TableMoverInitValue>(
+    const featureHandler = new TableMoverFeature(
         div,
         context,
         () => {},
@@ -106,6 +107,28 @@ interface TableMoverInitValue {
     cmTable: ContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     tableRect: HTMLDivElement;
+}
+
+class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
+    constructor(
+        div: HTMLElement,
+        context: TableMoverContext,
+        onSubmit: (
+            context: TableMoverContext,
+            trigger: HTMLElement,
+            container?: HTMLElement
+        ) => void,
+        handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
+        zoomScale: number,
+        forceMobile?: boolean | undefined,
+        container?: HTMLElement
+    ) {
+        super(div, context, onSubmit, handler, zoomScale, forceMobile);
+    }
+
+    dispose(): void {
+        super.dispose();
+    }
 }
 
 function setDivPosition(context: TableMoverContext, trigger: HTMLElement) {
