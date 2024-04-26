@@ -11,7 +11,7 @@ export {
     ShortcutUndo,
     ShortcutUndo2,
     ShortcutRedo,
-    ShortcutRedoMacOS,
+    ShortcutRedoAlt,
     ShortcutBullet,
     ShortcutNumbering,
     ShortcutIncreaseFont,

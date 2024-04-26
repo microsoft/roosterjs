@@ -129,17 +129,16 @@ export const ShortcutRedo: ShortcutCommand = {
 
 /**
  * Shortcut command for Redo 2
- * Windows: N/A
+ * Windows: Ctrl + Shift + Z
  * MacOS: Meta + Shift + Z
  */
-export const ShortcutRedoMacOS: ShortcutCommand = {
+export const ShortcutRedoAlt: ShortcutCommand = {
     shortcutKey: {
         modifierKey: 'ctrl',
         shiftKey: true,
         which: Keys.Z,
     },
     onClick: editor => redo(editor),
-    environment: 'mac',
 };
 
 /**
