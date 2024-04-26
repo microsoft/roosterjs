@@ -430,36 +430,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             break;
                         }
                     }
-                } else if (key == 'TabLeft' || key == 'TabRight') {
-                    const reverse = key == 'TabLeft';
-                    for (
-                        let step = reverse ? -1 : 1,
-                            row = lastCo.row ?? 0,
-                            col = (lastCo.col ?? 0) + step;
-                        ;
-                        col += step
-                    ) {
-                        if (col < 0 || col >= parsedTable[row].length) {
-                            row += step;
-                            if (row < 0) {
-                                this.selectBeforeOrAfterElement(this.editor, tableSel.table);
-                                break;
-                            } else if (row >= parsedTable.length) {
-                                this.selectBeforeOrAfterElement(
-                                    this.editor,
-                                    tableSel.table,
-                                    true /*after*/
-                                );
-                                break;
-                            }
-                            col = reverse ? parsedTable[row].length - 1 : 0;
-                        }
-                        const cell = parsedTable[row][col];
-                        if (typeof cell != 'string') {
-                            this.setRangeSelectionInTable(cell, 0, this.editor);
-                            break;
-                        }
-                    }
                 } else {
                     this.state.tableSelection = null;
                 }
