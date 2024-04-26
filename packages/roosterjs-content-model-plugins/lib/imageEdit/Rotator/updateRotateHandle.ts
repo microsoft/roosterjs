@@ -1,5 +1,5 @@
 import { DEG_PER_RAD, RESIZE_HANDLE_MARGIN, ROTATE_GAP, ROTATE_SIZE } from '../constants/constants';
-import { Rect } from 'roosterjs-content-model-types';
+import type { Rect } from 'roosterjs-content-model-types';
 
 /**
  * @internal

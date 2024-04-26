@@ -1,6 +1,6 @@
-import checkEditInfoState from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
-import getGeneratedImageSize from './generateImageSize';
+import { checkEditInfoState } from './checkEditInfoState';
+import { getGeneratedImageSize } from './generateImageSize';
 import { updateImageEditInfo } from './updateImageEditInfo';
 import type {
     ContentModelImage,

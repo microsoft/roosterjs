@@ -1,6 +1,6 @@
 import { DragAndDropHelper } from '../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { toArray } from 'roosterjs-content-model-dom';
+import type { ImageEditElementClass } from '../types/ImageEditElementClass';
 import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';

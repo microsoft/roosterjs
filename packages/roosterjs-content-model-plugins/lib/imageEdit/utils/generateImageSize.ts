@@ -13,7 +13,7 @@ import type { GeneratedImageSize } from '../types/GeneratedImageSize';
  * after crop
  * @returns A GeneratedImageSize object which contains original, visible and target target width and height of the image
  */
-export default function getGeneratedImageSize(
+export function getGeneratedImageSize(
     editInfo: ImageMetadataFormat,
     beforeCrop?: boolean
 ): GeneratedImageSize | undefined {

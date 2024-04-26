@@ -1,6 +1,6 @@
-import { ImageEditElementClass } from './ImageEditElementClass';
-import { ImageEditOptions } from './ImageEditOptions';
-import { ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageEditElementClass } from './ImageEditElementClass';
+import type { ImageEditOptions } from './ImageEditOptions';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

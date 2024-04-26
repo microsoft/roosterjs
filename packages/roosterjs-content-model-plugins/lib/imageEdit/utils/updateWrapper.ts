@@ -1,5 +1,5 @@
-import getGeneratedImageSize from './generateImageSize';
 import { doubleCheckResize } from './doubleCheckResize';
+import { getGeneratedImageSize } from './generateImageSize';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';

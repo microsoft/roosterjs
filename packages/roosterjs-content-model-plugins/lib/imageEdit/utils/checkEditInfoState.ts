@@ -62,7 +62,7 @@ export type ImageEditInfoState =
  * If the compare edit info exists, and both of them don't contain rotation, and the have same cropping values,
  * returns SameWithLast. Otherwise, returns FullyChanged
  */
-export default function checkEditInfoState(
+export function checkEditInfoState(
     editInfo: ImageMetadataFormat,
     compareTo?: ImageMetadataFormat
 ): ImageEditInfoState {
