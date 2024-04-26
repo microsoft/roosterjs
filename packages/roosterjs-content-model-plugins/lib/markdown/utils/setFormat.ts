@@ -54,9 +54,6 @@ export function setFormat(
                         context.canUndoByBackspace = true;
                         return true;
                     }
-
-                    context.canUndoByBackspace = true;
-                    return true;
                 }
             }
             return false;
