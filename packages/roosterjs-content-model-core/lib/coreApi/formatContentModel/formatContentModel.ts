@@ -100,20 +100,20 @@ export const formatContentModel: FormatContentModel = (
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
+
+    if (context.announceData) {
+        core.api.announce(core, context.announceData);
+    }
 };
 
 function handleImages(core: EditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
-        const viewport = core.api.getVisibleViewport(core);
-
-        if (viewport) {
-            const { left, right } = viewport;
-            const minMaxImageSize = 10;
-            const maxWidth = Math.max(right - left, minMaxImageSize);
-            context.newImages.forEach(image => {
-                image.format.maxWidth = `${maxWidth}px`;
-            });
-        }
+        const width = core.domHelper.getClientWidth();
+        const minMaxImageSize = 10;
+        const maxWidth = Math.max(width, minMaxImageSize);
+        context.newImages.forEach(image => {
+            image.format.maxWidth = `${maxWidth}px`;
+        });
     }
 }
 

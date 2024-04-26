@@ -66,6 +66,7 @@ describe('contentModelToDom', () => {
         expect((range as RangeSelection).range.startOffset).toBe(0);
         expect((range as RangeSelection).range.endContainer).toBe(parent.firstChild as HTMLElement);
         expect((range as RangeSelection).range.endOffset).toBe(0);
+        expect((range as RangeSelection).isReverted).toBe(false);
         expect(parent.innerHTML).toBe('<div><br></div>');
     });
 
@@ -93,13 +94,14 @@ describe('contentModelToDom', () => {
             segment: br,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(div);
         expect((range as RangeSelection).range.startOffset).toBe(1);
         expect((range as RangeSelection).range.endContainer).toBe(div);
         expect((range as RangeSelection).range.endOffset).toBe(1);
+        expect((range as RangeSelection).isReverted).toBe(false);
     });
 
     it('Extract selection range - normal collapsed range with empty text', () => {
@@ -128,13 +130,14 @@ describe('contentModelToDom', () => {
             segment: txt,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(div);
         expect((range as RangeSelection).range.startOffset).toBe(0);
         expect((range as RangeSelection).range.endContainer).toBe(div);
         expect((range as RangeSelection).range.endOffset).toBe(0);
+        expect((range as RangeSelection).isReverted).toBe(false);
     });
 
     it('Extract selection range - normal collapsed range in side text', () => {
@@ -163,13 +166,14 @@ describe('contentModelToDom', () => {
             segment: txt1,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(txt1);
         expect((range as RangeSelection).range.startOffset).toBe(5);
         expect((range as RangeSelection).range.endContainer).toBe(txt1);
         expect((range as RangeSelection).range.endOffset).toBe(5);
+        expect((range as RangeSelection).isReverted).toBe(false);
         expect(txt1.nodeValue).toBe('test1test2');
     });
 
@@ -197,7 +201,7 @@ describe('contentModelToDom', () => {
             segment: txt1,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range).toBeNull();
     });
@@ -226,13 +230,14 @@ describe('contentModelToDom', () => {
             segment: null,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(div);
         expect((range as RangeSelection).range.startOffset).toBe(0);
         expect((range as RangeSelection).range.endContainer).toBe(div);
         expect((range as RangeSelection).range.endOffset).toBe(0);
+        expect((range as RangeSelection).isReverted).toBe(false);
     });
 
     it('Extract selection range - no end', () => {
@@ -255,7 +260,7 @@ describe('contentModelToDom', () => {
             segment: txt1,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range).toBeNull();
     });
@@ -282,13 +287,14 @@ describe('contentModelToDom', () => {
             segment: txt1,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(txt1);
         expect((range as RangeSelection).range.startOffset).toBe(5);
         expect((range as RangeSelection).range.endContainer).toBe(txt1);
         expect((range as RangeSelection).range.endOffset).toBe(5);
+        expect((range as RangeSelection).isReverted).toBe(false);
     });
 
     it('Extract selection range - root is fragment - 2', () => {
@@ -315,13 +321,14 @@ describe('contentModelToDom', () => {
             segment: span,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(span);
         expect((range as RangeSelection).range.startOffset).toBe(1);
         expect((range as RangeSelection).range.endContainer).toBe(span);
         expect((range as RangeSelection).range.endOffset).toBe(1);
+        expect((range as RangeSelection).isReverted).toBe(false);
     });
 
     it('Extract selection range - expanded range', () => {
@@ -352,13 +359,58 @@ describe('contentModelToDom', () => {
             segment: txt2,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('range');
         expect((range as RangeSelection).range.startContainer).toBe(txt1);
         expect((range as RangeSelection).range.startOffset).toBe(5);
         expect((range as RangeSelection).range.endContainer).toBe(txt1);
         expect((range as RangeSelection).range.endOffset).toBe(10);
+        expect(txt1.nodeValue).toEqual('test1test2test3');
+        expect((range as RangeSelection).isReverted).toBe(false);
+    });
+
+    it('Extract selection range - reverted expanded range', () => {
+        const mockedHandler = jasmine.createSpy('blockGroupChildren');
+        const context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: mockedHandler,
+            },
+        });
+
+        const root = document.createElement('div');
+        const span = document.createElement('span');
+        const txt1 = document.createTextNode('test1');
+        const txt2 = document.createTextNode('test2');
+        const txt3 = document.createTextNode('test3');
+
+        root.appendChild(span);
+        span.appendChild(txt1);
+        span.appendChild(txt2);
+        span.appendChild(txt3);
+
+        context.regularSelection.start = {
+            block: span,
+            segment: txt1,
+        };
+        context.regularSelection.end = {
+            block: span,
+            segment: txt2,
+        };
+
+        const range = contentModelToDom(
+            document,
+            root,
+            { hasRevertedRangeSelection: true } as any,
+            context
+        );
+
+        expect(range!.type).toBe('range');
+        expect((range as RangeSelection).range.startContainer).toBe(txt1);
+        expect((range as RangeSelection).range.startOffset).toBe(5);
+        expect((range as RangeSelection).range.endContainer).toBe(txt1);
+        expect((range as RangeSelection).range.endOffset).toBe(10);
+        expect((range as RangeSelection).isReverted).toBe(true);
         expect(txt1.nodeValue).toEqual('test1test2test3');
     });
 
@@ -378,7 +430,7 @@ describe('contentModelToDom', () => {
             image: image,
         };
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range!.type).toBe('image');
         expect((range as ImageSelection).image).toBe(image);
@@ -397,7 +449,7 @@ describe('contentModelToDom', () => {
 
         context.tableSelection = mockedSelection;
 
-        const range = contentModelToDom(document, root, null!, context);
+        const range = contentModelToDom(document, root, {} as any, context);
 
         expect(range).toBe(mockedSelection);
     });

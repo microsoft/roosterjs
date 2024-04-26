@@ -1,9 +1,12 @@
 import { ContentModelEntityFormat } from 'roosterjs-content-model-types';
+import { createDOMHelper } from 'roosterjs-content-model-core/lib/editor/core/DOMHelperImpl';
 import {
     addDelimiters,
+    findClosestBlockEntityContainer,
     findClosestEntityWrapper,
     generateEntityClassNames,
     getAllEntityWrappers,
+    isBlockEntityContainer,
     isEntityDelimiter,
     isEntityElement,
     parseEntityFormat,
@@ -287,9 +290,7 @@ describe('findClosestEntityWrapper', () => {
 
         div.appendChild(span);
 
-        const result = findClosestEntityWrapper(span, {
-            findClosestElementAncestor: (): null => null,
-        } as any);
+        const result = findClosestEntityWrapper(span, createDOMHelper(div));
 
         expect(result).toBeNull();
     });
@@ -299,13 +300,71 @@ describe('findClosestEntityWrapper', () => {
         const span = document.createElement('span');
         const wrapper = document.createElement('div');
 
+        wrapper.className = '_Entity';
+
         div.appendChild(wrapper);
         wrapper.appendChild(span);
 
-        const result = findClosestEntityWrapper(span, {
-            findClosestElementAncestor: (): HTMLElement => wrapper,
-        } as any);
+        const result = findClosestEntityWrapper(span, createDOMHelper(div));
 
         expect(result).toBe(wrapper);
+    });
+});
+
+describe('findClosestBlockEntityContainer', () => {
+    it('no container', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+
+        div.appendChild(span);
+
+        const result = findClosestBlockEntityContainer(span, createDOMHelper(div));
+
+        expect(result).toBeNull();
+    });
+
+    it('has container', () => {
+        const div = document.createElement('div');
+        const container = document.createElement('div');
+        const wrapper = document.createElement('div');
+
+        container.className = '_E_EBlockEntityContainer';
+
+        div.appendChild(container);
+        container.appendChild(wrapper);
+
+        const result = findClosestBlockEntityContainer(wrapper, createDOMHelper(div));
+
+        expect(result).toBe(container);
+    });
+});
+
+describe('isBlockEntityContainer', () => {
+    it('DIV without container class', () => {
+        const div = document.createElement('div');
+
+        const result = isBlockEntityContainer(div);
+
+        expect(result).toBeFalse();
+    });
+
+    it('SPAN with container class', () => {
+        const span = document.createElement('span');
+
+        span.className = '_E_EBlockEntityContainer';
+
+        const result = isBlockEntityContainer(span);
+
+        expect(result).toBeFalse();
+    });
+
+    it('DIV with container class', () => {
+        const div = document.createElement('div');
+
+        div.className = '_E_EBlockEntityContainer';
+
+        const result = isBlockEntityContainer(div);
+
+        expect(result).toBeTrue();
     });
 });

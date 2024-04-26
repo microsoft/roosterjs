@@ -1,3 +1,4 @@
+import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
@@ -117,4 +118,11 @@ export interface EditorOptions {
      * Default paste type. By default will use the normal (as-is) paste type.
      */
     defaultPasteType?: PasteType;
+
+    /**
+     * A callback to help get string template to announce, used for accessibility
+     * @param key The key of known announce data
+     * @returns A template string to announce, use placeholder such as "{0}" for variables if necessary
+     */
+    announcerStringGetter?: (key: KnownAnnounceStrings) => string;
 }

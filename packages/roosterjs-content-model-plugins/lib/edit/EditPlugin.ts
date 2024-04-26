@@ -80,10 +80,18 @@ export class EditPlugin implements EditorPlugin {
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
                 case 'Backspace':
-                case 'Delete':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
+                    break;
+
+                case 'Delete':
+                    // Use our API to handle BACKSPACE/DELETE key.
+                    // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
+                    // And leave it to browser when shift key is pressed so that browser will trigger cut event
+                    if (!event.rawEvent.shiftKey) {
+                        keyboardDelete(editor, rawEvent);
+                    }
                     break;
 
                 case 'Tab':
@@ -141,6 +149,16 @@ export class EditPlugin implements EditorPlugin {
 
         if (handled) {
             rawEvent.preventDefault();
+
+            // Restore the selection to avoid the cursor jump issue
+            // See: https://issues.chromium.org/issues/330596261
+            const selection = editor.getDOMSelection();
+            const doc = this.editor?.getDocument();
+            doc?.defaultView?.requestAnimationFrame(() => {
+                if (this.editor) {
+                    this.editor.setDOMSelection(selection);
+                }
+            });
         }
     }
 }

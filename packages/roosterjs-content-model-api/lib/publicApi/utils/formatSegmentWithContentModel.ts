@@ -46,11 +46,12 @@ export function formatSegmentWithContentModel(
 
             if (isCollapsedSelection) {
                 const para = segmentAndParagraphs[0][1];
+                const path = segmentAndParagraphs[0][2];
 
                 segmentAndParagraphs = adjustWordSelection(
                     model,
                     segmentAndParagraphs[0][0]
-                ).map(x => [x, para]);
+                ).map(x => [x, para, path]);
 
                 if (segmentAndParagraphs.length > 1) {
                     isCollapsedSelection = false;

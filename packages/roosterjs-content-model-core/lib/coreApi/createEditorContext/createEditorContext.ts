@@ -22,15 +22,9 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
-    checkRootRtl(logicalRoot, context);
+    if (core.domHelper.isRightToLeft()) {
+        context.isRootRtl = true;
+    }
 
     return context;
 };
-
-function checkRootRtl(element: HTMLElement, context: EditorContext) {
-    const style = element?.ownerDocument.defaultView?.getComputedStyle(element);
-
-    if (style?.direction == 'rtl') {
-        context.isRootRtl = true;
-    }
-}

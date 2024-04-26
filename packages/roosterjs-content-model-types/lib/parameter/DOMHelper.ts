@@ -81,4 +81,14 @@ export interface DOMHelper {
      * @returns True if the editor has focus, otherwise false
      */
     hasFocus(): boolean;
+
+    /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean;
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getClientWidth(): number;
 }
