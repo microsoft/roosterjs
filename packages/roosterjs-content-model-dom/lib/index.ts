@@ -15,17 +15,14 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
-export {
-    updateMetadata,
-    hasMetadata,
-    EditingInfoDatasetName,
-} from './modelApi/metadata/updateMetadata';
+export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
 export { toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
+export { unwrap } from './domUtils/unwrap';
 export {
     isEntityElement,
     findClosestEntityWrapper,

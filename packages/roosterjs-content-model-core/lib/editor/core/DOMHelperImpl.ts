@@ -81,47 +81,6 @@ class DOMHelperImpl implements DOMHelper {
         const paddingRight = parseValueWithUnit(style?.paddingRight);
         return this.contentDiv.clientWidth - (paddingLeft + paddingRight);
     }
-
-    /**
-     * Wrap a node with a wrapper element
-     * @param node
-     * @param wrapper
-     * @returns
-     */
-    wrap(node: Node, wrapper: keyof HTMLElementTagNameMap | HTMLElement): HTMLElement {
-        if (!(wrapper instanceof HTMLElement)) {
-            wrapper = this.contentDiv.ownerDocument.createElement(wrapper);
-        }
-
-        if (isNodeOfType(node, 'ELEMENT_NODE')) {
-            const parent = node.parentNode;
-            if (parent) {
-                parent.insertBefore(wrapper, node);
-                wrapper.appendChild(node);
-            }
-        }
-        return wrapper;
-    }
-
-    /**
-     * Unwrap a node
-     * @param node
-     * @returns
-     */
-    unwrap(node: Node): Node | null {
-        // Unwrap requires a parentNode
-        const parentNode = node ? node.parentNode : null;
-        if (!parentNode) {
-            return null;
-        }
-
-        while (node.firstChild) {
-            parentNode.insertBefore(node.firstChild, node);
-        }
-
-        parentNode.removeChild(node);
-        return parentNode;
-    }
 }
 
 /**

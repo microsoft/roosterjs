@@ -1,7 +1,7 @@
-import type { EditAction } from 'roosterjs-content-model-types';
+import type { ImageEditOperation } from 'roosterjs-content-model-types';
 
 /**
- * Options for image edit plugin
+ * Options for customize ImageEdit plugin
  */
 export interface ImageEditOptions {
     /**
@@ -61,5 +61,5 @@ export interface ImageEditOptions {
      * Which operations will be executed when image is selected
      * @default resizeAndRotate
      */
-    onSelectState?: EditAction;
+    onSelectState?: ImageEditOperation;
 }

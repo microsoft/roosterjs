@@ -91,17 +91,4 @@ export interface DOMHelper {
      * Get the width of the editable area of the editor content div
      */
     getClientWidth(): number;
-
-    /**
-     * Wrap a node with a wrapper element
-     * @param node The node to wrap
-     * @param tag The tag name of the wrapper element
-     */
-    wrap(node: Node, tag: keyof HTMLElementTagNameMap | HTMLElement): HTMLElement;
-
-    /**
-     * Unwrap a node, keep all children in place, return the parentNode where the children are attached
-     * @param node The node to unwrap
-     */
-    unwrap(node: Node): Node | null;
 }

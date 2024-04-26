@@ -6,7 +6,6 @@ import { WatermarkCode } from './WatermarkCode';
 
 import {
     EditPluginCode,
-    ImageEditCode,
     PastePluginCode,
     TableEditPluginCode,
     ShortcutPluginCode,
@@ -47,15 +46,5 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
             pluginList.imageEditPlugin && new ImageEditPluginCode(),
         ]);
-    }
-}
-
-export class LegacyPluginCode extends PluginsCodeBase {
-    constructor(state: OptionState) {
-        const pluginList = state.pluginList;
-
-        const plugins: CodeElement[] = [pluginList.imageEdit && new ImageEditCode()];
-
-        super(plugins);
     }
 }

@@ -1,24 +1,32 @@
 import { applyChange } from './utils/applyChange';
-import { ChangeSource } from 'roosterjs-content-model-dom';
-import { checkIfImageWasResized } from './utils/imageEditUtils';
+import { canRegenerateImage } from './utils/canRegenerateImage';
+import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
-import { getImageEditInfo } from './utils/getImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
-import { RESIZE_IMAGE } from './constants/constants';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
+import { updateImageEditInfo } from './utils/updateImageEditInfo';
+import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
+import {
+    getSelectedSegments,
+    isElementOfType,
+    isNodeOfType,
+    unwrap,
+} from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
-    EditAction,
+    ContentModelImage,
     EditorPlugin,
     IEditor,
+    ImageEditOperation,
+    ImageEditor,
     ImageMetadataFormat,
     PluginEvent,
     SelectionChangedEvent,
@@ -41,7 +49,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
  * - Rotate image
  * - Flip image
  */
-export class ImageEditPlugin implements EditorPlugin {
+export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private editor: IEditor | null = null;
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
@@ -57,6 +65,7 @@ export class ImageEditPlugin implements EditorPlugin {
     private rotators: HTMLDivElement[] = [];
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
+    private contentModelImage: ContentModelImage | null = null;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -100,12 +109,7 @@ export class ImageEditPlugin implements EditorPlugin {
                     this.handleSelectionChangedEvent(this.editor, event);
                     break;
                 case 'contentChanged':
-                    if (
-                        event.source != RESIZE_IMAGE &&
-                        this.selectedImage &&
-                        this.imageEditInfo &&
-                        this.shadowSpan
-                    ) {
+                    if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
                     break;
@@ -113,41 +117,6 @@ export class ImageEditPlugin implements EditorPlugin {
                     if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
-                    break;
-                case 'editImage':
-                    if (event.apiOperation?.action === 'crop') {
-                        this.startCropping(this.editor, event.image);
-                    }
-
-                    if (event.apiOperation?.action === 'flip' && event.apiOperation.flipDirection) {
-                        this.flipImage(this.editor, event.image, event.apiOperation.flipDirection);
-                    }
-
-                    if (
-                        event.apiOperation?.action === 'rotate' &&
-                        event.apiOperation.angleRad !== undefined
-                    ) {
-                        this.rotateImage(this.editor, event.image, event.apiOperation.angleRad);
-                    }
-
-                    if (event.apiOperation?.action === 'reset') {
-                        this.removeImageWrapper(this.editor, this.dndHelpers);
-                    }
-
-                    if (
-                        event.apiOperation?.action === 'resize' &&
-                        event.apiOperation.widthPx &&
-                        event.apiOperation.heightPx
-                    ) {
-                        this.wasImageResized = true;
-                        this.resizeImage(
-                            this.editor,
-                            event.image,
-                            event.apiOperation.widthPx,
-                            event.apiOperation.heightPx
-                        );
-                    }
-
                     break;
             }
         }
@@ -166,8 +135,18 @@ export class ImageEditPlugin implements EditorPlugin {
         }
     }
 
-    private startEditing(editor: IEditor, image: HTMLImageElement, apiOperation?: EditAction) {
-        this.imageEditInfo = getImageEditInfo(image);
+    private startEditing(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation?: ImageEditOperation
+    ) {
+        const model = editor.getContentModelCopy('disconnected' /*mode*/);
+        const selectedSegments = getSelectedSegments(model, false /*includeFormatHolder*/);
+        if (selectedSegments.length !== 1 || selectedSegments[0].segmentType !== 'Image') {
+            return;
+        }
+        this.contentModelImage = selectedSegments[0];
+        this.imageEditInfo = updateImageEditInfo(image, this.contentModelImage);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const {
@@ -194,12 +173,13 @@ export class ImageEditPlugin implements EditorPlugin {
         this.rotators = rotators;
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
+
+        editor.setDOMSelection({
+            type: 'image',
+            image: image,
+        });
     }
 
-    /**
-     * @internal
-     * EXPORTED FOR TESTING
-     */
     public startRotateAndResize(
         editor: IEditor,
         image: HTMLImageElement,
@@ -225,15 +205,12 @@ export class ImageEditPlugin implements EditorPlugin {
                             this.clonedImage
                         ) {
                             updateWrapper(
-                                editor,
                                 this.imageEditInfo,
                                 this.options,
                                 this.selectedImage,
                                 this.clonedImage,
                                 this.wrapper,
-                                this.rotators,
-                                this.resizers,
-                                undefined
+                                this.resizers
                             );
                             this.wasImageResized = true;
                         }
@@ -254,15 +231,19 @@ export class ImageEditPlugin implements EditorPlugin {
                             this.clonedImage
                         ) {
                             updateWrapper(
-                                editor,
                                 this.imageEditInfo,
                                 this.options,
                                 this.selectedImage,
                                 this.clonedImage,
                                 this.wrapper,
+                                this.rotators
+                            );
+                            this.updateRotateHandleState(
+                                editor,
+                                this.selectedImage,
+                                this.wrapper,
                                 this.rotators,
-                                this.resizers,
-                                undefined
+                                this.imageEditInfo?.angleRad
                             );
                         }
                     },
@@ -271,33 +252,74 @@ export class ImageEditPlugin implements EditorPlugin {
             ];
 
             updateWrapper(
-                editor,
                 this.imageEditInfo,
                 this.options,
                 this.selectedImage,
                 this.clonedImage,
                 this.wrapper,
-                this.rotators,
-                this.resizers,
-                undefined
+                this.resizers
             );
 
-            editor.setDOMSelection({
-                type: 'image',
-                image: image,
-            });
+            this.updateRotateHandleState(
+                editor,
+                this.selectedImage,
+                this.wrapper,
+                this.rotators,
+                this.imageEditInfo?.angleRad
+            );
         }
     }
 
-    private startCropping(editor: IEditor, image: HTMLImageElement) {
-        if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            this.removeImageWrapper(editor, this.dndHelpers);
+    private updateRotateHandleState(
+        editor: IEditor,
+        image: HTMLImageElement,
+        wrapper: HTMLSpanElement,
+        rotators: HTMLDivElement[],
+        angleRad: number | undefined
+    ) {
+        const viewport = editor.getVisibleViewport();
+        const smallImage = isASmallImage(image.width, image.height);
+        if (viewport && rotators && rotators.length > 0) {
+            const rotator = rotators[0];
+            const rotatorHandle = rotator.firstElementChild;
+            if (
+                isNodeOfType(rotatorHandle, 'ELEMENT_NODE') &&
+                isElementOfType(rotatorHandle, 'div')
+            ) {
+                updateRotateHandle(
+                    viewport,
+                    angleRad ?? 0,
+                    wrapper,
+                    rotator,
+                    rotatorHandle,
+                    smallImage
+                );
+            }
         }
+    }
+
+    public isOperationAllowed(operation: ImageEditOperation): boolean {
+        return (
+            operation === 'resize' ||
+            operation === 'rotate' ||
+            operation === 'flip' ||
+            operation === 'crop'
+        );
+    }
+
+    public canRegenerateImage(image: HTMLImageElement): boolean {
+        return canRegenerateImage(image) || canRegenerateImage(this.selectedImage);
+    }
+
+    public cropImage(editor: IEditor, image: HTMLImageElement) {
+        if (this.wrapper && this.selectedImage && this.shadowSpan) {
+            image = this.removeImageWrapper(editor, this.dndHelpers) ?? image;
+        }
+
         this.startEditing(editor, image, 'crop');
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
         }
-
         this.dndHelpers = [
             ...getDropAndDragHelpers(
                 this.wrapper,
@@ -313,13 +335,11 @@ export class ImageEditPlugin implements EditorPlugin {
                         this.clonedImage
                     ) {
                         updateWrapper(
-                            editor,
                             this.imageEditInfo,
                             this.options,
                             this.selectedImage,
                             this.clonedImage,
                             this.wrapper,
-                            undefined,
                             undefined,
                             this.croppers
                         );
@@ -331,13 +351,11 @@ export class ImageEditPlugin implements EditorPlugin {
         ];
 
         updateWrapper(
-            editor,
             this.imageEditInfo,
             this.options,
             this.selectedImage,
             this.clonedImage,
             this.wrapper,
-            undefined,
             undefined,
             this.croppers
         );
@@ -346,11 +364,11 @@ export class ImageEditPlugin implements EditorPlugin {
     private editImage(
         editor: IEditor,
         image: HTMLImageElement,
-        apiOperation: EditAction,
+        apiOperation: ImageEditOperation,
         operation: (imageEditInfo: ImageMetadataFormat) => void
     ) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            this.removeImageWrapper(editor, this.dndHelpers);
+            image = this.removeImageWrapper(editor, this.dndHelpers) ?? image;
         }
         this.startEditing(editor, image, apiOperation);
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
@@ -360,7 +378,6 @@ export class ImageEditPlugin implements EditorPlugin {
         operation(this.imageEditInfo);
 
         updateWrapper(
-            editor,
             this.imageEditInfo,
             this.options,
             this.selectedImage,
@@ -385,16 +402,24 @@ export class ImageEditPlugin implements EditorPlugin {
         this.resizers = [];
         this.rotators = [];
         this.croppers = [];
+        this.contentModelImage = null;
     }
 
     private removeImageWrapper(
         editor: IEditor,
         resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
     ) {
-        if (this.lastSrc && this.selectedImage && this.imageEditInfo && this.clonedImage) {
+        if (
+            this.lastSrc &&
+            this.selectedImage &&
+            this.imageEditInfo &&
+            this.clonedImage &&
+            this.contentModelImage
+        ) {
             applyChange(
                 editor,
                 this.selectedImage,
+                this.contentModelImage,
                 this.imageEditInfo,
                 this.lastSrc,
                 this.wasImageResized || this.isCropMode,
@@ -402,15 +427,28 @@ export class ImageEditPlugin implements EditorPlugin {
             );
         }
 
-        const helper = editor.getDOMHelper();
+        let image: Node | null = null;
         if (this.shadowSpan && this.shadowSpan.parentElement) {
-            helper.unwrap(this.shadowSpan);
+            image = unwrap(this.shadowSpan);
         }
         resizeHelpers.forEach(helper => helper.dispose());
         this.cleanInfo();
+        return this.getImageWrappedImage(image);
     }
 
-    private flipImage(
+    private getImageWrappedImage(node: Node | null): HTMLImageElement | null {
+        if (node && isNodeOfType(node, 'ELEMENT_NODE')) {
+            if (isElementOfType(node, 'img')) {
+                return node;
+            } else if (node.firstChild && node.childElementCount === 1) {
+                return this.getImageWrappedImage(node.firstChild);
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public flipImage(
         editor: IEditor,
         image: HTMLImageElement,
         direction: 'horizontal' | 'vertical'
@@ -436,26 +474,9 @@ export class ImageEditPlugin implements EditorPlugin {
         });
     }
 
-    private rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
+    public rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
         this.editImage(editor, image, 'rotate', imageEditInfo => {
             imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
-        });
-    }
-
-    private resizeImage(
-        editor: IEditor,
-        image: HTMLImageElement,
-        widthPx: number,
-        heightPx: number
-    ) {
-        this.editImage(editor, image, 'resize', imageEditInfo => {
-            imageEditInfo.widthPx = widthPx;
-            imageEditInfo.heightPx = heightPx;
-            this.wasImageResized = true;
-        });
-
-        editor.triggerEvent('contentChanged', {
-            source: ChangeSource.ImageResize,
         });
     }
 }

@@ -85,7 +85,7 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         menuNameImageRotateLeft: 'Left',
         menuNameImageRotateRight: 'Right',
     },
-    shouldShow: (_, node, imageEditor) => {
+    shouldShow: (editor, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('rotate') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)
@@ -94,10 +94,10 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateLeft':
-                imageEdit?.rotateImage(-Math.PI / 2);
+                imageEdit?.rotateImage(editor, node as HTMLImageElement, -Math.PI / 2);
                 break;
             case 'menuNameImageRotateRight':
-                imageEdit?.rotateImage(Math.PI / 2);
+                imageEdit?.rotateImage(editor, node as HTMLImageElement, Math.PI / 2);
                 break;
         }
     },
@@ -110,7 +110,7 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
         menuNameImageRotateFlipHorizontally: 'Flip Horizontally',
         menuNameImageRotateFlipVertically: 'Flip Vertically',
     },
-    shouldShow: (_, node, imageEditor) => {
+    shouldShow: (editor, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('rotate') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)
@@ -119,10 +119,10 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
     onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateFlipHorizontally':
-                imageEdit?.flipImage('horizontal');
+                imageEdit?.flipImage(editor, node as HTMLImageElement, 'horizontal');
                 break;
             case 'menuNameImageRotateFlipVertically':
-                imageEdit?.flipImage('vertical');
+                imageEdit?.flipImage(editor, node as HTMLImageElement, 'vertical');
                 break;
         }
     },
@@ -131,14 +131,14 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
-    shouldShow: (_, node, imageEditor) => {
+    shouldShow: (editor, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('crop') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
     onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
-        imageEdit?.cropImage();
+        imageEdit?.cropImage(editor, node as HTMLImageElement);
     },
 };
 

@@ -1,6 +1,4 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { MIN_HEIGHT_WIDTH } from '../constants/constants';
-import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -112,14 +110,9 @@ export function checkIfImageWasResized(image: HTMLImageElement): boolean {
 /**
  * @internal
  */
-export const isRTL = (editor: IEditor) => {
-    const model = editor.getContentModelCopy('disconnected');
-    const paragraph = getSelectedSegmentsAndParagraphs(
-        model,
-        false /** includingFormatHolder */
-    )[0][1];
-    return paragraph?.format?.direction === 'rtl';
-};
+export function isRTL(image: HTMLImageElement): boolean {
+    return window.getComputedStyle(image).direction === 'rtl';
+}
 
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;

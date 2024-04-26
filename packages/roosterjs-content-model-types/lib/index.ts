@@ -319,7 +319,7 @@ export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEve
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
 export { ContextMenuEvent } from './event/ContextMenuEvent';
-export { EditImageEvent, EditAction, ImageEditApiOperation } from './event/EditImageEvent';
+export { EditImageEvent } from './event/EditImageEvent';
 export { EditorReadyEvent } from './event/EditorReadyEvent';
 export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
 export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';

@@ -26,24 +26,4 @@ export interface EditImageEvent extends BasePluginEvent<'editImage'> {
      * Plugin can modify this string so that the modified one will be set to the image element
      */
     newSrc: string;
-
-    /**
-     * Action triggered by user to edit the image
-     */
-    apiOperation?: ImageEditApiOperation;
-}
-/**
- * Represents an event that will be fired when an inline image is edited by user
- */
-export type EditAction = 'crop' | 'flip' | 'rotate' | 'resize' | 'reset' | 'resizeAndRotate';
-
-/**
- * Represents an operation to edit an image
- */
-export interface ImageEditApiOperation {
-    action: EditAction;
-    flipDirection?: 'horizontal' | 'vertical';
-    angleRad?: number;
-    widthPx?: number;
-    heightPx?: number;
 }

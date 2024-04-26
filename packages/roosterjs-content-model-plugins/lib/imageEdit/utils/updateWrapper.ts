@@ -3,10 +3,9 @@ import { doubleCheckResize } from './doubleCheckResize';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
-import { updateRotateHandle } from '../Rotator/updateRotateHandle';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
-import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     getPx,
     isASmallImage,
@@ -20,13 +19,11 @@ import {
  * @internal
  */
 export function updateWrapper(
-    editor: IEditor,
     editInfo: ImageMetadataFormat,
     options: ImageEditOptions,
     image: HTMLImageElement,
     clonedImage: HTMLImageElement,
     wrapper: HTMLSpanElement,
-    rotators?: HTMLDivElement[],
     resizers?: HTMLDivElement[],
     croppers?: HTMLDivElement[]
 ) {
@@ -67,7 +64,7 @@ export function updateWrapper(
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
     // or if the direction is Right To Left
-    if (isRTL(editor)) {
+    if (isRTL(clonedImage)) {
         wrapper.style.textAlign = 'right';
         if (!croppers) {
             clonedImage.style.left = getPx(cropLeftPx);
@@ -139,21 +136,5 @@ export function updateWrapper(
         }
 
         updateSideHandlesVisibility(resizeHandles, smallImage);
-    }
-
-    const viewport = editor.getVisibleViewport();
-    if (viewport && rotators && rotators.length > 0) {
-        const rotator = rotators[0];
-        const rotatorHandle = rotator.firstElementChild;
-        if (isNodeOfType(rotatorHandle, 'ELEMENT_NODE') && isElementOfType(rotatorHandle, 'div')) {
-            updateRotateHandle(
-                viewport,
-                angleRad ?? 0,
-                wrapper,
-                rotator,
-                rotatorHandle,
-                smallImage
-            );
-        }
     }
 }

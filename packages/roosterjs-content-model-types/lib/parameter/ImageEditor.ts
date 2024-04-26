@@ -1,3 +1,5 @@
+import type { IEditor } from '../editor/IEditor';
+
 /**
  * Type of image editing operations
  */
@@ -15,7 +17,17 @@ export type ImageEditOperation =
     /**
      * Crop an image
      */
-    | 'crop';
+    | 'crop'
+
+    /**
+     * Flip an image
+     */
+    | 'flip'
+
+    /**
+     * Resize and rotate an image
+     */
+    | 'resizeAndRotate';
 
 /**
  * Define the common operation of an image editor
@@ -39,16 +51,16 @@ export interface ImageEditor {
      * Rotate selected image to the given angle (in rad)
      * @param angleRad The angle to rotate to
      */
-    rotateImage(angleRad: number): void;
+    rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number): void;
 
     /**
      * Flip the image.
      * @param direction Direction of flip, can be vertical or horizontal
      */
-    flipImage(direction: 'vertical' | 'horizontal'): void;
+    flipImage(editor: IEditor, image: HTMLImageElement, direction: 'vertical' | 'horizontal'): void;
 
     /**
      * Start to crop selected image
      */
-    cropImage(): void;
+    cropImage(editor: IEditor, image: HTMLImageElement): void;
 }

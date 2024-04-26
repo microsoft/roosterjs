@@ -1,10 +1,11 @@
 /**
+ * @internal
  * Check if we can regenerate edited image from the source image.
  * An image can't regenerate result when there is CORS issue of the source content.
  * @param img The image element to test
  * @returns True when we can regenerate the edited image, otherwise false
  */
-export function canRegenerateImage(img: HTMLImageElement): boolean {
+export function canRegenerateImage(img: HTMLImageElement | null): boolean {
     if (!img) {
         return false;
     }

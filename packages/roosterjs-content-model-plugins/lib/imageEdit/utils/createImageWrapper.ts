@@ -1,7 +1,12 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
-import type { EditAction, IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import { wrap } from 'roosterjs-content-model-dom';
+import type {
+    IEditor,
+    ImageEditOperation,
+    ImageMetadataFormat,
+} from 'roosterjs-content-model-types';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
@@ -26,7 +31,7 @@ export function createImageWrapper(
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
-    operation?: EditAction
+    operation?: ImageEditOperation
 ): WrapperElements {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
@@ -63,12 +68,12 @@ export function createImageWrapper(
         rotators,
         croppers
     );
-    const shadowSpan = createShadowSpan(editor, wrapper, image);
+    const shadowSpan = createShadowSpan(doc, wrapper, image);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
-const createShadowSpan = (editor: IEditor, wrapper: HTMLElement, image: HTMLImageElement) => {
-    const shadowSpan = editor.getDOMHelper().wrap(image, 'span');
+const createShadowSpan = (doc: Document, wrapper: HTMLElement, image: HTMLImageElement) => {
+    const shadowSpan = wrap(doc, image, 'span');
     if (shadowSpan) {
         const shadowRoot = shadowSpan.attachShadow({
             mode: 'open',
