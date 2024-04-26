@@ -231,6 +231,26 @@ describe('ShortcutPlugin', () => {
 
             const exclusively = plugin.willHandleEventExclusively(event);
 
+            expect(exclusively).toBeFalse();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeUndefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).not.toHaveBeenCalled();
+        });
+
+        it('redo 3', () => {
+            const apiSpy = spyOn(redo, 'redo');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.Z, true, false, true, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
             expect(exclusively).toBeTrue();
             expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
 

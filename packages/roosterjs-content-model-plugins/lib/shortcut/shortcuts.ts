@@ -128,7 +128,23 @@ export const ShortcutRedo: ShortcutCommand = {
 };
 
 /**
+ * @deprecated
  * Shortcut command for Redo 2
+ * Windows: N/A
+ * MacOS: Meta + Shift + Z
+ */
+export const ShortcutRedoMacOS: ShortcutCommand = {
+    shortcutKey: {
+        modifierKey: 'ctrl',
+        shiftKey: true,
+        which: Keys.Z,
+    },
+    onClick: editor => redo(editor),
+    environment: 'mac',
+};
+
+/**
+ * Shortcut command for Redo 3
  * Windows: Ctrl + Shift + Z
  * MacOS: Meta + Shift + Z
  */
