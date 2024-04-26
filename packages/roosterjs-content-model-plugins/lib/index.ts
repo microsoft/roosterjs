@@ -12,6 +12,7 @@ export {
     ShortcutUndo,
     ShortcutUndo2,
     ShortcutRedo,
+    ShortcutRedoAlt,
     ShortcutRedoMacOS,
     ShortcutBullet,
     ShortcutNumbering,
