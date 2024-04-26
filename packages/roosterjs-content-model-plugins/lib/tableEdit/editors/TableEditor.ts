@@ -197,8 +197,7 @@ export class TableEditor {
                 this.onStartTableMove,
                 this.onEndTableMove,
                 this.contentDiv,
-                this.anchorContainer,
-                this.onEditorCreated
+                this.anchorContainer
             );
         }
 

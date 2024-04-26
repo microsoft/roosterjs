@@ -158,8 +158,8 @@ function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: Node
     return true;
 }
 
-function setTableMoverCursor(editor: IEditor, state: boolean) {
-    editor?.setEditorStyle(TABLE_MOVER_STYLE_KEY, state ? 'cursor: move' : null);
+function setTableMoverCursor(editor: IEditor, state: boolean, type?: 'move' | 'copy') {
+    editor?.setEditorStyle(TABLE_MOVER_STYLE_KEY, state ? 'cursor: ' + type ?? 'move' : null);
 }
 
 function onDragStart(context: TableMoverContext, event: MouseEvent) {
@@ -167,7 +167,7 @@ function onDragStart(context: TableMoverContext, event: MouseEvent) {
 
     const { editor, table, div } = context;
 
-    setTableMoverCursor(editor, true);
+    setTableMoverCursor(editor, true, 'move');
 
     // Create table outline rectangle
     const trect = table.getBoundingClientRect();
@@ -241,11 +241,16 @@ function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMIns
 }
 
 function onDragging(context: TableMoverContext, event: MouseEvent, initValue: TableMoverInitValue) {
-    // Move table outline rectangle
     const { tableRect } = initValue;
     const { editor } = context;
+
+    // Move table outline rectangle
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
+
+    event.ctrlKey || event.metaKey
+        ? setTableMoverCursor(editor, true, 'copy')
+        : setTableMoverCursor(editor, true, 'move');
 
     const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
     if (pos) {
