@@ -236,7 +236,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).not.toHaveBeenCalled();
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
         });
 
         it('bullet list', () => {
