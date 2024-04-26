@@ -216,7 +216,7 @@ function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMIns
     if ('caretPositionFromPoint' in doc) {
         // Firefox
         const pos = (doc as any).caretPositionFromPoint(x, y);
-        if (pos && domHelper.isNodeEditor(pos.offsetNode)) {
+        if (pos && domHelper.isNodeInEditor(pos.offsetNode)) {
             return { node: pos.offsetNode, offset: pos.offset };
         }
     }
@@ -224,7 +224,7 @@ function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMIns
     if (doc.elementFromPoint) {
         // Fallback
         const element = doc.elementFromPoint(x, y);
-        if (element && domHelper.isNodeEditor(element)) {
+        if (element && domHelper.isNodeInEditor(element)) {
             return { node: element, offset: 0 };
         }
     }
@@ -263,9 +263,6 @@ function onDragEnd(
 
     setTableMoverCursor(editor, false);
 
-    // Take snapshot before moving table
-    editor.takeSnapshot();
-
     if (element == context.div) {
         // Table mover was only clicked, select whole table
         selectWholeTable(table);
@@ -280,6 +277,8 @@ function onDragEnd(
         }
 
         const finalRange = editor.getDOMSelection();
+        console.log(finalRange, initValue?.initialSelection);
+        debugger;
         if (initValue && finalRange?.type == 'range' && initValue?.initialSelection != finalRange) {
             // Move table to new position
             finalRange.range.collapse(true);
@@ -338,7 +337,9 @@ function onDragEnd(
             );
             // Remove old table only if insertion was successful
             if (insertionSuccess) {
-                table.remove();
+                if (!(event.ctrlKey || event.metaKey)) {
+                    table.remove();
+                }
                 // Take snapshot after moving table
                 editor.takeSnapshot();
             }
