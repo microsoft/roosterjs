@@ -1,4 +1,5 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
+import { getListAnnounceData } from '../list/getListAnnounceData';
 import {
     createListLevel,
     getOperationalBlocks,
@@ -13,6 +14,7 @@ import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelListLevel,
+    FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 
 const IndentStepInPixel = 40;
@@ -26,7 +28,8 @@ const IndentStepInPixel = 40;
 export function setModelIndentation(
     model: ContentModelDocument,
     indentation: 'indent' | 'outdent',
-    length: number = IndentStepInPixel
+    length: number = IndentStepInPixel,
+    context?: FormatContentModelContext
 ) {
     const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(
         model,
@@ -79,6 +82,10 @@ export function setModelIndentation(
                     block.levels.push(newLevel);
                 } else {
                     block.levels.pop();
+                }
+
+                if (block.levels.length > 0 && context) {
+                    context.announceData = getListAnnounceData([block, ...path]);
                 }
             }
         } else if (block) {
