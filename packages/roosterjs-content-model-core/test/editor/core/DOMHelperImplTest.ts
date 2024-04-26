@@ -17,24 +17,19 @@ describe('DOMHelperImpl', () => {
             expect(result).toBe(mockedResult);
             expect(containsSpy).toHaveBeenCalledWith(mockedNode);
         });
-    });
 
-    describe('isNodeEditor', () => {
-        it('isNodeEditor - Node is editor', () => {
-            const div = document.createElement('div');
-            const domHelper = createDOMHelper(div);
+        it('isNodeInEditor - exclude root', () => {
+            const mockedResult = 'RESULT' as any;
+            const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
+            const mockedDiv = {
+                contains: containsSpy,
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv);
 
-            const result = domHelper.isNodeEditor(div);
-            expect(result).toBeTrue();
-        });
+            const result = domHelper.isNodeInEditor(mockedDiv, true);
 
-        it('isNodeEditor - Node is not editor', () => {
-            const div = document.createElement('div');
-            const div2 = document.createElement('div');
-            const domHelper = createDOMHelper(div);
-
-            const result = domHelper.isNodeEditor(div2);
             expect(result).toBeFalse();
+            expect(containsSpy).toHaveBeenCalledWith(mockedDiv);
         });
     });
 
