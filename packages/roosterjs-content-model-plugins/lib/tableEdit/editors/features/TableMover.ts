@@ -1,5 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
     createContentModelDocument,
@@ -38,7 +39,8 @@ export function createTableMover(
     onStart: () => void,
     onEnd: () => false,
     contentDiv?: EventTarget | null,
-    anchorContainer?: HTMLElement
+    anchorContainer?: HTMLElement,
+    onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -85,6 +87,7 @@ export function createTableMover(
             onDragEnd,
         },
         context.zoomScale,
+        onTableEditorCreated,
         editor.getEnvironment().isMobileOrTablet
     );
 
@@ -110,6 +113,8 @@ interface TableMoverInitValue {
 }
 
 class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
+    private disposer: undefined | (() => void);
+
     constructor(
         div: HTMLElement,
         context: TableMoverContext,
@@ -120,13 +125,17 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         ) => void,
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
+        onTableEditorCreated?: OnTableEditorCreatedCallback,
         forceMobile?: boolean | undefined,
         container?: HTMLElement
     ) {
-        super(div, context, onSubmit, handler, zoomScale, forceMobile);
+        super(div, context, onSubmit, handler, zoomScale);
+        this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 
     dispose(): void {
+        this.disposer?.();
+        this.disposer = undefined;
         super.dispose();
     }
 }

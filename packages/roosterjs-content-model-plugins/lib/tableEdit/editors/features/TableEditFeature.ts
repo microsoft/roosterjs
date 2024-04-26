@@ -14,9 +14,9 @@ export interface TableEditFeature {
  */
 export function disposeTableEditFeature(resizer: TableEditFeature | null) {
     if (resizer) {
-        resizer.div?.parentNode?.removeChild(resizer.div);
-        resizer.div = null;
         resizer.featureHandler?.dispose();
         resizer.featureHandler = null;
+        resizer.div?.parentNode?.removeChild(resizer.div);
+        resizer.div = null;
     }
 }

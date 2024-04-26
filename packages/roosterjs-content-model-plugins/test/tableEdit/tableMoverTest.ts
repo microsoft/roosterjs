@@ -1,6 +1,7 @@
 import { createTableMover } from '../../lib/tableEdit/editors/features/TableMover';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptions, IEditor } from 'roosterjs-content-model-types';
+import { OnTableEditorCreatedCallback } from '../../lib/tableEdit/OnTableEditorCreatedCallback';
 import { TableEditor } from '../../lib/tableEdit/editors/TableEditor';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 
@@ -181,6 +182,52 @@ describe('Table Mover Tests', () => {
         runTest(0, true);
     });
 
+    it('Customize component with callback', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        scrollContainer.innerHTML = '<div style="height: 300px"></div>';
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('disposer');
+        const mover = runTest(0, true, (editorType, element) => {
+            if (element && editorType == 'TableMover') {
+                changeCb();
+            }
+            return () => disposer();
+        });
+
+        mover?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).toHaveBeenCalled();
+    });
+
+    it('Dont customize component with callback, editor type not in callback', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        scrollContainer.innerHTML = '<div style="height: 300px"></div>';
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('disposer');
+        const mover = runTest(0, true, (editorType, element) => {
+            if (element && editorType == 'TableResizer') {
+                changeCb();
+            }
+            return () => disposer();
+        });
+
+        mover?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).not.toHaveBeenCalled();
+    });
+
     it('On click event', () => {
         const table = document.getElementById(targetId) as HTMLTableElement;
 
@@ -202,7 +249,11 @@ describe('Table Mover Tests', () => {
         }
     });
 
-    function runTest(scrollTop: number, isNotNull: boolean | null) {
+    function runTest(
+        scrollTop: number,
+        isNotNull: boolean | null,
+        onTableEditorCreatedCallback?: OnTableEditorCreatedCallback
+    ) {
         //Arrange
         node.style.height = '10px';
         node.style.overflowX = 'auto';
@@ -216,9 +267,9 @@ describe('Table Mover Tests', () => {
             editor,
             false,
             () => {},
-            () => {},
-            () => false,
-            node
+            node,
+            undefined,
+            onTableEditorCreatedCallback
         );
 
         //Assert
@@ -227,5 +278,7 @@ describe('Table Mover Tests', () => {
         } else {
             expect(result).toBeDefined();
         }
+
+        return result;
     }
 });

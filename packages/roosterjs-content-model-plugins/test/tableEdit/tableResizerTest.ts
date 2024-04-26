@@ -1,5 +1,8 @@
+import * as getIntersectedRect from '../../lib/pluginUtils/Rect/getIntersectedRect';
+import { createTableResizer } from '../../lib/tableEdit/editors/features/TableResizer';
 import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
+
 import {
     ContentModelTable,
     DOMEventHandlerFunction,
@@ -193,5 +196,91 @@ xdescribe('Table Resizer tests', () => {
 
     it('decreases the width and height of the table', () => {
         resizeWholeTableTest(getModelTable(), -1, 'both');
+    });
+
+    it('Customize table inserter', () => {
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 10,
+            left: 10,
+            right: 10,
+            top: 10,
+        });
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('changeCb');
+        //Act
+        const result = createTableResizer(
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                    };
+                    ownerDocument: document;
+                },
+            },
+            editor,
+            false,
+            () => {},
+            () => false,
+            null,
+            undefined,
+            (editorType, element) => {
+                if (element && editorType == 'TableResizer') {
+                    changeCb();
+                }
+                return () => disposer();
+            }
+        );
+
+        result?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).toHaveBeenCalled();
+    });
+
+    it('Customize table inserter, do not customize wrong editor type', () => {
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 10,
+            left: 10,
+            right: 10,
+            top: 10,
+        });
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('changeCb');
+        //Act
+        const result = createTableResizer(
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                    };
+                    ownerDocument: document;
+                },
+            },
+            editor,
+            false,
+            () => {},
+            () => false,
+            null,
+            undefined,
+            (editorType, element) => {
+                if (element && editorType == 'TableMover') {
+                    changeCb();
+                }
+                return () => disposer();
+            }
+        );
+
+        result?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).not.toHaveBeenCalled();
     });
 });
