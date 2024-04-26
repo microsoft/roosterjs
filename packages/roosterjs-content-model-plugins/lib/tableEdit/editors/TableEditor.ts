@@ -197,7 +197,8 @@ export class TableEditor {
                 this.onStartTableMove,
                 this.onEndTableMove,
                 this.contentDiv,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onEditorCreated
             );
         }
 
@@ -413,7 +414,8 @@ export class TableEditor {
                 ev.relatedTarget != feature &&
                 isNodeOfType(this.contentDiv as Node, 'ELEMENT_NODE') &&
                 isNodeOfType(ev.relatedTarget as Node, 'ELEMENT_NODE') &&
-                !(this.contentDiv == ev.relatedTarget)
+                !(this.contentDiv == ev.relatedTarget) &&
+                !this.isEditing()
             ) {
                 this.dispose();
             }
