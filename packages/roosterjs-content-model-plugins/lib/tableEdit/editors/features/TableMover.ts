@@ -11,11 +11,18 @@ import {
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, DOMSelection, IEditor, Rect } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTable,
+    DOMInsertPoint,
+    DOMSelection,
+    IEditor,
+    Rect,
+} from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';
 
 const TABLE_MOVER_LENGTH = 12;
 const TABLE_MOVER_ID = '_Table_Mover';
+const TABLE_MOVER_STYLE_KEY = '_TableMoverCursorStyle';
 
 /**
  * @internal
@@ -42,7 +49,7 @@ export function createTableMover(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        style: 'position: fixed; cursor: move; user-select: none; border: 1px solid #808080',
     };
 
     const div = createElement(createElementData, document) as HTMLDivElement;
@@ -51,28 +58,7 @@ export function createTableMover(
     div.style.width = `${TABLE_MOVER_LENGTH}px`;
     div.style.height = `${TABLE_MOVER_LENGTH}px`;
 
-    //(anchorContainer || document.body).appendChild(div);
-
-    // Broswer Drag Drop Attempt
-    const div2 = createElement(createElementData, document) as HTMLDivElement;
-    div2.id = TABLE_MOVER_ID;
-    div2.style.width = `${TABLE_MOVER_LENGTH}px`;
-    div2.style.height = `${TABLE_MOVER_LENGTH}px`;
-    div2.style.backgroundColor = 'gray';
-    (anchorContainer || document.body).appendChild(div2);
-    div2.draggable = true;
-    div2.addEventListener('dragstart', event => {
-        event.dataTransfer?.setData('text/html', table.outerHTML);
-        event.dataTransfer?.setDragImage(table, 0, 0);
-        console.log('>>DStart');
-    });
-    div2.addEventListener('drag', event => {
-        console.log('>>DDrag');
-    });
-    div2.addEventListener('dragend', event => {
-        table.remove();
-        console.log('>>DEnd');
-    });
+    (anchorContainer || document.body).appendChild(div);
 
     const context: TableMoverContext = {
         table,
@@ -86,7 +72,7 @@ export function createTableMover(
         onEnd,
     };
 
-    setDivPosition(context, div2);
+    setDivPosition(context, div);
 
     const featureHandler = new DragAndDropHelper<TableMoverContext, TableMoverInitValue>(
         div,
@@ -101,7 +87,7 @@ export function createTableMover(
         editor.getEnvironment().isMobileOrTablet
     );
 
-    return { node: table, div: div2, featureHandler };
+    return { node: table, div, featureHandler };
 }
 
 interface TableMoverContext {
@@ -141,10 +127,16 @@ function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: Node
     return true;
 }
 
+function setTableMoverCursor(editor: IEditor, state: boolean) {
+    editor?.setEditorStyle(TABLE_MOVER_STYLE_KEY, state ? 'cursor: move' : null);
+}
+
 function onDragStart(context: TableMoverContext, event: MouseEvent) {
     context.onStart();
 
     const { editor, table, div } = context;
+
+    setTableMoverCursor(editor, true);
 
     // Create table outline rectangle
     const trect = table.getBoundingClientRect();
@@ -185,68 +177,55 @@ function onDragStart(context: TableMoverContext, event: MouseEvent) {
     };
 }
 
+// Get range from coordinate.
+function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMInsertPoint | null {
+    const doc = editor.getDocument();
+    const domHelper = editor.getDOMHelper();
+
+    if (doc.caretRangeFromPoint) {
+        // Chrome, Edge, Safari, Opera
+        const range = doc.caretRangeFromPoint(x, y);
+        if (range && domHelper.isNodeInEditor(range.startContainer)) {
+            return { node: range.startContainer, offset: range.startOffset };
+        }
+    }
+
+    if ('caretPositionFromPoint' in doc) {
+        // Firefox
+        const pos = (doc as any).caretPositionFromPoint(x, y);
+        if (pos && domHelper.isNodeEditor(pos.offsetNode)) {
+            return { node: pos.offsetNode, offset: pos.offset };
+        }
+    }
+
+    if (doc.elementFromPoint) {
+        // Fallback
+        const element = doc.elementFromPoint(x, y);
+        if (element && domHelper.isNodeEditor(element)) {
+            return { node: element, offset: 0 };
+        }
+    }
+
+    return null;
+}
+
 function onDragging(context: TableMoverContext, event: MouseEvent, initValue: TableMoverInitValue) {
     // Move table outline rectangle
     const { tableRect } = initValue;
-    const { editor, table } = context;
+    const { editor } = context;
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
 
-    if (event.target == context.div) {
-        // Dragging has not left the table mover, do nothing
-        return false;
-    } else {
-        // Check if table was dragged on itself, do nothing
-        if (table.contains(event.target as Node)) {
-            return false;
-        }
-        const element = event.target as HTMLElement;
+    const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+    if (pos) {
+        const range = editor.getDocument().createRange();
+        range.setStart(pos.node, pos.offset);
+        range.collapse(true);
 
-        // Check if target is in editor
-        if (initValue?.cmTable != undefined && editor.getDOMHelper().isNodeInEditor(element)) {
-            let range: Range | undefined;
-            // Check if target is the editor itself
-            if (!editor.getDOMHelper().isNodeEditor(element)) {
-                // Obtain position in text or undefined
-                range = getTextPosition(element, event);
-                if (!range) {
-                    // Cursor is not on text
-                    if (!element.hasChildNodes()) {
-                        const parent = element.parentElement;
-                        if (parent != null) {
-                            // Element has no children, set insertion point after the element
-                            parent.childNodes.forEach((child, index) => {
-                                if ((child as HTMLElement) === element) {
-                                    range = document.createRange();
-                                    range.setStart(parent, index + 1);
-                                }
-                            });
-                            if (!range) {
-                                // Child not found in parent, do nothing
-                                return false;
-                            }
-                        } else {
-                            // Element has no parent, do nothing
-                            return false;
-                        }
-                    } else {
-                        // Set to end of element
-                        range = document.createRange();
-                        range.setStart(element, element.childNodes.length);
-                    }
-                }
-            } else {
-                // Set to end of editor
-                range = document.createRange();
-                range.setStart(element, element.childNodes.length);
-            }
-
-            range.collapse(true);
-            editor.setDOMSelection({ type: 'range', range, isReverted: false });
-            return true;
-        }
-        return false;
+        editor.setDOMSelection({ type: 'range', range, isReverted: false });
+        return true;
     }
+    return false;
 }
 
 function onDragEnd(
@@ -258,6 +237,8 @@ function onDragEnd(
     const element = event.target;
     // Remove table outline rectangle
     initValue?.tableRect.remove();
+
+    setTableMoverCursor(editor, false);
 
     // Take snapshot before moving table
     editor.takeSnapshot();
@@ -346,54 +327,6 @@ function onDragEnd(
         return true;
     }
     return false;
-}
-
-function getTextPosition(node: Node, event: MouseEvent): Range | undefined {
-    if (node.textContent) {
-        if (isNodeOfType(node, 'TEXT_NODE')) {
-            const string = node.textContent || '';
-            // Deetermine position in text
-            for (let i = 0; i < string.length; i++) {
-                const range = document.createRange();
-                range.setStart(node, 0 + i);
-                range.setEnd(node, 1 + i);
-                const rect = range.getClientRects()[0];
-                if (
-                    rect.right >= event.clientX &&
-                    rect.top <= event.clientY &&
-                    rect.bottom >= event.clientY
-                ) {
-                    if (event.clientX > rect.left + rect.width / 2) {
-                        range.setStart(node, 1 + i);
-                    }
-                    return range;
-                }
-            }
-        } else {
-            if (isNodeOfType(node, 'ELEMENT_NODE')) {
-                const elementRect = node.getBoundingClientRect();
-                if (
-                    !(
-                        event.clientX >= elementRect.left &&
-                        event.clientX <= elementRect.right &&
-                        event.clientY >= elementRect.top &&
-                        event.clientY <= elementRect.bottom
-                    )
-                ) {
-                    // Cursor is not on text of element
-                    return undefined;
-                }
-            }
-            for (let i = 0; i < node.childNodes.length; i++) {
-                const child = node.childNodes[i];
-                const result = getTextPosition(child, event);
-                if (result != undefined) {
-                    return result;
-                }
-            }
-            return undefined;
-        }
-    }
 }
 
 function cancelMove(context: TableMoverContext) {
