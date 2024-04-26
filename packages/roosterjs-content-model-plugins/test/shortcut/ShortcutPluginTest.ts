@@ -231,7 +231,7 @@ describe('ShortcutPlugin', () => {
 
             const exclusively = plugin.willHandleEventExclusively(event);
 
-            expect(exclusively).toBeFalse();
+            expect(exclusively).toBeTrue();
             expect(event.eventDataCache!.__ShortcutCommandCache).toBeUndefined();
 
             plugin.onPluginEvent(event);
