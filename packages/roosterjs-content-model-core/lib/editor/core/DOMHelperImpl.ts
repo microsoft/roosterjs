@@ -1,4 +1,4 @@
-import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { isNodeOfType, parseValueWithUnit, toArray } from 'roosterjs-content-model-dom';
 import type { DOMHelper } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
@@ -59,6 +59,27 @@ class DOMHelperImpl implements DOMHelper {
     hasFocus(): boolean {
         const activeElement = this.contentDiv.ownerDocument.activeElement;
         return !!(activeElement && this.contentDiv.contains(activeElement));
+    }
+
+    /**
+     * Check if the root element is in RTL mode
+     */
+    isRightToLeft(): boolean {
+        const contentDiv = this.contentDiv;
+        const style = contentDiv.ownerDocument.defaultView?.getComputedStyle(contentDiv);
+
+        return style?.direction == 'rtl';
+    }
+
+    /**
+     * Get the width of the editable area of the editor content div
+     */
+    getClientWidth(): number {
+        const contentDiv = this.contentDiv;
+        const style = contentDiv.ownerDocument.defaultView?.getComputedStyle(contentDiv);
+        const paddingLeft = parseValueWithUnit(style?.paddingLeft);
+        const paddingRight = parseValueWithUnit(style?.paddingRight);
+        return this.contentDiv.clientWidth - (paddingLeft + paddingRight);
     }
 }
 

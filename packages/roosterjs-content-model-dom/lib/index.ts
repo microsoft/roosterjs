@@ -30,6 +30,8 @@ export {
     generateEntityClassNames,
     addDelimiters,
     isEntityDelimiter,
+    isBlockEntityContainer,
+    findClosestBlockEntityContainer,
 } from './domUtils/entityUtils';
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
@@ -67,6 +69,8 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr';
+export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';

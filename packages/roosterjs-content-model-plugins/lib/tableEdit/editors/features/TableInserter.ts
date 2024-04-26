@@ -1,6 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { getIntersectedRect } from '../../../pluginUtils/Rect/getIntersectedRect';
 import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import {
     formatTableWithContentModel,
     insertTableColumn,
@@ -26,8 +27,8 @@ export function createTableInserter(
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: () => void,
-    getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-    anchorContainer?: HTMLElement
+    anchorContainer?: HTMLElement,
+    onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
     const tdRect = normalizeRect(td.getBoundingClientRect());
     const viewPort = editor.getVisibleViewport();
@@ -74,7 +75,7 @@ export function createTableInserter(
             isHorizontal,
             editor,
             onInsert,
-            getOnMouseOut
+            onTableEditorCreated
         );
 
         return { div, featureHandler: handler, node: td };
@@ -84,7 +85,7 @@ export function createTableInserter(
 }
 
 class TableInsertHandler implements Disposable {
-    private onMouseOutEvent: null | ((ev: MouseEvent) => void);
+    private disposer: undefined | (() => void);
     constructor(
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
@@ -92,21 +93,19 @@ class TableInsertHandler implements Disposable {
         private isHorizontal: boolean,
         private editor: IEditor,
         private onInsert: () => void,
-        getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void
+        onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
         this.div.addEventListener('click', this.insertTd);
-        this.onMouseOutEvent = getOnMouseOut(div);
-        this.div.addEventListener('mouseout', this.onMouseOutEvent);
+        this.disposer = onTableEditorCreated?.(
+            isHorizontal ? 'HorizontalTableInserter' : 'VerticalTableInserter',
+            div
+        );
     }
 
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
-
-        if (this.onMouseOutEvent) {
-            this.div.removeEventListener('mouseout', this.onMouseOutEvent);
-        }
-
-        this.onMouseOutEvent = null;
+        this.disposer?.();
+        this.disposer = undefined;
     }
 
     private insertTd = () => {

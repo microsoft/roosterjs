@@ -66,7 +66,7 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly formatApiName?: string;
 
     /**
-     * @optional Announce data from this content changed event.
+     * @deprecated Call editor.announce(announceData) directly insteaad
      */
     readonly announceData?: AnnounceData;
 }

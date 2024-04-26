@@ -2,9 +2,12 @@ import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
+import { ChangeSource } from '../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { createLinkAfterSpace } from '../../lib/autoFormat/link/createLinkAfterSpace';
 import { keyboardListTrigger } from '../../lib/autoFormat/list/keyboardListTrigger';
+import { transformFraction } from '../../lib/autoFormat/numbers/transformFraction';
 import { transformHyphen } from '../../lib/autoFormat/hyphen/transformHyphen';
+import { transformOrdinals } from '../../lib/autoFormat/numbers/transformOrdinals';
 import {
     ContentChangedEvent,
     ContentModelDocument,
@@ -19,12 +22,14 @@ import {
 describe('Content Model Auto Format Plugin Test', () => {
     let editor: IEditor;
     let formatTextSegmentBeforeSelectionMarkerSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         formatTextSegmentBeforeSelectionMarkerSpy = spyOn(
             formatTextSegmentBeforeSelectionMarker,
             'formatTextSegmentBeforeSelectionMarker'
         );
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
         editor = ({
             focus: () => {},
             getDOMSelection: () =>
@@ -35,40 +40,74 @@ describe('Content Model Auto Format Plugin Test', () => {
                     },
                 } as any), // Force return invalid range to go through content model code
             formatContentModel: () => {},
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
     });
 
     describe('onPluginEvent - keyboardListTrigger', () => {
         function runTest(
             event: EditorInputEvent,
-            options?: {
-                autoBullet: boolean;
-                autoNumbering: boolean;
-            }
+            testBullet: boolean,
+            expectResult: boolean,
+            options?: AutoFormatOptions
         ) {
-            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
+            const plugin = new AutoFormatPlugin(options);
             plugin.initialize(editor);
 
             plugin.onPluginEvent(event);
 
-            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            const formatOptions = {
+                apiName: '',
+            };
+
+            const inputModel = (bullet: boolean): ContentModelDocument => ({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: bullet ? '*' : '1)',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            });
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 expect(callback).toBe(
                     editor,
                     (
-                        model: ContentModelDocument,
+                        _model: ContentModelDocument,
                         _previousSegment: ContentModelText,
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return keyboardListTrigger(
-                            model,
+                        const result = keyboardListTrigger(
+                            inputModel(testBullet),
                             paragraph,
                             context,
                             options!.autoBullet,
                             options!.autoNumbering
                         );
+                        expect(result).toBe(expectResult);
+                        formatOptions.apiName = result ? 'autoToggleList' : '';
+                        return result;
                     }
                 );
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOptions.apiName,
+                });
             });
         }
 
@@ -77,7 +116,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, true, true, {
                 autoBullet: true,
                 autoNumbering: true,
             });
@@ -88,7 +127,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: '*', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, true, false, {
                 autoBullet: true,
                 autoNumbering: true,
             });
@@ -99,7 +138,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, { autoBullet: false, autoNumbering: false } as AutoFormatOptions);
+            runTest(event, false, false, { autoBullet: false, autoNumbering: false });
         });
 
         it('should trigger keyboardListTrigger with auto bullet only', () => {
@@ -107,7 +146,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, { autoBullet: true, autoNumbering: false } as AutoFormatOptions);
+            runTest(event, true, false, { autoBullet: true, autoNumbering: false });
         });
 
         it('should trigger keyboardListTrigger with auto numbering only', () => {
@@ -115,7 +154,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
             };
-            runTest(event, { autoBullet: false, autoNumbering: true } as AutoFormatOptions);
+            runTest(event, false, true, { autoBullet: false, autoNumbering: true });
         });
 
         it('should not trigger keyboardListTrigger if the input type is different from insertText', () => {
@@ -123,7 +162,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { key: ' ', defaultPrevented: false, inputType: 'test' } as any,
             };
-            runTest(event, { autoBullet: true, autoNumbering: true } as AutoFormatOptions);
+            runTest(event, true, false, { autoBullet: true, autoNumbering: true });
         });
     });
 
@@ -240,12 +279,20 @@ describe('Content Model Auto Format Plugin Test', () => {
     describe('onPluginEvent - createLinkAfterSpace', () => {
         function runTest(
             event: EditorInputEvent,
-            options?: {
-                autoLink: boolean;
-            }
+            expectResult: boolean,
+            options: AutoFormatOptions
         ) {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
+
+            const segment: ContentModelText = {
+                segmentType: 'Text',
+                text: 'www.test.com',
+                format: {},
+            };
+            const formatOptions = {
+                changeSource: '',
+            };
 
             plugin.onPluginEvent(event);
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
@@ -253,15 +300,19 @@ describe('Content Model Auto Format Plugin Test', () => {
                     editor,
                     (
                         _model: ContentModelDocument,
-                        previousSegment: ContentModelText,
+                        _previousSegment: ContentModelText,
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return (
+                        const result =
                             options &&
                             options.autoLink &&
-                            createLinkAfterSpace(previousSegment, paragraph, context)
-                        );
+                            createLinkAfterSpace(segment, paragraph, context);
+
+                        expect(result).toBe(expectResult);
+
+                        formatOptions.changeSource = result ? ChangeSource.AutoLink : '';
+                        return result;
                     }
                 );
             });
@@ -272,7 +323,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, true, {
                 autoLink: true,
             });
         });
@@ -282,7 +333,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoLink: false,
             });
         });
@@ -296,7 +347,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     inputType: 'insertText',
                 } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoLink: true,
             });
         });
@@ -305,30 +356,43 @@ describe('Content Model Auto Format Plugin Test', () => {
     describe('onPluginEvent - transformHyphen', () => {
         function runTest(
             event: EditorInputEvent,
-            options?: {
-                autoHyphen: boolean;
-            }
+            expectedResult: boolean,
+            options?: AutoFormatOptions
         ) {
-            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
+            const plugin = new AutoFormatPlugin(options);
             plugin.initialize(editor);
-
             plugin.onPluginEvent(event);
-            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            const formatOption = {
+                apiName: '',
+            };
+            const segment: ContentModelText = {
+                segmentType: 'Text',
+                text: 'test--test',
+                format: {},
+            };
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 expect(callback).toBe(
                     editor,
                     (
                         _model: ContentModelDocument,
-                        previousSegment: ContentModelText,
+                        _previousSegment: ContentModelText,
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        return (
-                            options &&
-                            options.autoHyphen &&
-                            transformHyphen(previousSegment, paragraph, context)
-                        );
+                        let result = false;
+
+                        if (options && options.autoHyphen) {
+                            result = transformHyphen(segment, paragraph, context);
+                        }
+                        expect(result).toBe(expectedResult);
+                        formatOption.apiName = result ? 'autoHyphen' : '';
+                        return result;
                     }
                 );
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOption.apiName,
+                });
             });
         }
 
@@ -337,7 +401,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, true, {
                 autoHyphen: true,
             });
         });
@@ -347,7 +411,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoHyphen: false,
             });
         });
@@ -361,8 +425,140 @@ describe('Content Model Auto Format Plugin Test', () => {
                     inputType: 'insertText',
                 } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoHyphen: true,
+            });
+        });
+    });
+
+    describe('onPluginEvent - transformFraction', () => {
+        function runTest(
+            event: EditorInputEvent,
+            expectResult: boolean,
+            options?: AutoFormatOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+            const formatOption = {
+                apiName: '',
+            };
+
+            const segment: ContentModelText = {
+                segmentType: 'Text',
+                text: '1/2',
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                expect(callback).toBe(
+                    editor,
+                    (
+                        _model: ContentModelDocument,
+                        _previousSegment: ContentModelText,
+                        paragraph: ContentModelParagraph,
+                        context: FormatContentModelContext
+                    ) => {
+                        let result = false;
+
+                        if (options && options.autoHyphen) {
+                            result = transformFraction(segment, paragraph, context);
+                        }
+                        expect(result).toBe(expectResult);
+                        formatOption.apiName = '';
+                        return result;
+                    }
+                );
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOption.apiName,
+                });
+            });
+        }
+
+        it('should call transformFraction', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, true, {
+                autoFraction: true,
+            });
+        });
+
+        it('should not call transformHyphen - disable options', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, false, {
+                autoFraction: false,
+            });
+        });
+    });
+
+    describe('onPluginEvent - transformOrdinals', () => {
+        function runTest(
+            event: EditorInputEvent,
+            expectResult: boolean,
+            options?: AutoFormatOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+            const formatOption = {
+                apiName: '',
+            };
+
+            const segment: ContentModelText = {
+                segmentType: 'Text',
+                text: '1st',
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                expect(callback).toBe(
+                    editor,
+                    (
+                        _model: ContentModelDocument,
+                        _previousSegment: ContentModelText,
+                        paragraph: ContentModelParagraph,
+                        context: FormatContentModelContext
+                    ) => {
+                        let result = false;
+
+                        if (options && options.autoHyphen) {
+                            result = transformOrdinals(segment, paragraph, context);
+                        }
+                        expect(result).toBe(expectResult);
+                        formatOption.apiName = '';
+                        return result;
+                    }
+                );
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOption.apiName,
+                });
+            });
+        }
+
+        it('should call transformOrdinals', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, true, {
+                autoOrdinals: true,
+            });
+        });
+
+        it('should not call transformOrdinals - disable options', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, false, {
+                autoOrdinals: false,
             });
         });
     });

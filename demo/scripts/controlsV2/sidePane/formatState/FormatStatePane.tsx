@@ -19,10 +19,7 @@ export interface FormatStatePaneProps extends FormatStatePaneState, SidePaneElem
     env?: EditorEnvironment;
 }
 
-export default class FormatStatePane extends React.Component<
-    FormatStatePaneProps,
-    FormatStatePaneState
-> {
+export class FormatStatePane extends React.Component<FormatStatePaneProps, FormatStatePaneState> {
     constructor(props: FormatStatePaneProps) {
         super(props);
         this.state = {

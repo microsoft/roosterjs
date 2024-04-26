@@ -8,6 +8,7 @@ import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelTableCell,
+    FormatContentModelContext,
     IEditor,
 } from 'roosterjs-content-model-types';
 
@@ -20,8 +21,8 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
     switch (selection?.type) {
         case 'range':
             editor.formatContentModel(
-                model => {
-                    return handleTab(model, rawEvent);
+                (model, context) => {
+                    return handleTab(model, rawEvent, context);
                 },
                 {
                     apiName: 'handleTabKey',
@@ -49,13 +50,18 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
  * - If it is a paragraph, call handleTabOnParagraph to handle the tab key.
  * - If it is a list item, call handleTabOnList to handle the tab key.
  */
-function handleTab(model: ContentModelDocument, rawEvent: KeyboardEvent) {
+function handleTab(
+    model: ContentModelDocument,
+    rawEvent: KeyboardEvent,
+    context: FormatContentModelContext
+) {
     const blocks = getOperationalBlocks<ContentModelListItem | ContentModelTableCell>(
         model,
         ['ListItem', 'TableCell'],
         []
     );
     const block = blocks.length > 0 ? blocks[0].block : undefined;
+
     if (blocks.length > 1) {
         setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
         rawEvent.preventDefault();
@@ -63,9 +69,9 @@ function handleTab(model: ContentModelDocument, rawEvent: KeyboardEvent) {
     } else if (isBlockGroupOfType<ContentModelTableCell>(block, 'TableCell')) {
         return handleTabOnTableCell(model, block, rawEvent);
     } else if (block?.blockType === 'Paragraph') {
-        return handleTabOnParagraph(model, block, rawEvent);
+        return handleTabOnParagraph(model, block, rawEvent, context);
     } else if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-        return handleTabOnList(model, block, rawEvent);
+        return handleTabOnList(model, block, rawEvent, context);
     }
     return false;
 }
