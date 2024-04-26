@@ -34,12 +34,6 @@ export class TableEditPluginCode extends SimplePluginCode {
     }
 }
 
-export class CustomReplaceCode extends SimplePluginCode {
-    constructor() {
-        super('CustomReplace', 'roosterjsLegacy');
-    }
-}
-
 export class ImageEditPluginCode extends SimplePluginCode {
     constructor() {
         super('ImageEditPlugin');

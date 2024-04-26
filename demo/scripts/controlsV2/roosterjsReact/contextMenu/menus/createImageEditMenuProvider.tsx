@@ -85,7 +85,7 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         menuNameImageRotateLeft: 'Left',
         menuNameImageRotateRight: 'Right',
     },
-    shouldShow: (editor, node, imageEditor) => {
+    shouldShow: (_, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('rotate') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)
@@ -110,7 +110,7 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
         menuNameImageRotateFlipHorizontally: 'Flip Horizontally',
         menuNameImageRotateFlipVertically: 'Flip Vertically',
     },
-    shouldShow: (editor, node, imageEditor) => {
+    shouldShow: (_, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('rotate') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)
@@ -131,7 +131,7 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
-    shouldShow: (editor, node, imageEditor) => {
+    shouldShow: (_, node, imageEditor) => {
         return (
             !!imageEditor?.isOperationAllowed('crop') &&
             imageEditor.canRegenerateImage(node as HTMLImageElement)

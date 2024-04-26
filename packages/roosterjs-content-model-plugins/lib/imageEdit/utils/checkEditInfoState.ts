@@ -24,18 +24,18 @@ const ALL_KEYS = [...ROTATE_CROP_KEYS, ...RESIZE_KEYS];
  * State of an edit info object for image editing.
  * It is returned by checkEditInfoState() function
  */
-export enum ImageEditInfoState {
+export type ImageEditInfoState =
     /**
      * Invalid edit info. It means the given edit info object is either null,
      * or not all its member are of correct type
      */
-    Invalid,
+    | 'Invalid'
 
     /**
      * The edit info shows that it is only potentially edited by resizing action.
      * Image is not rotated or cropped, or event not changed at all.
      */
-    ResizeOnly,
+    | 'ResizeOnly'
 
     /**
      * When compare with another edit info, this value can be returned when both current
@@ -43,15 +43,14 @@ export enum ImageEditInfoState {
      * percentages. So that they can share the same image src, only width and height
      * need to be adjusted.
      */
-    SameWithLast,
+    | 'SameWithLast'
 
     /**
      * When this value is returned, it means the image is edited by either cropping or
      * rotation, or both. Image source can't be reused, need to generate a new image src
      * data uri.
      */
-    FullyChanged,
-}
+    | 'FullyChanged';
 
 /**
  * @internal
@@ -68,14 +67,14 @@ export default function checkEditInfoState(
     compareTo?: ImageMetadataFormat
 ): ImageEditInfoState {
     if (!editInfo || !editInfo.src || ALL_KEYS.some(key => !isNumber(editInfo[key]))) {
-        return ImageEditInfoState.Invalid;
+        return 'Invalid';
     } else if (
         ROTATE_CROP_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
         !editInfo.flippedHorizontal &&
         !editInfo.flippedVertical &&
         (!compareTo || (compareTo && editInfo.angleRad === compareTo.angleRad))
     ) {
-        return ImageEditInfoState.ResizeOnly;
+        return 'ResizeOnly';
     } else if (
         compareTo &&
         ROTATE_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
@@ -84,9 +83,9 @@ export default function checkEditInfoState(
         compareTo.flippedHorizontal === editInfo.flippedHorizontal &&
         compareTo.flippedVertical === editInfo.flippedVertical
     ) {
-        return ImageEditInfoState.SameWithLast;
+        return 'SameWithLast';
     } else {
-        return ImageEditInfoState.FullyChanged;
+        return 'FullyChanged';
     }
 }
 

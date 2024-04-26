@@ -1,4 +1,4 @@
-import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
+import checkEditInfoState from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
 import getGeneratedImageSize from './generateImageSize';
 import { updateImageEditInfo } from './updateImageEditInfo';
@@ -32,16 +32,16 @@ export function applyChange(
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {
-        case ImageEditInfoState.ResizeOnly:
+        case 'ResizeOnly':
             // For resize only case, no need to generate a new image, just reuse the original one
             newSrc = editInfo.src || '';
             break;
-        case ImageEditInfoState.SameWithLast:
+        case 'SameWithLast':
             // For SameWithLast case, image may be resized but the content is still the same with last one,
             // so no need to create a new image, but just reuse last one
             newSrc = previousSrc;
             break;
-        case ImageEditInfoState.FullyChanged:
+        case 'FullyChanged':
             // For other cases (cropped, rotated, ...) we need to create a new image to reflect the change
             newSrc = generateDataURL(editingImage ?? image, editInfo);
             break;
@@ -78,7 +78,7 @@ export function applyChange(
     }
     image.src = newSrc;
 
-    if (wasResizedOrCropped || state == ImageEditInfoState.FullyChanged) {
+    if (wasResizedOrCropped || state == 'FullyChanged') {
         image.width = generatedImageSize.targetWidth;
         image.height = generatedImageSize.targetHeight;
         // Remove width/height style so that it won't affect the image size, since style width/height has higher priority

@@ -11,6 +11,7 @@ const NumberDefinition = createNumberDefinition(true);
 const BooleanDefinition = createBooleanDefinition(true);
 
 /**
+ * @internal
  * Definition of ImageMetadataFormat
  */
 export const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
