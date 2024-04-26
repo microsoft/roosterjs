@@ -277,9 +277,7 @@ function onDragEnd(
         }
 
         const finalRange = editor.getDOMSelection();
-        console.log(finalRange, initValue?.initialSelection);
-        debugger;
-        if (initValue && finalRange?.type == 'range' && initValue?.initialSelection != finalRange) {
+        if (initValue && finalRange?.type == 'range') {
             // Move table to new position
             finalRange.range.collapse(true);
             let insertionSuccess: boolean = false;
