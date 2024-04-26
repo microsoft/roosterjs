@@ -126,10 +126,9 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
         onTableEditorCreated?: OnTableEditorCreatedCallback,
-        forceMobile?: boolean | undefined,
-        container?: HTMLElement
+        forceMobile?: boolean | undefined
     ) {
-        super(div, context, onSubmit, handler, zoomScale);
+        super(div, context, onSubmit, handler, zoomScale, forceMobile);
         this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 

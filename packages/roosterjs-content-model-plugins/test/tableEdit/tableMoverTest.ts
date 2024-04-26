@@ -267,6 +267,8 @@ describe('Table Mover Tests', () => {
             editor,
             false,
             () => {},
+            () => {},
+            () => false,
             node,
             undefined,
             onTableEditorCreatedCallback
