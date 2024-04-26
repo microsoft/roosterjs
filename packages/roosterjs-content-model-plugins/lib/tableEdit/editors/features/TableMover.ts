@@ -1,6 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
-import { DragAndDropHandler } from 'roosterjs-content-model-plugins/lib/pluginUtils/DragAndDrop/DragAndDropHandler';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
     createContentModelDocument,
     createSelectionMarker,
