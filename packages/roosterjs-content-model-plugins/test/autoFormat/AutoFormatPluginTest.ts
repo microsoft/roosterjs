@@ -323,7 +323,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, true, {
                 autoLink: true,
             });
         });
@@ -333,7 +333,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoLink: false,
             });
         });
@@ -347,7 +347,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     inputType: 'insertText',
                 } as any,
             };
-            runTest(event, {
+            runTest(event, false, {
                 autoLink: true,
             });
         });
