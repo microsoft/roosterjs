@@ -4,8 +4,7 @@ import { DOMHelper } from 'roosterjs-content-model-types';
 describe('DOMHelperImpl', () => {
     describe('isNodeInEditor', () => {
         it('isNodeInEditor', () => {
-            const mockedResult = 'RESULT' as any;
-            const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
+            const containsSpy = jasmine.createSpy('contains').and.returnValue(true);
             const mockedDiv = {
                 contains: containsSpy,
             } as any;
@@ -14,7 +13,7 @@ describe('DOMHelperImpl', () => {
 
             const result = domHelper.isNodeInEditor(mockedNode);
 
-            expect(result).toBe(mockedResult);
+            expect(result).toBeTrue();
             expect(containsSpy).toHaveBeenCalledWith(mockedNode);
         });
 
