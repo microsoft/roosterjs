@@ -221,9 +221,13 @@ describe('setDOMSelection', () => {
 
     describe('Image selection', () => {
         let mockedImage: HTMLImageElement;
-
         beforeEach(() => {
             mockedImage = {
+                parentElement: {
+                    ownerDocument: doc,
+                    firstElementChild: mockedImage,
+                    lastElementChild: mockedImage,
+                },
                 ownerDocument: doc,
             } as any;
         });
@@ -274,7 +278,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0']
+                ['span:has(>img#image_0)']
             );
         });
 
@@ -326,7 +330,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0_0']
+                ['span:has(>img#image_0_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -385,7 +389,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:red!important;',
-                ['#image_0']
+                ['span:has(>img#image_0_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -439,7 +443,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0']
+                ['span:has(>img#image_0_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,

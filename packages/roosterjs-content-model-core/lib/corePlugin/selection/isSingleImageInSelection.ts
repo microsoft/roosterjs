@@ -5,7 +5,6 @@ import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
  */
 export function isSingleImageInSelection(selection: Selection | Range): HTMLImageElement | null {
     const { startNode, endNode, startOffset, endOffset } = getProps(selection);
-
     const max = Math.max(startOffset, endOffset);
     const min = Math.min(startOffset, endOffset);
 
@@ -17,6 +16,7 @@ export function isSingleImageInSelection(selection: Selection | Range): HTMLImag
     }
     return null;
 }
+
 function getProps(
     selection: Selection | Range
 ): { startNode: Node | null; endNode: Node | null; startOffset: number; endOffset: number } {
