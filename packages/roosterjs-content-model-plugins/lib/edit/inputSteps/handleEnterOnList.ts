@@ -1,13 +1,10 @@
 import { getListAnnounceData } from 'roosterjs-content-model-api';
+import { splitParagraph } from '../utils/splitParagraph';
 import {
-    createBr,
     createListItem,
     createListLevel,
-    createParagraph,
     createSelectionMarker,
     normalizeContentModel,
-    normalizeParagraph,
-    setParagraphNotImplicit,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
 } from 'roosterjs-content-model-dom';
@@ -15,7 +12,6 @@ import type {
     ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
-    InsertPoint,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -23,25 +19,35 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
-    const { deleteResult } = context;
-    if (
-        deleteResult == 'nothingToDelete' ||
-        deleteResult == 'notDeleted' ||
-        deleteResult == 'range'
-    ) {
-        const { insertPoint, formatContext } = context;
+    const { deleteResult, insertPoint } = context;
+
+    if (deleteResult == 'notDeleted' || deleteResult == 'nothingToDelete') {
         const { path } = insertPoint;
-        const rawEvent = formatContext?.rawEvent;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
-        const listItem = path[index];
         const listParent = path[index + 1];
+        const parentBlock = path[index];
 
-        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
+        if (parentBlock?.blockGroupType === 'ListItem' && listParent) {
+            let listItem: ContentModelListItem = parentBlock;
+
+            if (isEmptyListItem(listItem)) {
+                listItem.levels.pop();
+            } else {
+                listItem = createNewListItem(context, listItem, listParent);
+
+                if (context.formatContext) {
+                    context.formatContext.announceData = getListAnnounceData([
+                        listItem,
+                        ...path.slice(index + 1),
+                    ]);
+                }
+            }
+
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
 
-            if (deleteResult == 'range' && nextBlock) {
+            if (nextBlock) {
                 normalizeContentModel(listParent);
 
                 const nextListItem = listParent.blocks[listIndex + 1];
@@ -75,22 +81,8 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
 
                     context.lastParagraph = undefined;
                 }
-            } else if (deleteResult !== 'range') {
-                if (isEmptyListItem(listItem)) {
-                    listItem.levels.pop();
-                } else {
-                    const newListItem = createNewListItem(context, listItem, listParent);
-
-                    if (context.formatContext) {
-                        context.formatContext.announceData = getListAnnounceData([
-                            newListItem,
-                            ...path.slice(index + 1),
-                        ]);
-                    }
-                }
             }
 
-            rawEvent?.preventDefault();
             context.deleteResult = 'range';
         }
     }
@@ -113,7 +105,7 @@ const createNewListItem = (
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
-    const newParagraph = createNewParagraph(insertPoint);
+    const newParagraph = splitParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
     const newListItem = createListItem(levels, insertPoint.marker.format);
@@ -137,31 +129,4 @@ const createNewListLevel = (listItem: ContentModelListItem) => {
             level.dataset
         );
     });
-};
-
-const createNewParagraph = (insertPoint: InsertPoint) => {
-    const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
-        false /*isImplicit*/,
-        paragraph.format,
-        paragraph.segmentFormat
-    );
-
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
-
-    newParagraph.segments.push(...segments);
-
-    setParagraphNotImplicit(paragraph);
-
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
-
-    normalizeParagraph(newParagraph);
-
-    return newParagraph;
 };

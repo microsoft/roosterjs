@@ -1,4 +1,5 @@
 import { keyboardDelete } from './keyboardDelete';
+import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import type {
@@ -104,6 +105,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
+                    keyboardEnter(editor, rawEvent);
+                    break;
+
                 default:
                     keyboardInput(editor, rawEvent);
                     break;

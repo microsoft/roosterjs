@@ -1,13 +1,13 @@
 import {
-    createParagraph,
-    createSelectionMarker,
     unwrapBlock,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    createFormatContainer,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockGroup,
     ContentModelFormatContainer,
+    ContentModelParagraph,
     DeleteSelectionStep,
 } from 'roosterjs-content-model-types';
 
@@ -16,13 +16,10 @@ import type {
  */
 export const deleteEmptyQuote: DeleteSelectionStep = context => {
     const { deleteResult } = context;
-    if (
-        deleteResult == 'nothingToDelete' ||
-        deleteResult == 'notDeleted' ||
-        deleteResult == 'range'
-    ) {
+
+    if (deleteResult == 'nothingToDelete' || deleteResult == 'notDeleted') {
         const { insertPoint, formatContext } = context;
-        const { path } = insertPoint;
+        const { path, paragraph } = insertPoint;
         const rawEvent = formatContext?.rawEvent as KeyboardEvent;
         const index = getClosestAncestorBlockGroupIndex(
             path,
@@ -35,6 +32,7 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
             const parent = path[index + 1];
             const quoteBlockIndex = parent.blocks.indexOf(quote);
             const blockQuote = parent.blocks[quoteBlockIndex];
+
             if (
                 isBlockGroupOfType<ContentModelFormatContainer>(blockQuote, 'FormatContainer') &&
                 blockQuote.tagName === 'blockquote'
@@ -43,8 +41,11 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
                     unwrapBlock(parent, blockQuote);
                     rawEvent?.preventDefault();
                     context.deleteResult = 'range';
-                } else if (isSelectionOnEmptyLine(blockQuote) && rawEvent?.key === 'Enter') {
-                    insertNewLine(blockQuote, parent, quoteBlockIndex);
+                } else if (
+                    isSelectionOnEmptyLine(blockQuote, paragraph) &&
+                    rawEvent?.key === 'Enter'
+                ) {
+                    insertNewLine(blockQuote, parent, quoteBlockIndex, paragraph);
                     rawEvent?.preventDefault();
                     context.deleteResult = 'range';
                 }
@@ -63,25 +64,45 @@ const isEmptyQuote = (quote: ContentModelFormatContainer) => {
     );
 };
 
-const isSelectionOnEmptyLine = (quote: ContentModelFormatContainer) => {
-    const quoteLength = quote.blocks.length;
-    const lastParagraph = quote.blocks[quoteLength - 1];
-    if (lastParagraph && lastParagraph.blockType === 'Paragraph') {
-        return lastParagraph.segments.every(
+const isSelectionOnEmptyLine = (
+    quote: ContentModelFormatContainer,
+    paragraph: ContentModelParagraph
+) => {
+    const paraIndex = quote.blocks.indexOf(paragraph);
+
+    if (paraIndex >= 0) {
+        return paragraph.segments.every(
             s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
         );
+    } else {
+        return false;
     }
 };
 
 const insertNewLine = (
     quote: ContentModelFormatContainer,
     parent: ContentModelBlockGroup,
-    index: number
+    quoteIndex: number,
+    paragraph: ContentModelParagraph
 ) => {
-    const quoteLength = quote.blocks.length;
-    quote.blocks.splice(quoteLength - 1, 1);
-    const marker = createSelectionMarker();
-    const newParagraph = createParagraph(false /* isImplicit */);
-    newParagraph.segments.push(marker);
-    parent.blocks.splice(index + 1, 0, newParagraph);
+    const paraIndex = quote.blocks.indexOf(paragraph);
+
+    if (paraIndex >= 0) {
+        if (paraIndex < quote.blocks.length - 1) {
+            const newQuote = createFormatContainer(quote.tagName, quote.format);
+
+            newQuote.blocks.push(
+                ...quote.blocks.splice(paraIndex + 1, quote.blocks.length - paraIndex - 1)
+            );
+
+            parent.blocks.splice(quoteIndex + 1, 0, newQuote);
+        }
+
+        parent.blocks.splice(quoteIndex + 1, 0, paragraph);
+        quote.blocks.splice(paraIndex, 1);
+
+        if (quote.blocks.length == 0) {
+            parent.blocks.splice(quoteIndex, 0);
+        }
+    }
 };
