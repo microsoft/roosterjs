@@ -28,6 +28,7 @@ export interface WrapperElements {
 export function createImageWrapper(
     editor: IEditor,
     image: HTMLImageElement,
+    imageSpan: HTMLSpanElement,
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
@@ -72,8 +73,8 @@ export function createImageWrapper(
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
-const createShadowSpan = (doc: Document, wrapper: HTMLElement, image: HTMLImageElement) => {
-    const shadowSpan = wrap(doc, image, 'span');
+const createShadowSpan = (doc: Document, wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
+    const shadowSpan = wrap(doc, imageSpan, 'span');
     if (shadowSpan) {
         const shadowRoot = shadowSpan.attachShadow({
             mode: 'open',

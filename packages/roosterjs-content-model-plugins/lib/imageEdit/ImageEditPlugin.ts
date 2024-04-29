@@ -140,11 +140,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         apiOperation?: ImageEditOperation
     ) {
+        const imageSpan = image.parentElement;
+        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
+            return;
+        }
         const model = editor.getContentModelCopy('disconnected' /*mode*/);
         const selectedSegments = getSelectedSegments(model, false /*includeFormatHolder*/);
         if (selectedSegments.length !== 1 || selectedSegments[0].segmentType !== 'Image') {
             return;
         }
+
         this.contentModelImage = selectedSegments[0];
         this.imageEditInfo = updateImageEditInfo(image, this.contentModelImage);
         this.lastSrc = image.getAttribute('src');
@@ -159,6 +164,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         } = createImageWrapper(
             editor,
             image,
+            imageSpan,
             this.options,
             this.imageEditInfo,
             this.imageHTMLOptions,
