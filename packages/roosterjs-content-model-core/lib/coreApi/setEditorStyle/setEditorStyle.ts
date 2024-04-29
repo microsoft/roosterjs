@@ -72,5 +72,6 @@ function buildSelectors(rootSelector: string, subSelectors: string[], maxLen: nu
     });
 
     result.push(stringBuilder.join(','));
+
     return result;
 }
