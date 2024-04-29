@@ -44,7 +44,7 @@ export const setEditorStyle: SetEditorStyle = (
                       subSelectors,
                       maxRuleLength - cssRule.length - 3 // minus 3 for " {}"
                   );
-            console.log();
+
             selectors.forEach(selector => {
                 sheet.insertRule(`${selector} {${cssRule}}`);
             });

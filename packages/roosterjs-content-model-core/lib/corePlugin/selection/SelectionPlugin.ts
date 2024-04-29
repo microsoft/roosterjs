@@ -677,8 +677,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
 function ensureImageHasSpanParent(image: HTMLImageElement) {
     const parent = image.parentElement;
-    if (!parent) return false;
     if (
+        parent &&
         isNodeOfType(parent, 'ELEMENT_NODE') &&
         isElementOfType(parent, 'span') &&
         parent.firstElementChild == image &&
@@ -690,7 +690,7 @@ function ensureImageHasSpanParent(image: HTMLImageElement) {
     const span = image.ownerDocument.createElement('span');
     span.appendChild(image);
     parent?.appendChild(span);
-    return true;
+    return !!parent;
 }
 
 /**
