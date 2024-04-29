@@ -219,7 +219,7 @@ describe('ShortcutPlugin', () => {
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
         });
 
-        it('redo 2', () => {
+        it('redo 3', () => {
             const apiSpy = spyOn(redo, 'redo');
             const plugin = new ShortcutPlugin();
             const event: PluginEvent = {
@@ -231,12 +231,12 @@ describe('ShortcutPlugin', () => {
 
             const exclusively = plugin.willHandleEventExclusively(event);
 
-            expect(exclusively).toBeFalse();
-            expect(event.eventDataCache!.__ShortcutCommandCache).toBeUndefined();
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).not.toHaveBeenCalled();
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
         });
 
         it('bullet list', () => {

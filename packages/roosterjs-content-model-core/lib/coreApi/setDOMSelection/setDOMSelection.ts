@@ -48,7 +48,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     `outline-style:auto!important; outline-color:${
                         core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
                     }!important;`,
-                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                    [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
                 );
                 core.api.setEditorStyle(
                     core,

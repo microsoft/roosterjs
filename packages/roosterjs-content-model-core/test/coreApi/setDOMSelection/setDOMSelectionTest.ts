@@ -221,9 +221,13 @@ describe('setDOMSelection', () => {
 
     describe('Image selection', () => {
         let mockedImage: HTMLImageElement;
-
         beforeEach(() => {
             mockedImage = {
+                parentElement: {
+                    ownerDocument: doc,
+                    firstElementChild: mockedImage,
+                    lastElementChild: mockedImage,
+                },
                 ownerDocument: doc,
             } as any;
         });
@@ -274,65 +278,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0']
-            );
-        });
-
-        it('image selection with duplicated id', () => {
-            const mockedSelection = {
-                type: 'image',
-                image: mockedImage,
-            } as any;
-            const selectNodeSpy = jasmine.createSpy('selectNode');
-            const collapseSpy = jasmine.createSpy('collapse');
-            const mockedRange = {
-                selectNode: selectNodeSpy,
-                collapse: collapseSpy,
-            };
-
-            mockedImage.id = 'image_0';
-            createRangeSpy.and.returnValue(mockedRange);
-
-            querySelectorAllSpy.and.callFake(selector => {
-                return selector == '#image_0' ? ['', ''] : [''];
-            });
-            hasFocusSpy.and.returnValue(false);
-
-            setDOMSelection(core, mockedSelection);
-
-            expect(core.selection).toEqual({
-                skipReselectOnFocus: undefined,
-                selection: mockedSelection,
-            } as any);
-            expect(triggerEventSpy).toHaveBeenCalledWith(
-                core,
-                {
-                    eventType: 'selectionChanged',
-                    newSelection: mockedSelection,
-                },
-                true
-            );
-            expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
-            expect(collapseSpy).not.toHaveBeenCalledWith();
-            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelectionHideSelection',
-                null
-            );
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0_0']
-            );
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelectionHideSelection',
-                'background-color: transparent !important',
-                ['*::selection']
+                ['span:has(>img#image_0)']
             );
         });
 
@@ -385,7 +331,7 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:red!important;',
-                ['#image_0']
+                ['span:has(>img#image_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -439,7 +385,65 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
-                ['#image_0']
+                ['span:has(>img#image_0)']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important',
+                ['*::selection']
+            );
+        });
+
+        it('image selection with duplicated id', () => {
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            mockedImage.id = 'image_0';
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.callFake(selector => {
+                return selector == '#image_0' ? ['', ''] : [''];
+            });
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['span:has(>img#image_0_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,

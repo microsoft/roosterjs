@@ -8,7 +8,8 @@ export function removeUnnecessarySpan(root: Node) {
         if (
             isNodeOfType(child, 'ELEMENT_NODE') &&
             child.tagName == 'SPAN' &&
-            child.attributes.length == 0
+            child.attributes.length == 0 &&
+            !isImageSpan(child)
         ) {
             const node = child;
             let refNode = child.nextSibling;
@@ -26,3 +27,10 @@ export function removeUnnecessarySpan(root: Node) {
         }
     }
 }
+
+const isImageSpan = (child: HTMLElement) => {
+    return (
+        child?.firstElementChild?.tagName == 'IMG' &&
+        child.firstElementChild == child.lastElementChild
+    );
+};
