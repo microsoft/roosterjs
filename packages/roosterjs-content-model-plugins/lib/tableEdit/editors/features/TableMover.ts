@@ -302,38 +302,33 @@ function onDragEnd(
                     if (
                         SPArray.length == 1 &&
                         SPArray[0][0].segmentType == 'SelectionMarker' &&
-                        SPArray[0][1] != null
+                        SPArray[0][1] != null &&
+                        initValue.cmTable
                     ) {
-                        const paragraph = SPArray[0][1];
-                        paragraph.segments.forEach(segment => {
-                            if (segment == SPArray[0][0] && initValue.cmTable) {
-                                const doc = createContentModelDocument();
-                                doc.blocks.push(initValue.cmTable);
-                                insertionSuccess = !!mergeModel(model, doc, context, {
-                                    mergeFormat: 'none',
-                                });
-                                context.skipUndoSnapshot = true;
-                                // Add selection marker to the first cell of the table
-                                const [finalTable] = getFirstSelectedTable(model);
+                        const doc = createContentModelDocument();
+                        doc.blocks.push(initValue.cmTable);
+                        insertionSuccess = !!mergeModel(model, doc, context, {
+                            mergeFormat: 'none',
+                        });
+                        context.skipUndoSnapshot = true;
 
-                                if (finalTable) {
-                                    setSelection(model);
-                                    const FirstCell = finalTable.rows[0].cells[0];
+                        if (insertionSuccess) {
+                            // Add selection marker to the first cell of the table
+                            const [finalTable] = getFirstSelectedTable(model);
+                            if (finalTable) {
+                                setSelection(model);
+                                const FirstCell = finalTable.rows[0].cells[0];
 
-                                    const markerParagraph = FirstCell?.blocks[0];
-                                    if (markerParagraph?.blockType == 'Paragraph') {
-                                        const marker = createSelectionMarker(model.format);
+                                const markerParagraph = FirstCell?.blocks[0];
+                                if (markerParagraph?.blockType == 'Paragraph') {
+                                    const marker = createSelectionMarker(model.format);
 
-                                        markerParagraph.segments.unshift(marker);
-                                        setParagraphNotImplicit(markerParagraph);
-                                        setSelection(FirstCell, marker);
-                                    }
-                                } else {
-                                    // Restore initial selection
-                                    editor.setDOMSelection(initValue.initialSelection);
+                                    markerParagraph.segments.unshift(marker);
+                                    setParagraphNotImplicit(markerParagraph);
+                                    setSelection(FirstCell, marker);
                                 }
                             }
-                        });
+                        }
                     }
                     return true;
                 },
