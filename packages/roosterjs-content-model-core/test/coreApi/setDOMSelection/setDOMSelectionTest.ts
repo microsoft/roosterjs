@@ -14,6 +14,8 @@ describe('setDOMSelection', () => {
     let doc: Document;
     let contentDiv: HTMLDivElement;
     let mockedRange = 'RANGE' as any;
+    let createElementSpy: jasmine.Spy;
+    let appendChildSpy: jasmine.Spy;
 
     beforeEach(() => {
         querySelectorAllSpy = jasmine.createSpy('querySelectorAll');
@@ -27,11 +29,16 @@ describe('setDOMSelection', () => {
         createRangeSpy = jasmine.createSpy('createRange');
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         containsSpy = jasmine.createSpy('contains').and.returnValue(true);
+        appendChildSpy = jasmine.createSpy('appendChild');
+        createElementSpy = jasmine.createSpy('createElement').and.returnValue({
+            appendChild: appendChildSpy,
+        });
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
             createRange: createRangeSpy,
             contains: containsSpy,
+            createElement: createElementSpy,
         } as any;
         contentDiv = {
             ownerDocument: doc,
@@ -227,6 +234,7 @@ describe('setDOMSelection', () => {
                     ownerDocument: doc,
                     firstElementChild: mockedImage,
                     lastElementChild: mockedImage,
+                    appendChild: appendChildSpy,
                 },
                 ownerDocument: doc,
             } as any;
@@ -269,6 +277,7 @@ describe('setDOMSelection', () => {
             expect(mockedImage.id).toBe('image_0');
             expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
@@ -279,6 +288,12 @@ describe('setDOMSelection', () => {
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
                 ['span:has(>img#image_0)']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
             );
         });
 
@@ -336,7 +351,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
-                'background-color: transparent !important',
+                'background-color: transparent !important;',
                 ['*::selection']
             );
         });
@@ -383,6 +398,11 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
+                '_DOMSelectionHideSelection',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
                 '_DOMSelection',
                 'outline-style:auto!important; outline-color:#DB626C!important;',
                 ['span:has(>img#image_0)']
@@ -390,7 +410,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
-                'background-color: transparent !important',
+                'background-color: transparent !important;',
                 ['*::selection']
             );
         });
@@ -434,6 +454,7 @@ describe('setDOMSelection', () => {
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
             expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
@@ -448,7 +469,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
-                'background-color: transparent !important',
+                'background-color: transparent !important;',
                 ['*::selection']
             );
         });
