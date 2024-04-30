@@ -660,7 +660,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private trySelectSingleImage(selection: RangeSelection) {
         if (!selection.range.collapsed) {
             const image = isSingleImageInSelection(selection.range);
-            if (image) {
+            const imageSpan = image?.parentNode;
+
+            if (image && imageSpan && ensureImageHasSpanParent(image)) {
                 this.setDOMSelection(
                     {
                         type: 'image',
@@ -671,6 +673,24 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             }
         }
     }
+}
+
+function ensureImageHasSpanParent(image: HTMLImageElement) {
+    const parent = image.parentElement;
+    if (
+        parent &&
+        isNodeOfType(parent, 'ELEMENT_NODE') &&
+        isElementOfType(parent, 'span') &&
+        parent.firstElementChild == image &&
+        parent.lastElementChild == image
+    ) {
+        return true;
+    }
+
+    const span = image.ownerDocument.createElement('span');
+    span.appendChild(image);
+    parent?.appendChild(span);
+    return !!parent;
 }
 
 /**

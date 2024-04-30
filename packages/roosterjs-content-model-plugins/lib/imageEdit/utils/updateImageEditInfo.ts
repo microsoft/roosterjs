@@ -1,16 +1,21 @@
-import { updateImageMetadata } from 'roosterjs-content-model-dom';
-import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import { getSelectedSegments, updateImageMetadata } from 'roosterjs-content-model-dom';
+import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function updateImageEditInfo(
+    editor: IEditor,
     image: HTMLImageElement,
-    contentModelImage: ContentModelImage,
     newImageMetadata?: ImageMetadataFormat | null
 ): ImageMetadataFormat {
+    const model = editor.getContentModelCopy('disconnected' /*mode*/);
+    const selectedSegments = getSelectedSegments(model, false /*includeFormatHolder*/);
+    if (selectedSegments.length !== 1 || selectedSegments[0].segmentType !== 'Image') {
+        return getInitialEditInfo(image);
+    }
     const imageInfo = updateImageMetadata(
-        contentModelImage,
+        selectedSegments[0],
         newImageMetadata !== undefined
             ? format => {
                   format = newImageMetadata;

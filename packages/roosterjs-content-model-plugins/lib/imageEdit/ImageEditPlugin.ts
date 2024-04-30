@@ -6,23 +6,17 @@ import { Cropper } from './Cropper/cropperContext';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { isElementOfType, isNodeOfType, unwrap, wrap } from 'roosterjs-content-model-dom';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateImageEditInfo } from './utils/updateImageEditInfo';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
-import {
-    getSelectedSegments,
-    isElementOfType,
-    isNodeOfType,
-    unwrap,
-} from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
-    ContentModelImage,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -65,7 +59,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private rotators: HTMLDivElement[] = [];
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
-    private contentModelImage: ContentModelImage | null = null;
+    private disposer: (() => void) | null = null;
 
     constructor(private options: ImageEditOptions = DefaultOptions) {}
 
@@ -84,6 +78,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.disposer = editor.attachDomEvent({
+            blur: {
+                beforeDispatch: (e: Event) => {
+                    this.removeImageWrapper(editor, this.dndHelpers);
+                },
+            },
+        });
     }
 
     /**
@@ -94,6 +95,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     dispose() {
         this.editor = null;
         this.cleanInfo();
+        if (this.disposer) {
+            this.disposer();
+            this.disposer = null;
+        }
     }
 
     /**
@@ -144,14 +149,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
             return;
         }
-        const model = editor.getContentModelCopy('disconnected' /*mode*/);
-        const selectedSegments = getSelectedSegments(model, false /*includeFormatHolder*/);
-        if (selectedSegments.length !== 1 || selectedSegments[0].segmentType !== 'Image') {
-            return;
-        }
 
-        this.contentModelImage = selectedSegments[0];
-        this.imageEditInfo = updateImageEditInfo(image, this.contentModelImage);
+        this.imageEditInfo = updateImageEditInfo(editor, image);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const {
@@ -180,10 +179,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
-        editor.setDOMSelection({
-            type: 'image',
-            image: image,
-        });
+        editor.setEditorStyle('_DOMSelection', null);
     }
 
     public startRotateAndResize(
@@ -408,24 +404,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.resizers = [];
         this.rotators = [];
         this.croppers = [];
-        this.contentModelImage = null;
     }
 
     private removeImageWrapper(
         editor: IEditor,
         resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
     ) {
-        if (
-            this.lastSrc &&
-            this.selectedImage &&
-            this.imageEditInfo &&
-            this.clonedImage &&
-            this.contentModelImage
-        ) {
+        if (this.lastSrc && this.selectedImage && this.imageEditInfo && this.clonedImage) {
             applyChange(
                 editor,
                 this.selectedImage,
-                this.contentModelImage,
                 this.imageEditInfo,
                 this.lastSrc,
                 this.wasImageResized || this.isCropMode,
@@ -439,15 +427,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
         resizeHelpers.forEach(helper => helper.dispose());
         this.cleanInfo();
-        return this.getImageWrappedImage(image);
+        return this.getImageWrappedImage(editor.getDocument(), image);
     }
 
-    private getImageWrappedImage(node: Node | null): HTMLImageElement | null {
+    private getImageWrappedImage(doc: Document, node: Node | null): HTMLImageElement | null {
         if (node && isNodeOfType(node, 'ELEMENT_NODE')) {
             if (isElementOfType(node, 'img')) {
+                wrap(doc, node, 'span');
                 return node;
             } else if (node.firstChild && node.childElementCount === 1) {
-                return this.getImageWrappedImage(node.firstChild);
+                return this.getImageWrappedImage(doc, node.firstChild);
             }
             return null;
         }
