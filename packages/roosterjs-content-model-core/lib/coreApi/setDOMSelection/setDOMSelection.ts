@@ -7,6 +7,7 @@ import {
     isNodeOfType,
     parseTableCells,
     toArray,
+    wrap,
 } from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
@@ -44,14 +45,12 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     try {
         switch (selection?.type) {
             case 'image':
-                const image = selection.image;
+                const image = ensureImageHasSpanParent(selection.image);
 
-                const spanImage = ensureImageHasSpanParent(image);
-                if (!spanImage) {
-                    return;
-                }
-
-                core.selection.selection = selection;
+                core.selection.selection = {
+                    type: 'image',
+                    image,
+                };
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
@@ -242,22 +241,19 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
     }
 }
 
-function ensureImageHasSpanParent(image: HTMLImageElement) {
+function ensureImageHasSpanParent(image: HTMLImageElement): HTMLImageElement {
     const parent = image.parentElement;
 
     if (
         parent &&
         isNodeOfType(parent, 'ELEMENT_NODE') &&
         isElementOfType(parent, 'span') &&
-        parent.firstElementChild == image &&
-        parent.lastElementChild == image &&
-        !parent.textContent
+        parent.firstChild == image &&
+        parent.lastChild == image
     ) {
-        return parent;
+        return image;
     }
 
-    const span = image.ownerDocument.createElement('span');
-    span.appendChild(image);
-    parent?.appendChild(span);
-    return parent;
+    wrap(image.ownerDocument, image, 'span');
+    return image;
 }
