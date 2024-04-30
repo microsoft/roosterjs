@@ -38,10 +38,12 @@ function createImageRotateButton(handler: ImageEditor): RibbonButton<'buttonName
             items: directions,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
-        onClick: editor => {
+        onClick: (editor, direction) => {
             const selection = editor.getDOMSelection();
             if (selection.type === 'image' && selection.image) {
-                handler.cropImage(editor, selection.image);
+                const rotateDirection = direction as 'left' | 'right';
+                const rad = degreeToRad(rotateDirection == 'left' ? 270 : 90);
+                handler.rotateImage(editor, selection.image, rad);
             }
         },
     };
@@ -84,4 +86,8 @@ export const createImageEditButtons = (handler: ImageEditor) => {
         createImageRotateButton(handler),
         createImageFlipButton(handler),
     ];
+};
+
+const degreeToRad = (degree: number) => {
+    return degree * (Math.PI / 180);
 };

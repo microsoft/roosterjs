@@ -2,7 +2,11 @@ import { checkEditInfoState } from './checkEditInfoState';
 import { generateDataURL } from './generateDataURL';
 import { getGeneratedImageSize } from './generateImageSize';
 import { updateImageEditInfo } from './updateImageEditInfo';
-import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelImage,
+    IEditor,
+    ImageMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -17,13 +21,14 @@ import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types
 export function applyChange(
     editor: IEditor,
     image: HTMLImageElement,
+    contentModelImage: ContentModelImage,
     editInfo: ImageMetadataFormat,
     previousSrc: string,
     wasResizedOrCropped: boolean,
     editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
-    const initEditInfo = updateImageEditInfo(editor, editingImage ?? image) ?? undefined;
+    const initEditInfo = updateImageEditInfo(contentModelImage, editingImage ?? image) ?? undefined;
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {
@@ -59,11 +64,11 @@ export function applyChange(
     if (newSrc == editInfo.src) {
         // If newSrc is the same with original one, it means there is only size change, but no rotation, no cropping,
         // so we don't need to keep edit info, we can delete it
-        updateImageEditInfo(editor, image, null);
+        updateImageEditInfo(contentModelImage, image, null);
     } else {
         // Otherwise, save the new edit info to the image so that next time when we edit the same image, we know
         // the edit info
-        updateImageEditInfo(editor, image, editInfo);
+        updateImageEditInfo(contentModelImage, image, editInfo);
     }
 
     // Write back the change to image, and set its new size
@@ -72,10 +77,14 @@ export function applyChange(
         return;
     }
     image.src = newSrc;
+    contentModelImage.src = newSrc;
 
     if (wasResizedOrCropped || state == 'FullyChanged') {
         image.width = generatedImageSize.targetWidth;
         image.height = generatedImageSize.targetHeight;
+        contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
+        contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
+
         // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
         image.style.removeProperty('width');
         image.style.removeProperty('height');

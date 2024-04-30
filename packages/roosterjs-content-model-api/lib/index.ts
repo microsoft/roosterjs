@@ -49,6 +49,7 @@ export { formatImageWithContentModel } from './publicApi/utils/formatImageWithCo
 export { formatParagraphWithContentModel } from './publicApi/utils/formatParagraphWithContentModel';
 export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
 export { formatTextSegmentBeforeSelectionMarker } from './publicApi/utils/formatTextSegmentBeforeSelectionMarker';
+export { formatInsertPointWithContentModel } from './publicApi/utils/formatInsertPointWithContentModel';
 
 export { setListType } from './modelApi/list/setListType';
 export { setModelListStyle } from './modelApi/list/setModelListStyle';
