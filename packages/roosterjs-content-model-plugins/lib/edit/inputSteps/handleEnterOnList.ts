@@ -3,8 +3,6 @@ import { splitParagraph } from '../utils/splitParagraph';
 import {
     createListItem,
     createListLevel,
-    createSelectionMarker,
-    normalizeContentModel,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
 } from 'roosterjs-content-model-dom';
@@ -48,38 +46,15 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
             const nextBlock = listParent.blocks[listIndex + 1];
 
             if (nextBlock) {
-                normalizeContentModel(listParent);
-
                 const nextListItem = listParent.blocks[listIndex + 1];
 
                 if (
                     isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
                     nextListItem.levels[0]
                 ) {
-                    nextListItem.levels.forEach((level, index) => {
+                    nextListItem.levels.forEach(level => {
                         level.format.startNumberOverride = undefined;
-                        level.dataset = listItem.levels[index]
-                            ? listItem.levels[index].dataset
-                            : {};
                     });
-
-                    const lastParagraph = listItem.blocks[listItem.blocks.length - 1];
-                    const nextParagraph = nextListItem.blocks[0];
-
-                    if (
-                        nextParagraph.blockType === 'Paragraph' &&
-                        lastParagraph.blockType === 'Paragraph' &&
-                        lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
-                            'SelectionMarker'
-                    ) {
-                        lastParagraph.segments.pop();
-
-                        nextParagraph.segments.unshift(
-                            createSelectionMarker(insertPoint.marker.format)
-                        );
-                    }
-
-                    context.lastParagraph = undefined;
                 }
             }
 
@@ -105,14 +80,18 @@ const createNewListItem = (
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
+    const currentPara = insertPoint.paragraph;
     const newParagraph = splitParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
     const newListItem = createListItem(levels, insertPoint.marker.format);
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
-    context.lastParagraph = newParagraph;
     listParent.blocks.splice(listIndex + 1, 0, newListItem);
+
+    if (context.lastParagraph == currentPara) {
+        context.lastParagraph = newParagraph;
+    }
 
     return newListItem;
 };

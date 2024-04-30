@@ -1,4 +1,5 @@
 import {
+    createBr,
     createParagraph,
     normalizeParagraph,
     setParagraphNotImplicit,
@@ -26,6 +27,10 @@ export function splitParagraph(insertPoint: InsertPoint) {
         paragraph.segments.length - markerIndex
     );
 
+    if (paragraph.segments.length == 0) {
+        paragraph.segments.push(createBr(marker.format));
+    }
+
     newParagraph.segments.push(...segments);
 
     setParagraphNotImplicit(paragraph);
@@ -33,7 +38,6 @@ export function splitParagraph(insertPoint: InsertPoint) {
     insertPoint.paragraph = newParagraph;
 
     normalizeParagraph(paragraph);
-    normalizeParagraph(newParagraph);
 
     return newParagraph;
 }
