@@ -1,12 +1,12 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
     createContentModelDocument,
     createSelectionMarker,
     getFirstSelectedTable,
-    getSelectedSegmentsAndParagraphs,
     isNodeOfType,
     mergeModel,
     normalizeRect,
@@ -274,11 +274,14 @@ function onDragEnd(
     // Remove table outline rectangle
     initValue?.tableRect.remove();
 
+    // Reset cursor
     setTableMoverCursor(editor, false);
 
     if (element == context.div) {
         // Table mover was only clicked, select whole table
         selectWholeTable(table);
+        context.onEnd();
+        return true;
     } else {
         // Check if table was dragged on itself or Check if element is not in editor
         if (
@@ -286,39 +289,49 @@ function onDragEnd(
             !editor.getDOMHelper().isNodeInEditor(element as Node)
         ) {
             editor.setDOMSelection(initValue?.initialSelection ?? null);
-            return cancelMove(context);
+            context.onEnd();
+            return false;
         }
 
-        const finalRange = editor.getDOMSelection();
-        if (initValue && finalRange?.type == 'range') {
-            // Move table to new position
-            finalRange.range.collapse(true);
-            let insertionSuccess: boolean = false;
+        let insertionSuccess: boolean = false;
 
-            // Insert table into content model
-            editor.formatContentModel(
-                (model, context) => {
-                    const SPArray = getSelectedSegmentsAndParagraphs(model, false);
-                    if (
-                        SPArray.length == 1 &&
-                        SPArray[0][0].segmentType == 'SelectionMarker' &&
-                        SPArray[0][1] != null &&
-                        initValue.cmTable
-                    ) {
+        // Get position to insert table
+        const insertPosition = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+        if (insertPosition) {
+            // Move table to new position
+            formatInsertPointWithContentModel(
+                editor,
+                insertPosition,
+                (model, context, ip) => {
+                    // Remove old table if not copying
+                    if (!(event.ctrlKey || event.metaKey)) {
+                        const [oldTable, path] = getFirstSelectedTable(model);
+                        if (oldTable) {
+                            const index = path[0].blocks.indexOf(oldTable);
+                            path[0].blocks.splice(index, 1);
+                        }
+                    }
+                    if (ip && initValue?.cmTable) {
+                        // Guarantee the cm Insertion point is selected
+                        ip.marker.isSelected = true;
+
+                        // Insert new table
                         const doc = createContentModelDocument();
                         doc.blocks.push(initValue.cmTable);
                         insertionSuccess = !!mergeModel(model, doc, context, {
                             mergeFormat: 'none',
+                            insertPosition: ip,
                         });
-                        context.skipUndoSnapshot = true;
 
                         if (insertionSuccess) {
-                            // Add selection marker to the first cell of the table
+                            // After mergeModel, the new table should be selected
                             const [finalTable] = getFirstSelectedTable(model);
                             if (finalTable) {
+                                // Clear current selection
                                 setSelection(model);
-                                const FirstCell = finalTable.rows[0].cells[0];
 
+                                // Add selection marker to the first cell of the table
+                                const FirstCell = finalTable.rows[0].cells[0];
                                 const markerParagraph = FirstCell?.blocks[0];
                                 if (markerParagraph?.blockType == 'Paragraph') {
                                     const marker = createSelectionMarker(model.format);
@@ -329,37 +342,27 @@ function onDragEnd(
                                 }
                             }
                         }
+                        return insertionSuccess;
                     }
-                    return true;
                 },
                 {
-                    apiName: 'TableMover',
+                    // Select first cell of the old table
                     selectionOverride: {
-                        type: 'range',
-                        range: finalRange.range,
-                        isReverted: false,
+                        type: 'table',
+                        firstColumn: 0,
+                        firstRow: 0,
+                        lastColumn: 0,
+                        lastRow: 0,
+                        table: table,
                     },
+                    apiName: 'TableMover',
                 }
             );
-            // Remove old table only if insertion was successful
-            if (insertionSuccess) {
-                if (!(event.ctrlKey || event.metaKey)) {
-                    table.remove();
-                }
-                // Take snapshot after moving table
-                editor.takeSnapshot();
-            }
         } else {
             // No movement, restore initial selection
             editor.setDOMSelection(initValue?.initialSelection ?? null);
         }
         context.onEnd();
-        return true;
+        return insertionSuccess;
     }
-    return false;
-}
-
-function cancelMove(context: TableMoverContext) {
-    context.onEnd();
-    return false;
 }
