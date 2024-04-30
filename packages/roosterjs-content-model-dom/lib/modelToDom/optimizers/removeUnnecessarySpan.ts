@@ -30,7 +30,8 @@ export function removeUnnecessarySpan(root: Node) {
 
 const isImageSpan = (child: HTMLElement) => {
     return (
-        child?.firstElementChild?.tagName == 'IMG' &&
-        child.firstElementChild == child.lastElementChild
+        isNodeOfType(child.firstChild, 'ELEMENT_NODE') &&
+        child.firstChild.tagName == 'IMG' &&
+        child.firstChild == child.lastChild
     );
 };
