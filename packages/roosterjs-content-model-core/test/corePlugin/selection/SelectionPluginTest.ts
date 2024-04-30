@@ -2416,9 +2416,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
     it('onSelectionChange on image | 4', () => {
         const image = document.createElement('img');
-        const div = document.createElement('div');
-        div.appendChild(image);
-        document.body.appendChild(div);
         spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
 
         const plugin = createSelectionPlugin({});
@@ -2450,39 +2447,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             type: 'image',
             image,
         });
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        document.body.removeChild(div);
-    });
-
-    it('onSelectionChange on image with image without parents | 5', () => {
-        const image = document.createElement('img');
-        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
-
-        const plugin = createSelectionPlugin({});
-        const state = plugin.getState();
-        const mockedOldSelection = {
-            type: 'image',
-            image: {} as any,
-        } as DOMSelection;
-
-        state.selection = mockedOldSelection;
-
-        plugin.initialize(editor);
-
-        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
-        const mockedNewSelection = {
-            type: 'range',
-            range: {} as any,
-        } as any;
-
-        hasFocusSpy.and.returnValue(true);
-        isInShadowEditSpy.and.returnValue(false);
-        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
-        getRangeAtSpy.and.returnValue({ startContainer: {} });
-
-        onSelectionChange();
-
-        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });

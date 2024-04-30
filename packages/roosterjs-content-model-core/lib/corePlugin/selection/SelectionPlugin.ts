@@ -660,7 +660,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private trySelectSingleImage(selection: RangeSelection) {
         if (!selection.range.collapsed) {
             const image = isSingleImageInSelection(selection.range);
-
             if (image) {
                 this.setDOMSelection(
                     {
