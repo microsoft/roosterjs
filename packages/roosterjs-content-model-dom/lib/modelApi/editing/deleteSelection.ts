@@ -41,18 +41,16 @@ function isValidDeleteSelectionContext(
 // If we end up with multiple paragraphs impacted, we need to merge them
 function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
     const { insertPoint, deleteResult, lastParagraph, lastTableContext } = context;
-    const prevParagraph = insertPoint?.paragraph;
 
     if (
         insertPoint &&
-        prevParagraph &&
         deleteResult != 'notDeleted' &&
         deleteResult != 'nothingToDelete' &&
         lastParagraph &&
-        lastParagraph != prevParagraph &&
+        lastParagraph != insertPoint.paragraph &&
         lastTableContext == insertPoint.tableContext
     ) {
-        prevParagraph.segments.push(...lastParagraph.segments);
+        insertPoint.paragraph.segments.push(...lastParagraph.segments);
         lastParagraph.segments = [];
     }
 }
