@@ -14,7 +14,7 @@ const styleMap: Record<keyof WatermarkFormat, string> = {
  * A watermark plugin to manage watermark string for roosterjs
  */
 export class WatermarkPlugin implements EditorPlugin {
-    private editor: IEditor | null = null;
+    protected editor: IEditor | null = null;
     private format: WatermarkFormat;
     private isShowing = false;
 
