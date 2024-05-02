@@ -2,7 +2,7 @@ import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { Selectable } from '../selection/Selectable';
+import type { Selectable } from '../common/Selectable';
 
 /**
  * Content Model for general Block element

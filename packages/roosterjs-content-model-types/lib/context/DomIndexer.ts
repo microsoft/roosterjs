@@ -1,9 +1,9 @@
 import type { ReconcileChildListContext } from '../parameter/ReconcileChildListContext';
 import type { CacheSelection } from '../pluginState/CachePluginState';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type { ContentModelParagraph } from '../block/ContentModelParagraph';
-import type { ContentModelSegment } from '../segment/ContentModelSegment';
-import type { ContentModelTable } from '../block/ContentModelTable';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
+import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
 import type { DOMSelection } from '../selection/DOMSelection';
 
 /**

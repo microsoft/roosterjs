@@ -1,4 +1,4 @@
-import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
+import type { TableMetadataFormat } from '../contentModel/format/metadata/TableMetadataFormat';
 import type { ImageFormatState } from './ImageFormatState';
 
 /**

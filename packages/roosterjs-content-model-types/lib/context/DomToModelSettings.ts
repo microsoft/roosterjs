@@ -1,9 +1,9 @@
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
-import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelFormatBase } from '../contentModel/format/ContentModelFormatBase';
+import type { ContentModelFormatMap } from '../contentModel/format/ContentModelFormatMap';
 import type { DomToModelContext } from './DomToModelContext';
 import type { ElementProcessor } from './ElementProcessor';
-import type { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
+import type { FormatHandlerTypeMap, FormatKey } from '../contentModel/format/FormatHandlerTypeMap';
 
 /**
  * A type of Default style map, from tag name string (in upper case) to a static style object
