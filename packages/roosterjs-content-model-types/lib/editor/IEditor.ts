@@ -6,8 +6,8 @@ import type { PluginEventType } from '../event/PluginEventType';
 import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type {

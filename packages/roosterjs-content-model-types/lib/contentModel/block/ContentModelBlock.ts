@@ -1,8 +1,8 @@
 import type { ContentModelDivider } from './ContentModelDivider';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelFormatContainer } from '../group/ContentModelFormatContainer';
-import type { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
-import type { ContentModelListItem } from '../group/ContentModelListItem';
+import type { ContentModelFormatContainer } from '../blockGroup/ContentModelFormatContainer';
+import type { ContentModelGeneralBlock } from '../blockGroup/ContentModelGeneralBlock';
+import type { ContentModelListItem } from '../blockGroup/ContentModelListItem';
 import type { ContentModelParagraph } from './ContentModelParagraph';
 import type { ContentModelTable } from './ContentModelTable';
 

@@ -1,6 +1,6 @@
-import type { ContentModelBlock } from '../block/ContentModelBlock';
-import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock';
+import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
 import type { TableSelectionContext } from '../selection/TableSelectionContext';
 
 /**
