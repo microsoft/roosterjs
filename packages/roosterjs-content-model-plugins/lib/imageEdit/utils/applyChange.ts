@@ -76,12 +76,10 @@ export function applyChange(
     if (!generatedImageSize) {
         return;
     }
-    image.src = newSrc;
+
     contentModelImage.src = newSrc;
 
     if (wasResizedOrCropped || state == 'FullyChanged') {
-        image.width = generatedImageSize.targetWidth;
-        image.height = generatedImageSize.targetHeight;
         contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
         contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
 

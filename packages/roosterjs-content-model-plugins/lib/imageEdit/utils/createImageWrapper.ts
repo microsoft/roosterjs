@@ -1,7 +1,6 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
-import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import type {
     IEditor,
     ImageEditOperation,
@@ -52,7 +51,7 @@ export function createImageWrapper(
     }
     let resizers: HTMLDivElement[] = [];
     if (operation === 'resize' || operation === 'resizeAndRotate') {
-        resizers = createImageResizer(doc, htmlOptions);
+        resizers = createImageResizer(doc);
     }
 
     let croppers: HTMLDivElement[] = [];
@@ -113,7 +112,6 @@ const createWrapper = (
     wrapper.appendChild(imageBox);
     wrapper.appendChild(border);
     wrapper.style.userSelect = 'none';
-    wrapper.className = ImageEditElementClass.ImageWrapper;
 
     if (resizers && resizers?.length > 0) {
         resizers.forEach(resizer => {

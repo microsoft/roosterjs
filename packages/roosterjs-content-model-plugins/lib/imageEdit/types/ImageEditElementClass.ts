@@ -32,9 +32,4 @@ export enum ImageEditElementClass {
      * CSS class name for crop handle
      */
     CropHandle = 'r_cropH',
-
-    /**
-     * CSS class name for image wrapper
-     */
-    ImageWrapper = 'r_wrapper',
 }

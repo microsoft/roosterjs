@@ -15,7 +15,7 @@ import {
  * @internal
  */
 export function createImageCropper(doc: Document) {
-    return getCropHTML()
+    const cropper = getCropHTML()
         .map(data => {
             const cropper = createElement(data, doc);
             if (
@@ -27,6 +27,7 @@ export function createImageCropper(doc: Document) {
             }
         })
         .filter(cropper => !!cropper) as HTMLDivElement[];
+    return cropper;
 }
 
 /**

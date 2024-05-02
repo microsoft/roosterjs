@@ -29,9 +29,9 @@ export function createImageRotator(doc: Document, htmlOptions: ImageHtmlOptions)
 /**
  * @internal
  * Get HTML for rotate elements, including the rotate handle with icon, and a line between the handle and the image
- * EXPORTED FOR TESTING PURPOSES ONLY
+ *
  */
-export function getRotateHTML({
+function getRotateHTML({
     borderColor,
     rotateHandleBackColor,
 }: ImageHtmlOptions): CreateElementData[] {
