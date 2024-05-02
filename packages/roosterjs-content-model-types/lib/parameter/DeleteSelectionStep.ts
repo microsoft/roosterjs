@@ -1,4 +1,4 @@
-import type { ContentModelParagraph } from '../block/ContentModelParagraph';
+import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { DeleteResult } from '../enum/DeleteResult';
 import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { InsertPoint } from '../selection/InsertPoint';

@@ -1,10 +1,10 @@
 import type { TableCellMetadataFormat } from '../format/metadata/TableCellMetadataFormat';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import type { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
-import type { Selectable } from '../selection/Selectable';
+import type { Selectable } from '../common/Selectable';
 
 /**
  * Content Model of Table Cell

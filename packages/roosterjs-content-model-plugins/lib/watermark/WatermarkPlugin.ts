@@ -22,7 +22,7 @@ export class WatermarkPlugin implements EditorPlugin {
      * Create an instance of Watermark plugin
      * @param watermark The watermark string
      */
-    constructor(private watermark: string, format?: WatermarkFormat) {
+    constructor(protected watermark: string, format?: WatermarkFormat) {
         this.format = format || {
             fontSize: '14px',
             textColor: '#AAAAAA',
