@@ -1,5 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import {
     getFirstSelectedTable,
     isNodeOfType,
@@ -8,6 +10,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
 const TABLE_RESIZER_ID = '_Table_Resizer';
@@ -22,7 +25,8 @@ export function createTableResizer(
     onStart: () => void,
     onEnd: () => false,
     contentDiv?: EventTarget | null,
-    anchorContainer?: HTMLElement
+    anchorContainer?: HTMLElement,
+    onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -60,7 +64,7 @@ export function createTableResizer(
 
     setDivPosition(context, div);
 
-    const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
+    const featureHandler = new TableResizer(
         div,
         context,
         hideResizer, // Resizer is hidden while dragging only
@@ -70,10 +74,34 @@ export function createTableResizer(
             onDragEnd,
         },
         zoomScale,
-        editor.getEnvironment().isMobileOrTablet
+        editor.getEnvironment().isMobileOrTablet,
+        onTableEditorCreated
     );
 
     return { node: table, div, featureHandler };
+}
+
+class TableResizer extends DragAndDropHelper<DragAndDropContext, DragAndDropInitValue> {
+    private disposer: undefined | (() => void);
+
+    constructor(
+        trigger: HTMLElement,
+        context: DragAndDropContext,
+        onSubmit: (context: DragAndDropContext, trigger: HTMLElement) => void,
+        handler: DragAndDropHandler<DragAndDropContext, DragAndDropInitValue>,
+        zoomScale: number,
+        forceMobile?: boolean,
+        onTableEditorCreated?: OnTableEditorCreatedCallback
+    ) {
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        this.disposer = onTableEditorCreated?.('TableResizer', trigger);
+    }
+
+    dispose(): void {
+        this.disposer?.();
+        this.disposer = undefined;
+        super.dispose();
+    }
 }
 
 interface DragAndDropContext {
