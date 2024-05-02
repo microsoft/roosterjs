@@ -1,5 +1,5 @@
-import type { ContentModelBlock } from '../block/ContentModelBlock';
-import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock';
+import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 
 /**
  * Represent a pair of parent block group and child block
