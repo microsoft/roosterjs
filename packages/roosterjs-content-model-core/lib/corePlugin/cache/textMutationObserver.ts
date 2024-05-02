@@ -1,11 +1,18 @@
-import type { TextMutationObserver } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    DomIndexer,
+    ReconcileChildListContext,
+    TextMutationObserver,
+} from 'roosterjs-content-model-types';
 
 class TextMutationObserverImpl implements TextMutationObserver {
     private observer: MutationObserver;
 
     constructor(
         private contentDiv: HTMLDivElement,
-        private onMutation: (isTextChangeOnly: boolean) => void
+        private domIndexer: DomIndexer,
+        private onMutation: (isTextChangeOnly: boolean) => void,
+        private onSkipMutation: (newModel: ContentModelDocument) => void
     ) {
         this.observer = new MutationObserver(this.onMutationInternal);
     }
@@ -23,21 +30,66 @@ class TextMutationObserverImpl implements TextMutationObserver {
         this.observer.disconnect();
     }
 
-    flushMutations() {
+    flushMutations(model: ContentModelDocument) {
         const mutations = this.observer.takeRecords();
 
-        this.onMutationInternal(mutations);
+        if (model) {
+            this.onSkipMutation(model);
+        } else {
+            this.onMutationInternal(mutations);
+        }
     }
 
     private onMutationInternal = (mutations: MutationRecord[]) => {
-        const firstTarget = mutations[0]?.target;
+        const context: ReconcileChildListContext = {
+            segIndex: -1,
+        };
+        let canHandle = true;
+        let firstTarget: Node | null = null;
+        let lastTextChangeNode: Node | null = null;
 
-        if (firstTarget) {
-            const isTextChangeOnly = mutations.every(
-                mutation => mutation.type == 'characterData' && mutation.target == firstTarget
-            );
+        for (let i = 0; i < mutations.length && canHandle; i++) {
+            const mutation = mutations[i];
 
-            this.onMutation(isTextChangeOnly);
+            switch (mutation.type) {
+                case 'attributes':
+                    if (mutation.target != this.contentDiv) {
+                        // We cannot handle attributes changes on editor content for now
+                        canHandle = false;
+                    }
+                    break;
+
+                case 'characterData':
+                    if (lastTextChangeNode && lastTextChangeNode != mutation.target) {
+                        // Multiple text nodes got changed, we don't know how to handle it
+                        canHandle = false;
+                    } else {
+                        lastTextChangeNode = mutation.target;
+                        this.onMutation(true /*textOnly*/);
+                    }
+                    break;
+
+                case 'childList':
+                    if (!firstTarget) {
+                        firstTarget = mutation.target;
+                    } else if (firstTarget != mutation.target) {
+                        canHandle = false;
+                    }
+
+                    if (canHandle) {
+                        canHandle = this.domIndexer.reconcileChildList(
+                            mutation.addedNodes,
+                            mutation.removedNodes,
+                            context
+                        );
+                    }
+
+                    break;
+            }
+        }
+
+        if (!canHandle || context.pendingTextNode) {
+            this.onMutation(false /*textOnly*/);
         }
     };
 }
@@ -47,7 +99,9 @@ class TextMutationObserverImpl implements TextMutationObserver {
  */
 export function createTextMutationObserver(
     contentDiv: HTMLDivElement,
-    onMutation: (isTextChangeOnly: boolean) => void
+    domIndexer: DomIndexer,
+    onMutation: (isTextChangeOnly: boolean) => void,
+    onSkipMutation: (newModel: ContentModelDocument) => void
 ): TextMutationObserver {
-    return new TextMutationObserverImpl(contentDiv, onMutation);
+    return new TextMutationObserverImpl(contentDiv, domIndexer, onMutation, onSkipMutation);
 }

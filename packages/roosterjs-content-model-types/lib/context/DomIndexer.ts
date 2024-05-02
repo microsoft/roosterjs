@@ -1,3 +1,4 @@
+import type { ReconcileChildListContext } from '../parameter/ReconcileChildListContext';
 import type { CacheSelection } from '../pluginState/CachePluginState';
 import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -46,5 +47,11 @@ export interface DomIndexer {
         model: ContentModelDocument,
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
+    ) => boolean;
+
+    reconcileChildList: (
+        addedNodes: ArrayLike<Node>,
+        removedNodes: ArrayLike<Node>,
+        context: ReconcileChildListContext
     ) => boolean;
 }

@@ -1,3 +1,5 @@
+import type { ContentModelDocument } from '../group/ContentModelDocument';
+
 /**
  * A wrapper of MutationObserver to observe text change from editor
  */
@@ -15,5 +17,5 @@ export interface TextMutationObserver {
     /**
      * Flush all pending mutations that have not be handled in order to ignore them
      */
-    flushMutations(): void;
+    flushMutations(newModel?: ContentModelDocument): void;
 }

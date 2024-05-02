@@ -1,6 +1,8 @@
+import { EmptySegmentFormat } from './EmptySegmentFormat';
 import {
     createSelectionMarker,
     createText,
+    getObjectKeys,
     isNodeOfType,
     setSelection,
 } from 'roosterjs-content-model-dom';
@@ -9,6 +11,7 @@ import type {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
+    ContentModelSegmentFormat,
     ContentModelSelectionMarker,
     ContentModelTable,
     ContentModelTableRow,
@@ -16,6 +19,7 @@ import type {
     DomIndexer,
     DOMSelection,
     RangeSelectionForCache,
+    ReconcileChildListContext,
     Selectable,
 } from 'roosterjs-content-model-types';
 
@@ -47,6 +51,10 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     );
 }
 
+function getIndexedSegmentItem(node: Node | null): SegmentItem | null {
+    return node && isIndexedSegment(node) ? node.__roosterjsContentModel : null;
+}
+
 function onSegment(
     segmentNode: Node,
     paragraph: ContentModelParagraph,
@@ -67,9 +75,7 @@ function onParagraph(paragraphElement: HTMLElement) {
             if (!previousText) {
                 previousText = child;
             } else {
-                const item = isIndexedSegment(previousText)
-                    ? previousText.__roosterjsContentModel
-                    : undefined;
+                const item = getIndexedSegmentItem(previousText);
 
                 if (item && isIndexedSegment(child)) {
                     item.segments = item.segments.concat(child.__roosterjsContentModel.segments);
@@ -184,9 +190,10 @@ function reconcileNodeSelection(node: Node, offset: number): Selectable | undefi
 
 function insertMarker(node: Node | null, isAfter: boolean): Selectable | undefined {
     let marker: ContentModelSelectionMarker | undefined;
+    const segmentItem = node && getIndexedSegmentItem(node);
 
-    if (node && isIndexedSegment(node)) {
-        const { paragraph, segments } = node.__roosterjsContentModel;
+    if (segmentItem) {
+        const { paragraph, segments } = segmentItem;
         const index = paragraph.segments.indexOf(segments[0]);
 
         if (index >= 0) {
@@ -288,6 +295,135 @@ function reconcileTextSelection(
     return selectable;
 }
 
+function reconcileChildList(
+    addedNodes: ArrayLike<Node>,
+    removedNodes: ArrayLike<Node>,
+    context: ReconcileChildListContext
+): boolean {
+    let canHandle = true;
+
+    // First process added nodes
+    const addedNode = addedNodes[0];
+
+    if (addedNodes.length == 1 && isNodeOfType(addedNode, 'TEXT_NODE')) {
+        canHandle = reconcileAddedNode(addedNode, context);
+    } else if (addedNodes.length > 0) {
+        canHandle = false;
+    }
+
+    // Second, process removed nodes
+    const removedNode = removedNodes[0];
+
+    if (canHandle && removedNodes.length == 1) {
+        canHandle = reconcileRemovedNode(removedNode, context);
+    } else if (removedNodes.length > 0) {
+        canHandle = false;
+    }
+
+    return canHandle;
+}
+
+function reconcileAddedNode(node: Text, context: ReconcileChildListContext): boolean {
+    let segmentItem: SegmentItem | null = null;
+    let index = -1;
+    let existingSegment: ContentModelSegment;
+    const { previousSibling, nextSibling } = node;
+
+    if (
+        (segmentItem = getIndexedSegmentItem(previousSibling)) &&
+        (existingSegment = segmentItem.segments[segmentItem.segments.length - 1]) &&
+        (index = segmentItem.paragraph.segments.indexOf(existingSegment)) >= 0
+    ) {
+        // When we can find indexed segment before current one, use it as the insert index
+        indexNode(segmentItem.paragraph, index + 1, node, existingSegment.format);
+    } else if (
+        (segmentItem = getIndexedSegmentItem(nextSibling)) &&
+        (existingSegment = segmentItem.segments[0]) &&
+        (index = segmentItem.paragraph.segments.indexOf(existingSegment)) >= 0
+    ) {
+        // When we can find indexed segment after current one, use it as the insert index
+        indexNode(segmentItem.paragraph, index, node, existingSegment.format);
+    } else if (context.paragraph && context.segIndex >= 0) {
+        // When there is indexed paragraph from removed nodes, we can use it as the insert index
+        indexNode(context.paragraph, context.segIndex, node, context.format);
+    } else if (context.pendingTextNode === undefined) {
+        // When we can't find the insert index, set current node as pending node
+        // so later we can pick it up when we have enough info when processing removed node
+        // Only do this when pendingTextNode is undefined. If it is null it means there was already a pending node before
+        // and in that case we should return false since we can't handle two pending text node
+        context.pendingTextNode = node;
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
+function reconcileRemovedNode(node: Node, context: ReconcileChildListContext): boolean {
+    let segmentItem: SegmentItem | null = null;
+    let removingSegment: ContentModelSegment;
+
+    if (
+        context.segIndex < 0 &&
+        !context.paragraph && // No previous removed segment or related paragraph found, and
+        (segmentItem = getIndexedSegmentItem(node)) && // The removed node is indexed, and
+        (removingSegment = segmentItem.segments[0]) // There is at least one related segment
+    ) {
+        // Now we can remove the indexed segment from the paragraph, and remember it, later we may need to use it
+        context.format = removingSegment.format;
+        context.paragraph = segmentItem.paragraph;
+        context.segIndex = segmentItem.paragraph.segments.indexOf(segmentItem.segments[0]);
+
+        for (let i = 0; i < segmentItem.segments.length; i++) {
+            const index = segmentItem.paragraph.segments.indexOf(segmentItem.segments[i]);
+
+            if (index >= 0) {
+                segmentItem.paragraph.segments.splice(index, 1);
+            }
+        }
+
+        if (context.pendingTextNode) {
+            // If we have pending text node added but not indexed, do it now
+            indexNode(
+                context.paragraph,
+                context.segIndex,
+                context.pendingTextNode,
+                segmentItem.segments[0].format
+            );
+
+            // Set to null since we have processed it.
+            // Next time we see a pending node we know we have already processed one so it is a situation we cannot handle
+            context.pendingTextNode = null;
+        }
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function indexNode(
+    paragraph: ContentModelParagraph,
+    index: number,
+    textNode: Text,
+    format?: ContentModelSegmentFormat
+) {
+    let copiedFormat = format ? { ...format } : undefined;
+
+    if (copiedFormat) {
+        getObjectKeys(copiedFormat).forEach(key => {
+            if (EmptySegmentFormat[key] === undefined) {
+                delete copiedFormat[key];
+            }
+        });
+    }
+
+    const text = createText(textNode.textContent ?? '', copiedFormat);
+
+    paragraph.segments.splice(index, 0, text);
+    onSegment(textNode, paragraph, [text]);
+}
+
 /**
  * @internal
  * Implementation of DomIndexer
@@ -297,4 +433,5 @@ export const domIndexerImpl: DomIndexer = {
     onParagraph,
     onTable,
     reconcileSelection,
+    reconcileChildList,
 };

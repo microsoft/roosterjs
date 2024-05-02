@@ -1,9 +1,8 @@
-import { getFormatState } from 'roosterjs-content-model-api';
+import { ContentModelFormatState, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { LocalizedStrings, UIUtilities } from 'roosterjs-react';
 import { RibbonButton } from '../type/RibbonButton';
 import type { RibbonPlugin } from '../type/RibbonPlugin';
-import { ContentModelFormatState, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 class RibbonPluginImpl implements RibbonPlugin {
     private editor: IEditor | null = null;
@@ -151,7 +150,7 @@ class RibbonPluginImpl implements RibbonPlugin {
 
     private updateFormat() {
         if (this.editor && this.onFormatChanged) {
-            const newFormatState = getFormatState(this.editor);
+            const newFormatState = {}; // = getFormatState(this.editor);
 
             if (
                 !this.formatState ||

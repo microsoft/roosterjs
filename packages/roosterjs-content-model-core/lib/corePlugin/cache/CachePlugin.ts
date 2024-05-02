@@ -8,6 +8,7 @@ import type {
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    ContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -27,7 +28,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             ? {}
             : {
                   domIndexer: domIndexerImpl,
-                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+                  textMutationObserver: createTextMutationObserver(
+                      contentDiv,
+                      domIndexerImpl,
+                      this.onMutation,
+                      this.onSkipMutation
+                  ),
               };
     }
 
@@ -122,6 +128,13 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
     };
 
+    private onSkipMutation = (newModel: ContentModelDocument) => {
+        if (!this.editor?.isInShadowEdit()) {
+            this.state.cachedModel = newModel;
+            this.state.cachedSelection = undefined;
+        }
+    };
+
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
             this.updateCachedModel(this.editor);
@@ -129,7 +142,9 @@ class CachePlugin implements PluginWithState<CachePluginState> {
     };
 
     private invalidateCache() {
-        if (!this.editor?.isInShadowEdit()) {
+        if (!this.editor?.isInShadowEdit() && this.state.cachedModel) {
+            console.error('Clear cache');
+
             this.state.cachedModel = undefined;
             this.state.cachedSelection = undefined;
         }
@@ -156,9 +171,13 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 this.invalidateCache();
             } else {
                 updateCachedSelection(this.state, newRangeEx);
+
+                console.log('Successfully reconcile' + JSON.stringify(this.state.cachedModel));
             }
         } else {
             this.state.cachedSelection = cachedSelection;
+
+            console.log('Selection not changed');
         }
     }
 }

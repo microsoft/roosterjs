@@ -46,8 +46,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         }
 
         // Clear pending mutations since we will use our latest model object to replace existing cache
-        core.cache.textMutationObserver?.flushMutations();
-        core.cache.cachedModel = model;
+        core.cache.textMutationObserver?.flushMutations(model);
     }
 
     return selection;
