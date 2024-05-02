@@ -2,7 +2,13 @@ import { addRangeToSelection } from './addRangeToSelection';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
-import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
+import {
+    isElementOfType,
+    isNodeOfType,
+    parseTableCells,
+    toArray,
+    wrap,
+} from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,
@@ -18,7 +24,7 @@ const TABLE_ID = 'table';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
 const CARET_CSS_RULE = 'caret-color: transparent';
-const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important';
+const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
 
 /**
@@ -39,16 +45,19 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     try {
         switch (selection?.type) {
             case 'image':
-                const image = selection.image;
+                const image = ensureImageHasSpanParent(selection.image);
 
-                core.selection.selection = selection;
+                core.selection.selection = {
+                    type: 'image',
+                    image,
+                };
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
                     `outline-style:auto!important; outline-color:${
                         core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
                     }!important;`,
-                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                    [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
                 );
                 core.api.setEditorStyle(
                     core,
@@ -230,4 +239,21 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
 
         addRangeToSelection(doc, range, isReverted);
     }
+}
+
+function ensureImageHasSpanParent(image: HTMLImageElement): HTMLImageElement {
+    const parent = image.parentElement;
+
+    if (
+        parent &&
+        isNodeOfType(parent, 'ELEMENT_NODE') &&
+        isElementOfType(parent, 'span') &&
+        parent.firstChild == image &&
+        parent.lastChild == image
+    ) {
+        return image;
+    }
+
+    wrap(image.ownerDocument, image, 'span');
+    return image;
 }

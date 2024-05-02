@@ -53,7 +53,14 @@ export function Rooster(props: RoosterProps) {
     }, [inDarkMode]);
 
     const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
-    return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
+    return (
+        <div
+            ref={editorDiv}
+            tabIndex={0}
+            role="textbox"
+            aria-multiline="true"
+            {...(divProps || {})}></div>
+    );
 }
 
 function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {

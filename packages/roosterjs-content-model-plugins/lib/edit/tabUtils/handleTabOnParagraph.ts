@@ -1,6 +1,10 @@
 import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
-import type { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    ContentModelParagraph,
+    FormatContentModelContext,
+} from 'roosterjs-content-model-types';
 
 const tabSpaces = '    ';
 const space = ' ';
@@ -23,7 +27,8 @@ const space = ' ';
 export function handleTabOnParagraph(
     model: ContentModelDocument,
     paragraph: ContentModelParagraph,
-    rawEvent: KeyboardEvent
+    rawEvent: KeyboardEvent,
+    context?: FormatContentModelContext
 ) {
     const selectedSegments = paragraph.segments.filter(segment => segment.isSelected);
     const isCollapsed =
@@ -39,7 +44,12 @@ export function handleTabOnParagraph(
         ) {
             return false;
         }
-        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
+        setModelIndentation(
+            model,
+            rawEvent.shiftKey ? 'outdent' : 'indent',
+            undefined /*length*/,
+            context
+        );
     } else {
         if (!isCollapsed) {
             let firstSelectedSegmentIndex: number | undefined = undefined;

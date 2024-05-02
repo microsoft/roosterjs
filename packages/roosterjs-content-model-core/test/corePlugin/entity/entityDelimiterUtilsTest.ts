@@ -1,3 +1,4 @@
+import * as adjustSelectionAroundEntity from '../../../lib/corePlugin/entity/adjustSelectionAroundEntity';
 import * as DelimiterFile from '../../../lib/corePlugin/entity/entityDelimiterUtils';
 import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import * as isNodeOfType from 'roosterjs-content-model-dom/lib/domUtils/isNodeOfType';
@@ -19,7 +20,10 @@ describe('EntityDelimiterUtils |', () => {
     let queryElementsSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let mockedEditor: any;
+
     beforeEach(() => {
+        queryElementsSpy = jasmine.createSpy('queryElement');
+
         mockedEditor = (<any>{
             getDOMHelper: () => ({
                 queryElements: queryElementsSpy,
@@ -59,9 +63,7 @@ describe('EntityDelimiterUtils |', () => {
                     addDelimiterForEntity: true,
                 })
             );
-            queryElementsSpy = jasmine
-                .createSpy('queryElement')
-                .and.callFake(sel => div.querySelectorAll(sel));
+            queryElementsSpy.and.callFake(sel => div.querySelectorAll(sel));
 
             entityWrapper.remove();
 
@@ -98,9 +100,7 @@ describe('EntityDelimiterUtils |', () => {
                 },
                 createModelToDomContext({})
             );
-            queryElementsSpy = jasmine
-                .createSpy('queryElement')
-                .and.callFake(sel => div.querySelectorAll(sel));
+            queryElementsSpy.and.callFake(sel => div.querySelectorAll(sel));
 
             handleDelimiterContentChangedEvent(mockedEditor);
 
@@ -137,9 +137,7 @@ describe('EntityDelimiterUtils |', () => {
                     addDelimiterForEntity: true,
                 })
             );
-            queryElementsSpy = jasmine
-                .createSpy('queryElement')
-                .and.callFake(sel => div.querySelectorAll(sel));
+            queryElementsSpy.and.callFake(sel => div.querySelectorAll(sel));
 
             const invalidDelimiter = entityWrapper.previousElementSibling;
             invalidDelimiter?.appendChild(document.createTextNode('_'));
@@ -159,6 +157,7 @@ describe('EntityDelimiterUtils |', () => {
         let rafSpy: jasmine.Spy;
         let takeSnapshotSpy: jasmine.Spy;
         let triggerEventSpy: jasmine.Spy;
+        let findClosestElementAncestorSpy: jasmine.Spy;
 
         beforeEach(() => {
             mockedSelection = undefined!;
@@ -166,6 +165,9 @@ describe('EntityDelimiterUtils |', () => {
             formatContentModelSpy = jasmine.createSpy('formatContentModel');
             takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
             triggerEventSpy = jasmine.createSpy('triggerEvent');
+            findClosestElementAncestorSpy = jasmine
+                .createSpy('findClosestElementAncestor')
+                .and.callFake((node: HTMLElement, selector: string) => node.closest(selector));
 
             mockedEditor = (<any>{
                 getDOMSelection: () => mockedSelection,
@@ -179,6 +181,7 @@ describe('EntityDelimiterUtils |', () => {
                 getDOMHelper: () => ({
                     queryElements: queryElementsSpy,
                     isNodeInEditor: () => true,
+                    findClosestElementAncestor: findClosestElementAncestorSpy,
                 }),
                 triggerEvent: triggerEventSpy,
                 takeSnapshot: takeSnapshotSpy,
@@ -630,6 +633,80 @@ describe('EntityDelimiterUtils |', () => {
                 },
                 rawEvent: mockedEvent,
             });
+        });
+
+        it('Handle, range selection | ArrowLeft Key', () => {
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    collapsed: true,
+                },
+                isReverted: false,
+            };
+            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedSelection.range,
+            });
+            const adjustSelectionAroundEntitySpy = spyOn(
+                adjustSelectionAroundEntity,
+                'adjustSelectionAroundEntity'
+            );
+
+            const mockedEvent = <any>{
+                ctrlKey: false,
+                altKey: false,
+                metaKey: false,
+                shiftKey: false,
+                key: 'ArrowLeft',
+            };
+
+            rafSpy.and.callFake((callback: Function) => callback());
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: mockedEvent,
+            });
+
+            expect(adjustSelectionAroundEntitySpy).toHaveBeenCalledWith(
+                mockedEditor,
+                'ArrowLeft',
+                false
+            );
+        });
+
+        it('Do not Handle, range selection | Ctrl+ArrowLeft Key', () => {
+            mockedSelection = {
+                type: 'range',
+                range: <any>{
+                    collapsed: true,
+                },
+                isReverted: false,
+            };
+            spyOn(mockedEditor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedSelection.range,
+            });
+            const adjustSelectionAroundEntitySpy = spyOn(
+                adjustSelectionAroundEntity,
+                'adjustSelectionAroundEntity'
+            );
+
+            const mockedEvent = <any>{
+                ctrlKey: true,
+                altKey: false,
+                metaKey: false,
+                shiftKey: false,
+                key: 'ArrowLeft',
+            };
+
+            rafSpy.and.callFake((callback: Function) => callback());
+
+            handleDelimiterKeyDownEvent(mockedEditor, {
+                eventType: 'keyDown',
+                rawEvent: mockedEvent,
+            });
+
+            expect(adjustSelectionAroundEntitySpy).not.toHaveBeenCalled();
         });
     });
 });

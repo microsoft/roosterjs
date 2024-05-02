@@ -100,6 +100,10 @@ export const formatContentModel: FormatContentModel = (
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
+
+    if (context.announceData) {
+        core.api.announce(core, context.announceData);
+    }
 };
 
 function handleImages(core: EditorCore, context: FormatContentModelContext) {

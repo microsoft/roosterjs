@@ -1,3 +1,4 @@
+import type { AnnounceData } from '../parameter/AnnounceData';
 import type { DOMHelper } from '../parameter/DOMHelper';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from '../pluginState/PluginState';
@@ -172,6 +173,13 @@ export type SetEditorStyle = (
 ) => void;
 
 /**
+ * Announce the given data
+ * @param core The EditorCore object
+ * @param announceData Data to announce
+ */
+export type Announce = (core: EditorCore, announceData: AnnounceData) => void;
+
+/**
  * The interface for the map of core API for Editor.
  * Editor can call call API from this map under EditorCore object
  */
@@ -292,6 +300,13 @@ export interface CoreApiMap {
      * combined with root selector together to build a separate rule.
      */
     setEditorStyle: SetEditorStyle;
+
+    /**
+     * Announce the given data
+     * @param core The EditorCore object
+     * @param announceData Data to announce
+     */
+    announce: Announce;
 }
 
 /**
