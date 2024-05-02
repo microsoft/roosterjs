@@ -1,6 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, Rect } from 'roosterjs-content-model-types';
 import type { TableEditFeature } from './TableEditFeature';
@@ -18,9 +19,9 @@ export function createTableMover(
     editor: IEditor,
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
-    getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     contentDiv?: EventTarget | null,
-    anchorContainer?: HTMLElement
+    anchorContainer?: HTMLElement,
+    onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -67,7 +68,7 @@ export function createTableMover(
             onDragEnd,
         },
         context.zoomScale,
-        getOnMouseOut
+        onTableEditorCreated
     );
 
     return { div, featureHandler, node: table };
@@ -85,10 +86,10 @@ interface TableMoverInitValue {
 }
 
 class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
-    private onMouseOut: ((ev: MouseEvent) => void) | null;
+    private disposer: undefined | (() => void);
 
     constructor(
-        private div: HTMLElement,
+        div: HTMLElement,
         context: TableMoverContext,
         onSubmit: (
             context: TableMoverContext,
@@ -97,21 +98,16 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         ) => void,
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
-        getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-        forceMobile?: boolean | undefined,
-        container?: HTMLElement
+        onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
-        super(div, context, onSubmit, handler, zoomScale, forceMobile);
-        this.onMouseOut = getOnMouseOut(div);
-        div.addEventListener('mouseout', this.onMouseOut);
+        super(div, context, onSubmit, handler, zoomScale);
+        this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 
     dispose(): void {
+        this.disposer?.();
+        this.disposer = undefined;
         super.dispose();
-        if (this.onMouseOut) {
-            this.div.removeEventListener('mouseout', this.onMouseOut);
-        }
-        this.onMouseOut = null;
     }
 }
 
