@@ -22,7 +22,7 @@ export class WatermarkPlugin implements EditorPlugin {
      * Create an instance of Watermark plugin
      * @param watermark The watermark string
      */
-    constructor(private watermark: string, format?: WatermarkFormat) {
+    constructor(protected watermark: string, format?: WatermarkFormat) {
         this.format = format || {
             fontSize: '14px',
             textColor: '#AAAAAA',
@@ -62,7 +62,10 @@ export class WatermarkPlugin implements EditorPlugin {
             return;
         }
 
-        if (event.eventType == 'input' && event.rawEvent.inputType == 'insertText') {
+        if (
+            (event.eventType == 'input' && event.rawEvent.inputType == 'insertText') ||
+            event.eventType == 'compositionEnd'
+        ) {
             // When input text, editor must not be empty, so we can do hide watermark now without checking content model
             this.showHide(editor, false /*isEmpty*/);
         } else if (

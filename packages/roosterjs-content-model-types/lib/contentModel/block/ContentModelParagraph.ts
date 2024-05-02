@@ -1,5 +1,5 @@
 import type { ContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import type { ContentModelSegment } from '../segment/ContentModelSegment';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
