@@ -1,3 +1,5 @@
+import * as getIntersectedRect from '../../lib/pluginUtils/Rect/getIntersectedRect';
+import { createTableInserter } from '../../lib/tableEdit/editors/features/TableInserter';
 import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { getMergedFirstColumnTable, getMergedTopRowTable, getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
@@ -111,5 +113,113 @@ describe('Table Inserter tests', () => {
             y: (rect.bottom - rect.top) / 2,
         });
         expect(inserterFound).toBe('not clickable');
+    });
+
+    it('Customize table inserter', () => {
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 10,
+            left: 10,
+            right: 10,
+            top: 10,
+        });
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('changeCb');
+        //Act
+        const result = createTableInserter(
+            editor,
+            <any>(<HTMLTableCellElement>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                    };
+                },
+                ownerDocument: document,
+            }),
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                    };
+                    ownerDocument: document;
+                },
+            },
+            false,
+            false,
+            () => {},
+            undefined,
+            (editorType, element) => {
+                if (element && editorType == 'VerticalTableInserter') {
+                    changeCb();
+                }
+                return () => disposer();
+            }
+        );
+
+        result?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).toHaveBeenCalled();
+    });
+
+    it('Customize table inserter, do not customize editortype is not in the cb', () => {
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 10,
+            left: 10,
+            right: 10,
+            top: 10,
+        });
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('changeCb');
+        //Act
+        const result = createTableInserter(
+            editor,
+            <any>(<HTMLTableCellElement>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                    };
+                },
+                ownerDocument: document,
+            }),
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 10,
+                        height: 10,
+                        left: 10,
+                        right: 10,
+                    };
+                    ownerDocument: document;
+                },
+            },
+            false,
+            false,
+            () => {},
+            undefined,
+            (editorType, element) => {
+                if (element && editorType == 'TableMover') {
+                    changeCb();
+                }
+                return () => disposer();
+            }
+        );
+
+        result?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).not.toHaveBeenCalled();
     });
 });
