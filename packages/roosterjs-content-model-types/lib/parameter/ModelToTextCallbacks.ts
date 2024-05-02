@@ -1,11 +1,11 @@
-import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import type { ContentModelDivider } from '../block/ContentModelDivider';
-import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelGeneralSegment } from '../segment/ContentModelGeneralSegment';
-import type { ContentModelImage } from '../segment/ContentModelImage';
-import type { ContentModelParagraph } from '../block/ContentModelParagraph';
-import type { ContentModelTable } from '../block/ContentModelTable';
-import type { ContentModelText } from '../segment/ContentModelText';
+import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ContentModelDivider } from '../contentModel/block/ContentModelDivider';
+import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
+import type { ContentModelGeneralSegment } from '../contentModel/segment/ContentModelGeneralSegment';
+import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
+import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
+import type { ContentModelText } from '../contentModel/segment/ContentModelText';
 
 /**
  * Callback function type for converting a given Content Model object to plain text
