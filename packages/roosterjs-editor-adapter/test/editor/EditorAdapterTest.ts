@@ -1,9 +1,5 @@
 import { EditorAdapter } from '../../lib/editor/EditorAdapter';
-import { EditorContext, EditorCore } from 'roosterjs-content-model-types';
-
-const editorContext: EditorContext = {
-    isDarkMode: false,
-};
+import { EditorCore } from 'roosterjs-content-model-types';
 
 describe('EditorAdapter', () => {
     it('default format', () => {
