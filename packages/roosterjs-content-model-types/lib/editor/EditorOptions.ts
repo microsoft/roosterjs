@@ -2,11 +2,11 @@ import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { CoreApiMap } from './EditorCore';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
