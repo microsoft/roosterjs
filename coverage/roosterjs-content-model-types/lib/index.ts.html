@@ -402,7 +402,8 @@
 <a name='L343'></a><a href='#L343'>343</a>
 <a name='L344'></a><a href='#L344'>344</a>
 <a name='L345'></a><a href='#L345'>345</a>
-<a name='L346'></a><a href='#L346'>346</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -747,72 +748,74 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
-export { ContentModelWithFormat } from './format/ContentModelWithFormat';
-export { ContentModelTableFormat } from './format/ContentModelTableFormat';
-export { ContentModelWithDataset } from './format/ContentModelWithDataset';
-export { ContentModelBlockFormat } from './format/ContentModelBlockFormat';
-export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
-export { ContentModelListItemFormat } from './format/ContentModelListItemFormat';
-export { ContentModelListItemLevelFormat } from './format/ContentModelListItemLevelFormat';
-export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkFormat';
-export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
-export { ContentModelFormatContainerFormat } from './format/ContentModelFormatContainerFormat';
-export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
-export { ContentModelFormatBase } from './format/ContentModelFormatBase';
-export { ContentModelFormatMap } from './format/ContentModelFormatMap';
-export { ContentModelImageFormat } from './format/ContentModelImageFormat';
-export { ContentModelEntityFormat } from './format/ContentModelEntityFormat';
-export { FormatHandlerTypeMap, FormatKey } from './format/FormatHandlerTypeMap';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { ContentModelSegmentFormat } from './contentModel/format/ContentModelSegmentFormat';
+export { ContentModelWithFormat } from './contentModel/format/ContentModelWithFormat';
+export { ContentModelTableFormat } from './contentModel/format/ContentModelTableFormat';
+export { ContentModelWithDataset } from './contentModel/format/ContentModelWithDataset';
+export { ContentModelBlockFormat } from './contentModel/format/ContentModelBlockFormat';
+export { ContentModelTableCellFormat } from './contentModel/format/ContentModelTableCellFormat';
+export { ContentModelListItemFormat } from './contentModel/format/ContentModelListItemFormat';
+export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
+export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
+export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
+export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';
+export { ContentModelDividerFormat } from './contentModel/format/ContentModelDividerFormat';
+export { ContentModelFormatBase } from './contentModel/format/ContentModelFormatBase';
+export { ContentModelFormatMap } from './contentModel/format/ContentModelFormatMap';
+export { ContentModelImageFormat } from './contentModel/format/ContentModelImageFormat';
+export { ContentModelEntityFormat } from './contentModel/format/ContentModelEntityFormat';
+export { FormatHandlerTypeMap, FormatKey } from './contentModel/format/FormatHandlerTypeMap';
 &nbsp;
-export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
-export { BoldFormat } from './format/formatParts/BoldFormat';
-export { FontFamilyFormat } from './format/formatParts/FontFamilyFormat';
-export { FontSizeFormat } from './format/formatParts/FontSizeFormat';
-export { ItalicFormat } from './format/formatParts/ItalicFormat';
-export { LetterSpacingFormat } from './format/formatParts/LetterSpacingFormat';
-export { LineHeightFormat } from './format/formatParts/LineHeightFormat';
-export { StrikeFormat } from './format/formatParts/StrikeFormat';
-export { SuperOrSubScriptFormat } from './format/formatParts/SuperOrSubScriptFormat';
-export { TextColorFormat } from './format/formatParts/TextColorFormat';
-export { UnderlineFormat } from './format/formatParts/UnderlineFormat';
-export { BorderBoxFormat } from './format/formatParts/BorderBoxFormat';
-export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
-export { WordBreakFormat } from './format/formatParts/WordBreakFormat';
-export { BorderFormat } from './format/formatParts/BorderFormat';
-export { DirectionFormat } from './format/formatParts/DirectionFormat';
-export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
-export { MarginFormat } from './format/formatParts/MarginFormat';
-export { PaddingFormat } from './format/formatParts/PaddingFormat';
-export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
-export { TextIndentFormat } from './format/formatParts/TextIndentFormat';
-export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
-export { DisplayFormat } from './format/formatParts/DisplayFormat';
-export { IdFormat } from './format/formatParts/IdFormat';
-export { SpacingFormat } from './format/formatParts/SpacingFormat';
-export { TableLayoutFormat } from './format/formatParts/TableLayoutFormat';
-export { LinkFormat } from './format/formatParts/LinkFormat';
-export { SizeFormat } from './format/formatParts/SizeFormat';
-export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
-export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
-export { ListStyleFormat } from './format/formatParts/ListStyleFormat';
-export { FloatFormat } from './format/formatParts/FloatFormat';
-export { EntityInfoFormat } from './format/formatParts/EntityInfoFormat';
+export { BackgroundColorFormat } from './contentModel/format/formatParts/BackgroundColorFormat';
+export { BoldFormat } from './contentModel/format/formatParts/BoldFormat';
+export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFormat';
+export { FontSizeFormat } from './contentModel/format/formatParts/FontSizeFormat';
+export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
+export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';
+export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';
+export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
+export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
+export { TextColorFormat } from './contentModel/format/formatParts/TextColorFormat';
+export { UnderlineFormat } from './contentModel/format/formatParts/UnderlineFormat';
+export { BorderBoxFormat } from './contentModel/format/formatParts/BorderBoxFormat';
+export { VerticalAlignFormat } from './contentModel/format/formatParts/VerticalAlignFormat';
+export { WordBreakFormat } from './contentModel/format/formatParts/WordBreakFormat';
+export { BorderFormat } from './contentModel/format/formatParts/BorderFormat';
+export { DirectionFormat } from './contentModel/format/formatParts/DirectionFormat';
+export { HtmlAlignFormat } from './contentModel/format/formatParts/HtmlAlignFormat';
+export { MarginFormat } from './contentModel/format/formatParts/MarginFormat';
+export { PaddingFormat } from './contentModel/format/formatParts/PaddingFormat';
+export { TextAlignFormat } from './contentModel/format/formatParts/TextAlignFormat';
+export { TextIndentFormat } from './contentModel/format/formatParts/TextIndentFormat';
+export { WhiteSpaceFormat } from './contentModel/format/formatParts/WhiteSpaceFormat';
+export { DisplayFormat } from './contentModel/format/formatParts/DisplayFormat';
+export { IdFormat } from './contentModel/format/formatParts/IdFormat';
+export { SpacingFormat } from './contentModel/format/formatParts/SpacingFormat';
+export { TableLayoutFormat } from './contentModel/format/formatParts/TableLayoutFormat';
+export { LinkFormat } from './contentModel/format/formatParts/LinkFormat';
+export { SizeFormat } from './contentModel/format/formatParts/SizeFormat';
+export { BoxShadowFormat } from './contentModel/format/formatParts/BoxShadowFormat';
+export { ListThreadFormat } from './contentModel/format/formatParts/ListThreadFormat';
+export { ListStyleFormat } from './contentModel/format/formatParts/ListStyleFormat';
+export { FloatFormat } from './contentModel/format/formatParts/FloatFormat';
+export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFormat';
 &nbsp;
-export { DatasetFormat } from './format/metadata/DatasetFormat';
-export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
-export { ListMetadataFormat } from './format/metadata/ListMetadataFormat';
+export { DatasetFormat } from './contentModel/format/metadata/DatasetFormat';
+export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
+export { ListMetadataFormat } from './contentModel/format/metadata/ListMetadataFormat';
 export {
     ImageResizeMetadataFormat,
     ImageCropMetadataFormat,
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
-} from './format/metadata/ImageMetadataFormat';
-export { TableCellMetadataFormat } from './format/metadata/TableCellMetadataFormat';
+} from './contentModel/format/metadata/ImageMetadataFormat';
+export { TableCellMetadataFormat } from './contentModel/format/metadata/TableCellMetadataFormat';
 &nbsp;
-export { ContentModelBlockGroupType } from './enum/BlockGroupType';
-export { ContentModelBlockType } from './enum/BlockType';
-export { ContentModelSegmentType } from './enum/SegmentType';
+export { ContentModelBlockGroupType } from './contentModel/blockGroup/BlockGroupType';
+export { ContentModelBlockType } from './contentModel/block/BlockType';
+export { ContentModelSegmentType } from './contentModel/segment/SegmentType';
+&nbsp;
 export {
     EntityLifecycleOperation,
     EntityOperation,
@@ -837,39 +840,39 @@ export { DeleteResult } from './enum/DeleteResult';
 export { InsertEntityPosition } from './enum/InsertEntityPosition';
 export { ExportContentMode } from './enum/ExportContentMode';
 &nbsp;
-export { ContentModelBlock } from './block/ContentModelBlock';
-export { ContentModelParagraph } from './block/ContentModelParagraph';
-export { ContentModelTable } from './block/ContentModelTable';
-export { ContentModelDivider } from './block/ContentModelDivider';
-export { ContentModelBlockBase } from './block/ContentModelBlockBase';
-export { ContentModelBlockWithCache } from './block/ContentModelBlockWithCache';
-export { ContentModelTableRow } from './block/ContentModelTableRow';
+export { ContentModelBlock } from './contentModel/block/ContentModelBlock';
+export { ContentModelParagraph } from './contentModel/block/ContentModelParagraph';
+export { ContentModelTable } from './contentModel/block/ContentModelTable';
+export { ContentModelDivider } from './contentModel/block/ContentModelDivider';
+export { ContentModelBlockBase } from './contentModel/block/ContentModelBlockBase';
+export { ContentModelBlockWithCache } from './contentModel/common/ContentModelBlockWithCache';
+export { ContentModelTableRow } from './contentModel/block/ContentModelTableRow';
 &nbsp;
-export { ContentModelEntity } from './entity/ContentModelEntity';
+export { ContentModelEntity } from './contentModel/entity/ContentModelEntity';
 &nbsp;
-export { ContentModelDocument } from './group/ContentModelDocument';
-export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
-export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
-export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
-export { ContentModelListItem } from './group/ContentModelListItem';
-export { ContentModelTableCell } from './group/ContentModelTableCell';
-export { ContentModelBlockGroup } from './group/ContentModelBlockGroup';
+export { ContentModelDocument } from './contentModel/blockGroup/ContentModelDocument';
+export { ContentModelBlockGroupBase } from './contentModel/blockGroup/ContentModelBlockGroupBase';
+export { ContentModelFormatContainer } from './contentModel/blockGroup/ContentModelFormatContainer';
+export { ContentModelGeneralBlock } from './contentModel/blockGroup/ContentModelGeneralBlock';
+export { ContentModelListItem } from './contentModel/blockGroup/ContentModelListItem';
+export { ContentModelTableCell } from './contentModel/blockGroup/ContentModelTableCell';
+export { ContentModelBlockGroup } from './contentModel/blockGroup/ContentModelBlockGroup';
 &nbsp;
-export { ContentModelBr } from './segment/ContentModelBr';
-export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment';
-export { ContentModelImage } from './segment/ContentModelImage';
-export { ContentModelText } from './segment/ContentModelText';
-export { ContentModelSelectionMarker } from './segment/ContentModelSelectionMarker';
-export { ContentModelSegmentBase } from './segment/ContentModelSegmentBase';
-export { ContentModelSegment } from './segment/ContentModelSegment';
+export { ContentModelBr } from './contentModel/segment/ContentModelBr';
+export { ContentModelGeneralSegment } from './contentModel/segment/ContentModelGeneralSegment';
+export { ContentModelImage } from './contentModel/segment/ContentModelImage';
+export { ContentModelText } from './contentModel/segment/ContentModelText';
+export { ContentModelSelectionMarker } from './contentModel/segment/ContentModelSelectionMarker';
+export { ContentModelSegmentBase } from './contentModel/segment/ContentModelSegmentBase';
+export { ContentModelSegment } from './contentModel/segment/ContentModelSegment';
 &nbsp;
-export { ContentModelCode } from './decorator/ContentModelCode';
-export { ContentModelLink } from './decorator/ContentModelLink';
-export { ContentModelParagraphDecorator } from './decorator/ContentModelParagraphDecorator';
-export { ContentModelDecorator } from './decorator/ContentModelDecorator';
-export { ContentModelListLevel } from './decorator/ContentModelListLevel';
+export { ContentModelCode } from './contentModel/decorator/ContentModelCode';
+export { ContentModelLink } from './contentModel/decorator/ContentModelLink';
+export { ContentModelParagraphDecorator } from './contentModel/decorator/ContentModelParagraphDecorator';
+export { ContentModelDecorator } from './contentModel/decorator/ContentModelDecorator';
+export { ContentModelListLevel } from './contentModel/decorator/ContentModelListLevel';
 &nbsp;
-export { Selectable } from './selection/Selectable';
+export { Selectable } from './contentModel/common/Selectable';
 export {
     DOMSelection,
     SelectionType,
@@ -1099,7 +1102,7 @@ export { ZoomChangedEvent } from './event/ZoomChangedEvent';
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 02 2024 20:28:54 GMT+0000 (Coordinated Universal Time)
+                at Thu May 02 2024 22:24:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
