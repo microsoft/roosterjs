@@ -1,3 +1,4 @@
+import type { Mutable } from '../common/Mutable';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
@@ -10,10 +11,7 @@ import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptForma
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
-/**
- * The format object for a segment in Content Model
- */
-export type ContentModelSegmentFormat = TextColorFormat &
+export type ContentModelSegmentFormatCommon = TextColorFormat &
     BackgroundColorFormat &
     LetterSpacingFormat &
     FontSizeFormat &
@@ -24,3 +22,10 @@ export type ContentModelSegmentFormat = TextColorFormat &
     StrikeFormat &
     SuperOrSubScriptFormat &
     LineHeightFormat;
+
+/**
+ * The format object for a segment in Content Model
+ */
+export type ContentModelSegmentFormat = Mutable & ContentModelSegmentFormatCommon;
+
+export type ReadonlyContentModelSegmentFormat = Readonly<ContentModelSegmentFormatCommon>;

@@ -1,4 +1,8 @@
-export { ContentModelSegmentFormat } from './contentModel/format/ContentModelSegmentFormat';
+export {
+    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
+    ReadonlyContentModelSegmentFormat,
+} from './contentModel/format/ContentModelSegmentFormat';
 export { ContentModelWithFormat } from './contentModel/format/ContentModelWithFormat';
 export { ContentModelTableFormat } from './contentModel/format/ContentModelTableFormat';
 export { ContentModelWithDataset } from './contentModel/format/ContentModelWithDataset';
@@ -112,7 +116,11 @@ export { ContentModelGeneralSegment } from './contentModel/segment/ContentModelG
 export { ContentModelImage } from './contentModel/segment/ContentModelImage';
 export { ContentModelText } from './contentModel/segment/ContentModelText';
 export { ContentModelSelectionMarker } from './contentModel/segment/ContentModelSelectionMarker';
-export { ContentModelSegmentBase } from './contentModel/segment/ContentModelSegmentBase';
+export {
+    ContentModelSegmentBase,
+    ContentModelSegmentBaseCommon,
+    ReadonlyContentModelSegmentBase,
+} from './contentModel/segment/ContentModelSegmentBase';
 export { ContentModelSegment } from './contentModel/segment/ContentModelSegment';
 
 export { ContentModelCode } from './contentModel/decorator/ContentModelCode';
@@ -122,6 +130,8 @@ export { ContentModelDecorator } from './contentModel/decorator/ContentModelDeco
 export { ContentModelListLevel } from './contentModel/decorator/ContentModelListLevel';
 
 export { Selectable } from './contentModel/common/Selectable';
+export { Mutable } from './contentModel/common/Mutable';
+
 export {
     DOMSelection,
     SelectionType,

@@ -1,21 +1,21 @@
 import type { ContentModelCode } from '../decorator/ContentModelCode';
 import type { ContentModelLink } from '../decorator/ContentModelLink';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type {
+    ContentModelSegmentFormat,
+    ReadonlyContentModelSegmentFormat,
+} from '../format/ContentModelSegmentFormat';
 import type { ContentModelSegmentType } from './SegmentType';
-import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type {
+    ContentModelWithFormat,
+    ReadonlyContentModelWithFormat,
+} from '../format/ContentModelWithFormat';
 import type { Selectable } from '../common/Selectable';
 
-/**
- * Base type of Content Model Segment
- */
-export interface ContentModelSegmentBase<
-    T extends ContentModelSegmentType,
-    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
-> extends Selectable, ContentModelWithFormat<TFormat> {
+export interface ContentModelSegmentBaseCommon<T extends ContentModelSegmentType> {
     /**
      * Type of this segment
      */
-    segmentType: T;
+    readonly segmentType: T;
 
     /**
      * Hyperlink info
@@ -27,3 +27,19 @@ export interface ContentModelSegmentBase<
      */
     code?: ContentModelCode;
 }
+
+/**
+ * Base type of Content Model Segment
+ */
+export interface ContentModelSegmentBase<
+    T extends ContentModelSegmentType,
+    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+> extends Selectable, ContentModelWithFormat<TFormat>, ContentModelSegmentBaseCommon<T> {}
+
+export interface ReadonlyContentModelSegmentBase<
+    T extends ContentModelSegmentType,
+    TFormat extends ReadonlyContentModelSegmentFormat = ReadonlyContentModelSegmentFormat
+>
+    extends Readonly<Selectable>,
+        ReadonlyContentModelWithFormat<TFormat>,
+        Readonly<ContentModelSegmentBaseCommon<T>> {}
