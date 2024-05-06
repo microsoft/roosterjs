@@ -21,6 +21,7 @@ describe('formatContentModel', () => {
     let hasFocus: jasmine.Spy;
     let getClientWidth: jasmine.Spy;
     let announce: jasmine.Spy;
+    let findClosestElementAncestor: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -42,6 +43,7 @@ describe('formatContentModel', () => {
         hasFocus = jasmine.createSpy('hasFocus');
         getClientWidth = jasmine.createSpy('getClientWidth');
         announce = jasmine.createSpy('announce');
+        findClosestElementAncestor = jasmine.createSpy('findClosestElementAncestor ');
 
         core = ({
             api: {
@@ -62,6 +64,7 @@ describe('formatContentModel', () => {
             domHelper: {
                 hasFocus,
                 getClientWidth,
+                findClosestElementAncestor,
             },
         } as any) as EditorCore;
     });
@@ -548,6 +551,31 @@ describe('formatContentModel', () => {
                 cachedSelection: undefined,
             });
             expect(announce).not.toHaveBeenCalled();
+        });
+
+        it('Has scrollCaretIntoView, and callback return true', () => {
+            const scrollIntoViewSpy = jasmine.createSpy('scrollIntoView');
+            const mockedImage = { scrollIntoView: scrollIntoViewSpy } as any;
+
+            findClosestElementAncestor.and.returnValue(mockedImage);
+            setContentModel.and.returnValue({
+                type: 'image',
+                image: mockedImage,
+            });
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.clearModelCache = true;
+                    return true;
+                },
+                {
+                    scrollCaretIntoView: true,
+                    apiName,
+                }
+            );
+
+            expect(findClosestElementAncestor).toHaveBeenCalledWith(mockedImage);
+            expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
         });
     });
 

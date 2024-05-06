@@ -94,6 +94,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
+            scrollCaretIntoView: true,
             apiName: 'paste',
         }
     );
