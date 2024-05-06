@@ -1,7 +1,10 @@
 import type { Mutable } from '../common/Mutable';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
-import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import type {
+    ContentModelSegmentFormat,
+    ReadonlyContentModelSegmentFormat,
+} from './ContentModelSegmentFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { IdFormat } from './formatParts/IdFormat';
@@ -13,8 +16,7 @@ import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 /**
  * Common part of format object for an image in Content Model
  */
-export type ContentModelImageFormatCommon = ContentModelSegmentFormat &
-    IdFormat &
+export type ContentModelImageFormatCommon = IdFormat &
     SizeFormat &
     MarginFormat &
     PaddingFormat &
@@ -27,9 +29,12 @@ export type ContentModelImageFormatCommon = ContentModelSegmentFormat &
 /**
  * The format object for an image in Content Model
  */
-export type ContentModelImageFormat = Mutable & ContentModelImageFormatCommon;
+export type ContentModelImageFormat = Mutable &
+    ContentModelSegmentFormat &
+    ContentModelImageFormatCommon;
 
 /**
  * The format object for an image in Content Model (Readonly)
  */
-export type ReadonlyContentModelImageFormat = Readonly<ContentModelImageFormatCommon>;
+export type ReadonlyContentModelImageFormat = ReadonlyContentModelSegmentFormat &
+    Readonly<ContentModelImageFormatCommon>;

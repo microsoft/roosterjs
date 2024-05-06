@@ -1,6 +1,9 @@
 import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ContentModelDividerFormat } from '../format/ContentModelDividerFormat';
+import type {
+    ContentModelDividerFormat,
+    ReadonlyContentModelDividerFormat,
+} from '../format/ContentModelDividerFormat';
 import type { ReadonlySelectable, Selectable } from '../common/Selectable';
 
 /**
@@ -33,5 +36,5 @@ export interface ContentModelDivider
 export interface ReadonlyContentModelDivider
     extends ReadonlySelectable,
         ContentModelBlockWithCache,
-        ReadonlyContentModelBlockBase<'Divider', ContentModelDividerFormat>,
+        ReadonlyContentModelBlockBase<'Divider', ReadonlyContentModelDividerFormat>,
         Readonly<ContentModelDividerCommon> {}
