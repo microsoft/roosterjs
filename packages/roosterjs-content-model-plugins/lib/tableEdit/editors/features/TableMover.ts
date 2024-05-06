@@ -37,7 +37,7 @@ export function createTableMover(
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
     onStart: () => void,
-    onEnd: () => false,
+    onEnd: () => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement,
     onTableEditorCreated?: OnTableEditorCreatedCallback
@@ -103,13 +103,18 @@ interface TableMoverContext {
     div: HTMLElement;
     onFinishDragging: (table: HTMLTableElement) => void;
     onStart: () => void;
-    onEnd: () => false;
+    onEnd: () => void;
 }
 
-interface TableMoverInitValue {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableMoverInitValue {
     cmTable: ContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     tableRect: HTMLDivElement;
+    copyKey: 'ctrlKey' | 'metaKey';
 }
 
 class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
@@ -194,7 +199,11 @@ function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMIns
     return null;
 }
 
-function onDragStart(context: TableMoverContext, event: MouseEvent) {
+/**
+ * Exported for testing
+ * @internal
+ */
+export function onDragStart(context: TableMoverContext): TableMoverInitValue {
     context.onStart();
 
     const { editor, table, div } = context;
@@ -233,22 +242,33 @@ function onDragStart(context: TableMoverContext, event: MouseEvent) {
     // Restore selection
     editor.setDOMSelection(initialSelection);
 
+    // Get Copy key
+    const copyKey = editor.getEnvironment().isMac ? 'metaKey' : 'ctrlKey';
     return {
         cmTable,
         initialSelection,
         tableRect,
+        copyKey,
     };
 }
 
-function onDragging(context: TableMoverContext, event: MouseEvent, initValue: TableMoverInitValue) {
-    const { tableRect } = initValue;
+/**
+ * Exported for testing
+ * @internal
+ */
+export function onDragging(
+    context: TableMoverContext,
+    event: MouseEvent,
+    initValue: TableMoverInitValue
+) {
+    const { tableRect, copyKey } = initValue;
     const { editor } = context;
 
     // Move table outline rectangle
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
 
-    event.ctrlKey || event.metaKey
+    event[copyKey]
         ? setTableMoverCursor(editor, true, 'copy')
         : setTableMoverCursor(editor, true, 'move');
 
@@ -264,13 +284,18 @@ function onDragging(context: TableMoverContext, event: MouseEvent, initValue: Ta
     return false;
 }
 
-function onDragEnd(
+/**
+ * Exported for testing
+ * @internal
+ */
+export function onDragEnd(
     context: TableMoverContext,
     event: MouseEvent,
     initValue: TableMoverInitValue | undefined
 ) {
     const { editor, table, onFinishDragging: selectWholeTable } = context;
     const element = event.target;
+
     // Remove table outline rectangle
     initValue?.tableRect.remove();
 
@@ -304,7 +329,7 @@ function onDragEnd(
                 insertPosition,
                 (model, context, ip) => {
                     // Remove old table if not copying
-                    if (!(event.ctrlKey || event.metaKey)) {
+                    if (initValue && !event[initValue?.copyKey]) {
                         const [oldTable, path] = getFirstSelectedTable(model);
                         if (oldTable) {
                             const index = path[0].blocks.indexOf(oldTable);
@@ -312,9 +337,6 @@ function onDragEnd(
                         }
                     }
                     if (ip && initValue?.cmTable) {
-                        // Guarantee the cm Insertion point is selected
-                        ip.marker.isSelected = true;
-
                         // Insert new table
                         const doc = createContentModelDocument();
                         doc.blocks.push(initValue.cmTable);
@@ -324,22 +346,15 @@ function onDragEnd(
                         });
 
                         if (insertionSuccess) {
-                            // After mergeModel, the new table should be selected
-                            const [finalTable] = getFirstSelectedTable(model);
-                            if (finalTable) {
-                                // Clear current selection
-                                setSelection(model);
+                            // Add selection marker to the first cell of the table
+                            const FirstCell = initValue.cmTable.rows[0].cells[0];
+                            const markerParagraph = FirstCell?.blocks[0];
+                            if (markerParagraph?.blockType == 'Paragraph') {
+                                const marker = createSelectionMarker(model.format);
 
-                                // Add selection marker to the first cell of the table
-                                const FirstCell = finalTable.rows[0].cells[0];
-                                const markerParagraph = FirstCell?.blocks[0];
-                                if (markerParagraph?.blockType == 'Paragraph') {
-                                    const marker = createSelectionMarker(model.format);
-
-                                    markerParagraph.segments.unshift(marker);
-                                    setParagraphNotImplicit(markerParagraph);
-                                    setSelection(FirstCell, marker);
-                                }
+                                markerParagraph.segments.unshift(marker);
+                                setParagraphNotImplicit(markerParagraph);
+                                setSelection(FirstCell, marker);
                             }
                         }
                         return insertionSuccess;
