@@ -115,6 +115,12 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             case 'beforeKeyboardEditing':
                 this.onBeforeKeyboardEditing(event.rawEvent);
                 break;
+
+            case 'mouseDown':
+                if (this.state.snapshotsManager.hasNewContent) {
+                    this.addUndoSnapshot();
+                }
+                break;
         }
     }
 
