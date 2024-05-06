@@ -162,6 +162,38 @@ function setTableMoverCursor(editor: IEditor, state: boolean, type?: 'move' | 'c
     editor?.setEditorStyle(TABLE_MOVER_STYLE_KEY, state ? 'cursor: ' + type ?? 'move' : null);
 }
 
+// Get insertion point from coordinate.
+function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMInsertPoint | null {
+    const doc = editor.getDocument();
+    const domHelper = editor.getDOMHelper();
+
+    if (doc.caretRangeFromPoint) {
+        // Chrome, Edge, Safari, Opera
+        const range = doc.caretRangeFromPoint(x, y);
+        if (range && domHelper.isNodeInEditor(range.startContainer)) {
+            return { node: range.startContainer, offset: range.startOffset };
+        }
+    }
+
+    if ('caretPositionFromPoint' in doc) {
+        // Firefox
+        const pos = (doc as any).caretPositionFromPoint(x, y);
+        if (pos && domHelper.isNodeInEditor(pos.offsetNode)) {
+            return { node: pos.offsetNode, offset: pos.offset };
+        }
+    }
+
+    if (doc.elementFromPoint) {
+        // Fallback
+        const element = doc.elementFromPoint(x, y);
+        if (element && domHelper.isNodeInEditor(element)) {
+            return { node: element, offset: 0 };
+        }
+    }
+
+    return null;
+}
+
 function onDragStart(context: TableMoverContext, event: MouseEvent) {
     context.onStart();
 
@@ -206,38 +238,6 @@ function onDragStart(context: TableMoverContext, event: MouseEvent) {
         initialSelection,
         tableRect,
     };
-}
-
-// Get range from coordinate.
-function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMInsertPoint | null {
-    const doc = editor.getDocument();
-    const domHelper = editor.getDOMHelper();
-
-    if (doc.caretRangeFromPoint) {
-        // Chrome, Edge, Safari, Opera
-        const range = doc.caretRangeFromPoint(x, y);
-        if (range && domHelper.isNodeInEditor(range.startContainer)) {
-            return { node: range.startContainer, offset: range.startOffset };
-        }
-    }
-
-    if ('caretPositionFromPoint' in doc) {
-        // Firefox
-        const pos = (doc as any).caretPositionFromPoint(x, y);
-        if (pos && domHelper.isNodeInEditor(pos.offsetNode)) {
-            return { node: pos.offsetNode, offset: pos.offset };
-        }
-    }
-
-    if (doc.elementFromPoint) {
-        // Fallback
-        const element = doc.elementFromPoint(x, y);
-        if (element && domHelper.isNodeInEditor(element)) {
-            return { node: element, offset: 0 };
-        }
-    }
-
-    return null;
 }
 
 function onDragging(context: TableMoverContext, event: MouseEvent, initValue: TableMoverInitValue) {
