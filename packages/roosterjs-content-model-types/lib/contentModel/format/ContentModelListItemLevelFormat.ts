@@ -1,3 +1,4 @@
+import type { Mutable } from '../common/Mutable';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
@@ -6,11 +7,23 @@ import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 
 /**
- * The format object for a list level in Content Model
+ * Common part of format object for a list level in Content Model
  */
-export type ContentModelListItemLevelFormat = ListThreadFormat &
+export type ContentModelListItemLevelFormatCommon = ListThreadFormat &
     DirectionFormat &
     TextAlignFormat &
     MarginFormat &
     PaddingFormat &
     ListStyleFormat;
+
+/**
+ * The format object for a list level in Content Model
+ */
+export type ContentModelListItemLevelFormat = Mutable & ContentModelListItemLevelFormatCommon;
+
+/**
+ * The format object for a list level in Content Model (Readonly)
+ */
+export type ReadonlyContentModelListItemLevelFormat = Readonly<
+    ContentModelListItemLevelFormatCommon
+>;

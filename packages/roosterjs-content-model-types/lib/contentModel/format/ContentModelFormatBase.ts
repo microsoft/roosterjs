@@ -13,3 +13,19 @@ export type ContentModelFormatBase<
 > = {
     [key: string]: V;
 };
+
+/**
+ * Base type of content model format. (Readonly)
+ * All content model format should only have simple value type (string, number, boolean).
+ * So that we can use a single level copy ({...object}) to easily clone a format object
+ */
+export type ReadonlyContentModelFormatBase<
+    V extends string | number | boolean | undefined | null =
+        | string
+        | number
+        | boolean
+        | undefined
+        | null
+> = {
+    readonly [key: string]: V;
+};

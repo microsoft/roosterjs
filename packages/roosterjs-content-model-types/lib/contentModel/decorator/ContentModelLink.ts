@@ -1,6 +1,16 @@
-import type { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
-import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { Mutable } from '../common/Mutable';
+import type {
+    ContentModelHyperLinkFormat,
+    ReadonlyContentModelHyperLinkFormat,
+} from '../format/ContentModelHyperLinkFormat';
+import type {
+    ContentModelWithDataset,
+    ReadonlyContentModelWithDataset,
+} from '../format/ContentModelWithDataset';
+import type {
+    ContentModelWithFormat,
+    ReadonlyContentModelWithFormat,
+} from '../format/ContentModelWithFormat';
 
 /**
  * Represent link info of Content Model.
@@ -8,5 +18,15 @@ import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
  * since link is also a kind of segment, with some extra information
  */
 export interface ContentModelLink
-    extends ContentModelWithFormat<ContentModelHyperLinkFormat>,
+    extends Mutable,
+        ContentModelWithFormat<ContentModelHyperLinkFormat>,
         ContentModelWithDataset<null> {}
+
+/**
+ * Represent link info of Content Model (Readonly).
+ * ContentModelLink is not a standalone model type, instead it need to be put inside a ContentModelSegment
+ * since link is also a kind of segment, with some extra information
+ */
+export interface ReadonlyContentModelLink
+    extends ReadonlyContentModelWithFormat<ReadonlyContentModelHyperLinkFormat>,
+        ReadonlyContentModelWithDataset<null> {}

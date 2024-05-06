@@ -1,12 +1,25 @@
+import type { Mutable } from '../common/Mutable';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 
 /**
- * Type for FormatContainer
+ * Common part of type for FormatContainer
  */
-export type ContentModelFormatContainerFormat = ContentModelBlockFormat &
+export type ContentModelFormatContainerFormatCommon = ContentModelBlockFormat &
     ContentModelSegmentFormat &
     SizeFormat &
     DisplayFormat;
+
+/**
+ * Type for FormatContainer
+ */
+export type ContentModelFormatContainerFormat = Mutable & ContentModelFormatContainerFormatCommon;
+
+/**
+ * Type for FormatContainer (Readonly)
+ */
+export type ReadonlyContentModelFormatContainerFormat = Readonly<
+    ContentModelFormatContainerFormatCommon
+>;

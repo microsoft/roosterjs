@@ -1,6 +1,23 @@
-import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { Mutable } from '../common/Mutable';
+import type {
+    ContentModelBlockFormat,
+    ReadonlyContentModelBlockFormat,
+} from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockType } from './BlockType';
-import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type {
+    ContentModelWithFormat,
+    ReadonlyContentModelWithFormat,
+} from '../format/ContentModelWithFormat';
+
+/**
+ * Common part of base type of a block
+ */
+export interface ContentModelBlockBaseCommon<T extends ContentModelBlockType> {
+    /**
+     * Type of this block
+     */
+    readonly blockType: T;
+}
 
 /**
  * Base type of a block
@@ -8,9 +25,12 @@ import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 export interface ContentModelBlockBase<
     T extends ContentModelBlockType,
     TFormat extends ContentModelBlockFormat = ContentModelBlockFormat
-> extends ContentModelWithFormat<TFormat> {
-    /**
-     * Type of this block
-     */
-    blockType: T;
-}
+> extends Mutable, ContentModelBlockBaseCommon<T>, ContentModelWithFormat<TFormat> {}
+
+/**
+ * Base type of a block (Readonly)
+ */
+export interface ReadonlyContentModelBlockBase<
+    T extends ContentModelBlockType,
+    TFormat extends ReadonlyContentModelBlockFormat = ReadonlyContentModelBlockFormat
+> extends ContentModelBlockBaseCommon<T>, ReadonlyContentModelWithFormat<TFormat> {}

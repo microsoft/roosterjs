@@ -1,3 +1,4 @@
+import type { Mutable } from '../common/Mutable';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
@@ -10,9 +11,9 @@ import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 
 /**
- * The format object for a paragraph in Content Model
+ * Common part of format object for a paragraph in Content Model
  */
-export type ContentModelBlockFormat = BackgroundColorFormat &
+export type ContentModelBlockFormatCommon = BackgroundColorFormat &
     DirectionFormat &
     TextAlignFormat &
     HtmlAlignFormat &
@@ -22,3 +23,13 @@ export type ContentModelBlockFormat = BackgroundColorFormat &
     WhiteSpaceFormat &
     BorderFormat &
     TextIndentFormat;
+
+/**
+ * The format object for a paragraph in Content Model
+ */
+export type ContentModelBlockFormat = Mutable & ContentModelBlockFormatCommon;
+
+/**
+ * The format object for a paragraph in Content Model (Readonly)
+ */
+export type ReadonlyContentModelBlockFormat = Readonly<ContentModelBlockFormatCommon>;

@@ -1,3 +1,4 @@
+import type { Mutable } from '../common/Mutable';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
@@ -10,9 +11,9 @@ import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
 /**
- * The format object for a hyperlink in Content Model
+ * Common part of format object for a hyperlink in Content Model
  */
-export type ContentModelHyperLinkFormat = LinkFormat &
+export type ContentModelHyperLinkFormatCommon = LinkFormat &
     TextColorFormat &
     BackgroundColorFormat &
     UnderlineFormat &
@@ -22,3 +23,13 @@ export type ContentModelHyperLinkFormat = LinkFormat &
     BorderFormat &
     SizeFormat &
     TextAlignFormat;
+
+/**
+ * The format object for a hyperlink in Content Model
+ */
+export type ContentModelHyperLinkFormat = Mutable & ContentModelHyperLinkFormatCommon;
+
+/**
+ * The format object for a hyperlink in Content Model (Readonly)
+ */
+export type ReadonlyContentModelHyperLinkFormat = Readonly<ContentModelHyperLinkFormatCommon>;

@@ -1,3 +1,4 @@
+import type { Mutable } from '../common/Mutable';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
@@ -9,9 +10,9 @@ import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 
 /**
- * Format of Table
+ * Common part of format of Table
  */
-export type ContentModelTableFormat = ContentModelBlockFormat &
+export type ContentModelTableFormatCommon = ContentModelBlockFormat &
     IdFormat &
     BorderFormat &
     BorderBoxFormat &
@@ -20,3 +21,13 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     DisplayFormat &
     TableLayoutFormat &
     SizeFormat;
+
+/**
+ * Format of Table
+ */
+export type ContentModelTableFormat = Mutable & ContentModelTableFormatCommon;
+
+/**
+ * Format of Table (Readonly)
+ */
+export type ReadonlyContentModelTableFormat = Readonly<ContentModelTableFormatCommon>;

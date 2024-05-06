@@ -1,11 +1,26 @@
-import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
+import type {
+    ContentModelSegmentBase,
+    ReadonlyContentModelSegmentBase,
+} from './ContentModelSegmentBase';
 
 /**
- * Content Model for Text
+ * Common port of Content Model for Text
  */
-export interface ContentModelText extends ContentModelSegmentBase<'Text'> {
+export interface ContentModelTextCommon {
     /**
      * Text content of this segment
      */
     text: string;
 }
+
+/**
+ * Content Model for Text
+ */
+export interface ContentModelText extends ContentModelTextCommon, ContentModelSegmentBase<'Text'> {}
+
+/**
+ * Content Model for Text (Readonly)
+ */
+export interface ReadonlyContentModelText
+    extends ReadonlyContentModelSegmentBase<'Text'>,
+        Readonly<ContentModelTextCommon> {}

@@ -1,15 +1,21 @@
-import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type {
+    ContentModelBlockBase,
+    ReadonlyContentModelBlockBase,
+} from '../block/ContentModelBlockBase';
+import type {
+    ContentModelBlockGroupBase,
+    ReadonlyContentModelBlockGroupBase,
+} from './ContentModelBlockGroupBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
+import type {
+    ContentModelFormatContainerFormat,
+    ReadonlyContentModelFormatContainerFormat,
+} from '../format/ContentModelFormatContainerFormat';
 
 /**
- * Content Model of Format Container
+ * Common part of Content Model of Format Container
  */
-export interface ContentModelFormatContainer
-    extends ContentModelBlockWithCache,
-        ContentModelBlockGroupBase<'FormatContainer'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat> {
+export interface ContentModelFormatContainerCommon {
     /**
      * Tag name of this container
      */
@@ -21,3 +27,21 @@ export interface ContentModelFormatContainer
      */
     zeroFontSize?: boolean;
 }
+
+/**
+ * Content Model of Format Container
+ */
+export interface ContentModelFormatContainer
+    extends ContentModelBlockWithCache,
+        ContentModelFormatContainerCommon,
+        ContentModelBlockGroupBase<'FormatContainer'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat> {}
+
+/**
+ * Content Model of Format Container (Readonly)
+ */
+export interface ReadonlyContentModelFormatContainer
+    extends ContentModelBlockWithCache,
+        ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
+        ReadonlyContentModelBlockBase<'BlockGroup', ReadonlyContentModelFormatContainerFormat>,
+        Readonly<ContentModelFormatContainerCommon> {}
