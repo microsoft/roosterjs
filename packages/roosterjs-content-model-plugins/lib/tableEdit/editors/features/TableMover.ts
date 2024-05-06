@@ -346,15 +346,19 @@ export function onDragEnd(
                         });
 
                         if (insertionSuccess) {
-                            // Add selection marker to the first cell of the table
-                            const FirstCell = initValue.cmTable.rows[0].cells[0];
-                            const markerParagraph = FirstCell?.blocks[0];
-                            if (markerParagraph?.blockType == 'Paragraph') {
-                                const marker = createSelectionMarker(model.format);
+                            // After mergeModel, the new table should be selected
+                            const finalTable = getFirstSelectedTable(model)[0] ?? initValue.cmTable;
+                            if (finalTable) {
+                                // Add selection marker to the first cell of the table
+                                const FirstCell = finalTable.rows[0].cells[0];
+                                const markerParagraph = FirstCell?.blocks[0];
+                                if (markerParagraph?.blockType == 'Paragraph') {
+                                    const marker = createSelectionMarker(model.format);
 
-                                markerParagraph.segments.unshift(marker);
-                                setParagraphNotImplicit(markerParagraph);
-                                setSelection(FirstCell, marker);
+                                    markerParagraph.segments.unshift(marker);
+                                    setParagraphNotImplicit(markerParagraph);
+                                    setSelection(FirstCell, marker);
+                                }
                             }
                         }
                         return insertionSuccess;
