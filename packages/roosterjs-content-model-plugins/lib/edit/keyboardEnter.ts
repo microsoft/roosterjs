@@ -28,6 +28,7 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
         },
         {
             rawEvent,
+            scrollCaretIntoView: true,
         }
     );
 }
