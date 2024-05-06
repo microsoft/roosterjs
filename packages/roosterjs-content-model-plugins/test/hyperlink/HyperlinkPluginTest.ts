@@ -455,4 +455,15 @@ describe('HyperlinkPlugin', () => {
 
         plugin.dispose();
     });
+
+    it('ContentChanged', () => {
+        const plugin = new HyperlinkPlugin();
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: 'contentChanged',
+        } as any);
+
+        expect(setDomAttributeSpy).toHaveBeenCalledWith('title', null);
+    });
 });
