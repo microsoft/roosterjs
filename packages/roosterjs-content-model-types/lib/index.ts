@@ -310,6 +310,11 @@ export { NodeTypeMap } from './parameter/NodeTypeMap';
 export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
 export { OperationalBlocks } from './parameter/OperationalBlocks';
 export { ParsedTable, ParsedTableCell } from './parameter/ParsedTable';
+export {
+    ModelToTextCallback,
+    ModelToTextCallbacks,
+    ModelToTextChecker,
+} from './parameter/ModelToTextCallbacks';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
