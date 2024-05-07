@@ -676,6 +676,88 @@ describe('Table Mover Tests', () => {
             expect(onFinishDraggingSpy).not.toHaveBeenCalled();
             expect(onEndSpy).toHaveBeenCalled();
         });
+
+        it('Drop table inside editor below last br', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: cmTable,
+                initialSelection: null,
+                tableRect: divRect,
+                copyKey: 'ctrlKey',
+            };
+
+            editor.formatContentModel(model => {
+                model.blocks.push(
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    }
+                );
+
+                return true;
+            });
+
+            const brElement = node.getElementsByTagName('br')[0];
+            if (brElement == null) {
+                fail('no br element');
+                return false;
+            }
+            const brElementRect = brElement.getBoundingClientRect();
+
+            const event = new MouseEvent('mouseup', {
+                clientX: brElementRect.left + 1,
+                clientY: brElementRect.bottom + 5,
+                bubbles: false,
+            });
+            spyOnProperty(event, 'target').and.returnValue(brElement);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            const finalModel = editor.getContentModelCopy('disconnected');
+            expect(finalModel.blocks[0]?.blockType).toEqual('Paragraph');
+            expect(finalModel.blocks[1]?.blockType).toEqual('Table');
+            expect(finalModel.blocks[1]?.format.id).toEqual(targetId);
+            expect(finalModel.blocks[2]?.segments[0]?.segmentType).toEqual('Br');
+            expect(dropResult).toBe(true);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
     });
 
     function runTest(
