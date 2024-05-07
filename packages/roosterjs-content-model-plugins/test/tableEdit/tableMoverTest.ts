@@ -297,7 +297,9 @@ describe('Table Mover Tests', () => {
     it('Move - onDragging', () => {
         //Arrange
         const nodeHeight = 100;
+        const nodeWidth = 100;
         node.style.height = `${nodeHeight}px`;
+        node.style.width = `${nodeWidth}px`;
         node.style.overflowX = 'auto';
         node.scrollTop = 0;
         const target = document.getElementById(targetId);
@@ -330,7 +332,7 @@ describe('Table Mover Tests', () => {
         //Act
         const draggingOutsideEditor = onDragging(
             context,
-            { clientX: nodeHeight + 10, clientY: nodeHeight + 10 } as MouseEvent,
+            { clientX: nodeWidth + 10, clientY: nodeHeight + 10 } as MouseEvent,
             initValue
         );
         const targetRect = target?.getBoundingClientRect();
