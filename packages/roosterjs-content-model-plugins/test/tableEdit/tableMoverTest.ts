@@ -318,6 +318,11 @@ describe('Table Mover Tests', () => {
             onStart: () => {},
             onEnd: () => {},
         };
+        const outsiderDiv = document.createElement('div');
+        outsiderDiv.style.height = `${nodeHeight}px`;
+        outsiderDiv.style.width = `${nodeWidth}px`;
+        node.parentElement?.appendChild(outsiderDiv);
+
         const divRect = document.createElement('div');
         divRect.style.position = 'fixed';
         divRect.style.top = '0px';
@@ -330,9 +335,13 @@ describe('Table Mover Tests', () => {
         };
 
         //Act
+        const outsideDivRect = outsiderDiv.getBoundingClientRect();
         const draggingOutsideEditor = onDragging(
             context,
-            { clientX: nodeWidth + 10, clientY: nodeHeight + 10 } as MouseEvent,
+            {
+                clientX: outsideDivRect.right - 10,
+                clientY: outsideDivRect.bottom - 10,
+            } as MouseEvent,
             initValue
         );
         const targetRect = target?.getBoundingClientRect();
@@ -344,6 +353,7 @@ describe('Table Mover Tests', () => {
             } as MouseEvent,
             initValue
         );
+        node.parentElement?.removeChild(outsiderDiv);
 
         //Assert
         expect(draggingOutsideEditor).toBe(false);
