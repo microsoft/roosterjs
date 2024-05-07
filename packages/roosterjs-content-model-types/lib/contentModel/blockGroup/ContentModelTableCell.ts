@@ -4,7 +4,10 @@ import type {
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
+import type {
+    ContentModelTableCellFormat,
+    ReadonlyContentModelTableCellFormat,
+} from '../format/ContentModelTableCellFormat';
 import type {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
@@ -52,7 +55,7 @@ export interface ContentModelTableCell
 export interface ReadonlyContentModelTableCell
     extends ReadonlySelectable,
         ReadonlyContentModelBlockGroupBase<'TableCell'>,
-        ReadonlyContentModelWithFormat<ContentModelTableCellFormat>,
+        ReadonlyContentModelWithFormat<ReadonlyContentModelTableCellFormat>,
         ReadonlyContentModelWithDataset<TableCellMetadataFormat>,
         ContentModelBlockWithCache<HTMLTableCellElement>,
         Readonly<ContentModelTableCellCommon> {}

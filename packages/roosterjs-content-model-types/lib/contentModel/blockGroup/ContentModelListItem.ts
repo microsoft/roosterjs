@@ -10,7 +10,10 @@ import type {
     ContentModelListItemFormat,
     ReadonlyContentModelListItemFormat,
 } from '../format/ContentModelListItemFormat';
-import type { ContentModelListLevel } from '../decorator/ContentModelListLevel';
+import type {
+    ContentModelListLevel,
+    ReadonlyContentModelListLevel,
+} from '../decorator/ContentModelListLevel';
 import type {
     ContentModelSelectionMarker,
     ReadonlyContentModelSelectionMarker,
@@ -42,7 +45,7 @@ export interface ReadonlyContentModelListItem
     /**
      * Type of this list, either ordered or unordered
      */
-    readonly levels: ReadonlyArray<ContentModelListLevel>;
+    readonly levels: ReadonlyArray<ReadonlyContentModelListLevel>;
 
     /**
      * A dummy segment to hold format of this list item
