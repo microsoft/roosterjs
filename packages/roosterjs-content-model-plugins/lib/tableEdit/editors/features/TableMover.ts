@@ -94,7 +94,11 @@ export function createTableMover(
     return { node: table, div, featureHandler };
 }
 
-interface TableMoverContext {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableMoverContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
@@ -114,7 +118,6 @@ export interface TableMoverInitValue {
     cmTable: ContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     tableRect: HTMLDivElement;
-    copyKey: 'ctrlKey' | 'metaKey';
 }
 
 class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
@@ -200,8 +203,8 @@ function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMIns
 }
 
 /**
- * Exported for testing
  * @internal
+ * Exported for testing
  */
 export function onDragStart(context: TableMoverContext): TableMoverInitValue {
     context.onStart();
@@ -242,35 +245,28 @@ export function onDragStart(context: TableMoverContext): TableMoverInitValue {
     // Restore selection
     editor.setDOMSelection(initialSelection);
 
-    // Get Copy key
-    const copyKey = editor.getEnvironment().isMac ? 'metaKey' : 'ctrlKey';
     return {
         cmTable,
         initialSelection,
         tableRect,
-        copyKey,
     };
 }
 
 /**
- * Exported for testing
  * @internal
+ * Exported for testing
  */
 export function onDragging(
     context: TableMoverContext,
     event: MouseEvent,
     initValue: TableMoverInitValue
 ) {
-    const { tableRect, copyKey } = initValue;
+    const { tableRect } = initValue;
     const { editor } = context;
 
     // Move table outline rectangle
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
-
-    event[copyKey]
-        ? setTableMoverCursor(editor, true, 'copy')
-        : setTableMoverCursor(editor, true, 'move');
 
     const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
     if (pos) {
@@ -285,8 +281,8 @@ export function onDragging(
 }
 
 /**
- * Exported for testing
  * @internal
+ * Exported for testing
  */
 export function onDragEnd(
     context: TableMoverContext,
@@ -328,14 +324,13 @@ export function onDragEnd(
                 editor,
                 insertPosition,
                 (model, context, ip) => {
-                    // Remove old table if not copying
-                    if (initValue && !event[initValue?.copyKey]) {
-                        const [oldTable, path] = getFirstSelectedTable(model);
-                        if (oldTable) {
-                            const index = path[0].blocks.indexOf(oldTable);
-                            path[0].blocks.splice(index, 1);
-                        }
+                    // Remove old table
+                    const [oldTable, path] = getFirstSelectedTable(model);
+                    if (oldTable) {
+                        const index = path[0].blocks.indexOf(oldTable);
+                        path[0].blocks.splice(index, 1);
                     }
+
                     if (ip && initValue?.cmTable) {
                         // Insert new table
                         const doc = createContentModelDocument();
