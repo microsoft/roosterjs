@@ -1,5 +1,5 @@
 import type { Mutable } from '../common/Mutable';
-import type { ContentModelBlock } from '../block/ContentModelBlock';
+import type { ContentModelBlock, ReadonlyContentModelBlock } from '../block/ContentModelBlock';
 import type { ContentModelBlockGroupType } from './BlockGroupType';
 
 /**
@@ -32,5 +32,5 @@ export interface ReadonlyContentModelBlockGroupBase<T extends ContentModelBlockG
     /**
      * Blocks under this group
      */
-    readonly blocks: ReadonlyArray<ContentModelBlock>;
+    readonly blocks: ReadonlyArray<ReadonlyContentModelBlock>;
 }
