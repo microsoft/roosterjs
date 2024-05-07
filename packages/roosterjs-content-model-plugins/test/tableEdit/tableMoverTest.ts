@@ -352,7 +352,7 @@ describe('Table Mover Tests', () => {
 
     describe('Move - onDragEnd', () => {
         let target: HTMLTableElement;
-        const nodeHeight = 100;
+        const nodeHeight = 300;
 
         beforeEach(() => {
             //Arrange
@@ -595,6 +595,99 @@ describe('Table Mover Tests', () => {
             expect(onEndSpy).toHaveBeenCalled();
         });
 
+        it('Drop table inside editor between two texts - Copy', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: cmTable,
+                initialSelection: null,
+                tableRect: divRect,
+                copyKey: 'ctrlKey',
+            };
+
+            editor.formatContentModel(model => {
+                model.blocks.push(
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT-A',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT-B',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    }
+                );
+
+                return true;
+            });
+
+            const divs = Array.from(node.getElementsByTagName('div'));
+            let textB: HTMLElement | null = null;
+            for (const div of divs) {
+                if (div.textContent == 'TEXT-B') {
+                    textB = div;
+                    break;
+                }
+            }
+
+            if (textB == null) {
+                fail('no text found');
+                return false;
+            }
+
+            const textBRect = textB.getBoundingClientRect();
+            const event = new MouseEvent('mouseup', {
+                clientX: textBRect.left,
+                clientY: textBRect.top + 2,
+                bubbles: false,
+                ctrlKey: true,
+            });
+            spyOnProperty(event, 'target').and.returnValue(textB);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            const finalModel = editor.getContentModelCopy('disconnected');
+
+            expect(finalModel.blocks[0]?.blockType).toEqual('Table');
+            expect(finalModel.blocks[1]?.blockType).toEqual('Paragraph');
+            expect(finalModel.blocks[2]?.blockType).toEqual('Table');
+            expect(finalModel.blocks[3]?.blockType).toEqual('Paragraph');
+            expect(dropResult).toBe(true);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
         it('Drop table inside editor last br', () => {
             const div = document.createElement('div');
             const onEndSpy = jasmine.createSpy('onEnd');
@@ -743,7 +836,7 @@ describe('Table Mover Tests', () => {
                 clientY: brElementRect.bottom + 5,
                 bubbles: false,
             });
-            spyOnProperty(event, 'target').and.returnValue(brElement);
+            spyOnProperty(event, 'target').and.returnValue(node);
 
             //Act
             const dropResult = onDragEnd(context, event, initValue);
