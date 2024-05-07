@@ -1,12 +1,15 @@
+import { ContentModelPanePlugin } from '../ContentModelPanePlugin';
 import { RibbonButton } from '../../../roosterjsReact/ribbon';
 
-export const refreshButton: RibbonButton<'buttonNameRefresh'> = {
-    key: 'buttonNameRefresh',
-    unlocalizedText: 'Refresh',
-    iconName: 'Refresh',
-    onClick: editor => {
-        editor.triggerEvent('contentChanged', {
-            source: 'RefreshModel',
-        });
-    },
-};
+export function getRefreshButton(
+    plugin: ContentModelPanePlugin
+): RibbonButton<'buttonNameRefresh'> {
+    return {
+        key: 'buttonNameRefresh',
+        unlocalizedText: 'Refresh',
+        iconName: 'Refresh',
+        onClick: () => {
+            plugin.onModelChange(true /*force*/);
+        },
+    };
+}

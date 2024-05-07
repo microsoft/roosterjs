@@ -350,11 +350,22 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns HTML string representing current editor content
      */
     getContent(mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML): string {
-        return exportContent(
-            this,
-            GetContentModeMap[mode],
-            this.getCore().environment.modelToDomSettings.customized
-        );
+        const exportMode = GetContentModeMap[mode] ?? 'HTML';
+
+        switch (exportMode) {
+            case 'HTML':
+                return exportContent(
+                    this,
+                    'HTML',
+                    this.getCore().environment.modelToDomSettings.customized
+                );
+
+            case 'PlainText':
+                return exportContent(this, 'PlainText');
+
+            case 'PlainTextFast':
+                return exportContent(this, 'PlainTextFast');
+        }
     }
 
     /**

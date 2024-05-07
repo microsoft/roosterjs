@@ -1,4 +1,4 @@
-import type { ContentModelTable } from '../block/ContentModelTable';
+import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
 
 /**
  * Context object for table in a selection
