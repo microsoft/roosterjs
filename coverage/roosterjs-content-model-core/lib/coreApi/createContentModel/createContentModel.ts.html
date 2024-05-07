@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -112,8 +112,7 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,43 +130,42 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">186x</span>
+<span class="cline-any cline-yes">177x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">177x</span>
+<span class="cline-any cline-yes">138x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">186x</span>
+<span class="cline-any cline-yes">138x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">186x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">186x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">78x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">95x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">62x</span>
-<span class="cline-any cline-yes">62x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">94x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
 import {
@@ -189,41 +187,40 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     // Flush all mutations if any, so that we can get an up-to-date Content Model
     core.cache.textMutationObserver?.flushMutations();
 &nbsp;
-    let cachedModel =
-        selectionOverride || (option &amp;&amp; !option.tryGetFromCache) ? null : core.cache.cachedModel;
+    if (!selectionOverride &amp;&amp; (!option || option.tryGetFromCache)) {
+        const cachedModel = core.cache.cachedModel;
 &nbsp;
-    if (cachedModel &amp;&amp; core.lifecycle.shadowEditFragment) {
-        // When in shadow edit, use a cloned model so we won't pollute the cached one
-        cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
+        if (cachedModel) {
+            // When in shadow edit, use a cloned model so we won't pollute the cached one
+            return core.lifecycle.shadowEditFragment
+                ? cloneModel(cachedModel, { includeCachedElement: true })
+                : cachedModel;
+        }
     }
 &nbsp;
-    if (cachedModel) {
-        return cachedModel;
-    } else {
-        const selection =
-            selectionOverride == 'none'
-                ? undefined
-                : selectionOverride || core.api.getDOMSelection(core) || undefined;
-        const saveIndex = !option &amp;&amp; !selectionOverride;
-        const editorContext = core.api.createEditorContext(core, saveIndex);
-        const settings = core.environment.domToModelSettings;
-        const domToModelContext = option
-            ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
-            : createDomToModelContextWithConfig(settings.calculated, editorContext);
+    const selection =
+        selectionOverride == 'none'
+            ? undefined
+            : selectionOverride || core.api.getDOMSelection(core) || undefined;
+    const saveIndex = !option &amp;&amp; !selectionOverride;
+    const editorContext = core.api.createEditorContext(core, saveIndex);
+    const settings = core.environment.domToModelSettings;
+    const domToModelContext = option
+        ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
+        : createDomToModelContextWithConfig(settings.calculated, editorContext);
 &nbsp;
-        if (selection) {
-            domToModelContext.selection = selection;
-        }
-&nbsp;
-        const model = domToContentModel(core.logicalRoot, domToModelContext);
-&nbsp;
-        if (saveIndex) {
-            core.cache.cachedModel = model;
-            updateCachedSelection(core.cache, selection);
-        }
-&nbsp;
-        return model;
+    if (selection) {
+        domToModelContext.selection = selection;
     }
+&nbsp;
+    const model = domToContentModel(core.logicalRoot, domToModelContext);
+&nbsp;
+    if (saveIndex) {
+        core.cache.cachedModel = model;
+        updateCachedSelection(core.cache, selection);
+    }
+&nbsp;
+    return model;
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -232,7 +229,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 07 2024 16:53:45 GMT+0000 (Coordinated Universal Time)
+                at Tue May 07 2024 17:01:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
