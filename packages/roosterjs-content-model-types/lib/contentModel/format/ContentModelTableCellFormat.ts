@@ -1,9 +1,6 @@
 import type { Mutable } from '../common/Mutable';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
-import type {
-    ContentModelBlockFormat,
-    ReadonlyContentModelBlockFormat,
-} from './ContentModelBlockFormat';
+import type { ContentModelBlockFormatCommon } from './ContentModelBlockFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -16,17 +13,15 @@ export type ContentModelTableCellFormatCommon = BorderBoxFormat &
     VerticalAlignFormat &
     WordBreakFormat &
     TextColorFormat &
-    SizeFormat;
+    SizeFormat &
+    ContentModelBlockFormatCommon;
 
 /**
  * Format of table cell
  */
-export type ContentModelTableCellFormat = Mutable &
-    ContentModelBlockFormat &
-    ContentModelTableCellFormatCommon;
+export type ContentModelTableCellFormat = Mutable & ContentModelTableCellFormatCommon;
 
 /**
  * Format of table cell (Readonly)
  */
-export type ReadonlyContentModelTableCellFormat = ReadonlyContentModelBlockFormat &
-    Readonly<ContentModelTableCellFormatCommon>;
+export type ReadonlyContentModelTableCellFormat = Readonly<ContentModelTableCellFormatCommon>;
