@@ -12,6 +12,9 @@ export class AutoFormatCode extends CodeElement {
             autoLink: ${this.options.autoLink},
             autoNumbering: ${this.options.autoNumbering},
             autoUnlink: ${this.options.autoUnlink},
+            autoHyphen: ${this.options.autoHyphen},
+            autoFraction: ${this.options.autoFraction},
+            autoOrdinals: ${this.options.autoOrdinals},
         })`;
     }
 }

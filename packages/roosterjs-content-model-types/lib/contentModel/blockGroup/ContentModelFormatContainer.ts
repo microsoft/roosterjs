@@ -1,6 +1,6 @@
 import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import type { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
 
 /**

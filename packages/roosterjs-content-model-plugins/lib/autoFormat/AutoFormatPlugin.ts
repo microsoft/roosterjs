@@ -3,7 +3,9 @@ import { createLink } from './link/createLink';
 import { createLinkAfterSpace } from './link/createLinkAfterSpace';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
+import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
+import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
 import type {
     ContentChangedEvent,
@@ -22,38 +24,50 @@ export type AutoFormatOptions = {
     /**
      * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
      */
-    autoBullet: boolean;
+    autoBullet?: boolean;
 
     /**
      * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
      */
-    autoNumbering: boolean;
+    autoNumbering?: boolean;
 
     /**
      * When press backspace before a link, remove the hyperlink
      */
-    autoUnlink: boolean;
+    autoUnlink?: boolean;
 
     /**
      * When paste content, create hyperlink for the pasted link
      */
-    autoLink: boolean;
+    autoLink?: boolean;
 
     /**
      * Transform -- into hyphen, if typed between two words
      */
-    autoHyphen: boolean;
+    autoHyphen?: boolean;
+
+    /**
+     * Transform 1/2, 1/4, 3/4 into fraction character
+     */
+    autoFraction?: boolean;
+
+    /**
+     * Transform ordinal numbers into superscript
+     */
+    autoOrdinals?: boolean;
 };
 
 /**
  * @internal
  */
-const DefaultOptions: Required<AutoFormatOptions> = {
+const DefaultOptions: Partial<AutoFormatOptions> = {
     autoBullet: false,
     autoNumbering: false,
     autoUnlink: false,
     autoLink: false,
     autoHyphen: false,
+    autoFraction: false,
+    autoOrdinals: false,
 };
 
 /**
@@ -69,6 +83,8 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
      *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
+     *  - autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.
+     *  - autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -132,7 +148,7 @@ export class AutoFormatPlugin implements EditorPlugin {
             switch (rawEvent.data) {
                 case ' ':
                     const formatOptions: FormatContentModelOptions = {
-                        changeSource: ChangeSource.AutoFormat,
+                        changeSource: '',
                         apiName: '',
                     };
                     formatTextSegmentBeforeSelectionMarker(
@@ -143,10 +159,14 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 autoNumbering,
                                 autoLink,
                                 autoHyphen,
+                                autoFraction,
+                                autoOrdinals,
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
                             let shouldList = false;
+                            let shouldFraction = false;
+                            let shouldOrdinals = false;
 
                             if (autoBullet || autoNumbering) {
                                 shouldList = keyboardListTrigger(
@@ -170,9 +190,36 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldHyphen = transformHyphen(previousSegment, paragraph, context);
                             }
 
-                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
+                            if (autoFraction) {
+                                shouldFraction = transformFraction(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
 
-                            return shouldList || shouldHyphen || shouldLink;
+                            if (autoOrdinals) {
+                                shouldOrdinals = transformOrdinals(
+                                    previousSegment,
+                                    paragraph,
+                                    context
+                                );
+                            }
+
+                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
+                            formatOptions.changeSource = getChangeSource(
+                                shouldList,
+                                shouldHyphen,
+                                shouldLink
+                            );
+
+                            return (
+                                shouldList ||
+                                shouldHyphen ||
+                                shouldLink ||
+                                shouldFraction ||
+                                shouldOrdinals
+                            );
                         },
                         formatOptions
                     );
@@ -205,4 +252,12 @@ export class AutoFormatPlugin implements EditorPlugin {
 
 const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
     return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+};
+
+const getChangeSource = (shouldList: boolean, shouldHyphen: boolean, shouldLink: boolean) => {
+    return shouldList || shouldHyphen
+        ? ChangeSource.AutoFormat
+        : shouldLink
+        ? ChangeSource.AutoLink
+        : '';
 };

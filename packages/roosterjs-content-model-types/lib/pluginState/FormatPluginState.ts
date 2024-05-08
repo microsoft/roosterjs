@@ -1,5 +1,5 @@
 import type { DOMInsertPoint } from '../selection/DOMSelection';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 
 /**
  * Pending format holder interface

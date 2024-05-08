@@ -26,9 +26,11 @@ export function paste(
     const trustedHTMLHandler = editor.getTrustedHTMLHandler();
 
     if (!clipboardData.modelBeforePaste) {
-        clipboardData.modelBeforePaste = cloneModelForPaste(
-            editor.getContentModelCopy('connected')
-        );
+        editor.formatContentModel(model => {
+            clipboardData.modelBeforePaste = cloneModelForPaste(model);
+
+            return false;
+        });
     }
 
     // 1. Prepare variables
