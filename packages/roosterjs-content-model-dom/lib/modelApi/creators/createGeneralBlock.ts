@@ -9,7 +9,7 @@ import type {
  * @param element Original element of this model
  */
 export function createGeneralBlock(element: HTMLElement): ContentModelGeneralBlock {
-    let result: ReadonlyContentModelGeneralBlock = {
+    const result: ReadonlyContentModelGeneralBlock = {
         blockType: 'BlockGroup',
         blockGroupType: 'General',
         element: element,
