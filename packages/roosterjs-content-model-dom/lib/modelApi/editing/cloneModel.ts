@@ -1,7 +1,7 @@
+import { createEmptyFormat } from '../creators/createEmptyFormat';
+import { internalConvertToMutableType } from '../creators/internalConvertToMutableType';
 import type {
     ContentModelBlock,
-    ContentModelBlockBase,
-    ContentModelBlockGroupBase,
     ContentModelBlockGroupType,
     ContentModelBlockType,
     ContentModelDivider,
@@ -14,19 +14,43 @@ import type {
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegment,
-    ContentModelSegmentBase,
     ContentModelSegmentType,
     ContentModelSelectionMarker,
     ContentModelTable,
     ContentModelTableCell,
-    ContentModelWithDataset,
-    ContentModelWithFormat,
     ContentModelGeneralSegment,
     ContentModelText,
     ContentModelTableRow,
     ContentModelListLevel,
     CloneModelOptions,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelBlockGroupBase,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelBlockBase,
+    ReadonlyContentModelWithFormat,
+    ReadonlyContentModelTableRow,
+    ReadonlyContentModelTableCell,
+    ReadonlyContentModelGeneralBlock,
+    ReadonlyContentModelWithDataset,
+    ReadonlyContentModelDivider,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelSegmentBase,
+    ReadonlyContentModelEntity,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelTable,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelSelectionMarker,
+    ReadonlyContentModelImage,
+    ReadonlyContentModelGeneralSegment,
+    ReadonlyContentModelText,
+    ContentModelSegmentFormat,
+    ReadonlyContentModelListLevel,
+    ReadonlyContentModelBr,
+    ContentModelBr,
 } from 'roosterjs-content-model-types';
+
+//#region Main function
 
 /**
  * Clone a content model
@@ -34,19 +58,27 @@ import type {
  * @param options @optional Options to specify customize the clone behavior
  */
 export function cloneModel(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     options?: CloneModelOptions
 ): ContentModelDocument {
-    const newModel: ContentModelDocument = cloneBlockGroupBase(model, options || {});
+    const newModel: ReadonlyContentModelDocument = cloneBlockGroupBase(model, options || {});
+    const result = internalConvertToMutableType(newModel);
 
     if (model.format) {
-        newModel.format = Object.assign({}, model.format);
+        result.format = Object.assign(createEmptyFormat<ContentModelSegmentFormat>(), model.format);
     }
 
-    return newModel;
+    return result;
 }
 
-function cloneBlock(block: ContentModelBlock, options: CloneModelOptions): ContentModelBlock {
+//#endregion
+
+//#region dispatchers
+
+function cloneBlock(
+    block: ReadonlyContentModelBlock,
+    options: CloneModelOptions
+): ContentModelBlock {
     switch (block.blockType) {
         case 'BlockGroup':
             switch (block.blockGroupType) {
@@ -70,12 +102,12 @@ function cloneBlock(block: ContentModelBlock, options: CloneModelOptions): Conte
 }
 
 function cloneSegment(
-    segment: ContentModelSegment,
+    segment: ReadonlyContentModelSegment,
     options: CloneModelOptions
 ): ContentModelSegment {
     switch (segment.segmentType) {
         case 'Br':
-            return cloneSegmentBase(segment);
+            return cloneBr(segment);
         case 'Entity':
             return cloneEntity(segment, options);
         case 'General':
@@ -89,23 +121,29 @@ function cloneSegment(
     }
 }
 
+//#endregion
+
+//#region base cloner
+
 function cloneModelWithFormat<T extends ContentModelFormatBase>(
-    model: ContentModelWithFormat<T>
-): ContentModelWithFormat<T> {
+    model: ReadonlyContentModelWithFormat<T>
+): ReadonlyContentModelWithFormat<T> {
     return {
         format: Object.assign({}, model.format),
     };
 }
 
-function cloneModelWithDataset<T>(model: ContentModelWithDataset<T>): ContentModelWithDataset<T> {
+function cloneModelWithDataset<T>(
+    model: ReadonlyContentModelWithDataset<T>
+): ReadonlyContentModelWithDataset<T> {
     return {
         dataset: Object.assign({}, model.dataset),
     };
 }
 
 function cloneBlockBase<T extends ContentModelBlockType>(
-    block: ContentModelBlockBase<T>
-): ContentModelBlockBase<T> {
+    block: ReadonlyContentModelBlockBase<T>
+): ReadonlyContentModelBlockBase<T> {
     const { blockType } = block;
 
     return Object.assign(
@@ -117,9 +155,9 @@ function cloneBlockBase<T extends ContentModelBlockType>(
 }
 
 function cloneBlockGroupBase<T extends ContentModelBlockGroupType>(
-    group: ContentModelBlockGroupBase<T>,
+    group: ReadonlyContentModelBlockGroupBase<T>,
     options: CloneModelOptions
-): ContentModelBlockGroupBase<T> {
+): ReadonlyContentModelBlockGroupBase<T> {
     const { blockGroupType, blocks } = group;
 
     return {
@@ -129,32 +167,35 @@ function cloneBlockGroupBase<T extends ContentModelBlockGroupType>(
 }
 
 function cloneSegmentBase<T extends ContentModelSegmentType>(
-    segment: ContentModelSegmentBase<T>
-): ContentModelSegmentBase<T> {
+    segment: ReadonlyContentModelSegmentBase<T>
+): ReadonlyContentModelSegmentBase<T> {
     const { segmentType, isSelected, code, link } = segment;
 
-    const newSegment: ContentModelSegmentBase<T> = Object.assign(
+    const newSegment: ReadonlyContentModelSegmentBase<T> = Object.assign(
         {
             segmentType,
             isSelected,
         },
-        cloneModelWithFormat(segment)
+        cloneModelWithFormat(segment),
+        code ? { code: cloneModelWithFormat(code) } : undefined,
+        link
+            ? { link: Object.assign(cloneModelWithFormat(link), cloneModelWithDataset(link)) }
+            : undefined
     );
-
-    if (code) {
-        newSegment.code = cloneModelWithFormat(code);
-    }
-    if (link) {
-        newSegment.link = Object.assign(cloneModelWithFormat(link), cloneModelWithDataset(link));
-    }
 
     return newSegment;
 }
 
-function cloneEntity(entity: ContentModelEntity, options: CloneModelOptions): ContentModelEntity {
-    const { wrapper, entityFormat } = entity;
+//#endregion
 
-    return Object.assign(
+//#region model cloner
+
+function cloneEntity(
+    entity: ReadonlyContentModelEntity,
+    options: CloneModelOptions
+): ContentModelEntity {
+    const { wrapper, entityFormat } = entity;
+    const result: ReadonlyContentModelEntity = Object.assign(
         {
             wrapper: handleCachedElement(wrapper, 'entity', options),
             entityFormat: { ...entityFormat },
@@ -162,15 +203,16 @@ function cloneEntity(entity: ContentModelEntity, options: CloneModelOptions): Co
         cloneBlockBase(entity),
         cloneSegmentBase(entity)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneParagraph(
-    paragraph: ContentModelParagraph,
+    paragraph: ReadonlyContentModelParagraph,
     options: CloneModelOptions
 ): ContentModelParagraph {
     const { cachedElement, segments, isImplicit, decorator, segmentFormat } = paragraph;
-
-    const newParagraph: ContentModelParagraph = Object.assign(
+    const newParagraph: ReadonlyContentModelParagraph = Object.assign(
         {
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
             isImplicit,
@@ -178,25 +220,28 @@ function cloneParagraph(
             segmentFormat: segmentFormat ? { ...segmentFormat } : undefined,
         },
         cloneBlockBase(paragraph),
-        cloneModelWithFormat(paragraph)
+        cloneModelWithFormat(paragraph),
+        decorator
+            ? {
+                  decorator: Object.assign(
+                      {
+                          tagName: decorator.tagName,
+                      },
+                      cloneModelWithFormat(decorator)
+                  ),
+              }
+            : undefined
     );
 
-    if (decorator) {
-        newParagraph.decorator = Object.assign(
-            {
-                tagName: decorator.tagName,
-            },
-            cloneModelWithFormat(decorator)
-        );
-    }
-
-    return newParagraph;
+    return internalConvertToMutableType(newParagraph);
 }
 
-function cloneTable(table: ContentModelTable, options: CloneModelOptions): ContentModelTable {
+function cloneTable(
+    table: ReadonlyContentModelTable,
+    options: CloneModelOptions
+): ContentModelTable {
     const { cachedElement, widths, rows } = table;
-
-    return Object.assign(
+    const result: ReadonlyContentModelTable = Object.assign(
         {
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
             widths: Array.from(widths),
@@ -205,15 +250,16 @@ function cloneTable(table: ContentModelTable, options: CloneModelOptions): Conte
         cloneBlockBase(table),
         cloneModelWithDataset(table)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneTableRow(
-    row: ContentModelTableRow,
+    row: ReadonlyContentModelTableRow,
     options: CloneModelOptions
 ): ContentModelTableRow {
     const { height, cells, cachedElement } = row;
-
-    return Object.assign(
+    const result: ReadonlyContentModelTableRow = Object.assign(
         {
             height,
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
@@ -221,15 +267,16 @@ function cloneTableRow(
         },
         cloneModelWithFormat(row)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneTableCell(
-    cell: ContentModelTableCell,
+    cell: ReadonlyContentModelTableCell,
     options: CloneModelOptions
 ): ContentModelTableCell {
     const { cachedElement, isSelected, spanAbove, spanLeft, isHeader } = cell;
-
-    return Object.assign(
+    const result: ReadonlyContentModelTableCell = Object.assign(
         {
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
             isSelected,
@@ -241,33 +288,31 @@ function cloneTableCell(
         cloneModelWithFormat(cell),
         cloneModelWithDataset(cell)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneFormatContainer(
-    container: ContentModelFormatContainer,
+    container: ReadonlyContentModelFormatContainer,
     options: CloneModelOptions
 ): ContentModelFormatContainer {
-    const { tagName, cachedElement } = container;
-    const newContainer: ContentModelFormatContainer = Object.assign(
+    const { tagName, cachedElement, zeroFontSize } = container;
+    const newContainer: ReadonlyContentModelFormatContainer = Object.assign(
         { tagName, cachedElement: handleCachedElement(cachedElement, 'cache', options) },
         cloneBlockBase(container),
-        cloneBlockGroupBase(container, options)
+        cloneBlockGroupBase(container, options),
+        zeroFontSize ? { zeroFontSize: true } : undefined
     );
 
-    if (container.zeroFontSize) {
-        newContainer.zeroFontSize = true;
-    }
-
-    return newContainer;
+    return internalConvertToMutableType(newContainer);
 }
 
 function cloneListItem(
-    item: ContentModelListItem,
+    item: ReadonlyContentModelListItem,
     options: CloneModelOptions
 ): ContentModelListItem {
     const { formatHolder, levels } = item;
-
-    return Object.assign(
+    const result: ReadonlyContentModelListItem = Object.assign(
         {
             formatHolder: cloneSelectionMarker(formatHolder),
             levels: levels.map(cloneListLevel),
@@ -275,20 +320,27 @@ function cloneListItem(
         cloneBlockBase(item),
         cloneBlockGroupBase(item, options)
     );
+
+    return internalConvertToMutableType(result);
 }
 
-function cloneListLevel(level: ContentModelListLevel): ContentModelListLevel {
+function cloneListLevel(level: ReadonlyContentModelListLevel): ContentModelListLevel {
     const { listType } = level;
+    const result: ReadonlyContentModelListLevel = Object.assign(
+        { listType },
+        cloneModelWithFormat(level),
+        cloneModelWithDataset(level)
+    );
 
-    return Object.assign({ listType }, cloneModelWithFormat(level), cloneModelWithDataset(level));
+    return internalConvertToMutableType(result);
 }
+
 function cloneDivider(
-    divider: ContentModelDivider,
+    divider: ReadonlyContentModelDivider,
     options: CloneModelOptions
 ): ContentModelDivider {
     const { tagName, isSelected, cachedElement } = divider;
-
-    return Object.assign(
+    const result: ReadonlyContentModelDivider = Object.assign(
         {
             isSelected,
             tagName,
@@ -296,48 +348,77 @@ function cloneDivider(
         },
         cloneBlockBase(divider)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneGeneralBlock(
-    general: ContentModelGeneralBlock,
+    general: ReadonlyContentModelGeneralBlock,
     options: CloneModelOptions
 ): ContentModelGeneralBlock {
     const { element } = general;
 
-    return Object.assign(
+    const result: ReadonlyContentModelGeneralBlock = Object.assign(
         {
             element: handleCachedElement(element, 'general', options),
         },
         cloneBlockBase(general),
         cloneBlockGroupBase(general, options)
     );
+
+    return internalConvertToMutableType(result);
 }
 
-function cloneSelectionMarker(marker: ContentModelSelectionMarker): ContentModelSelectionMarker {
-    return Object.assign({ isSelected: marker.isSelected }, cloneSegmentBase(marker));
+function cloneSelectionMarker(
+    marker: ReadonlyContentModelSelectionMarker
+): ContentModelSelectionMarker {
+    const result: ReadonlyContentModelSelectionMarker = Object.assign(
+        { isSelected: marker.isSelected },
+        cloneSegmentBase(marker)
+    );
+
+    return internalConvertToMutableType(result);
 }
 
-function cloneImage(image: ContentModelImage): ContentModelImage {
+function cloneImage(image: ReadonlyContentModelImage): ContentModelImage {
     const { src, alt, title, isSelectedAsImageSelection } = image;
 
-    return Object.assign(
+    const result: ReadonlyContentModelImage = Object.assign(
         { src, alt, title, isSelectedAsImageSelection },
         cloneSegmentBase(image),
         cloneModelWithDataset(image)
     );
+
+    return internalConvertToMutableType(result);
 }
 
 function cloneGeneralSegment(
-    general: ContentModelGeneralSegment,
+    general: ReadonlyContentModelGeneralSegment,
     options: CloneModelOptions
 ): ContentModelGeneralSegment {
-    return Object.assign(cloneGeneralBlock(general, options), cloneSegmentBase(general));
+    const result: ReadonlyContentModelGeneralSegment = Object.assign(
+        cloneGeneralBlock(general, options),
+        cloneSegmentBase(general)
+    );
+    return internalConvertToMutableType(result);
 }
 
-function cloneText(textSegment: ContentModelText): ContentModelText {
+function cloneText(textSegment: ReadonlyContentModelText): ContentModelText {
     const { text } = textSegment;
-    return Object.assign({ text }, cloneSegmentBase(textSegment));
+    const result: ReadonlyContentModelText = Object.assign({ text }, cloneSegmentBase(textSegment));
+
+    return internalConvertToMutableType(result);
 }
+
+function cloneBr(br: ReadonlyContentModelBr): ContentModelBr {
+    const result: ReadonlyContentModelBr = cloneSegmentBase(br);
+
+    return internalConvertToMutableType(result);
+}
+
+//#endregion
+
+//#region utilities
 
 function handleCachedElement<T extends HTMLElement>(
     node: T,
@@ -374,3 +455,5 @@ function handleCachedElement<T extends HTMLElement>(
         return result;
     }
 }
+
+//#endregion

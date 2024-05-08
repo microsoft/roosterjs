@@ -283,7 +283,9 @@ describe('Editor', () => {
             mockedModel
         );
 
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         const model = editor.getContentModelCopy('clean');
         expect(model).toBe(mockedModel);

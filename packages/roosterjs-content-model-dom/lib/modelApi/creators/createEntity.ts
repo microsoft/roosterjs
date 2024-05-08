@@ -1,4 +1,9 @@
-import type { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
+import type {
+    ContentModelEntity,
+    ReadonlyContentModelEntity,
+    ReadonlyContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelEntity model
@@ -11,11 +16,11 @@ import type { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-co
 export function createEntity(
     wrapper: HTMLElement,
     isReadonly: boolean = true,
-    segmentFormat?: ContentModelSegmentFormat,
+    segmentFormat?: ReadonlyContentModelSegmentFormat,
     type?: string,
     id?: string
 ): ContentModelEntity {
-    return {
+    const result: ReadonlyContentModelEntity = {
         segmentType: 'Entity',
         blockType: 'Entity',
         format: { ...segmentFormat },
@@ -26,4 +31,6 @@ export function createEntity(
         },
         wrapper,
     };
+
+    return internalConvertToMutableType(result);
 }

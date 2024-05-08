@@ -1,7 +1,9 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
-    ContentModelListItemLevelFormat,
     ContentModelListLevel,
-    DatasetFormat,
+    ReadonlyContentModelListItemLevelFormat,
+    ReadonlyContentModelListLevel,
+    ReadonlyDatasetFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,12 +14,14 @@ import type {
  */
 export function createListLevel(
     listType: 'OL' | 'UL',
-    format?: ContentModelListItemLevelFormat,
-    dataset?: DatasetFormat
+    format?: ReadonlyContentModelListItemLevelFormat,
+    dataset?: ReadonlyDatasetFormat
 ): ContentModelListLevel {
-    return {
+    const result: ReadonlyContentModelListLevel = {
         listType,
         format: { ...format },
         dataset: { ...dataset },
     };
+
+    return internalConvertToMutableType(result);
 }

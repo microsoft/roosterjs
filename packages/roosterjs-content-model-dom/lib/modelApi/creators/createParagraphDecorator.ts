@@ -1,6 +1,8 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelParagraphDecorator,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelParagraphDecorator,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,10 +12,12 @@ import type {
  */
 export function createParagraphDecorator(
     tagName: string,
-    format?: ContentModelSegmentFormat
+    format?: ReadonlyContentModelSegmentFormat
 ): ContentModelParagraphDecorator {
-    return {
+    const result: ReadonlyContentModelParagraphDecorator = {
         tagName: tagName.toLocaleLowerCase(),
-        format: { ...(format || {}) },
+        format: { ...format },
     };
+
+    return internalConvertToMutableType(result);
 }

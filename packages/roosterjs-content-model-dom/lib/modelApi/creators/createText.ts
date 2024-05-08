@@ -1,9 +1,12 @@
-import { addCode, addLink } from '../common/addDecorators';
+import { createCodeDecorator } from './createCodeDecorator';
+import { createLinkDecorator } from './createLinkDecorator';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelCode,
     ContentModelLink,
-    ContentModelSegmentFormat,
     ContentModelText,
+    ReadonlyContentModelSegmentFormat,
+    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,23 +18,19 @@ import type {
  */
 export function createText(
     text: string,
-    format?: ContentModelSegmentFormat,
+    format?: ReadonlyContentModelSegmentFormat,
     link?: ContentModelLink,
     code?: ContentModelCode
 ): ContentModelText {
-    const result: ContentModelText = {
-        segmentType: 'Text',
-        text: text,
-        format: format ? { ...format } : {},
-    };
+    const result: ReadonlyContentModelText = Object.assign(
+        <ReadonlyContentModelText>{
+            segmentType: 'Text',
+            text: text,
+            format: { ...format },
+        },
+        link ? { link: createLinkDecorator(link.format, link.dataset) } : undefined,
+        code ? { code: createCodeDecorator(code.format) } : undefined
+    );
 
-    if (link) {
-        addLink(result, link);
-    }
-
-    if (code) {
-        addCode(result, code);
-    }
-
-    return result;
+    return internalConvertToMutableType(result);
 }

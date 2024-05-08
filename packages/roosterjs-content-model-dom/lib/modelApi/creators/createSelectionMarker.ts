@@ -1,18 +1,27 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
-    ContentModelSegmentFormat,
     ContentModelSelectionMarker,
+    ReadonlyContentModelSegmentFormat,
+    ReadonlyContentModelSelectionMarker,
 } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelSelectionMarker model
  * @param format @optional The format of this model
+ * @param isShadowMarker @optional By default a selection marker should be selected.
+ * But it is also supported to have a "shadow" marker which as isSelected=false, this can be use for
+ * marking a place inside a content model without changing selection.
+ * This is used by API formatInsertPointWithContentModel
  */
 export function createSelectionMarker(
-    format?: ContentModelSegmentFormat
+    format?: ReadonlyContentModelSegmentFormat,
+    isShadowMarker?: boolean
 ): ContentModelSelectionMarker {
-    return {
+    const result: ReadonlyContentModelSelectionMarker = {
         segmentType: 'SelectionMarker',
-        isSelected: true,
-        format: format ? { ...format } : {},
+        isSelected: !isShadowMarker,
+        format: { ...format },
     };
+
+    return internalConvertToMutableType(result);
 }

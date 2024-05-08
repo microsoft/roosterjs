@@ -1,6 +1,8 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelFormatContainer,
-    ContentModelFormatContainerFormat,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelFormatContainerFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,13 +12,15 @@ import type {
  */
 export function createFormatContainer(
     tag: Lowercase<string>,
-    format?: ContentModelFormatContainerFormat
+    format?: ReadonlyContentModelFormatContainerFormat
 ): ContentModelFormatContainer {
-    return {
+    const result: ReadonlyContentModelFormatContainer = {
         blockType: 'BlockGroup',
         blockGroupType: 'FormatContainer',
         tagName: tag,
         blocks: [],
-        format: { ...(format || {}) },
+        format: { ...format },
     };
+
+    return internalConvertToMutableType(result);
 }

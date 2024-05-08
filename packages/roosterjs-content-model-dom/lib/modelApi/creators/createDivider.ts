@@ -1,4 +1,9 @@
-import type { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-content-model-types';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
+import type {
+    ContentModelDivider,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelDivider,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelDivider model
@@ -7,11 +12,13 @@ import type { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-con
  */
 export function createDivider(
     tagName: 'hr' | 'div',
-    format?: ContentModelBlockFormat
+    format?: ReadonlyContentModelBlockFormat
 ): ContentModelDivider {
-    return {
+    const result: ReadonlyContentModelDivider = {
         blockType: 'Divider',
         tagName,
-        format: format ? { ...format } : {},
+        format: { ...format },
     };
+
+    return internalConvertToMutableType(result);
 }

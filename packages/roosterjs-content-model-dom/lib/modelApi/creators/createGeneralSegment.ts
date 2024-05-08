@@ -1,6 +1,8 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelGeneralSegment,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelGeneralSegment,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,14 +12,16 @@ import type {
  */
 export function createGeneralSegment(
     element: HTMLElement,
-    format?: ContentModelSegmentFormat
+    format?: ReadonlyContentModelSegmentFormat
 ): ContentModelGeneralSegment {
-    return {
+    let result: ReadonlyContentModelGeneralSegment = {
         blockType: 'BlockGroup',
         blockGroupType: 'General',
         segmentType: 'General',
-        format: format ? { ...format } : {},
+        format: { ...format },
         blocks: [],
         element: element,
     };
+
+    return internalConvertToMutableType(result);
 }

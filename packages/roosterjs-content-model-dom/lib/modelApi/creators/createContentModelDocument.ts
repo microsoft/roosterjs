@@ -1,6 +1,8 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -8,16 +10,15 @@ import type {
  * @param defaultFormat @optional Default format of this model
  */
 export function createContentModelDocument(
-    defaultFormat?: ContentModelSegmentFormat
+    defaultFormat?: ReadonlyContentModelSegmentFormat
 ): ContentModelDocument {
-    const result: ContentModelDocument = {
-        blockGroupType: 'Document',
-        blocks: [],
-    };
+    const doc: ReadonlyContentModelDocument = Object.assign(
+        <ReadonlyContentModelDocument>{
+            blockGroupType: 'Document',
+            blocks: [],
+        },
+        defaultFormat ? { format: defaultFormat } : undefined
+    );
 
-    if (defaultFormat) {
-        result.format = defaultFormat;
-    }
-
-    return result;
+    return internalConvertToMutableType(doc);
 }

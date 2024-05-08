@@ -1,7 +1,10 @@
+import { createTableRow } from './createTableRow';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelTable,
-    ContentModelTableFormat,
-    ContentModelTableRow,
+    ReadonlyContentModelTable,
+    ReadonlyContentModelTableFormat,
+    ReadonlyContentModelTableRow,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -9,22 +12,23 @@ import type {
  * @param rowCount Count of rows of this table
  * @param format @optional The format of this model
  */
-export function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
-    const rows: ContentModelTableRow[] = [];
+export function createTable(
+    rowCount: number,
+    format?: ReadonlyContentModelTableFormat
+): ContentModelTable {
+    const rows: ReadonlyContentModelTableRow[] = [];
 
     for (let i = 0; i < rowCount; i++) {
-        rows.push({
-            height: 0,
-            format: {},
-            cells: [],
-        });
+        rows.push(createTableRow());
     }
 
-    return {
+    const result: ReadonlyContentModelTable = {
         blockType: 'Table',
         rows,
         format: { ...(format || {}) },
         widths: [],
         dataset: {},
     };
+
+    return internalConvertToMutableType(result);
 }

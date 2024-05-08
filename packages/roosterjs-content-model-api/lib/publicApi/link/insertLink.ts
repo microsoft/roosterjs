@@ -5,6 +5,7 @@ import {
     addSegment,
     ChangeSource,
     createContentModelDocument,
+    createLinkDecorator,
     createText,
     getSelectedSegments,
     mergeModel,
@@ -60,12 +61,12 @@ export function insertLink(
                     originalText == text
                 ) {
                     segments.forEach(x => {
-                        const link = createLink(
-                            linkUrl,
+                        const link = createLinkDecorator({
+                            href: linkUrl,
                             anchorTitle,
                             target,
-                            x.segmentType == 'Text'
-                        );
+                            underline: x.segmentType == 'Text',
+                        });
                         addLink(x, link);
                         if (x.link) {
                             links.push(x.link);
@@ -80,7 +81,12 @@ export function insertLink(
                         ...editor.getPendingFormat(),
                     });
                     const doc = createContentModelDocument();
-                    const link = createLink(linkUrl, anchorTitle, target);
+                    const link = createLinkDecorator({
+                        href: linkUrl,
+                        anchorTitle,
+                        target,
+                        underline: true,
+                    });
 
                     addLink(segment, link);
                     addSegment(doc, segment);
@@ -110,23 +116,6 @@ export function insertLink(
         );
     }
 }
-
-const createLink = (
-    url: string,
-    anchorTitle?: string,
-    target?: string,
-    underline: boolean = true
-): ContentModelLink => {
-    return {
-        dataset: {},
-        format: {
-            href: url,
-            anchorTitle,
-            target,
-            underline: underline,
-        },
-    };
-};
 
 function applyLinkPrefix(url: string): string {
     if (!url) {

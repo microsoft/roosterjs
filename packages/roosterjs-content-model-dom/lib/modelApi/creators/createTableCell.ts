@@ -1,7 +1,9 @@
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelTableCell,
-    ContentModelTableCellFormat,
-    DatasetFormat,
+    ReadonlyContentModelTableCell,
+    ReadonlyContentModelTableCellFormat,
+    ReadonlyDatasetFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,20 +17,22 @@ export function createTableCell(
     spanLeftOrColSpan?: boolean | number,
     spanAboveOrRowSpan?: boolean | number,
     isHeader?: boolean,
-    format?: ContentModelTableCellFormat,
-    dataset?: DatasetFormat
+    format?: ReadonlyContentModelTableCellFormat,
+    dataset?: ReadonlyDatasetFormat
 ): ContentModelTableCell {
     const spanLeft =
         typeof spanLeftOrColSpan === 'number' ? spanLeftOrColSpan > 1 : !!spanLeftOrColSpan;
     const spanAbove =
         typeof spanAboveOrRowSpan === 'number' ? spanAboveOrRowSpan > 1 : !!spanAboveOrRowSpan;
-    return {
+    const result: ReadonlyContentModelTableCell = {
         blockGroupType: 'TableCell',
         blocks: [],
-        format: format ? { ...format } : {},
+        format: { ...format },
         spanLeft,
         spanAbove,
         isHeader: !!isHeader,
         dataset: { ...dataset },
     };
+
+    return internalConvertToMutableType(result);
 }

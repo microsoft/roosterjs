@@ -1,8 +1,11 @@
+import { createParagraphDecorator } from './createParagraphDecorator';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
-    ContentModelBlockFormat,
     ContentModelParagraph,
-    ContentModelParagraphDecorator,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelParagraphDecorator,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -14,30 +17,25 @@ import type {
  */
 export function createParagraph(
     isImplicit?: boolean,
-    blockFormat?: ContentModelBlockFormat,
-    segmentFormat?: ContentModelSegmentFormat,
-    decorator?: ContentModelParagraphDecorator
+    blockFormat?: ReadonlyContentModelBlockFormat,
+    segmentFormat?: ReadonlyContentModelSegmentFormat,
+    decorator?: ReadonlyContentModelParagraphDecorator
 ): ContentModelParagraph {
-    const result: ContentModelParagraph = {
-        blockType: 'Paragraph',
-        segments: [],
-        format: blockFormat ? { ...blockFormat } : {},
-    };
+    const result: ReadonlyContentModelParagraph = Object.assign(
+        <ReadonlyContentModelParagraph>{
+            blockType: 'Paragraph',
+            segments: [],
+            format: { ...blockFormat },
+        },
 
-    if (segmentFormat && Object.keys(segmentFormat).length > 0) {
-        result.segmentFormat = { ...segmentFormat };
-    }
+        segmentFormat && Object.keys(segmentFormat).length > 0
+            ? { segmentFormat: { ...segmentFormat } }
+            : undefined,
+        isImplicit ? { isImplicit: true } : undefined,
+        decorator
+            ? { decorator: createParagraphDecorator(decorator.tagName, decorator.format) }
+            : undefined
+    );
 
-    if (isImplicit) {
-        result.isImplicit = true;
-    }
-
-    if (decorator) {
-        result.decorator = {
-            tagName: decorator.tagName,
-            format: { ...decorator.format },
-        };
-    }
-
-    return result;
+    return internalConvertToMutableType(result);
 }

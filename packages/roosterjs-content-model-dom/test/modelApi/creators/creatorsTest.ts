@@ -1,11 +1,14 @@
 import { createBr } from '../../../lib/modelApi/creators/createBr';
+import { createCodeDecorator } from '../../../lib/modelApi/creators/createCodeDecorator';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEmptyFormat } from '../../../lib/modelApi/creators/createEmptyFormat';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
+import { createLinkDecorator } from '../../../lib/modelApi/creators/createLinkDecorator';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -13,7 +16,9 @@ import { createParagraphDecorator } from '../../../lib/modelApi/creators/createP
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createTableRow } from '../../../lib/modelApi/creators/createTableRow';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { internalConvertToMutableType } from '../../../lib/modelApi/creators/internalConvertToMutableType';
 import {
     ContentModelCode,
     ContentModelLink,
@@ -590,5 +595,70 @@ describe('Creators', () => {
             tagName: 'div',
             format: { marginTop: '10px' },
         });
+    });
+
+    it('createCodeDecorator', () => {
+        const code = createCodeDecorator();
+
+        expect(code).toEqual({ format: {} });
+    });
+
+    it('createCodeDecorator with format', () => {
+        const code = createCodeDecorator({ fontFamily: 'Arial' });
+
+        expect(code).toEqual({ format: { fontFamily: 'Arial' } });
+    });
+
+    it('createEmptyFormat', () => {
+        const format = createEmptyFormat<any>();
+        expect(format).toEqual({});
+    });
+
+    it('createLinkDecorator', () => {
+        const link = createLinkDecorator();
+
+        expect(link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('createLinkDecorator with format', () => {
+        const link = createLinkDecorator({ href: 'test' }, { a: 'b' });
+
+        expect(link).toEqual({
+            format: { href: 'test' },
+            dataset: { a: 'b' },
+        });
+    });
+
+    it('createTableRow', () => {
+        const row = createTableRow();
+
+        expect(row).toEqual({
+            height: 0,
+            format: {},
+            cells: [],
+        });
+    });
+
+    it('createTableRow with format', () => {
+        const mockedCell1 = { name: '1' } as any;
+        const mockedCell2 = { name: '2' } as any;
+        const row = createTableRow({ direction: 'ltr' }, 100, [mockedCell1, mockedCell2]);
+
+        expect(row).toEqual({
+            height: 100,
+            format: { direction: 'ltr' },
+            cells: [mockedCell1, mockedCell2],
+        });
+    });
+
+    it('internalConvertToMutableType', () => {
+        const source = { name: 'SOURCE' } as any;
+        const result = internalConvertToMutableType(source);
+
+        expect(result).toBe(source);
+        expect(result).toEqual({ name: 'SOURCE' } as any);
     });
 });

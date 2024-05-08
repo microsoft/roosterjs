@@ -1,9 +1,11 @@
 import { createListLevel } from './createListLevel';
 import { createSelectionMarker } from './createSelectionMarker';
+import { internalConvertToMutableType } from './internalConvertToMutableType';
 import type {
     ContentModelListItem,
-    ContentModelListLevel,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelListLevel,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,14 +14,11 @@ import type {
  * @param format @optional The format of this model
  */
 export function createListItem(
-    levels: ContentModelListLevel[],
-    format?: ContentModelSegmentFormat
+    levels: ReadonlyContentModelListLevel[],
+    format?: ReadonlyContentModelSegmentFormat
 ): ContentModelListItem {
-    const formatHolder = createSelectionMarker(format);
-
-    formatHolder.isSelected = false;
-
-    return {
+    const formatHolder = createSelectionMarker(format, true /*isShadowMarker*/);
+    const result: ReadonlyContentModelListItem = {
         blockType: 'BlockGroup',
         blockGroupType: 'ListItem',
         blocks: [],
@@ -29,4 +28,6 @@ export function createListItem(
         formatHolder,
         format: {},
     };
+
+    return internalConvertToMutableType(result);
 }
