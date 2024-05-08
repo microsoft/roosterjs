@@ -12,11 +12,22 @@ export interface TableEditFeature {
 /**
  * @internal
  */
-export function disposeTableEditFeature(resizer: TableEditFeature | null) {
-    if (resizer) {
-        resizer.featureHandler?.dispose();
-        resizer.featureHandler = null;
-        resizer.div?.parentNode?.removeChild(resizer.div);
-        resizer.div = null;
+export type TableEditFeatureName =
+    | 'HorizontalTableInserter'
+    | 'VerticalTableInserter'
+    | 'TableMover'
+    | 'TableResizer'
+    | 'TableSelector'
+    | 'CellResizer';
+
+/**
+ * @internal
+ */
+export function disposeTableEditFeature(feature: TableEditFeature | null) {
+    if (feature) {
+        feature.featureHandler?.dispose();
+        feature.featureHandler = null;
+        feature.div?.parentNode?.removeChild(feature.div);
+        feature.div = null;
     }
 }

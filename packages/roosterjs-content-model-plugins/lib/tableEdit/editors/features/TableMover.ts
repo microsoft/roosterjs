@@ -21,7 +21,8 @@ export function createTableMover(
     onFinishDragging: (table: HTMLTableElement) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement,
-    onTableEditorCreated?: OnTableEditorCreatedCallback
+    onTableEditorCreated?: OnTableEditorCreatedCallback,
+    disableMovement?: boolean
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
