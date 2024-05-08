@@ -1,9 +1,8 @@
 import type { ContentModelFormatBase } from 'roosterjs-content-model-types';
 
 /**
- * Create a mutable format object
- * @param existingFormats @optional An array of existing format values that will be copied into the target format object.
- * If not passed, this will return an empty format object
+ * Create an empty mutable format object
+ * @param format @optional The format of this model
  */
 export function createFormatObject<T extends ContentModelFormatBase>(
     ...existingFormats: (Partial<T> | undefined)[]
