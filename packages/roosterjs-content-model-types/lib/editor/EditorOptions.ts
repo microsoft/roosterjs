@@ -2,11 +2,11 @@ import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ReadonlyContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { CoreApiMap } from './EditorCore';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ReadonlyContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
@@ -44,7 +44,7 @@ export interface EditorOptions {
      * If there is already content inside editor, format of existing content will not be changed.
      * Default value is the computed style of editor content DIV
      */
-    defaultSegmentFormat?: ContentModelSegmentFormat;
+    defaultSegmentFormat?: ReadonlyContentModelSegmentFormat;
 
     /**
      * Allowed custom content type when paste besides text/plain, text/html and images
@@ -90,7 +90,7 @@ export interface EditorOptions {
     /**
      * Initial Content Model
      */
-    initialModel?: ContentModelDocument;
+    initialModel?: ReadonlyContentModelDocument;
 
     /**
      * Whether to skip the adjust editor process when for light/dark mode

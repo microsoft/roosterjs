@@ -5,20 +5,19 @@ import { moveChildNodes } from '../../domUtils/moveChildNodes';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
-    ContentModelTable,
-    ModelToDomContext,
+    ReadonlyContentModelTable,
     TableSelection,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
-    doc: Document,
-    parent: Node,
-    table: ContentModelTable,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleTable: ContentModelBlockHandler<ReadonlyContentModelTable> = (
+    doc,
+    parent,
+    table,
+    context,
+    refNode
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return

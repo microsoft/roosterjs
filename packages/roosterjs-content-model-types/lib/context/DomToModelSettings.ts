@@ -1,4 +1,4 @@
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 import type { ContentModelFormatBase } from '../contentModel/format/ContentModelFormatBase';
 import type { ContentModelFormatMap } from '../contentModel/format/ContentModelFormatMap';
 import type { DomToModelContext } from './DomToModelContext';
@@ -40,7 +40,7 @@ export type FormatParser<TFormat extends ContentModelFormatBase> = (
  * @param context The context object that provide related context information
  */
 export type TextFormatParser<
-    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+    TFormat extends ContentModelSegmentFormatCommon = ContentModelSegmentFormatCommon
 > = (format: TFormat, textNode: Text, context: DomToModelContext) => void;
 
 /**

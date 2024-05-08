@@ -67,9 +67,9 @@ export function mergePasteContent(
                 domToModelOption
             );
 
-            domToModelContext.segmentFormat = selectedSegment
-                ? getSegmentTextFormat(selectedSegment)
-                : {};
+            if (selectedSegment) {
+                domToModelContext.segmentFormat = getSegmentTextFormat(selectedSegment);
+            }
 
             const pasteModel = domToContentModel(fragment, domToModelContext);
             const mergeOption: MergeModelOption = {

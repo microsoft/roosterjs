@@ -1,7 +1,7 @@
 import type { AnnounceData } from './AnnounceData';
 import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
 import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 
 /**
@@ -85,7 +85,7 @@ export interface FormatContentModelContext {
      * To set a new pending format, set this property to the format object
      * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
      */
-    newPendingFormat?: ContentModelSegmentFormat | 'preserve';
+    newPendingFormat?: ContentModelSegmentFormatCommon | 'preserve';
 
     /**
      * @optional Entity states related to the format API that will be added together with undo snapshot.

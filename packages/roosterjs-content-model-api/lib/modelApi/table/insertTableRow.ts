@@ -1,5 +1,5 @@
 import { clearSelectedCells } from './clearSelectedCells';
-import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
+import { createTableCell, createTableRow, getSelectedCells } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
     TableVerticalInsertOperation,
@@ -18,10 +18,10 @@ export function insertTableRow(table: ContentModelTable, operation: TableVertica
         clearSelectedCells(table, sel);
         for (let i = sel.firstRow; i <= sel.lastRow; i++) {
             const sourceRow = table.rows[insertAbove ? sel.firstRow : sel.lastRow];
-
-            table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, {
-                format: { ...sourceRow.format },
-                cells: sourceRow.cells.map(cell => {
+            const newRow = createTableRow(
+                sourceRow.format,
+                sourceRow.height,
+                sourceRow.cells.map(cell => {
                     const newCell = createTableCell(
                         cell.spanLeft,
                         cell.spanAbove,
@@ -31,9 +31,10 @@ export function insertTableRow(table: ContentModelTable, operation: TableVertica
                     );
                     newCell.isSelected = true;
                     return newCell;
-                }),
-                height: sourceRow.height,
-            });
+                })
+            );
+
+            table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, newRow);
         }
     }
 }

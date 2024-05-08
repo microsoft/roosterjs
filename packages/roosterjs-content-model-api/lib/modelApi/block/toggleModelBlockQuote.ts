@@ -12,9 +12,9 @@ import type {
     ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelFormatContainer,
-    ContentModelFormatContainerFormat,
     ContentModelListItem,
     OperationalBlocks,
+    ReadonlyContentModelFormatContainerFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,8 +22,8 @@ import type {
  */
 export function toggleModelBlockQuote(
     model: ContentModelDocument,
-    formatLtr: ContentModelFormatContainerFormat,
-    formatRtl: ContentModelFormatContainerFormat
+    formatLtr: ReadonlyContentModelFormatContainerFormat,
+    formatRtl: ReadonlyContentModelFormatContainerFormat
 ): boolean {
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
@@ -61,7 +61,7 @@ export function toggleModelBlockQuote(
 
 function canMergeQuote(
     target: ContentModelBlock,
-    format: ContentModelFormatContainerFormat
+    format: ReadonlyContentModelFormatContainerFormat
 ): target is ContentModelFormatContainer {
     return isQuote(target) && areSameFormats(format, target.format);
 }

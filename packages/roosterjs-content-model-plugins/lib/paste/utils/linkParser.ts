@@ -1,5 +1,8 @@
 import { isElementOfType } from 'roosterjs-content-model-dom';
-import type { ContentModelHyperLinkFormat, FormatParser } from 'roosterjs-content-model-types';
+import type {
+    ContentModelHyperLinkFormatCommon,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 
 const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'notes:', 'mailto:', 'onenote:'];
 const INVALID_LINKS_REGEX = /^file:\/\/\/[a-zA-Z\/]/i;
@@ -7,7 +10,7 @@ const INVALID_LINKS_REGEX = /^file:\/\/\/[a-zA-Z\/]/i;
 /**
  * @internal
  */
-export const parseLink: FormatParser<ContentModelHyperLinkFormat> = (format, element) => {
+export const parseLink: FormatParser<ContentModelHyperLinkFormatCommon> = (format, element) => {
     if (!isElementOfType(element, 'a')) {
         return;
     }

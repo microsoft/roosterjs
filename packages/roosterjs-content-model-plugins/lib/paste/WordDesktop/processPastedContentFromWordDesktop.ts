@@ -8,9 +8,8 @@ import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
     BeforePasteEvent,
-    ContentModelListItemLevelFormat,
-    ContentModelTableFormat,
-    DomToModelContext,
+    ContentModelListItemLevelFormatCommon,
+    ContentModelTableFormatCommon,
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
@@ -50,20 +49,20 @@ const wordDesktopElementProcessor = (
     };
 };
 
-function listLevelParser(
-    format: ContentModelListItemLevelFormat,
-    element: HTMLElement,
-    context: DomToModelContext,
-    defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
-): void {
+const listLevelParser: FormatParser<ContentModelListItemLevelFormatCommon> = (
+    format,
+    element,
+    _,
+    defaultStyle
+) => {
     if (element.style.marginLeft != '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
     format.marginBottom = undefined;
-}
+};
 
-const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+const wordTableParser: FormatParser<ContentModelTableFormatCommon> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {
         delete format.marginLeft;
     }

@@ -1,15 +1,18 @@
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
-import type { ContentModelFormatContainerFormat, IEditor } from 'roosterjs-content-model-types';
+import type {
+    IEditor,
+    ReadonlyContentModelFormatContainerFormat,
+} from 'roosterjs-content-model-types';
 
-const DefaultQuoteFormatLtr: ContentModelFormatContainerFormat = {
+const DefaultQuoteFormatLtr: ReadonlyContentModelFormatContainerFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)',
     textColor: 'rgb(102, 102, 102)',
 };
-const DefaultQuoteFormatRtl: ContentModelFormatContainerFormat = {
+const DefaultQuoteFormatRtl: ReadonlyContentModelFormatContainerFormat = {
     borderRight: '3px solid rgb(200, 200, 200)',
     textColor: 'rgb(102, 102, 102)',
 };
-const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
+const BuildInQuoteFormat: ReadonlyContentModelFormatContainerFormat = {
     marginTop: '1em',
     marginBottom: '1em',
     marginLeft: '40px',
@@ -25,15 +28,15 @@ const BuildInQuoteFormat: ContentModelFormatContainerFormat = {
  */
 export function toggleBlockQuote(
     editor: IEditor,
-    quoteFormat?: ContentModelFormatContainerFormat,
-    quoteFormatRtl?: ContentModelFormatContainerFormat
+    quoteFormat?: ReadonlyContentModelFormatContainerFormat,
+    quoteFormatRtl?: ReadonlyContentModelFormatContainerFormat
 ) {
-    const fullQuoteFormatLtr: ContentModelFormatContainerFormat = {
+    const fullQuoteFormatLtr: ReadonlyContentModelFormatContainerFormat = {
         ...BuildInQuoteFormat,
         paddingLeft: '10px',
         ...(quoteFormat ?? DefaultQuoteFormatLtr),
     };
-    const fullQuoteFormatRtl: ContentModelFormatContainerFormat = {
+    const fullQuoteFormatRtl: ReadonlyContentModelFormatContainerFormat = {
         ...BuildInQuoteFormat,
         paddingRight: '10px',
         direction: 'rtl',

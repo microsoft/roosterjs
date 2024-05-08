@@ -2,12 +2,14 @@ import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function isBlockEmpty(block: ContentModelBlock): boolean {
+export function isBlockEmpty(block: ReadonlyContentModelBlock): boolean {
     switch (block.blockType) {
         case 'Paragraph':
             return block.segments.length == 0;
@@ -29,7 +31,7 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
 /**
  * @internal
  */
-export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
+export function isBlockGroupEmpty(group: ReadonlyContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
         case 'FormatContainer':
             // Format Container of DIV is a container for style, so we always treat it as not empty

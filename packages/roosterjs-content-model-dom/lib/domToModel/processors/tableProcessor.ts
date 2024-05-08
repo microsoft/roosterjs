@@ -8,7 +8,7 @@ import { parseFormat } from '../utils/parseFormat';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
-    ContentModelTableCellFormat,
+    ContentModelTableCellFormatCommon,
     DatasetFormat,
     DomToModelContext,
     ElementProcessor,
@@ -169,7 +169,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     context
                                 );
 
-                                const cellFormat: ContentModelTableCellFormat = {
+                                const cellFormat: ContentModelTableCellFormatCommon = {
                                     ...context.blockFormat,
                                 };
                                 const dataset: DatasetFormat = {};

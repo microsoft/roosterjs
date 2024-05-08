@@ -1,6 +1,6 @@
 import { applySegmentFormat, getFormatState } from 'roosterjs-content-model-api';
 import {
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -27,7 +27,7 @@ export interface FormatPainterHandler {
  */
 export class FormatPainterPlugin implements EditorPlugin, FormatPainterHandler {
     private editor: IEditor | null = null;
-    private painterFormat: ContentModelSegmentFormat | null = null;
+    private painterFormat: ContentModelSegmentFormatCommon | null = null;
 
     getName() {
         return 'FormatPainter';
@@ -51,7 +51,7 @@ export class FormatPainterPlugin implements EditorPlugin, FormatPainterHandler {
         }
     }
 
-    private setFormatPainterCursor(format: ContentModelSegmentFormat | null) {
+    private setFormatPainterCursor(format: ContentModelSegmentFormatCommon | null) {
         this.painterFormat = format;
 
         this.editor?.setEditorStyle(
@@ -69,7 +69,7 @@ export class FormatPainterPlugin implements EditorPlugin, FormatPainterHandler {
     }
 }
 
-function getSegmentFormat(editor: IEditor): ContentModelSegmentFormat {
+function getSegmentFormat(editor: IEditor): ContentModelSegmentFormatCommon {
     const formatState = getFormatState(editor);
 
     return {

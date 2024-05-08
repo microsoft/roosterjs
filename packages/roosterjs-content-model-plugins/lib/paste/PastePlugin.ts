@@ -10,8 +10,8 @@ import { processPastedContentFromWordDesktop } from './WordDesktop/processPasted
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import type {
     BorderFormat,
-    ContentModelBlockFormat,
-    ContentModelTableCellFormat,
+    ContentModelBlockFormatCommon,
+    ContentModelTableCellFormatCommon,
     EditorPlugin,
     FormatParser,
     IEditor,
@@ -123,10 +123,7 @@ export class PastePlugin implements EditorPlugin {
  * For block elements that have background color style, remove the background color when user selects the merge current format
  * paste option
  */
-const blockElementParser: FormatParser<ContentModelBlockFormat> = (
-    format: ContentModelBlockFormat,
-    element: HTMLElement
-) => {
+const blockElementParser: FormatParser<ContentModelBlockFormatCommon> = (format, element) => {
     if (element.style.backgroundColor) {
         delete format.backgroundColor;
     }
@@ -146,7 +143,7 @@ const ElementBorderKeys = new Map<
     ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
 ]);
 
-function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLElement): void {
+const tableBorderParser: FormatParser<ContentModelTableCellFormatCommon> = (format, element) => {
     BorderKeys.forEach(key => {
         if (!format[key]) {
             const styleSet = ElementBorderKeys.get(key);
@@ -160,4 +157,4 @@ function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLEle
             }
         }
     });
-}
+};

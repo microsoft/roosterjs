@@ -1,10 +1,10 @@
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { toArray } from '../domUtils/toArray';
 import type {
-    ContentModelDocument,
     DOMSelection,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -20,7 +20,7 @@ import type {
 export function contentModelToDom(
     doc: Document,
     root: Node,
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     context: ModelToDomContext
 ): DOMSelection | null {
     context.modelHandlers.blockGroupChildren(doc, root, model, context);

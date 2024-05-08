@@ -6,6 +6,7 @@ import type {
     FormatContentModel,
     FormatContentModelContext,
     EditorCore,
+    ContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -33,7 +34,13 @@ export const formatContentModel: FormatContentModel = (
         selectionOverride,
         scrollCaretIntoView,
     } = options || {};
-    const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
+    const readonlyModel = core.api.createContentModel(core, domToModelOptions, selectionOverride);
+
+    // TODO: !!! IMPORTANT !!!
+    // This is a temporary state. We will need to remove this type cast and just use readonly content model,
+    // then let formatter code decide which part to convert to mutable.
+    // This will be removed in up coming changes
+    const model = readonlyModel as ContentModelDocument;
     const context: FormatContentModelContext = {
         newEntities: [],
         deletedEntities: [],

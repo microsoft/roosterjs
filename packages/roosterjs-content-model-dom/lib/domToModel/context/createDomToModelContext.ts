@@ -1,3 +1,6 @@
+import { createCodeDecorator } from '../../modelApi/creators/createCodeDecorator';
+import { createLinkDecorator } from '../../modelApi/creators/createLinkDecorator';
+import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { defaultProcessorMap } from './defaultProcessors';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import {
@@ -5,7 +8,7 @@ import {
     defaultFormatParsers,
 } from '../../formatHandlers/defaultFormatHandlers';
 import type {
-    ContentModelBlockFormat,
+    ContentModelBlockFormatCommon,
     DomToModelContext,
     DomToModelDecoratorContext,
     DomToModelFormatContext,
@@ -55,7 +58,7 @@ function createDomToModelSelectionContext(): DomToModelSelectionContext {
 }
 
 function createDomToModelFormatContext(isRootRtl?: boolean): DomToModelFormatContext {
-    const blockFormat: ContentModelBlockFormat = isRootRtl ? { direction: 'rtl' } : {};
+    const blockFormat: ContentModelBlockFormatCommon = isRootRtl ? { direction: 'rtl' } : {};
 
     return {
         blockFormat,
@@ -70,17 +73,9 @@ function createDomToModelFormatContext(isRootRtl?: boolean): DomToModelFormatCon
 
 function createDomToModelDecoratorContext(): DomToModelDecoratorContext {
     return {
-        link: {
-            format: {},
-            dataset: {},
-        },
-        code: {
-            format: {},
-        },
-        blockDecorator: {
-            format: {},
-            tagName: '',
-        },
+        link: createLinkDecorator(),
+        code: createCodeDecorator(),
+        blockDecorator: createParagraphDecorator(''),
     };
 }
 

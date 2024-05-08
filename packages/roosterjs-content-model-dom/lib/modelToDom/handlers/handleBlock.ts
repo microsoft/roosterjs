@@ -1,18 +1,17 @@
 import type {
-    ContentModelBlock,
     ContentModelBlockHandler,
-    ModelToDomContext,
+    ReadonlyContentModelBlock,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
-    doc: Document,
-    parent: Node,
-    block: ContentModelBlock,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleBlock: ContentModelBlockHandler<ReadonlyContentModelBlock> = (
+    doc,
+    parent,
+    block,
+    context,
+    refNode
 ) => {
     const handlers = context.modelHandlers;
 

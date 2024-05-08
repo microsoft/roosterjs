@@ -10,6 +10,7 @@ import type {
     ContentModelBlock,
     ContentModelDocument,
     ContentModelListItem,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -68,7 +69,7 @@ export function setListType(
             if (index >= 0) {
                 if (paragraphOrListItems.length == 1 || !shouldIgnoreBlock(block)) {
                     const prevBlock = parent.blocks[index - 1];
-                    const segmentFormat =
+                    const segmentFormat: ReadonlyContentModelSegmentFormat =
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
                     const newListItem = createListItem(
                         [

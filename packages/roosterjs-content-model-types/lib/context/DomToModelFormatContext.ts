@@ -1,10 +1,10 @@
-import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
+import type { ContentModelBlockFormatCommon } from '../contentModel/format/ContentModelBlockFormat';
 import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 import type { ContentModelCode } from '../contentModel/decorator/ContentModelCode';
 import type { ContentModelLink } from '../contentModel/decorator/ContentModelLink';
 import type { ContentModelListLevel } from '../contentModel/decorator/ContentModelListLevel';
 import type { ContentModelParagraphDecorator } from '../contentModel/decorator/ContentModelParagraphDecorator';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List
@@ -33,12 +33,12 @@ export interface DomToModelFormatContext {
     /**
      * Format of current block
      */
-    blockFormat: ContentModelBlockFormat;
+    blockFormat: ContentModelBlockFormatCommon;
 
     /**
      * Format of current segment
      */
-    segmentFormat: ContentModelSegmentFormat;
+    segmentFormat: ContentModelSegmentFormatCommon;
 
     /**
      * Context of list that is currently processing

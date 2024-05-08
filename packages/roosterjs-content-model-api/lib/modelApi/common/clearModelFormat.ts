@@ -1,6 +1,7 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
 import {
     applyTableFormat,
+    createFormatObject,
     createFormatContainer,
     getClosestAncestorBlockGroupIndex,
     iterateSelections,
@@ -8,6 +9,7 @@ import {
     updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelBlockFormat,
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -18,6 +20,8 @@ import type {
     ContentModelTable,
     Selectable,
     TableSelectionContext,
+    ContentModelTableFormat,
+    ContentModelTableCellFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -83,10 +87,10 @@ function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
     tablesToClear.forEach(x => {
         const [table, isWholeTableSelected] = x;
         if (isWholeTableSelected) {
-            table.format = {
+            table.format = createFormatObject<ContentModelTableFormat>({
                 useBorderBox: table.format.useBorderBox,
                 borderCollapse: table.format.borderCollapse,
-            };
+            });
             updateTableMetadata(table, () => null);
         }
 
@@ -99,7 +103,7 @@ function clearSegmentsFormat(
     defaultSegmentFormat: ContentModelSegmentFormat | undefined
 ) {
     segmentsToClear.forEach(x => {
-        x.format = { ...(defaultSegmentFormat || {}) };
+        x.format = createFormatObject<ContentModelSegmentFormat>(defaultSegmentFormat);
 
         if (x.link) {
             delete x.link.format.textColor;
@@ -120,9 +124,9 @@ function clearTableCellFormat(
         if (cell.isSelected) {
             updateTableCellMetadata(cell, () => null);
             cell.isHeader = false;
-            cell.format = {
+            cell.format = createFormatObject<ContentModelTableCellFormat>({
                 useBorderBox: cell.format.useBorderBox,
-            };
+            });
         }
 
         if (!tablesToClear.find(x => x[0] == table)) {
@@ -172,7 +176,7 @@ function clearBlockFormat(path: ContentModelBlockGroup[], block: ContentModelBlo
             path[0].blocks.splice(index, 1);
         }
     } else if (block.blockType == 'Paragraph') {
-        block.format = {};
+        block.format = createFormatObject<ContentModelBlockFormat>();
         delete block.decorator;
     }
 }

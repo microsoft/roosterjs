@@ -1,17 +1,17 @@
-import type { SizeFormat } from './formatParts/SizeFormat';
-import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
-import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
-import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
-import type { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
-import type { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
-import type { ContentModelImageFormat } from './ContentModelImageFormat';
-import type { ContentModelListItemFormat } from './ContentModelListItemFormat';
-import type { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
-import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
-import type { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
-import type { ContentModelTableFormat } from './ContentModelTableFormat';
+import type { ContentModelBlockFormatCommon } from './ContentModelBlockFormat';
+import type { ContentModelCodeFormatCommon } from './ContentModelCodeFormat';
+import type { ContentModelDividerFormatCommon } from './ContentModelDividerFormat';
+import type { ContentModelEntityFormatCommon } from './ContentModelEntityFormat';
+import type { ContentModelFormatContainerFormatCommon } from './ContentModelFormatContainerFormat';
+import type { ContentModelHyperLinkFormatCommon } from './ContentModelHyperLinkFormat';
+import type { ContentModelImageFormatCommon } from './ContentModelImageFormat';
+import type { ContentModelListItemFormatCommon } from './ContentModelListItemFormat';
+import type { ContentModelListItemLevelFormatCommon } from './ContentModelListItemLevelFormat';
+import type { ContentModelSegmentFormatCommon } from './ContentModelSegmentFormat';
+import type { ContentModelTableCellFormatCommon } from './ContentModelTableCellFormat';
+import type { ContentModelTableFormatCommon } from './ContentModelTableFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
-import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
+import type { SizeFormat } from './formatParts/SizeFormat';
 
 /**
  * A map from Content Model format name to its combined format type
@@ -20,29 +20,29 @@ export interface ContentModelFormatMap {
     /**
      * Format type for block
      */
-    block: ContentModelBlockFormat;
+    block: ContentModelBlockFormatCommon;
 
     /**
      * Format type for style based segment format
      */
-    styleBasedSegment: ContentModelSegmentFormat;
+    styleBasedSegment: ContentModelSegmentFormatCommon;
 
     /**
      * Format type for element based segment format
      */
-    elementBasedSegment: ContentModelSegmentFormat;
+    elementBasedSegment: ContentModelSegmentFormatCommon;
 
     /**
      * Format type for segment
      */
-    segment: ContentModelSegmentFormat;
+    segment: ContentModelSegmentFormatCommon;
 
     /**
      * Format type for segment on block.
      * Block can have format that can impact segment, such as font and color.
      * But some segment format should not be read from block, like background color.
      */
-    segmentOnBlock: ContentModelSegmentFormat;
+    segmentOnBlock: ContentModelSegmentFormatCommon;
 
     /**
      * Format type for segment on table cell.
@@ -50,22 +50,22 @@ export interface ContentModelFormatMap {
      * text color style on table cell to indicate auto calculated segment color when set table cell shade.
      * Segments can set its own text color to override this value
      */
-    segmentOnTableCell: ContentModelSegmentFormat;
+    segmentOnTableCell: ContentModelSegmentFormatCommon;
 
     /**
      * Format type for table, except alignment related styles
      */
-    table: ContentModelTableFormat;
+    table: ContentModelTableFormatCommon;
 
     /**
      * Format type for tableCell
      */
-    tableCell: ContentModelTableCellFormat;
+    tableCell: ContentModelTableCellFormatCommon;
 
     /**
      * Format type for tableRow
      */
-    tableRow: ContentModelBlockFormat;
+    tableRow: ContentModelBlockFormatCommon;
 
     /**
      * Format type for tableColumn
@@ -75,52 +75,52 @@ export interface ContentModelFormatMap {
     /**
      * Format type for table border
      */
-    tableBorder: ContentModelTableFormat;
+    tableBorder: ContentModelTableFormatCommon;
 
     /**
      * Format type for tableCell border
      */
-    tableCellBorder: ContentModelTableCellFormat;
+    tableCellBorder: ContentModelTableCellFormatCommon;
 
     /**
      * Format type for li element
      */
-    listItemElement: ContentModelListItemFormat;
+    listItemElement: ContentModelListItemFormatCommon;
 
     /**
      * Format type for listItem
      */
-    listItemThread: ContentModelListItemLevelFormat;
+    listItemThread: ContentModelListItemLevelFormatCommon;
 
     /**
      * Format type for listLevel
      */
-    listLevel: ContentModelListItemLevelFormat;
+    listLevel: ContentModelListItemLevelFormatCommon;
 
     /**
      * Format type for listLevel
      */
-    listLevelThread: ContentModelListItemLevelFormat;
+    listLevelThread: ContentModelListItemLevelFormatCommon;
 
     /**
      * Format type for image
      */
-    image: ContentModelImageFormat;
+    image: ContentModelImageFormatCommon;
 
     /**
      * Format type for link
      */
-    link: ContentModelHyperLinkFormat;
+    link: ContentModelHyperLinkFormatCommon;
 
     /**
      * Format type for segment inside link
      */
-    segmentUnderLink: ContentModelHyperLinkFormat;
+    segmentUnderLink: ContentModelHyperLinkFormatCommon;
 
     /**
      * Format type for code
      */
-    code: FontFamilyFormat;
+    code: ContentModelCodeFormatCommon;
 
     /**
      * Format type for dataset
@@ -130,20 +130,20 @@ export interface ContentModelFormatMap {
     /**
      * Format type for divider
      */
-    divider: ContentModelDividerFormat;
+    divider: ContentModelDividerFormatCommon;
 
     /**
      * Format type for format container
      */
-    container: ContentModelFormatContainerFormat;
+    container: ContentModelFormatContainerFormatCommon;
 
     /**
      * Format type for entity
      */
-    entity: ContentModelEntityFormat;
+    entity: ContentModelEntityFormatCommon;
 
     /**
      * Format type for general model
      */
-    general: ContentModelSegmentFormat;
+    general: ContentModelSegmentFormatCommon;
 }

@@ -5,7 +5,10 @@ import { createParagraphDecorator } from '../../modelApi/creators/createParagrap
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import type { ContentModelSegmentFormat, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormatCommon,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -15,7 +18,7 @@ export const headingProcessor: ElementProcessor<HTMLHeadingElement> = (group, el
         context,
         { segment: 'shallowCloneForBlock', paragraph: 'shallowClone', blockDecorator: 'empty' },
         () => {
-            const segmentFormat: ContentModelSegmentFormat = {};
+            const segmentFormat: ContentModelSegmentFormatCommon = {};
 
             parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
 

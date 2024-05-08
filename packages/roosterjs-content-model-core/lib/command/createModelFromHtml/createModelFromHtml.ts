@@ -3,7 +3,7 @@ import { createDomToModelContextForSanitizing } from './createDomToModelContextF
 import { createEmptyModel, domToContentModel, parseFormat } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DomToModelOptionForSanitizing,
     TrustedHTMLHandler,
 } from 'roosterjs-content-model-types';
@@ -19,7 +19,7 @@ export function createModelFromHtml(
     html: string,
     options?: Partial<DomToModelOptionForSanitizing>,
     trustedHTMLHandler?: TrustedHTMLHandler,
-    defaultSegmentFormat?: ContentModelSegmentFormat
+    defaultSegmentFormat?: ContentModelSegmentFormatCommon
 ): ContentModelDocument {
     const doc = html
         ? new DOMParser().parseFromString(trustedHTMLHandler?.(html) ?? html, 'text/html')

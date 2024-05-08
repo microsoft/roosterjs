@@ -3,14 +3,17 @@ import { addSegment } from '../../modelApi/common/addSegment';
 import { createImage } from '../../modelApi/creators/createImage';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import type { ContentModelImageFormat, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelImageFormatCommon,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, element, context) => {
     stackFormat(context, { segment: 'shallowClone' }, () => {
-        const imageFormat: ContentModelImageFormat = context.segmentFormat;
+        const imageFormat: ContentModelImageFormatCommon = context.segmentFormat;
 
         // Use getAttribute('src') instead of retrieving src directly, in case the src has port and may be stripped by browser
         const src = element.getAttribute('src') ?? '';

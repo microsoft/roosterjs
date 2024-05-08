@@ -1,12 +1,20 @@
+import { createCodeDecorator } from '../../modelApi/creators/createCodeDecorator';
+import { createFormatObject } from '../../modelApi/creators/createFormatObject';
+import { createLinkDecorator } from '../../modelApi/creators/createLinkDecorator';
+import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     ContentModelBlockFormat,
+    ContentModelBlockFormatCommon,
     ContentModelCode,
-    ContentModelFormatBase,
     ContentModelLink,
     ContentModelParagraphDecorator,
     ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DomToModelContext,
+    ReadonlyContentModelCode,
+    ReadonlyContentModelLink,
+    ReadonlyContentModelParagraphDecorator,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -72,72 +80,61 @@ export function stackFormat(
 }
 
 function stackLinkInternal(
-    linkFormat: ContentModelLink,
+    linkFormat: ReadonlyContentModelLink,
     link?: 'linkDefault' | 'cloneFormat' | 'empty'
-) {
+): ContentModelLink {
     switch (link) {
         case 'linkDefault':
-            return {
-                format: {
-                    underline: true,
-                },
-                dataset: {},
-            };
+            return createLinkDecorator({
+                underline: true,
+            });
 
         case 'empty':
-            return {
-                format: {},
-                dataset: {},
-            };
+            return createLinkDecorator();
 
         case 'cloneFormat':
         default:
-            return {
-                dataset: linkFormat.dataset,
-                format: { ...linkFormat.format },
-            };
+            return createLinkDecorator(linkFormat.format, linkFormat.dataset);
     }
 }
 
-function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 'empty') {
+function stackCodeInternal(
+    codeFormat: ReadonlyContentModelCode,
+    code?: 'codeDefault' | 'empty'
+): ContentModelCode {
     switch (code) {
         case 'codeDefault':
-            return {
-                format: {
-                    fontFamily: 'monospace',
-                },
-            };
+            return createCodeDecorator({
+                fontFamily: 'monospace',
+            });
         case 'empty':
-            return {
-                format: {},
-            };
+            return createCodeDecorator();
         default:
-            return codeFormat;
+            return createCodeDecorator(codeFormat.format);
     }
 }
 
 function stackDecoratorInternal(
-    format: ContentModelParagraphDecorator,
+    format: ReadonlyContentModelParagraphDecorator,
     decorator?: 'decoratorDefault' | 'empty'
-) {
+): ContentModelParagraphDecorator {
     switch (decorator) {
         case 'empty':
-            return {
-                format: {},
-                tagName: '',
-            };
+            return createParagraphDecorator('');
         default:
-            return format;
+            return createParagraphDecorator(format.tagName, format.format);
     }
 }
 
-function stackFormatInternal<T extends ContentModelFormatBase>(
+function stackFormatInternal<
+    T extends ContentModelSegmentFormatCommon | ContentModelBlockFormatCommon
+>(
     format: T,
     processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForGroup' | 'empty'
-): T | {} {
+): T {
     switch (processType) {
         case 'empty':
-            return {};
+            return createFormatObject<T>();
 
         case undefined:
             return format;
@@ -145,12 +142,14 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
         default:
             const result = { ...format };
 
-            getObjectKeys(format).forEach(key => {
+            getObjectKeys(format).forEach(formatKey => {
+                const key = formatKey as keyof (
+                    | ContentModelSegmentFormatCommon
+                    | ContentModelBlockFormatCommon
+                );
                 if (
                     (processType == 'shallowCloneForBlock' &&
-                        SkippedStylesForBlockOnSegmentOnSegment.indexOf(
-                            key as keyof ContentModelSegmentFormat
-                        ) >= 0) ||
+                        SkippedStylesForBlockOnSegmentOnSegment.indexOf(key) >= 0) ||
                     (processType == 'shallowCloneForGroup' &&
                         SkippedStylesForTable.indexOf(key as keyof ContentModelBlockFormat) >= 0)
                 ) {

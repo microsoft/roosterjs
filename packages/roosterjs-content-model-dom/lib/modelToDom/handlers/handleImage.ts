@@ -1,12 +1,15 @@
 import { applyFormat } from '../utils/applyFormat';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
-import type { ContentModelImage, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentHandler,
+    ReadonlyContentModelImage,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
+export const handleImage: ContentModelSegmentHandler<ReadonlyContentModelImage> = (
     doc,
     parent,
     imageModel,

@@ -1,7 +1,8 @@
+import { createFormatObject } from '../../modelApi/creators/createFormatObject';
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import type { ElementProcessor } from 'roosterjs-content-model-types';
+import type { ContentModelBlockFormat, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -50,7 +51,7 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                     firstChild.isImplicit
                 ) {
                     Object.assign(listItem.format, firstChild.format);
-                    firstChild.format = {};
+                    firstChild.format = createFormatObject<ContentModelBlockFormat>();
                 }
             }
         );

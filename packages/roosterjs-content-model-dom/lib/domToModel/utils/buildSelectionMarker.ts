@@ -5,6 +5,7 @@ import type {
     ContentModelSegmentFormat,
     ContentModelSelectionMarker,
     DomToModelContext,
+    ContentModelSegmentFormatCommon,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,7 +23,7 @@ export function buildSelectionMarker(
     offset?: number
 ): ContentModelSelectionMarker {
     const lastPara = group.blocks[group.blocks.length - 1];
-    const formatFromParagraph: ContentModelSegmentFormat =
+    const formatFromParagraph: ContentModelSegmentFormatCommon =
         !lastPara || lastPara.blockType != 'Paragraph'
             ? {}
             : lastPara.decorator

@@ -1,8 +1,8 @@
 import { CodeElement } from './CodeElement';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormatCommon } from 'roosterjs-content-model-types';
 
 export class DefaultFormatCode extends CodeElement {
-    constructor(private defaultFormat: ContentModelSegmentFormat) {
+    constructor(private defaultFormat: ContentModelSegmentFormatCommon) {
         super();
     }
 

@@ -7,10 +7,10 @@ import { pasteBlockEntityParser } from '../../override/pasteCopyBlockEntityParse
 import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../override/pasteTextProcessor';
 import type {
-    ContentModelSegmentFormat,
     DomToModelContext,
     DomToModelOption,
     DomToModelOptionForSanitizing,
+    ContentModelSegmentFormatCommon,
 } from 'roosterjs-content-model-types';
 
 const DefaultSanitizingOption: DomToModelOptionForSanitizing = {
@@ -28,7 +28,7 @@ const DefaultSanitizingOption: DomToModelOptionForSanitizing = {
  */
 export function createDomToModelContextForSanitizing(
     document: Document,
-    defaultFormat?: ContentModelSegmentFormat,
+    defaultFormat?: ContentModelSegmentFormatCommon,
     defaultOption?: DomToModelOption,
     additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>
 ): DomToModelContext {

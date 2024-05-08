@@ -11,7 +11,7 @@ import {
 import type {
     ContentModelDocument,
     ContentModelFormatter,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DarkColorHandler,
     DOMEventRecord,
     DOMHelper,
@@ -101,10 +101,6 @@ export class Editor implements IEditor {
 
         switch (mode) {
             case 'connected':
-                return core.api.createContentModel(core, {
-                    tryGetFromCache: true, // Pass an option here to force disable save index
-                });
-
             case 'disconnected':
                 return cloneModel(
                     core.api.createContentModel(core, {
@@ -187,7 +183,7 @@ export class Editor implements IEditor {
     /**
      * Get pending format of editor if any, or return null
      */
-    getPendingFormat(): ContentModelSegmentFormat | null {
+    getPendingFormat(): ContentModelSegmentFormatCommon | null {
         return this.getCore().format.pendingFormat?.format ?? null;
     }
 

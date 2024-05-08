@@ -1,7 +1,7 @@
 import { setFormat } from './utils/setFormat';
 import type {
     ContentChangedEvent,
-    ContentModelCodeFormat,
+    ContentModelCodeFormatCommon,
     EditorInputEvent,
     EditorPlugin,
     IEditor,
@@ -21,7 +21,7 @@ export interface MarkdownOptions {
     strikethrough?: boolean;
     bold?: boolean;
     italic?: boolean;
-    codeFormat?: ContentModelCodeFormat;
+    codeFormat?: ContentModelCodeFormatCommon;
 }
 
 /**

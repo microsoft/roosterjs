@@ -1,3 +1,4 @@
+import { createLinkDecorator } from 'roosterjs-content-model-dom/lib';
 import { matchLink } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type {
@@ -25,13 +26,10 @@ export function createLinkAfterSpace(
             previousSegment.text.length - link.trimLeft().length,
             previousSegment.text.trimRight().length
         );
-        linkSegment.link = {
-            format: {
-                href: linkData.normalizedUrl,
-                underline: true,
-            },
-            dataset: {},
-        };
+        linkSegment.link = createLinkDecorator({
+            href: linkData.normalizedUrl,
+            underline: true,
+        });
 
         context.canUndoByBackspace = true;
 

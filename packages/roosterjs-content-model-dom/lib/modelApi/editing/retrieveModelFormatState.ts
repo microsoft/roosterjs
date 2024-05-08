@@ -13,8 +13,8 @@ import type {
     ContentModelImage,
     ContentModelListItem,
     ContentModelParagraph,
-    ContentModelSegmentFormat,
     TableSelectionContext,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -25,7 +25,7 @@ import type {
  */
 export function retrieveModelFormatState(
     model: ContentModelDocument,
-    pendingFormat: ContentModelSegmentFormat | null,
+    pendingFormat: ReadonlyContentModelSegmentFormat | null,
     formatState: ContentModelFormatState
 ) {
     let firstTableContext: TableSelectionContext | undefined;
@@ -137,7 +137,7 @@ export function retrieveModelFormatState(
 function retrieveSegmentFormat(
     result: ContentModelFormatState,
     isFirst: boolean,
-    mergedFormat: ContentModelSegmentFormat
+    mergedFormat: ReadonlyContentModelSegmentFormat
 ) {
     const superOrSubscript = mergedFormat.superOrSubScriptSequence?.split(' ')?.pop();
 

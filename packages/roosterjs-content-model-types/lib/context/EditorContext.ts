@@ -1,6 +1,6 @@
 import type { DarkColorHandler } from './DarkColorHandler';
 import type { DomIndexer } from './DomIndexer';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 import type { PendingFormat } from '../pluginState/FormatPluginState';
 
 /**
@@ -15,7 +15,7 @@ export interface EditorContext {
     /**
      * Default format of editor
      */
-    defaultFormat?: ContentModelSegmentFormat;
+    defaultFormat?: ContentModelSegmentFormatCommon;
 
     /**
      * Pending format if any

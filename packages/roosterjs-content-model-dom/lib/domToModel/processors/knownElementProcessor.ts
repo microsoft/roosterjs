@@ -7,7 +7,7 @@ import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import type {
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
@@ -49,7 +49,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;
 
         stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
-            const segmentFormat: ContentModelSegmentFormat = {};
+            const segmentFormat: ContentModelSegmentFormatCommon = {};
 
             parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
             Object.assign(context.segmentFormat, segmentFormat);

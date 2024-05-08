@@ -7,7 +7,7 @@ import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImp
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelFormatContainer,
-    ContentModelFormatContainerFormat,
+    ContentModelFormatContainerFormatCommon,
     ContentModelParagraph,
     ElementProcessor,
     MarginFormat,
@@ -36,7 +36,7 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
         parseFormat(element, context.formatParsers.block, context.blockFormat, context);
         parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
 
-        const format: ContentModelFormatContainerFormat = {
+        const format: ContentModelFormatContainerFormatCommon = {
             ...context.blockFormat,
         };
 

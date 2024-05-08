@@ -4,7 +4,7 @@ import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { parseFormat } from '../utils/parseFormat';
 import type {
     ContentModelBlockGroup,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DomToModelContext,
 } from 'roosterjs-content-model-types';
 
@@ -17,7 +17,7 @@ export function blockProcessor(
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext,
-    segmentFormat?: ContentModelSegmentFormat
+    segmentFormat?: ContentModelSegmentFormatCommon
 ) {
     const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;
     const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;

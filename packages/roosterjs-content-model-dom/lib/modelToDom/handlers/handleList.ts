@@ -2,19 +2,18 @@ import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
 import type {
     ContentModelBlockHandler,
-    ContentModelListItem,
-    ModelToDomContext,
+    ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
-    doc: Document,
-    parent: Node,
-    listItem: ContentModelListItem,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleList: ContentModelBlockHandler<ReadonlyContentModelListItem> = (
+    doc,
+    parent,
+    listItem,
+    context,
+    refNode
 ) => {
     let layer = 0;
     const { nodeStack } = context.listFormat;

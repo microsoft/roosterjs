@@ -7,7 +7,7 @@ import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { SnapshotsManager } from '../parameter/SnapshotsManager';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type {
@@ -79,7 +79,7 @@ export interface IEditor {
     /**
      * Get pending format of editor if any, or return null
      */
-    getPendingFormat(): ContentModelSegmentFormat | null;
+    getPendingFormat(): ContentModelSegmentFormatCommon | null;
 
     /**
      * Get whether this editor is disposed

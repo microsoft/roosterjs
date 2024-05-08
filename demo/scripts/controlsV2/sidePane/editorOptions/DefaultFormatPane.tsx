@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ContentModelSegmentFormatCommon } from 'roosterjs-content-model-types';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { OptionState } from './OptionState';
 
@@ -10,7 +10,7 @@ const styles = require('./OptionsPane.scss');
 const NOT_SET = 'NotSet';
 
 export interface DefaultFormatProps {
-    state: ContentModelSegmentFormat;
+    state: ContentModelSegmentFormatCommon;
     resetState: (callback: (state: OptionState) => void, resetEditor: boolean) => void;
 }
 

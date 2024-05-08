@@ -1,4 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
+import { createFormatObject } from '../../modelApi/creators/createFormatObject';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
@@ -6,8 +7,8 @@ import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
-    ContentModelParagraph,
-    ModelToDomContext,
+    ContentModelSegmentFormat,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const DefaultParagraphTag = 'div';
@@ -15,12 +16,12 @@ const DefaultParagraphTag = 'div';
 /**
  * @internal
  */
-export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = (
-    doc: Document,
-    parent: Node,
-    paragraph: ContentModelParagraph,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleParagraph: ContentModelBlockHandler<ReadonlyContentModelParagraph> = (
+    doc,
+    parent,
+    paragraph,
+    context,
+    refNode
 ) => {
     let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
@@ -34,11 +35,11 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 (getObjectKeys(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
             const formatOnWrapper = needParagraphWrapper
-                ? {
-                      ...(paragraph.decorator?.format || {}),
-                      ...paragraph.segmentFormat,
-                  }
-                : {};
+                ? createFormatObject<ContentModelSegmentFormat>(
+                      paragraph.decorator?.format,
+                      paragraph.segmentFormat
+                  )
+                : createFormatObject<ContentModelSegmentFormat>();
 
             container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 

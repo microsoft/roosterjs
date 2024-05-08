@@ -1,10 +1,10 @@
 import { addBlock } from './addBlock';
 import { createParagraph } from '../creators/createParagraph';
 import type {
-    ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelParagraph,
-    ContentModelSegmentFormat,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,8 +15,8 @@ import type {
  */
 export function ensureParagraph(
     group: ContentModelBlockGroup,
-    blockFormat?: ContentModelBlockFormat,
-    segmentFormat?: ContentModelSegmentFormat
+    blockFormat?: ReadonlyContentModelBlockFormat,
+    segmentFormat?: ReadonlyContentModelSegmentFormat
 ): ContentModelParagraph {
     const lastBlock = group.blocks[group.blocks.length - 1];
 

@@ -15,6 +15,7 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     IterateSelectionsOption,
+    ReadonlyContentModelSegmentFormat,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -49,7 +50,7 @@ export function deleteExpandedSelection(
                 undefined /*blockFormat*/,
                 model.format
             );
-            let markerFormat = model.format;
+            let markerFormat: ReadonlyContentModelSegmentFormat | undefined = model.format;
             let insertMarkerIndex = 0;
 
             if (segments) {

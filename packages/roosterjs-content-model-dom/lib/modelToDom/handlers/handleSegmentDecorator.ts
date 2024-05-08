@@ -3,14 +3,14 @@ import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { stackFormat } from '../utils/stackFormat';
 import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type {
-    ContentModelSegment,
     ContentModelSegmentHandler,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegment> = (
+export const handleSegmentDecorator: ContentModelSegmentHandler<ReadonlyContentModelSegment> = (
     _,
     parent,
     segment,

@@ -1,14 +1,14 @@
 import { allTextFormats } from './textPresets';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { image64x64Black, image64x64Gradient, image64x64White } from './imagePresets';
 import { mergedTableNoText, simpleTable, simpleTableWithHeader } from './tablePresets';
 import { mixedParagraphs } from './paragraphPresets';
 import { numberedList, simpleList } from './listPresets';
+import { ReadonlyContentModelDocument } from 'roosterjs-content-model-types';
 
 export type Preset = {
     buttonName: string;
     id: string;
-    content: ContentModelDocument;
+    content: ReadonlyContentModelDocument;
 };
 
 const wipeEditor: Preset = {

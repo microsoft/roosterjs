@@ -1,8 +1,8 @@
 import type { CacheSelection } from '../pluginState/CachePluginState';
 import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
-import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
-import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
-import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
+import type { ReadonlyContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ReadonlyContentModelSegment } from '../contentModel/segment/ContentModelSegment';
+import type { ReadonlyContentModelTable } from '../contentModel/block/ContentModelTable';
 import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
@@ -18,8 +18,8 @@ export interface DomIndexer {
      */
     onSegment: (
         segmentNode: Node,
-        paragraph: ContentModelParagraph,
-        segments: ContentModelSegment[]
+        paragraph: ReadonlyContentModelParagraph,
+        segments: ReadonlyContentModelSegment[]
     ) => void;
 
     /**
@@ -32,7 +32,7 @@ export interface DomIndexer {
      * Invoked when new table node is created in DOM tree
      * @param tableElement The new DOM node for this table
      */
-    onTable: (tableElement: HTMLTableElement, tableModel: ContentModelTable) => void;
+    onTable: (tableElement: HTMLTableElement, tableModel: ReadonlyContentModelTable) => void;
 
     /**
      * When document content or selection is changed by user, we need to use this function to update the content model

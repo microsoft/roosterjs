@@ -1,5 +1,6 @@
 import { addDelimiters } from '../../domUtils/entityUtils';
 import { applyFormat } from '../utils/applyFormat';
+import { createFormatObject } from '../../modelApi/creators/createFormatObject';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
@@ -9,6 +10,7 @@ import type {
     ContentModelSegmentFormat,
     ContentModelSegmentHandler,
     ModelToDomContext,
+    ReadonlyContentModelEntity,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityContainer = '_E_EBlockEntityContainer';
@@ -52,7 +54,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
 /**
  * @internal
  */
-export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity> = (
+export const handleEntitySegment: ContentModelSegmentHandler<ReadonlyContentModelEntity> = (
     doc,
     parent,
     entityModel,
@@ -83,11 +85,12 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
+
 function getSegmentFormat(
     context: ModelToDomContext
 ): ContentModelSegmentFormat | null | undefined {
-    return {
-        ...context.pendingFormat?.format,
-        ...context.defaultFormat,
-    };
+    return createFormatObject<ContentModelSegmentFormat>(
+        context.pendingFormat?.format,
+        context.defaultFormat
+    );
 }

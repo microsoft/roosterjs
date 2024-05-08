@@ -5,36 +5,33 @@ import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
-    ContentModelGeneralBlock,
     ContentModelGeneralSegment,
     ContentModelSegmentHandler,
+    ReadonlyContentModelGeneralBlock,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlock> = (
+export const handleGeneralBlock: ContentModelBlockHandler<ReadonlyContentModelGeneralBlock> = (
     doc,
     parent,
     group,
     context,
     refNode
 ) => {
-    let node: HTMLElement = group.element;
+    const { element } = group;
 
-    if (refNode && node.parentNode == parent) {
-        refNode = reuseCachedElement(parent, node, refNode);
+    if (refNode && element.parentNode == parent) {
+        refNode = reuseCachedElement(parent, element, refNode);
     } else {
-        node = node.cloneNode() as HTMLElement;
-        group.element = node as HTMLElement;
+        applyFormat(element, context.formatAppliers.general, group.format, context);
 
-        applyFormat(node, context.formatAppliers.general, group.format, context);
-
-        parent.insertBefore(node, refNode);
+        parent.insertBefore(element, refNode);
     }
 
-    context.onNodeCreated?.(group, node);
-    context.modelHandlers.blockGroupChildren(doc, node, group, context);
+    context.onNodeCreated?.(group, element);
+    context.modelHandlers.blockGroupChildren(doc, element, group, context);
 
     return refNode;
 };

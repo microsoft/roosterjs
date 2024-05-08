@@ -1,8 +1,8 @@
 import { defaultContentModelFormatMap } from '../../config/defaultContentModelFormatMap';
 import type {
-    ContentModelBlockFormat,
-    ContentModelSegmentFormat,
     ModelToDomContext,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +10,10 @@ import type {
  */
 export function stackFormat(
     context: ModelToDomContext,
-    tagNameOrFormat: string | (ContentModelSegmentFormat & ContentModelBlockFormat) | null,
+    tagNameOrFormat:
+        | string
+        | (ReadonlyContentModelSegmentFormat & ReadonlyContentModelBlockFormat)
+        | null,
     callback: () => void
 ) {
     const newFormat =

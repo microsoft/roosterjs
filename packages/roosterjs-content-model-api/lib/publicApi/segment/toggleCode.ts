@@ -1,11 +1,9 @@
-import { addCode } from 'roosterjs-content-model-dom';
+import { createCodeDecorator } from 'roosterjs-content-model-dom';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { ContentModelCode, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelCodeFormat } from 'roosterjs-content-model-types';
 
-const DefaultCode: ContentModelCode = {
-    format: {
-        fontFamily: 'monospace',
-    },
+const DefaultCodeFormat: ReadonlyContentModelCodeFormat = {
+    fontFamily: 'monospace',
 };
 
 /**
@@ -21,7 +19,7 @@ export function toggleCode(editor: IEditor) {
         (_, isTurningOn, segment) => {
             if (segment) {
                 if (isTurningOn) {
-                    addCode(segment, DefaultCode);
+                    segment.code = createCodeDecorator(DefaultCodeFormat);
                 } else {
                     delete segment.code;
                 }

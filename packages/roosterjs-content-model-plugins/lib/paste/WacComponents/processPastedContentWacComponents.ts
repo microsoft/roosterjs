@@ -10,11 +10,11 @@ import {
 } from './constants';
 import type {
     BeforePasteEvent,
-    ContentModelBlockFormat,
+    ContentModelBlockFormatCommon,
     ContentModelBlockGroup,
-    ContentModelListItemLevelFormat,
+    ContentModelListItemLevelFormatCommon,
     ContentModelListLevel,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     DomToModelContext,
     DomToModelListFormat,
     ElementProcessor,
@@ -39,10 +39,7 @@ interface WacContext extends DomToModelListFormat {
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
  * This parser normalize the content for content model
  */
-const wacSubSuperParser: FormatParser<ContentModelSegmentFormat> = (
-    format: ContentModelSegmentFormat,
-    element: HTMLElement
-): void => {
+const wacSubSuperParser: FormatParser<ContentModelSegmentFormatCommon> = (format, element) => {
     const verticalAlign = element.style.verticalAlign;
     if (verticalAlign === 'super') {
         format.superOrSubScriptSequence = 'super';
@@ -130,11 +127,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
 
     const newLevels: ContentModelListLevel[] = [];
     listFormat.levels.forEach(v => {
-        const newValue: ContentModelListLevel = {
-            dataset: { ...v.dataset },
-            format: { ...v.format },
-            listType: v.listType,
-        };
+        const newValue: ContentModelListLevel = createListLevel(v.listType, v.format, v.dataset);
         newLevels.push(newValue);
     });
     listFormat.currentListLevels = newLevels;
@@ -146,10 +139,10 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
  * 1) Sets the display for dummy item to undefined when the current style is block.
  * 2) Removes the Margin Left
  */
-const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
-    format: ContentModelListItemLevelFormat,
-    element: HTMLElement
-): void => {
+const wacListItemParser: FormatParser<ContentModelListItemLevelFormatCommon> = (
+    format,
+    element
+) => {
     if (element.style.display === 'block') {
         format.displayForDummyItem = undefined;
     }
@@ -160,9 +153,7 @@ const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
 /**
  * Wac usually adds padding to lists which is unwanted so remove it.
  */
-const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
-    format: ContentModelListItemLevelFormat
-): void => {
+const wacListLevelParser: FormatParser<ContentModelListItemLevelFormatCommon> = format => {
     format.marginLeft = undefined;
     format.paddingLeft = undefined;
 };
@@ -197,10 +188,7 @@ function shouldClearListContext(
     );
 }
 
-const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
-    format: ContentModelSegmentFormat,
-    element: HTMLElement
-): void => {
+const wacCommentParser: FormatParser<ContentModelSegmentFormatCommon> = (format, element) => {
     if (
         element.className.includes(COMMENT_HIGHLIGHT_CLASS) ||
         element.className.includes(COMMENT_HIGHLIGHT_CLICKED_CLASS)
@@ -227,10 +215,7 @@ export function processPastedContentWacComponents(ev: BeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
 }
 
-const wacContainerParser: FormatParser<ContentModelBlockFormat> = (
-    format: ContentModelBlockFormat,
-    element: HTMLElement
-) => {
+const wacContainerParser: FormatParser<ContentModelBlockFormatCommon> = (format, element) => {
     if (element.style.marginLeft.startsWith('-')) {
         delete format.marginLeft;
     }

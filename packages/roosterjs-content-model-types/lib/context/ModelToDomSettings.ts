@@ -1,29 +1,32 @@
 import type { Definition } from '../metadata/Definition';
-import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock';
-import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
-import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
-import type { ContentModelBr } from '../contentModel/segment/ContentModelBr';
-import type { ContentModelDecorator } from '../contentModel/decorator/ContentModelDecorator';
-import type { ContentModelDivider } from '../contentModel/block/ContentModelDivider';
-import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
-import type { ContentModelFormatBase } from '../contentModel/format/ContentModelFormatBase';
-import type { ContentModelFormatContainer } from '../contentModel/blockGroup/ContentModelFormatContainer';
+import type { ReadonlyContentModelBlock } from '../contentModel/block/ContentModelBlock';
+import type { ReadonlyContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
+import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ReadonlyContentModelBr } from '../contentModel/segment/ContentModelBr';
+import type { ReadonlyContentModelDecorator } from '../contentModel/decorator/ContentModelDecorator';
+import type { ReadonlyContentModelDivider } from '../contentModel/block/ContentModelDivider';
+import type { ReadonlyContentModelEntity } from '../contentModel/entity/ContentModelEntity';
+import type { ReadonlyContentModelFormatContainer } from '../contentModel/blockGroup/ContentModelFormatContainer';
 import type { ContentModelFormatMap } from '../contentModel/format/ContentModelFormatMap';
-import type { ContentModelGeneralBlock } from '../contentModel/blockGroup/ContentModelGeneralBlock';
-import type { ContentModelGeneralSegment } from '../contentModel/segment/ContentModelGeneralSegment';
-import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
-import type { ContentModelListItem } from '../contentModel/blockGroup/ContentModelListItem';
+import type { ReadonlyContentModelGeneralBlock } from '../contentModel/blockGroup/ContentModelGeneralBlock';
+import type { ReadonlyContentModelGeneralSegment } from '../contentModel/segment/ContentModelGeneralSegment';
+import type { ReadonlyContentModelImage } from '../contentModel/segment/ContentModelImage';
+import type { ReadonlyContentModelListItem } from '../contentModel/blockGroup/ContentModelListItem';
 import type { ContentModelListItemFormat } from '../contentModel/format/ContentModelListItemFormat';
 import type { ContentModelListItemLevelFormat } from '../contentModel/format/ContentModelListItemLevelFormat';
-import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
-import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
-import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
-import type { ContentModelTableRow } from '../contentModel/block/ContentModelTableRow';
-import type { ContentModelText } from '../contentModel/segment/ContentModelText';
+import type { ReadonlyContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ReadonlyContentModelSegment } from '../contentModel/segment/ContentModelSegment';
+import type { ReadonlyContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ReadonlyContentModelTable } from '../contentModel/block/ContentModelTable';
+import type { ReadonlyContentModelTableRow } from '../contentModel/block/ContentModelTableRow';
+import type { ReadonlyContentModelText } from '../contentModel/segment/ContentModelText';
 import type { FormatHandlerTypeMap, FormatKey } from '../contentModel/format/FormatHandlerTypeMap';
 import type { ModelToDomContext } from './ModelToDomContext';
 import type { ListMetadataFormat } from '../contentModel/format/metadata/ListMetadataFormat';
+import type {
+    ContentModelFormatBase,
+    ReadonlyContentModelFormatBase,
+} from '../contentModel/format/ContentModelFormatBase';
 import type {
     ContentModelHandler,
     ContentModelBlockHandler,
@@ -35,7 +38,7 @@ import type {
  */
 export type DefaultImplicitFormatMap = Record<
     string,
-    Readonly<ContentModelSegmentFormat & ContentModelBlockFormat>
+    ReadonlyContentModelSegmentFormat & ReadonlyContentModelBlockFormat
 >;
 
 /**
@@ -44,7 +47,7 @@ export type DefaultImplicitFormatMap = Record<
  * @param element The HTML element to apply format to
  * @param context The context object that provide related context information
  */
-export type FormatApplier<TFormat extends ContentModelFormatBase> = (
+export type FormatApplier<TFormat extends ReadonlyContentModelFormatBase> = (
     format: TFormat,
     element: HTMLElement,
     context: ModelToDomContext
@@ -57,7 +60,7 @@ export type FormatApplier<TFormat extends ContentModelFormatBase> = (
  * @param context The context object that provide related context information
  */
 export type TextFormatApplier<
-    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+    TFormat extends ReadonlyContentModelSegmentFormat = ReadonlyContentModelSegmentFormat
 > = (format: TFormat, textNode: Text, context: ModelToDomContext) => void;
 
 /**
@@ -88,87 +91,87 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelBlock
      */
-    block: ContentModelBlockHandler<ContentModelBlock>;
+    block: ContentModelBlockHandler<ReadonlyContentModelBlock>;
 
     /**
      * Content Model type for child models of ContentModelBlockGroup
      */
-    blockGroupChildren: ContentModelHandler<ContentModelBlockGroup>;
+    blockGroupChildren: ContentModelHandler<ReadonlyContentModelBlockGroup>;
 
     /**
      * Content Model type for ContentModelBr
      */
-    br: ContentModelSegmentHandler<ContentModelBr>;
+    br: ContentModelSegmentHandler<ReadonlyContentModelBr>;
 
     /**
      * Content Model type for child models of ContentModelEntity
      */
-    entityBlock: ContentModelBlockHandler<ContentModelEntity>;
+    entityBlock: ContentModelBlockHandler<ReadonlyContentModelEntity>;
 
     /**
      * Content Model type for child models of ContentModelEntity
      */
-    entitySegment: ContentModelSegmentHandler<ContentModelEntity>;
+    entitySegment: ContentModelSegmentHandler<ReadonlyContentModelEntity>;
 
     /**
      * Content Model type for ContentModelGeneralBlock
      */
-    generalBlock: ContentModelBlockHandler<ContentModelGeneralBlock>;
+    generalBlock: ContentModelBlockHandler<ReadonlyContentModelGeneralBlock>;
 
     /**
      * Content Model type for ContentModelGeneralBlock
      */
-    generalSegment: ContentModelSegmentHandler<ContentModelGeneralSegment>;
+    generalSegment: ContentModelSegmentHandler<ReadonlyContentModelGeneralSegment>;
 
     /**
      * Content Model type for ContentModelHR
      */
-    divider: ContentModelBlockHandler<ContentModelDivider>;
+    divider: ContentModelBlockHandler<ReadonlyContentModelDivider>;
 
     /**
      * Content Model type for ContentModelImage
      */
-    image: ContentModelSegmentHandler<ContentModelImage>;
+    image: ContentModelSegmentHandler<ReadonlyContentModelImage>;
 
     /**
      * Content Model type for list group of ContentModelListItem
      */
-    list: ContentModelBlockHandler<ContentModelListItem>;
+    list: ContentModelBlockHandler<ReadonlyContentModelListItem>;
 
     /**
      * Content Model type for list item of ContentModelListItem
      */
-    listItem: ContentModelBlockHandler<ContentModelListItem>;
+    listItem: ContentModelBlockHandler<ReadonlyContentModelListItem>;
 
     /**
      * Content Model type for ContentModelParagraph
      */
-    paragraph: ContentModelBlockHandler<ContentModelParagraph>;
+    paragraph: ContentModelBlockHandler<ReadonlyContentModelParagraph>;
 
     /**
      * Content Model type for ContentModelFormatContainer
      */
-    formatContainer: ContentModelBlockHandler<ContentModelFormatContainer>;
+    formatContainer: ContentModelBlockHandler<ReadonlyContentModelFormatContainer>;
 
     /**
      * Content Model type for ContentModelSegment
      */
-    segment: ContentModelSegmentHandler<ContentModelSegment>;
+    segment: ContentModelSegmentHandler<ReadonlyContentModelSegment>;
 
     /**
      * Content Model type for ContentModelCode
      */
-    segmentDecorator: ContentModelSegmentHandler<ContentModelSegment>;
+    segmentDecorator: ContentModelSegmentHandler<ReadonlyContentModelSegment>;
 
     /**
      * Content Model type for ContentModelTable
      */
-    table: ContentModelBlockHandler<ContentModelTable>;
+    table: ContentModelBlockHandler<ReadonlyContentModelTable>;
 
     /**
      * Content Model type for ContentModelText
      */
-    text: ContentModelSegmentHandler<ContentModelText>;
+    text: ContentModelSegmentHandler<ReadonlyContentModelText>;
 };
 
 /**
@@ -220,11 +223,11 @@ export type MetadataAppliers = {
  */
 export type OnNodeCreated = (
     modelElement:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
+        | ReadonlyContentModelBlock
+        | ReadonlyContentModelBlockGroup
+        | ReadonlyContentModelSegment
+        | ReadonlyContentModelDecorator
+        | ReadonlyContentModelTableRow,
     node: Node
 ) => void;
 

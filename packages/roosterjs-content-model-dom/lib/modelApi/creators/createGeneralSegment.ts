@@ -14,7 +14,7 @@ export function createGeneralSegment(
     element: HTMLElement,
     format?: ReadonlyContentModelSegmentFormat
 ): ContentModelGeneralSegment {
-    const result: ReadonlyContentModelGeneralSegment = {
+    let result: ReadonlyContentModelGeneralSegment = {
         blockType: 'BlockGroup',
         blockGroupType: 'General',
         segmentType: 'General',

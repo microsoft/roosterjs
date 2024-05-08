@@ -16,8 +16,6 @@ export type Mutable = {
     /**
      * The mutable marker to mark an object as mutable. When assign readonly object to a mutable type, compile will fail to build
      * due to this member does not exist from source type.
-     *
-     * TODO: We temporarily make it as optional to make existing code pass the build for now. In further steps we will make this as required.
      */
-    readonly mutableMark?: never;
+    readonly mutableMark: never;
 };

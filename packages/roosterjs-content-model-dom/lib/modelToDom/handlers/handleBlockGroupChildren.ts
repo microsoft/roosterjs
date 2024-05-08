@@ -1,17 +1,16 @@
 import type {
-    ContentModelBlockGroup,
     ContentModelHandler,
-    ModelToDomContext,
+    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGroup> = (
-    doc: Document,
-    parent: Node,
-    group: ContentModelBlockGroup,
-    context: ModelToDomContext
+export const handleBlockGroupChildren: ContentModelHandler<ReadonlyContentModelBlockGroup> = (
+    doc,
+    parent,
+    group,
+    context
 ) => {
     const { listFormat } = context;
     const nodeStack = listFormat.nodeStack;

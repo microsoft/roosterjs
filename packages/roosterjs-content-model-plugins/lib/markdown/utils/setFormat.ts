@@ -1,10 +1,11 @@
+import { createCodeDecorator } from 'roosterjs-content-model-dom/lib';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 
 import type {
-    ContentModelCodeFormat,
-    ContentModelSegmentFormat,
     IEditor,
+    ReadonlyContentModelCodeFormat,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -13,8 +14,8 @@ import type {
 export function setFormat(
     editor: IEditor,
     character: string,
-    format: ContentModelSegmentFormat,
-    codeFormat?: ContentModelCodeFormat
+    format: ReadonlyContentModelSegmentFormat,
+    codeFormat?: ReadonlyContentModelCodeFormat
 ) {
     formatTextSegmentBeforeSelectionMarker(
         editor,
@@ -46,9 +47,7 @@ export function setFormat(
                             ...format,
                         };
                         if (codeFormat) {
-                            formattedText.code = {
-                                format: codeFormat,
-                            };
+                            formattedText.code = createCodeDecorator(codeFormat);
                         }
 
                         context.canUndoByBackspace = true;

@@ -1,5 +1,5 @@
 import type { TextMutationObserver } from '../context/TextMutationObserver';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ReadonlyContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DomIndexer } from '../context/DomIndexer';
 import type {
     DOMInsertPoint,
@@ -47,7 +47,7 @@ export interface CachePluginState {
     /**
      * When reuse Content Model is allowed, we cache the Content Model object here after created
      */
-    cachedModel?: ContentModelDocument;
+    cachedModel?: ReadonlyContentModelDocument;
 
     /**
      * @optional Indexer for CachePlugin, to help build backward relationship from DOM node to Content Model

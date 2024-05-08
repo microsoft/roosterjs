@@ -4,6 +4,7 @@ import type {
     ContentModelSegment,
     IterateSelectionsCallback,
     IterateSelectionsOption,
+    ReadonlyContentModelBlockGroup,
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -14,7 +15,7 @@ import type {
  * @param option Option to determine how to iterate
  */
 export function iterateSelections(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     callback: IterateSelectionsCallback,
     option?: IterateSelectionsOption
 ): void {
@@ -26,7 +27,13 @@ export function iterateSelections(
         return callback(path, tableContext, block, segments);
     };
 
-    internalIterateSelections([group], internalCallback, option);
+    // TODO: !!! IMPORTANT !!!
+    // This is a temporary state. We will need to remove this type cast and just use readonly content model,
+    // then let formatter code decide which part to convert to mutable.
+    // This will be removed in up coming changes
+    const mutableGroup = group as ContentModelBlockGroup;
+
+    internalIterateSelections([mutableGroup], internalCallback, option);
 }
 
 function internalIterateSelections(

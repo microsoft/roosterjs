@@ -1,10 +1,15 @@
 import {
+    createFormatObject,
     createText,
     iterateSelections,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormat,
+    IEditor,
+    ReadonlyContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';
@@ -18,7 +23,7 @@ const NON_BREAK_SPACE = '\u00A0';
 export function applyPendingFormat(
     editor: IEditor,
     data: string,
-    format: ContentModelSegmentFormat
+    format: ReadonlyContentModelSegmentFormat
 ) {
     let isChanged = false;
 
@@ -40,7 +45,7 @@ export function applyPendingFormat(
 
                         // For space, there can be &#32 (space) or &#160 (&nbsp;), we treat them as the same
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
-                            marker.format = { ...format };
+                            marker.format = createFormatObject<ContentModelSegmentFormat>(format);
                             previousSegment.text = text.substring(0, text.length - data.length);
 
                             const newText = createText(

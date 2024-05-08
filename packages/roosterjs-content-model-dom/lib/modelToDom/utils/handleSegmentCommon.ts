@@ -1,5 +1,5 @@
 import { applyFormat } from './applyFormat';
-import type { ContentModelSegment, ModelToDomContext } from 'roosterjs-content-model-types';
+import type { ModelToDomContext, ReadonlyContentModelSegment } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ export function handleSegmentCommon(
     doc: Document,
     segmentNode: Node,
     containerNode: HTMLElement,
-    segment: ContentModelSegment,
+    segment: ReadonlyContentModelSegment,
     context: ModelToDomContext,
     segmentNodes: Node[]
 ) {

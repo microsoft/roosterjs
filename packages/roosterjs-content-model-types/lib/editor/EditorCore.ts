@@ -7,7 +7,7 @@ import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ReadonlyContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { EditorContext } from '../context/EditorContext';
@@ -39,7 +39,7 @@ export type CreateContentModel = (
     core: EditorCore,
     option?: DomToModelOptionForCreateModel,
     selectionOverride?: DOMSelection | 'none'
-) => ContentModelDocument;
+) => ReadonlyContentModelDocument;
 
 /**
  * Get current DOM selection from editor
@@ -56,7 +56,7 @@ export type GetDOMSelection = (core: EditorCore) => DOMSelection | null;
  */
 export type SetContentModel = (
     core: EditorCore,
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
 ) => DOMSelection | null;

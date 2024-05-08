@@ -4,9 +4,9 @@ import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
 import type {
     ContentModelSegment,
-    ContentModelSegmentFormat,
     ContentModelTable,
     ContentModelTableCell,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -28,7 +28,7 @@ const MIN_HEIGHT = 22;
  */
 export function normalizeTable(
     table: ContentModelTable,
-    defaultSegmentFormat?: ContentModelSegmentFormat
+    defaultSegmentFormat?: ReadonlyContentModelSegmentFormat
 ) {
     // Always collapse border and use border box for table in roosterjs to make layout simpler
     const format = table.format;

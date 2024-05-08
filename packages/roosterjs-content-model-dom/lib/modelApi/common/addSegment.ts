@@ -1,10 +1,10 @@
 import { ensureParagraph } from './ensureParagraph';
 import type {
-    ContentModelBlockFormat,
+    ContentModelBlockFormatCommon,
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSegment,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,8 +17,8 @@ import type {
 export function addSegment(
     group: ContentModelBlockGroup,
     newSegment: ContentModelSegment,
-    blockFormat?: ContentModelBlockFormat,
-    segmentFormat?: ContentModelSegmentFormat
+    blockFormat?: ContentModelBlockFormatCommon,
+    segmentFormat?: ContentModelSegmentFormatCommon
 ): ContentModelParagraph {
     const paragraph = ensureParagraph(group, blockFormat, segmentFormat);
     const lastSegment = paragraph.segments[paragraph.segments.length - 1];

@@ -1,5 +1,6 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { createBr } from '../creators/createBr';
+import { createFormatObject } from '../creators/createFormatObject';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
@@ -88,7 +89,7 @@ const formatsToMoveUp: FormatsToMoveUp[] = ['fontFamily', 'fontSize', 'textColor
 function moveUpSegmentFormat(paragraph: ContentModelParagraph) {
     if (!paragraph.decorator) {
         const segments = paragraph.segments.filter(x => x.segmentType != 'SelectionMarker');
-        const target = paragraph.segmentFormat || {};
+        const target = createFormatObject<ContentModelSegmentFormat>(paragraph.segmentFormat);
         let changed = false;
 
         formatsToMoveUp.forEach(key => {

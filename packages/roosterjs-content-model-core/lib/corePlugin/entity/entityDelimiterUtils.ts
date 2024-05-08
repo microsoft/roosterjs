@@ -19,7 +19,7 @@ import type {
     ContentModelBlockGroup,
     ContentModelFormatter,
     ContentModelParagraph,
-    ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     IEditor,
     KeyDownEvent,
     RangeSelection,
@@ -64,7 +64,7 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
 
 function addDelimitersIfNeeded(
     nodes: Element[] | NodeListOf<Element>,
-    format: ContentModelSegmentFormat | null
+    format: ContentModelSegmentFormatCommon | null
 ) {
     if (nodes.length > 0) {
         const context = createModelToDomContext();

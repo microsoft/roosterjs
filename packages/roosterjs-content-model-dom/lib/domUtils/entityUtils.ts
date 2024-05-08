@@ -3,10 +3,11 @@ import { isElementOfType } from './isElementOfType';
 import { isNodeOfType } from './isNodeOfType';
 import { toArray } from './toArray';
 import type {
-    ContentModelEntityFormat,
-    ContentModelSegmentFormat,
+    ContentModelEntityFormatCommon,
+    ContentModelSegmentFormatCommon,
     DOMHelper,
     ModelToDomContext,
+    ReadonlyContentModelEntityFormat,
 } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
@@ -66,9 +67,9 @@ export function getAllEntityWrappers(root: HTMLElement): HTMLElement[] {
  * @param wrapper The wrapper element to parse entity format from
  * @returns Entity format
  */
-export function parseEntityFormat(wrapper: HTMLElement): ContentModelEntityFormat {
+export function parseEntityFormat(wrapper: HTMLElement): ContentModelEntityFormatCommon {
     let isEntity = false;
-    const format: ContentModelEntityFormat = {};
+    const format: ContentModelEntityFormatCommon = {};
 
     wrapper.classList.forEach(name => {
         isEntity = parseEntityClassName(name, format) || isEntity;
@@ -89,7 +90,7 @@ export function parseEntityFormat(wrapper: HTMLElement): ContentModelEntityForma
  */
 function parseEntityClassName(
     className: string,
-    format: ContentModelEntityFormat
+    format: ContentModelEntityFormatCommon
 ): boolean | undefined {
     if (className == ENTITY_INFO_NAME) {
         return true;
@@ -107,7 +108,7 @@ function parseEntityClassName(
  * @param format The source entity format object
  * @returns A combined CSS class name string for entity wrapper
  */
-export function generateEntityClassNames(format: ContentModelEntityFormat): string {
+export function generateEntityClassNames(format: ReadonlyContentModelEntityFormat): string {
     return format.isFakeEntity
         ? ''
         : `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.entityType ?? ''} ${
@@ -151,7 +152,7 @@ export function isBlockEntityContainer(element: HTMLElement): boolean {
 export function addDelimiters(
     doc: Document,
     element: HTMLElement,
-    format?: ContentModelSegmentFormat | null,
+    format?: ContentModelSegmentFormatCommon | null,
     context?: ModelToDomContext
 ): HTMLElement[] {
     let [delimiterAfter, delimiterBefore] = getDelimiters(element);

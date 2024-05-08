@@ -1,11 +1,18 @@
-import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
-import type { ContentModelListLevel } from '../contentModel/decorator/ContentModelListLevel';
-import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelListItemLevelFormatCommon } from '../contentModel/format/ContentModelListItemLevelFormat';
+import type { ContentModelWithDataset } from '../contentModel/format/ContentModelWithDataset';
+import type { ContentModelWithFormat } from '../contentModel/format/ContentModelWithFormat';
+import type { ListMetadataFormat } from '../contentModel/format/metadata/ListMetadataFormat';
+import type { ContentModelBlockFormatCommon } from '../contentModel/format/ContentModelBlockFormat';
+import type { ContentModelListLevelCommon } from '../contentModel/decorator/ContentModelListLevel';
+import type { ContentModelSegmentFormatCommon } from '../contentModel/format/ContentModelSegmentFormat';
 
 /**
  * Represents a list stack item used by Content Model to DOM conversion
  */
-export interface ModelToDomListStackItem extends Partial<ContentModelListLevel> {
+export interface ModelToDomListStackItem
+    extends Partial<ContentModelListLevelCommon>,
+        Partial<ContentModelWithFormat<ContentModelListItemLevelFormatCommon>>,
+        Partial<ContentModelWithDataset<ListMetadataFormat>> {
     /**
      * DOM node of this list stack
      */
@@ -39,5 +46,5 @@ export interface ModelToDomFormatContext {
     /**
      * Existing format implicitly applied from parent element
      */
-    implicitFormat: ContentModelSegmentFormat & ContentModelBlockFormat;
+    implicitFormat: ContentModelSegmentFormatCommon & ContentModelBlockFormatCommon;
 }

@@ -2,19 +2,18 @@ import { applyFormat } from '../utils/applyFormat';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
-    ContentModelDivider,
-    ModelToDomContext,
+    ReadonlyContentModelDivider,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
-    doc: Document,
-    parent: Node,
-    divider: ContentModelDivider,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleDivider: ContentModelBlockHandler<ReadonlyContentModelDivider> = (
+    doc,
+    parent,
+    divider,
+    context,
+    refNode
 ) => {
     let element = context.allowCacheElement ? divider.cachedElement : undefined;
 

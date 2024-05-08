@@ -1,5 +1,5 @@
-import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
+import { createTableCell, createTableRow, getSelectedCells } from 'roosterjs-content-model-dom';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;
 
@@ -38,10 +38,10 @@ export function splitTableCellVertically(table: ContentModelTable) {
                 delete belowRow.cachedElement;
             } else {
                 const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
-                const newRow: ContentModelTableRow = {
-                    format: { ...row.format },
-                    height: newHeight,
-                    cells: row.cells.map((cell, colIndex) => {
+                const newRow = createTableRow(
+                    row.format,
+                    newHeight,
+                    row.cells.map((cell, colIndex) => {
                         const newCell = createTableCell(
                             cell.spanLeft,
                             cell.spanAbove,
@@ -58,8 +58,8 @@ export function splitTableCellVertically(table: ContentModelTable) {
                         }
 
                         return newCell;
-                    }),
-                };
+                    })
+                );
 
                 row.height = newHeight;
                 table.rows.splice(rowIndex + 1, 0, newRow);

@@ -1,3 +1,4 @@
+import { createParagraphDecorator } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import type { ContentModelParagraphDecorator, IEditor } from 'roosterjs-content-model-types';
 
@@ -11,6 +12,8 @@ const HeaderFontSizes: Record<HeadingLevelTags, string> = {
     h5: '0.83em',
     h6: '0.67em',
 };
+const MinHeadingLevel = 1;
+const MaxHeadingLevel = 6;
 
 /**
  * Set heading level of selected paragraphs
@@ -21,29 +24,26 @@ export function setHeadingLevel(editor: IEditor, headingLevel: 0 | 1 | 2 | 3 | 4
     editor.focus();
 
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
-        const tagName =
-            headingLevel > 0
-                ? (('h' + headingLevel) as HeadingLevelTags | null)
-                : getExistingHeadingTag(para.decorator);
+        if (headingLevel >= MinHeadingLevel && headingLevel <= MaxHeadingLevel) {
+            const tagName = ('h' + headingLevel) as HeadingLevelTags;
 
-        if (headingLevel > 0) {
-            para.decorator = {
-                tagName: tagName!,
-                format: tagName
-                    ? {
-                          fontWeight: 'bold',
-                          fontSize: HeaderFontSizes[tagName],
-                      }
-                    : {},
-            };
+            para.decorator = createParagraphDecorator(tagName, {
+                fontWeight: 'bold',
+                fontSize: HeaderFontSizes[tagName],
+            });
 
             // Remove existing formats since tags have default font size and weight
             para.segments.forEach(segment => {
                 delete segment.format.fontSize;
                 delete segment.format.fontWeight;
             });
-        } else if (tagName) {
-            delete para.decorator;
+        } else {
+            // Delete exiting heading decorator if any
+            const tagName = getExistingHeadingTag(para.decorator);
+
+            if (tagName) {
+                delete para.decorator;
+            }
         }
     });
 }

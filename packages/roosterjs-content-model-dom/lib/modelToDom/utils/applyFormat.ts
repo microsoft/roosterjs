@@ -1,7 +1,7 @@
 import type {
-    ContentModelFormatBase,
     FormatApplier,
     ModelToDomContext,
+    ReadonlyContentModelFormatBase,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,7 +12,7 @@ import type {
  * @param format The format object we get format info from
  * @param context Content Model to DOM context
  */
-export function applyFormat<T extends ContentModelFormatBase>(
+export function applyFormat<T extends ReadonlyContentModelFormatBase>(
     element: HTMLElement,
     appliers: (FormatApplier<T> | null)[],
     format: T,

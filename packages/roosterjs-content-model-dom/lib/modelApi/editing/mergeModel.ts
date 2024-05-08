@@ -1,9 +1,11 @@
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
+import { createFormatObject } from '../creators/createFormatObject';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
+import { createTableRow } from '../creators/createTableRow';
 import { deleteSelection } from './deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
@@ -11,16 +13,18 @@ import { normalizeContentModel } from '../common/normalizeContentModel';
 import { normalizeTable } from './normalizeTable';
 import type {
     ContentModelBlock,
-    ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegmentFormat,
+    ContentModelSegmentFormatCommon,
     ContentModelTable,
     FormatContentModelContext,
     InsertPoint,
     MergeModelOption,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -189,11 +193,7 @@ function mergeTable(
 
                 if (j == 0 && rowIndex + i >= table.rows.length) {
                     if (!table.rows[rowIndex + i]) {
-                        table.rows[rowIndex + i] = {
-                            cells: [],
-                            format: {},
-                            height: 0,
-                        };
+                        table.rows[rowIndex + i] = createTableRow();
                     }
 
                     for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
@@ -252,7 +252,10 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     }
 }
 
-function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModelBlockFormat) {
+function splitParagraph(
+    markerPosition: InsertPoint,
+    newParaFormat: ReadonlyContentModelBlockFormat
+) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
@@ -368,19 +371,19 @@ function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelB
 
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetformat: ContentModelSegmentFormat,
-    sourceFormat: ContentModelSegmentFormat
+    targetFormat: ReadonlyContentModelSegmentFormat,
+    sourceFormat: ReadonlyContentModelSegmentFormat
 ): ContentModelSegmentFormat {
-    return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetformat, ...sourceFormat }
-        : {
-              ...targetformat,
-              ...getSemanticFormat(sourceFormat),
-          };
+    return createFormatObject<ContentModelSegmentFormat>(
+        targetFormat,
+        applyDefaultFormatOption == 'mergeAll' ? sourceFormat : getSemanticFormat(sourceFormat)
+    );
 }
 
-function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
-    const result: ContentModelSegmentFormat = {};
+function getSemanticFormat(
+    segmentFormat: ReadonlyContentModelSegmentFormat
+): ContentModelSegmentFormatCommon {
+    const result: ContentModelSegmentFormatCommon = {};
 
     const { fontWeight, italic, underline } = segmentFormat;
 

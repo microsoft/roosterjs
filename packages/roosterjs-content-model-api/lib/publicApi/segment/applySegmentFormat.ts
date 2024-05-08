@@ -1,12 +1,12 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Bulk apply segment format to all selected content. This is usually used for format painter.
  * @param editor The editor to operate on
  * @param newFormat The segment format to apply
  */
-export function applySegmentFormat(editor: IEditor, newFormat: ContentModelSegmentFormat) {
+export function applySegmentFormat(editor: IEditor, newFormat: ReadonlyContentModelSegmentFormat) {
     formatSegmentWithContentModel(
         editor,
         'applySegmentFormat',

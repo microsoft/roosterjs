@@ -4,7 +4,10 @@ import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import type { ContentModelSegmentFormat, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormatCommon,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -16,7 +19,7 @@ export const pProcessor: ElementProcessor<HTMLElement> = (group, element, contex
         () => {
             context.blockDecorator = createParagraphDecorator(element.tagName);
 
-            const segmentFormat: ContentModelSegmentFormat = {};
+            const segmentFormat: ContentModelSegmentFormatCommon = {};
 
             parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
             Object.assign(context.segmentFormat, segmentFormat);

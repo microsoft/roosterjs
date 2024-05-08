@@ -47,6 +47,7 @@ import {
     EditorPlugin,
     IEditor,
     KnownAnnounceStrings,
+    ReadonlyContentModelDocument,
     Snapshots,
 } from 'roosterjs-content-model-types';
 import {
@@ -103,7 +104,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
-    protected model: ContentModelDocument | null = null;
+    protected model: ReadonlyContentModelDocument | null = null;
     private knownColors: Record<string, Colors> = {};
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
@@ -246,7 +247,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
     }
 
-    setPreset(preset: ContentModelDocument) {
+    setPreset(preset: ReadonlyContentModelDocument) {
         this.model = preset;
     }
 

@@ -4,19 +4,18 @@ import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImp
 import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
-    ContentModelListItem,
-    ModelToDomContext,
+    ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
-    doc: Document,
-    parent: Node,
-    listItem: ContentModelListItem,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleListItem: ContentModelBlockHandler<ReadonlyContentModelListItem> = (
+    doc,
+    parent,
+    listItem,
+    context,
+    refNode
 ) => {
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 

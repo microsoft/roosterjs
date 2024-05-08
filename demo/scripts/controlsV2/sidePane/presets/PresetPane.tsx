@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { allPresets, Preset } from './allPresets/allPresets';
+import { cloneModel } from 'roosterjs-content-model-dom';
 import { IEditor } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -39,7 +40,7 @@ export default class PresetPane extends React.Component<PresetPaneProps, PresetP
 
     setPreset(editor: IEditor, preset: Preset) {
         editor?.formatContentModel(model => {
-            model.blocks = preset.content.blocks;
+            model.blocks.splice(0, model.blocks.length, ...cloneModel(preset.content).blocks);
             return true;
         });
 

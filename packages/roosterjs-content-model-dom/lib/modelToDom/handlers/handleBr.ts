@@ -1,10 +1,13 @@
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import type { ContentModelBr, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentHandler,
+    ReadonlyContentModelBr,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleBr: ContentModelSegmentHandler<ContentModelBr> = (
+export const handleBr: ContentModelSegmentHandler<ReadonlyContentModelBr> = (
     doc,
     parent,
     segment,

@@ -1,4 +1,4 @@
-import { addLink, ChangeSource } from 'roosterjs-content-model-dom';
+import { ChangeSource, createLinkDecorator } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker, matchLink } from 'roosterjs-content-model-api';
 import type { IEditor, LinkData } from 'roosterjs-content-model-types';
 
@@ -11,13 +11,13 @@ export function createLink(editor: IEditor) {
         (_model, linkSegment, _paragraph) => {
             let linkData: LinkData | null = null;
             if (!linkSegment.link && (linkData = matchLink(linkSegment.text))) {
-                addLink(linkSegment, {
-                    format: {
+                if (linkData.normalizedUrl) {
+                    linkSegment.link = createLinkDecorator({
                         href: linkData.normalizedUrl,
                         underline: true,
-                    },
-                    dataset: {},
-                });
+                    });
+                }
+
                 return true;
             }
             return false;

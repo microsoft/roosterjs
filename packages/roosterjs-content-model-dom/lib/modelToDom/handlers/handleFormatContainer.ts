@@ -3,14 +3,13 @@ import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 import type {
-    ContentModelBlockFormat,
     ContentModelBlockHandler,
-    ContentModelFormatContainer,
-    ContentModelSegmentFormat,
-    ModelToDomContext,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
-const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
+const PreChildFormat: ReadonlyContentModelSegmentFormat & ReadonlyContentModelBlockFormat = {
     fontFamily: 'monospace',
     whiteSpace: 'pre',
 };
@@ -18,12 +17,12 @@ const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
 /**
  * @internal
  */
-export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatContainer> = (
-    doc: Document,
-    parent: Node,
-    container: ContentModelFormatContainer,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleFormatContainer: ContentModelBlockHandler<ReadonlyContentModelFormatContainer> = (
+    doc,
+    parent,
+    container,
+    context,
+    refNode
 ) => {
     let element = context.allowCacheElement ? container.cachedElement : undefined;
 
