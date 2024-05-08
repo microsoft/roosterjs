@@ -1,4 +1,4 @@
-import { createEmptyFormat } from '../creators/createEmptyFormat';
+import { createFormatObject } from '../creators/createFormatObject';
 import { internalConvertToMutableType } from '../creators/internalConvertToMutableType';
 import type {
     ContentModelBlock,
@@ -65,7 +65,7 @@ export function cloneModel(
     const result = internalConvertToMutableType(newModel);
 
     if (model.format) {
-        result.format = Object.assign(createEmptyFormat<ContentModelSegmentFormat>(), model.format);
+        result.format = createFormatObject<ContentModelSegmentFormat>(model.format);
     }
 
     return result;

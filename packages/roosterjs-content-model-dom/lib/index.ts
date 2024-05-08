@@ -56,7 +56,7 @@ export { createListLevel } from './modelApi/creators/createListLevel';
 export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 export { createLinkDecorator } from './modelApi/creators/createLinkDecorator';
 export { createCodeDecorator } from './modelApi/creators/createCodeDecorator';
-export { createEmptyFormat } from './modelApi/creators/createEmptyFormat';
+export { createFormatObject } from './modelApi/creators/createFormatObject';
 export { createTableRow } from './modelApi/creators/createTableRow';
 
 export { addBlock } from './modelApi/common/addBlock';

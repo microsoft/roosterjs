@@ -2,9 +2,9 @@ import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createCodeDecorator } from '../../../lib/modelApi/creators/createCodeDecorator';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createEmptyFormat } from '../../../lib/modelApi/creators/createEmptyFormat';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
+import { createFormatObject } from '../../../lib/modelApi/creators/createFormatObject';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
@@ -609,9 +609,40 @@ describe('Creators', () => {
         expect(code).toEqual({ format: { fontFamily: 'Arial' } });
     });
 
-    it('createEmptyFormat', () => {
-        const format = createEmptyFormat<any>();
+    it('createFormatObject', () => {
+        const format = createFormatObject<any>();
         expect(format).toEqual({});
+    });
+
+    it('createFormatObject with formats', () => {
+        const format1 = {
+            a: 1,
+            b: 2,
+        };
+        const format2 = {
+            b: 3,
+            c: 4,
+        };
+        const format = createFormatObject<any>(format1, format2);
+
+        expect(format).toEqual({
+            a: 1,
+            b: 3,
+            c: 4,
+        });
+
+        format.a = 5;
+        format.b = 6;
+        format.c = 7;
+
+        expect(format1).toEqual({
+            a: 1,
+            b: 2,
+        });
+        expect(format2).toEqual({
+            b: 3,
+            c: 4,
+        });
     });
 
     it('createLinkDecorator', () => {
