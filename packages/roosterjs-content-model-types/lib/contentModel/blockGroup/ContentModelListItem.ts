@@ -24,7 +24,7 @@ import type {
  */
 export interface ContentModelListItem
     extends ContentModelBlockGroupBase<'ListItem'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat> {
+        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
     /**
      * Type of this list, either ordered or unordered
      */
@@ -41,7 +41,11 @@ export interface ContentModelListItem
  */
 export interface ReadonlyContentModelListItem
     extends ReadonlyContentModelBlockGroupBase<'ListItem'>,
-        ReadonlyContentModelBlockBase<'BlockGroup', ReadonlyContentModelListItemFormat> {
+        ReadonlyContentModelBlockBase<
+            'BlockGroup',
+            ReadonlyContentModelListItemFormat,
+            HTMLLIElement
+        > {
     /**
      * Type of this list, either ordered or unordered
      */

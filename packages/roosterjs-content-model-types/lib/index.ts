@@ -270,6 +270,7 @@ export {
 
 export { Selectable, ReadonlySelectable } from './contentModel/common/Selectable';
 export { Mutable } from './contentModel/common/Mutable';
+export { MutableType } from './contentModel/common/MutableType';
 
 export {
     DOMSelection,

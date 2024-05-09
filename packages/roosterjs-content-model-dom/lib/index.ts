@@ -103,6 +103,7 @@ export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
+export { isMutableBlock } from './modelApi/typeCheck/isMutableBlock';
 
 export { getClosestAncestorBlockGroupIndex } from './modelApi/editing/getClosestAncestorBlockGroupIndex';
 
