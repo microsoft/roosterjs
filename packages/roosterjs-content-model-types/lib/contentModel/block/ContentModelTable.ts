@@ -1,5 +1,4 @@
 import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {
     ContentModelTableFormat,
     ReadonlyContentModelTableFormat,
@@ -15,9 +14,8 @@ import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat
  * Content Model of Table
  */
 export interface ContentModelTable
-    extends ContentModelBlockBase<'Table', ContentModelTableFormat>,
-        ContentModelWithDataset<TableMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableElement> {
+    extends ContentModelBlockBase<'Table', ContentModelTableFormat, HTMLTableElement>,
+        ContentModelWithDataset<TableMetadataFormat> {
     /**
      * Widths of each column
      */
@@ -33,9 +31,12 @@ export interface ContentModelTable
  * Content Model of Table (Readonly)
  */
 export interface ReadonlyContentModelTable
-    extends ReadonlyContentModelBlockBase<'Table', ReadonlyContentModelTableFormat>,
-        ReadonlyContentModelWithDataset<TableMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableElement> {
+    extends ReadonlyContentModelBlockBase<
+            'Table',
+            ReadonlyContentModelTableFormat,
+            HTMLTableElement
+        >,
+        ReadonlyContentModelWithDataset<TableMetadataFormat> {
     /**
      * Widths of each column
      */

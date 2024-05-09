@@ -1,6 +1,5 @@
 import type {
     ContentModelBlock,
-    ContentModelBlockBase,
     ContentModelBlockGroupBase,
     ContentModelBlockGroupType,
     ContentModelBlockType,
@@ -26,6 +25,8 @@ import type {
     ContentModelTableRow,
     ContentModelListLevel,
     CloneModelOptions,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelBlockBase,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -103,9 +104,13 @@ function cloneModelWithDataset<T>(model: ContentModelWithDataset<T>): ContentMod
     };
 }
 
-function cloneBlockBase<T extends ContentModelBlockType>(
-    block: ContentModelBlockBase<T>
-): ContentModelBlockBase<T> {
+function cloneBlockBase<
+    T extends ContentModelBlockType,
+    TFormat extends ReadonlyContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>(
+    block: ReadonlyContentModelBlockBase<T, TFormat, TCacheElement>
+): ReadonlyContentModelBlockBase<T, TFormat, TCacheElement> {
     const { blockType } = block;
 
     return Object.assign(

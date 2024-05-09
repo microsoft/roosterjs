@@ -6,7 +6,6 @@ import type {
     ContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {
     ContentModelFormatContainerFormat,
     ReadonlyContentModelFormatContainerFormat,
@@ -32,16 +31,18 @@ export interface ContentModelFormatContainerCommon {
  * Content Model of Format Container
  */
 export interface ContentModelFormatContainer
-    extends ContentModelBlockWithCache,
-        ContentModelFormatContainerCommon,
+    extends ContentModelFormatContainerCommon,
         ContentModelBlockGroupBase<'FormatContainer'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat> {}
+        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement> {}
 
 /**
  * Content Model of Format Container (Readonly)
  */
 export interface ReadonlyContentModelFormatContainer
-    extends ContentModelBlockWithCache,
-        ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
-        ReadonlyContentModelBlockBase<'BlockGroup', ReadonlyContentModelFormatContainerFormat>,
+    extends ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
+        ReadonlyContentModelBlockBase<
+            'BlockGroup',
+            ReadonlyContentModelFormatContainerFormat,
+            HTMLElement
+        >,
         Readonly<ContentModelFormatContainerCommon> {}
