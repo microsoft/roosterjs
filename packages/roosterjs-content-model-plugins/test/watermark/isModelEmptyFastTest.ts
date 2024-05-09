@@ -104,6 +104,7 @@ describe('isModelEmptyFast', () => {
         const para = createParagraph();
         para.format.marginRight = '10px';
 
+        para.segments.push(createBr());
         model.blocks.push(para);
 
         const result = isModelEmptyFast(model);
@@ -116,6 +117,7 @@ describe('isModelEmptyFast', () => {
         const para = createParagraph();
         para.format.marginLeft = '0.25rem';
 
+        para.segments.push(createBr());
         model.blocks.push(para);
 
         const result = isModelEmptyFast(model);
