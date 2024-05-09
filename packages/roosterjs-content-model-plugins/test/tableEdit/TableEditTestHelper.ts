@@ -1,6 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import { DOMEventHandlerFunction } from 'roosterjs-editor-types';
 import { getObjectKeys, normalizeTable } from 'roosterjs-content-model-dom';
+import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeature';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
     ContentModelTable,
@@ -15,8 +16,12 @@ import {
  * @param anchorContainerSelector The selector for the anchor container
  * @returns The editor, plugin, and handler to be used in the test
  */
-export function beforeTableTest(TEST_ID: string, anchorContainerSelector?: string) {
-    const plugin = new TableEditPlugin('.' + anchorContainerSelector);
+export function beforeTableTest(
+    TEST_ID: string,
+    anchorContainerSelector?: string,
+    disabledFeatures?: TableEditFeatureName[]
+) {
+    const plugin = new TableEditPlugin('.' + anchorContainerSelector, undefined, disabledFeatures);
 
     let handler: Record<string, DOMEventHandlerFunction> = {};
     const attachDomEvent = jasmine
