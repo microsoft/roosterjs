@@ -1,28 +1,25 @@
-import { updateMetadata } from '../../modelApi/metadata/updateMetadata';
+import { retrieveMetadataCopy } from '../../modelApi/metadata/updateMetadata';
 import type {
     ContentModelFormatBase,
-    ContentModelWithDataset,
     MetadataApplier,
     ModelToDomContext,
+    ReadonlyContentModelWithDataset,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function applyMetadata<TMetadata, TFormat extends ContentModelFormatBase>(
-    model: ContentModelWithDataset<TMetadata>,
+    model: ReadonlyContentModelWithDataset<TMetadata>,
     applier: MetadataApplier<TMetadata, TFormat> | undefined,
     format: TFormat,
     context: ModelToDomContext
 ) {
     if (applier) {
-        updateMetadata(
-            model,
-            metadata => {
-                applier.applierFunction(metadata, format, context);
-                return metadata;
-            },
-            applier.metadataDefinition
-        );
+        const metadata = retrieveMetadataCopy(model, applier.metadataDefinition);
+
+        if (metadata) {
+            applier.applierFunction(metadata, format, context);
+        }
     }
 }

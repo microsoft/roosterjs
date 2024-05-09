@@ -8,6 +8,26 @@ import type {
 const EditingInfoDatasetName = 'editingInfo';
 
 /**
+ * Retrieve a copy of metadata from a metadata model
+ * @param model The model to update metadata to
+ * @param definition @optional Metadata definition used for verify the metadata object
+ * @returns The metadata object if any, or null
+ */
+export function retrieveMetadataCopy<T>(
+    model: ReadonlyContentModelWithDataset<T>,
+    definition?: Definition<T>
+): T | null {
+    const metadataString = model.dataset[EditingInfoDatasetName];
+    let obj: T | null = null;
+
+    try {
+        obj = JSON.parse(metadataString) as T;
+    } catch {}
+
+    return definition && !validate(obj, definition) ? null : obj;
+}
+
+/**
  * Update metadata of the given model
  * @param model The model to update metadata to
  * @param callback A callback function to update metadata
@@ -19,16 +39,7 @@ export function updateMetadata<T>(
     callback?: (metadata: T | null) => T | null,
     definition?: Definition<T>
 ): T | null {
-    const metadataString = model.dataset[EditingInfoDatasetName];
-    let obj: T | null = null;
-
-    try {
-        obj = JSON.parse(metadataString) as T;
-    } catch {}
-
-    if (definition && !validate(obj, definition)) {
-        obj = null;
-    }
+    let obj = retrieveMetadataCopy(model, definition);
 
     if (callback) {
         obj = callback(obj);

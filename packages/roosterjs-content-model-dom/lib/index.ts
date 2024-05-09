@@ -15,7 +15,11 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
-export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
+export {
+    updateMetadata,
+    hasMetadata,
+    retrieveMetadataCopy,
+} from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';

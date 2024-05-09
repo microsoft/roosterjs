@@ -6,7 +6,6 @@ import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
-    ContentModelEntity,
     ContentModelSegmentFormat,
     ContentModelSegmentHandler,
     ModelToDomContext,
@@ -18,7 +17,7 @@ const BlockEntityContainer = '_E_EBlockEntityContainer';
 /**
  * @internal
  */
-export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
+export const handleEntityBlock: ContentModelBlockHandler<ReadonlyContentModelEntity> = (
     doc,
     parent,
     entityModel,

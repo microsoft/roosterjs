@@ -1,5 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { isMutableBlock } from 'roosterjs-content-model-dom/lib/modelApi/typeCheck/isMutableBlock';
+import { reuseCachedElement } from 'roosterjs/lib';
 import type {
     ContentModelBlockHandler,
     ReadonlyContentModelListItem,
@@ -44,22 +46,28 @@ export const handleList: ContentModelBlockHandler<ReadonlyContentModelListItem> 
     // Create new list levels that are after reused ones
     for (; layer < listItem.levels.length; layer++) {
         const level = listItem.levels[layer];
-        const newList = doc.createElement(level.listType || 'UL');
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
-        lastParent.insertBefore(newList, layer == 0 ? refNode : null);
-        nodeStack.push({ node: newList, ...level });
+        if (isMutableBlock(level)) {
+            const newList = doc.createElement(level.listType || 'UL');
 
-        applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
+            lastParent.insertBefore(newList, layer == 0 ? refNode : null);
+            nodeStack.push({ node: newList, ...level });
 
-        // Need to apply metadata after applying list level format since the list numbers value relies on the result of list thread handling
-        applyMetadata(level, context.metadataAppliers.listLevel, level.format, context);
+            applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
 
-        // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
-        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
-        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
+            // Need to apply metadata after applying list level format since the list numbers value relies on the result of list thread handling
+            applyMetadata(level, context.metadataAppliers.listLevel, level.format, context);
 
-        context.onNodeCreated?.(level, newList);
+            // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
+            applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
+            applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
+
+            context.onNodeCreated?.(level, newList);
+        } else if (level.cachedElement) {
+            // TODO: handle multiple layer of list
+            reuseCachedElement(lastParent, level.cachedElement, refNode);
+        }
     }
 
     return refNode;

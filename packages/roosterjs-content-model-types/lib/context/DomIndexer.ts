@@ -1,5 +1,5 @@
 import type { CacheSelection } from '../pluginState/CachePluginState';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ReadonlyContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { ReadonlyContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { ReadonlyContentModelSegment } from '../contentModel/segment/ContentModelSegment';
 import type { ReadonlyContentModelTable } from '../contentModel/block/ContentModelTable';
@@ -43,7 +43,7 @@ export interface DomIndexer {
      * @returns True if reconcile successfully, otherwise false
      */
     reconcileSelection: (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
     ) => boolean;

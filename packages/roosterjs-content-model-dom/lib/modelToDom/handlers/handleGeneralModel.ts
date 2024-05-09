@@ -5,9 +5,9 @@ import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { wrap } from '../../domUtils/wrap';
 import type {
     ContentModelBlockHandler,
-    ContentModelGeneralSegment,
     ContentModelSegmentHandler,
     ReadonlyContentModelGeneralBlock,
+    ReadonlyContentModelGeneralSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -39,25 +39,23 @@ export const handleGeneralBlock: ContentModelBlockHandler<ReadonlyContentModelGe
 /**
  * @internal
  */
-export const handleGeneralSegment: ContentModelSegmentHandler<ContentModelGeneralSegment> = (
+export const handleGeneralSegment: ContentModelSegmentHandler<ReadonlyContentModelGeneralSegment> = (
     doc,
     parent,
     group,
     context,
     segmentNodes
 ) => {
-    const node = group.element.cloneNode() as HTMLElement;
-    group.element = node;
-    parent.appendChild(node);
+    parent.appendChild(group.element);
 
-    if (isNodeOfType(node, 'ELEMENT_NODE')) {
-        const element = wrap(doc, node, 'span');
+    if (isNodeOfType(group.element, 'ELEMENT_NODE')) {
+        const element = wrap(doc, group.element, 'span');
 
-        handleSegmentCommon(doc, node, element, group, context, segmentNodes);
-        applyFormat(node, context.formatAppliers.general, group.format, context);
+        handleSegmentCommon(doc, group.element, element, group, context, segmentNodes);
+        applyFormat(group.element, context.formatAppliers.general, group.format, context);
 
-        context.onNodeCreated?.(group, node);
+        context.onNodeCreated?.(group, group.element);
     }
 
-    context.modelHandlers.blockGroupChildren(doc, node, group, context);
+    context.modelHandlers.blockGroupChildren(doc, group.element, group, context);
 };

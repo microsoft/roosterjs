@@ -6,16 +6,19 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     CacheSelection,
-    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSelectionMarker,
-    ContentModelTable,
-    ContentModelTableRow,
     ContentModelText,
     DomIndexer,
     DOMSelection,
+    MutableType,
     RangeSelectionForCache,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
+    ReadonlyContentModelTableRow,
     Selectable,
 } from 'roosterjs-content-model-types';
 
@@ -25,7 +28,7 @@ interface SegmentItem {
 }
 
 interface TableItem {
-    tableRows: ContentModelTableRow[];
+    tableRows: ReadonlyContentModelTableRow[];
 }
 
 interface IndexedSegmentNode extends Node {
@@ -49,13 +52,13 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
 
 function onSegment(
     segmentNode: Node,
-    paragraph: ContentModelParagraph,
-    segment: ContentModelSegment[]
+    paragraph: ReadonlyContentModelParagraph,
+    segment: ReadonlyContentModelSegment[]
 ) {
     const indexedText = segmentNode as IndexedSegmentNode;
     indexedText.__roosterjsContentModel = {
-        paragraph,
-        segments: segment,
+        paragraph: internalConvertToMutableType(paragraph),
+        segments: internalConvertToMutableType(segment),
     };
 }
 
@@ -86,16 +89,26 @@ function onParagraph(paragraphElement: HTMLElement) {
     }
 }
 
-function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
+function onTable(tableElement: HTMLTableElement, table: ReadonlyContentModelTable) {
     const indexedTable = tableElement as IndexedTableElement;
-    indexedTable.__roosterjsContentModel = { tableRows: table.rows };
+    indexedTable.__roosterjsContentModel = { tableRows: internalConvertToMutableType(table).rows };
+}
+
+// Convert to mutable type to update cache
+// !!!IMPORTANT do not export this function and do not do this in other place !!!
+// Here is the place we want to update cached model without marked is as dirty so that we can keep using it
+// This is the only place that we can update a readonly model
+function internalConvertToMutableType<T>(source: T): MutableType<T> {
+    return (source as unknown) as MutableType<T>;
 }
 
 function reconcileSelection(
-    model: ContentModelDocument,
+    readonlyModel: ReadonlyContentModelDocument,
     newSelection: DOMSelection,
     oldSelection?: CacheSelection
 ): boolean {
+    const model = internalConvertToMutableType(readonlyModel);
+
     if (oldSelection) {
         if (
             oldSelection.type == 'range' &&

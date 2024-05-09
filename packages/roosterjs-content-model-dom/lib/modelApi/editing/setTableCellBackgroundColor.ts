@@ -1,6 +1,10 @@
+import { createFormatObject } from '../creators/createFormatObject';
 import { parseColor } from '../../formatHandlers/utils/color';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
-import type { ContentModelTableCell } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormat,
+    ContentModelTableCell,
+} from 'roosterjs-content-model-types';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
 // If the value of the lightness is less than 20, the color is dark.
@@ -84,10 +88,10 @@ function setAdaptiveCellColor(cell: ContentModelTableCell) {
         cell.blocks.forEach(block => {
             if (block.blockType == 'Paragraph') {
                 if (!block.segmentFormat?.textColor) {
-                    block.segmentFormat = {
-                        ...block.segmentFormat,
-                        textColor: cell.format.textColor,
-                    };
+                    block.segmentFormat = createFormatObject<ContentModelSegmentFormat>(
+                        block.segmentFormat,
+                        { textColor: cell.format.textColor }
+                    );
                 }
                 block.segments.forEach(segment => {
                     if (!segment.format?.textColor) {
