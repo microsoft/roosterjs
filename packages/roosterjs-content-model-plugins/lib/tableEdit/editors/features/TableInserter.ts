@@ -1,7 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { getIntersectedRect } from '../../../pluginUtils/Rect/getIntersectedRect';
 import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
-import { HORIZONTAL_INSERTER_ID, type TableEditFeature, VERTICAL_INSERTER_ID } from './TableEditFeature';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import {
     formatTableWithContentModel,
@@ -16,6 +16,14 @@ const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
+/**
+ * @internal
+ */
+export const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
+/**
+ * @internal
+ */
+export const VERTICAL_INSERTER_ID = 'verticalInserter';
 
 /**
  * @internal

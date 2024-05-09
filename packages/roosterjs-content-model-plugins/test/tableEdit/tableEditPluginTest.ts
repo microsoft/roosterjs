@@ -1,15 +1,8 @@
 import * as TestHelper from '../TestHelper';
 import { createElement } from '../../lib/pluginUtils/CreateElement/createElement';
-import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { getModelTable } from './tableData';
+import { IEditor } from 'roosterjs-content-model-types';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
-import {
-    afterTableTest,
-    beforeTableTest,
-    getCellRect,
-    initialize,
-    mouseToPoint,
-} from './TableEditTestHelper';
 
 describe('TableEditPlugin', () => {
     let editor: IEditor;

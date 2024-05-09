@@ -1,6 +1,13 @@
 import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { getModelTable } from './tableData';
+import { TABLE_MOVER_ID } from '../../lib/tableEdit/editors/features/TableMover';
+import { TABLE_RESIZER_ID } from '../../lib/tableEdit/editors/features/TableResizer';
+import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeature';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
+import {
+    HORIZONTAL_INSERTER_ID,
+    VERTICAL_INSERTER_ID,
+} from '../../lib/tableEdit/editors/features/TableInserter';
 import {
     afterTableTest,
     beforeTableTest,
@@ -9,11 +16,9 @@ import {
     mouseToPoint,
 } from './TableEditTestHelper';
 import {
-    HORIZONTAL_INSERTER_ID,
-    TABLE_MOVER_ID,
-    TABLE_RESIZER_ID,
-    TableEditFeatureName,
-} from '../../lib/tableEdit/editors/features/TableEditFeature';
+    HORIZONTAL_RESIZER_ID,
+    VERTICAL_RESIZER_ID,
+} from '../../lib/tableEdit/editors/features/CellResizer';
 
 describe('TableEdit', () => {
     describe('disableFeatures', () => {
@@ -44,7 +49,23 @@ describe('TableEdit', () => {
             const tableRect = runDisableFeatureSetup(['VerticalTableInserter']);
             // Move mouse to top right of table
             mouseToPoint({ x: tableRect.right, y: tableRect.top - insideTheOffset }, handler);
-            const feature = editor.getDocument().getElementById(HORIZONTAL_INSERTER_ID);
+            const feature = editor.getDocument().getElementById(VERTICAL_INSERTER_ID);
+            expect(!!feature).toBe(false);
+        });
+
+        it('Disable Horizontal Resizer', () => {
+            const tableRect = runDisableFeatureSetup(['CellResizer']);
+            // Move mouse to bottom right of table
+            mouseToPoint({ x: tableRect.right - insideTheOffset, y: tableRect.bottom }, handler);
+            const feature = editor.getDocument().getElementById(HORIZONTAL_RESIZER_ID);
+            expect(!!feature).toBe(false);
+        });
+
+        it('Disable Vertical Resizer', () => {
+            const tableRect = runDisableFeatureSetup(['CellResizer']);
+            // Move mouse to bottom right of table
+            mouseToPoint({ x: tableRect.right, y: tableRect.bottom - insideTheOffset }, handler);
+            const feature = editor.getDocument().getElementById(VERTICAL_RESIZER_ID);
             expect(!!feature).toBe(false);
         });
 
@@ -106,8 +127,8 @@ describe('TableEdit', () => {
 
             // Look for table mover and resizer on the anchor
             const anchor = editor.getDocument().getElementsByClassName(ANCHOR_CLASS)[0];
-            const mover = anchor?.querySelector('#_Table_Mover');
-            const resizer = anchor?.querySelector('#_Table_Resizer');
+            const mover = anchor?.querySelector('#' + TABLE_MOVER_ID);
+            const resizer = anchor?.querySelector('#' + TABLE_RESIZER_ID);
             expect(!!mover).toBe(true);
             expect(!!resizer).toBe(true);
         });
@@ -126,8 +147,8 @@ describe('TableEdit', () => {
 
             // Look for table mover and resizer on the anchor
             const anchor = editor.getDocument().getElementsByClassName(ANCHOR_CLASS)[0];
-            const mover = anchor?.querySelector('#_Table_Mover');
-            const resizer = anchor?.querySelector('#_Table_Resizer');
+            const mover = anchor?.querySelector('#' + TABLE_MOVER_ID);
+            const resizer = anchor?.querySelector('#' + TABLE_RESIZER_ID);
             expect(!!mover).toBe(false);
             expect(!!resizer).toBe(false);
         });

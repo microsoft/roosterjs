@@ -1,6 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { HORIZONTAL_RESIZER_ID, type TableEditFeature, VERTICAL_RESIZER_ID } from './TableEditFeature';
+import type { TableEditFeature } from './TableEditFeature';
 import {
     isElementOfType,
     normalizeRect,
@@ -12,6 +12,14 @@ import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAn
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
 
 const CELL_RESIZER_WIDTH = 4;
+/**
+ * @internal
+ */
+export const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
+/**
+ * @internal
+ */
+export const VERTICAL_RESIZER_ID = 'verticalResizer';
 
 /**
  * @internal

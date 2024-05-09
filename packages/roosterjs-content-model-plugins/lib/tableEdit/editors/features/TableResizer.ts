@@ -1,6 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { TABLE_RESIZER_ID, type TableEditFeature } from './TableEditFeature';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import {
     getFirstSelectedTable,
@@ -12,6 +12,10 @@ import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-t
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
+/**
+ * @internal
+ */
+export const TABLE_RESIZER_ID = '_Table_Resizer';
 
 /**
  * @internal

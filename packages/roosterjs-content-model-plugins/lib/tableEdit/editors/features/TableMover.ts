@@ -1,12 +1,16 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
-import { TABLE_MOVER_ID, type TableEditFeature } from './TableEditFeature';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, Rect } from 'roosterjs-content-model-types';
 
 const TABLE_MOVER_LENGTH = 12;
+/**
+ * @internal
+ */
+export const TABLE_MOVER_ID = '_Table_Mover';
 
 /**
  * @internal
