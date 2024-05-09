@@ -1,5 +1,4 @@
 import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {
     ContentModelParagraphDecorator,
     ReadonlyContentModelParagraphDecorator,
@@ -28,8 +27,7 @@ export interface ContentModelParagraphCommon {
  * Content Model of Paragraph
  */
 export interface ContentModelParagraph
-    extends ContentModelBlockWithCache,
-        ContentModelParagraphCommon,
+    extends ContentModelParagraphCommon,
         ContentModelBlockBase<'Paragraph'> {
     /**
      * Segments within this paragraph
@@ -51,8 +49,7 @@ export interface ContentModelParagraph
  * Content Model of Paragraph (Readonly)
  */
 export interface ReadonlyContentModelParagraph
-    extends ContentModelBlockWithCache,
-        ReadonlyContentModelBlockBase<'Paragraph'>,
+    extends ReadonlyContentModelBlockBase<'Paragraph'>,
         Readonly<ContentModelParagraphCommon> {
     /**
      * Segments within this paragraph

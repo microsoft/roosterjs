@@ -1,3 +1,4 @@
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { Mutable } from '../common/Mutable';
 import type {
     ContentModelListItemLevelFormat,
@@ -28,6 +29,7 @@ export interface ContentModelListLevelCommon {
  */
 export interface ContentModelListLevel
     extends Mutable,
+        ContentModelBlockWithCache<HTMLOListElement | HTMLUListElement>,
         ContentModelListLevelCommon,
         ContentModelWithFormat<ContentModelListItemLevelFormat>,
         ContentModelWithDataset<ListMetadataFormat> {}
@@ -36,6 +38,7 @@ export interface ContentModelListLevel
  * Content Model of List Level (Readonly)
  */
 export interface ReadonlyContentModelListLevel
-    extends ReadonlyContentModelWithFormat<ReadonlyContentModelListItemLevelFormat>,
+    extends ContentModelBlockWithCache<HTMLOListElement | HTMLUListElement>,
+        ReadonlyContentModelWithFormat<ReadonlyContentModelListItemLevelFormat>,
         ReadonlyContentModelWithDataset<ListMetadataFormat>,
         Readonly<ContentModelListLevelCommon> {}

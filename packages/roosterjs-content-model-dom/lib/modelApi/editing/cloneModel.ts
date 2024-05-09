@@ -48,6 +48,7 @@ import type {
     ReadonlyContentModelListLevel,
     ReadonlyContentModelBr,
     ContentModelBr,
+    ReadonlyContentModelBlockFormat,
 } from 'roosterjs-content-model-types';
 
 //#region Main function
@@ -141,9 +142,13 @@ function cloneModelWithDataset<T>(
     };
 }
 
-function cloneBlockBase<T extends ContentModelBlockType>(
-    block: ReadonlyContentModelBlockBase<T>
-): ReadonlyContentModelBlockBase<T> {
+function cloneBlockBase<
+    T extends ContentModelBlockType,
+    TFormat extends ReadonlyContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>(
+    block: ReadonlyContentModelBlockBase<T, TFormat, TCacheElement>
+): ReadonlyContentModelBlockBase<T, TFormat, TCacheElement> {
     const { blockType } = block;
 
     return Object.assign(

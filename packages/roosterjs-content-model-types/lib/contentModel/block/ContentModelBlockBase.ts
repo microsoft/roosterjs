@@ -1,3 +1,4 @@
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { Mutable } from '../common/Mutable';
 import type {
     ContentModelBlockFormat,
@@ -24,13 +25,22 @@ export interface ContentModelBlockBaseCommon<T extends ContentModelBlockType> {
  */
 export interface ContentModelBlockBase<
     T extends ContentModelBlockType,
-    TFormat extends ContentModelBlockFormat = ContentModelBlockFormat
-> extends Mutable, ContentModelBlockBaseCommon<T>, ContentModelWithFormat<TFormat> {}
+    TFormat extends ContentModelBlockFormat = ContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>
+    extends Mutable,
+        ContentModelBlockBaseCommon<T>,
+        ContentModelWithFormat<TFormat>,
+        ContentModelBlockWithCache<TCacheElement> {}
 
 /**
  * Base type of a block (Readonly)
  */
 export interface ReadonlyContentModelBlockBase<
     T extends ContentModelBlockType,
-    TFormat extends ReadonlyContentModelBlockFormat = ReadonlyContentModelBlockFormat
-> extends ContentModelBlockBaseCommon<T>, ReadonlyContentModelWithFormat<TFormat> {}
+    TFormat extends ReadonlyContentModelBlockFormat = ReadonlyContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>
+    extends ContentModelBlockBaseCommon<T>,
+        ReadonlyContentModelWithFormat<TFormat>,
+        ContentModelBlockWithCache<TCacheElement> {}
