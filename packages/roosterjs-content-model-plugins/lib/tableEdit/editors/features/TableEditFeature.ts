@@ -10,17 +10,6 @@ export interface TableEditFeature {
 }
 
 /**
- * Names of table edit features
- */
-export type TableEditFeatureName =
-    | 'HorizontalTableInserter'
-    | 'VerticalTableInserter'
-    | 'TableMover'
-    | 'TableResizer'
-    | 'TableSelector'
-    | 'CellResizer';
-
-/**
  * @internal
  */
 export function disposeTableEditFeature(feature: TableEditFeature | null) {

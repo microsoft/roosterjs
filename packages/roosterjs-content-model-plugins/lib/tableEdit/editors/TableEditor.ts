@@ -5,8 +5,9 @@ import { createTableResizer } from './features/TableResizer';
 import { disposeTableEditFeature } from './features/TableEditFeature';
 import { isNodeOfType, normalizeRect, parseTableCells } from 'roosterjs-content-model-dom';
 import type { OnTableEditorCreatedCallback } from '../OnTableEditorCreatedCallback';
-import type { TableEditFeature, TableEditFeatureName } from './features/TableEditFeature';
+import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
+import type { TableEditFeatureName } from './features/TableEditFeatureName';
 
 const INSERTER_HOVER_OFFSET = 6;
 const enum TOP_OR_SIDE {

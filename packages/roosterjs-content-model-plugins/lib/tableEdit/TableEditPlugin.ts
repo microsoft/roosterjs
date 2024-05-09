@@ -1,6 +1,6 @@
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { TableEditor } from './editors/TableEditor';
-import type { TableEditFeatureName } from './editors/features/TableEditFeature';
+import type { TableEditFeatureName } from './editors/features/TableEditFeatureName';
 import type { OnTableEditorCreatedCallback } from './OnTableEditorCreatedCallback';
 import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 

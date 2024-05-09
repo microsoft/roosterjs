@@ -2,7 +2,7 @@ import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types'
 import { getModelTable } from './tableData';
 import { TABLE_MOVER_ID } from '../../lib/tableEdit/editors/features/TableMover';
 import { TABLE_RESIZER_ID } from '../../lib/tableEdit/editors/features/TableResizer';
-import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeature';
+import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeatureName';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
     HORIZONTAL_INSERTER_ID,

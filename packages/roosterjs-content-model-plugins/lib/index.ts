@@ -1,6 +1,6 @@
 export { TableEditPlugin } from './tableEdit/TableEditPlugin';
 export { OnTableEditorCreatedCallback } from './tableEdit/OnTableEditorCreatedCallback';
-export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeature';
+export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeatureName';
 export { PastePlugin } from './paste/PastePlugin';
 export { EditPlugin } from './edit/EditPlugin';
 export { AutoFormatPlugin, AutoFormatOptions } from './autoFormat/AutoFormatPlugin';
