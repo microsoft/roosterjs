@@ -11,7 +11,6 @@ export interface TableEditFeature {
 
 /**
  * Names of table edit features
- * @internal
  */
 export type TableEditFeatureName =
     | 'HorizontalTableInserter'
