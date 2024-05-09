@@ -1,4 +1,4 @@
-import { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { Mutable } from '../common/Mutable';
 import type {
     ContentModelListItemLevelFormat,
