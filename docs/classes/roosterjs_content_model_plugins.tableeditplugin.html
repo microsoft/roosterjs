@@ -116,13 +116,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Edit<wbr>Plugin<span class="tsd-signature-symbol">(</span>anchorContainerSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onTableEditorCreated<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#ontableeditorcreatedcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnTableEditorCreatedCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Edit<wbr>Plugin<span class="tsd-signature-symbol">(</span>anchorContainerSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onTableEditorCreated<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#ontableeditorcreatedcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnTableEditorCreatedCallback</a>, disableFeatures<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#tableeditfeaturename" class="tsd-signature-type" data-tsd-kind="Type alias">TableEditFeatureName</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L15">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L16">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -146,6 +146,12 @@
 										<p>An optional callback to customize the Table Editors elements when created.</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> disableFeatures: <a href="../modules/roosterjs_content_model_plugins.html#tableeditfeaturename" class="tsd-signature-type" data-tsd-kind="Type alias">TableEditFeatureName</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An optional array of TableEditFeatures to disable</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></h4>
 						</li>
@@ -165,7 +171,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L66">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L69">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -188,7 +194,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L32">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L35">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -211,7 +217,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L40">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L43">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -243,7 +249,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L81">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L84">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,7 +277,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6c69ef9/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L133">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b1d4bab/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L136">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -357,33 +363,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.autoformatplugin.html" class="tsd-kind-icon">Auto<wbr>Format<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="roosterjs_content_model_plugins.contextmenupluginbase.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Plugin<wbr>Base</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.customreplaceplugin.html" class="tsd-kind-icon">Custom<wbr>Replace<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.editplugin.html" class="tsd-kind-icon">Edit<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.hyperlinkplugin.html" class="tsd-kind-icon">Hyperlink<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.markdownplugin.html" class="tsd-kind-icon">Markdown<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.pasteplugin.html" class="tsd-kind-icon">Paste<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.pickerplugin.html" class="tsd-kind-icon">Picker<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.shortcutplugin.html" class="tsd-kind-icon">Shortcut<wbr>Plugin</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
@@ -411,96 +390,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_content_model_plugins.watermarkplugin.html" class="tsd-kind-icon">Watermark<wbr>Plugin</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../interfaces/roosterjs_content_model_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.customreplace.html" class="tsd-kind-icon">Custom<wbr>Replace</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.markdownoptions.html" class="tsd-kind-icon">Markdown<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.pickerhandler.html" class="tsd-kind-icon">Picker<wbr>Handler</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.pickerhelper.html" class="tsd-kind-icon">Picker<wbr>Helper</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.shortcutcommand.html" class="tsd-kind-icon">Shortcut<wbr>Command</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/roosterjs_content_model_plugins.shortcutkeydefinition.html" class="tsd-kind-icon">Shortcut<wbr>Key<wbr>Definition</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-kind-icon">Auto<wbr>Format<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#hyperlinktooltip" class="tsd-kind-icon">Hyperlink<wbr>Tool<wbr>Tip</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#ontableeditorcreatedcallback" class="tsd-kind-icon">On<wbr>Table<wbr>Editor<wbr>Created<wbr>Callback</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#pickerdirection" class="tsd-kind-icon">Picker<wbr>Direction</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#pickerselectionchangmode" class="tsd-kind-icon">Picker<wbr>Selection<wbr>Chang<wbr>Mode</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#watermarkformat" class="tsd-kind-icon">Watermark<wbr>Format</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutbold" class="tsd-kind-icon">Shortcut<wbr>Bold</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutbullet" class="tsd-kind-icon">Shortcut<wbr>Bullet</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutclearformat" class="tsd-kind-icon">Shortcut<wbr>Clear<wbr>Format</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutdecreasefont" class="tsd-kind-icon">Shortcut<wbr>Decrease<wbr>Font</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutincreasefont" class="tsd-kind-icon">Shortcut<wbr>Increase<wbr>Font</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutindentlist" class="tsd-kind-icon">Shortcut<wbr>Indent<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutitalic" class="tsd-kind-icon">Shortcut<wbr>Italic</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutnumbering" class="tsd-kind-icon">Shortcut<wbr>Numbering</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutoutdentlist" class="tsd-kind-icon">Shortcut<wbr>Outdent<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutredo" class="tsd-kind-icon">Shortcut<wbr>Redo</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutredoalt" class="tsd-kind-icon">Shortcut<wbr>Redo<wbr>Alt</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutredomacos" class="tsd-kind-icon">Shortcut<wbr>Redo<wbr>MacOS</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutunderline" class="tsd-kind-icon">Shortcut<wbr>Underline</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutundo" class="tsd-kind-icon">Shortcut<wbr>Undo</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#shortcutundo2" class="tsd-kind-icon">Shortcut<wbr>Undo2</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/roosterjs_content_model_plugins.html#getdominsertpointrect" class="tsd-kind-icon">getDOMInsert<wbr>Point<wbr>Rect</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
