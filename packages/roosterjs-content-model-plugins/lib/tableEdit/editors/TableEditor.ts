@@ -7,6 +7,7 @@ import { isNodeOfType, normalizeRect, parseTableCells } from 'roosterjs-content-
 import type { OnTableEditorCreatedCallback } from '../OnTableEditorCreatedCallback';
 import type { TableEditFeature } from './features/TableEditFeature';
 import type { IEditor, TableSelection } from 'roosterjs-content-model-types';
+import type { TableEditFeatureName } from './features/TableEditFeatureName';
 
 const INSERTER_HOVER_OFFSET = 6;
 const enum TOP_OR_SIDE {
@@ -67,7 +68,8 @@ export class TableEditor {
         private onChanged: () => void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null,
-        private onTableEditorCreated?: OnTableEditorCreatedCallback
+        private onTableEditorCreated?: OnTableEditorCreatedCallback,
+        private disableFeatures?: TableEditFeatureName[]
     ) {
         this.isRTL = editor.getDocument().defaultView?.getComputedStyle(table).direction == 'rtl';
         this.setEditorFeatures();
@@ -145,10 +147,11 @@ export class TableEditor {
                     if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
-                        this.setInserterTd(
-                            isOnRightHalf ? td : tr.cells[j - 1],
-                            false /*isHorizontal*/
-                        );
+                        !this.disableFeatures?.includes('VerticalTableInserter') &&
+                            this.setInserterTd(
+                                isOnRightHalf ? td : tr.cells[j - 1],
+                                false /*isHorizontal*/
+                            );
                     } else if (j === 0 && topOrSide == TOP_OR_SIDE.side) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
@@ -161,17 +164,18 @@ export class TableEditor {
                             ? tdAboveRect.right === tdRect.right
                             : tdAboveRect.left === tdRect.left;
 
-                        this.setInserterTd(
-                            y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
-                                ? tdAbove
-                                : td,
-                            true /*isHorizontal*/
-                        );
+                        !this.disableFeatures?.includes('HorizontalTableInserter') &&
+                            this.setInserterTd(
+                                y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
+                                    ? tdAbove
+                                    : td,
+                                true /*isHorizontal*/
+                            );
                     } else {
                         this.setInserterTd(null);
                     }
 
-                    this.setResizingTd(td);
+                    !this.disableFeatures?.includes('CellResizer') && this.setResizingTd(td);
 
                     //Cell found
                     break;
@@ -188,21 +192,24 @@ export class TableEditor {
     }
 
     private setEditorFeatures() {
-        if (!this.tableMover) {
+        const disableSelector = this.disableFeatures?.includes('TableSelector');
+        const disableMovement = this.disableFeatures?.includes('TableMover');
+        if (!this.tableMover && !(disableSelector && disableMovement)) {
             this.tableMover = createTableMover(
                 this.table,
                 this.editor,
                 this.isRTL,
-                this.onSelect,
+                disableSelector ? () => {} : this.onSelect,
                 this.onStartTableMove,
                 this.onEndTableMove,
                 this.contentDiv,
                 this.anchorContainer,
-                this.onEditorCreated
+                this.onEditorCreated,
+                disableMovement
             );
         }
 
-        if (!this.tableResizer) {
+        if (!this.tableResizer && !this.disableFeatures?.includes('TableResizer')) {
             this.tableResizer = createTableResizer(
                 this.table,
                 this.editor,
@@ -216,15 +223,8 @@ export class TableEditor {
         }
     }
 
-    private onEditorCreated = (
-        editorType:
-            | 'HorizontalTableInserter'
-            | 'VerticalTableInserter'
-            | 'TableMover'
-            | 'TableResizer',
-        element: HTMLElement
-    ) => {
-        const disposer = this.onTableEditorCreated?.(editorType, element);
+    private onEditorCreated = (featureType: TableEditFeatureName, element: HTMLElement) => {
+        const disposer = this.onTableEditorCreated?.(featureType, element);
         const onMouseOut = element && this.getOnMouseOut(element);
         if (onMouseOut) {
             element.addEventListener('mouseout', onMouseOut);

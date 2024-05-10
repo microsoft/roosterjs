@@ -1,6 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
@@ -20,10 +21,12 @@ import type {
     IEditor,
     Rect,
 } from 'roosterjs-content-model-types';
-import type { TableEditFeature } from './TableEditFeature';
 
 const TABLE_MOVER_LENGTH = 12;
-const TABLE_MOVER_ID = '_Table_Mover';
+/**
+ * @internal
+ */
+export const TABLE_MOVER_ID = '_Table_Mover';
 const TABLE_MOVER_STYLE_KEY = '_TableMoverCursorStyle';
 
 /**
@@ -40,7 +43,8 @@ export function createTableMover(
     onEnd: () => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement,
-    onTableEditorCreated?: OnTableEditorCreatedCallback
+    onTableEditorCreated?: OnTableEditorCreatedCallback,
+    disableMovement?: boolean
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
