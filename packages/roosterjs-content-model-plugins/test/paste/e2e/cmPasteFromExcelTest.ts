@@ -44,7 +44,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData, 'asImage');
 
-        const model = editor.getContentModelCopy('connected');
+        const model = editor.getContentModelCopy('disconnected');
         const width = editor.getDOMHelper().getClientWidth();
 
         expect(model).toEqual({
@@ -60,6 +60,10 @@ describe(ID, () => {
                                 maxWidth: `${width}px`,
                             },
                             dataset: {},
+                            alt: undefined,
+                            title: undefined,
+                            isSelectedAsImageSelection: undefined,
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -80,6 +84,9 @@ describe(ID, () => {
                         },
                     ],
                     format: {},
+                    cachedElement: undefined,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
                 },
             ],
             format: {},

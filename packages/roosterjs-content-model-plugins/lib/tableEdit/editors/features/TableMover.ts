@@ -1,27 +1,50 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { IEditor, Rect } from 'roosterjs-content-model-types';
-import type { TableEditFeature } from './TableEditFeature';
+import {
+    createContentModelDocument,
+    createSelectionMarker,
+    getFirstSelectedTable,
+    isNodeOfType,
+    mergeModel,
+    normalizeRect,
+    setParagraphNotImplicit,
+    setSelection,
+} from 'roosterjs-content-model-dom';
+import type {
+    ContentModelTable,
+    DOMInsertPoint,
+    DOMSelection,
+    IEditor,
+    Rect,
+} from 'roosterjs-content-model-types';
 
 const TABLE_MOVER_LENGTH = 12;
-const TABLE_MOVER_ID = '_Table_Mover';
+/**
+ * @internal
+ */
+export const TABLE_MOVER_ID = '_Table_Mover';
+const TABLE_MOVER_STYLE_KEY = '_TableMoverCursorStyle';
 
 /**
  * @internal
+ * Allows user to move table to another position
  * Contains the function to select whole table
- * Moving behavior not implemented yet
  */
 export function createTableMover(
     table: HTMLTableElement,
     editor: IEditor,
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
+    onStart: () => void,
+    onEnd: () => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement,
-    onTableEditorCreated?: OnTableEditorCreatedCallback
+    onTableEditorCreated?: OnTableEditorCreatedCallback,
+    disableMovement?: boolean
 ): TableEditFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -33,7 +56,7 @@ export function createTableMover(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        style: 'position: fixed; cursor: move; user-select: none; border: 1px solid #808080',
     };
 
     const div = createElement(createElementData, document) as HTMLDivElement;
@@ -49,40 +72,60 @@ export function createTableMover(
         zoomScale,
         rect,
         isRTL,
+        editor,
+        div,
+        onFinishDragging,
+        onStart,
+        onEnd,
+        disableMovement,
     };
 
     setDivPosition(context, div);
 
-    const onDragEnd = (context: TableMoverContext, event: MouseEvent): false => {
-        if (event.target == div) {
-            onFinishDragging(context.table);
-        }
-        return false;
-    };
-
     const featureHandler = new TableMoverFeature(
         div,
         context,
-        setDivPosition,
-        {
-            onDragEnd,
-        },
+        () => {},
+        disableMovement
+            ? { onDragEnd }
+            : {
+                  onDragStart,
+                  onDragging,
+                  onDragEnd,
+              },
         context.zoomScale,
-        onTableEditorCreated
+        onTableEditorCreated,
+        editor.getEnvironment().isMobileOrTablet
     );
 
-    return { div, featureHandler, node: table };
+    return { node: table, div, featureHandler };
 }
 
-interface TableMoverContext {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableMoverContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
     isRTL: boolean;
+    editor: IEditor;
+    div: HTMLElement;
+    onFinishDragging: (table: HTMLTableElement) => void;
+    onStart: () => void;
+    onEnd: () => void;
+    disableMovement?: boolean;
 }
 
-interface TableMoverInitValue {
-    event: MouseEvent;
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableMoverInitValue {
+    cmTable: ContentModelTable | undefined;
+    initialSelection: DOMSelection | null;
+    tableRect: HTMLDivElement;
 }
 
 class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverInitValue> {
@@ -98,9 +141,10 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         ) => void,
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
-        onTableEditorCreated?: OnTableEditorCreatedCallback
+        onTableEditorCreated?: OnTableEditorCreatedCallback,
+        forceMobile?: boolean | undefined
     ) {
-        super(div, context, onSubmit, handler, zoomScale);
+        super(div, context, onSubmit, handler, zoomScale, forceMobile);
         this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 
@@ -128,4 +172,220 @@ function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: Node
     }
 
     return true;
+}
+
+function setTableMoverCursor(editor: IEditor, state: boolean, type?: 'move' | 'copy') {
+    editor?.setEditorStyle(TABLE_MOVER_STYLE_KEY, state ? 'cursor: ' + type ?? 'move' : null);
+}
+
+// Get insertion point from coordinate.
+function getNodePositionFromEvent(editor: IEditor, x: number, y: number): DOMInsertPoint | null {
+    const doc = editor.getDocument();
+    const domHelper = editor.getDOMHelper();
+
+    if (doc.caretRangeFromPoint) {
+        // Chrome, Edge, Safari, Opera
+        const range = doc.caretRangeFromPoint(x, y);
+        if (range && domHelper.isNodeInEditor(range.startContainer)) {
+            return { node: range.startContainer, offset: range.startOffset };
+        }
+    }
+
+    if ('caretPositionFromPoint' in doc) {
+        // Firefox
+        const pos = (doc as any).caretPositionFromPoint(x, y);
+        if (pos && domHelper.isNodeInEditor(pos.offsetNode)) {
+            return { node: pos.offsetNode, offset: pos.offset };
+        }
+    }
+
+    if (doc.elementFromPoint) {
+        // Fallback
+        const element = doc.elementFromPoint(x, y);
+        if (element && domHelper.isNodeInEditor(element)) {
+            return { node: element, offset: 0 };
+        }
+    }
+
+    return null;
+}
+
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragStart(context: TableMoverContext): TableMoverInitValue {
+    context.onStart();
+
+    const { editor, table, div } = context;
+
+    setTableMoverCursor(editor, true, 'move');
+
+    // Create table outline rectangle
+    const trect = table.getBoundingClientRect();
+    const createElementData = {
+        tag: 'div',
+        style: 'position: fixed; user-select: none; border: 1px solid #808080',
+    };
+    const tableRect = createElement(createElementData, document) as HTMLDivElement;
+    tableRect.style.width = `${trect.width}px`;
+    tableRect.style.height = `${trect.height}px`;
+    tableRect.style.top = `${trect.top}px`;
+    tableRect.style.left = `${trect.left}px`;
+    div.parentNode?.appendChild(tableRect);
+
+    // Get current selection
+    const initialSelection = editor.getDOMSelection();
+
+    // Select first cell of the table
+    editor.setDOMSelection({
+        type: 'table',
+        firstColumn: 0,
+        firstRow: 0,
+        lastColumn: 0,
+        lastRow: 0,
+        table: table,
+    });
+
+    // Get the table content model
+    const [cmTable] = getFirstSelectedTable(editor.getContentModelCopy('disconnected'));
+
+    // Restore selection
+    editor.setDOMSelection(initialSelection);
+
+    return {
+        cmTable,
+        initialSelection,
+        tableRect,
+    };
+}
+
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragging(
+    context: TableMoverContext,
+    event: MouseEvent,
+    initValue: TableMoverInitValue
+) {
+    const { tableRect } = initValue;
+    const { editor } = context;
+
+    // Move table outline rectangle
+    tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
+    tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
+
+    const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+    if (pos) {
+        const range = editor.getDocument().createRange();
+        range.setStart(pos.node, pos.offset);
+        range.collapse(true);
+
+        editor.setDOMSelection({ type: 'range', range, isReverted: false });
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragEnd(
+    context: TableMoverContext,
+    event: MouseEvent,
+    initValue: TableMoverInitValue | undefined
+) {
+    const { editor, table, onFinishDragging: selectWholeTable, disableMovement } = context;
+    const element = event.target;
+
+    // Remove table outline rectangle
+    initValue?.tableRect.remove();
+
+    // Reset cursor
+    setTableMoverCursor(editor, false);
+
+    if (element == context.div) {
+        // Table mover was only clicked, select whole table
+        selectWholeTable(table);
+        context.onEnd();
+        return true;
+    } else {
+        // Check if table was dragged on itself, element is not in editor, or movement is disabled
+        if (
+            table.contains(element as Node) ||
+            !editor.getDOMHelper().isNodeInEditor(element as Node) ||
+            disableMovement
+        ) {
+            editor.setDOMSelection(initValue?.initialSelection ?? null);
+            context.onEnd();
+            return false;
+        }
+
+        let insertionSuccess: boolean = false;
+
+        // Get position to insert table
+        const insertPosition = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+        if (insertPosition) {
+            // Move table to new position
+            formatInsertPointWithContentModel(
+                editor,
+                insertPosition,
+                (model, context, ip) => {
+                    // Remove old table
+                    const [oldTable, path] = getFirstSelectedTable(model);
+                    if (oldTable) {
+                        const index = path[0].blocks.indexOf(oldTable);
+                        path[0].blocks.splice(index, 1);
+                    }
+
+                    if (ip && initValue?.cmTable) {
+                        // Insert new table
+                        const doc = createContentModelDocument();
+                        doc.blocks.push(initValue.cmTable);
+                        insertionSuccess = !!mergeModel(model, doc, context, {
+                            mergeFormat: 'none',
+                            insertPosition: ip,
+                        });
+
+                        if (insertionSuccess) {
+                            // After mergeModel, the new table should be selected
+                            const finalTable = getFirstSelectedTable(model)[0] ?? initValue.cmTable;
+                            if (finalTable) {
+                                // Add selection marker to the first cell of the table
+                                const FirstCell = finalTable.rows[0].cells[0];
+                                const markerParagraph = FirstCell?.blocks[0];
+                                if (markerParagraph?.blockType == 'Paragraph') {
+                                    const marker = createSelectionMarker(model.format);
+
+                                    markerParagraph.segments.unshift(marker);
+                                    setParagraphNotImplicit(markerParagraph);
+                                    setSelection(FirstCell, marker);
+                                }
+                            }
+                        }
+                        return insertionSuccess;
+                    }
+                },
+                {
+                    // Select first cell of the old table
+                    selectionOverride: {
+                        type: 'table',
+                        firstColumn: 0,
+                        firstRow: 0,
+                        lastColumn: 0,
+                        lastRow: 0,
+                        table: table,
+                    },
+                    apiName: 'TableMover',
+                }
+            );
+        } else {
+            // No movement, restore initial selection
+            editor.setDOMSelection(initValue?.initialSelection ?? null);
+        }
+        context.onEnd();
+        return insertionSuccess;
+    }
 }

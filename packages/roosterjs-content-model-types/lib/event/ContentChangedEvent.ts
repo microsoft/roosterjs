@@ -1,9 +1,9 @@
 import type { AnnounceData } from '../parameter/AnnounceData';
 import type { BasePluginEvent } from './BasePluginEvent';
 import type { EntityState } from '../parameter/FormatContentModelContext';
-import type { ContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 
 /**

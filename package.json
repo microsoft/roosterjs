@@ -28,6 +28,7 @@
         "test:chrome": "node tools/build.js normalize & karma start --chrome",
         "test:firefox": "node tools/build.js normalize & karma start --firefox",
         "test:debug": "node tools/build.js normalize & karma start --no-single-run --chrome",
+        "test:debug-firefox": "node tools/build.js normalize & karma start --no-single-run --firefox",
         "test:coverage": "node tools/build.js normalize & karma start --coverage --firefox --chrome",
         "publish": "node tools/build.js clean normalize buildcommonjs buildamd buildmjs dts pack packprod builddemo builddoc publish"
     },
