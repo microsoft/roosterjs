@@ -1,5 +1,5 @@
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import type { ContentModelBlockType } from '../enum/BlockType';
+import type { ContentModelBlockType } from './BlockType';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**

@@ -1,7 +1,7 @@
 import type { ContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelDividerFormat } from '../format/ContentModelDividerFormat';
-import type { Selectable } from '../selection/Selectable';
+import type { Selectable } from '../common/Selectable';
 
 /**
  * Content Model of horizontal divider

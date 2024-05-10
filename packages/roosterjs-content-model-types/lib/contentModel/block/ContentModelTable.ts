@@ -1,5 +1,5 @@
 import type { ContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelTableFormat } from '../format/ContentModelTableFormat';
 import type { ContentModelTableRow } from './ContentModelTableRow';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
