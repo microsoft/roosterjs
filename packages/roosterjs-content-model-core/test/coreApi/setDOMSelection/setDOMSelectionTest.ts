@@ -277,11 +277,7 @@ describe('setDOMSelection', () => {
             expect(mockedImage.id).toBe('image_0');
             expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
-            expect(setEditorStyleSpy).toHaveBeenCalledWith(
-                core,
-                '_DOMSelectionHideSelection',
-                null
-            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelectionHideSelection',
