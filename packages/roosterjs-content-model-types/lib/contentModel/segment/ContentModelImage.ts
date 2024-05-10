@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelImageFormat } from '../format/ContentModelImageFormat';
 import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
@@ -29,3 +30,8 @@ export interface ContentModelImage
      */
     isSelectedAsImageSelection?: boolean;
 }
+
+/**
+ * Content Model of Image (Readonly)
+ */
+export type ReadonlyContentModelImage = ReadonlyContentModel<ContentModelImage>;

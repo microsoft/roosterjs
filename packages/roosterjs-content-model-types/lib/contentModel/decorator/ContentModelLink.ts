@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
@@ -10,3 +11,8 @@ import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 export interface ContentModelLink
     extends ContentModelWithFormat<ContentModelHyperLinkFormat>,
         ContentModelWithDataset<null> {}
+
+/**
+ * Content Model of link decorator (Readonly)
+ */
+export type ReadonlyContentModelLink = ReadonlyContentModel<ContentModelLink>;

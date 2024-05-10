@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
@@ -13,3 +14,10 @@ export interface ContentModelParagraphDecorator
      */
     tagName: string;
 }
+
+/**
+ * Content Model of paragraph decorator (Readonly)
+ */
+export type ReadonlyContentModelParagraphDecorator = ReadonlyContentModel<
+    ContentModelParagraphDecorator
+>;

@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
@@ -13,3 +14,8 @@ export interface ContentModelDocument
      */
     hasRevertedRangeSelection?: boolean;
 }
+
+/**
+ * Content Model document entry point (Readonly)
+ */
+export type ReadonlyContentModelDocument = ReadonlyContentModel<ContentModelDocument>;

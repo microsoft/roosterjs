@@ -3,6 +3,7 @@ import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWith
 import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import type { ContentModelSegment } from '../segment/ContentModelSegment';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ReadonlyContentModel } from '../common/Mutable';
 
 /**
  * Content Model of Paragraph
@@ -31,3 +32,8 @@ export interface ContentModelParagraph
      */
     isImplicit?: boolean;
 }
+
+/**
+ * Content Model of Paragraph (Readonly)
+ */
+export type ReadonlyContentModelParagraph = ReadonlyContentModel<ContentModelParagraph>;

@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelCodeFormat } from '../format/ContentModelCodeFormat';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
@@ -7,3 +8,8 @@ import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
  * since code is also a kind of segment, with some extra information
  */
 export interface ContentModelCode extends ContentModelWithFormat<ContentModelCodeFormat> {}
+
+/**
+ * Content Model of code decorator (Readonly)
+ */
+export type ReadonlyContentModelCode = ReadonlyContentModel<ContentModelCode>;

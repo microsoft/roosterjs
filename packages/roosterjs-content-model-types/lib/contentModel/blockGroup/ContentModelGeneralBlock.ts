@@ -3,6 +3,7 @@ import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat'
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { Selectable } from '../common/Selectable';
+import type { ReadonlyContentModel } from '../common/Mutable';
 
 /**
  * Content Model for general Block element
@@ -16,3 +17,8 @@ export interface ContentModelGeneralBlock
      */
     element: HTMLElement;
 }
+
+/**
+ * Content Model document general Block element (Readonly)
+ */
+export type ReadonlyContentModelGeneralBlock = ReadonlyContentModel<ContentModelGeneralBlock>;

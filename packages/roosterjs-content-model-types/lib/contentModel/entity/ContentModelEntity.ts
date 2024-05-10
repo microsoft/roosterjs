@@ -3,6 +3,7 @@ import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat'
 import type { ContentModelEntityFormat } from '../format/ContentModelEntityFormat';
 import type { ContentModelSegmentBase } from '../segment/ContentModelSegmentBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ReadonlyContentModel } from '../common/Mutable';
 
 /**
  * Content Model of Entity
@@ -20,3 +21,8 @@ export interface ContentModelEntity
      */
     entityFormat: ContentModelEntityFormat;
 }
+
+/**
+ * Content Model of Entity(Readonly)
+ */
+export type ReadonlyContentModelEntity = ReadonlyContentModel<ContentModelEntity>;

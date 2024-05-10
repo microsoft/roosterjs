@@ -4,6 +4,7 @@ import type { ContentModelTableFormat } from '../format/ContentModelTableFormat'
 import type { ContentModelTableRow } from './ContentModelTableRow';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
+import type { ReadonlyContentModel } from '../common/Mutable';
 
 /**
  * Content Model of Table
@@ -22,3 +23,8 @@ export interface ContentModelTable
      */
     rows: ContentModelTableRow[];
 }
+
+/**
+ * Content Model of Table (Readonly)
+ */
+export type ReadonlyContentModelTable = ReadonlyContentModel<ContentModelTable>;

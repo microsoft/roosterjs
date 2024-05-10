@@ -1,3 +1,4 @@
+import { ReadonlyContentModel } from '../common/Mutable';
 import type { TableCellMetadataFormat } from '../format/metadata/TableCellMetadataFormat';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
@@ -30,3 +31,8 @@ export interface ContentModelTableCell
      */
     isHeader?: boolean;
 }
+
+/**
+ * Content Model of Table Cell (Readonly)
+ */
+export type ReadonlyContentModelTableCell = ReadonlyContentModel<ContentModelTableCell>;

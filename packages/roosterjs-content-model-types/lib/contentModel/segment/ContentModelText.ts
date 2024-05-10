@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
 
 /**
@@ -9,3 +10,8 @@ export interface ContentModelText extends ContentModelSegmentBase<'Text'> {
      */
     text: string;
 }
+
+/**
+ * Content Model of Text (Readonly)
+ */
+export type ReadonlyContentModelText = ReadonlyContentModel<ContentModelText>;

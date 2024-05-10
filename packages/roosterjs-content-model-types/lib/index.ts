@@ -89,39 +89,112 @@ export { DeleteResult } from './enum/DeleteResult';
 export { InsertEntityPosition } from './enum/InsertEntityPosition';
 export { ExportContentMode } from './enum/ExportContentMode';
 
-export { ContentModelBlock } from './contentModel/block/ContentModelBlock';
-export { ContentModelParagraph } from './contentModel/block/ContentModelParagraph';
-export { ContentModelTable } from './contentModel/block/ContentModelTable';
-export { ContentModelDivider } from './contentModel/block/ContentModelDivider';
+export {
+    ContentModelBlock,
+    ReadonlyContentModelBlock,
+} from './contentModel/block/ContentModelBlock';
+export {
+    ContentModelParagraph,
+    ReadonlyContentModelParagraph,
+} from './contentModel/block/ContentModelParagraph';
+export {
+    ContentModelTable,
+    ReadonlyContentModelTable,
+} from './contentModel/block/ContentModelTable';
+export {
+    ContentModelDivider,
+    ReadonlyContentModelDivider,
+} from './contentModel/block/ContentModelDivider';
 export { ContentModelBlockBase } from './contentModel/block/ContentModelBlockBase';
 export { ContentModelBlockWithCache } from './contentModel/common/ContentModelBlockWithCache';
-export { ContentModelTableRow } from './contentModel/block/ContentModelTableRow';
+export {
+    ContentModelTableRow,
+    ReadonlyContentModelTableRow,
+} from './contentModel/block/ContentModelTableRow';
 
-export { ContentModelEntity } from './contentModel/entity/ContentModelEntity';
+export {
+    ContentModelEntity,
+    ReadonlyContentModelEntity,
+} from './contentModel/entity/ContentModelEntity';
 
-export { ContentModelDocument } from './contentModel/blockGroup/ContentModelDocument';
+export {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+} from './contentModel/blockGroup/ContentModelDocument';
 export { ContentModelBlockGroupBase } from './contentModel/blockGroup/ContentModelBlockGroupBase';
-export { ContentModelFormatContainer } from './contentModel/blockGroup/ContentModelFormatContainer';
-export { ContentModelGeneralBlock } from './contentModel/blockGroup/ContentModelGeneralBlock';
-export { ContentModelListItem } from './contentModel/blockGroup/ContentModelListItem';
-export { ContentModelTableCell } from './contentModel/blockGroup/ContentModelTableCell';
-export { ContentModelBlockGroup } from './contentModel/blockGroup/ContentModelBlockGroup';
+export {
+    ContentModelFormatContainer,
+    ReadonlyContentModelFormatContainer,
+} from './contentModel/blockGroup/ContentModelFormatContainer';
+export {
+    ContentModelGeneralBlock,
+    ReadonlyContentModelGeneralBlock,
+} from './contentModel/blockGroup/ContentModelGeneralBlock';
+export {
+    ContentModelListItem,
+    ReadonlyContentModelListItem,
+} from './contentModel/blockGroup/ContentModelListItem';
+export {
+    ContentModelTableCell,
+    ReadonlyContentModelTableCell,
+} from './contentModel/blockGroup/ContentModelTableCell';
+export {
+    ContentModelBlockGroup,
+    ReadonlyContentModelBlockGroup,
+} from './contentModel/blockGroup/ContentModelBlockGroup';
 
-export { ContentModelBr } from './contentModel/segment/ContentModelBr';
-export { ContentModelGeneralSegment } from './contentModel/segment/ContentModelGeneralSegment';
-export { ContentModelImage } from './contentModel/segment/ContentModelImage';
-export { ContentModelText } from './contentModel/segment/ContentModelText';
-export { ContentModelSelectionMarker } from './contentModel/segment/ContentModelSelectionMarker';
+export { ContentModelBr, ReadonlyContentModelBr } from './contentModel/segment/ContentModelBr';
+export {
+    ContentModelGeneralSegment,
+    ReadonlyContentModelGeneralSegment,
+} from './contentModel/segment/ContentModelGeneralSegment';
+export {
+    ContentModelImage,
+    ReadonlyContentModelImage,
+} from './contentModel/segment/ContentModelImage';
+export {
+    ContentModelText,
+    ReadonlyContentModelText,
+} from './contentModel/segment/ContentModelText';
+export {
+    ContentModelSelectionMarker,
+    ReadonlyContentModelSelectionMarker,
+} from './contentModel/segment/ContentModelSelectionMarker';
 export { ContentModelSegmentBase } from './contentModel/segment/ContentModelSegmentBase';
-export { ContentModelSegment } from './contentModel/segment/ContentModelSegment';
+export {
+    ContentModelSegment,
+    ReadonlyContentModelSegment,
+} from './contentModel/segment/ContentModelSegment';
 
-export { ContentModelCode } from './contentModel/decorator/ContentModelCode';
-export { ContentModelLink } from './contentModel/decorator/ContentModelLink';
-export { ContentModelParagraphDecorator } from './contentModel/decorator/ContentModelParagraphDecorator';
-export { ContentModelDecorator } from './contentModel/decorator/ContentModelDecorator';
-export { ContentModelListLevel } from './contentModel/decorator/ContentModelListLevel';
+export {
+    ContentModelCode,
+    ReadonlyContentModelCode,
+} from './contentModel/decorator/ContentModelCode';
+export {
+    ContentModelLink,
+    ReadonlyContentModelLink,
+} from './contentModel/decorator/ContentModelLink';
+export {
+    ContentModelParagraphDecorator,
+    ReadonlyContentModelParagraphDecorator,
+} from './contentModel/decorator/ContentModelParagraphDecorator';
+export {
+    ContentModelDecorator,
+    ReadonlyContentModelDecorator,
+} from './contentModel/decorator/ContentModelDecorator';
+export {
+    ContentModelListLevel,
+    ReadonlyContentModelListLevel,
+} from './contentModel/decorator/ContentModelListLevel';
 
 export { Selectable } from './contentModel/common/Selectable';
+export {
+    MutableContentModel,
+    MutableMarker,
+    NativeTypes,
+    ReadonlyContentModel,
+} from './contentModel/common/Mutable';
+
 export {
     DOMSelection,
     SelectionType,

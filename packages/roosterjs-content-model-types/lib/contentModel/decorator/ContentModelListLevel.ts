@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
@@ -14,3 +15,8 @@ export interface ContentModelListLevel
      */
     listType: 'OL' | 'UL';
 }
+
+/**
+ * Content Model of List Level (Readonly)
+ */
+export type ReadonlyContentModelListLevel = ReadonlyContentModel<ContentModelListLevel>;

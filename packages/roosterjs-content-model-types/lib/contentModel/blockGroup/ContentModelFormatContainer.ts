@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
@@ -21,3 +22,8 @@ export interface ContentModelFormatContainer
      */
     zeroFontSize?: boolean;
 }
+
+/**
+ * Content Model of Format Container (Readonly)
+ */
+export type ReadonlyContentModelFormatContainer = ReadonlyContentModel<ContentModelFormatContainer>;

@@ -1,3 +1,4 @@
+import type { ReadonlyContentModel } from '../common/Mutable';
 import type { ContentModelBlockBase } from './ContentModelBlockBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelDividerFormat } from '../format/ContentModelDividerFormat';
@@ -20,3 +21,8 @@ export interface ContentModelDivider
      */
     size?: string;
 }
+
+/**
+ * Content Model of horizontal divider (Readonly)
+ */
+export type ReadonlyContentModelDivider = ReadonlyContentModel<ContentModelDivider>;
