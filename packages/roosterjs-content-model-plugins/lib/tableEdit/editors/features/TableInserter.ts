@@ -1,6 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { getIntersectedRect } from '../../../pluginUtils/Rect/getIntersectedRect';
 import { isElementOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import {
     formatTableWithContentModel,
@@ -9,13 +10,20 @@ import {
 } from 'roosterjs-content-model-api';
 import type { CreateElementData } from '../../../pluginUtils/CreateElement/CreateElementData';
 import type { Disposable } from '../../../pluginUtils/Disposable';
-import type { TableEditFeature } from './TableEditFeature';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
+/**
+ * @internal
+ */
+export const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
+/**
+ * @internal
+ */
+export const VERTICAL_INSERTER_ID = 'verticalInserter';
 
 /**
  * @internal
@@ -48,7 +56,7 @@ export function createTableInserter(
 
         if (isHorizontal) {
             // tableRect.left/right is used because the Inserter is always intended to be on the side
-            div.id = 'horizontalInserter';
+            div.id = HORIZONTAL_INSERTER_ID;
             div.style.left = `${
                 isRTL
                     ? tableRect.right
@@ -57,7 +65,7 @@ export function createTableInserter(
             div.style.top = `${tdRect.bottom - 8}px`;
             (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
         } else {
-            div.id = 'verticalInserter';
+            div.id = VERTICAL_INSERTER_ID;
             div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
             // tableRect.top is used because the Inserter is always intended to be on top
             div.style.top = `${

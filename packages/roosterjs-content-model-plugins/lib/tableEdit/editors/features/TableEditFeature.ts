@@ -12,11 +12,11 @@ export interface TableEditFeature {
 /**
  * @internal
  */
-export function disposeTableEditFeature(resizer: TableEditFeature | null) {
-    if (resizer) {
-        resizer.featureHandler?.dispose();
-        resizer.featureHandler = null;
-        resizer.div?.parentNode?.removeChild(resizer.div);
-        resizer.div = null;
+export function disposeTableEditFeature(feature: TableEditFeature | null) {
+    if (feature) {
+        feature.featureHandler?.dispose();
+        feature.featureHandler = null;
+        feature.div?.parentNode?.removeChild(feature.div);
+        feature.div = null;
     }
 }

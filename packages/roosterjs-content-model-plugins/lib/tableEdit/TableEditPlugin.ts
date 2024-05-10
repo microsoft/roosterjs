@@ -1,5 +1,6 @@
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { TableEditor } from './editors/TableEditor';
+import type { TableEditFeatureName } from './editors/features/TableEditFeatureName';
 import type { OnTableEditorCreatedCallback } from './OnTableEditorCreatedCallback';
 import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
 
@@ -20,10 +21,12 @@ export class TableEditPlugin implements EditorPlugin {
      * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
      * If not specified, the plugin will be inserted in document.body
      * @param onTableEditorCreated An optional callback to customize the Table Editors elements when created.
+     * @param disableFeatures An optional array of TableEditFeatures to disable
      */
     constructor(
         private anchorContainerSelector?: string,
-        private onTableEditorCreated?: OnTableEditorCreatedCallback
+        private onTableEditorCreated?: OnTableEditorCreatedCallback,
+        private disableFeatures?: TableEditFeatureName[]
     ) {}
 
     /**
@@ -147,7 +150,8 @@ export class TableEditPlugin implements EditorPlugin {
                 this.invalidateTableRects,
                 isNodeOfType(container, 'ELEMENT_NODE') ? container : undefined,
                 event?.currentTarget,
-                this.onTableEditorCreated
+                this.onTableEditorCreated,
+                this.disableFeatures
             );
         }
     }
