@@ -20,6 +20,14 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Test all files (Firefox)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--firefox"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Test current file",
             "program": "${workspaceFolder}/node_modules/karma/bin/karma",
             "args": ["start", "--components", "${fileBasenameNoExtension}"],
@@ -31,6 +39,14 @@
             "name": "Test current file (Chrome)",
             "program": "${workspaceFolder}/node_modules/karma/bin/karma",
             "args": ["start", "--chrome", "--components", "${fileBasenameNoExtension}"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test current file (Firefox)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--firefox", "--components", "${fileBasenameNoExtension}"],
             "console": "integratedTerminal"
         },
         {
@@ -52,6 +68,14 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Debug All Unit Tests (Firefox)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--firefox", "--no-single-run"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Debug current unit test file",
             "program": "${workspaceFolder}/node_modules/karma/bin/karma",
             "args": ["start", "--components", "${fileBasenameNoExtension}", "--no-single-run"],
@@ -65,6 +89,20 @@
             "args": [
                 "start",
                 "--chrome",
+                "--components",
+                "${fileBasenameNoExtension}",
+                "--no-single-run"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug current unit test file (Firefox)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": [
+                "start",
+                "--firefox",
                 "--components",
                 "${fileBasenameNoExtension}",
                 "--no-single-run"

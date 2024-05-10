@@ -99,6 +99,32 @@ describe('isModelEmptyFast', () => {
         expect(result).toBeTrue();
     });
 
+    it('Single Paragraph block - right margin 10px', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.format.marginRight = '10px';
+
+        para.segments.push(createBr());
+        model.blocks.push(para);
+
+        const result = isModelEmptyFast(model);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Single Paragraph block - left margin 0.25rem', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.format.marginLeft = '0.25rem';
+
+        para.segments.push(createBr());
+        model.blocks.push(para);
+
+        const result = isModelEmptyFast(model);
+
+        expect(result).toBeFalse();
+    });
+
     it('Single Paragraph block - two BR segment', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
