@@ -25,6 +25,11 @@ export function isModelEmptyFast(model: ContentModelDocument): boolean {
         )
     ) {
         return false; // Has meaningful segments, it is not empty
+    } else if (
+        (firstBlock.format.marginRight && parseFloat(firstBlock.format.marginRight) > 0) ||
+        (firstBlock.format.marginLeft && parseFloat(firstBlock.format.marginLeft) > 0)
+    ) {
+        return false; // Has margin (indentation is changed), it is not empty
     } else {
         return firstBlock.segments.filter(x => x.segmentType == 'Br').length <= 1; // If there are more than one BR, it is not empty, otherwise it is empty
     }
