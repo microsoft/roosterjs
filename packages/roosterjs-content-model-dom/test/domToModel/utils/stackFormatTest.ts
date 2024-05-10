@@ -95,7 +95,7 @@ describe('stackFormat', () => {
                 textColor: 'red',
                 underline: true,
             },
-            dataset: { a: 'c' },
+            dataset: { a: 'b' },
         });
     });
 

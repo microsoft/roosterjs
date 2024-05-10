@@ -12,6 +12,7 @@ import {
     ContentModelDocument,
     ContentModelEntity,
     EditorCore,
+    ReadonlyContentModelDocument,
     Rect,
 } from 'roosterjs-content-model-types';
 
@@ -130,18 +131,12 @@ describe('Editor', () => {
                 setContentModel: setContentModelSpy,
             },
         } as any;
-
         createEditorCoreSpy.and.returnValue(mockedCore);
 
         const editor = new Editor(div);
 
-        const model1 = editor.getContentModelCopy('connected');
-
-        expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, { tryGetFromCache: true });
-
         editor.dispose();
-        expect(() => editor.getContentModelCopy('connected')).toThrow();
+        expect(() => editor.getContentModelCopy('disconnected')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 

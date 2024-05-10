@@ -1,15 +1,15 @@
 import { hasSelectionInBlock } from '../../../lib/modelApi/selection/hasSelectionInBlock';
 import { hasSelectionInBlockGroup } from '../../../lib/modelApi/selection/hasSelectionInBlockGroup';
 import {
-    ContentModelBlock,
-    ContentModelDivider,
-    ContentModelEntity,
-    ContentModelTableCell,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelDivider,
+    ReadonlyContentModelEntity,
+    ReadonlyContentModelTableCell,
 } from 'roosterjs-content-model-types';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
             format: {},
@@ -21,7 +21,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Paragraph block with selected segment', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Paragraph',
             segments: [
                 {
@@ -43,7 +43,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Empty table', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Table',
             format: {},
             rows: [],
@@ -57,7 +57,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Table without selection', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Table',
             format: {},
             rows: [
@@ -86,7 +86,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Table with selected cell', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Table',
             format: {},
             rows: [
@@ -124,7 +124,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Table with selected content', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'Table',
             format: {},
             rows: [
@@ -165,7 +165,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Table cell with selected content', () => {
-        const block: ContentModelTableCell = {
+        const block: ReadonlyContentModelTableCell = {
             blockGroupType: 'TableCell',
             format: {},
             spanAbove: false,
@@ -192,7 +192,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Empty general block', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'BlockGroup',
             blockGroupType: 'General',
             element: null!,
@@ -206,7 +206,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('General block with selected paragraph', () => {
-        const block: ContentModelBlock = {
+        const block: ReadonlyContentModelBlock = {
             blockType: 'BlockGroup',
             blockGroupType: 'General',
             element: null!,
@@ -232,7 +232,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('HR has selection', () => {
-        const block: ContentModelDivider = {
+        const block: ReadonlyContentModelDivider = {
             blockType: 'Divider',
             tagName: 'hr',
             format: {},
@@ -245,7 +245,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Entity has selection', () => {
-        const block: ContentModelEntity = {
+        const block: ReadonlyContentModelEntity = {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},

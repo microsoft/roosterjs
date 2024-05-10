@@ -8,10 +8,10 @@ describe('applyMetadata', () => {
     const mockedContext = 'Context' as any;
     const mockedMetadata = 'Metadata' as any;
     const mockedDefinition = 'Definition' as any;
-    let updateMetadataSpy: jasmine.Spy;
+    let retrieveMetadataCopySpy: jasmine.Spy;
 
     beforeEach(() => {
-        updateMetadataSpy = spyOn(updateMetadata, 'updateMetadata');
+        retrieveMetadataCopySpy = spyOn(updateMetadata, 'retrieveMetadataCopy');
     });
 
     it('No applier', () => {
@@ -23,7 +23,7 @@ describe('applyMetadata', () => {
 
         expect(model).toEqual(mockedModel);
         expect(format).toEqual(mockedFormat);
-        expect(updateMetadataSpy).not.toHaveBeenCalled();
+        expect(retrieveMetadataCopySpy).not.toHaveBeenCalled();
     });
 
     it('No definition', () => {
@@ -35,19 +35,14 @@ describe('applyMetadata', () => {
             applierFunction,
         };
 
-        updateMetadataSpy.and.callFake((model, callback, definition) => {
-            expect(model).toBe(mockedModel);
-            expect(definition).toBeUndefined();
-            const result = callback(mockedMetadata);
-
-            expect(result).toBe(mockedMetadata);
-        });
+        retrieveMetadataCopySpy.and.returnValue(mockedMetadata);
 
         applyMetadata(model, applier, format, context);
 
         expect(model).toEqual(mockedModel);
         expect(format).toEqual(mockedFormat);
         expect(applierFunction).toHaveBeenCalledWith(mockedMetadata, mockedFormat, context);
+        expect(retrieveMetadataCopySpy).toHaveBeenCalledWith(mockedModel, undefined);
     });
 
     it('Has definition', () => {
@@ -60,18 +55,13 @@ describe('applyMetadata', () => {
             metadataDefinition: mockedDefinition,
         };
 
-        updateMetadataSpy.and.callFake((model, callback, definition) => {
-            expect(model).toBe(mockedModel);
-            expect(definition).toBe(mockedDefinition);
-            const result = callback(mockedMetadata);
-
-            expect(result).toBe(mockedMetadata);
-        });
+        retrieveMetadataCopySpy.and.returnValue(mockedMetadata);
 
         applyMetadata(model, applier, format, context);
 
         expect(model).toEqual(mockedModel);
         expect(format).toEqual(mockedFormat);
         expect(applierFunction).toHaveBeenCalledWith(mockedMetadata, mockedFormat, context);
+        expect(retrieveMetadataCopySpy).toHaveBeenCalledWith(mockedModel, mockedDefinition);
     });
 });

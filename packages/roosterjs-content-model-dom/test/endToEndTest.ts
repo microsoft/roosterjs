@@ -6,22 +6,25 @@ import { createModelToDomContext } from '../lib/modelToDom/context/createModelTo
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
 import { expectHtml } from './testUtils';
 import {
-    ContentModelBlockFormat,
-    ContentModelDocument,
-    ContentModelGeneralBlock,
+    ReadonlyContentModelBlockFormat,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelGeneralBlock,
 } from 'roosterjs-content-model-types';
 
 describe('End to end test for DOM => Model => DOM/TEXT', () => {
     function runTest(
         html: string,
-        expectedModel: ContentModelDocument,
+        expectedModel: ReadonlyContentModelDocument,
         expectedText: string,
         ...expectedHtml: string[]
     ) {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(div1, createDomToModelContext());
+        const model: ReadonlyContentModelDocument = domToContentModel(
+            div1,
+            createDomToModelContext()
+        );
 
         expect(model).toEqual(expectedModel);
 
@@ -682,7 +685,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             marginBottom: '20px',
                             marginLeft: '20px',
                             display: 'block',
-                        } as ContentModelBlockFormat,
+                        } as ReadonlyContentModelBlockFormat,
                         isImplicit: false,
                     },
                 ],
@@ -1317,14 +1320,8 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
     });
 
     it('Center', () => {
-        const cloneNodeSpy = jasmine
-            .createSpy('cloneNode')
-            .and.returnValue(document.createElement('center'));
-        const mockedElement = {
-            name: 'ELEMENT',
-            cloneNode: cloneNodeSpy,
-        } as any;
-        const mockedGeneral: ContentModelGeneralBlock = {
+        const mockedElement = document.createElement('center');
+        const mockedGeneral: ReadonlyContentModelGeneralBlock = {
             blockType: 'BlockGroup',
             blockGroupType: 'General',
             element: mockedElement,
@@ -1335,7 +1332,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         const createGeneralBlockSpy = spyOn(
             createGeneralBlock,
             'createGeneralBlock'
-        ).and.returnValue(mockedGeneral);
+        ).and.returnValue(mockedGeneral as any);
 
         runTest(
             '<center>test1<table><tr><td>test2</td></tr></table><div align="right">test3</div></center>',
@@ -1417,7 +1414,6 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         );
 
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
-        expect(cloneNodeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('html align overwrite text align from context', () => {

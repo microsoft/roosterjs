@@ -1,11 +1,11 @@
-import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
-import type { ContentModelDivider } from '../contentModel/block/ContentModelDivider';
-import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
-import type { ContentModelGeneralSegment } from '../contentModel/segment/ContentModelGeneralSegment';
-import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
-import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
-import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
-import type { ContentModelText } from '../contentModel/segment/ContentModelText';
+import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ReadonlyContentModelDivider } from '../contentModel/block/ContentModelDivider';
+import type { ReadonlyContentModelEntity } from '../contentModel/entity/ContentModelEntity';
+import type { ReadonlyContentModelGeneralSegment } from '../contentModel/segment/ContentModelGeneralSegment';
+import type { ReadonlyContentModelImage } from '../contentModel/segment/ContentModelImage';
+import type { ReadonlyContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ReadonlyContentModelTable } from '../contentModel/block/ContentModelTable';
+import type { ReadonlyContentModelText } from '../contentModel/segment/ContentModelText';
 
 /**
  * Callback function type for converting a given Content Model object to plain text
@@ -26,45 +26,45 @@ export interface ModelToTextCallbacks {
     /**
      * Customize the behavior of converting entity segment to plain text
      */
-    onEntitySegment?: ModelToTextCallback<ContentModelEntity>;
+    onEntitySegment?: ModelToTextCallback<ReadonlyContentModelEntity>;
 
     /**
      * Customize the behavior of converting entity block to plain text
      */
-    onEntityBlock?: ModelToTextCallback<ContentModelEntity>;
+    onEntityBlock?: ModelToTextCallback<ReadonlyContentModelEntity>;
 
     /**
      * Customize the behavior of converting general segment to plain text
      */
-    onGeneralSegment?: ModelToTextCallback<ContentModelGeneralSegment>;
+    onGeneralSegment?: ModelToTextCallback<ReadonlyContentModelGeneralSegment>;
 
     /**
      * Customize the behavior of converting text model to plain text
      */
-    onText?: ModelToTextCallback<ContentModelText>;
+    onText?: ModelToTextCallback<ReadonlyContentModelText>;
 
     /**
      * Customize the behavior of converting image model to plain text
      */
-    onImage?: ModelToTextCallback<ContentModelImage>;
+    onImage?: ModelToTextCallback<ReadonlyContentModelImage>;
 
     /**
      * Customize the behavior of converting divider model to plain text
      */
-    onDivider?: ModelToTextCallback<ContentModelDivider>;
+    onDivider?: ModelToTextCallback<ReadonlyContentModelDivider>;
 
     /**
      * Customize the check if we should convert a paragraph model to plain text
      */
-    onParagraph?: ModelToTextChecker<ContentModelParagraph>;
+    onParagraph?: ModelToTextChecker<ReadonlyContentModelParagraph>;
 
     /**
      * Customize the check if we should convert a table model to plain text
      */
-    onTable?: ModelToTextChecker<ContentModelTable>;
+    onTable?: ModelToTextChecker<ReadonlyContentModelTable>;
 
     /**
      * Customize the check if we should convert a block group model to plain text
      */
-    onBlockGroup?: ModelToTextChecker<ContentModelBlockGroup>;
+    onBlockGroup?: ModelToTextChecker<ReadonlyContentModelBlockGroup>;
 }

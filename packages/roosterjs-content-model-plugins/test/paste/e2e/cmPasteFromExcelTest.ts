@@ -2,7 +2,11 @@ import * as processPastedContentFromExcel from '../../../lib/paste/Excel/process
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
-import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ClipboardData,
+    IEditor,
+    ReadonlyContentModelDocument,
+} from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 let clipboardData: ClipboardData;
@@ -47,7 +51,7 @@ describe(ID, () => {
         const model = editor.getContentModelCopy('connected');
         const width = editor.getDOMHelper().getClientWidth();
 
-        expect(model).toEqual({
+        expect(model as ReadonlyContentModelDocument).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -60,6 +64,10 @@ describe(ID, () => {
                                 maxWidth: `${width}px`,
                             },
                             dataset: {},
+                            alt: undefined,
+                            title: undefined,
+                            isSelectedAsImageSelection: undefined,
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -80,6 +88,9 @@ describe(ID, () => {
                         },
                     ],
                     format: {},
+                    cachedElement: undefined,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
                 },
             ],
             format: {},

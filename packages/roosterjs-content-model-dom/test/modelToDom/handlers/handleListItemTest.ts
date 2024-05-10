@@ -14,6 +14,7 @@ import {
     ListMetadataFormat,
     ContentModelListItemFormat,
     ApplyMetadata,
+    ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 describe('handleListItem without format handler', () => {
@@ -130,7 +131,7 @@ describe('handleListItem without format handler', () => {
             listItem.levels[0].format,
             context
         );
-        expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
+        expect(listItemMetadataApplier).not.toHaveBeenCalled();
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
@@ -193,7 +194,7 @@ describe('handleListItem without format handler', () => {
             listItem.levels[0].format,
             context
         );
-        expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
+        expect(listItemMetadataApplier).not.toHaveBeenCalled();
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
@@ -228,7 +229,7 @@ describe('handleListItem without format handler', () => {
 
     it('With onNodeCreated', () => {
         const listLevel0 = createListLevel('OL');
-        const listItem: ContentModelListItem = {
+        const listItem: ReadonlyContentModelListItem = {
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
             blocks: [],
@@ -258,5 +259,29 @@ describe('handleListItem without format handler', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listItem);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('li'));
+    });
+
+    it('OL with metadata', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const listItem = createListItem([createListLevel('OL', {}, { editingInfo: '{}' })]);
+
+        fragment.appendChild(parent);
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+            },
+        ];
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(listItemMetadataApplier).toHaveBeenCalledWith({}, {} as any, context);
     });
 });

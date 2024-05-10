@@ -1,4 +1,4 @@
-import { ContentModelTable } from 'roosterjs-content-model-types';
+import { ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 
 export const WORD_TABLE =
     '<table style="border-collapse:collapse;"><tbody><tr style="height:30.7pt"><td style="width:56.25pt;border:solid  1.0pt;padding:0in 5.4pt 0in 5.4pt;height:30.7pt" valign="top" width="75"><span>dsfsdf</span></td><td style="width:56.25pt;border:solid  1.0pt;border-left:none;padding:0in 5.4pt 0in 5.4pt;height:30.7pt"valign="top" width="75"><span>23423</span></td><td style="width:56.25pt;border:solid  1.0pt;border-left:none;padding:0in 5.4pt 0in 5.4pt;height:30.7pt"valign="top" width="75"><span>23423</span></td></tr><tr style="height:30.7pt"><td style="width:56.25pt;border:solid 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:30.7pt"valign="top" width="75"><span>Sdf323</span></td><td style="width:56.25pt;border-top:none;border-left:none;border-bottom:solid  1.0pt;border-right:solid  1.0pt;padding:0in 5.4pt 0in 5.4pt;height:30.7pt"valign="top" width="75"><span>234234</span></td><td style="width:56.25pt;border-top:none;border-left:none;border-bottom:solid  1.0pt;border-right:solid  1.0pt;padding:0in 5.4pt 0in 5.4pt;height:30.7pt"valign="top" width="75"><span>234234</span></td></tr><tr style="height:31.6pt"><td style="width:56.25pt;border:solid 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:31.6pt"valign="top" width="75"><span>2323</span></td><td style="width:56.25pt;border-top:none;border-left:none;border-bottom:solid;border-right:solid 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:31.6pt"valign="top" width="75"><span>234324</span></td><td style="width:56.25pt;border-top:none;border-left:none;border-bottom:solid;border-right:solid 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:31.6pt"valign="top" width="75"><span>2erfwfwf</span></td></tr></tbody></table>';
@@ -12,7 +12,7 @@ export const DEFAULT_TABLE_MERGED =
 /**
  * Regular 3 x 3 Table
  */
-export function getModelTable(): ContentModelTable {
+export function getModelTable(): ReadonlyContentModelTable {
     /*
      *   ——————————————
      *  | a1 | b1 | c1 |
@@ -242,7 +242,7 @@ export function getModelTable(): ContentModelTable {
 /**
  * 3 x 3 Table with merged central column
  */
-export function getMergedCenterColumnTable(): ContentModelTable {
+export function getMergedCenterColumnTable(): ReadonlyContentModelTable {
     /*
      *   ——————————————
      *  | a1 |    | c1 |
@@ -448,7 +448,7 @@ export function getMergedCenterColumnTable(): ContentModelTable {
 /**
  * 3 x 3 Table with merged central row
  */
-export function getMergedCenterRowTable(): ContentModelTable {
+export function getMergedCenterRowTable(): ReadonlyContentModelTable {
     /*
      *   ——————————————
      *  | a1 | b1 | c1 |
@@ -654,7 +654,7 @@ export function getMergedCenterRowTable(): ContentModelTable {
 /**
  * 2 x 2 Table with merged top row
  */
-export function getMergedTopRowTable(): ContentModelTable {
+export function getMergedTopRowTable(): ReadonlyContentModelTable {
     /*
      *   —————————
      *  | a1      |
@@ -759,7 +759,7 @@ export function getMergedTopRowTable(): ContentModelTable {
 /**
  * 2 x 2 Table with merged first column
  */
-export function getMergedFirstColumnTable(): ContentModelTable {
+export function getMergedFirstColumnTable(): ReadonlyContentModelTable {
     /*
      *   —————————
      *  | a1 | b1 |

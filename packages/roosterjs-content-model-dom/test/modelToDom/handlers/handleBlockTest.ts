@@ -129,7 +129,7 @@ describe('handleBlock', () => {
         handleBlock(document, parent, block, context, null);
 
         expect(parent.innerHTML).toBe('<span></span>');
-        expect(parent.firstChild).not.toBe(element);
+        expect(parent.firstChild).toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild!.firstChild);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
 
