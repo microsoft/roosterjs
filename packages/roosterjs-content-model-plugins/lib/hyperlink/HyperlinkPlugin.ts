@@ -131,6 +131,8 @@ export class HyperlinkPlugin implements EditorPlugin {
                     } catch {}
                 }
             });
+        } else if (event.eventType == 'contentChanged') {
+            this.domHelper?.setDomAttribute('title', null /*value*/);
         }
     }
 
