@@ -1,5 +1,6 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import type { TableEditFeature } from './TableEditFeature';
 import {
     isElementOfType,
     normalizeRect,
@@ -9,9 +10,16 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
-import type { TableEditFeature } from './TableEditFeature';
 
 const CELL_RESIZER_WIDTH = 4;
+/**
+ * @internal
+ */
+export const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
+/**
+ * @internal
+ */
+export const VERTICAL_RESIZER_ID = 'verticalResizer';
 
 /**
  * @internal
@@ -223,7 +231,7 @@ function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
-        trigger.id = 'horizontalResizer';
+        trigger.id = HORIZONTAL_RESIZER_ID;
         trigger.style.top = rect.bottom - CELL_RESIZER_WIDTH + 'px';
         trigger.style.left = rect.left + 'px';
         trigger.style.width = rect.right - rect.left + 'px';
@@ -235,7 +243,7 @@ function setVerticalPosition(context: DragAndDropContext, trigger: HTMLElement) 
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
-        trigger.id = 'verticalResizer';
+        trigger.id = VERTICAL_RESIZER_ID;
         trigger.style.top = rect.top + 'px';
         trigger.style.left = (isRTL ? rect.left : rect.right) - CELL_RESIZER_WIDTH + 1 + 'px';
         trigger.style.width = CELL_RESIZER_WIDTH + 'px';
