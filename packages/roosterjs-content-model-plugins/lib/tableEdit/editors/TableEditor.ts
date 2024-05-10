@@ -147,7 +147,7 @@ export class TableEditor {
                     if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
-                        !this.disableFeatures?.includes('VerticalTableInserter') &&
+                        !this.isFeatureDisabled('VerticalTableInserter') &&
                             this.setInserterTd(
                                 isOnRightHalf ? td : tr.cells[j - 1],
                                 false /*isHorizontal*/
@@ -164,7 +164,7 @@ export class TableEditor {
                             ? tdAboveRect.right === tdRect.right
                             : tdAboveRect.left === tdRect.left;
 
-                        !this.disableFeatures?.includes('HorizontalTableInserter') &&
+                        !this.isFeatureDisabled('HorizontalTableInserter') &&
                             this.setInserterTd(
                                 y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
                                     ? tdAbove
@@ -175,7 +175,7 @@ export class TableEditor {
                         this.setInserterTd(null);
                     }
 
-                    !this.disableFeatures?.includes('CellResizer') && this.setResizingTd(td);
+                    !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
 
                     //Cell found
                     break;
@@ -192,8 +192,8 @@ export class TableEditor {
     }
 
     private setEditorFeatures() {
-        const disableSelector = this.disableFeatures?.includes('TableSelector');
-        const disableMovement = this.disableFeatures?.includes('TableMover');
+        const disableSelector = this.isFeatureDisabled('TableSelector');
+        const disableMovement = this.isFeatureDisabled('TableMover');
         if (!this.tableMover && !(disableSelector && disableMovement)) {
             this.tableMover = createTableMover(
                 this.table,
@@ -209,7 +209,7 @@ export class TableEditor {
             );
         }
 
-        if (!this.tableResizer && !this.disableFeatures?.includes('TableResizer')) {
+        if (!this.tableResizer && !this.isFeatureDisabled('TableResizer')) {
             this.tableResizer = createTableResizer(
                 this.table,
                 this.editor,
@@ -421,4 +421,8 @@ export class TableEditor {
             }
         };
     };
+
+    private isFeatureDisabled(feature: TableEditFeatureName) {
+        return this.disableFeatures?.includes(feature);
+    }
 }

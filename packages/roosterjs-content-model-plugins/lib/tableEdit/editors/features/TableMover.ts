@@ -77,6 +77,7 @@ export function createTableMover(
         onFinishDragging,
         onStart,
         onEnd,
+        disableMovement,
     };
 
     setDivPosition(context, div);
@@ -85,11 +86,13 @@ export function createTableMover(
         div,
         context,
         () => {},
-        {
-            onDragStart,
-            onDragging,
-            onDragEnd,
-        },
+        disableMovement
+            ? { onDragEnd }
+            : {
+                  onDragStart,
+                  onDragging,
+                  onDragEnd,
+              },
         context.zoomScale,
         onTableEditorCreated,
         editor.getEnvironment().isMobileOrTablet
@@ -112,6 +115,7 @@ export interface TableMoverContext {
     onFinishDragging: (table: HTMLTableElement) => void;
     onStart: () => void;
     onEnd: () => void;
+    disableMovement?: boolean;
 }
 
 /**
@@ -293,7 +297,7 @@ export function onDragEnd(
     event: MouseEvent,
     initValue: TableMoverInitValue | undefined
 ) {
-    const { editor, table, onFinishDragging: selectWholeTable } = context;
+    const { editor, table, onFinishDragging: selectWholeTable, disableMovement } = context;
     const element = event.target;
 
     // Remove table outline rectangle
@@ -308,10 +312,11 @@ export function onDragEnd(
         context.onEnd();
         return true;
     } else {
-        // Check if table was dragged on itself or Check if element is not in editor
+        // Check if table was dragged on itself, element is not in editor, or movement is disabled
         if (
             table.contains(element as Node) ||
-            !editor.getDOMHelper().isNodeInEditor(element as Node)
+            !editor.getDOMHelper().isNodeInEditor(element as Node) ||
+            disableMovement
         ) {
             editor.setDOMSelection(initValue?.initialSelection ?? null);
             context.onEnd();
