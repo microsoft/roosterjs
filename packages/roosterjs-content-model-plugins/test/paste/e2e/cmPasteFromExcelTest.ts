@@ -48,7 +48,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData, 'asImage');
 
-        const model = editor.getContentModelCopy('connected');
+        const model = editor.getContentModelCopy('disconnected');
         const width = editor.getDOMHelper().getClientWidth();
 
         expect(model as ReadonlyContentModelDocument).toEqual({

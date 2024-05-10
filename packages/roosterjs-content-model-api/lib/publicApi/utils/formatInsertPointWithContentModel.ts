@@ -18,7 +18,11 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Format content model at a given insert point with a callback function
+ * @param editor The editor object
+ * @param insertPoint The insert point to format
+ * @param callback The callback function to format the content model
+ * @param options Options to control the behavior of the formatting
  */
 export function formatInsertPointWithContentModel(
     editor: IEditor,
