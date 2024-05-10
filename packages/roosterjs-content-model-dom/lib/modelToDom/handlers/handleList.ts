@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
-import { isMutableBlock } from 'roosterjs-content-model-dom/lib/modelApi/typeCheck/isMutableBlock';
-import { reuseCachedElement } from 'roosterjs/lib';
+import { isMutableBlock } from '../../modelApi/typeCheck/isMutableBlock';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
     ReadonlyContentModelListItem,

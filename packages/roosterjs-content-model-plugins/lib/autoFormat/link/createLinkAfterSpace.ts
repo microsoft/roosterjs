@@ -1,4 +1,4 @@
-import { createLinkDecorator } from 'roosterjs-content-model-dom/lib';
+import { createLinkDecorator } from 'roosterjs-content-model-dom';
 import { matchLink } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type {

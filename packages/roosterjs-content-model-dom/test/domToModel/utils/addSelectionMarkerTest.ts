@@ -1,7 +1,7 @@
 import { addSelectionMarker } from '../../../lib/domToModel/utils/addSelectionMarker';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createParagraph } from '../../../lib';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 
 describe('addSelectionMarker', () => {
     it('add marker', () => {

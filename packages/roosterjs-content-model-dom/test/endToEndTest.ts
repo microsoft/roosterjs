@@ -1,6 +1,8 @@
 import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
-import { contentModelToText, createDomToModelContext, createModelToDomContext } from '../lib';
+import { contentModelToText } from '../lib/modelToText/contentModelToText';
+import { createDomToModelContext } from '../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../lib/modelToDom/context/createModelToDomContext';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
 import { expectHtml } from './testUtils';
 import {

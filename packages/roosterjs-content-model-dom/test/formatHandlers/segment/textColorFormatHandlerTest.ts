@@ -1,7 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
-import { DeprecatedColors } from '../../../lib';
+import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
 import { expectHtml } from '../../testUtils';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {

@@ -1,6 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
-import { isMutableBlock, reuseCachedElement } from 'roosterjs/lib';
+import { isMutableBlock } from '../../modelApi/typeCheck/isMutableBlock';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from '../../domUtils/unwrap';
 import type {

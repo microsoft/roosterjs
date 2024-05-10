@@ -1,4 +1,4 @@
-import { createCodeDecorator } from 'roosterjs-content-model-dom/lib';
+import { createCodeDecorator } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 
