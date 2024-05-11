@@ -121,4 +121,26 @@ describe('backgroundColorFormatHandler.apply', () => {
 
         expectHtml(div.outerHTML, expectedResult);
     });
+
+    it('Element with Background color and format.background is undefined', () => {
+        format.backgroundColor = undefined;
+        div.style.backgroundColor = 'red';
+
+        backgroundColorFormatHandler.apply(format, div, context);
+
+        const expectedResult = ['<div style=""></div>'];
+
+        expectHtml(div.outerHTML, expectedResult);
+    });
+
+    it('Element with Background color and format.background is undefined', () => {
+        format.backgroundColor = undefined;
+        div.setAttribute('bgColor', 'red');
+
+        backgroundColorFormatHandler.apply(format, div, context);
+
+        const expectedResult = ['<div></div>'];
+
+        expectHtml(div.outerHTML, expectedResult);
+    });
 });
