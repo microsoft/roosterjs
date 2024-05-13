@@ -18,13 +18,11 @@ import type {
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
     ReadonlyContentModelListItem,
-    ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
     ReadonlyContentModelTable,
     TypeOfBlockGroup,
 } from 'roosterjs-content-model-types';
 
-//#region getSelectedSegmentsAndParagraphs
 /**
  * Get an array of selected parent paragraph and child segment pair
  * @param model The Content Model to get selection from
@@ -67,69 +65,39 @@ export function getSelectedSegmentsAndParagraphs(
 
     return result;
 }
-//#endregion
 
-//#region getSelectedSegments
 /**
  * Get an array of selected segments from a content model
  * @param model The Content Model to get selection from
  * @param includingFormatHolder True means also include format holder as segment from list item
  */
 export function getSelectedSegments(
-    model: ContentModelDocument,
-    includingFormatHolder: boolean
-): ContentModelSegment[];
-
-/**
- * Get an array of selected segments from a content model (Readonly)
- * @param model The Content Model to get selection from
- * @param includingFormatHolder True means also include format holder as segment from list item
- */
-export function getSelectedSegments(
     model: ReadonlyContentModelDocument,
     includingFormatHolder: boolean
-): ReadonlyContentModelSegment[];
-
-export function getSelectedSegments(
-    model: ReadonlyContentModelDocument,
-    includingFormatHolder: boolean
-): ReadonlyContentModelSegment[] {
+): ContentModelSegment[] {
     return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
 }
-//#endregion
 
-//#region getSelectedParagraphs
 /**
  * Get any array of selected paragraphs from a content model
  * @param model The Content Model to get selection from
  */
-export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[];
-
-/**
- * Get any array of selected paragraphs from a content model (Readonly)
- * @param model The Content Model to get selection from
- */
 export function getSelectedParagraphs(
     model: ReadonlyContentModelDocument
-): ReadonlyContentModelParagraph[];
-
-export function getSelectedParagraphs(
-    model: ReadonlyContentModelDocument
-): ReadonlyContentModelParagraph[] {
+): ContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    const result: ReadonlyContentModelParagraph[] = [];
+    const result: ContentModelParagraph[] = [];
 
     removeUnmeaningfulSelections(selections);
 
     selections.forEach(({ block }) => {
         if (block?.blockType == 'Paragraph') {
-            result.push(block);
+            result.push(mutateBlock(block));
         }
     });
 
     return result;
 }
-//#endregion
 
 //#region getOperationalBlocks
 /**
