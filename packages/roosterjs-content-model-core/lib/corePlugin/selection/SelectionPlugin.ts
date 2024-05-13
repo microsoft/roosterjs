@@ -601,6 +601,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         if (
             (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&
+            table.isContentEditable &&
             (parsedTable = parseTableCells(table)) &&
             (firstCo = findCoordinate(parsedTable, tdStart, domHelper))
         ) {
