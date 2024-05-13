@@ -1,16 +1,48 @@
-import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
+import type { MutableMark } from '../common/MutableMark';
+import type {
+    ContentModelBlockFormat,
+    ReadonlyContentModelBlockFormat,
+} from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockType } from './BlockType';
-import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type {
+    ContentModelWithFormat,
+    ReadonlyContentModelWithFormat,
+} from '../format/ContentModelWithFormat';
+
+/**
+ * Common part of base type of a block
+ */
+export interface ContentModelBlockBaseCommon<T extends ContentModelBlockType> {
+    /**
+     * Type of this block
+     */
+    readonly blockType: T;
+}
 
 /**
  * Base type of a block
  */
 export interface ContentModelBlockBase<
     T extends ContentModelBlockType,
-    TFormat extends ContentModelBlockFormat = ContentModelBlockFormat
-> extends ContentModelWithFormat<TFormat> {
-    /**
-     * Type of this block
-     */
-    blockType: T;
-}
+    TFormat extends ContentModelBlockFormat = ContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>
+    extends MutableMark,
+        ContentModelBlockBaseCommon<T>,
+        ContentModelWithFormat<TFormat>,
+        ContentModelBlockWithCache<TCacheElement> {}
+
+/**
+ * Base type of a block (Readonly)
+ */
+export interface ReadonlyContentModelBlockBase<
+    T extends ContentModelBlockType,
+    TFormat extends ReadonlyContentModelBlockFormat = ReadonlyContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>
+    extends ReadonlyMark,
+        ContentModelBlockBaseCommon<T>,
+        ReadonlyContentModelWithFormat<TFormat>,
+        ContentModelBlockWithCache<TCacheElement> {}

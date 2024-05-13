@@ -4,12 +4,14 @@
  * So that we can use a single level copy ({...object}) to easily clone a format object
  */
 export type ContentModelFormatBase<
-    V extends string | number | boolean | undefined | null =
+    V extends string | number | boolean | undefined | null | never[] | ReadonlyArray<never> =
         | string
         | number
         | boolean
         | undefined
         | null
+        | never[]
+        | ReadonlyArray<never>
 > = {
     [key: string]: V;
 };

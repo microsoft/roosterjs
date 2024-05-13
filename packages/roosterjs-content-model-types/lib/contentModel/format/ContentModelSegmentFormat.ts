@@ -1,3 +1,5 @@
+import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { MutableMark } from '../common/MutableMark';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
@@ -11,9 +13,9 @@ import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
 /**
- * The format object for a segment in Content Model
+ * Common part of format object for a segment in Content Model
  */
-export type ContentModelSegmentFormat = TextColorFormat &
+export type ContentModelSegmentFormatCommon = TextColorFormat &
     BackgroundColorFormat &
     LetterSpacingFormat &
     FontSizeFormat &
@@ -24,3 +26,14 @@ export type ContentModelSegmentFormat = TextColorFormat &
     StrikeFormat &
     SuperOrSubScriptFormat &
     LineHeightFormat;
+
+/**
+ * The format object for a segment in Content Model
+ */
+export type ContentModelSegmentFormat = MutableMark & ContentModelSegmentFormatCommon;
+
+/**
+ * The format object for a segment in Content Model (Readonly)
+ */
+export type ReadonlyContentModelSegmentFormat = ReadonlyMark &
+    Readonly<ContentModelSegmentFormatCommon>;

@@ -1,20 +1,27 @@
 import type { TableCellMetadataFormat } from '../format/metadata/TableCellMetadataFormat';
-import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type {
+    ContentModelBlockGroupBase,
+    ReadonlyContentModelBlockGroupBase,
+} from './ContentModelBlockGroupBase';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
-import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
-import type { Selectable } from '../common/Selectable';
+import type {
+    ContentModelTableCellFormat,
+    ReadonlyContentModelTableCellFormat,
+} from '../format/ContentModelTableCellFormat';
+import type {
+    ContentModelWithDataset,
+    ReadonlyContentModelWithDataset,
+} from '../format/ContentModelWithDataset';
+import type {
+    ContentModelWithFormat,
+    ReadonlyContentModelWithFormat,
+} from '../format/ContentModelWithFormat';
+import type { ReadonlySelectable, Selectable } from '../common/Selectable';
 
 /**
- * Content Model of Table Cell
+ * Common part of Content Model of Table Cell
  */
-export interface ContentModelTableCell
-    extends Selectable,
-        ContentModelBlockGroupBase<'TableCell'>,
-        ContentModelWithFormat<ContentModelTableCellFormat>,
-        ContentModelWithDataset<TableCellMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableCellElement> {
+export interface ContentModelTableCellCommon {
     /**
      * Whether this cell is spanned from left cell
      */
@@ -30,3 +37,25 @@ export interface ContentModelTableCell
      */
     isHeader?: boolean;
 }
+
+/**
+ * Content Model of Table Cell
+ */
+export interface ContentModelTableCell
+    extends Selectable,
+        ContentModelTableCellCommon,
+        ContentModelBlockGroupBase<'TableCell'>,
+        ContentModelWithFormat<ContentModelTableCellFormat>,
+        ContentModelWithDataset<TableCellMetadataFormat>,
+        ContentModelBlockWithCache<HTMLTableCellElement> {}
+
+/**
+ * Content Model of Table Cell (Readonly)
+ */
+export interface ReadonlyContentModelTableCell
+    extends ReadonlySelectable,
+        ReadonlyContentModelBlockGroupBase<'TableCell'>,
+        ReadonlyContentModelWithFormat<ReadonlyContentModelTableCellFormat>,
+        ReadonlyContentModelWithDataset<TableCellMetadataFormat>,
+        ContentModelBlockWithCache<HTMLTableCellElement>,
+        Readonly<ContentModelTableCellCommon> {}

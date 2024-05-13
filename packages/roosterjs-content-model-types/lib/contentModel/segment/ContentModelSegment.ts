@@ -1,9 +1,15 @@
-import type { ContentModelBr } from './ContentModelBr';
-import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelGeneralSegment } from './ContentModelGeneralSegment';
-import type { ContentModelImage } from './ContentModelImage';
-import type { ContentModelSelectionMarker } from './ContentModelSelectionMarker';
-import type { ContentModelText } from './ContentModelText';
+import type { ContentModelBr, ReadonlyContentModelBr } from './ContentModelBr';
+import type { ContentModelEntity, ReadonlyContentModelEntity } from '../entity/ContentModelEntity';
+import type {
+    ContentModelGeneralSegment,
+    ReadonlyContentModelGeneralSegment,
+} from './ContentModelGeneralSegment';
+import type { ContentModelImage, ReadonlyContentModelImage } from './ContentModelImage';
+import type {
+    ContentModelSelectionMarker,
+    ReadonlyContentModelSelectionMarker,
+} from './ContentModelSelectionMarker';
+import type { ContentModelText, ReadonlyContentModelText } from './ContentModelText';
 
 /**
  * Union type of Content Model Segment
@@ -15,3 +21,14 @@ export type ContentModelSegment =
     | ContentModelGeneralSegment
     | ContentModelEntity
     | ContentModelImage;
+
+/**
+ * Union type of Content Model Segment (Readonly)
+ */
+export type ReadonlyContentModelSegment =
+    | ReadonlyContentModelSelectionMarker
+    | ReadonlyContentModelText
+    | ReadonlyContentModelBr
+    | ReadonlyContentModelGeneralSegment
+    | ReadonlyContentModelEntity
+    | ReadonlyContentModelImage;
