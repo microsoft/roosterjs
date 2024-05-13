@@ -1,8 +1,10 @@
 import { getClosestAncestorBlockGroupIndex } from '../editing/getClosestAncestorBlockGroupIndex';
 import { isBlockGroupOfType } from '../typeCheck/isBlockGroupOfType';
 import { iterateSelections } from './iterateSelections';
+import { mutateBlock, mutateParagraph } from '../common/mutateBlock';
+import { ReadonlyOperationalBlocks } from 'roosterjs-content-model-types/lib/parameter/OperationalBlocks';
+import { ReadonlyTableSelectionContext } from 'roosterjs-content-model-types/lib/selection/TableSelectionContext';
 import type {
-    ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelBlockGroupType,
     ContentModelDocument,
@@ -12,46 +14,62 @@ import type {
     ContentModelTable,
     IterateSelectionsOption,
     OperationalBlocks,
-    TableSelectionContext,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
     TypeOfBlockGroup,
 } from 'roosterjs-content-model-types';
 
+//#region getSelectedSegmentsAndParagraphs
 /**
  * Get an array of selected parent paragraph and child segment pair
  * @param model The Content Model to get selection from
  * @param includingFormatHolder True means also include format holder as segment from list item, in that case paragraph will be null
  */
 export function getSelectedSegmentsAndParagraphs(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     includingFormatHolder: boolean,
     includingEntity?: boolean
-): [ContentModelSegment, ContentModelParagraph | null, ContentModelBlockGroup[]][] {
+): [ContentModelSegment, ContentModelParagraph | null, ReadonlyContentModelBlockGroup[]][] {
     const selections = collectSelections(model, {
         includeListFormatHolder: includingFormatHolder ? 'allSegments' : 'never',
     });
     const result: [
         ContentModelSegment,
         ContentModelParagraph | null,
-        ContentModelBlockGroup[]
+        ReadonlyContentModelBlockGroup[]
     ][] = [];
 
     selections.forEach(({ segments, block, path }) => {
-        if (segments && ((includingFormatHolder && !block) || block?.blockType == 'Paragraph')) {
-            segments.forEach(segment => {
-                if (
-                    includingEntity ||
-                    segment.segmentType != 'Entity' ||
-                    !segment.entityFormat.isReadonly
-                ) {
-                    result.push([segment, block?.blockType == 'Paragraph' ? block : null, path]);
-                }
-            });
+        if (segments) {
+            if (block?.blockType == 'Paragraph') {
+                const [mutablePara, mutableSegments] = mutateParagraph(block, segments);
+
+                mutableSegments.forEach(segment => {
+                    if (
+                        includingEntity ||
+                        segment.segmentType != 'Entity' ||
+                        !segment.entityFormat.isReadonly
+                    ) {
+                        result.push([segment, mutablePara, path]);
+                    }
+                });
+            } else if (!block && includingFormatHolder && path[0].blockGroupType == 'ListItem') {
+                const mutableList = mutateBlock(path[0]);
+                result.push([mutableList.formatHolder, null, path]);
+            }
         }
     });
 
     return result;
 }
+//#endregion
 
+//#region getSelectedSegments
 /**
  * Get an array of selected segments from a content model
  * @param model The Content Model to get selection from
@@ -60,17 +78,46 @@ export function getSelectedSegmentsAndParagraphs(
 export function getSelectedSegments(
     model: ContentModelDocument,
     includingFormatHolder: boolean
-): ContentModelSegment[] {
+): ContentModelSegment[];
+
+/**
+ * Get an array of selected segments from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ * @param includingFormatHolder True means also include format holder as segment from list item
+ */
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[];
+
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[] {
     return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
 }
+//#endregion
 
+//#region getSelectedParagraphs
 /**
  * Get any array of selected paragraphs from a content model
  * @param model The Content Model to get selection from
  */
-export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
+export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[];
+
+/**
+ * Get any array of selected paragraphs from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[];
+
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    const result: ContentModelParagraph[] = [];
+    const result: ReadonlyContentModelParagraph[] = [];
 
     removeUnmeaningfulSelections(selections);
 
@@ -82,7 +129,9 @@ export function getSelectedParagraphs(model: ContentModelDocument): ContentModel
 
     return result;
 }
+//#endregion
 
+//#region getOperationalBlocks
 /**
  * Get an array of block group - block pair that is of the expected block group type from selection
  * @param group The root block group to search
@@ -95,8 +144,29 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[],
     deepFirst?: boolean
-): OperationalBlocks<T>[] {
-    const result: OperationalBlocks<T>[] = [];
+): OperationalBlocks<T>[];
+
+/**
+ * Get an array of block group - block pair that is of the expected block group type from selection (Readonly)
+ * @param group The root block group to search
+ * @param blockGroupTypes The expected block group types
+ * @param stopTypes Block group types that will stop searching when hit
+ * @param deepFirst True means search in deep first, otherwise wide first
+ */
+export function getOperationalBlocks<T extends ReadonlyContentModelBlockGroup>(
+    group: ReadonlyContentModelBlockGroup,
+    blockGroupTypes: TypeOfBlockGroup<T>[],
+    stopTypes: ContentModelBlockGroupType[],
+    deepFirst?: boolean
+): ReadonlyOperationalBlocks<T>[];
+
+export function getOperationalBlocks<T extends ContentModelBlockGroup>(
+    group: ReadonlyContentModelBlockGroup,
+    blockGroupTypes: TypeOfBlockGroup<T>[],
+    stopTypes: ContentModelBlockGroupType[],
+    deepFirst?: boolean
+): ReadonlyOperationalBlocks<T>[] {
+    const result: ReadonlyOperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
     const selections = collectSelections(group, {
         includeListFormatHolder: 'never',
@@ -131,17 +201,31 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 
     return result;
 }
+//#endregion
 
+//#region getFirstSelectedTable
 /**
  * Get the first selected table from content model
  * @param model The Content Model to get selection from
  */
 export function getFirstSelectedTable(
     model: ContentModelDocument
-): [ContentModelTable | undefined, ContentModelBlockGroup[]] {
+): [ContentModelTable | undefined, ContentModelBlockGroup[]];
+
+/**
+ * Get the first selected table from content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getFirstSelectedTable(
+    model: ReadonlyContentModelDocument
+): [ReadonlyContentModelTable | undefined, ReadonlyContentModelBlockGroup[]];
+
+export function getFirstSelectedTable(
+    model: ReadonlyContentModelDocument
+): [ReadonlyContentModelTable | undefined, ReadonlyContentModelBlockGroup[]] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    let table: ContentModelTable | undefined;
-    let resultPath: ContentModelBlockGroup[] = [];
+    let table: ReadonlyContentModelTable | undefined;
+    let resultPath: ReadonlyContentModelBlockGroup[] = [];
 
     removeUnmeaningfulSelections(selections);
 
@@ -164,14 +248,28 @@ export function getFirstSelectedTable(
 
     return [table, resultPath];
 }
+//#endregion
 
+//#region getFirstSelectedListItem
 /**
  * Get the first selected list item from content model
  * @param model The Content Model to get selection from
  */
 export function getFirstSelectedListItem(
     model: ContentModelDocument
-): ContentModelListItem | undefined {
+): ContentModelListItem | undefined;
+
+/**
+ * Get the first selected list item from content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getFirstSelectedListItem(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelListItem | undefined;
+
+export function getFirstSelectedListItem(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelListItem | undefined {
     let listItem: ContentModelListItem | undefined;
 
     getOperationalBlocks(model, ['ListItem'], ['TableCell']).forEach(r => {
@@ -182,16 +280,17 @@ export function getFirstSelectedListItem(
 
     return listItem;
 }
+//#endregion
 
 interface SelectionInfo {
-    path: ContentModelBlockGroup[];
-    segments?: ContentModelSegment[];
-    block?: ContentModelBlock;
-    tableContext?: TableSelectionContext;
+    path: ReadonlyContentModelBlockGroup[];
+    segments?: ReadonlyContentModelSegment[];
+    block?: ReadonlyContentModelBlock;
+    tableContext?: ReadonlyTableSelectionContext;
 }
 
 function collectSelections(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     option?: IterateSelectionsOption
 ): SelectionInfo[] {
     const selections: SelectionInfo[] = [];
