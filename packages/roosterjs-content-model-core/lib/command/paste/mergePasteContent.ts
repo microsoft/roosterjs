@@ -12,12 +12,12 @@ import type {
     ClipboardData,
     CloneModelOptions,
     ContentModelDocument,
-    ContentModelSegmentFormatCommon,
+    ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
 } from 'roosterjs-content-model-types';
 
-const EmptySegmentFormat: Required<ContentModelSegmentFormatCommon> = {
+const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
     backgroundColor: '',
     fontFamily: '',
     fontSize: '',
