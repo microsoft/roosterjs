@@ -1,9 +1,13 @@
 import { isGeneralSegment } from '../typeCheck/isGeneralSegment';
+import { mutateBlock, mutateSegment } from '../common/mutateBlock';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelSegment,
-    ContentModelTable,
+    MutableType,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
+    ReadonlySelectable,
     Selectable,
     TableCellCoordinate,
 } from 'roosterjs-content-model-types';
@@ -14,19 +18,23 @@ import type {
  * @param start The start selected element. If not passed, existing selection of content model will be cleared
  * @param end The end selected element. If not passed, only the start element will be selected. If passed, all elements between start and end elements will be selected
  */
-export function setSelection(group: ContentModelBlockGroup, start?: Selectable, end?: Selectable) {
+export function setSelection(
+    group: ReadonlyContentModelBlockGroup,
+    start?: ReadonlySelectable,
+    end?: ReadonlySelectable
+) {
     setSelectionToBlockGroup(group, false /*isInSelection*/, start || null, end || null);
 }
 
 function setSelectionToBlockGroup(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     isInSelection: boolean,
-    start: Selectable | null,
-    end: Selectable | null
+    start: ReadonlySelectable | null,
+    end: ReadonlySelectable | null
 ): boolean {
     return handleSelection(isInSelection, group, start, end, isInSelection => {
-        if (isGeneralSegment(group)) {
-            setIsSelected(group, isInSelection);
+        if (isGeneralSegment(group) && needToSetSelection(group, isInSelection)) {
+            setIsSelected(mutateBlock(group), isInSelection);
         }
 
         group.blocks.forEach(block => {
@@ -38,10 +46,10 @@ function setSelectionToBlockGroup(
 }
 
 function setSelectionToBlock(
-    block: ContentModelBlock,
+    block: ReadonlyContentModelBlock,
     isInSelection: boolean,
-    start: Selectable | null,
-    end: Selectable | null
+    start: ReadonlySelectable | null,
+    end: ReadonlySelectable | null
 ) {
     switch (block.blockType) {
         case 'BlockGroup':
@@ -53,10 +61,14 @@ function setSelectionToBlock(
         case 'Divider':
         case 'Entity':
             return handleSelection(isInSelection, block, start, end, isInSelection => {
-                if (isInSelection) {
-                    block.isSelected = true;
-                } else {
-                    delete block.isSelected;
+                if (needToSetSelection(block, isInSelection)) {
+                    const mutableBlock = mutateBlock(block);
+
+                    if (isInSelection) {
+                        mutableBlock.isSelected = true;
+                    } else {
+                        delete mutableBlock.isSelected;
+                    }
                 }
 
                 return isInSelection;
@@ -73,6 +85,7 @@ function setSelectionToBlock(
                     end,
                     isInSelection => {
                         return setSelectionToSegment(
+                            block,
                             segment,
                             isInSelection,
                             segmentsToDelete,
@@ -84,11 +97,11 @@ function setSelectionToBlock(
                 );
             });
 
-            while (segmentsToDelete.length > 0) {
-                const index = segmentsToDelete.pop()!;
+            let index: number | undefined;
 
+            while ((index = segmentsToDelete.pop()) !== undefined) {
                 if (index >= 0) {
-                    block.segments.splice(index, 1);
+                    mutateBlock(block).segments.splice(index, 1);
                 }
             }
 
@@ -100,10 +113,10 @@ function setSelectionToBlock(
 }
 
 function setSelectionToTable(
-    table: ContentModelTable,
+    table: ReadonlyContentModelTable,
     isInSelection: boolean,
-    start: Selectable | null,
-    end: Selectable | null
+    start: ReadonlySelectable | null,
+    end: ReadonlySelectable | null
 ): boolean {
     const first = findCell(table, start);
     const last = end ? findCell(table, end) : first;
@@ -116,7 +129,9 @@ function setSelectionToTable(
                 const isSelected =
                     row >= first.row && row <= last.row && col >= first.col && col <= last.col;
 
-                setIsSelected(currentCell, isSelected);
+                if (needToSetSelection(currentCell, isSelected)) {
+                    setIsSelected(mutateBlock(currentCell), isSelected);
+                }
 
                 if (!isSelected) {
                     setSelectionToBlockGroup(currentCell, false /*isInSelection*/, start, end);
@@ -134,21 +149,27 @@ function setSelectionToTable(
     return isInSelection;
 }
 
-function findCell(table: ContentModelTable, cell: Selectable | null): TableCellCoordinate {
+function findCell(
+    table: ReadonlyContentModelTable,
+    cell: ReadonlySelectable | null
+): TableCellCoordinate {
     let col = -1;
     const row = cell
-        ? table.rows.findIndex(row => (col = (row.cells as Selectable[]).indexOf(cell)) >= 0)
+        ? table.rows.findIndex(
+              row => (col = (row.cells as ReadonlyArray<ReadonlySelectable>).indexOf(cell)) >= 0
+          )
         : -1;
 
     return { row, col };
 }
 
 function setSelectionToSegment(
-    segment: ContentModelSegment,
+    paragraph: ReadonlyContentModelParagraph,
+    segment: ReadonlyContentModelSegment,
     isInSelection: boolean,
     segmentsToDelete: number[],
-    start: Selectable | null,
-    end: Selectable | null,
+    start: ReadonlySelectable | null,
+    end: ReadonlySelectable | null,
     i: number
 ) {
     switch (segment.segmentType) {
@@ -162,20 +183,53 @@ function setSelectionToSegment(
             return isInSelection;
 
         case 'General':
-            setIsSelected(segment, isInSelection);
+            internalSetSelectionToSegment(paragraph, segment, isInSelection);
 
             return segment != start && segment != end
                 ? setSelectionToBlockGroup(segment, isInSelection, start, end)
                 : isInSelection;
 
         case 'Image':
-            setIsSelected(segment, isInSelection);
-            segment.isSelectedAsImageSelection = start == segment && (!end || end == segment);
+            const isSelectedAsImageSelection = start == segment && (!end || end == segment);
+            const mutableImage = internalSetSelectionToSegment(
+                paragraph,
+                segment,
+                isInSelection,
+                !segment.isSelectedAsImageSelection != !isSelectedAsImageSelection
+            );
+
+            if (mutableImage) {
+                mutableImage.isSelectedAsImageSelection = isSelectedAsImageSelection;
+            }
+
             return isInSelection;
         default:
-            setIsSelected(segment, isInSelection);
+            internalSetSelectionToSegment(paragraph, segment, isInSelection);
             return isInSelection;
     }
+}
+
+function internalSetSelectionToSegment<T extends ReadonlyContentModelSegment>(
+    paragraph: ReadonlyContentModelParagraph,
+    segment: T,
+    isInSelection: boolean,
+    force?: boolean
+): MutableType<T> | null {
+    if (force || needToSetSelection(segment, isInSelection)) {
+        const [_, mutableSegment] = mutateSegment(paragraph, segment);
+
+        if (mutableSegment) {
+            setIsSelected(mutableSegment, isInSelection);
+
+            return mutableSegment;
+        }
+    }
+
+    return null;
+}
+
+function needToSetSelection(selectable: ReadonlySelectable, isSelected: boolean) {
+    return !selectable.isSelected != !isSelected;
 }
 
 function setIsSelected(selectable: Selectable, value: boolean) {
@@ -190,9 +244,9 @@ function setIsSelected(selectable: Selectable, value: boolean) {
 
 function handleSelection(
     isInSelection: boolean,
-    model: ContentModelBlockGroup | ContentModelBlock | ContentModelSegment,
-    start: Selectable | null,
-    end: Selectable | null,
+    model: ReadonlyContentModelBlockGroup | ReadonlyContentModelBlock | ReadonlyContentModelSegment,
+    start: ReadonlySelectable | null,
+    end: ReadonlySelectable | null,
     callback: (isInSelection: boolean) => boolean
 ) {
     isInSelection = isInSelection || model == start;

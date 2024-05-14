@@ -1,16 +1,22 @@
-import { createText, isPunctuation, isSpace, iterateSelections } from 'roosterjs-content-model-dom';
+import {
+    createText,
+    isPunctuation,
+    isSpace,
+    iterateSelections,
+    mutateBlock,
+} from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelText,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function adjustWordSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     marker: ContentModelSegment
 ): ContentModelSegment[] {
     let markerBlock: ContentModelParagraph | undefined;
@@ -18,7 +24,7 @@ export function adjustWordSelection(
     iterateSelections(model, (_, __, block, segments) => {
         //Find the block with the selection marker
         if (block?.blockType == 'Paragraph' && segments?.length == 1 && segments[0] == marker) {
-            markerBlock = block;
+            markerBlock = mutateBlock(block);
         }
         return true;
     });
