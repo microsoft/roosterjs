@@ -81,10 +81,10 @@ export interface ShallowMutableContentModelSegmentBase<
     /**
      * Hyperlink info
      */
-    readonly link?: ReadonlyContentModelLink;
+    link?: ContentModelLink;
 
     /**
      * Code info
      */
-    readonly code?: ReadonlyContentModelCode;
+    code?: ContentModelCode;
 }
