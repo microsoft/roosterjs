@@ -1,5 +1,4 @@
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { MutableMark, ReadonlyMark, ShallowMutableMark } from '../common/MutableMark';
 import type { DatasetFormat, ReadonlyDatasetFormat } from './metadata/DatasetFormat';
 
 /**
@@ -20,4 +19,14 @@ export type ReadonlyContentModelWithDataset<T> = ReadonlyMark & {
      * dataset of this element
      */
     readonly dataset: ReadonlyDatasetFormat;
+};
+
+/**
+ * Represents base format of an element that supports dataset and/or metadata (Readonly)
+ */
+export type ShallowMutableContentModelWithDataset<T> = ShallowMutableMark & {
+    /**
+     * dataset of this element
+     */
+    dataset: DatasetFormat;
 };

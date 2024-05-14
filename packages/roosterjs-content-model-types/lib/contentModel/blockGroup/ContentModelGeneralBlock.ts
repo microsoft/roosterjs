@@ -1,15 +1,20 @@
 import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
 } from '../block/ContentModelBlockBase';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelBlockGroupBase,
-    MutableContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import type { ReadonlySelectable, Selectable } from '../common/Selectable';
+import type {
+    ReadonlySelectable,
+    Selectable,
+    ShallowMutableSelectable,
+} from '../common/Selectable';
 
 /**
  * Common part of Content Model for general Block element
@@ -43,10 +48,13 @@ export interface ReadonlyContentModelGeneralBlock
         > {}
 
 /**
- * Content Model for general Block element (Single level mutable)
+ * Content Model for general Block element (Shallow mutable)
  */
-export interface MutableContentModelGeneralBlock
-    extends Selectable,
+export interface ShallowMutableContentModelGeneralBlock
+    extends ShallowMutableSelectable,
         ContentModelGeneralBlockCommon,
-        MutableContentModelBlockGroupBase<'General'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelBlockFormat & ContentModelSegmentFormat> {}
+        ShallowMutableContentModelBlockGroupBase<'General'>,
+        ShallowMutableContentModelBlockBase<
+            'BlockGroup',
+            ContentModelBlockFormat & ContentModelSegmentFormat
+        > {}
