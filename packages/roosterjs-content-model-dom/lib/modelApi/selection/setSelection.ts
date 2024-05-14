@@ -8,7 +8,7 @@ import type {
     ReadonlyContentModelSegment,
     ReadonlyContentModelTable,
     ReadonlySelectable,
-    Selectable,
+    ShallowMutableSelectable,
     TableCellCoordinate,
 } from 'roosterjs-content-model-types';
 
@@ -232,7 +232,7 @@ function needToSetSelection(selectable: ReadonlySelectable, isSelected: boolean)
     return !selectable.isSelected != !isSelected;
 }
 
-function setIsSelected(selectable: Selectable, value: boolean) {
+function setIsSelected(selectable: ShallowMutableSelectable, value: boolean) {
     if (value) {
         selectable.isSelected = true;
     } else {
