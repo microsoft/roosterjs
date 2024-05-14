@@ -5,9 +5,9 @@ import {
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelEntity,
     IEditor,
     ReadonlyContentModelBlockGroup,
-    ReadonlyContentModelEntity,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
@@ -127,7 +127,7 @@ function findPairedDelimiter(
     paragraph: ReadonlyContentModelParagraph,
     movingBefore: boolean
 ) {
-    let entity: ReadonlyContentModelEntity | null = null;
+    let entity: ContentModelEntity | null = null;
 
     if (entitySegment?.segmentType == 'Entity') {
         // Inline entity
