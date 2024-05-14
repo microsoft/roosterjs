@@ -191,16 +191,15 @@ function setSelectionToSegment(
 
         case 'Image':
             const isSelectedAsImageSelection = start == segment && (!end || end == segment);
-            const mutableImage = internalSetSelectionToSegment(
+
+            internalSetSelectionToSegment(
                 paragraph,
                 segment,
                 isInSelection,
                 !segment.isSelectedAsImageSelection != !isSelectedAsImageSelection
+                    ? image => (image.isSelectedAsImageSelection = isSelectedAsImageSelection)
+                    : undefined
             );
-
-            if (mutableImage) {
-                mutableImage.isSelectedAsImageSelection = isSelectedAsImageSelection;
-            }
 
             return isInSelection;
         default:
@@ -213,19 +212,14 @@ function internalSetSelectionToSegment<T extends ReadonlyContentModelSegment>(
     paragraph: ReadonlyContentModelParagraph,
     segment: T,
     isInSelection: boolean,
-    force?: boolean
-): MutableType<T> | null {
-    if (force || needToSetSelection(segment, isInSelection)) {
-        const [_, mutableSegment] = mutateSegment(paragraph, segment);
-
-        if (mutableSegment) {
+    additionAction?: (segment: MutableType<T>) => void
+) {
+    if (additionAction || needToSetSelection(segment, isInSelection)) {
+        mutateSegment(paragraph, segment, mutableSegment => {
             setIsSelected(mutableSegment, isInSelection);
-
-            return mutableSegment;
-        }
+            additionAction?.(mutableSegment);
+        });
     }
-
-    return null;
 }
 
 function needToSetSelection(selectable: ReadonlySelectable, isSelected: boolean) {

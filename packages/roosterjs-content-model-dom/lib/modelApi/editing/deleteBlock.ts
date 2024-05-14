@@ -1,12 +1,14 @@
+import { mutateBlock } from '../common/mutate';
 import type {
-    ContentModelBlock,
     EntityRemovalOperation,
     FormatContentModelContext,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
  * Delete a content model block from current selection
- * @param blocks Array of the block to delete
+ * @param parent Array of the block to delete
  * @param blockToDelete The block to delete
  * @param replacement @optional If specified, use this block to replace the deleted block
  * @param context @optional Context object provided by formatContentModel API
@@ -14,18 +16,21 @@ import type {
  * If not specified, only selected entity will be deleted
  */
 export function deleteBlock(
-    blocks: ContentModelBlock[],
-    blockToDelete: ContentModelBlock,
-    replacement?: ContentModelBlock,
+    parent: ReadonlyContentModelBlockGroup,
+    blockToDelete: ReadonlyContentModelBlock,
+    replacement?: ReadonlyContentModelBlock,
     context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
-    const index = blocks.indexOf(blockToDelete);
+    const index = parent.blocks.indexOf(blockToDelete);
+    const blocks = mutateBlock(parent).blocks;
 
     switch (blockToDelete.blockType) {
         case 'Table':
         case 'Divider':
-            replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
+            replacement
+                ? blocks.splice(index, 1, mutateBlock(replacement))
+                : blocks.splice(index, 1);
             return true;
 
         case 'Entity':
@@ -38,7 +43,9 @@ export function deleteBlock(
                 : undefined;
 
             if (operation !== undefined) {
-                replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
+                replacement
+                    ? blocks.splice(index, 1, mutateBlock(replacement))
+                    : blocks.splice(index, 1);
                 context?.deletedEntities.push({
                     entity: blockToDelete,
                     operation,
@@ -51,7 +58,7 @@ export function deleteBlock(
             switch (blockToDelete.blockGroupType) {
                 case 'General':
                     if (replacement) {
-                        blocks.splice(index, 1, replacement);
+                        blocks.splice(index, 1, mutateBlock(replacement));
                         return true;
                     } else {
                         // no op, let browser handle it

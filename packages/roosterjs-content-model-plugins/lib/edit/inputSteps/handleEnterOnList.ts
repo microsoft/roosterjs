@@ -10,12 +10,15 @@ import {
     setParagraphNotImplicit,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
+    mutateSegment,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
     InsertPoint,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -34,10 +37,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const rawEvent = formatContext?.rawEvent;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
-        const listItem = path[index];
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
 
-        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
+        if (readonlyListItem && readonlyListItem.blockGroupType === 'ListItem' && listParent) {
+            const listItem = mutateBlock(readonlyListItem);
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
 
@@ -66,7 +70,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                         lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
                             'SelectionMarker'
                     ) {
-                        lastParagraph.segments.pop();
+                        mutateBlock(lastParagraph).segments.pop();
 
                         nextParagraph.segments.unshift(
                             createSelectionMarker(insertPoint.marker.format)
@@ -96,7 +100,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
     }
 };
 
-const isEmptyListItem = (listItem: ContentModelListItem) => {
+const isEmptyListItem = (listItem: ReadonlyContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
@@ -108,8 +112,8 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
 
 const createNewListItem = (
     context: ValidDeleteSelectionContext,
-    listItem: ContentModelListItem,
-    listParent: ContentModelBlockGroup
+    listItem: ReadonlyContentModelListItem,
+    listParent: ReadonlyContentModelBlockGroup
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
@@ -120,12 +124,12 @@ const createNewListItem = (
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
-    listParent.blocks.splice(listIndex + 1, 0, newListItem);
+    mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
 
     return newListItem;
 };
 
-const createNewListLevel = (listItem: ContentModelListItem) => {
+const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
     return listItem.levels.map(level => {
         return createListLevel(
             level.listType,
@@ -147,21 +151,22 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
         paragraph.segmentFormat
     );
 
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
+    mutateSegment(paragraph, marker, (marker, paragraph, markerIndex) => {
+        const segments = paragraph.segments.splice(
+            markerIndex,
+            paragraph.segments.length - markerIndex
+        );
 
-    newParagraph.segments.push(...segments);
+        newParagraph.segments.push(...segments);
 
-    setParagraphNotImplicit(paragraph);
+        setParagraphNotImplicit(paragraph);
 
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
+        if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
+            paragraph.segments.push(createBr(marker.format));
+        }
 
-    normalizeParagraph(newParagraph);
+        normalizeParagraph(newParagraph);
+    });
 
     return newParagraph;
 };

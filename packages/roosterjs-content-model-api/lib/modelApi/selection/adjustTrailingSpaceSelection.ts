@@ -53,9 +53,7 @@ function splitTextSegment(
     readonlyBlock: ReadonlyContentModelParagraph,
     readonlyTextSegment: ReadonlyContentModelText
 ) {
-    const [block, textSegment] = mutateSegment(readonlyBlock, readonlyTextSegment);
-
-    if (textSegment) {
+    mutateSegment(readonlyBlock, readonlyTextSegment, (textSegment, block) => {
         const text = textSegment.text.trimRight();
         const trailingSpace = textSegment.text.substring(text.length);
         const newText = createText(text, textSegment.format, textSegment.link, textSegment.code);
@@ -78,5 +76,5 @@ function splitTextSegment(
         trailingSpaceSegment.isSelected = true;
         const index = block.segments.indexOf(textSegment);
         block.segments.splice(index, 1, newText, trailingSpaceSegment);
-    }
+    });
 }

@@ -1,12 +1,12 @@
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -18,7 +18,7 @@ import type {
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
     callback: (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         previousSegment: ContentModelText,
         paragraph: ContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
@@ -28,7 +28,7 @@ export function formatTextSegmentBeforeSelectionMarker(
 ): boolean {
     let result = false;
 
-    editor.formatContentModel((model, context) => {
+    editor.formatContentModel((model: ReadonlyContentModelDocument, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
             false /*includeFormatHolder*/

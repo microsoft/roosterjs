@@ -8,8 +8,14 @@ import {
     getFirstSelectedTable,
     normalizeTable,
     setSelection,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, IEditor, TableSelection } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTable,
+    IEditor,
+    ReadonlyContentModelDocument,
+    TableSelection,
+} from 'roosterjs-content-model-types';
 
 /**
  * Invoke a callback to format the selected table using Content Model
@@ -25,10 +31,12 @@ export function formatTableWithContentModel(
     selectionOverride?: TableSelection
 ) {
     editor.formatContentModel(
-        model => {
-            const [tableModel, path] = getFirstSelectedTable(model);
+        (model: ReadonlyContentModelDocument) => {
+            const [readonlyTableModel, path] = getFirstSelectedTable(model);
 
-            if (tableModel) {
+            if (readonlyTableModel) {
+                const tableModel = mutateBlock(readonlyTableModel);
+
                 callback(tableModel);
 
                 if (!hasSelectionInBlock(tableModel)) {

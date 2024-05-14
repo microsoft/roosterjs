@@ -7,12 +7,12 @@ import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from './deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
+import { mutateBlock } from '../common/mutate';
 import { normalizeContentModel } from '../common/normalizeContentModel';
 import { normalizeTable } from './normalizeTable';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
@@ -21,6 +21,9 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     MergeModelOption,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -34,7 +37,7 @@ const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
  * @returns Insert point after merge, or null if there is no insert point
  */
 export function mergeModel(
-    target: ContentModelDocument,
+    target: ReadonlyContentModelDocument,
     source: ContentModelDocument,
     context?: FormatContentModelContext,
     options?: MergeModelOption
@@ -105,10 +108,11 @@ function mergeParagraph(
     option?: MergeModelOption
 ) {
     const { paragraph, marker } = markerPosition;
-    const newParagraph = mergeToCurrentParagraph
+    const readonlyParagraph = mergeToCurrentParagraph
         ? paragraph
         : splitParagraph(markerPosition, newPara.format);
-    const segmentIndex = newParagraph.segments.indexOf(marker);
+    const segmentIndex = readonlyParagraph.segments.indexOf(marker);
+    const newParagraph = mutateBlock(readonlyParagraph);
 
     if (option?.mergeFormat == 'none' && mergeToCurrentParagraph) {
         newParagraph.segments.forEach(segment => {
@@ -171,14 +175,16 @@ function mergeTable(
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
+        const mutableTable = mutateBlock(table);
+
         for (let i = 0; i < newTable.rows.length; i++) {
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
-                    for (let k = 0; k < table.rows.length; k++) {
-                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
-                        table.rows[k].cells[colIndex + j] = createTableCell(
+                if (i == 0 && colIndex + j >= mutableTable.rows[0].cells.length) {
+                    for (let k = 0; k < mutableTable.rows.length; k++) {
+                        const leftCell = mutableTable.rows[k]?.cells[colIndex + j - 1];
+                        mutableTable.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -187,18 +193,18 @@ function mergeTable(
                     }
                 }
 
-                if (j == 0 && rowIndex + i >= table.rows.length) {
-                    if (!table.rows[rowIndex + i]) {
-                        table.rows[rowIndex + i] = {
+                if (j == 0 && rowIndex + i >= mutableTable.rows.length) {
+                    if (!mutableTable.rows[rowIndex + i]) {
+                        mutableTable.rows[rowIndex + i] = {
                             cells: [],
                             format: {},
                             height: 0,
                         };
                     }
 
-                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
-                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
-                        table.rows[rowIndex + i].cells[k] = createTableCell(
+                    for (let k = 0; k < mutableTable.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = mutableTable.rows[rowIndex + i - 1]?.cells[k];
+                        mutableTable.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -207,8 +213,8 @@ function mergeTable(
                     }
                 }
 
-                const oldCell = table.rows[rowIndex + i].cells[colIndex + j];
-                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
+                const oldCell = mutableTable.rows[rowIndex + i].cells[colIndex + j];
+                mutableTable.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
                     const newMarker = createSelectionMarker(marker.format);
@@ -224,8 +230,8 @@ function mergeTable(
             }
         }
 
-        normalizeTable(table, markerPosition.marker.format);
-        applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
+        normalizeTable(mutableTable, markerPosition.marker.format);
+        applyTableFormat(mutableTable, undefined /*newFormat*/, true /*keepCellShade*/);
     } else {
         insertBlock(markerPosition, newTable);
     }
@@ -242,7 +248,7 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     const blockIndex = listParent.blocks.indexOf(listItem || paragraph);
 
     if (blockIndex >= 0) {
-        listParent.blocks.splice(blockIndex, 0, newList);
+        mutateBlock(listParent).blocks.splice(blockIndex, 0, newList);
     }
 
     if (listItem) {
@@ -263,11 +269,11 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     );
 
     if (segmentIndex >= 0) {
-        newParagraph.segments = paragraph.segments.splice(segmentIndex);
+        newParagraph.segments = mutateBlock(paragraph).segments.splice(segmentIndex);
     }
 
     if (paraIndex >= 0) {
-        path[0].blocks.splice(paraIndex + 1, 0, newParagraph);
+        mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newParagraph);
     }
 
     const listItemIndex = getClosestAncestorBlockGroupIndex(
@@ -289,7 +295,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
             }
 
             if (blockIndex >= 0) {
-                listParent.blocks.splice(blockIndex + 1, 0, newListItem);
+                mutateBlock(listParent).blocks.splice(blockIndex + 1, 0, newListItem);
             }
 
             path[listItemIndex] = newListItem;
@@ -308,21 +314,22 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
-        path[0].blocks.splice(blockIndex, 0, block);
+        mutateBlock(path[0]).blocks.splice(blockIndex, 0, block);
     }
 }
 
 function applyDefaultFormat(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
+
         switch (block.blockType) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem') {
-                    block.formatHolder.format = mergeSegmentFormat(
+                    mutateBlock(block).formatHolder.format = mergeSegmentFormat(
                         applyDefaultFormatOption,
                         format,
                         block.formatHolder.format
@@ -341,7 +348,9 @@ function applyDefaultFormat(
 
             case 'Paragraph':
                 const paragraphFormat = block.decorator?.format || {};
-                block.segments.forEach(segment => {
+                const paragraph = mutateBlock(block);
+
+                paragraph.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
@@ -353,16 +362,16 @@ function applyDefaultFormat(
                 });
 
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
-                    delete block.decorator;
+                    delete paragraph.decorator;
                 }
                 break;
         }
     });
 }
 
-function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
+function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyContentModelBlock) {
     if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' && block.format.backgroundColor) {
-        delete block.format.backgroundColor;
+        delete mutateBlock(block).format.backgroundColor;
     }
 }
 
