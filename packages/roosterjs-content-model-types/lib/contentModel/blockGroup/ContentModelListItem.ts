@@ -65,5 +65,5 @@ export interface MutableContentModelListItem
     /**
      * A dummy segment to hold format of this list item
      */
-    readonly formatHolder: ReadonlyContentModelSelectionMarker;
+    formatHolder: ContentModelSelectionMarker;
 }
