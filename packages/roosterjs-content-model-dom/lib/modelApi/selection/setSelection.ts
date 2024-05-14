@@ -1,5 +1,5 @@
 import { isGeneralSegment } from '../typeCheck/isGeneralSegment';
-import { mutateBlock, mutateSegment } from '../common/mutateBlock';
+import { mutateBlock, mutateSegment } from '../common/mutate';
 import type {
     MutableType,
     ReadonlyContentModelBlock,

@@ -1,7 +1,7 @@
 import { getClosestAncestorBlockGroupIndex } from '../editing/getClosestAncestorBlockGroupIndex';
 import { isBlockGroupOfType } from '../typeCheck/isBlockGroupOfType';
 import { iterateSelections } from './iterateSelections';
-import { mutateBlock, mutateParagraph } from '../common/mutateBlock';
+import { mutateBlock, mutateSegments } from '../common/mutate';
 import type {
     ContentModelBlockGroup,
     ContentModelBlockGroupType,
@@ -45,7 +45,7 @@ export function getSelectedSegmentsAndParagraphs(
     selections.forEach(({ segments, block, path }) => {
         if (segments) {
             if (block?.blockType == 'Paragraph') {
-                const [mutablePara, mutableSegments] = mutateParagraph(block, segments);
+                const [mutablePara, mutableSegments] = mutateSegments(block, segments);
 
                 mutableSegments.forEach(segment => {
                     if (
