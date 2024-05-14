@@ -788,6 +788,7 @@ describe('SelectionPlugin handle table selection', () => {
     it('MouseDown - save a table selection when left click', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
         const div = document.createElement('div');
@@ -837,9 +838,57 @@ describe('SelectionPlugin handle table selection', () => {
         expect(mouseDispatcher).toBeDefined();
     });
 
+    it('MouseDown - do not save a table selection when left click, table is not editable', () => {
+        const state = plugin.getState();
+        const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'false');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(div);
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: div,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: undefined,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: undefined,
+        });
+        expect(mouseDispatcher).toBeUndefined();
+    });
+
     it('MouseDown - triple click', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
 
@@ -887,6 +936,7 @@ describe('SelectionPlugin handle table selection', () => {
     it('MouseMove - in same table', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td1 = document.createElement('td');
         const td2 = document.createElement('td');
@@ -999,6 +1049,8 @@ describe('SelectionPlugin handle table selection', () => {
         const state = plugin.getState();
         const table1 = document.createElement('table');
         const table2 = document.createElement('table');
+        table1.setAttribute('contenteditable', 'true');
+        table2.setAttribute('contenteditable', 'true');
         const tr1 = document.createElement('tr');
         const tr2 = document.createElement('tr');
         const td1 = document.createElement('td');
@@ -1164,6 +1216,7 @@ describe('SelectionPlugin handle table selection', () => {
 
         beforeEach(() => {
             table = document.createElement('table');
+            table.setAttribute('contenteditable', 'true');
             tr1 = document.createElement('tr');
             tr2 = document.createElement('tr');
             td1 = document.createElement('td');
