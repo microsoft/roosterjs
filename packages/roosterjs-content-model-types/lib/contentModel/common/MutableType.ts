@@ -5,26 +5,26 @@ import type {
     ReadonlyContentModelDivider,
 } from '../block/ContentModelDivider';
 import type {
-    ContentModelDocument,
+    MutableContentModelDocument,
     ReadonlyContentModelDocument,
 } from '../blockGroup/ContentModelDocument';
 import type { ContentModelEntity, ReadonlyContentModelEntity } from '../entity/ContentModelEntity';
 import type {
-    ContentModelFormatContainer,
+    MutableContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
 } from '../blockGroup/ContentModelFormatContainer';
 import type {
-    ContentModelGeneralBlock,
+    MutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
 } from '../blockGroup/ContentModelGeneralBlock';
 import type {
-    ContentModelGeneralSegment,
+    MutableContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
 } from '../segment/ContentModelGeneralSegment';
 import type { ContentModelImage, ReadonlyContentModelImage } from '../segment/ContentModelImage';
 import type { ContentModelLink, ReadonlyContentModelLink } from '../decorator/ContentModelLink';
 import type {
-    ContentModelListItem,
+    MutableContentModelListItem,
     ReadonlyContentModelListItem,
 } from '../blockGroup/ContentModelListItem';
 import type {
@@ -45,7 +45,7 @@ import type {
 } from '../segment/ContentModelSelectionMarker';
 import type { ContentModelTable, ReadonlyContentModelTable } from '../block/ContentModelTable';
 import type {
-    ContentModelTableCell,
+    MutableContentModelTableCell,
     ReadonlyContentModelTableCell,
 } from '../blockGroup/ContentModelTableCell';
 import type {
@@ -58,7 +58,7 @@ import type { ContentModelText, ReadonlyContentModelText } from '../segment/Cont
  * Get mutable type from its related readonly type
  */
 export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
-    ? ContentModelGeneralSegment
+    ? MutableContentModelGeneralSegment
     : T extends ReadonlyContentModelSelectionMarker
     ? ContentModelSelectionMarker
     : T extends ReadonlyContentModelImage
@@ -76,19 +76,19 @@ export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
     : T extends ReadonlyContentModelTableRow
     ? ContentModelTableRow
     : T extends ReadonlyContentModelTableCell
-    ? ContentModelTableCell
+    ? MutableContentModelTableCell
     : T extends ReadonlyContentModelFormatContainer
-    ? ContentModelFormatContainer
+    ? MutableContentModelFormatContainer
     : T extends ReadonlyContentModelListItem
-    ? ContentModelListItem
+    ? MutableContentModelListItem
     : T extends ReadonlyContentModelListLevel
     ? ContentModelListLevel
     : T extends ReadonlyContentModelDivider
     ? ContentModelDivider
     : T extends ReadonlyContentModelDocument
-    ? ContentModelDocument
+    ? MutableContentModelDocument
     : T extends ReadonlyContentModelGeneralBlock
-    ? ContentModelGeneralBlock
+    ? MutableContentModelGeneralBlock
     : T extends ReadonlyContentModelParagraphDecorator
     ? ContentModelParagraphDecorator
     : T extends ReadonlyContentModelLink

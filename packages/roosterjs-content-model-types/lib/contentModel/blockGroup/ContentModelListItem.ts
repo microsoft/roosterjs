@@ -4,6 +4,7 @@ import type {
 } from '../block/ContentModelBlockBase';
 import type {
     ContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
@@ -20,7 +21,7 @@ import type {
  * Content Model of List Item
  */
 export interface ContentModelListItem
-    extends ContentModelBlockGroupBase<'ListItem'>,
+    extends ContentModelBlockGroupBase<'ListItem', HTMLLIElement>,
         ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
     /**
      * Type of this list, either ordered or unordered
@@ -37,8 +38,25 @@ export interface ContentModelListItem
  * Content Model of List Item (Readonly)
  */
 export interface ReadonlyContentModelListItem
-    extends ReadonlyContentModelBlockGroupBase<'ListItem'>,
+    extends ReadonlyContentModelBlockGroupBase<'ListItem', HTMLLIElement>,
         ReadonlyContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
+    /**
+     * Type of this list, either ordered or unordered
+     */
+    readonly levels: ReadonlyArray<ReadonlyContentModelListLevel>;
+
+    /**
+     * A dummy segment to hold format of this list item
+     */
+    readonly formatHolder: ReadonlyContentModelSelectionMarker;
+}
+
+/**
+ * Content Model of List Item (Single level mutable)
+ */
+export interface MutableContentModelListItem
+    extends MutableContentModelBlockGroupBase<'ListItem', HTMLLIElement>,
+        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
     /**
      * Type of this list, either ordered or unordered
      */

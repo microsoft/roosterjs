@@ -1,5 +1,6 @@
 import type {
     ContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -30,6 +31,14 @@ export interface ContentModelDocument
  * Content Model document entry point (Readonly)
  */
 export interface ReadonlyContentModelDocument
-    extends ReadonlyContentModelBlockGroupBase<'Document'>,
-        Partial<ReadonlyContentModelWithFormat<ContentModelSegmentFormat>>,
-        Readonly<ContentModelDocumentCommon> {}
+    extends Readonly<ContentModelDocumentCommon>,
+        ReadonlyContentModelBlockGroupBase<'Document'>,
+        Partial<ReadonlyContentModelWithFormat<ContentModelSegmentFormat>> {}
+
+/**
+ * Content Model document entry point (Single level mutable)
+ */
+export interface MutableContentModelDocument
+    extends ContentModelDocumentCommon,
+        MutableContentModelBlockGroupBase<'Document'>,
+        Partial<ContentModelWithFormat<ContentModelSegmentFormat>> {}

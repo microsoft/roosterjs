@@ -1,14 +1,28 @@
-import type { ContentModelDocument, ReadonlyContentModelDocument } from './ContentModelDocument';
+import type {
+    ContentModelDocument,
+    MutableContentModelDocument,
+    ReadonlyContentModelDocument,
+} from './ContentModelDocument';
 import type {
     ContentModelFormatContainer,
+    MutableContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
 } from './ContentModelFormatContainer';
 import type {
     ContentModelGeneralBlock,
+    MutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
 } from './ContentModelGeneralBlock';
-import type { ContentModelListItem, ReadonlyContentModelListItem } from './ContentModelListItem';
-import type { ContentModelTableCell, ReadonlyContentModelTableCell } from './ContentModelTableCell';
+import type {
+    ContentModelListItem,
+    MutableContentModelListItem,
+    ReadonlyContentModelListItem,
+} from './ContentModelListItem';
+import type {
+    ContentModelTableCell,
+    MutableContentModelTableCell,
+    ReadonlyContentModelTableCell,
+} from './ContentModelTableCell';
 
 /**
  * The union type of Content Model Block Group
@@ -29,3 +43,13 @@ export type ReadonlyContentModelBlockGroup =
     | ReadonlyContentModelListItem
     | ReadonlyContentModelTableCell
     | ReadonlyContentModelGeneralBlock;
+
+/**
+ * The union type of Content Model Block Group (Single level mutable)
+ */
+export type MutableContentModelBlockGroup =
+    | MutableContentModelDocument
+    | MutableContentModelFormatContainer
+    | MutableContentModelListItem
+    | MutableContentModelTableCell
+    | MutableContentModelGeneralBlock;
