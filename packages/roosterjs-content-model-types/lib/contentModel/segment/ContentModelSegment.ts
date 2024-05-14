@@ -1,5 +1,5 @@
 import type { ContentModelBr, ReadonlyContentModelBr } from './ContentModelBr';
-import type { ContentModelEntity, ReadonlyContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type {
     ContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
@@ -30,5 +30,5 @@ export type ReadonlyContentModelSegment =
     | ReadonlyContentModelText
     | ReadonlyContentModelBr
     | ReadonlyContentModelGeneralSegment
-    | ReadonlyContentModelEntity
+    | ContentModelEntity
     | ReadonlyContentModelImage;
