@@ -27,5 +27,5 @@ export interface ShallowMutableSelectable extends ShallowMutableMark {
     /**
      * Whether this model object is selected
      */
-    readonly isSelected?: boolean;
+    isSelected?: boolean;
 }
