@@ -65,7 +65,7 @@ export interface ShallowMutableContentModelListItem
     /**
      * Type of this list, either ordered or unordered
      */
-    readonly levels: ReadonlyArray<ReadonlyContentModelListLevel>;
+    levels: ContentModelListLevel[];
 
     /**
      * A dummy segment to hold format of this list item
