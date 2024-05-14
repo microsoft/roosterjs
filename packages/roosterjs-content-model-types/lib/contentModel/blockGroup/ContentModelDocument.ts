@@ -2,10 +2,7 @@ import type {
     ContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type {
     ContentModelWithFormat,
     ReadonlyContentModelWithFormat,
@@ -34,5 +31,5 @@ export interface ContentModelDocument
  */
 export interface ReadonlyContentModelDocument
     extends ReadonlyContentModelBlockGroupBase<'Document'>,
-        Partial<ReadonlyContentModelWithFormat<ReadonlyContentModelSegmentFormat>>,
+        Partial<ReadonlyContentModelWithFormat<ContentModelSegmentFormat>>,
         Readonly<ContentModelDocumentCommon> {}

@@ -1,8 +1,6 @@
-import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type { MutableMark } from '../common/MutableMark';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
-import type { ContentModelSegmentFormatCommon } from './ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { IdFormat } from './formatParts/IdFormat';
@@ -12,9 +10,10 @@ import type { SizeFormat } from './formatParts/SizeFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
- * Common part of format object for an image in Content Model
+ * The format object for an image in Content Model
  */
-export type ContentModelImageFormatCommon = IdFormat &
+export type ContentModelImageFormat = ContentModelSegmentFormat &
+    IdFormat &
     SizeFormat &
     MarginFormat &
     PaddingFormat &
@@ -22,16 +21,4 @@ export type ContentModelImageFormatCommon = IdFormat &
     BoxShadowFormat &
     DisplayFormat &
     FloatFormat &
-    VerticalAlignFormat &
-    ContentModelSegmentFormatCommon;
-
-/**
- * The format object for an image in Content Model
- */
-export type ContentModelImageFormat = MutableMark & ContentModelImageFormatCommon;
-
-/**
- * The format object for an image in Content Model (Readonly)
- */
-export type ReadonlyContentModelImageFormat = ReadonlyMark &
-    Readonly<ContentModelImageFormatCommon>;
+    VerticalAlignFormat;

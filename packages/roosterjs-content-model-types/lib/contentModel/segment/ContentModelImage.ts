@@ -1,7 +1,4 @@
-import type {
-    ContentModelImageFormat,
-    ReadonlyContentModelImageFormat,
-} from '../format/ContentModelImageFormat';
+import type { ContentModelImageFormat } from '../format/ContentModelImageFormat';
 import type {
     ContentModelSegmentBase,
     ReadonlyContentModelSegmentBase,
@@ -49,6 +46,6 @@ export interface ContentModelImage
  * Content Model of IMG (Readonly)
  */
 export interface ReadonlyContentModelImage
-    extends ReadonlyContentModelSegmentBase<'Image', ReadonlyContentModelImageFormat>,
+    extends ReadonlyContentModelSegmentBase<'Image', ContentModelImageFormat>,
         ReadonlyContentModelWithDataset<ImageMetadataFormat>,
         Readonly<ContentModelImageCommon> {}

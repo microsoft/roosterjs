@@ -1,9 +1,6 @@
 import type { MutableMark } from '../common/MutableMark';
 import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type {
-    ContentModelHyperLinkFormat,
-    ReadonlyContentModelHyperLinkFormat,
-} from '../format/ContentModelHyperLinkFormat';
+import type { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
 import type {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
@@ -30,5 +27,5 @@ export interface ContentModelLink
  */
 export interface ReadonlyContentModelLink
     extends ReadonlyMark,
-        ReadonlyContentModelWithFormat<ReadonlyContentModelHyperLinkFormat>,
+        ReadonlyContentModelWithFormat<ContentModelHyperLinkFormat>,
         ReadonlyContentModelWithDataset<null> {}

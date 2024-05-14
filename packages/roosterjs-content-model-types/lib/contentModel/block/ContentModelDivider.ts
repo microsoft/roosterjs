@@ -1,8 +1,5 @@
 import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
-import type {
-    ContentModelDividerFormat,
-    ReadonlyContentModelDividerFormat,
-} from '../format/ContentModelDividerFormat';
+import type { ContentModelDividerFormat } from '../format/ContentModelDividerFormat';
 import type { ReadonlySelectable, Selectable } from '../common/Selectable';
 
 /**
@@ -33,5 +30,5 @@ export interface ContentModelDivider
  */
 export interface ReadonlyContentModelDivider
     extends ReadonlySelectable,
-        ReadonlyContentModelBlockBase<'Divider', ReadonlyContentModelDividerFormat>,
+        ReadonlyContentModelBlockBase<'Divider', ContentModelDividerFormat>,
         Readonly<ContentModelDividerCommon> {}

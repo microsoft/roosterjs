@@ -1,5 +1,3 @@
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
@@ -12,9 +10,9 @@ import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 
 /**
- * Common part of format object for a paragraph in Content Model
+ * The format object for a paragraph in Content Model
  */
-export type ContentModelBlockFormatCommon = BackgroundColorFormat &
+export type ContentModelBlockFormat = BackgroundColorFormat &
     DirectionFormat &
     TextAlignFormat &
     HtmlAlignFormat &
@@ -24,14 +22,3 @@ export type ContentModelBlockFormatCommon = BackgroundColorFormat &
     WhiteSpaceFormat &
     BorderFormat &
     TextIndentFormat;
-
-/**
- * The format object for a paragraph in Content Model
- */
-export type ContentModelBlockFormat = MutableMark & ContentModelBlockFormatCommon;
-
-/**
- * The format object for a paragraph in Content Model (Readonly)
- */
-export type ReadonlyContentModelBlockFormat = ReadonlyMark &
-    Readonly<ContentModelBlockFormatCommon>;

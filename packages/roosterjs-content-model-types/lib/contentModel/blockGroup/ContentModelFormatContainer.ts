@@ -6,10 +6,7 @@ import type {
     ContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type {
-    ContentModelFormatContainerFormat,
-    ReadonlyContentModelFormatContainerFormat,
-} from '../format/ContentModelFormatContainerFormat';
+import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
 
 /**
  * Common part of Content Model of Format Container
@@ -40,9 +37,5 @@ export interface ContentModelFormatContainer
  */
 export interface ReadonlyContentModelFormatContainer
     extends ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
-        ReadonlyContentModelBlockBase<
-            'BlockGroup',
-            ReadonlyContentModelFormatContainerFormat,
-            HTMLElement
-        >,
+        ReadonlyContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement>,
         Readonly<ContentModelFormatContainerCommon> {}

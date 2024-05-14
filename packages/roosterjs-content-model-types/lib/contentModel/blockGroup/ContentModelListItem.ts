@@ -6,10 +6,7 @@ import type {
     ContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type {
-    ContentModelListItemFormat,
-    ReadonlyContentModelListItemFormat,
-} from '../format/ContentModelListItemFormat';
+import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
 import type {
     ContentModelListLevel,
     ReadonlyContentModelListLevel,
@@ -41,11 +38,7 @@ export interface ContentModelListItem
  */
 export interface ReadonlyContentModelListItem
     extends ReadonlyContentModelBlockGroupBase<'ListItem'>,
-        ReadonlyContentModelBlockBase<
-            'BlockGroup',
-            ReadonlyContentModelListItemFormat,
-            HTMLLIElement
-        > {
+        ReadonlyContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
     /**
      * Type of this list, either ordered or unordered
      */

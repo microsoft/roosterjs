@@ -1,10 +1,7 @@
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { MutableMark } from '../common/MutableMark';
 import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type {
-    ContentModelListItemLevelFormat,
-    ReadonlyContentModelListItemLevelFormat,
-} from '../format/ContentModelListItemLevelFormat';
+import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import type {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
@@ -41,6 +38,6 @@ export interface ContentModelListLevel
 export interface ReadonlyContentModelListLevel
     extends ReadonlyMark,
         ContentModelBlockWithCache<HTMLOListElement | HTMLUListElement>,
-        ReadonlyContentModelWithFormat<ReadonlyContentModelListItemLevelFormat>,
+        ReadonlyContentModelWithFormat<ContentModelListItemLevelFormat>,
         ReadonlyContentModelWithDataset<ListMetadataFormat>,
         Readonly<ContentModelListLevelCommon> {}

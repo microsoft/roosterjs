@@ -1,5 +1,3 @@
-import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type { MutableMark } from '../common/MutableMark';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
@@ -12,9 +10,9 @@ import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
 /**
- * Common part of format object for a hyperlink in Content Model
+ * The format object for a hyperlink in Content Model
  */
-export type ContentModelHyperLinkFormatCommon = LinkFormat &
+export type ContentModelHyperLinkFormat = LinkFormat &
     TextColorFormat &
     BackgroundColorFormat &
     UnderlineFormat &
@@ -24,14 +22,3 @@ export type ContentModelHyperLinkFormatCommon = LinkFormat &
     BorderFormat &
     SizeFormat &
     TextAlignFormat;
-
-/**
- * The format object for a hyperlink in Content Model
- */
-export type ContentModelHyperLinkFormat = MutableMark & ContentModelHyperLinkFormatCommon;
-
-/**
- * The format object for a hyperlink in Content Model (Readonly)
- */
-export type ReadonlyContentModelHyperLinkFormat = ReadonlyMark &
-    Readonly<ContentModelHyperLinkFormatCommon>;

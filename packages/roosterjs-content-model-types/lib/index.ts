@@ -1,73 +1,25 @@
-export {
-    ContentModelSegmentFormat,
-    ContentModelSegmentFormatCommon,
-    ReadonlyContentModelSegmentFormat,
-} from './contentModel/format/ContentModelSegmentFormat';
+export { ContentModelSegmentFormat } from './contentModel/format/ContentModelSegmentFormat';
 export {
     ContentModelWithFormat,
     ReadonlyContentModelWithFormat,
 } from './contentModel/format/ContentModelWithFormat';
-export {
-    ContentModelTableFormat,
-    ContentModelTableFormatCommon,
-    ReadonlyContentModelTableFormat,
-} from './contentModel/format/ContentModelTableFormat';
+export { ContentModelTableFormat } from './contentModel/format/ContentModelTableFormat';
 export {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
 } from './contentModel/format/ContentModelWithDataset';
-export {
-    ContentModelBlockFormat,
-    ContentModelBlockFormatCommon,
-    ReadonlyContentModelBlockFormat,
-} from './contentModel/format/ContentModelBlockFormat';
-export {
-    ContentModelTableCellFormat,
-    ContentModelTableCellFormatCommon,
-    ReadonlyContentModelTableCellFormat,
-} from './contentModel/format/ContentModelTableCellFormat';
-export {
-    ContentModelListItemFormat,
-    ContentModelListItemFormatCommon,
-    ReadonlyContentModelListItemFormat,
-} from './contentModel/format/ContentModelListItemFormat';
-export {
-    ContentModelListItemLevelFormat,
-    ContentModelListItemLevelFormatCommon,
-    ReadonlyContentModelListItemLevelFormat,
-} from './contentModel/format/ContentModelListItemLevelFormat';
-export {
-    ContentModelHyperLinkFormat,
-    ContentModelHyperLinkFormatCommon,
-    ReadonlyContentModelHyperLinkFormat,
-} from './contentModel/format/ContentModelHyperLinkFormat';
-export {
-    ContentModelCodeFormat,
-    ContentModelCodeFormatCommon,
-    ReadonlyContentModelCodeFormat,
-} from './contentModel/format/ContentModelCodeFormat';
-export {
-    ContentModelFormatContainerFormat,
-    ContentModelFormatContainerFormatCommon,
-    ReadonlyContentModelFormatContainerFormat,
-} from './contentModel/format/ContentModelFormatContainerFormat';
-export {
-    ContentModelDividerFormat,
-    ContentModelDividerFormatCommon,
-    ReadonlyContentModelDividerFormat,
-} from './contentModel/format/ContentModelDividerFormat';
+export { ContentModelBlockFormat } from './contentModel/format/ContentModelBlockFormat';
+export { ContentModelTableCellFormat } from './contentModel/format/ContentModelTableCellFormat';
+export { ContentModelListItemFormat } from './contentModel/format/ContentModelListItemFormat';
+export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
+export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
+export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
+export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';
+export { ContentModelDividerFormat } from './contentModel/format/ContentModelDividerFormat';
 export { ContentModelFormatBase } from './contentModel/format/ContentModelFormatBase';
 export { ContentModelFormatMap } from './contentModel/format/ContentModelFormatMap';
-export {
-    ContentModelImageFormat,
-    ContentModelImageFormatCommon,
-    ReadonlyContentModelImageFormat,
-} from './contentModel/format/ContentModelImageFormat';
-export {
-    ContentModelEntityFormat,
-    ContentModelEntityFormatCommon,
-    ReadonlyContentModelEntityFormat,
-} from './contentModel/format/ContentModelEntityFormat';
+export { ContentModelImageFormat } from './contentModel/format/ContentModelImageFormat';
+export { ContentModelEntityFormat } from './contentModel/format/ContentModelEntityFormat';
 export { FormatHandlerTypeMap, FormatKey } from './contentModel/format/FormatHandlerTypeMap';
 
 export { BackgroundColorFormat } from './contentModel/format/formatParts/BackgroundColorFormat';

@@ -1,9 +1,6 @@
 import type { MutableMark } from '../common/MutableMark';
 import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type {
-    ContentModelCodeFormat,
-    ReadonlyContentModelCodeFormat,
-} from '../format/ContentModelCodeFormat';
+import type { ContentModelCodeFormat } from '../format/ContentModelCodeFormat';
 import type {
     ContentModelWithFormat,
     ReadonlyContentModelWithFormat,
@@ -25,4 +22,4 @@ export interface ContentModelCode
  */
 export interface ReadonlyContentModelCode
     extends ReadonlyMark,
-        ReadonlyContentModelWithFormat<ReadonlyContentModelCodeFormat> {}
+        ReadonlyContentModelWithFormat<ContentModelCodeFormat> {}

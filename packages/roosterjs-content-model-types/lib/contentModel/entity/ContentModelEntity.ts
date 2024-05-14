@@ -4,22 +4,13 @@ import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
 } from '../block/ContentModelBlockBase';
-import type {
-    ContentModelBlockFormat,
-    ReadonlyContentModelBlockFormat,
-} from '../format/ContentModelBlockFormat';
-import type {
-    ContentModelEntityFormat,
-    ReadonlyContentModelEntityFormat,
-} from '../format/ContentModelEntityFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelEntityFormat } from '../format/ContentModelEntityFormat';
 import type {
     ContentModelSegmentBase,
     ReadonlyContentModelSegmentBase,
 } from '../segment/ContentModelSegmentBase';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Common part of Content Model of Entity
@@ -53,14 +44,14 @@ export interface ReadonlyContentModelEntity
         Readonly<ContentModelEntityCommon>,
         ReadonlyContentModelBlockBase<
             'Entity',
-            ReadonlyContentModelBlockFormat & ReadonlyContentModelSegmentFormat
+            ContentModelBlockFormat & ContentModelSegmentFormat
         >,
         ReadonlyContentModelSegmentBase<
             'Entity',
-            ReadonlyContentModelBlockFormat & ReadonlyContentModelSegmentFormat
+            ContentModelBlockFormat & ContentModelSegmentFormat
         > {
     /**
      * Format of this entity
      */
-    readonly entityFormat: ReadonlyContentModelEntityFormat;
+    readonly entityFormat: Readonly<ContentModelEntityFormat>;
 }

@@ -1,9 +1,6 @@
 import type { ReadonlyMark } from '../common/ReadonlyMark';
 import type { MutableMark } from '../common/MutableMark';
-import type {
-    ContentModelBlockFormat,
-    ReadonlyContentModelBlockFormat,
-} from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {
     ContentModelTableCell,
@@ -44,7 +41,7 @@ export interface ContentModelTableRow
 export interface ReadonlyContentModelTableRow
     extends ReadonlyMark,
         ContentModelBlockWithCache<HTMLTableRowElement>,
-        ReadonlyContentModelWithFormat<ReadonlyContentModelBlockFormat>,
+        ReadonlyContentModelWithFormat<ContentModelBlockFormat>,
         Readonly<ContentModelTableRowCommon> {
     /**
      * Cells of this table

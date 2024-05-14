@@ -7,10 +7,7 @@ import type {
     ContentModelSegment,
     ReadonlyContentModelSegment,
 } from '../segment/ContentModelSegment';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Common part of Content Model of Paragraph
@@ -59,7 +56,7 @@ export interface ReadonlyContentModelParagraph
     /**
      * Segment format on this paragraph. This is mostly used for default format
      */
-    readonly segmentFormat?: ReadonlyContentModelSegmentFormat;
+    readonly segmentFormat?: ContentModelSegmentFormat;
 
     /**
      * Decorator info for this paragraph, used by heading and P tags

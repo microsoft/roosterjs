@@ -2,10 +2,7 @@ import type { ReadonlyMark } from '../common/ReadonlyMark';
 import type { MutableMark } from '../common/MutableMark';
 import type { ContentModelCode, ReadonlyContentModelCode } from '../decorator/ContentModelCode';
 import type { ContentModelLink, ReadonlyContentModelLink } from '../decorator/ContentModelLink';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelSegmentType } from './SegmentType';
 import type {
     ContentModelWithFormat,
@@ -50,7 +47,7 @@ export interface ContentModelSegmentBase<
  */
 export interface ReadonlyContentModelSegmentBase<
     T extends ContentModelSegmentType,
-    TFormat extends ReadonlyContentModelSegmentFormat = ReadonlyContentModelSegmentFormat
+    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
 >
     extends ReadonlyMark,
         ReadonlySelectable,

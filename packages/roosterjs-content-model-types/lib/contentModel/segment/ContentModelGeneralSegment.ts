@@ -1,7 +1,4 @@
-import type {
-    ContentModelBlockFormat,
-    ReadonlyContentModelBlockFormat,
-} from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
@@ -10,10 +7,7 @@ import type {
     ContentModelSegmentBase,
     ReadonlyContentModelSegmentBase,
 } from './ContentModelSegmentBase';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of general Segment
@@ -29,5 +23,5 @@ export interface ReadonlyContentModelGeneralSegment
     extends ReadonlyContentModelGeneralBlock,
         ReadonlyContentModelSegmentBase<
             'General',
-            ReadonlyContentModelBlockFormat & ReadonlyContentModelSegmentFormat
+            ContentModelBlockFormat & ContentModelSegmentFormat
         > {}

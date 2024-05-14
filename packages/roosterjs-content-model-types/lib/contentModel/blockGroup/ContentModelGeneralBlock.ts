@@ -2,18 +2,12 @@ import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
 } from '../block/ContentModelBlockBase';
-import type {
-    ContentModelBlockFormat,
-    ReadonlyContentModelBlockFormat,
-} from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ReadonlySelectable, Selectable } from '../common/Selectable';
 
 /**
@@ -43,6 +37,6 @@ export interface ReadonlyContentModelGeneralBlock
         ReadonlyContentModelBlockGroupBase<'General'>,
         ReadonlyContentModelBlockBase<
             'BlockGroup',
-            ReadonlyContentModelBlockFormat & ReadonlyContentModelSegmentFormat
+            ContentModelBlockFormat & ContentModelSegmentFormat
         >,
         Readonly<ContentModelGeneralBlockCommon> {}

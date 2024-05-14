@@ -1,5 +1,3 @@
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
@@ -10,9 +8,9 @@ import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 
 /**
- * Common part of format object for a list item in Content Model
+ * The format object for a list item in Content Model
  */
-export type ContentModelListItemFormatCommon = DirectionFormat &
+export type ContentModelListItemFormat = DirectionFormat &
     LineHeightFormat &
     MarginFormat &
     PaddingFormat &
@@ -20,14 +18,3 @@ export type ContentModelListItemFormatCommon = DirectionFormat &
     ListStyleFormat &
     TextIndentFormat &
     BackgroundColorFormat;
-
-/**
- * The format object for a list item in Content Model
- */
-export type ContentModelListItemFormat = MutableMark & ContentModelListItemFormatCommon;
-
-/**
- * The format object for a list item in Content Model (Readonly)
- */
-export type ReadonlyContentModelListItemFormat = ReadonlyMark &
-    Readonly<ContentModelListItemFormatCommon>;

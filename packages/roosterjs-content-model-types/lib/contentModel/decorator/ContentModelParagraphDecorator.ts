@@ -1,9 +1,6 @@
 import type { MutableMark } from '../common/MutableMark';
 import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type {
-    ContentModelSegmentFormat,
-    ReadonlyContentModelSegmentFormat,
-} from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type {
     ContentModelWithFormat,
     ReadonlyContentModelWithFormat,
@@ -36,5 +33,5 @@ export interface ContentModelParagraphDecorator
  */
 export interface ReadonlyContentModelParagraphDecorator
     extends ReadonlyMark,
-        ReadonlyContentModelWithFormat<ReadonlyContentModelSegmentFormat>,
+        ReadonlyContentModelWithFormat<ContentModelSegmentFormat>,
         Readonly<ContentModelParagraphDecoratorCommon> {}

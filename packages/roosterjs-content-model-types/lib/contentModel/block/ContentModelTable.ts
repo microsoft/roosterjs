@@ -1,8 +1,5 @@
 import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
-import type {
-    ContentModelTableFormat,
-    ReadonlyContentModelTableFormat,
-} from '../format/ContentModelTableFormat';
+import type { ContentModelTableFormat } from '../format/ContentModelTableFormat';
 import type { ContentModelTableRow, ReadonlyContentModelTableRow } from './ContentModelTableRow';
 import type {
     ContentModelWithDataset,
@@ -31,11 +28,7 @@ export interface ContentModelTable
  * Content Model of Table (Readonly)
  */
 export interface ReadonlyContentModelTable
-    extends ReadonlyContentModelBlockBase<
-            'Table',
-            ReadonlyContentModelTableFormat,
-            HTMLTableElement
-        >,
+    extends ReadonlyContentModelBlockBase<'Table', ContentModelTableFormat, HTMLTableElement>,
         ReadonlyContentModelWithDataset<TableMetadataFormat> {
     /**
      * Widths of each column
