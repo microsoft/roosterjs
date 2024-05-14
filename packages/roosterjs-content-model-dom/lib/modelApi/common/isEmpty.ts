@@ -1,13 +1,13 @@
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelSegment,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function isBlockEmpty(block: ContentModelBlock): boolean {
+export function isBlockEmpty(block: ReadonlyContentModelBlock): boolean {
     switch (block.blockType) {
         case 'Paragraph':
             return block.segments.length == 0;
@@ -29,7 +29,7 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
 /**
  * @internal
  */
-export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
+export function isBlockGroupEmpty(group: ReadonlyContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
         case 'FormatContainer':
             // Format Container of DIV is a container for style, so we always treat it as not empty
@@ -51,7 +51,7 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
 /**
  * @internal
  */
-export function isSegmentEmpty(segment: ContentModelSegment): boolean {
+export function isSegmentEmpty(segment: ReadonlyContentModelSegment): boolean {
     switch (segment.segmentType) {
         case 'Text':
             return !segment.text;
@@ -69,7 +69,7 @@ export function isSegmentEmpty(segment: ContentModelSegment): boolean {
  * @returns true if the model is empty.
  */
 export function isEmpty(
-    model: ContentModelBlock | ContentModelBlockGroup | ContentModelSegment
+    model: ReadonlyContentModelBlock | ReadonlyContentModelBlockGroup | ReadonlyContentModelSegment
 ): boolean {
     if (isBlockGroup(model)) {
         return isBlockGroupEmpty(model);
@@ -83,19 +83,19 @@ export function isEmpty(
 }
 
 function isSegment(
-    model: ContentModelBlock | ContentModelBlockGroup | ContentModelSegment
-): model is ContentModelSegment {
-    return typeof (<ContentModelSegment>model).segmentType === 'string';
+    model: ReadonlyContentModelBlock | ReadonlyContentModelBlockGroup | ReadonlyContentModelSegment
+): model is ReadonlyContentModelSegment {
+    return typeof (<ReadonlyContentModelSegment>model).segmentType === 'string';
 }
 
 function isBlock(
-    model: ContentModelBlock | ContentModelBlockGroup | ContentModelSegment
-): model is ContentModelBlock {
-    return typeof (<ContentModelBlock>model).blockType === 'string';
+    model: ReadonlyContentModelBlock | ReadonlyContentModelBlockGroup | ReadonlyContentModelSegment
+): model is ReadonlyContentModelBlock {
+    return typeof (<ReadonlyContentModelBlock>model).blockType === 'string';
 }
 
 function isBlockGroup(
-    model: ContentModelBlock | ContentModelBlockGroup | ContentModelSegment
-): model is ContentModelBlockGroup {
-    return typeof (<ContentModelBlockGroup>model).blockGroupType === 'string';
+    model: ReadonlyContentModelBlock | ReadonlyContentModelBlockGroup | ReadonlyContentModelSegment
+): model is ReadonlyContentModelBlockGroup {
+    return typeof (<ReadonlyContentModelBlockGroup>model).blockGroupType === 'string';
 }
