@@ -125,11 +125,7 @@ export {
     ReadonlyContentModelTableRow,
 } from './contentModel/block/ContentModelTableRow';
 
-export {
-    ContentModelEntity,
-    ContentModelEntityCommon,
-    ReadonlyContentModelEntity,
-} from './contentModel/entity/ContentModelEntity';
+export { ContentModelEntity } from './contentModel/entity/ContentModelEntity';
 
 export {
     ContentModelDocument,

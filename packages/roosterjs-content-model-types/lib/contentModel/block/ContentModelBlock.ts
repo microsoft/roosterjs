@@ -1,5 +1,5 @@
 import type { ContentModelDivider, ReadonlyContentModelDivider } from './ContentModelDivider';
-import type { ContentModelEntity, ReadonlyContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type {
     ContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
@@ -36,5 +36,5 @@ export type ReadonlyContentModelBlock =
     | ReadonlyContentModelGeneralBlock
     | ReadonlyContentModelTable
     | ReadonlyContentModelParagraph
-    | ReadonlyContentModelEntity
+    | ContentModelEntity
     | ReadonlyContentModelDivider;

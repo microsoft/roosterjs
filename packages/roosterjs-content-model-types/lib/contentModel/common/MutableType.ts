@@ -8,7 +8,7 @@ import type {
     MutableContentModelDocument,
     ReadonlyContentModelDocument,
 } from '../blockGroup/ContentModelDocument';
-import type { ContentModelEntity, ReadonlyContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type {
     MutableContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
@@ -63,7 +63,7 @@ export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
     ? ContentModelSelectionMarker
     : T extends ReadonlyContentModelImage
     ? ContentModelImage
-    : T extends ReadonlyContentModelEntity
+    : T extends ContentModelEntity
     ? ContentModelEntity
     : T extends ReadonlyContentModelText
     ? ContentModelText
