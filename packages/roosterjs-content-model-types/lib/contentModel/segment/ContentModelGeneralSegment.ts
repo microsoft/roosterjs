@@ -1,6 +1,7 @@
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelGeneralBlock,
+    MutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
 } from '../blockGroup/ContentModelGeneralBlock';
 import type {
@@ -25,3 +26,10 @@ export interface ReadonlyContentModelGeneralSegment
             'General',
             ContentModelBlockFormat & ContentModelSegmentFormat
         > {}
+
+/**
+ * Content Model of general Segment (Single level mutable)
+ */
+export interface MutableContentModelGeneralSegment
+    extends MutableContentModelGeneralBlock,
+        ContentModelSegmentBase<'General', ContentModelBlockFormat & ContentModelSegmentFormat> {}

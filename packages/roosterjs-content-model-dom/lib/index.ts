@@ -55,6 +55,7 @@ export { createDivider } from './modelApi/creators/createDivider';
 export { createListLevel } from './modelApi/creators/createListLevel';
 export { createEmptyModel } from './modelApi/creators/createEmptyModel';
 
+export { mutateBlock, mutateSegments, mutateSegment } from './modelApi/common/mutate';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';

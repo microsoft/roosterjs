@@ -5,6 +5,7 @@ import type {
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -34,9 +35,18 @@ export interface ContentModelGeneralBlock
  */
 export interface ReadonlyContentModelGeneralBlock
     extends ReadonlySelectable,
+        Readonly<ContentModelGeneralBlockCommon>,
         ReadonlyContentModelBlockGroupBase<'General'>,
         ReadonlyContentModelBlockBase<
             'BlockGroup',
             ContentModelBlockFormat & ContentModelSegmentFormat
-        >,
-        Readonly<ContentModelGeneralBlockCommon> {}
+        > {}
+
+/**
+ * Content Model for general Block element (Single level mutable)
+ */
+export interface MutableContentModelGeneralBlock
+    extends Selectable,
+        ContentModelGeneralBlockCommon,
+        MutableContentModelBlockGroupBase<'General'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelBlockFormat & ContentModelSegmentFormat> {}

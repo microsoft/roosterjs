@@ -135,40 +135,48 @@ export {
     ContentModelDocument,
     ContentModelDocumentCommon,
     ReadonlyContentModelDocument,
+    MutableContentModelDocument,
 } from './contentModel/blockGroup/ContentModelDocument';
 export {
     ContentModelBlockGroupBase,
     ContentModelBlockGroupBaseCommon,
     ReadonlyContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
 } from './contentModel/blockGroup/ContentModelBlockGroupBase';
 export {
     ContentModelFormatContainer,
     ContentModelFormatContainerCommon,
     ReadonlyContentModelFormatContainer,
+    MutableContentModelFormatContainer,
 } from './contentModel/blockGroup/ContentModelFormatContainer';
 export {
     ContentModelGeneralBlock,
     ContentModelGeneralBlockCommon,
     ReadonlyContentModelGeneralBlock,
+    MutableContentModelGeneralBlock,
 } from './contentModel/blockGroup/ContentModelGeneralBlock';
 export {
     ContentModelListItem,
     ReadonlyContentModelListItem,
+    MutableContentModelListItem,
 } from './contentModel/blockGroup/ContentModelListItem';
 export {
     ContentModelTableCell,
     ContentModelTableCellCommon,
     ReadonlyContentModelTableCell,
+    MutableContentModelTableCell,
 } from './contentModel/blockGroup/ContentModelTableCell';
 export {
     ContentModelBlockGroup,
     ReadonlyContentModelBlockGroup,
+    MutableContentModelBlockGroup,
 } from './contentModel/blockGroup/ContentModelBlockGroup';
 
 export { ContentModelBr, ReadonlyContentModelBr } from './contentModel/segment/ContentModelBr';
 export {
     ContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
+    MutableContentModelGeneralSegment,
 } from './contentModel/segment/ContentModelGeneralSegment';
 export {
     ContentModelImage,

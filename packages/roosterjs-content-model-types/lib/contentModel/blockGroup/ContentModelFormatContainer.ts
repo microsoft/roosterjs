@@ -4,6 +4,7 @@ import type {
 } from '../block/ContentModelBlockBase';
 import type {
     ContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
@@ -36,6 +37,18 @@ export interface ContentModelFormatContainer
  * Content Model of Format Container (Readonly)
  */
 export interface ReadonlyContentModelFormatContainer
-    extends ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
-        ReadonlyContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement>,
-        Readonly<ContentModelFormatContainerCommon> {}
+    extends Readonly<ContentModelFormatContainerCommon>,
+        ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
+        ReadonlyContentModelBlockBase<
+            'BlockGroup',
+            ContentModelFormatContainerFormat,
+            HTMLElement
+        > {}
+
+/**
+ * Content Model of Format Container (Single level mutable)
+ */
+export interface MutableContentModelFormatContainer
+    extends ContentModelFormatContainerCommon,
+        MutableContentModelBlockGroupBase<'FormatContainer'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement> {}

@@ -1,9 +1,9 @@
 import type { TableCellMetadataFormat } from '../format/metadata/TableCellMetadataFormat';
 import type {
     ContentModelBlockGroupBase,
+    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
 import type {
     ContentModelWithDataset,
@@ -41,18 +41,26 @@ export interface ContentModelTableCellCommon {
 export interface ContentModelTableCell
     extends Selectable,
         ContentModelTableCellCommon,
-        ContentModelBlockGroupBase<'TableCell'>,
+        ContentModelBlockGroupBase<'TableCell', HTMLTableCellElement>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
-        ContentModelWithDataset<TableCellMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableCellElement> {}
+        ContentModelWithDataset<TableCellMetadataFormat> {}
 
 /**
  * Content Model of Table Cell (Readonly)
  */
 export interface ReadonlyContentModelTableCell
     extends ReadonlySelectable,
-        ReadonlyContentModelBlockGroupBase<'TableCell'>,
+        Readonly<ContentModelTableCellCommon>,
+        ReadonlyContentModelBlockGroupBase<'TableCell', HTMLTableCellElement>,
         ReadonlyContentModelWithFormat<ContentModelTableCellFormat>,
-        ReadonlyContentModelWithDataset<TableCellMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableCellElement>,
-        Readonly<ContentModelTableCellCommon> {}
+        ReadonlyContentModelWithDataset<TableCellMetadataFormat> {}
+
+/**
+ * Content Model of Table Cell (Single level mutable)
+ */
+export interface MutableContentModelTableCell
+    extends Selectable,
+        ContentModelTableCellCommon,
+        MutableContentModelBlockGroupBase<'TableCell', HTMLTableCellElement>,
+        ContentModelWithFormat<ContentModelTableCellFormat>,
+        ContentModelWithDataset<TableCellMetadataFormat> {}
