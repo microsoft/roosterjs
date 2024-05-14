@@ -1,6 +1,5 @@
-import type { ReadonlyMark } from '../common/ReadonlyMark';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { MutableMark } from '../common/MutableMark';
+import type { MutableMark, ReadonlyMark, ShallowMutableMark } from '../common/MutableMark';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockType } from './BlockType';
 import type {
@@ -42,4 +41,17 @@ export interface ReadonlyContentModelBlockBase<
     extends ReadonlyMark,
         ContentModelBlockBaseCommon<T>,
         ReadonlyContentModelWithFormat<TFormat>,
+        ContentModelBlockWithCache<TCacheElement> {}
+
+/**
+ * Base type of a block (Shallow mutable)
+ */
+export interface ShallowMutableContentModelBlockBase<
+    T extends ContentModelBlockType,
+    TFormat extends ContentModelBlockFormat = ContentModelBlockFormat,
+    TCacheElement extends HTMLElement = HTMLElement
+>
+    extends ShallowMutableMark,
+        ContentModelBlockBaseCommon<T>,
+        ContentModelWithFormat<TFormat>,
         ContentModelBlockWithCache<TCacheElement> {}

@@ -5,26 +5,26 @@ import type {
     ReadonlyContentModelDivider,
 } from '../block/ContentModelDivider';
 import type {
-    MutableContentModelDocument,
+    ShallowMutableContentModelDocument,
     ReadonlyContentModelDocument,
 } from '../blockGroup/ContentModelDocument';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type {
-    MutableContentModelFormatContainer,
+    ShallowMutableContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
 } from '../blockGroup/ContentModelFormatContainer';
 import type {
-    MutableContentModelGeneralBlock,
+    ShallowMutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
 } from '../blockGroup/ContentModelGeneralBlock';
 import type {
-    MutableContentModelGeneralSegment,
+    ShallowMutableContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
 } from '../segment/ContentModelGeneralSegment';
 import type { ContentModelImage, ReadonlyContentModelImage } from '../segment/ContentModelImage';
 import type { ContentModelLink, ReadonlyContentModelLink } from '../decorator/ContentModelLink';
 import type {
-    MutableContentModelListItem,
+    ShallowMutableContentModelListItem,
     ReadonlyContentModelListItem,
 } from '../blockGroup/ContentModelListItem';
 import type {
@@ -45,7 +45,7 @@ import type {
 } from '../segment/ContentModelSelectionMarker';
 import type { ContentModelTable, ReadonlyContentModelTable } from '../block/ContentModelTable';
 import type {
-    MutableContentModelTableCell,
+    ShallowMutableContentModelTableCell,
     ReadonlyContentModelTableCell,
 } from '../blockGroup/ContentModelTableCell';
 import type {
@@ -58,7 +58,7 @@ import type { ContentModelText, ReadonlyContentModelText } from '../segment/Cont
  * Get mutable type from its related readonly type
  */
 export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
-    ? MutableContentModelGeneralSegment
+    ? ShallowMutableContentModelGeneralSegment
     : T extends ReadonlyContentModelSelectionMarker
     ? ContentModelSelectionMarker
     : T extends ReadonlyContentModelImage
@@ -76,19 +76,19 @@ export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
     : T extends ReadonlyContentModelTableRow
     ? ContentModelTableRow
     : T extends ReadonlyContentModelTableCell
-    ? MutableContentModelTableCell
+    ? ShallowMutableContentModelTableCell
     : T extends ReadonlyContentModelFormatContainer
-    ? MutableContentModelFormatContainer
+    ? ShallowMutableContentModelFormatContainer
     : T extends ReadonlyContentModelListItem
-    ? MutableContentModelListItem
+    ? ShallowMutableContentModelListItem
     : T extends ReadonlyContentModelListLevel
     ? ContentModelListLevel
     : T extends ReadonlyContentModelDivider
     ? ContentModelDivider
     : T extends ReadonlyContentModelDocument
-    ? MutableContentModelDocument
+    ? ShallowMutableContentModelDocument
     : T extends ReadonlyContentModelGeneralBlock
-    ? MutableContentModelGeneralBlock
+    ? ShallowMutableContentModelGeneralBlock
     : T extends ReadonlyContentModelParagraphDecorator
     ? ContentModelParagraphDecorator
     : T extends ReadonlyContentModelLink

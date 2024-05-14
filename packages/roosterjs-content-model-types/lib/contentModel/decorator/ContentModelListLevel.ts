@@ -1,6 +1,5 @@
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { MutableMark, ReadonlyMark } from '../common/MutableMark';
 import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import type {
     ContentModelWithDataset,

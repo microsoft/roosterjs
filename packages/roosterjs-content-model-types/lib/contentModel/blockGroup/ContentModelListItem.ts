@@ -1,11 +1,12 @@
 import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
 } from '../block/ContentModelBlockBase';
 import type {
     ContentModelBlockGroupBase,
-    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
 import type {
@@ -52,11 +53,15 @@ export interface ReadonlyContentModelListItem
 }
 
 /**
- * Content Model of List Item (Single level mutable)
+ * Content Model of List Item (Shallow mutable)
  */
-export interface MutableContentModelListItem
-    extends MutableContentModelBlockGroupBase<'ListItem', HTMLLIElement>,
-        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat, HTMLLIElement> {
+export interface ShallowMutableContentModelListItem
+    extends ShallowMutableContentModelBlockGroupBase<'ListItem', HTMLLIElement>,
+        ShallowMutableContentModelBlockBase<
+            'BlockGroup',
+            ContentModelListItemFormat,
+            HTMLLIElement
+        > {
     /**
      * Type of this list, either ordered or unordered
      */

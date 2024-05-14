@@ -1,11 +1,12 @@
 import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
 } from '../block/ContentModelBlockBase';
 import type {
     ContentModelBlockGroupBase,
-    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
 
@@ -46,9 +47,13 @@ export interface ReadonlyContentModelFormatContainer
         > {}
 
 /**
- * Content Model of Format Container (Single level mutable)
+ * Content Model of Format Container (Shallow mutable)
  */
-export interface MutableContentModelFormatContainer
+export interface ShallowMutableContentModelFormatContainer
     extends ContentModelFormatContainerCommon,
-        MutableContentModelBlockGroupBase<'FormatContainer'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement> {}
+        ShallowMutableContentModelBlockGroupBase<'FormatContainer'>,
+        ShallowMutableContentModelBlockBase<
+            'BlockGroup',
+            ContentModelFormatContainerFormat,
+            HTMLElement
+        > {}

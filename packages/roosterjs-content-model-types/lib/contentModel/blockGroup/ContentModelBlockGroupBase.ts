@@ -1,6 +1,5 @@
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type { MutableMark } from '../common/MutableMark';
+import type { MutableMark, ReadonlyMark, ShallowMutableMark } from '../common/MutableMark';
 import type { ContentModelBlock, ReadonlyContentModelBlock } from '../block/ContentModelBlock';
 import type { ContentModelBlockGroupType } from './BlockGroupType';
 
@@ -44,12 +43,12 @@ export interface ReadonlyContentModelBlockGroupBase<
 }
 
 /**
- * Base type of Content Model Block Group (Readonly)
+ * Base type of Content Model Block Group (Shallow mutable)
  */
-export interface MutableContentModelBlockGroupBase<
+export interface ShallowMutableContentModelBlockGroupBase<
     T extends ContentModelBlockGroupType,
     TElement extends HTMLElement = HTMLElement
-> extends MutableMark, ContentModelBlockGroupBaseCommon<T, TElement> {
+> extends ShallowMutableMark, ContentModelBlockGroupBaseCommon<T, TElement> {
     /**
      * Blocks under this group
      */

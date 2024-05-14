@@ -1,19 +1,24 @@
 import type { TableCellMetadataFormat } from '../format/metadata/TableCellMetadataFormat';
 import type {
     ContentModelBlockGroupBase,
-    MutableContentModelBlockGroupBase,
     ReadonlyContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
 } from './ContentModelBlockGroupBase';
 import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
 import type {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
 } from '../format/ContentModelWithDataset';
 import type {
     ContentModelWithFormat,
     ReadonlyContentModelWithFormat,
 } from '../format/ContentModelWithFormat';
-import type { ReadonlySelectable, Selectable } from '../common/Selectable';
+import type {
+    ReadonlySelectable,
+    Selectable,
+    ShallowMutableSelectable,
+} from '../common/Selectable';
 
 /**
  * Common part of Content Model of Table Cell
@@ -56,11 +61,11 @@ export interface ReadonlyContentModelTableCell
         ReadonlyContentModelWithDataset<TableCellMetadataFormat> {}
 
 /**
- * Content Model of Table Cell (Single level mutable)
+ * Content Model of Table Cell (Shallow mutable)
  */
-export interface MutableContentModelTableCell
-    extends Selectable,
+export interface ShallowMutableContentModelTableCell
+    extends ShallowMutableSelectable,
         ContentModelTableCellCommon,
-        MutableContentModelBlockGroupBase<'TableCell', HTMLTableCellElement>,
+        ShallowMutableContentModelBlockGroupBase<'TableCell', HTMLTableCellElement>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
-        ContentModelWithDataset<TableCellMetadataFormat> {}
+        ShallowMutableContentModelWithDataset<TableCellMetadataFormat> {}

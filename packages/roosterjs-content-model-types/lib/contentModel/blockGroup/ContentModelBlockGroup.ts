@@ -1,27 +1,27 @@
 import type {
     ContentModelDocument,
-    MutableContentModelDocument,
     ReadonlyContentModelDocument,
+    ShallowMutableContentModelDocument,
 } from './ContentModelDocument';
 import type {
     ContentModelFormatContainer,
-    MutableContentModelFormatContainer,
     ReadonlyContentModelFormatContainer,
+    ShallowMutableContentModelFormatContainer,
 } from './ContentModelFormatContainer';
 import type {
     ContentModelGeneralBlock,
-    MutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
+    ShallowMutableContentModelGeneralBlock,
 } from './ContentModelGeneralBlock';
 import type {
     ContentModelListItem,
-    MutableContentModelListItem,
     ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
 } from './ContentModelListItem';
 import type {
     ContentModelTableCell,
-    MutableContentModelTableCell,
     ReadonlyContentModelTableCell,
+    ShallowMutableContentModelTableCell,
 } from './ContentModelTableCell';
 
 /**
@@ -45,11 +45,11 @@ export type ReadonlyContentModelBlockGroup =
     | ReadonlyContentModelGeneralBlock;
 
 /**
- * The union type of Content Model Block Group (Single level mutable)
+ * The union type of Content Model Block Group (Shallow mutable)
  */
-export type MutableContentModelBlockGroup =
-    | MutableContentModelDocument
-    | MutableContentModelFormatContainer
-    | MutableContentModelListItem
-    | MutableContentModelTableCell
-    | MutableContentModelGeneralBlock;
+export type ShallowMutableContentModelBlockGroup =
+    | ShallowMutableContentModelDocument
+    | ShallowMutableContentModelFormatContainer
+    | ShallowMutableContentModelListItem
+    | ShallowMutableContentModelTableCell
+    | ShallowMutableContentModelGeneralBlock;

@@ -1,12 +1,13 @@
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type {
     ContentModelGeneralBlock,
-    MutableContentModelGeneralBlock,
     ReadonlyContentModelGeneralBlock,
+    ShallowMutableContentModelGeneralBlock,
 } from '../blockGroup/ContentModelGeneralBlock';
 import type {
     ContentModelSegmentBase,
     ReadonlyContentModelSegmentBase,
+    ShallowMutableContentModelSegmentBase,
 } from './ContentModelSegmentBase';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
@@ -28,8 +29,11 @@ export interface ReadonlyContentModelGeneralSegment
         > {}
 
 /**
- * Content Model of general Segment (Single level mutable)
+ * Content Model of general Segment (Shallow mutable)
  */
-export interface MutableContentModelGeneralSegment
-    extends MutableContentModelGeneralBlock,
-        ContentModelSegmentBase<'General', ContentModelBlockFormat & ContentModelSegmentFormat> {}
+export interface ShallowMutableContentModelGeneralSegment
+    extends ShallowMutableContentModelGeneralBlock,
+        ShallowMutableContentModelSegmentBase<
+            'General',
+            ContentModelBlockFormat & ContentModelSegmentFormat
+        > {}

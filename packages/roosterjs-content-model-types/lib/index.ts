@@ -7,6 +7,7 @@ export { ContentModelTableFormat } from './contentModel/format/ContentModelTable
 export {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
 } from './contentModel/format/ContentModelWithDataset';
 export { ContentModelBlockFormat } from './contentModel/format/ContentModelBlockFormat';
 export { ContentModelTableCellFormat } from './contentModel/format/ContentModelTableCellFormat';
@@ -117,6 +118,7 @@ export {
     ContentModelBlockBase,
     ContentModelBlockBaseCommon,
     ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
 } from './contentModel/block/ContentModelBlockBase';
 export { ContentModelBlockWithCache } from './contentModel/common/ContentModelBlockWithCache';
 export {
@@ -131,48 +133,48 @@ export {
     ContentModelDocument,
     ContentModelDocumentCommon,
     ReadonlyContentModelDocument,
-    MutableContentModelDocument,
+    ShallowMutableContentModelDocument,
 } from './contentModel/blockGroup/ContentModelDocument';
 export {
     ContentModelBlockGroupBase,
     ContentModelBlockGroupBaseCommon,
     ReadonlyContentModelBlockGroupBase,
-    MutableContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
 } from './contentModel/blockGroup/ContentModelBlockGroupBase';
 export {
     ContentModelFormatContainer,
     ContentModelFormatContainerCommon,
     ReadonlyContentModelFormatContainer,
-    MutableContentModelFormatContainer,
+    ShallowMutableContentModelFormatContainer,
 } from './contentModel/blockGroup/ContentModelFormatContainer';
 export {
     ContentModelGeneralBlock,
     ContentModelGeneralBlockCommon,
     ReadonlyContentModelGeneralBlock,
-    MutableContentModelGeneralBlock,
+    ShallowMutableContentModelGeneralBlock,
 } from './contentModel/blockGroup/ContentModelGeneralBlock';
 export {
     ContentModelListItem,
     ReadonlyContentModelListItem,
-    MutableContentModelListItem,
+    ShallowMutableContentModelListItem,
 } from './contentModel/blockGroup/ContentModelListItem';
 export {
     ContentModelTableCell,
     ContentModelTableCellCommon,
     ReadonlyContentModelTableCell,
-    MutableContentModelTableCell,
+    ShallowMutableContentModelTableCell,
 } from './contentModel/blockGroup/ContentModelTableCell';
 export {
     ContentModelBlockGroup,
     ReadonlyContentModelBlockGroup,
-    MutableContentModelBlockGroup,
+    ShallowMutableContentModelBlockGroup,
 } from './contentModel/blockGroup/ContentModelBlockGroup';
 
 export { ContentModelBr, ReadonlyContentModelBr } from './contentModel/segment/ContentModelBr';
 export {
     ContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
-    MutableContentModelGeneralSegment,
+    ShallowMutableContentModelGeneralSegment,
 } from './contentModel/segment/ContentModelGeneralSegment';
 export {
     ContentModelImage,
@@ -192,6 +194,7 @@ export {
     ContentModelSegmentBase,
     ContentModelSegmentBaseCommon,
     ReadonlyContentModelSegmentBase,
+    ShallowMutableContentModelSegmentBase,
 } from './contentModel/segment/ContentModelSegmentBase';
 export {
     ContentModelSegment,
@@ -221,9 +224,12 @@ export {
     ReadonlyContentModelListLevel,
 } from './contentModel/decorator/ContentModelListLevel';
 
-export { Selectable, ReadonlySelectable } from './contentModel/common/Selectable';
-export { ReadonlyMark } from './contentModel/common/ReadonlyMark';
-export { MutableMark } from './contentModel/common/MutableMark';
+export {
+    Selectable,
+    ReadonlySelectable,
+    ShallowMutableSelectable,
+} from './contentModel/common/Selectable';
+export { MutableMark, ShallowMutableMark, ReadonlyMark } from './contentModel/common/MutableMark';
 export { MutableType } from './contentModel/common/MutableType';
 
 export {

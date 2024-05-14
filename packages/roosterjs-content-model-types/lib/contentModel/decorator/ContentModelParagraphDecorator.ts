@@ -1,5 +1,4 @@
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { MutableMark, ReadonlyMark } from '../common/MutableMark';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type {
     ContentModelWithFormat,

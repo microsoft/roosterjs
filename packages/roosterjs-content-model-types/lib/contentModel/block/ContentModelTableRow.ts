@@ -1,5 +1,4 @@
-import type { ReadonlyMark } from '../common/ReadonlyMark';
-import type { MutableMark } from '../common/MutableMark';
+import type { MutableMark, ReadonlyMark } from '../common/MutableMark';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {

@@ -1,5 +1,4 @@
-import type { MutableMark } from '../common/MutableMark';
-import type { ReadonlyMark } from '../common/ReadonlyMark';
+import type { MutableMark, ReadonlyMark } from '../common/MutableMark';
 import type { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
 import type {
     ContentModelWithDataset,
