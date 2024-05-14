@@ -14,8 +14,8 @@ import type {
     InsertPoint,
     DomToModelContext,
     ContentModelBlockGroup,
-    ContentModelDocument,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,7 +29,7 @@ export function formatInsertPointWithContentModel(
     editor: IEditor,
     insertPoint: DOMInsertPoint,
     callback: (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         context: FormatContentModelContext,
         insertPoint?: InsertPoint
     ) => void,
