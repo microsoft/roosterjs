@@ -99,6 +99,7 @@ export { ExportContentMode } from './enum/ExportContentMode';
 export {
     ContentModelBlock,
     ReadonlyContentModelBlock,
+    ShallowMutableContentModelBlock,
 } from './contentModel/block/ContentModelBlock';
 export {
     ContentModelParagraph,
@@ -108,6 +109,7 @@ export {
 export {
     ContentModelTable,
     ReadonlyContentModelTable,
+    ShallowMutableContentModelTable,
 } from './contentModel/block/ContentModelTable';
 export {
     ContentModelDivider,
@@ -125,6 +127,7 @@ export {
     ContentModelTableRow,
     ContentModelTableRowCommon,
     ReadonlyContentModelTableRow,
+    ShallowMutableContentModelTableRow,
 } from './contentModel/block/ContentModelTableRow';
 
 export { ContentModelEntity } from './contentModel/entity/ContentModelEntity';
