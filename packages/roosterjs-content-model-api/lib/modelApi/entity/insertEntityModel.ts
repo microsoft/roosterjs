@@ -9,7 +9,6 @@ import {
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
     FormatContentModelContext,
@@ -17,13 +16,14 @@ import type {
     InsertPoint,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function insertEntityModel(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     entityModel: ContentModelEntity,
     position: InsertEntityPosition,
     isBlock: boolean,
@@ -115,7 +115,7 @@ export function insertEntityModel(
 }
 
 function getInsertPoint(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     insertPointOverride?: InsertPoint,
     context?: FormatContentModelContext
 ): InsertPoint | null {
