@@ -43,7 +43,10 @@ import type {
     ContentModelSelectionMarker,
     ReadonlyContentModelSelectionMarker,
 } from '../segment/ContentModelSelectionMarker';
-import type { ContentModelTable, ReadonlyContentModelTable } from '../block/ContentModelTable';
+import type {
+    ReadonlyContentModelTable,
+    ShallowMutableContentModelTable,
+} from '../block/ContentModelTable';
 import type {
     ShallowMutableContentModelTableCell,
     ReadonlyContentModelTableCell,
@@ -72,7 +75,7 @@ export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
     : T extends ReadonlyContentModelParagraph
     ? ContentModelParagraph
     : T extends ReadonlyContentModelTable
-    ? ContentModelTable
+    ? ShallowMutableContentModelTable
     : T extends ReadonlyContentModelTableRow
     ? ContentModelTableRow
     : T extends ReadonlyContentModelTableCell
