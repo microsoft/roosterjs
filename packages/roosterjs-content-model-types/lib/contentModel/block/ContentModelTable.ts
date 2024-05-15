@@ -1,9 +1,18 @@
-import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
+import type {
+    ContentModelBlockBase,
+    ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
+} from './ContentModelBlockBase';
 import type { ContentModelTableFormat } from '../format/ContentModelTableFormat';
-import type { ContentModelTableRow, ReadonlyContentModelTableRow } from './ContentModelTableRow';
+import type {
+    ContentModelTableRow,
+    ReadonlyContentModelTableRow,
+    ShallowMutableContentModelTableRow,
+} from './ContentModelTableRow';
 import type {
     ContentModelWithDataset,
     ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
 } from '../format/ContentModelWithDataset';
 import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
 
@@ -39,4 +48,21 @@ export interface ReadonlyContentModelTable
      * Cells of this table
      */
     readonly rows: ReadonlyArray<ReadonlyContentModelTableRow>;
+}
+
+/**
+ * Content Model of Table (Shallow mutable)
+ */
+export interface ShallowMutableContentModelTable
+    extends ShallowMutableContentModelBlockBase<'Table', ContentModelTableFormat, HTMLTableElement>,
+        ShallowMutableContentModelWithDataset<TableMetadataFormat> {
+    /**
+     * Widths of each column
+     */
+    widths: number[];
+
+    /**
+     * Cells of this table
+     */
+    rows: ShallowMutableContentModelTableRow[];
 }
