@@ -36,7 +36,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
                 }
             },
             {
-                scrollCaretIntoView: true,
+                scrollCaretIntoView: false,
                 rawEvent,
             }
         );
