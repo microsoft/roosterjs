@@ -2,11 +2,12 @@ import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
+import { mutateBlock } from '../common/mutate';
 import type {
-    ContentModelSegment,
     ContentModelSegmentFormat,
-    ContentModelTable,
-    ContentModelTableCell,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
+    ShallowMutableContentModelTableCell,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -23,13 +24,15 @@ const MIN_HEIGHT = 22;
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
  * 6. default format is correctly applied
- * @param table The table to normalize
+ * @param readonlyTable The table to normalize
  * @param defaultSegmentFormat @optional Default segment format to apply to cell
  */
 export function normalizeTable(
-    table: ContentModelTable,
+    readonlyTable: ReadonlyContentModelTable,
     defaultSegmentFormat?: ContentModelSegmentFormat
 ) {
+    const table = mutateBlock(readonlyTable);
+
     // Always collapse border and use border box for table in roosterjs to make layout simpler
     const format = table.format;
 
@@ -42,7 +45,9 @@ export function normalizeTable(
     // Make sure all inner cells are not header
     // Make sure all cells have content and width
     table.rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, colIndex) => {
+        row.cells.forEach((readonlyCell, colIndex) => {
+            const cell = mutateBlock(readonlyCell);
+
             if (cell.blocks.length == 0) {
                 const format = cell.format.textColor
                     ? {
@@ -96,7 +101,7 @@ export function normalizeTable(
             const cell = row.cells[colIndex];
             const leftCell = row.cells[colIndex - 1];
             if (cell && leftCell && cell.spanLeft) {
-                tryMoveBlocks(leftCell, cell);
+                tryMoveBlocks(mutateBlock(leftCell), mutateBlock(cell));
             }
         });
 
@@ -116,7 +121,7 @@ export function normalizeTable(
         row.cells.forEach((cell, colIndex) => {
             const aboveCell = table.rows[rowIndex - 1]?.cells[colIndex];
             if (aboveCell && cell.spanAbove) {
-                tryMoveBlocks(aboveCell, cell);
+                tryMoveBlocks(mutateBlock(aboveCell), mutateBlock(cell));
             }
         });
 
@@ -137,7 +142,10 @@ function getTableCellWidth(columns: number): number {
     }
 }
 
-function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentModelTableCell) {
+function tryMoveBlocks(
+    targetCell: ShallowMutableContentModelTableCell,
+    sourceCell: ShallowMutableContentModelTableCell
+) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
         block => block.blockType == 'Paragraph' && hasOnlyBrSegment(block.segments)
     );
@@ -148,7 +156,7 @@ function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentMod
     }
 }
 
-function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
+function hasOnlyBrSegment(segments: ReadonlyArray<ReadonlyContentModelSegment>): boolean {
     segments = segments.filter(s => s.segmentType != 'SelectionMarker');
 
     return segments.length == 0 || (segments.length == 1 && segments[0].segmentType == 'Br');

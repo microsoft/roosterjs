@@ -1,11 +1,14 @@
 import { getSelectedParagraphs, setSelection } from 'roosterjs-content-model-dom';
-import type { ContentModelDocument, ContentModelSegment } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegment,
+    ReadonlyContentModelDocument,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function adjustSegmentSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     firstMatcher: (target: ContentModelSegment) => boolean,
     siblingMatcher: (target: ContentModelSegment, ref: ContentModelSegment) => boolean
 ): boolean {

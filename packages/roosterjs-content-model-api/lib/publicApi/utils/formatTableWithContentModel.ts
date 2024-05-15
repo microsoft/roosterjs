@@ -11,9 +11,8 @@ import {
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
     IEditor,
-    ReadonlyContentModelDocument,
+    ShallowMutableContentModelTable,
     TableSelection,
 } from 'roosterjs-content-model-types';
 
@@ -27,11 +26,11 @@ import type {
 export function formatTableWithContentModel(
     editor: IEditor,
     apiName: string,
-    callback: (tableModel: ContentModelTable) => void,
+    callback: (tableModel: ShallowMutableContentModelTable) => void,
     selectionOverride?: TableSelection
 ) {
     editor.formatContentModel(
-        (model: ReadonlyContentModelDocument) => {
+        model => {
             const [readonlyTableModel, path] = getFirstSelectedTable(model);
 
             if (readonlyTableModel) {

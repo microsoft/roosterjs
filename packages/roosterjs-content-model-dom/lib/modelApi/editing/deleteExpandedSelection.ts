@@ -101,7 +101,7 @@ export function deleteExpandedSelection(
                 const { table, colIndex, rowIndex } = tableContext;
                 const mutableTable = mutateBlock(table);
                 const row = mutableTable.rows[rowIndex];
-                const cell = row.cells[colIndex];
+                const cell = mutateBlock(row.cells[colIndex]);
                 const mutableParagraph = mutateBlock(paragraph);
 
                 path = [cell, ...path];

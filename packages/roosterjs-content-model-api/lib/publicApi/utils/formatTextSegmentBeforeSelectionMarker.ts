@@ -28,7 +28,7 @@ export function formatTextSegmentBeforeSelectionMarker(
 ): boolean {
     let result = false;
 
-    editor.formatContentModel((model: ReadonlyContentModelDocument, context) => {
+    editor.formatContentModel((model, context) => {
         const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
             model,
             false /*includeFormatHolder*/

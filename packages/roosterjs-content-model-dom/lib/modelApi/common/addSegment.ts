@@ -1,10 +1,10 @@
 import { ensureParagraph } from './ensureParagraph';
 import type {
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
+    ShallowMutableContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,7 +15,7 @@ import type {
  * @returns The parent paragraph where the segment is added to
  */
 export function addSegment(
-    group: ContentModelBlockGroup,
+    group: ShallowMutableContentModelBlockGroup,
     newSegment: ContentModelSegment,
     blockFormat?: ContentModelBlockFormat,
     segmentFormat?: ContentModelSegmentFormat

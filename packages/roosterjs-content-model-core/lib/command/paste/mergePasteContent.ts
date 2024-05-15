@@ -15,6 +15,7 @@ import type {
     ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
@@ -38,7 +39,7 @@ const CloneOption: CloneModelOptions = {
 /**
  * @internal
  */
-export function cloneModelForPaste(model: ContentModelDocument) {
+export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
     return cloneModel(model, CloneOption);
 }
 

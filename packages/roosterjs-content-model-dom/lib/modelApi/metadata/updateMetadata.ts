@@ -1,5 +1,9 @@
 import { validate } from './validate';
-import type { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
+import type {
+    Definition,
+    ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
+} from 'roosterjs-content-model-types';
 
 const EditingInfoDatasetName = 'editingInfo';
 
@@ -11,7 +15,7 @@ const EditingInfoDatasetName = 'editingInfo';
  * @returns The metadata object if any, or null
  */
 export function updateMetadata<T>(
-    model: ContentModelWithDataset<T>,
+    model: ShallowMutableContentModelWithDataset<T>,
     callback?: (metadata: T | null) => T | null,
     definition?: Definition<T>
 ): T | null {
@@ -43,6 +47,6 @@ export function updateMetadata<T>(
  * Check if the given model has metadata
  * @param model The content model to check
  */
-export function hasMetadata<T>(model: ContentModelWithDataset<T> | HTMLElement): boolean {
+export function hasMetadata<T>(model: ReadonlyContentModelWithDataset<T> | HTMLElement): boolean {
     return !!model.dataset[EditingInfoDatasetName];
 }

@@ -1,10 +1,10 @@
 import { createBr, createParagraph, mutateBlock } from 'roosterjs-content-model-dom';
 import type {
     ContentModelParagraph,
-    ContentModelTable,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +16,7 @@ import type {
 export function ensureFocusableParagraphForTable(
     model: ReadonlyContentModelDocument,
     path: ReadonlyContentModelBlockGroup[],
-    table: ContentModelTable
+    table: ReadonlyContentModelTable
 ): ContentModelParagraph | undefined {
     let paragraph: ContentModelParagraph | undefined;
     const firstCell = table.rows.filter(row => row.cells.length > 0)[0]?.cells[0];
@@ -30,7 +30,7 @@ export function ensureFocusableParagraphForTable(
         if (!paragraph) {
             // If there is not a paragraph under this cell, create one
             paragraph = createEmptyParagraph(model);
-            firstCell.blocks.push(paragraph);
+            mutateBlock(firstCell).blocks.push(paragraph);
         }
     } else {
         // No table cell at all, which means the whole table is deleted. So we need to remove it from content model.

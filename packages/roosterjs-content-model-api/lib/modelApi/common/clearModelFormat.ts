@@ -4,28 +4,33 @@ import {
     createFormatContainer,
     getClosestAncestorBlockGroupIndex,
     iterateSelections,
+    mutateBlock,
+    mutateSegments,
     updateTableCellMetadata,
     updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelFormatContainer,
-    ContentModelListItem,
     ContentModelSegment,
     ContentModelSegmentFormat,
     ContentModelTable,
-    Selectable,
-    TableSelectionContext,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelListItem,
+    ReadonlySelectable,
+    ReadonlyTableSelectionContext,
+    ShallowMutableContentModelBlock,
+    ShallowMutableContentModelFormatContainer,
+    ShallowMutableContentModelTable,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function clearModelFormat(
-    model: ContentModelDocument,
-    blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][],
+    model: ReadonlyContentModelDocument,
+    blocksToClear: [ReadonlyContentModelBlockGroup[], ShallowMutableContentModelBlock][],
     segmentsToClear: ContentModelSegment[],
     tablesToClear: [ContentModelTable, boolean][]
 ) {
@@ -33,11 +38,21 @@ export function clearModelFormat(
         model,
         (path, tableContext, block, segments) => {
             if (segments) {
-                segmentsToClear.push(...segments);
+                if (block?.blockType == 'Paragraph') {
+                    const [, mutableSegments] = mutateSegments(block, segments);
+
+                    segmentsToClear.push(...mutableSegments);
+                } else if (
+                    path[0].blockGroupType == 'ListItem' &&
+                    segments.length == 1 &&
+                    path[0].formatHolder == segments[0]
+                ) {
+                    segmentsToClear.push(mutateBlock(path[0]).formatHolder);
+                }
             }
 
             if (block) {
-                blocksToClear.push([path, block]);
+                blocksToClear.push([path, mutateBlock(block)]);
             } else if (tableContext) {
                 clearTableCellFormat(tableContext, tablesToClear);
             }
@@ -110,28 +125,32 @@ function clearSegmentsFormat(
 }
 
 function clearTableCellFormat(
-    tableContext: TableSelectionContext | undefined,
-    tablesToClear: [ContentModelTable, boolean][]
+    tableContext: ReadonlyTableSelectionContext | undefined,
+    tablesToClear: [ShallowMutableContentModelTable, boolean][]
 ) {
     if (tableContext) {
         const { table, colIndex, rowIndex, isWholeTableSelected } = tableContext;
         const cell = table.rows[rowIndex].cells[colIndex];
 
         if (cell.isSelected) {
-            updateTableCellMetadata(cell, () => null);
-            cell.isHeader = false;
-            cell.format = {
+            const mutableCell = mutateBlock(cell);
+            updateTableCellMetadata(mutableCell, () => null);
+            mutableCell.isHeader = false;
+            mutableCell.format = {
                 useBorderBox: cell.format.useBorderBox,
             };
         }
 
         if (!tablesToClear.find(x => x[0] == table)) {
-            tablesToClear.push([table, isWholeTableSelected]);
+            tablesToClear.push([mutateBlock(table), isWholeTableSelected]);
         }
     }
 }
 
-function clearContainerFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
+function clearContainerFormat(
+    path: ReadonlyContentModelBlockGroup[],
+    block: ShallowMutableContentModelBlock
+) {
     const containerPathIndex = getClosestAncestorBlockGroupIndex(
         path,
         ['FormatContainer'],
@@ -139,37 +158,50 @@ function clearContainerFormat(path: ContentModelBlockGroup[], block: ContentMode
     );
 
     if (containerPathIndex >= 0 && containerPathIndex < path.length - 1) {
-        const container = path[containerPathIndex] as ContentModelFormatContainer;
+        const container = mutateBlock(
+            path[containerPathIndex] as ReadonlyContentModelFormatContainer
+        );
         const containerIndex = path[containerPathIndex + 1].blocks.indexOf(container);
         const blockIndex = container.blocks.indexOf(block);
 
         if (blockIndex >= 0 && containerIndex >= 0) {
-            const newContainer = createFormatContainer(container.tagName, container.format);
+            const newContainer: ShallowMutableContentModelFormatContainer = createFormatContainer(
+                container.tagName,
+                container.format
+            );
 
             container.blocks.splice(blockIndex, 1);
             newContainer.blocks = container.blocks.splice(blockIndex);
 
-            path[containerPathIndex + 1].blocks.splice(containerIndex + 1, 0, block, newContainer);
+            mutateBlock(path[containerPathIndex + 1]).blocks.splice(
+                containerIndex + 1,
+                0,
+                block,
+                newContainer
+            );
         }
     }
 }
 
-function clearListFormat(path: ContentModelBlockGroup[]) {
+function clearListFormat(path: ReadonlyContentModelBlockGroup[]) {
     const listItem = path[getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell'])] as
-        | ContentModelListItem
+        | ReadonlyContentModelListItem
         | undefined;
 
     if (listItem) {
-        listItem.levels = [];
+        mutateBlock(listItem).levels = [];
     }
 }
 
-function clearBlockFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
+function clearBlockFormat(
+    path: ReadonlyContentModelBlockGroup[],
+    block: ShallowMutableContentModelBlock
+) {
     if (block.blockType == 'Divider') {
         const index = path[0].blocks.indexOf(block);
 
         if (index >= 0) {
-            path[0].blocks.splice(index, 1);
+            mutateBlock(path[0]).blocks.splice(index, 1);
         }
     } else if (block.blockType == 'Paragraph') {
         block.format = {};
@@ -177,15 +209,15 @@ function clearBlockFormat(path: ContentModelBlockGroup[], block: ContentModelBlo
     }
 }
 
-function isOnlySelectionMarkerSelected(block: ContentModelBlock) {
+function isOnlySelectionMarkerSelected(block: ReadonlyContentModelBlock) {
     const segments = block.blockType == 'Paragraph' ? block.segments.filter(x => x.isSelected) : [];
 
     return segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 }
 
-function isWholeBlockSelected(block: ContentModelBlock) {
+function isWholeBlockSelected(block: ReadonlyContentModelBlock) {
     return (
-        (block as Selectable).isSelected ||
+        (block as ReadonlySelectable).isSelected ||
         (block.blockType == 'Paragraph' && block.segments.every(x => x.isSelected))
     );
 }

@@ -1,6 +1,9 @@
 import { createBooleanDefinition, createObjectDefinition } from './definitionCreators';
 import { updateMetadata } from './updateMetadata';
-import type { ContentModelTableCell, TableCellMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ShallowMutableContentModelTableCell,
+    TableCellMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {
@@ -18,7 +21,7 @@ const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableC
  * @param callback The callback function used for updating metadata
  */
 export function updateTableCellMetadata(
-    cell: ContentModelTableCell,
+    cell: ShallowMutableContentModelTableCell,
     callback?: (format: TableCellMetadataFormat | null) => TableCellMetadataFormat | null
 ): TableCellMetadataFormat | null {
     return updateMetadata(cell, callback, TableCellMetadataFormatDefinition);

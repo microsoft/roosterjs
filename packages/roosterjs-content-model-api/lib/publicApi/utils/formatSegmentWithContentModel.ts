@@ -35,7 +35,7 @@ export function formatSegmentWithContentModel(
     afterFormatCallback?: (model: ReadonlyContentModelDocument) => void
 ) {
     editor.formatContentModel(
-        (model: ReadonlyContentModelDocument, context) => {
+        (model, context) => {
             let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
                 model,
                 !!includingFormatHolder

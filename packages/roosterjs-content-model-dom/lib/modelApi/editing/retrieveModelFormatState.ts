@@ -2,19 +2,20 @@ import { extractBorderValues } from '../../domUtils/style/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
+import { mutateBlock } from '../common/mutate';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     ContentModelFormatState,
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelFormatContainer,
-    ContentModelImage,
-    ContentModelListItem,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
-    TableSelectionContext,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelImage,
+    ReadonlyTableSelectionContext,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -24,12 +25,12 @@ import type {
  * @param formatState Existing format state object, used for receiving the result
  */
 export function retrieveModelFormatState(
-    model: ContentModelDocument,
+    model: ShallowMutableContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState
 ) {
-    let firstTableContext: TableSelectionContext | undefined;
-    let firstBlock: ContentModelBlock | undefined;
+    let firstTableContext: ReadonlyTableSelectionContext | undefined;
+    let firstBlock: ReadonlyContentModelBlock | undefined;
     let isFirst = true;
     let isFirstImage = true;
     let isFirstSegment = true;
@@ -56,10 +57,14 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                        const modelFormat = Object.assign({}, model.format);
-                        delete modelFormat?.italic;
-                        delete modelFormat?.underline;
-                        delete modelFormat?.fontWeight;
+                        const modelFormat = Object.assign(
+                            <ContentModelSegmentFormat>{},
+                            model.format
+                        );
+
+                        delete modelFormat.italic;
+                        delete modelFormat.underline;
+                        delete modelFormat.fontWeight;
 
                         retrieveSegmentFormat(
                             formatState,
@@ -165,7 +170,7 @@ function retrieveSegmentFormat(
 
 function retrieveParagraphFormat(
     result: ContentModelFormatState,
-    paragraph: ContentModelParagraph,
+    paragraph: ReadonlyContentModelParagraph,
     isFirst: boolean
 ) {
     const headingLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
@@ -180,14 +185,14 @@ function retrieveParagraphFormat(
 
 function retrieveStructureFormat(
     result: ContentModelFormatState,
-    path: ContentModelBlockGroup[],
+    path: ReadonlyContentModelBlockGroup[],
     isFirst: boolean
 ) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
     const containerIndex = getClosestAncestorBlockGroupIndex(path, ['FormatContainer'], []);
 
     if (listItemIndex >= 0) {
-        const listItem = path[listItemIndex] as ContentModelListItem;
+        const listItem = path[listItemIndex] as ReadonlyContentModelListItem;
         const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
 
         mergeValue(result, 'isBullet', listType == 'UL', isFirst);
@@ -198,13 +203,16 @@ function retrieveStructureFormat(
         result,
         'isBlockQuote',
         containerIndex >= 0 &&
-            (path[containerIndex] as ContentModelFormatContainer)?.tagName == 'blockquote',
+            (path[containerIndex] as ReadonlyContentModelFormatContainer)?.tagName == 'blockquote',
         isFirst
     );
 }
 
-function retrieveTableFormat(tableContext: TableSelectionContext, result: ContentModelFormatState) {
-    const tableFormat = updateTableMetadata(tableContext.table);
+function retrieveTableFormat(
+    tableContext: ReadonlyTableSelectionContext,
+    result: ContentModelFormatState
+) {
+    const tableFormat = updateTableMetadata(mutateBlock(tableContext.table));
 
     result.isInTable = true;
     result.tableHasHeader = tableContext.table.rows.some(row =>
@@ -216,7 +224,7 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Conten
     }
 }
 
-function retrieveImageFormat(image: ContentModelImage, result: ContentModelFormatState) {
+function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentModelFormatState) {
     const { format } = image;
     const borderKey = 'borderTop';
     const extractedBorder = extractBorderValues(format[borderKey]);
