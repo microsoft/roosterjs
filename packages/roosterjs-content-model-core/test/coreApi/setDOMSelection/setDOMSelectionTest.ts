@@ -549,7 +549,7 @@ describe('setDOMSelection', () => {
             };
             const defaultSelectionColor = '#C6C6C6';
             if (selectionColor) {
-                core.selection.imageSelectionBorderColor = selectionColor;
+                core.selection.tableCellSelectionBackgroundColor = selectionColor;
             }
 
             createRangeSpy.and.returnValue(mockedRange);
