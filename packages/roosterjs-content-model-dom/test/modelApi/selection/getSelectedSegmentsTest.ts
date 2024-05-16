@@ -148,6 +148,30 @@ describe('getSelectedSegments', () => {
         );
     });
 
+    it('Block with list item, include format holder', () => {
+        const s1 = createText('test1');
+        const s2 = createText('test2');
+        const b1 = createDivider('div');
+        const doc = createContentModelDocument();
+        const listItem = createListItem([]);
+
+        runTest(
+            [
+                {
+                    path: [doc],
+                    block: b1,
+                    segments: [s1, s2],
+                },
+                {
+                    path: [listItem, doc],
+                    segments: [listItem.formatHolder],
+                },
+            ],
+            true,
+            [listItem.formatHolder]
+        );
+    });
+
     it('Unmeaningful segments should be included', () => {
         const s1 = createText('test1');
         const s2 = createText('test2');
