@@ -530,7 +530,8 @@ describe('setDOMSelection', () => {
             firstRow: number,
             lastColumn: number,
             lastRow: number,
-            result: string[]
+            result: string[],
+            selectionColor?: string
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -546,6 +547,10 @@ describe('setDOMSelection', () => {
                 selectNode: selectNodeSpy,
                 collapse: collapseSpy,
             };
+            const defaultSelectionColor = '#C6C6C6';
+            if (selectionColor) {
+                core.selection.imageSelectionBorderColor = selectionColor;
+            }
 
             createRangeSpy.and.returnValue(mockedRange);
 
@@ -578,7 +583,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'background-color:#C6C6C6!important;',
+                `background-color:${selectionColor ?? defaultSelectionColor}!important;`,
                 result
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -773,6 +778,18 @@ describe('setDOMSelection', () => {
                 '#table_0',
                 '#table_0 *',
             ]);
+        });
+
+        it('Select All with custom selection color', () => {
+            runTest(
+                buildTable(true /* tbody */, false, false),
+                0,
+                0,
+                1,
+                1,
+                ['#table_0', '#table_0 *'],
+                'red'
+            );
         });
     });
 });
