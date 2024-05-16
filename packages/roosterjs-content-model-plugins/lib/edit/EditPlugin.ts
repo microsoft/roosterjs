@@ -22,6 +22,7 @@ export class EditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
+    private restoreSelectionCallback: (() => void) | null = null;
 
     /**
      * Get name of this plugin
@@ -69,6 +70,10 @@ export class EditPlugin implements EditorPlugin {
             switch (event.eventType) {
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
+                    break;
+                case 'keyUp':
+                    this.restoreSelectionCallback?.();
+                    this.restoreSelectionCallback = null;
                     break;
             }
         }
@@ -150,15 +155,12 @@ export class EditPlugin implements EditorPlugin {
         if (handled) {
             rawEvent.preventDefault();
 
-            // Restore the selection to avoid the cursor jump issue
+            // Restore the selection on keyup event to avoid the cursor jump issue
             // See: https://issues.chromium.org/issues/330596261
             const selection = editor.getDOMSelection();
-            const doc = this.editor?.getDocument();
-            doc?.defaultView?.requestAnimationFrame(() => {
-                if (this.editor) {
-                    this.editor.setDOMSelection(selection);
-                }
-            });
+            this.restoreSelectionCallback = () => {
+                this.editor?.setDOMSelection(selection);
+            };
         }
     }
 }
