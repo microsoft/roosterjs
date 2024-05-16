@@ -14,14 +14,14 @@ import type {
  */
 export function createParagraph(
     isImplicit?: boolean,
-    blockFormat?: ContentModelBlockFormat,
-    segmentFormat?: ContentModelSegmentFormat,
+    blockFormat?: Readonly<ContentModelBlockFormat>,
+    segmentFormat?: Readonly<ContentModelSegmentFormat>,
     decorator?: ReadonlyContentModelParagraphDecorator
 ): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: 'Paragraph',
         segments: [],
-        format: blockFormat ? { ...blockFormat } : {},
+        format: { ...blockFormat },
     };
 
     if (segmentFormat && Object.keys(segmentFormat).length > 0) {

@@ -1,10 +1,9 @@
 import { extractBorderValues } from '../../domUtils/style/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getTableMetadata } from '../metadata/updateTableMetadata';
 import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
-import { mutateBlock } from '../common/mutate';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     ContentModelFormatState,
     ContentModelSegmentFormat,
@@ -15,7 +14,7 @@ import type {
     ReadonlyContentModelParagraph,
     ReadonlyContentModelFormatContainer,
     ReadonlyContentModelListItem,
-    ShallowMutableContentModelDocument,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -25,7 +24,7 @@ import type {
  * @param formatState Existing format state object, used for receiving the result
  */
 export function retrieveModelFormatState(
-    model: ShallowMutableContentModelDocument,
+    model: ReadonlyContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState
 ) {
@@ -57,10 +56,7 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                        const modelFormat = Object.assign(
-                            <ContentModelSegmentFormat>{},
-                            model.format
-                        );
+                        const modelFormat = { ...model.format };
 
                         delete modelFormat.italic;
                         delete modelFormat.underline;
@@ -212,7 +208,7 @@ function retrieveTableFormat(
     tableContext: ReadonlyTableSelectionContext,
     result: ContentModelFormatState
 ) {
-    const tableFormat = updateTableMetadata(mutateBlock(tableContext.table));
+    const tableFormat = getTableMetadata(tableContext.table);
 
     result.isInTable = true;
     result.tableHasHeader = tableContext.table.rows.some(row =>

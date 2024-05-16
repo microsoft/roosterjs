@@ -1,3 +1,4 @@
+import { createTableRow } from './createTableRow';
 import type {
     ContentModelTable,
     ContentModelTableFormat,
@@ -9,21 +10,20 @@ import type {
  * @param rowCount Count of rows of this table
  * @param format @optional The format of this model
  */
-export function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
+export function createTable(
+    rowCount: number,
+    format?: Readonly<ContentModelTableFormat>
+): ContentModelTable {
     const rows: ContentModelTableRow[] = [];
 
     for (let i = 0; i < rowCount; i++) {
-        rows.push({
-            height: 0,
-            format: {},
-            cells: [],
-        });
+        rows.push(createTableRow());
     }
 
     return {
         blockType: 'Table',
         rows,
-        format: { ...(format || {}) },
+        format: { ...format },
         widths: [],
         dataset: {},
     };

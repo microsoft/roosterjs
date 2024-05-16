@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { FormatRenderer } from './utils/FormatRenderer';
 import {
     ContentModelWithDataset,
     ShallowMutableContentModelWithDataset,
 } from 'roosterjs-content-model-types';
-import { FormatRenderer } from './utils/FormatRenderer';
 
 const styles = require('./FormatView.scss');
 

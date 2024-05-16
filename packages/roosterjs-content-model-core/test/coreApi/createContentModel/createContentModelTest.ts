@@ -4,6 +4,7 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
 import {
+    ContentModelDocument,
     DomToModelContext,
     DomToModelOptionForCreateModel,
     EditorCore,
@@ -362,7 +363,9 @@ describe('createContentModel and cache management', () => {
             },
         } as any;
 
-        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x as any);
+        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedNewModel);
 

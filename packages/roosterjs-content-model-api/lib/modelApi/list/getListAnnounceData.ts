@@ -2,8 +2,8 @@ import { findListItemsInSameThread } from './findListItemsInSameThread';
 import {
     getAutoListStyleType,
     getClosestAncestorBlockGroupIndex,
+    getListMetadata,
     getOrderedListNumberStr,
-    updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     AnnounceData,
@@ -28,7 +28,7 @@ export function getListAnnounceData(path: ReadonlyContentModelBlockGroup[]): Ann
             return null;
         } else if (level.listType == 'OL') {
             const listNumber = getListNumber(path, listItem);
-            const metadata = updateListMetadata(level);
+            const metadata = getListMetadata(level);
             const listStyle = getAutoListStyleType(
                 'OL',
                 metadata ?? {},

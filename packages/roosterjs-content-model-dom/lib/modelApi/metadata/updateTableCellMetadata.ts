@@ -1,6 +1,7 @@
 import { createBooleanDefinition, createObjectDefinition } from './definitionCreators';
-import { updateMetadata } from './updateMetadata';
+import { getMetadata, updateMetadata } from './updateMetadata';
 import type {
+    ReadonlyContentModelTableCell,
     ShallowMutableContentModelTableCell,
     TableCellMetadataFormat,
 } from 'roosterjs-content-model-types';
@@ -14,6 +15,16 @@ const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableC
     false /* isOptional */,
     true /** allowNull */
 );
+
+/**
+ * Get table cell metadata
+ * @param cell The table cell Content Model
+ */
+export function getTableCellMetadata(
+    cell: ReadonlyContentModelTableCell
+): TableCellMetadataFormat | null {
+    return getMetadata(cell, TableCellMetadataFormatDefinition);
+}
 
 /**
  * Update table cell metadata with a callback

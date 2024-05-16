@@ -16,6 +16,7 @@ import type {
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
     ReadonlyContentModelListItem,
+    ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
     ReadonlyContentModelTable,
     ReadonlyOperationalBlocks,
@@ -32,13 +33,38 @@ export function getSelectedSegmentsAndParagraphs(
     model: ReadonlyContentModelDocument,
     includingFormatHolder: boolean,
     includingEntity?: boolean
-): [ContentModelSegment, ContentModelParagraph | null, ReadonlyContentModelBlockGroup[]][] {
+): [ContentModelSegment, ContentModelParagraph | null, ContentModelBlockGroup[]][];
+
+/**
+ * Get an array of selected parent paragraph and child segment pair (Readonly)
+ * @param model The Content Model to get selection from
+ * @param includingFormatHolder True means also include format holder as segment from list item, in that case paragraph will be null
+ */
+export function getSelectedSegmentsAndParagraphs(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean,
+    includingEntity?: boolean
+): [
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelParagraph | null,
+    ReadonlyContentModelBlockGroup[]
+][];
+
+export function getSelectedSegmentsAndParagraphs(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean,
+    includingEntity?: boolean
+): [
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelParagraph | null,
+    ReadonlyContentModelBlockGroup[]
+][] {
     const selections = collectSelections(model, {
         includeListFormatHolder: includingFormatHolder ? 'allSegments' : 'never',
     });
     const result: [
-        ContentModelSegment,
-        ContentModelParagraph | null,
+        ReadonlyContentModelSegment,
+        ReadonlyContentModelParagraph | null,
         ReadonlyContentModelBlockGroup[]
     ][] = [];
 
@@ -257,11 +283,28 @@ interface SelectionInfo {
     tableContext?: ReadonlyTableSelectionContext;
 }
 
+interface ReadonlySelectionInfo {
+    path: ReadonlyContentModelBlockGroup[];
+    segments?: ReadonlyContentModelSegment[];
+    block?: ReadonlyContentModelBlock;
+    tableContext?: ReadonlyTableSelectionContext;
+}
+
 function collectSelections(
     group: ReadonlyContentModelBlockGroup,
     option?: IterateSelectionsOption
-): SelectionInfo[] {
-    const selections: SelectionInfo[] = [];
+): SelectionInfo[];
+
+function collectSelections(
+    group: ReadonlyContentModelBlockGroup,
+    option?: IterateSelectionsOption
+): ReadonlySelectionInfo[];
+
+function collectSelections(
+    group: ReadonlyContentModelBlockGroup,
+    option?: IterateSelectionsOption
+): ReadonlySelectionInfo[] {
+    const selections: ReadonlySelectionInfo[] = [];
 
     iterateSelections(
         group,
@@ -279,7 +322,7 @@ function collectSelections(
     return selections;
 }
 
-function removeUnmeaningfulSelections(selections: SelectionInfo[]) {
+function removeUnmeaningfulSelections(selections: ReadonlySelectionInfo[]) {
     if (
         selections.length > 1 &&
         isOnlySelectionMarkerSelected(selections, false /*checkFirstParagraph*/)
@@ -297,7 +340,7 @@ function removeUnmeaningfulSelections(selections: SelectionInfo[]) {
 }
 
 function isOnlySelectionMarkerSelected(
-    selections: SelectionInfo[],
+    selections: ReadonlySelectionInfo[],
     checkFirstParagraph: boolean
 ): boolean {
     const selection = selections[checkFirstParagraph ? 0 : selections.length - 1];
