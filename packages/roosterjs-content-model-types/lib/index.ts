@@ -245,7 +245,10 @@ export {
     DOMInsertPoint,
 } from './selection/DOMSelection';
 export { InsertPoint } from './selection/InsertPoint';
-export { TableSelectionContext } from './selection/TableSelectionContext';
+export {
+    TableSelectionContext,
+    ReadonlyTableSelectionContext,
+} from './selection/TableSelectionContext';
 export { TableSelectionCoordinates } from './selection/TableSelectionCoordinates';
 
 export {
@@ -418,10 +421,11 @@ export { MergeModelOption } from './parameter/MergeModelOption';
 export {
     IterateSelectionsCallback,
     IterateSelectionsOption,
+    ReadonlyIterateSelectionsCallback,
 } from './parameter/IterateSelectionsOption';
 export { NodeTypeMap } from './parameter/NodeTypeMap';
 export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
-export { OperationalBlocks } from './parameter/OperationalBlocks';
+export { OperationalBlocks, ReadonlyOperationalBlocks } from './parameter/OperationalBlocks';
 export { ParsedTable, ParsedTableCell } from './parameter/ParsedTable';
 export {
     ModelToTextCallback,

@@ -1,6 +1,7 @@
 import type {
     ContentModelBlockGroup,
     ContentModelBlockGroupType,
+    ReadonlyContentModelBlockGroup,
     TypeOfBlockGroup,
 } from 'roosterjs-content-model-types';
 
@@ -11,7 +12,7 @@ import type {
  * @param stopTypes @optional Block group types that will cause stop searching
  */
 export function getClosestAncestorBlockGroupIndex<T extends ContentModelBlockGroup>(
-    path: ContentModelBlockGroup[],
+    path: ReadonlyContentModelBlockGroup[],
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[] = []
 ): number {

@@ -15,7 +15,7 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
-export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
+export { updateMetadata, getMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
@@ -131,10 +131,17 @@ export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormat
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';
 export { getSegmentTextFormat } from './modelApi/editing/getSegmentTextFormat';
 
-export { updateImageMetadata } from './modelApi/metadata/updateImageMetadata';
-export { updateTableCellMetadata } from './modelApi/metadata/updateTableCellMetadata';
-export { updateTableMetadata } from './modelApi/metadata/updateTableMetadata';
-export { updateListMetadata, ListMetadataDefinition } from './modelApi/metadata/updateListMetadata';
+export { updateImageMetadata, getImageMetadata } from './modelApi/metadata/updateImageMetadata';
+export {
+    updateTableCellMetadata,
+    getTableCellMetadata,
+} from './modelApi/metadata/updateTableCellMetadata';
+export { updateTableMetadata, getTableMetadata } from './modelApi/metadata/updateTableMetadata';
+export {
+    updateListMetadata,
+    getListMetadata,
+    ListMetadataDefinition,
+} from './modelApi/metadata/updateListMetadata';
 
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';

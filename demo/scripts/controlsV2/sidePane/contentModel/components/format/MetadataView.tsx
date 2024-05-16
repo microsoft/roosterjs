@@ -1,13 +1,19 @@
 import * as React from 'react';
-import { ContentModelWithDataset } from 'roosterjs-content-model-types';
 import { FormatRenderer } from './utils/FormatRenderer';
+import {
+    ContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
+} from 'roosterjs-content-model-types';
 
 const styles = require('./FormatView.scss');
 
 export function MetadataView<T>(props: {
     model: ContentModelWithDataset<T>;
     renderers: FormatRenderer<T>[];
-    updater: (model: ContentModelWithDataset<T>, callback: (format: T | null) => T | null) => void;
+    updater: (
+        model: ShallowMutableContentModelWithDataset<T>,
+        callback: (format: T | null) => T | null
+    ) => void;
 }) {
     const { model, renderers, updater } = props;
     const metadata = React.useRef<T>(null);
