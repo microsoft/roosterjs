@@ -1,5 +1,11 @@
-import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock';
-import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type {
+    ContentModelBlock,
+    ReadonlyContentModelBlock,
+} from '../contentModel/block/ContentModelBlock';
+import type {
+    ContentModelBlockGroup,
+    ReadonlyContentModelBlockGroup,
+} from '../contentModel/blockGroup/ContentModelBlockGroup';
 
 /**
  * Represent a pair of parent block group and child block
@@ -19,4 +25,24 @@ export type OperationalBlocks<T extends ContentModelBlockGroup> = {
      * Selection path of this block
      */
     path: ContentModelBlockGroup[];
+};
+
+/**
+ * Represent a pair of parent block group and child block (Readonly)
+ */
+export type ReadonlyOperationalBlocks<T extends ReadonlyContentModelBlockGroup> = {
+    /**
+     * The parent block group
+     */
+    parent: ReadonlyContentModelBlockGroup;
+
+    /**
+     * The child block
+     */
+    block: ReadonlyContentModelBlock | T;
+
+    /**
+     * Selection path of this block
+     */
+    path: ReadonlyContentModelBlockGroup[];
 };

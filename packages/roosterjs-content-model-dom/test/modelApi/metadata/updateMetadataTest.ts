@@ -1,6 +1,97 @@
 import * as validate from '../../../lib/modelApi/metadata/validate';
-import { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
-import { hasMetadata, updateMetadata } from '../../../lib/modelApi/metadata/updateMetadata';
+import {
+    getMetadata,
+    hasMetadata,
+    updateMetadata,
+} from '../../../lib/modelApi/metadata/updateMetadata';
+import {
+    ContentModelWithDataset,
+    Definition,
+    ReadonlyContentModelWithDataset,
+} from 'roosterjs-content-model-types';
+
+describe('getMetadata', () => {
+    it('no metadata', () => {
+        const model: ReadonlyContentModelWithDataset<void> = {
+            dataset: {},
+        };
+        const result = getMetadata(model);
+
+        expect(model).toEqual({
+            dataset: {},
+        });
+        expect(result).toBeNull();
+    });
+
+    it('with metadata', () => {
+        const model: ReadonlyContentModelWithDataset<any> = {
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        };
+
+        const result = getMetadata(model);
+
+        expect(model).toEqual({
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        });
+        expect(result).toEqual({
+            a: 'b',
+        });
+    });
+
+    it('with metadata, pass the validation', () => {
+        const model: ContentModelWithDataset<void> = {
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        };
+
+        const validateSpy = spyOn(validate, 'validate').and.returnValue(true);
+
+        const mockedDefinition = 'DEFINITION' as any;
+        const result = getMetadata(model, mockedDefinition);
+
+        expect(validateSpy).toHaveBeenCalledWith(
+            {
+                a: 'b',
+            },
+            mockedDefinition
+        );
+        expect(model).toEqual({
+            dataset: { editingInfo: '{"a":"b"}' },
+        });
+        expect(result).toEqual({
+            a: 'b',
+        });
+    });
+
+    it('with metadata, fail the validation, return new value', () => {
+        const model: ContentModelWithDataset<void> = {
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        };
+
+        const validateSpy = spyOn(validate, 'validate').and.returnValue(false);
+
+        const mockedDefinition = 'DEFINITION' as any;
+        const result = getMetadata(model, mockedDefinition);
+
+        expect(validateSpy).toHaveBeenCalledWith(
+            {
+                a: 'b',
+            },
+            mockedDefinition
+        );
+        expect(model).toEqual({
+            dataset: { editingInfo: '{"a":"b"}' },
+        });
+        expect(result).toBeNull();
+    });
+});
 
 describe('updateMetadata', () => {
     it('no metadata', () => {

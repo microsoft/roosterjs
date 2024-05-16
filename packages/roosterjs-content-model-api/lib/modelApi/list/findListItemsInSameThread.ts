@@ -1,14 +1,34 @@
-import type { ContentModelBlockGroup, ContentModelListItem } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockGroup,
+    ContentModelListItem,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
+} from 'roosterjs-content-model-types';
 
 /**
+ * Search for all list items in the same thread as the current list item
  * @param model The content model
  * @param currentItem The current list item
- * Search for all list items in the same thread as the current list item
  */
 export function findListItemsInSameThread(
     group: ContentModelBlockGroup,
     currentItem: ContentModelListItem
-): ContentModelListItem[] {
+): ContentModelListItem[];
+
+/**
+ * Search for all list items in the same thread as the current list item (Readonly)
+ * @param model The content model
+ * @param currentItem The current list item
+ */
+export function findListItemsInSameThread(
+    group: ReadonlyContentModelBlockGroup,
+    currentItem: ReadonlyContentModelListItem
+): ReadonlyContentModelListItem[];
+
+export function findListItemsInSameThread(
+    group: ReadonlyContentModelBlockGroup,
+    currentItem: ReadonlyContentModelListItem
+): ReadonlyContentModelListItem[] {
     const items: (ContentModelListItem | null)[] = [];
 
     findListItems(group, items);
@@ -16,7 +36,10 @@ export function findListItemsInSameThread(
     return filterListItems(items, currentItem);
 }
 
-function findListItems(group: ContentModelBlockGroup, result: (ContentModelListItem | null)[]) {
+function findListItems(
+    group: ReadonlyContentModelBlockGroup,
+    result: (ReadonlyContentModelListItem | null)[]
+) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':
@@ -56,7 +79,7 @@ function findListItems(group: ContentModelBlockGroup, result: (ContentModelListI
     });
 }
 
-function pushNullIfNecessary(result: (ContentModelListItem | null)[]) {
+function pushNullIfNecessary(result: (ReadonlyContentModelListItem | null)[]) {
     const last = result[result.length - 1];
 
     if (!last || last !== null) {
@@ -65,10 +88,10 @@ function pushNullIfNecessary(result: (ContentModelListItem | null)[]) {
 }
 
 function filterListItems(
-    items: (ContentModelListItem | null)[],
-    currentItem: ContentModelListItem
+    items: (ReadonlyContentModelListItem | null)[],
+    currentItem: ReadonlyContentModelListItem
 ) {
-    const result: ContentModelListItem[] = [];
+    const result: ReadonlyContentModelListItem[] = [];
     const currentIndex = items.indexOf(currentItem);
     const levelLength = currentItem.levels.length;
     const isOrderedList = currentItem.levels[levelLength - 1]?.listType == 'OL';
@@ -131,7 +154,7 @@ function filterListItems(
 }
 
 function areListTypesCompatible(
-    listItems: (ContentModelListItem | null)[],
+    listItems: (ReadonlyContentModelListItem | null)[],
     currentIndex: number,
     compareToIndex: number
 ): boolean {
@@ -146,7 +169,7 @@ function areListTypesCompatible(
     );
 }
 
-function hasStartNumberOverride(item: ContentModelListItem, levelLength: number): boolean {
+function hasStartNumberOverride(item: ReadonlyContentModelListItem, levelLength: number): boolean {
     return item.levels
         .slice(0, levelLength)
         .some(level => level.format.startNumberOverride !== undefined);
