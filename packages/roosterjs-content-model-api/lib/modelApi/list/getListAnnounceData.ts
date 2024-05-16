@@ -2,13 +2,14 @@ import { findListItemsInSameThread } from './findListItemsInSameThread';
 import {
     getAutoListStyleType,
     getClosestAncestorBlockGroupIndex,
+    getListMetadata,
     getOrderedListNumberStr,
-    updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     AnnounceData,
-    ContentModelBlockGroup,
     ContentModelListItem,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +17,7 @@ import type {
  * @param path Content model path that include the list item
  * @returns Announce data of current list item if any, or null
  */
-export function getListAnnounceData(path: ContentModelBlockGroup[]): AnnounceData | null {
+export function getListAnnounceData(path: ReadonlyContentModelBlockGroup[]): AnnounceData | null {
     const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
     if (index >= 0) {
@@ -27,7 +28,7 @@ export function getListAnnounceData(path: ContentModelBlockGroup[]): AnnounceDat
             return null;
         } else if (level.listType == 'OL') {
             const listNumber = getListNumber(path, listItem);
-            const metadata = updateListMetadata(level);
+            const metadata = getListMetadata(level);
             const listStyle = getAutoListStyleType(
                 'OL',
                 metadata ?? {},
@@ -51,7 +52,10 @@ export function getListAnnounceData(path: ContentModelBlockGroup[]): AnnounceDat
     }
 }
 
-function getListNumber(path: ContentModelBlockGroup[], listItem: ContentModelListItem) {
+function getListNumber(
+    path: ReadonlyContentModelBlockGroup[],
+    listItem: ReadonlyContentModelListItem
+) {
     const items = findListItemsInSameThread(path[path.length - 1], listItem);
     let listNumber = 0;
 

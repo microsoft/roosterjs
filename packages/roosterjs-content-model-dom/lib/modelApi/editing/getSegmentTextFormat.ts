@@ -1,11 +1,16 @@
-import type { ContentModelSegment, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormat,
+    ReadonlyContentModelSegment,
+} from 'roosterjs-content-model-types';
 
 /**
  * Get the text format of a segment, this function will return only format that is applicable to text
  * @param segment The segment to get format from
  * @returns
  */
-export function getSegmentTextFormat(segment: ContentModelSegment): ContentModelSegmentFormat {
+export function getSegmentTextFormat(
+    segment: ReadonlyContentModelSegment
+): ContentModelSegmentFormat {
     const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
         segment?.format ?? {};
 
