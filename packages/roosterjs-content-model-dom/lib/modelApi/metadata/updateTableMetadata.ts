@@ -6,7 +6,10 @@ import {
     createObjectDefinition,
     createStringDefinition,
 } from './definitionCreators';
-import type { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ShallowMutableContentModelTable,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 const NullStringDefinition = createStringDefinition(
     false /** isOptional */,
@@ -46,7 +49,7 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
  * @param callback The callback function used for updating metadata
  */
 export function updateTableMetadata(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     callback?: (format: TableMetadataFormat | null) => TableMetadataFormat | null
 ): TableMetadataFormat | null {
     return updateMetadata(table, callback, TableFormatDefinition);

@@ -5,16 +5,16 @@ import {
     setModelListStyle,
 } from 'roosterjs-content-model-api';
 import type {
-    ContentModelDocument,
     ContentModelParagraph,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function keyboardListTrigger(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     paragraph: ContentModelParagraph,
     context: FormatContentModelContext,
     shouldSearchForBullet: boolean = true,
@@ -33,7 +33,7 @@ export function keyboardListTrigger(
 }
 
 const triggerList = (
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     listType: 'OL' | 'UL',
     styleType: number,
     index?: number

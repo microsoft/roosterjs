@@ -362,7 +362,7 @@ describe('createContentModel and cache management', () => {
             },
         } as any;
 
-        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x as any);
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedNewModel);
 

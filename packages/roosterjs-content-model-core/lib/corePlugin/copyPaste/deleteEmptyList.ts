@@ -2,14 +2,15 @@ import {
     getClosestAncestorBlockGroupIndex,
     hasSelectionInBlock,
     hasSelectionInBlockGroup,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
     DeleteSelectionContext,
     DeleteSelectionStep,
+    ReadonlyContentModelBlock,
 } from 'roosterjs-content-model-types';
 
-function isEmptyBlock(block: ContentModelBlock | undefined): boolean {
+function isEmptyBlock(block: ReadonlyContentModelBlock | undefined): boolean {
     if (block && block.blockType == 'Paragraph') {
         return block.segments.every(
             segment => segment.segmentType !== 'SelectionMarker' && segment.segmentType == 'Br'
@@ -37,6 +38,7 @@ export const deleteEmptyList: DeleteSelectionStep = (context: DeleteSelectionCon
             ['TableCell']
         );
         const item = insertPoint.path[index];
+
         if (index >= 0 && item && item.blockGroupType == 'ListItem') {
             const listItemIndex = insertPoint.path[index + 1].blocks.indexOf(item);
             const previousBlock =
@@ -53,7 +55,7 @@ export const deleteEmptyList: DeleteSelectionStep = (context: DeleteSelectionCon
                 nextBlock &&
                 isEmptyBlock(nextBlock)
             ) {
-                item.levels = [];
+                mutateBlock(item).levels = [];
             }
         }
     }

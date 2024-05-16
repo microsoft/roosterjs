@@ -1,5 +1,9 @@
 import { getSelectedParagraphs } from 'roosterjs-content-model-dom';
-import type { ContentModelParagraph, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelParagraph,
+    IEditor,
+    ReadonlyContentModelDocument,
+} from 'roosterjs-content-model-types';
 
 /**
  * Invoke a callback to format the selected paragraph using Content Model
@@ -13,7 +17,7 @@ export function formatParagraphWithContentModel(
     setStyleCallback: (paragraph: ContentModelParagraph) => void
 ) {
     editor.formatContentModel(
-        (model, context) => {
+        (model: ReadonlyContentModelDocument, context) => {
             const paragraphs = getSelectedParagraphs(model);
 
             paragraphs.forEach(setStyleCallback);

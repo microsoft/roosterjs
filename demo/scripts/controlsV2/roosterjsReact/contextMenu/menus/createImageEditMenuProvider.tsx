@@ -1,7 +1,7 @@
 import { createContextMenuProvider } from '../utils/createContextMenuProvider';
 import { EditorPlugin, IEditor, ImageEditor } from 'roosterjs-content-model-types';
 import { formatImageWithContentModel } from 'roosterjs-content-model-api';
-import { iterateSelections, updateImageMetadata } from 'roosterjs-content-model-dom';
+import { iterateSelections, mutateBlock, updateImageMetadata } from 'roosterjs-content-model-dom';
 import { setImageAltText } from 'roosterjs-content-model-api';
 import { showInputDialog } from '../../inputDialog/utils/showInputDialog';
 import type { ContextMenuItem } from '../types/ContextMenuItem';
@@ -208,7 +208,7 @@ function removeImage(editor: IEditor) {
                         const index = block.segments.indexOf(segment);
 
                         if (index >= 0) {
-                            block.segments.splice(index, 1);
+                            mutateBlock(block).segments.splice(index, 1);
                             changed = true;
                         }
                     }

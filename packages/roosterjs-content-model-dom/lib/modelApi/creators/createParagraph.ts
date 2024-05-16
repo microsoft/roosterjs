@@ -1,8 +1,8 @@
 import type {
     ContentModelBlockFormat,
     ContentModelParagraph,
-    ContentModelParagraphDecorator,
     ContentModelSegmentFormat,
+    ReadonlyContentModelParagraphDecorator,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,7 +16,7 @@ export function createParagraph(
     isImplicit?: boolean,
     blockFormat?: ContentModelBlockFormat,
     segmentFormat?: ContentModelSegmentFormat,
-    decorator?: ContentModelParagraphDecorator
+    decorator?: ReadonlyContentModelParagraphDecorator
 ): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: 'Paragraph',

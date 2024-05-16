@@ -6,23 +6,24 @@ import {
     deleteSelection,
     getClosestAncestorBlockGroupIndex,
     setSelection,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
     FormatContentModelContext,
     InsertEntityPosition,
     InsertPoint,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function insertEntityModel(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     entityModel: ContentModelEntity,
     position: InsertEntityPosition,
     isBlock: boolean,
@@ -30,7 +31,7 @@ export function insertEntityModel(
     context?: FormatContentModelContext,
     insertPointOverride?: InsertPoint
 ) {
-    let blockParent: ContentModelBlockGroup | undefined;
+    let blockParent: ReadonlyContentModelBlockGroup | undefined;
     let blockIndex = -1;
     let insertPoint: InsertPoint | null;
 
@@ -50,7 +51,11 @@ export function insertEntityModel(
             Object.assign(entityModel.format, marker.format);
 
             if (index >= 0) {
-                paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);
+                mutateBlock(paragraph).segments.splice(
+                    focusAfterEntity ? index : index + 1,
+                    0,
+                    entityModel
+                );
             }
         } else {
             const pathIndex =
@@ -59,7 +64,7 @@ export function insertEntityModel(
                     : 0;
             blockParent = path[pathIndex];
             const child = path[pathIndex - 1];
-            const directChild: ContentModelBlock =
+            const directChild: ReadonlyContentModelBlock =
                 child?.blockGroupType == 'FormatContainer' ||
                 child?.blockGroupType == 'General' ||
                 child?.blockGroupType == 'ListItem'
@@ -71,7 +76,7 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
-        const blocksToInsert: ContentModelBlock[] = [];
+        const blocksToInsert: ReadonlyContentModelBlock[] = [];
         let nextParagraph: ContentModelParagraph | undefined;
 
         if (isBlock) {
@@ -80,7 +85,7 @@ export function insertEntityModel(
             blocksToInsert.push(entityModel);
 
             if (nextBlock?.blockType == 'Paragraph') {
-                nextParagraph = nextBlock;
+                nextParagraph = mutateBlock(nextBlock);
             } else if (!nextBlock || nextBlock.blockType == 'Entity' || focusAfterEntity) {
                 nextParagraph = createParagraph(false /*isImplicit*/, {}, model.format);
                 nextParagraph.segments.push(createBr(model.format));
@@ -97,7 +102,7 @@ export function insertEntityModel(
             blocksToInsert.push(nextParagraph);
         }
 
-        blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
+        mutateBlock(blockParent).blocks.splice(blockIndex, 0, ...blocksToInsert);
 
         if (focusAfterEntity && nextParagraph) {
             const marker = createSelectionMarker(nextParagraph.segments[0]?.format || model.format);
@@ -110,7 +115,7 @@ export function insertEntityModel(
 }
 
 function getInsertPoint(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     insertPointOverride?: InsertPoint,
     context?: FormatContentModelContext
 ): InsertPoint | null {

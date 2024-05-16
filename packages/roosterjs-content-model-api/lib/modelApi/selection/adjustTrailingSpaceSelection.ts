@@ -1,15 +1,15 @@
-import { createText, iterateSelections } from 'roosterjs-content-model-dom';
+import { createText, iterateSelections, mutateSegment } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelText,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
 /**
  * If a format cannot be applied to be applied to a trailing space, split the trailing space into a separate segment
  * @internal
  */
-export function adjustTrailingSpaceSelection(model: ContentModelDocument) {
+export function adjustTrailingSpaceSelection(model: ReadonlyContentModelDocument) {
     iterateSelections(model, (_, __, block, segments) => {
         if (block?.blockType === 'Paragraph' && segments && segments.length > 0) {
             if (
@@ -37,7 +37,7 @@ export function adjustTrailingSpaceSelection(model: ContentModelDocument) {
     });
 }
 
-function shouldSplitTrailingSpace(segment: ContentModelText) {
+function shouldSplitTrailingSpace(segment: ReadonlyContentModelText) {
     return segment.isSelected && hasTrailingSpace(segment.text) && !isTrailingSpace(segment.text);
 }
 
@@ -49,27 +49,32 @@ function isTrailingSpace(text: string) {
     return text.trimRight().length == 0;
 }
 
-function splitTextSegment(block: ContentModelParagraph, textSegment: Readonly<ContentModelText>) {
-    const text = textSegment.text.trimRight();
-    const trailingSpace = textSegment.text.substring(text.length);
-    const newText = createText(text, textSegment.format, textSegment.link, textSegment.code);
-    newText.isSelected = true;
-    const trailingSpaceLink = textSegment.link
-        ? {
-              ...textSegment.link,
-              format: {
-                  ...textSegment.link?.format,
-                  underline: false, // Remove underline for trailing space link
-              },
-          }
-        : undefined;
-    const trailingSpaceSegment = createText(
-        trailingSpace,
-        undefined,
-        trailingSpaceLink,
-        textSegment.code
-    );
-    trailingSpaceSegment.isSelected = true;
-    const index = block.segments.indexOf(textSegment);
-    block.segments.splice(index, 1, newText, trailingSpaceSegment);
+function splitTextSegment(
+    readonlyBlock: ReadonlyContentModelParagraph,
+    readonlyTextSegment: ReadonlyContentModelText
+) {
+    mutateSegment(readonlyBlock, readonlyTextSegment, (textSegment, block) => {
+        const text = textSegment.text.trimRight();
+        const trailingSpace = textSegment.text.substring(text.length);
+        const newText = createText(text, textSegment.format, textSegment.link, textSegment.code);
+        newText.isSelected = true;
+        const trailingSpaceLink = textSegment.link
+            ? {
+                  ...textSegment.link,
+                  format: {
+                      ...textSegment.link?.format,
+                      underline: false, // Remove underline for trailing space link
+                  },
+              }
+            : undefined;
+        const trailingSpaceSegment = createText(
+            trailingSpace,
+            undefined,
+            trailingSpaceLink,
+            textSegment.code
+        );
+        trailingSpaceSegment.isSelected = true;
+        const index = block.segments.indexOf(textSegment);
+        block.segments.splice(index, 1, newText, trailingSpaceSegment);
+    });
 }

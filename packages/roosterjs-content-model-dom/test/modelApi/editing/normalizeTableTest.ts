@@ -7,13 +7,21 @@ import {
     ContentModelTableFormat,
 } from 'roosterjs-content-model-types';
 import {
-    createParagraph,
+    createParagraph as originalCreateParagraph,
     createTable as originalCreateTable,
     createTableCell as originalCreateTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
 
 const mockedCachedElement = {} as any;
+
+function createParagraph(): ContentModelParagraph {
+    const paragraph = originalCreateParagraph();
+
+    paragraph.cachedElement = mockedCachedElement;
+
+    return paragraph;
+}
 
 function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
     const table = originalCreateTable(rowCount, format);
@@ -51,7 +59,6 @@ describe('normalizeTable', () => {
             },
             widths: [],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -88,7 +95,6 @@ describe('normalizeTable', () => {
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -99,7 +105,6 @@ describe('normalizeTable', () => {
             },
             widths: [120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -138,10 +143,10 @@ describe('normalizeTable', () => {
                                     blockType: 'Paragraph',
                                     segments: [],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -160,6 +165,7 @@ describe('normalizeTable', () => {
                                     blockType: 'Paragraph',
                                     segments: [],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
@@ -173,7 +179,6 @@ describe('normalizeTable', () => {
             },
             widths: [120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -230,6 +235,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -241,10 +247,10 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -263,10 +269,10 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -277,7 +283,6 @@ describe('normalizeTable', () => {
             },
             widths: [240, 120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -316,10 +321,10 @@ describe('normalizeTable', () => {
                                     blockType: 'Paragraph',
                                     segments: [],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -330,7 +335,6 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -379,7 +383,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block1, block2],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -389,7 +392,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -405,7 +407,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block3],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -415,7 +416,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block4],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -426,7 +426,6 @@ describe('normalizeTable', () => {
             },
             widths: [120, 120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -484,6 +483,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -495,10 +495,10 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -517,6 +517,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -528,10 +529,10 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -542,7 +543,6 @@ describe('normalizeTable', () => {
             },
             widths: [120, 120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -601,6 +601,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -612,6 +613,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -623,6 +625,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                                 {
                                     blockType: 'Paragraph',
@@ -634,9 +637,9 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    cachedElement: mockedCachedElement,
                                 },
                             ],
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -647,7 +650,6 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -690,7 +692,6 @@ describe('normalizeTable', () => {
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -701,7 +702,6 @@ describe('normalizeTable', () => {
             },
             widths: [120],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
@@ -748,7 +748,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -758,7 +757,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -774,7 +772,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -784,7 +781,6 @@ describe('normalizeTable', () => {
                             format: { useBorderBox: true },
                             blocks: [block],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -795,7 +791,6 @@ describe('normalizeTable', () => {
             },
             widths: [100, 100],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 });
