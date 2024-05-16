@@ -29,7 +29,7 @@ export interface TableSelectionContext {
 }
 
 /**
- * Context object for table in a selection
+ * Context object for table in a selection (Readonly)
  */
 export interface ReadonlyTableSelectionContext {
     /**
