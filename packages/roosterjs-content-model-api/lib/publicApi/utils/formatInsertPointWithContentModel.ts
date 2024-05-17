@@ -3,6 +3,7 @@ import {
     addTextSegment,
     buildSelectionMarker,
     getRegularSelectionOffsets,
+    mutateBlock,
     processChildNode,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -13,8 +14,8 @@ import type {
     InsertPoint,
     DomToModelContext,
     ContentModelBlockGroup,
-    ContentModelDocument,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -28,7 +29,7 @@ export function formatInsertPointWithContentModel(
     editor: IEditor,
     insertPoint: DOMInsertPoint,
     callback: (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         context: FormatContentModelContext,
         insertPoint?: InsertPoint
     ) => void,
@@ -47,7 +48,7 @@ export function formatInsertPointWithContentModel(
                 const index = paragraph.segments.indexOf(marker);
 
                 if (index >= 0) {
-                    paragraph.segments.splice(index, 1);
+                    mutateBlock(paragraph).segments.splice(index, 1);
                 }
             }
             return true;

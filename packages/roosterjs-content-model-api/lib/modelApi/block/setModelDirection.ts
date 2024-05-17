@@ -3,22 +3,23 @@ import {
     applyTableFormat,
     getOperationalBlocks,
     isBlockGroupOfType,
+    mutateBlock,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     BorderFormat,
-    ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelDocument,
     ContentModelListItem,
     MarginFormat,
     PaddingFormat,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function setModelDirection(model: ContentModelDocument, direction: 'ltr' | 'rtl') {
+export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl') {
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],
@@ -29,7 +30,9 @@ export function setModelDirection(model: ContentModelDocument, direction: 'ltr' 
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const items = findListItemsInSameThread(model, block);
 
-            items.forEach(item => {
+            items.forEach(readonlyItem => {
+                const item = mutateBlock(readonlyItem);
+
                 item.levels.forEach(level => {
                     level.format.direction = direction;
                 });
@@ -47,7 +50,7 @@ export function setModelDirection(model: ContentModelDocument, direction: 'ltr' 
 function internalSetDirection(
     format: ContentModelBlockFormat,
     direction: 'ltr' | 'rtl',
-    block?: ContentModelBlock
+    block?: ReadonlyContentModelBlock
 ) {
     const wasRtl = format.direction == 'rtl';
     const isRtl = direction == 'rtl';
@@ -69,7 +72,7 @@ function internalSetDirection(
             block.rows.forEach(row => {
                 row.cells.forEach(cell => {
                     // Optimise by skipping cells with unchanged borders
-                    updateTableCellMetadata(cell, metadata => {
+                    updateTableCellMetadata(mutateBlock(cell), metadata => {
                         if (metadata?.borderOverride) {
                             const storeBorderLeft = cell.format.borderLeft;
                             setProperty(cell.format, 'borderLeft', cell.format.borderRight);

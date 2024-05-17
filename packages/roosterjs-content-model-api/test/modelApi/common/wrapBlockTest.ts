@@ -77,7 +77,60 @@ describe('wrapBlockStep1', () => {
                 },
             },
         ]);
+        expect(canMerge).toHaveBeenCalledTimes(0);
+        expect(para.isImplicit).toBeFalse();
+    });
+
+    it('Valid parent 2 - has sibling', () => {
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
+        const para: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            isImplicit: true,
+        };
+        const para2 = createParagraph();
+        const parent: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [para2, para],
+        };
+        const canMerge = jasmine.createSpy().and.returnValue(false);
+
+        wrapBlockStep1(
+            result,
+            parent,
+            para,
+            () => createFormatContainer('blockquote'),
+            canMerge as any
+        );
+
+        expect(parent).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                para2,
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {},
+                    blocks: [para],
+                },
+            ],
+        });
+        expect(result).toEqual([
+            {
+                parent: parent,
+                wrapper: {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {},
+                    blocks: [para],
+                },
+            },
+        ]);
         expect(canMerge).toHaveBeenCalledTimes(1);
+        expect(canMerge).toHaveBeenCalledWith(false, para2);
         expect(para.isImplicit).toBeFalse();
     });
 
@@ -190,7 +243,7 @@ describe('wrapBlockStep2', () => {
         });
     });
 
-    it('Has result, no block to merge', () => {
+    it('Has result, no block to merge 1 - no sibling', () => {
         const quote: ContentModelFormatContainer = createFormatContainer('blockquote');
         const doc: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -224,8 +277,47 @@ describe('wrapBlockStep2', () => {
                 },
             ],
         });
+        expect(canMerge).toHaveBeenCalledTimes(0);
+    });
+
+    it('Has result, no block to merge 2 - has sibling', () => {
+        const quote: ContentModelFormatContainer = createFormatContainer('blockquote');
+        const para: ContentModelParagraph = createParagraph();
+        const doc: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [quote, para],
+        };
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [
+            {
+                parent: doc,
+                wrapper: quote,
+            },
+        ];
+        const canMerge = jasmine.createSpy().and.returnValue(false);
+
+        wrapBlockStep2(result, canMerge as any);
+
+        expect(result).toEqual([
+            {
+                parent: doc,
+                wrapper: quote,
+            },
+        ]);
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [],
+                    format: {},
+                },
+                para,
+            ],
+        });
         expect(canMerge).toHaveBeenCalledTimes(1);
-        expect(canMerge).toHaveBeenCalledWith(false, undefined, quote);
+        expect(canMerge).toHaveBeenCalledWith(false, para, quote);
     });
 
     it('Has results, can merge', () => {

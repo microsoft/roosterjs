@@ -38,6 +38,7 @@ export const deleteEmptyList: DeleteSelectionStep = (context: DeleteSelectionCon
             ['TableCell']
         );
         const item = insertPoint.path[index];
+
         if (index >= 0 && item && item.blockGroupType == 'ListItem') {
             const listItemIndex = insertPoint.path[index + 1].blocks.indexOf(item);
             const previousBlock =

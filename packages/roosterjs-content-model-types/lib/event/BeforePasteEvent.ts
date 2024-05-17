@@ -2,7 +2,10 @@ import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption'
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+} from '../contentModel/blockGroup/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
 
 /**
@@ -12,7 +15,7 @@ import type { InsertPoint } from '../selection/InsertPoint';
  * @returns Insert point after merge
  */
 export type MergePastedContentFunc = (
-    target: ContentModelDocument,
+    target: ReadonlyContentModelDocument,
     source: ContentModelDocument
 ) => InsertPoint | null;
 

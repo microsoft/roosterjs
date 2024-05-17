@@ -14,9 +14,9 @@ import type {
     EntityState,
     DOMInsertPoint,
     FormatContentModelOptions,
-    ContentModelDocument,
     FormatContentModelContext,
     InsertPoint,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const BlockEntityTag = 'div';
@@ -102,7 +102,7 @@ export function insertEntity(
     };
 
     const callback = (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         context: FormatContentModelContext,
         insertPoint?: InsertPoint
     ) => {

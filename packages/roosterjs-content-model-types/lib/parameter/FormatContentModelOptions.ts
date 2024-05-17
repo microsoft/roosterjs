@@ -1,4 +1,4 @@
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type { ShallowMutableContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { OnNodeCreated } from '../context/ModelToDomSettings';
@@ -52,6 +52,6 @@ export interface FormatContentModelOptions {
  * @returns True means the model is changed and need to write back to editor, otherwise false
  */
 export type ContentModelFormatter = (
-    model: ContentModelDocument,
+    model: ShallowMutableContentModelDocument,
     context: FormatContentModelContext
 ) => boolean;

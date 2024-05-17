@@ -10,21 +10,21 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
-    ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
     FormatContentModelContext,
     InsertEntityPosition,
     InsertPoint,
     ReadonlyContentModelBlock,
-    ShallowMutableContentModelBlockGroup,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function insertEntityModel(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     entityModel: ContentModelEntity,
     position: InsertEntityPosition,
     isBlock: boolean,
@@ -32,7 +32,7 @@ export function insertEntityModel(
     context?: FormatContentModelContext,
     insertPointOverride?: InsertPoint
 ) {
-    let blockParent: ShallowMutableContentModelBlockGroup | undefined;
+    let blockParent: ReadonlyContentModelBlockGroup | undefined;
     let blockIndex = -1;
     let insertPoint: InsertPoint | null;
 
@@ -100,7 +100,7 @@ export function insertEntityModel(
             blocksToInsert.push(nextParagraph);
         }
 
-        blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
+        mutateBlock(blockParent).blocks.splice(blockIndex, 0, ...blocksToInsert);
 
         if (focusAfterEntity && nextParagraph) {
             const marker = createSelectionMarker(nextParagraph.segments[0]?.format || model.format);
@@ -113,7 +113,7 @@ export function insertEntityModel(
 }
 
 function getInsertPoint(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     insertPointOverride?: InsertPoint,
     context?: FormatContentModelContext
 ): InsertPoint | null {

@@ -1,11 +1,11 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
     IEditor,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -32,7 +32,7 @@ export function formatSegmentWithContentModel(
         paragraph: ContentModelParagraph | null
     ) => boolean,
     includingFormatHolder?: boolean,
-    afterFormatCallback?: (model: ContentModelDocument) => void
+    afterFormatCallback?: (model: ReadonlyContentModelDocument) => void
 ) {
     editor.formatContentModel(
         (model, context) => {
