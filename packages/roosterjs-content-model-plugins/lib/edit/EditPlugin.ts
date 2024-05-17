@@ -2,6 +2,7 @@ import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import type {
+    DOMSelection,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -22,7 +23,7 @@ export class EditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
-    private restoreSelectionCallback: (() => void) | null = null;
+    private selectionAfterDelete: DOMSelection | null = null;
 
     /**
      * Get name of this plugin
@@ -72,8 +73,10 @@ export class EditPlugin implements EditorPlugin {
                     this.handleKeyDownEvent(this.editor, event);
                     break;
                 case 'keyUp':
-                    this.restoreSelectionCallback?.();
-                    this.restoreSelectionCallback = null;
+                    if (this.selectionAfterDelete) {
+                        this.editor.setDOMSelection(this.selectionAfterDelete);
+                        this.selectionAfterDelete = null;
+                    }
                     break;
             }
         }
@@ -157,10 +160,7 @@ export class EditPlugin implements EditorPlugin {
 
             // Restore the selection on keyup event to avoid the cursor jump issue
             // See: https://issues.chromium.org/issues/330596261
-            const selection = editor.getDOMSelection();
-            this.restoreSelectionCallback = () => {
-                this.editor?.setDOMSelection(selection);
-            };
+            this.selectionAfterDelete = editor.getDOMSelection();
         }
     }
 }
