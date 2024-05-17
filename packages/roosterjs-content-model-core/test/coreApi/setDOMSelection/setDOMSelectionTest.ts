@@ -1,7 +1,12 @@
 import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
 import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../../lib/coreApi/setDOMSelection/setDOMSelection';
+import {
+    DEFAULT_SELECTION_BORDER_COLOR,
+    DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+} from '../../../lib/corePlugin/selection/SelectionPlugin';
 
+const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
 describe('setDOMSelection', () => {
     let core: EditorCore;
     let querySelectorAllSpy: jasmine.Spy;
@@ -47,7 +52,10 @@ describe('setDOMSelection', () => {
         core = {
             physicalRoot: contentDiv,
             logicalRoot: contentDiv,
-            selection: {},
+            selection: {
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            },
             api: {
                 triggerEvent: triggerEventSpy,
                 setEditorStyle: setEditorStyleSpy,
@@ -74,6 +82,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -141,6 +151,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
@@ -180,6 +192,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, false);
@@ -208,6 +222,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -265,6 +281,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -325,6 +343,7 @@ describe('setDOMSelection', () => {
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
                 imageSelectionBorderColor: 'red',
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -373,7 +392,7 @@ describe('setDOMSelection', () => {
             const coreValue = { ...core, lifecycle: { isDarkMode: true } as any };
 
             coreValue.selection.imageSelectionBorderColor = 'red';
-            coreValue.selection.imageSelectionBorderColorDark = 'DarkColorMock-red';
+            coreValue.selection.imageSelectionBorderColorDark = `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`;
 
             createRangeSpy.and.returnValue(mockedRange);
 
@@ -386,7 +405,8 @@ describe('setDOMSelection', () => {
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
                 imageSelectionBorderColor: 'red',
-                imageSelectionBorderColorDark: 'DarkColorMock-red',
+                imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 coreValue,
@@ -449,6 +469,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -509,6 +531,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -576,6 +600,8 @@ describe('setDOMSelection', () => {
 
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(selectNodeSpy).not.toHaveBeenCalled();
@@ -617,7 +643,6 @@ describe('setDOMSelection', () => {
                 selectNode: selectNodeSpy,
                 collapse: collapseSpy,
             };
-            const defaultSelectionColor = '#C6C6C6';
 
             createRangeSpy.and.returnValue(mockedRange);
 
@@ -629,7 +654,9 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
-                ...(selectionColor ? { tableCellSelectionBackgroundColor: selectionColor } : {}),
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor:
+                    selectionColor ?? DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
                 ...(expectedDarkSelectionColor
                     ? { tableCellSelectionBackgroundColorDark: expectedDarkSelectionColor }
                     : {}),
@@ -655,7 +682,9 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelection',
                 `background-color:${
-                    expectedDarkSelectionColor ?? selectionColor ?? defaultSelectionColor
+                    expectedDarkSelectionColor ??
+                    selectionColor ??
+                    DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR
                 }!important;`,
                 result
             );
@@ -775,6 +804,8 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: resultSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -869,7 +900,7 @@ describe('setDOMSelection', () => {
 
         it('Select All with custom selection color and dark mode', () => {
             const selectionColor = 'red';
-            const selectionColorDark = 'DarkColorMock-red';
+            const selectionColorDark = `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`;
             core.selection.tableCellSelectionBackgroundColor = selectionColor;
             core.selection.tableCellSelectionBackgroundColorDark = selectionColorDark;
             core.lifecycle.isDarkMode = true;

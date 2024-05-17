@@ -21,8 +21,6 @@ const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR = '#C6C6C6';
 const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
@@ -51,12 +49,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     type: 'image',
                     image,
                 };
-                let imageSelectionColor = DEFAULT_SELECTION_BORDER_COLOR;
-                if (isDarkMode === true && core.selection.imageSelectionBorderColorDark) {
-                    imageSelectionColor = core.selection.imageSelectionBorderColorDark;
-                } else if (isDarkMode !== true && core.selection.imageSelectionBorderColor) {
-                    imageSelectionColor = core.selection.imageSelectionBorderColor;
-                }
+                let imageSelectionColor = isDarkMode
+                    ? core.selection.imageSelectionBorderColorDark
+                    : core.selection.imageSelectionBorderColor;
 
                 core.api.setEditorStyle(
                     core,
@@ -118,15 +113,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 core.selection.selection = selection;
 
-                let tableSelectionColor = DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR;
-                if (isDarkMode === true && core.selection.tableCellSelectionBackgroundColorDark) {
-                    tableSelectionColor = core.selection.tableCellSelectionBackgroundColorDark;
-                } else if (
-                    isDarkMode !== true &&
-                    core.selection.tableCellSelectionBackgroundColor
-                ) {
-                    tableSelectionColor = core.selection.tableCellSelectionBackgroundColor;
-                }
+                let tableSelectionColor = isDarkMode
+                    ? core.selection.tableCellSelectionBackgroundColorDark
+                    : core.selection.tableCellSelectionBackgroundColor;
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
