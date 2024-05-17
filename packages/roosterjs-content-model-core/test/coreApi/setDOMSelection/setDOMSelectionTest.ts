@@ -601,7 +601,8 @@ describe('setDOMSelection', () => {
             lastColumn: number,
             lastRow: number,
             result: string[],
-            selectionColor?: string
+            selectionColor?: string,
+            expectedDarkSelectionColor?: string
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -619,7 +620,6 @@ describe('setDOMSelection', () => {
             };
             const defaultSelectionColor = '#C6C6C6';
             if (selectionColor) {
-                core.selection.tableCellSelectionBackgroundColor = selectionColor;
             }
 
             createRangeSpy.and.returnValue(mockedRange);
@@ -654,7 +654,9 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                `background-color:${selectionColor ?? defaultSelectionColor}!important;`,
+                `background-color:${
+                    expectedDarkSelectionColor ?? selectionColor ?? defaultSelectionColor
+                }!important;`,
                 result
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -852,6 +854,8 @@ describe('setDOMSelection', () => {
         });
 
         it('Select All with custom selection color', () => {
+            const selectionColor = 'red';
+            core.selection.tableCellSelectionBackgroundColor = selectionColor;
             runTest(
                 buildTable(true /* tbody */, false, false),
                 0,
@@ -859,7 +863,23 @@ describe('setDOMSelection', () => {
                 1,
                 1,
                 ['#table_0', '#table_0 *'],
-                'red'
+                selectionColor
+            );
+        });
+
+        it('Select All with custom selection color and dark mode', () => {
+            const selectionColor = 'red';
+            core.selection.tableCellSelectionBackgroundColor = selectionColor;
+            core.lifecycle.isDarkMode = true;
+            runTest(
+                buildTable(true /* tbody */, false, false),
+                0,
+                0,
+                1,
+                1,
+                ['#table_0', '#table_0 *'],
+                selectionColor,
+                'DarkColorMock-red'
             );
         });
     });
