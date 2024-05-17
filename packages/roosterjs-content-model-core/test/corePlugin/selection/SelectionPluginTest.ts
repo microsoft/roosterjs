@@ -1,6 +1,10 @@
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
-import { createSelectionPlugin } from '../../../lib/corePlugin/selection/SelectionPlugin';
+import {
+    createSelectionPlugin,
+    DEFAULT_SELECTION_BORDER_COLOR,
+    DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+} from '../../../lib/corePlugin/selection/SelectionPlugin';
 import {
     DOMEventRecord,
     DOMSelection,
@@ -9,6 +13,8 @@ import {
     PluginWithState,
     SelectionPluginState,
 } from 'roosterjs-content-model-types';
+
+const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
 
 describe('SelectionPlugin', () => {
     it('init and dispose', () => {
@@ -26,14 +32,19 @@ describe('SelectionPlugin', () => {
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any) as IEditor;
 
         plugin.initialize(editor);
 
         expect(state).toEqual({
             selection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -61,17 +72,59 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
         });
-
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         }));
 
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: 'red',
             tableCellSelectionBackgroundColor: 'blue',
+            imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`,
+            tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}blue`,
+            tableSelection: null,
+        });
+
+        expect(attachDomEvent).toHaveBeenCalled();
+
+        plugin.dispose();
+    });
+
+    it('init with different options - transparent colors', () => {
+        const plugin = createSelectionPlugin({
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+        });
+        const state = plugin.getState();
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
+        const attachDomEvent = jasmine
+            .createSpy('attachDomEvent')
+            .and.returnValue(jasmine.createSpy('disposer'));
+        const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+        plugin.initialize(<IEditor>(<any>{
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        }));
+
+        expect(state).toEqual({
+            selection: null,
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+            imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
+            tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
             tableSelection: null,
         });
 
@@ -119,6 +172,9 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             getElementAtCursor: getElementAtCursorSpy,
             setDOMSelection: setDOMSelectionSpy,
             getScrollContainer: getScrollContainerSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         });
         plugin.initialize(editor);
     });
@@ -137,8 +193,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             skipReselectOnFocus: false,
             tableSelection: null,
         });
@@ -154,8 +212,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             skipReselectOnFocus: true,
             tableSelection: null,
         });
@@ -224,6 +284,9 @@ describe('SelectionPlugin scroll event ', () => {
             setDOMSelection: setDOMSelectionSpy,
             getScrollContainer: getScrollContainerSpy,
             hasFocus: hasFocusSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         });
         plugin.initialize(editor);
     });
@@ -300,6 +363,9 @@ describe('SelectionPlugin handle image selection', () => {
             attachDomEvent: (map: Record<string, any>) => {
                 return jasmine.createSpy('disposer');
             },
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -731,6 +797,9 @@ describe('SelectionPlugin handle table selection', () => {
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
             getDocument: getDocumentSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
             getEnvironment: () => ({}),
             getDOMHelper: () => domHelper,
             attachDomEvent: (map: Record<string, Record<string, DOMEventRecord>>) => {
@@ -772,8 +841,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: mockedTableSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
 
         plugin.onPluginEvent!({
@@ -782,12 +853,13 @@ describe('SelectionPlugin handle table selection', () => {
                 button: 0,
             } as any,
         });
-
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeUndefined();
     });
@@ -820,8 +892,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
 
         plugin.onPluginEvent!({
@@ -841,8 +915,10 @@ describe('SelectionPlugin handle table selection', () => {
                 startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
     });
@@ -875,8 +951,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
 
         plugin.onPluginEvent!({
@@ -890,8 +968,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeUndefined();
     });
@@ -929,8 +1009,10 @@ describe('SelectionPlugin handle table selection', () => {
                 startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
         expect(preventDefaultSpy).toHaveBeenCalled();
@@ -1270,8 +1352,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1312,8 +1396,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1369,8 +1455,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1433,8 +1521,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1496,8 +1586,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1560,8 +1652,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1623,8 +1717,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1686,8 +1782,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1752,8 +1850,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 0, col: 1 },
                     startNode: td4,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1818,8 +1918,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1883,8 +1985,10 @@ describe('SelectionPlugin handle table selection', () => {
                     firstCo: { row: 0, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1928,8 +2032,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -1982,8 +2088,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
@@ -2032,8 +2140,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 0 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2089,8 +2199,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 0, col: 1 },
                     startNode: td3,
                 },
-                imageSelectionBorderColor: undefined,
-                tableCellSelectionBackgroundColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2148,6 +2260,9 @@ describe('SelectionPlugin on Safari', () => {
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any) as IEditor;
     });
 
@@ -2159,8 +2274,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: null,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -2195,8 +2312,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2227,8 +2346,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedNewSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2256,8 +2377,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2285,8 +2408,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2314,8 +2439,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
@@ -2343,8 +2470,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
-            tableCellSelectionBackgroundColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
