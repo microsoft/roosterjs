@@ -5,17 +5,18 @@ import { deleteBlock } from './deleteBlock';
 import { deleteSegment } from './deleteSegment';
 import { getSegmentTextFormat } from './getSegmentTextFormat';
 import { iterateSelections } from '../selection/iterateSelections';
+import { mutateBlock, mutateSegments } from '../common/mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSelectionMarker,
     DeleteSelectionContext,
     FormatContentModelContext,
     InsertPoint,
     IterateSelectionsOption,
-    TableSelectionContext,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
@@ -30,7 +31,7 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * at the first deleted position so that we know where to put cursor to after delete
  */
 export function deleteExpandedSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     formatContext?: FormatContentModelContext
 ): DeleteSelectionContext {
     const context: DeleteSelectionContext = {
@@ -41,7 +42,7 @@ export function deleteExpandedSelection(
 
     iterateSelections(
         model,
-        (path, tableContext, block, segments) => {
+        (path, tableContext, readonlyBlock, readonlySegments) => {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
             let paragraph = createParagraph(
@@ -52,13 +53,15 @@ export function deleteExpandedSelection(
             let markerFormat = model.format;
             let insertMarkerIndex = 0;
 
-            if (segments) {
+            if (readonlySegments && readonlyBlock?.blockType == 'Paragraph') {
+                const [block, segments, indexes] = mutateSegments(readonlyBlock, readonlySegments);
+
                 // Delete segments inside a paragraph
-                if (segments[0] && block?.blockType == 'Paragraph') {
+                if (segments[0]) {
                     // Now that we have found a paragraph with selections, we can overwrite the default paragraph with this one
                     // so we can put cursor here after delete
                     paragraph = block;
-                    insertMarkerIndex = paragraph.segments.indexOf(segments[0]);
+                    insertMarkerIndex = indexes[0];
                     markerFormat = getSegmentTextFormat(segments[0]);
 
                     context.lastParagraph = paragraph;
@@ -90,25 +93,24 @@ export function deleteExpandedSelection(
                         setParagraphNotImplicit(block);
                     }
                 }
-            } else if (block) {
+            } else if (readonlyBlock) {
                 // Delete a whole block (divider, table, ...)
-                const blocks = path[0].blocks;
+                const blocks = mutateBlock(path[0]).blocks;
 
-                if (deleteBlock(blocks, block, paragraph, context.formatContext)) {
+                if (deleteBlock(blocks, readonlyBlock, paragraph, context.formatContext)) {
                     context.deleteResult = 'range';
                 }
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
-                const row = table.rows[rowIndex];
-                const cell = row.cells[colIndex];
+                const mutableTable = mutateBlock(table);
+                const row = mutableTable.rows[rowIndex];
+                const cell = mutateBlock(row.cells[colIndex]);
 
                 path = [cell, ...path];
                 paragraph.segments.push(createBr(model.format));
                 cell.blocks = [paragraph];
 
-                delete cell.cachedElement;
-                delete row.cachedElement;
                 context.deleteResult = 'range';
             }
 
@@ -130,8 +132,8 @@ export function deleteExpandedSelection(
 function createInsertPoint(
     marker: ContentModelSelectionMarker,
     paragraph: ContentModelParagraph,
-    path: ContentModelBlockGroup[],
-    tableContext: TableSelectionContext | undefined
+    path: ReadonlyContentModelBlockGroup[],
+    tableContext: ReadonlyTableSelectionContext | undefined
 ): InsertPoint {
     return {
         marker,

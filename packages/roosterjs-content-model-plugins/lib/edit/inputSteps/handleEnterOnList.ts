@@ -10,12 +10,14 @@ import {
     setParagraphNotImplicit,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
     InsertPoint,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -66,7 +68,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                         lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
                             'SelectionMarker'
                     ) {
-                        lastParagraph.segments.pop();
+                        mutateBlock(lastParagraph).segments.pop();
 
                         nextParagraph.segments.unshift(
                             createSelectionMarker(insertPoint.marker.format)
@@ -77,7 +79,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                 }
             } else if (deleteResult !== 'range') {
                 if (isEmptyListItem(listItem)) {
-                    listItem.levels.pop();
+                    mutateBlock(listItem).levels.pop();
                 } else {
                     const newListItem = createNewListItem(context, listItem, listParent);
 
@@ -96,7 +98,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
     }
 };
 
-const isEmptyListItem = (listItem: ContentModelListItem) => {
+const isEmptyListItem = (listItem: ReadonlyContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
@@ -108,8 +110,8 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
 
 const createNewListItem = (
     context: ValidDeleteSelectionContext,
-    listItem: ContentModelListItem,
-    listParent: ContentModelBlockGroup
+    listItem: ReadonlyContentModelListItem,
+    listParent: ReadonlyContentModelBlockGroup
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
@@ -120,12 +122,12 @@ const createNewListItem = (
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
-    listParent.blocks.splice(listIndex + 1, 0, newListItem);
+    mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
 
     return newListItem;
 };
 
-const createNewListLevel = (listItem: ContentModelListItem) => {
+const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
     return listItem.levels.map(level => {
         return createListLevel(
             level.listType,

@@ -7,12 +7,12 @@ import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from './deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
+import { mutateBlock } from '../common/mutate';
 import { normalizeContentModel } from '../common/normalizeContentModel';
 import { normalizeTable } from './normalizeTable';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
@@ -21,6 +21,9 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     MergeModelOption,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -34,7 +37,7 @@ const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
  * @returns Insert point after merge, or null if there is no insert point
  */
 export function mergeModel(
-    target: ContentModelDocument,
+    target: ReadonlyContentModelDocument,
     source: ContentModelDocument,
     context?: FormatContentModelContext,
     options?: MergeModelOption
@@ -170,7 +173,9 @@ function mergeTable(
     const { tableContext, marker } = markerPosition;
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
-        const { table, colIndex, rowIndex } = tableContext;
+        const { table: readonlyTable, colIndex, rowIndex } = tableContext;
+        const table = mutateBlock(readonlyTable);
+
         for (let i = 0; i < newTable.rows.length; i++) {
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
@@ -242,7 +247,7 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     const blockIndex = listParent.blocks.indexOf(listItem || paragraph);
 
     if (blockIndex >= 0) {
-        listParent.blocks.splice(blockIndex, 0, newList);
+        mutateBlock(listParent).blocks.splice(blockIndex, 0, newList);
     }
 
     if (listItem) {
@@ -267,7 +272,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     }
 
     if (paraIndex >= 0) {
-        path[0].blocks.splice(paraIndex + 1, 0, newParagraph);
+        mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newParagraph);
     }
 
     const listItemIndex = getClosestAncestorBlockGroupIndex(
@@ -289,7 +294,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
             }
 
             if (blockIndex >= 0) {
-                listParent.blocks.splice(blockIndex + 1, 0, newListItem);
+                mutateBlock(listParent).blocks.splice(blockIndex + 1, 0, newListItem);
             }
 
             path[listItemIndex] = newListItem;
@@ -308,21 +313,22 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
-        path[0].blocks.splice(blockIndex, 0, block);
+        mutateBlock(path[0]).blocks.splice(blockIndex, 0, block);
     }
 }
 
 function applyDefaultFormat(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
+
         switch (block.blockType) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem') {
-                    block.formatHolder.format = mergeSegmentFormat(
+                    mutateBlock(block).formatHolder.format = mergeSegmentFormat(
                         applyDefaultFormatOption,
                         format,
                         block.formatHolder.format
@@ -341,7 +347,9 @@ function applyDefaultFormat(
 
             case 'Paragraph':
                 const paragraphFormat = block.decorator?.format || {};
-                block.segments.forEach(segment => {
+                const paragraph = mutateBlock(block);
+
+                paragraph.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
@@ -353,28 +361,28 @@ function applyDefaultFormat(
                 });
 
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
-                    delete block.decorator;
+                    delete paragraph.decorator;
                 }
                 break;
         }
     });
 }
 
-function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
+function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyContentModelBlock) {
     if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' && block.format.backgroundColor) {
-        delete block.format.backgroundColor;
+        delete mutateBlock(block).format.backgroundColor;
     }
 }
 
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetformat: ContentModelSegmentFormat,
+    targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetformat, ...sourceFormat }
+        ? { ...targetFormat, ...sourceFormat }
         : {
-              ...targetformat,
+              ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
 }

@@ -2,18 +2,19 @@ import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
+import { mutateBlock, mutateSegment } from './mutate';
 import { normalizeAllSegments } from './normalizeSegment';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     ContentModelSegmentFormat,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * @param paragraph The paragraph to normalize
  * Normalize a paragraph. If it is empty, add a BR segment to make sure it can insert content
  */
-export function normalizeParagraph(paragraph: ContentModelParagraph) {
+export function normalizeParagraph(paragraph: ReadonlyContentModelParagraph) {
     const segments = paragraph.segments;
 
     if (!paragraph.isImplicit && segments.length > 0) {
@@ -24,7 +25,7 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
             last.segmentType == 'SelectionMarker' &&
             (!secondLast || secondLast.segmentType == 'Br')
         ) {
-            segments.push(createBr(last.format));
+            mutateBlock(paragraph).segments.push(createBr(last.format));
         } else if (segments.length > 1 && segments[segments.length - 1].segmentType == 'Br') {
             const noMarkerSegments = segments.filter(x => x.segmentType != 'SelectionMarker');
 
@@ -34,7 +35,7 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
                 noMarkerSegments.length > 1 &&
                 noMarkerSegments[noMarkerSegments.length - 2].segmentType != 'Br'
             ) {
-                segments.pop();
+                mutateBlock(paragraph).segments.pop();
             }
         }
     }
@@ -50,20 +51,21 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
     moveUpSegmentFormat(paragraph);
 }
 
-function removeEmptySegments(block: ContentModelParagraph) {
+function removeEmptySegments(block: ReadonlyContentModelParagraph) {
     for (let j = block.segments.length - 1; j >= 0; j--) {
         if (isSegmentEmpty(block.segments[j])) {
-            block.segments.splice(j, 1);
+            mutateBlock(block).segments.splice(j, 1);
         }
     }
 }
 
-function removeEmptyLinks(paragraph: ContentModelParagraph) {
+function removeEmptyLinks(paragraph: ReadonlyContentModelParagraph) {
     const marker = paragraph.segments.find(x => x.segmentType == 'SelectionMarker');
     if (marker) {
         const markerIndex = paragraph.segments.indexOf(marker);
         const prev = paragraph.segments[markerIndex - 1];
         const next = paragraph.segments[markerIndex + 1];
+
         if (
             (prev &&
                 !prev.link &&
@@ -76,7 +78,9 @@ function removeEmptyLinks(paragraph: ContentModelParagraph) {
                 !next.link &&
                 areSameFormats(next.format, marker.format))
         ) {
-            delete marker.link;
+            mutateSegment(paragraph, marker, mutableMarker => {
+                delete mutableMarker.link;
+            });
         }
     }
 }
@@ -85,7 +89,7 @@ type FormatsToMoveUp = 'fontFamily' | 'fontSize' | 'textColor';
 const formatsToMoveUp: FormatsToMoveUp[] = ['fontFamily', 'fontSize', 'textColor'];
 
 // When all segments are sharing the same segment format (font name, size and color), we can move its format to paragraph
-function moveUpSegmentFormat(paragraph: ContentModelParagraph) {
+function moveUpSegmentFormat(paragraph: ReadonlyContentModelParagraph) {
     if (!paragraph.decorator) {
         const segments = paragraph.segments.filter(x => x.segmentType != 'SelectionMarker');
         const target = paragraph.segmentFormat || {};
@@ -96,13 +100,13 @@ function moveUpSegmentFormat(paragraph: ContentModelParagraph) {
         });
 
         if (changed) {
-            paragraph.segmentFormat = target;
+            mutateBlock(paragraph).segmentFormat = target;
         }
     }
 }
 
 function internalMoveUpSegmentFormat(
-    segments: ContentModelSegment[],
+    segments: ReadonlyContentModelSegment[],
     target: ContentModelSegmentFormat,
     formatKey: FormatsToMoveUp
 ): boolean {

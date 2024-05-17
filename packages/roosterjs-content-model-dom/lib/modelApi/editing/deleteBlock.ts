@@ -1,7 +1,7 @@
 import type {
-    ContentModelBlock,
     EntityRemovalOperation,
     FormatContentModelContext,
+    ReadonlyContentModelBlock,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -14,9 +14,9 @@ import type {
  * If not specified, only selected entity will be deleted
  */
 export function deleteBlock(
-    blocks: ContentModelBlock[],
-    blockToDelete: ContentModelBlock,
-    replacement?: ContentModelBlock,
+    blocks: ReadonlyContentModelBlock[],
+    blockToDelete: ReadonlyContentModelBlock,
+    replacement?: ReadonlyContentModelBlock,
     context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
