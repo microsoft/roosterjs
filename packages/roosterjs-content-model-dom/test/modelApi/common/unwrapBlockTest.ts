@@ -1,7 +1,11 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { unwrapBlock } from '../../../lib/modelApi/common/unwrapBlock';
+import {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelFormatContainer,
+} from 'roosterjs-content-model-types';
 
 describe('unwrapBlock', () => {
     it('no parent', () => {
@@ -40,7 +44,10 @@ describe('unwrapBlock', () => {
         para.isImplicit = true;
         quote.blocks.push(para);
 
-        unwrapBlock(doc, quote);
+        unwrapBlock(
+            doc as ReadonlyContentModelDocument,
+            quote as ReadonlyContentModelFormatContainer
+        );
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -76,7 +83,10 @@ describe('unwrapBlock', () => {
         para.isImplicit = true;
         quote.blocks.push(para);
 
-        unwrapBlock(doc, quote);
+        unwrapBlock(
+            doc as ReadonlyContentModelDocument,
+            quote as ReadonlyContentModelFormatContainer
+        );
 
         expect(doc).toEqual({
             blockGroupType: 'Document',

@@ -1,7 +1,7 @@
-import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { ContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
-import type { TableSelectionContext } from './TableSelectionContext';
+import type { ReadonlyTableSelectionContext } from './TableSelectionContext';
 
 /**
  * Represent all related information of an insert point
@@ -20,10 +20,10 @@ export interface InsertPoint {
     /**
      * Block group path of this insert point, from direct parent group to the root group
      */
-    path: ContentModelBlockGroup[];
+    path: ReadonlyContentModelBlockGroup[];
 
     /**
      * Table context of this insert point
      */
-    tableContext?: TableSelectionContext;
+    tableContext?: ReadonlyTableSelectionContext;
 }
