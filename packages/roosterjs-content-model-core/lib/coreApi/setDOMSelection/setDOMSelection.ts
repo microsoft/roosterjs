@@ -51,16 +51,13 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     type: 'image',
                     image,
                 };
-                let imageSelectionColor =
-                    core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
-                if (imageSelectionColor !== DEFAULT_SELECTION_BORDER_COLOR && isDarkMode === true) {
-                    imageSelectionColor = core.darkColorHandler.getDarkColor(
-                        imageSelectionColor,
-                        undefined,
-                        'border',
-                        image
-                    );
+                let imageSelectionColor = DEFAULT_SELECTION_BORDER_COLOR;
+                if (isDarkMode === true && core.selection.imageSelectionBorderColorDark) {
+                    imageSelectionColor = core.selection.imageSelectionBorderColorDark;
+                } else if (isDarkMode !== true && core.selection.imageSelectionBorderColor) {
+                    imageSelectionColor = core.selection.imageSelectionBorderColor;
                 }
+
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
@@ -120,19 +117,15 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                         : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
 
                 core.selection.selection = selection;
-                let tableSelectionColor =
-                    core.selection.tableCellSelectionBackgroundColor ||
-                    DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR;
-                if (
-                    tableSelectionColor !== DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR &&
-                    isDarkMode === true
+
+                let tableSelectionColor = DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR;
+                if (isDarkMode === true && core.selection.tableCellSelectionBackgroundColorDark) {
+                    tableSelectionColor = core.selection.tableCellSelectionBackgroundColorDark;
+                } else if (
+                    isDarkMode !== true &&
+                    core.selection.tableCellSelectionBackgroundColor
                 ) {
-                    tableSelectionColor = core.darkColorHandler.getDarkColor(
-                        tableSelectionColor,
-                        undefined,
-                        'background',
-                        table
-                    );
+                    tableSelectionColor = core.selection.tableCellSelectionBackgroundColor;
                 }
                 core.api.setEditorStyle(
                     core,

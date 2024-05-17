@@ -58,6 +58,22 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     initialize(editor: IEditor) {
         this.editor = editor;
 
+        if (this.state.imageSelectionBorderColor) {
+            this.state.imageSelectionBorderColorDark = editor
+                .getColorManager()
+                .getDarkColor(this.state.imageSelectionBorderColor, undefined, 'border');
+        }
+
+        if (this.state.tableCellSelectionBackgroundColor) {
+            this.state.tableCellSelectionBackgroundColorDark = editor
+                .getColorManager()
+                .getDarkColor(
+                    this.state.tableCellSelectionBackgroundColor,
+                    undefined,
+                    'background'
+                );
+        }
+
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
 

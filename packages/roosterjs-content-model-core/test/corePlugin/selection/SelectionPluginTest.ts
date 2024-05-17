@@ -61,17 +61,24 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
         });
-
+        const darkColorSuffix = 'DarkColorMock-';
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => {
+                    return `${darkColorSuffix}${color}`;
+                },
+            }),
         }));
 
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: 'red',
             tableCellSelectionBackgroundColor: 'blue',
+            imageSelectionBorderColorDark: `${darkColorSuffix}red`,
+            tableCellSelectionBackgroundColorDark: `${darkColorSuffix}blue`,
             tableSelection: null,
         });
 
@@ -2537,3 +2544,4 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
+

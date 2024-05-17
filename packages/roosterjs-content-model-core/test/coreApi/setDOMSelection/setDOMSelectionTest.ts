@@ -58,9 +58,6 @@ describe('setDOMSelection', () => {
             lifecycle: {
                 isDarkMode: false,
             },
-            darkColorHandler: {
-                getDarkColor: (lightColor: string) => `DarkColorMock-${lightColor}`,
-            },
         } as any;
     });
 
@@ -376,6 +373,7 @@ describe('setDOMSelection', () => {
             const coreValue = { ...core, lifecycle: { isDarkMode: true } as any };
 
             coreValue.selection.imageSelectionBorderColor = 'red';
+            coreValue.selection.imageSelectionBorderColorDark = 'DarkColorMock-red';
 
             createRangeSpy.and.returnValue(mockedRange);
 
@@ -388,6 +386,7 @@ describe('setDOMSelection', () => {
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
                 imageSelectionBorderColor: 'red',
+                imageSelectionBorderColorDark: 'DarkColorMock-red',
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 coreValue,
@@ -631,6 +630,9 @@ describe('setDOMSelection', () => {
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
                 ...(selectionColor ? { tableCellSelectionBackgroundColor: selectionColor } : {}),
+                ...(expectedDarkSelectionColor
+                    ? { tableCellSelectionBackgroundColorDark: expectedDarkSelectionColor }
+                    : {}),
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
@@ -867,7 +869,9 @@ describe('setDOMSelection', () => {
 
         it('Select All with custom selection color and dark mode', () => {
             const selectionColor = 'red';
+            const selectionColorDark = 'DarkColorMock-red';
             core.selection.tableCellSelectionBackgroundColor = selectionColor;
+            core.selection.tableCellSelectionBackgroundColorDark = selectionColorDark;
             core.lifecycle.isDarkMode = true;
             runTest(
                 buildTable(true /* tbody */, false, false),
@@ -877,7 +881,7 @@ describe('setDOMSelection', () => {
                 1,
                 ['#table_0', '#table_0 *'],
                 selectionColor,
-                'DarkColorMock-red'
+                selectionColorDark
             );
         });
     });
