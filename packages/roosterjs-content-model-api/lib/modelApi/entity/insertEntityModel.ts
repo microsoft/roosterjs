@@ -9,6 +9,7 @@ import {
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelBlock,
     ContentModelEntity,
     ContentModelParagraph,
     FormatContentModelContext,
@@ -51,18 +52,15 @@ export function insertEntityModel(
             Object.assign(entityModel.format, marker.format);
 
             if (index >= 0) {
-                mutateBlock(paragraph).segments.splice(
-                    focusAfterEntity ? index : index + 1,
-                    0,
-                    entityModel
-                );
+                paragraph.segments.splice(focusAfterEntity ? index : index + 1, 0, entityModel);
             }
         } else {
             const pathIndex =
                 position == 'root'
                     ? getClosestAncestorBlockGroupIndex(path, ['TableCell', 'Document'])
                     : 0;
-            blockParent = path[pathIndex];
+            blockParent = mutateBlock(path[pathIndex]);
+
             const child = path[pathIndex - 1];
             const directChild: ReadonlyContentModelBlock =
                 child?.blockGroupType == 'FormatContainer' ||
@@ -76,7 +74,7 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
-        const blocksToInsert: ReadonlyContentModelBlock[] = [];
+        const blocksToInsert: ContentModelBlock[] = [];
         let nextParagraph: ContentModelParagraph | undefined;
 
         if (isBlock) {

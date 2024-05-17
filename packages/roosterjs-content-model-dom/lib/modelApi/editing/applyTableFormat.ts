@@ -8,7 +8,7 @@ import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     BorderFormat,
     ReadonlyContentModelTable,
-    ReadonlyContentModelTableRow,
+    ShallowMutableContentModelTableRow,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
@@ -51,7 +51,7 @@ export function applyTableFormat(
         const effectiveMetadata = {
             ...DEFAULT_FORMAT,
             ...format,
-            ...(newFormat || {}),
+            ...newFormat,
         };
         const metaOverrides: MetaOverrides = updateOverrides(rows, !keepCellShade);
 
@@ -64,7 +64,7 @@ export function applyTableFormat(
 }
 
 function updateOverrides(
-    rows: ReadonlyContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     removeCellShade: boolean
 ): MetaOverrides {
     const overrides: MetaOverrides = {
@@ -164,7 +164,7 @@ const BorderFormatters: Record<number, ShouldUseTransparentBorder | undefined> =
  * Apply vertical align, borders, and background color to all cells in the table
  */
 function formatCells(
-    rows: ReadonlyContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
@@ -231,7 +231,7 @@ function formatCells(
 }
 
 function setFirstColumnFormat(
-    rows: ReadonlyContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: Partial<TableMetadataFormat>,
     metaOverrides: MetaOverrides
 ) {
@@ -263,7 +263,7 @@ function setFirstColumnFormat(
 }
 
 function setHeaderRowFormat(
-    rows: ReadonlyContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {

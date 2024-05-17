@@ -1,6 +1,6 @@
+import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
 import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
-import type { ReadonlyContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
-import type { ReadonlyContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
 import type { ReadonlyTableSelectionContext } from './TableSelectionContext';
 
 /**
@@ -10,12 +10,12 @@ export interface InsertPoint {
     /**
      * The selection marker object for this insert point
      */
-    marker: ReadonlyContentModelSelectionMarker;
+    marker: ContentModelSelectionMarker;
 
     /**
      * The paragraph that contains this insert point
      */
-    paragraph: ReadonlyContentModelParagraph;
+    paragraph: ContentModelParagraph;
 
     /**
      * Block group path of this insert point, from direct parent group to the root group

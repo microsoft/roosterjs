@@ -59,7 +59,6 @@ describe('Table Inserter tests', () => {
                 // Inserter is visible, but pointer is not over it
                 return 'not clickable';
             }
-
             let table = getCurrentTable(editor);
             const rows = getTableRows(table);
             const cols = getTableColumns(table);

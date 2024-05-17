@@ -22,7 +22,7 @@ const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
+const DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR = '#C6C6C6';
 const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
@@ -115,7 +115,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    TABLE_CSS_RULE,
+                    `background-color:${
+                        core.selection.tableCellSelectionBackgroundColor ||
+                        DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR
+                    }!important;`,
                     tableSelectors
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);

@@ -10,7 +10,6 @@ import type {
     ContentModelFormatContainer,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
-    ReadonlyContentModelFormatContainer,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -76,7 +75,7 @@ const isSelectionOnEmptyLine = (quote: ContentModelFormatContainer) => {
 };
 
 const insertNewLine = (
-    quote: ReadonlyContentModelFormatContainer,
+    quote: ContentModelFormatContainer,
     parent: ReadonlyContentModelBlockGroup,
     index: number
 ) => {

@@ -7,7 +7,7 @@ import type {
     ContentModelSegmentFormat,
     ReadonlyContentModelSegment,
     ReadonlyContentModelTable,
-    ShallowMutableContentModelTableCell,
+    ReadonlyContentModelTableCell,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -143,16 +143,16 @@ function getTableCellWidth(columns: number): number {
 }
 
 function tryMoveBlocks(
-    targetCell: ShallowMutableContentModelTableCell,
-    sourceCell: ShallowMutableContentModelTableCell
+    targetCell: ReadonlyContentModelTableCell,
+    sourceCell: ReadonlyContentModelTableCell
 ) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
         block => block.blockType == 'Paragraph' && hasOnlyBrSegment(block.segments)
     );
 
     if (!onlyHasEmptyOrBr) {
-        targetCell.blocks.push(...sourceCell.blocks);
-        sourceCell.blocks = [];
+        mutateBlock(targetCell).blocks.push(...sourceCell.blocks);
+        mutateBlock(sourceCell).blocks = [];
     }
 }
 

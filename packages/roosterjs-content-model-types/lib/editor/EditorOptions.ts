@@ -88,6 +88,11 @@ export interface EditorOptions {
     imageSelectionBorderColor?: string;
 
     /**
+     * Background color of a selected table cell. Default color: '#C6C6C6'
+     */
+    tableCellSelectionBackgroundColor?: string;
+
+    /**
      * Initial Content Model
      */
     initialModel?: ContentModelDocument;

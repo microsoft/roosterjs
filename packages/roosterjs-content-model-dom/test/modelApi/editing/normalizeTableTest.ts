@@ -5,6 +5,7 @@ import {
     ContentModelTable,
     ContentModelTableCellFormat,
     ContentModelTableFormat,
+    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 import {
     createParagraph as originalCreateParagraph,
@@ -48,7 +49,7 @@ describe('normalizeTable', () => {
     it('Normalize an empty table', () => {
         const table = createTable(0);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -67,7 +68,7 @@ describe('normalizeTable', () => {
 
         table.rows[0].cells.push(createTableCell(1, 1, false));
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -123,7 +124,7 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell1);
         table.rows[1].cells.push(cell2);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -209,7 +210,7 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell2);
         table.rows[0].cells.push(cell3);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -301,7 +302,7 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell1);
         table.rows[0].cells.push(cell2);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -366,7 +367,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -457,7 +458,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -574,7 +575,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -661,7 +662,7 @@ describe('normalizeTable', () => {
 
         table.rows[0].cells.push(createTableCell(1, 1, false));
 
-        normalizeTable(table, format);
+        normalizeTable(table as ReadonlyContentModelTable, format);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -720,7 +721,7 @@ describe('normalizeTable', () => {
         table.rows[0].height = 200;
         table.rows[1].height = 200;
 
-        normalizeTable(table);
+        normalizeTable(table as ReadonlyContentModelTable);
 
         const block: ContentModelParagraph = {
             blockType: 'Paragraph',

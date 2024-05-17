@@ -174,17 +174,17 @@ function mergeTable(
     const { tableContext, marker } = markerPosition;
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
-        const { table, colIndex, rowIndex } = tableContext;
-        const mutableTable = mutateBlock(table);
+        const { table: readonlyTable, colIndex, rowIndex } = tableContext;
+        const table = mutateBlock(readonlyTable);
 
         for (let i = 0; i < newTable.rows.length; i++) {
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= mutableTable.rows[0].cells.length) {
-                    for (let k = 0; k < mutableTable.rows.length; k++) {
-                        const leftCell = mutableTable.rows[k]?.cells[colIndex + j - 1];
-                        mutableTable.rows[k].cells[colIndex + j] = createTableCell(
+                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
+                    for (let k = 0; k < table.rows.length; k++) {
+                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
+                        table.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -193,18 +193,18 @@ function mergeTable(
                     }
                 }
 
-                if (j == 0 && rowIndex + i >= mutableTable.rows.length) {
-                    if (!mutableTable.rows[rowIndex + i]) {
-                        mutableTable.rows[rowIndex + i] = {
+                if (j == 0 && rowIndex + i >= table.rows.length) {
+                    if (!table.rows[rowIndex + i]) {
+                        table.rows[rowIndex + i] = {
                             cells: [],
                             format: {},
                             height: 0,
                         };
                     }
 
-                    for (let k = 0; k < mutableTable.rows[rowIndex].cells.length; k++) {
-                        const aboveCell = mutableTable.rows[rowIndex + i - 1]?.cells[k];
-                        mutableTable.rows[rowIndex + i].cells[k] = createTableCell(
+                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
+                        table.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -213,8 +213,8 @@ function mergeTable(
                     }
                 }
 
-                const oldCell = mutableTable.rows[rowIndex + i].cells[colIndex + j];
-                mutableTable.rows[rowIndex + i].cells[colIndex + j] = newCell;
+                const oldCell = table.rows[rowIndex + i].cells[colIndex + j];
+                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
                     const newMarker = createSelectionMarker(marker.format);
@@ -230,8 +230,8 @@ function mergeTable(
             }
         }
 
-        normalizeTable(mutableTable, markerPosition.marker.format);
-        applyTableFormat(mutableTable, undefined /*newFormat*/, true /*keepCellShade*/);
+        normalizeTable(table, markerPosition.marker.format);
+        applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
     } else {
         insertBlock(markerPosition, newTable);
     }
@@ -377,13 +377,13 @@ function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyConte
 
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetformat: ContentModelSegmentFormat,
+    targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetformat, ...sourceFormat }
+        ? { ...targetFormat, ...sourceFormat }
         : {
-              ...targetformat,
+              ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
 }

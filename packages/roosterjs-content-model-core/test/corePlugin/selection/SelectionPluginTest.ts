@@ -33,6 +33,7 @@ describe('SelectionPlugin', () => {
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -48,6 +49,7 @@ describe('SelectionPlugin', () => {
     it('init with different options', () => {
         const plugin = createSelectionPlugin({
             imageSelectionBorderColor: 'red',
+            tableCellSelectionBackgroundColor: 'blue',
         });
         const state = plugin.getState();
         const addEventListenerSpy = jasmine.createSpy('addEventListener');
@@ -69,6 +71,7 @@ describe('SelectionPlugin', () => {
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: 'red',
+            tableCellSelectionBackgroundColor: 'blue',
             tableSelection: null,
         });
 
@@ -135,6 +138,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             skipReselectOnFocus: false,
             tableSelection: null,
         });
@@ -151,6 +155,7 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             skipReselectOnFocus: true,
             tableSelection: null,
         });
@@ -768,6 +773,7 @@ describe('SelectionPlugin handle table selection', () => {
             selection: null,
             tableSelection: mockedTableSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
 
         plugin.onPluginEvent!({
@@ -781,6 +787,7 @@ describe('SelectionPlugin handle table selection', () => {
             selection: null,
             tableSelection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
         expect(mouseDispatcher).toBeUndefined();
     });
@@ -814,6 +821,7 @@ describe('SelectionPlugin handle table selection', () => {
             selection: null,
             tableSelection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
 
         plugin.onPluginEvent!({
@@ -834,6 +842,7 @@ describe('SelectionPlugin handle table selection', () => {
             },
             mouseDisposer: mouseMoveDisposer,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
         expect(mouseDispatcher).toBeDefined();
     });
@@ -867,6 +876,7 @@ describe('SelectionPlugin handle table selection', () => {
             selection: null,
             tableSelection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
 
         plugin.onPluginEvent!({
@@ -881,6 +891,7 @@ describe('SelectionPlugin handle table selection', () => {
             selection: null,
             tableSelection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
         expect(mouseDispatcher).toBeUndefined();
     });
@@ -919,6 +930,7 @@ describe('SelectionPlugin handle table selection', () => {
             },
             mouseDisposer: mouseMoveDisposer,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
         });
         expect(mouseDispatcher).toBeDefined();
         expect(preventDefaultSpy).toHaveBeenCalled();
@@ -1259,6 +1271,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1300,6 +1313,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1356,6 +1370,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1419,6 +1434,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1481,6 +1497,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1544,6 +1561,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1606,6 +1624,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1668,6 +1687,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1733,6 +1753,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td4,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1798,6 +1819,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1862,6 +1884,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1906,6 +1929,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -1959,6 +1983,7 @@ describe('SelectionPlugin handle table selection', () => {
                 selection: null,
                 tableSelection: null,
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
@@ -2008,6 +2033,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td2,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2064,6 +2090,7 @@ describe('SelectionPlugin handle table selection', () => {
                     startNode: td3,
                 },
                 imageSelectionBorderColor: undefined,
+                tableCellSelectionBackgroundColor: undefined,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2133,6 +2160,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -2168,6 +2196,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedOldSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2199,6 +2228,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedNewSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2227,6 +2257,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedOldSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2255,6 +2286,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedOldSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2283,6 +2315,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedOldSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
@@ -2311,6 +2344,7 @@ describe('SelectionPlugin on Safari', () => {
         expect(state).toEqual({
             selection: mockedOldSelection,
             imageSelectionBorderColor: undefined,
+            tableCellSelectionBackgroundColor: undefined,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);

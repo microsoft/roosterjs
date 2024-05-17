@@ -60,8 +60,10 @@ export function setTableCellBackgroundColor(
 }
 
 function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
-    cell.blocks.forEach(block => {
-        if (block.blockType == 'Paragraph') {
+    cell.blocks.forEach(readonlyBlock => {
+        if (readonlyBlock.blockType == 'Paragraph') {
+            const block = mutateBlock(readonlyBlock);
+
             if (
                 block.segmentFormat?.textColor &&
                 shouldRemoveColor(block.segmentFormat?.textColor, cell.format.backgroundColor || '')

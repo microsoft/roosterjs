@@ -81,7 +81,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                 }
             } else if (deleteResult !== 'range') {
                 if (isEmptyListItem(listItem)) {
-                    listItem.levels.pop();
+                    mutateBlock(listItem).levels.pop();
                 } else {
                     const newListItem = createNewListItem(context, listItem, listParent);
 

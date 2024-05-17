@@ -7,13 +7,14 @@ import {
     mutateBlock,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import type { BlockAndPath } from '../utils/getLeafSiblingBlock';
+import type { ReadonlyBlockAndPath } from '../utils/getLeafSiblingBlock';
 import type {
+    ContentModelParagraph,
+    ContentModelSegment,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
     ReadonlyContentModelParagraph,
-    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
@@ -30,7 +31,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
 
         const index = segments.indexOf(marker) + (isForward ? 1 : -1);
         const segmentToDelete = segments[index];
-        let blockToDelete: BlockAndPath | null;
+        let blockToDelete: ReadonlyBlockAndPath | null;
         let root: ReadonlyContentModelDocument | null;
 
         if (segmentToDelete) {
@@ -48,9 +49,11 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
             setModelIndentation(root, 'outdent');
             context.deleteResult = 'range';
         } else if ((blockToDelete = getLeafSiblingBlock(path, paragraph, isForward))) {
-            const { block, path, siblingSegment } = blockToDelete;
+            const { block: readonlyBlock, path, siblingSegment } = blockToDelete;
 
-            if (block.blockType == 'Paragraph') {
+            if (readonlyBlock.blockType == 'Paragraph') {
+                const block = mutateBlock(readonlyBlock);
+
                 if (siblingSegment) {
                     // When selection is under general segment, need to check if it has a sibling sibling, and delete from it
                     if (deleteSegment(block, siblingSegment, context.formatContext, direction)) {
@@ -71,7 +74,6 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                             tableContext,
                         };
                         context.lastParagraph = paragraph;
-                        delete block.cachedElement;
                     }
 
                     context.deleteResult = 'range';
@@ -82,8 +84,8 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
             } else {
                 if (
                     deleteBlock(
-                        path[0],
-                        block,
+                        mutateBlock(path[0]).blocks,
+                        readonlyBlock,
                         undefined /*replacement*/,
                         context.formatContext,
                         direction
@@ -108,8 +110,8 @@ function getRoot(path: ReadonlyContentModelBlockGroup[]): ReadonlyContentModelDo
 
 function shouldOutdentParagraph(
     isForward: boolean,
-    segments: ReadonlyArray<ReadonlyContentModelSegment>,
-    paragraph: ReadonlyContentModelParagraph,
+    segments: ContentModelSegment[],
+    paragraph: ContentModelParagraph,
     path: ReadonlyContentModelBlockGroup[]
 ) {
     return (

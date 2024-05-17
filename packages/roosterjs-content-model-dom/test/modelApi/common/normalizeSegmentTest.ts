@@ -2,6 +2,7 @@ import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 import {
     createNormalizeSegmentContext,
     normalizeSegment,
@@ -15,7 +16,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(image);
 
-        normalizeSegment(para, image, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, image, context);
 
         expect(image).toEqual({
             segmentType: 'Image',
@@ -40,7 +41,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(text);
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',
@@ -64,7 +65,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(br);
 
-        normalizeSegment(para, br, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, br, context);
 
         expect(br).toEqual({
             segmentType: 'Br',
@@ -87,7 +88,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(text);
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',
@@ -111,7 +112,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(text);
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',
@@ -135,7 +136,7 @@ describe('normalizeSegment', () => {
 
         para.segments.push(text);
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',
@@ -161,7 +162,7 @@ describe('normalizeSegment', () => {
 
         context.ignoreLeadingSpaces = false;
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',
@@ -187,7 +188,7 @@ describe('normalizeSegment', () => {
 
         context.ignoreTrailingSpaces = false;
 
-        normalizeSegment(para, text, context);
+        normalizeSegment(para as ReadonlyContentModelParagraph, text, context);
 
         expect(text).toEqual({
             segmentType: 'Text',

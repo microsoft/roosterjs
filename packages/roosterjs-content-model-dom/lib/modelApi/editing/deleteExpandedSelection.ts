@@ -5,17 +5,17 @@ import { deleteBlock } from './deleteBlock';
 import { deleteSegment } from './deleteSegment';
 import { getSegmentTextFormat } from './getSegmentTextFormat';
 import { iterateSelections } from '../selection/iterateSelections';
-import { mutateBlock } from '../common/mutate';
+import { mutateBlock, mutateSegments } from '../common/mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
+    ContentModelParagraph,
+    ContentModelSelectionMarker,
     DeleteSelectionContext,
     FormatContentModelContext,
     InsertPoint,
     IterateSelectionsOption,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
-    ReadonlyContentModelParagraph,
-    ReadonlyContentModelSelectionMarker,
     ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -42,10 +42,10 @@ export function deleteExpandedSelection(
 
     iterateSelections(
         model,
-        (path, tableContext, block, segments) => {
+        (path, tableContext, readonlyBlock, readonlySegments) => {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
-            let paragraph: ReadonlyContentModelParagraph = createParagraph(
+            let paragraph: ContentModelParagraph = createParagraph(
                 true /*implicit*/,
                 undefined /*blockFormat*/,
                 model.format
@@ -53,13 +53,15 @@ export function deleteExpandedSelection(
             let markerFormat = model.format;
             let insertMarkerIndex = 0;
 
-            if (segments) {
+            if (readonlySegments && readonlyBlock?.blockType == 'Paragraph') {
+                const [block, segments, indexes] = mutateSegments(readonlyBlock, readonlySegments);
+
                 // Delete segments inside a paragraph
-                if (segments[0] && block?.blockType == 'Paragraph') {
+                if (segments[0]) {
                     // Now that we have found a paragraph with selections, we can overwrite the default paragraph with this one
                     // so we can put cursor here after delete
                     paragraph = block;
-                    insertMarkerIndex = paragraph.segments.indexOf(segments[0]);
+                    insertMarkerIndex = indexes[0];
                     markerFormat = getSegmentTextFormat(segments[0]);
 
                     context.lastParagraph = paragraph;
@@ -91,9 +93,11 @@ export function deleteExpandedSelection(
                         setParagraphNotImplicit(block);
                     }
                 }
-            } else if (block) {
+            } else if (readonlyBlock) {
                 // Delete a whole block (divider, table, ...)
-                if (deleteBlock(path[0], block, paragraph, context.formatContext)) {
+                const blocks = mutateBlock(path[0]).blocks;
+
+                if (deleteBlock(blocks, readonlyBlock, paragraph, context.formatContext)) {
                     context.deleteResult = 'range';
                 }
             } else if (tableContext) {
@@ -102,11 +106,10 @@ export function deleteExpandedSelection(
                 const mutableTable = mutateBlock(table);
                 const row = mutableTable.rows[rowIndex];
                 const cell = mutateBlock(row.cells[colIndex]);
-                const mutableParagraph = mutateBlock(paragraph);
 
                 path = [cell, ...path];
-                mutableParagraph.segments.push(createBr(model.format));
-                cell.blocks = [mutableParagraph];
+                paragraph.segments.push(createBr(model.format));
+                cell.blocks = [paragraph];
 
                 context.deleteResult = 'range';
             }
@@ -128,8 +131,8 @@ export function deleteExpandedSelection(
 }
 
 function createInsertPoint(
-    marker: ReadonlyContentModelSelectionMarker,
-    paragraph: ReadonlyContentModelParagraph,
+    marker: ContentModelSelectionMarker,
+    paragraph: ContentModelParagraph,
     path: ReadonlyContentModelBlockGroup[],
     tableContext: ReadonlyTableSelectionContext | undefined
 ): InsertPoint {

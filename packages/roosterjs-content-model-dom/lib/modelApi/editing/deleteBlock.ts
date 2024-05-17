@@ -3,7 +3,6 @@ import type {
     EntityRemovalOperation,
     FormatContentModelContext,
     ReadonlyContentModelBlock,
-    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,14 +15,13 @@ import type {
  * If not specified, only selected entity will be deleted
  */
 export function deleteBlock(
-    parent: ReadonlyContentModelBlockGroup,
+    blocks: ReadonlyContentModelBlock[],
     blockToDelete: ReadonlyContentModelBlock,
     replacement?: ReadonlyContentModelBlock,
     context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
-    const index = parent.blocks.indexOf(blockToDelete);
-    const blocks = mutateBlock(parent).blocks;
+    const index = blocks.indexOf(blockToDelete);
 
     switch (blockToDelete.blockType) {
         case 'Table':
