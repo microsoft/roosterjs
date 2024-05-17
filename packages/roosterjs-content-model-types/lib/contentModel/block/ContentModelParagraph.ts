@@ -56,7 +56,7 @@ export interface ReadonlyContentModelParagraph
     /**
      * Segment format on this paragraph. This is mostly used for default format
      */
-    readonly segmentFormat?: ContentModelSegmentFormat;
+    readonly segmentFormat?: Readonly<ContentModelSegmentFormat>;
 
     /**
      * Decorator info for this paragraph, used by heading and P tags
