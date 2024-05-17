@@ -55,6 +55,12 @@ describe('setDOMSelection', () => {
             domHelper: {
                 hasFocus: hasFocusSpy,
             },
+            lifecycle: {
+                isDarkMode: false,
+            },
+            darkColorHandler: {
+                getDarkColor: (lightColor: string) => `DarkColorMock-${lightColor}`,
+            },
         } as any;
     });
 
@@ -350,6 +356,70 @@ describe('setDOMSelection', () => {
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
+            );
+        });
+
+        it('image selection with customized selection border color and dark mode', () => {
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+            const coreValue = { ...core, lifecycle: { isDarkMode: true } as any };
+
+            coreValue.selection.imageSelectionBorderColor = 'red';
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.returnValue([]);
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(coreValue, mockedSelection);
+
+            expect(coreValue.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+                imageSelectionBorderColor: 'red',
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                coreValue,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(coreValue, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                coreValue,
+                '_DOMSelectionHideCursor',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                coreValue,
+                '_DOMSelectionHideSelection',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                coreValue,
+                '_DOMSelection',
+                'outline-style:auto!important; outline-color:DarkColorMock-red!important;',
+                ['span:has(>img#image_0)']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                coreValue,
                 '_DOMSelectionHideSelection',
                 'background-color: transparent !important;',
                 ['*::selection']
