@@ -94,6 +94,44 @@ describe('SelectionPlugin', () => {
 
         plugin.dispose();
     });
+
+    it('init with different options - transparent colors', () => {
+        const plugin = createSelectionPlugin({
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+        });
+        const state = plugin.getState();
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
+        const attachDomEvent = jasmine
+            .createSpy('attachDomEvent')
+            .and.returnValue(jasmine.createSpy('disposer'));
+        const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+        plugin.initialize(<IEditor>(<any>{
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        }));
+
+        expect(state).toEqual({
+            selection: null,
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+            imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
+            tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
+            tableSelection: null,
+        });
+
+        expect(attachDomEvent).toHaveBeenCalled();
+
+        plugin.dispose();
+    });
 });
 
 describe('SelectionPlugin handle onFocus and onBlur event', () => {
