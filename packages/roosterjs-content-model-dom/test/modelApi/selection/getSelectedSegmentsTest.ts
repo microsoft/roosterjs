@@ -10,7 +10,6 @@ import {
     createContentModelDocument,
     createDivider,
     createEntity,
-    createListItem,
     createParagraph,
     createSelectionMarker,
     createText,
@@ -120,7 +119,7 @@ describe('getSelectedSegments', () => {
                 },
             ],
             true,
-            [s3, s4]
+            []
         );
     });
 
