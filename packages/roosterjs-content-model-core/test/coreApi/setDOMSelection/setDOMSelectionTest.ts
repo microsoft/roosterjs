@@ -619,8 +619,6 @@ describe('setDOMSelection', () => {
                 collapse: collapseSpy,
             };
             const defaultSelectionColor = '#C6C6C6';
-            if (selectionColor) {
-            }
 
             createRangeSpy.and.returnValue(mockedRange);
 
