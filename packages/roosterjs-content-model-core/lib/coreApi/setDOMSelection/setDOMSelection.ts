@@ -49,7 +49,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     type: 'image',
                     image,
                 };
-                let imageSelectionColor = isDarkMode
+                const imageSelectionColor = isDarkMode
                     ? core.selection.imageSelectionBorderColorDark
                     : core.selection.imageSelectionBorderColor;
 
@@ -113,7 +113,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 core.selection.selection = selection;
 
-                let tableSelectionColor = isDarkMode
+                const tableSelectionColor = isDarkMode
                     ? core.selection.tableCellSelectionBackgroundColorDark
                     : core.selection.tableCellSelectionBackgroundColor;
                 core.api.setEditorStyle(
