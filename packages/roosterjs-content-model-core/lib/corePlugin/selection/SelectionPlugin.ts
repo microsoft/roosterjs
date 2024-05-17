@@ -47,6 +47,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             selection: null,
             tableSelection: null,
             imageSelectionBorderColor: options.imageSelectionBorderColor,
+            tableCellSelectionBackgroundColor: options.tableCellSelectionBackgroundColor,
         };
     }
 
