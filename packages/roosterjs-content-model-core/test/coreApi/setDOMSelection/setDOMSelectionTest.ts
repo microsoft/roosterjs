@@ -562,6 +562,7 @@ describe('setDOMSelection', () => {
             expect(core.selection).toEqual({
                 skipReselectOnFocus: undefined,
                 selection: mockedSelection,
+                tableCellSelectionBackgroundColor: selectionColor,
             } as any);
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
