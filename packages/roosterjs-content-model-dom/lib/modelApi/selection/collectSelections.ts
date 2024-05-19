@@ -15,8 +15,10 @@ import type {
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
     ReadonlyOperationalBlocks,
     ReadonlyTableSelectionContext,
     TableSelectionContext,
@@ -92,7 +94,22 @@ export function getSelectedSegmentsAndParagraphs(
 export function getSelectedSegments(
     model: ContentModelDocument,
     includingFormatHolder: boolean
-): ContentModelSegment[] {
+): ContentModelSegment[];
+
+/**
+ * Get an array of selected segments from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ * @param includingFormatHolder True means also include format holder as segment from list item
+ */
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[];
+
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[] {
     return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
 }
 
@@ -100,9 +117,21 @@ export function getSelectedSegments(
  * Get any array of selected paragraphs from a content model
  * @param model The Content Model to get selection from
  */
-export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
+export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[];
+
+/**
+ * Get any array of selected paragraphs from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[];
+
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    const result: ContentModelParagraph[] = [];
+    const result: ReadonlyContentModelParagraph[] = [];
 
     removeUnmeaningfulSelections(selections);
 
@@ -191,10 +220,22 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
  */
 export function getFirstSelectedTable(
     model: ContentModelDocument
-): [ContentModelTable | undefined, ContentModelBlockGroup[]] {
+): [ContentModelTable | undefined, ContentModelBlockGroup[]];
+
+/**
+ * Get the first selected table from content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getFirstSelectedTable(
+    model: ReadonlyContentModelDocument
+): [ReadonlyContentModelTable | undefined, ReadonlyContentModelBlockGroup[]];
+
+export function getFirstSelectedTable(
+    model: ReadonlyContentModelDocument
+): [ReadonlyContentModelTable | undefined, ReadonlyContentModelBlockGroup[]] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    let table: ContentModelTable | undefined;
-    let resultPath: ContentModelBlockGroup[] = [];
+    let table: ReadonlyContentModelTable | undefined;
+    let resultPath: ReadonlyContentModelBlockGroup[] = [];
 
     removeUnmeaningfulSelections(selections);
 
@@ -224,7 +265,19 @@ export function getFirstSelectedTable(
  */
 export function getFirstSelectedListItem(
     model: ContentModelDocument
-): ContentModelListItem | undefined {
+): ContentModelListItem | undefined;
+
+/**
+ * Get the first selected list item from content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getFirstSelectedListItem(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelListItem | undefined;
+
+export function getFirstSelectedListItem(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelListItem | undefined {
     let listItem: ContentModelListItem | undefined;
 
     getOperationalBlocks(model, ['ListItem'], ['TableCell']).forEach(r => {
