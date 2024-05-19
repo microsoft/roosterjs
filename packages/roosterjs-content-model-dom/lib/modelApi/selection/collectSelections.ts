@@ -94,7 +94,22 @@ export function getSelectedSegmentsAndParagraphs(
 export function getSelectedSegments(
     model: ContentModelDocument,
     includingFormatHolder: boolean
-): ContentModelSegment[] {
+): ContentModelSegment[];
+
+/**
+ * Get an array of selected segments from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ * @param includingFormatHolder True means also include format holder as segment from list item
+ */
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[];
+
+export function getSelectedSegments(
+    model: ReadonlyContentModelDocument,
+    includingFormatHolder: boolean
+): ReadonlyContentModelSegment[] {
     return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
 }
 
@@ -102,9 +117,21 @@ export function getSelectedSegments(
  * Get any array of selected paragraphs from a content model
  * @param model The Content Model to get selection from
  */
-export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
+export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[];
+
+/**
+ * Get any array of selected paragraphs from a content model (Readonly)
+ * @param model The Content Model to get selection from
+ */
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[];
+
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument
+): ReadonlyContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
-    const result: ContentModelParagraph[] = [];
+    const result: ReadonlyContentModelParagraph[] = [];
 
     removeUnmeaningfulSelections(selections);
 
