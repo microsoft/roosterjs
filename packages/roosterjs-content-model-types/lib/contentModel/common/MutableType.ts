@@ -32,8 +32,8 @@ import type {
     ReadonlyContentModelListLevel,
 } from '../decorator/ContentModelListLevel';
 import type {
-    ContentModelParagraph,
     ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
 } from '../block/ContentModelParagraph';
 import type {
     ContentModelParagraphDecorator,
@@ -73,7 +73,7 @@ export type MutableType<T> = T extends ReadonlyContentModelGeneralSegment
     : T extends ReadonlyContentModelBr
     ? ContentModelBr
     : T extends ReadonlyContentModelParagraph
-    ? ContentModelParagraph
+    ? ShallowMutableContentModelParagraph
     : T extends ReadonlyContentModelTable
     ? ShallowMutableContentModelTable
     : T extends ReadonlyContentModelTableRow
