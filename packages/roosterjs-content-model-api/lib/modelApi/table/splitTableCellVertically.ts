@@ -17,11 +17,7 @@ export function splitTableCellVertically(table: ShallowMutableContentModelTable)
             const row = table.rows[rowIndex];
             const belowRow = table.rows[rowIndex + 1];
 
-            row.cells.forEach(cell => {
-                delete cell.cachedElement;
-            });
-
-            delete row.cachedElement;
+            row.cells.forEach(mutateBlock);
 
             if (
                 belowRow?.cells.every(
@@ -36,8 +32,6 @@ export function splitTableCellVertically(table: ShallowMutableContentModelTable)
                         mutateBlock(belowCell).spanAbove = false;
                     }
                 });
-
-                delete belowRow.cachedElement;
             } else {
                 const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
                 const newRow: ContentModelTableRow = {

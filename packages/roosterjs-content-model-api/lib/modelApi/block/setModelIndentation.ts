@@ -112,7 +112,7 @@ export function setModelIndentation(
 
                     break;
                 } else if (currentParent.blockGroupType == 'FormatContainer' && index >= 0) {
-                    delete currentParent.cachedElement;
+                    mutateBlock(currentParent);
 
                     currentBlock = currentParent;
                     currentParent = path[index + 1];
