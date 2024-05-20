@@ -1,14 +1,17 @@
 import type {
-    ContentModelSegment,
     DomToModelDecoratorContext,
     ReadonlyContentModelCode,
     ReadonlyContentModelLink,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function addLink(segment: ContentModelSegment, link: ReadonlyContentModelLink) {
+export function addLink(
+    segment: ShallowMutableContentModelSegment,
+    link: ReadonlyContentModelLink
+) {
     if (link.format.href) {
         segment.link = {
             format: { ...link.format },
@@ -22,7 +25,10 @@ export function addLink(segment: ContentModelSegment, link: ReadonlyContentModel
  * @param segment The segment to add decorator to
  * @param code The code decorator to add
  */
-export function addCode(segment: ContentModelSegment, code: ReadonlyContentModelCode) {
+export function addCode(
+    segment: ShallowMutableContentModelSegment,
+    code: ReadonlyContentModelCode
+) {
     if (code.format.fontFamily) {
         segment.code = {
             format: { ...code.format },
@@ -33,7 +39,10 @@ export function addCode(segment: ContentModelSegment, code: ReadonlyContentModel
 /**
  * @internal
  */
-export function addDecorators(segment: ContentModelSegment, context: DomToModelDecoratorContext) {
+export function addDecorators(
+    segment: ShallowMutableContentModelSegment,
+    context: DomToModelDecoratorContext
+) {
     addLink(segment, context.link);
     addCode(segment, context.code);
 }
