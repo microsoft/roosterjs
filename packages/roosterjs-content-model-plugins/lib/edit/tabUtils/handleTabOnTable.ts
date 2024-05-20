@@ -1,12 +1,15 @@
 import { getFirstSelectedTable } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
-import type { ContentModelDocument, ContentModelTable } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelTable,
+} from 'roosterjs-content-model-types';
 
 /**
  * When the whole table is selected, indent or outdent the whole table with setModelIndentation.
  * @internal
  */
-export function handleTabOnTable(model: ContentModelDocument, rawEvent: KeyboardEvent) {
+export function handleTabOnTable(model: ReadonlyContentModelDocument, rawEvent: KeyboardEvent) {
     const tableModel = getFirstSelectedTable(model)[0];
     if (tableModel && isWholeTableSelected(tableModel)) {
         setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
@@ -16,7 +19,7 @@ export function handleTabOnTable(model: ContentModelDocument, rawEvent: Keyboard
     return false;
 }
 
-function isWholeTableSelected(tableModel: ContentModelTable) {
+function isWholeTableSelected(tableModel: ReadonlyContentModelTable) {
     return (
         tableModel.rows[0]?.cells[0]?.isSelected &&
         tableModel.rows[tableModel.rows.length - 1]?.cells[tableModel.widths.length - 1]?.isSelected

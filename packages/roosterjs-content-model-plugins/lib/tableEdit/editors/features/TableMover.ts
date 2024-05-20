@@ -10,6 +10,7 @@ import {
     getFirstSelectedTable,
     isNodeOfType,
     mergeModel,
+    mutateBlock,
     normalizeRect,
     setParagraphNotImplicit,
     setSelection,
@@ -337,7 +338,7 @@ export function onDragEnd(
                     const [oldTable, path] = getFirstSelectedTable(model);
                     if (oldTable) {
                         const index = path[0].blocks.indexOf(oldTable);
-                        path[0].blocks.splice(index, 1);
+                        mutateBlock(path[0]).blocks.splice(index, 1);
                     }
 
                     if (ip && initValue?.cmTable) {
@@ -359,7 +360,7 @@ export function onDragEnd(
                                 if (markerParagraph?.blockType == 'Paragraph') {
                                     const marker = createSelectionMarker(model.format);
 
-                                    markerParagraph.segments.unshift(marker);
+                                    mutateBlock(markerParagraph).segments.unshift(marker);
                                     setParagraphNotImplicit(markerParagraph);
                                     setSelection(FirstCell, marker);
                                 }

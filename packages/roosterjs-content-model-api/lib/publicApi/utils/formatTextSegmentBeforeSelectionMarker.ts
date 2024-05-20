@@ -1,12 +1,12 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import { getSelectedSegmentsAndParagraphs, mutateSegment } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -18,9 +18,9 @@ import type {
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
     callback: (
-        model: ContentModelDocument,
+        model: ReadonlyContentModelDocument,
         previousSegment: ContentModelText,
-        paragraph: ContentModelParagraph,
+        paragraph: ShallowMutableContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
         context: FormatContentModelContext
     ) => boolean,
@@ -33,22 +33,34 @@ export function formatTextSegmentBeforeSelectionMarker(
             model,
             false /*includeFormatHolder*/
         );
+        let rewrite = false;
 
-        if (selectedSegmentsAndParagraphs.length > 0 && selectedSegmentsAndParagraphs[0][1]) {
-            const marker = selectedSegmentsAndParagraphs[0][0];
-            const paragraph = selectedSegmentsAndParagraphs[0][1];
-            const markerIndex = paragraph.segments.indexOf(marker);
-            if (marker.segmentType === 'SelectionMarker' && markerIndex > 0) {
-                const previousSegment = paragraph.segments[markerIndex - 1];
-                if (previousSegment && previousSegment.segmentType === 'Text') {
-                    result = true;
+        if (
+            selectedSegmentsAndParagraphs.length > 0 &&
+            selectedSegmentsAndParagraphs[0][0].segmentType == 'SelectionMarker' &&
+            selectedSegmentsAndParagraphs[0][1]
+        ) {
+            mutateSegment(
+                selectedSegmentsAndParagraphs[0][1],
+                selectedSegmentsAndParagraphs[0][0],
+                (marker, paragraph, markerIndex) => {
+                    const previousSegment = paragraph.segments[markerIndex - 1];
 
-                    return callback(model, previousSegment, paragraph, marker.format, context);
+                    if (previousSegment && previousSegment.segmentType === 'Text') {
+                        result = true;
+                        rewrite = callback(
+                            model,
+                            previousSegment,
+                            paragraph,
+                            marker.format,
+                            context
+                        );
+                    }
                 }
-            }
+            );
         }
 
-        return false;
+        return rewrite;
     }, options);
 
     return result;
