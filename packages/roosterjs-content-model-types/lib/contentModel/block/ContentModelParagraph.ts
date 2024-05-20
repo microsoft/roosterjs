@@ -6,6 +6,7 @@ import type {
 import type {
     ContentModelSegment,
     ReadonlyContentModelSegment,
+    ShallowMutableContentModelSegment,
 } from '../segment/ContentModelSegment';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
@@ -62,4 +63,26 @@ export interface ReadonlyContentModelParagraph
      * Decorator info for this paragraph, used by heading and P tags
      */
     readonly decorator?: ReadonlyContentModelParagraphDecorator;
+}
+
+/**
+ * Content Model of Paragraph (Shallow mutable)
+ */
+export interface ShallowMutableContentModelParagraph
+    extends ContentModelParagraphCommon,
+        ContentModelBlockBase<'Paragraph'> {
+    /**
+     * Segments within this paragraph
+     */
+    segments: ShallowMutableContentModelSegment[];
+
+    /**
+     * Segment format on this paragraph. This is mostly used for default format
+     */
+    segmentFormat?: ContentModelSegmentFormat;
+
+    /**
+     * Decorator info for this paragraph, used by heading and P tags
+     */
+    decorator?: ContentModelParagraphDecorator;
 }
