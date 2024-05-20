@@ -1,5 +1,5 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
-import { mutateSegment } from 'roosterjs-content-model-dom/lib';
+import { mutateSegment } from 'roosterjs-content-model-dom';
 import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
