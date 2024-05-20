@@ -105,6 +105,7 @@ export {
     ContentModelParagraph,
     ContentModelParagraphCommon,
     ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
 } from './contentModel/block/ContentModelParagraph';
 export {
     ContentModelTable,
@@ -202,6 +203,7 @@ export {
 export {
     ContentModelSegment,
     ReadonlyContentModelSegment,
+    ShallowMutableContentModelSegment,
 } from './contentModel/segment/ContentModelSegment';
 
 export {
