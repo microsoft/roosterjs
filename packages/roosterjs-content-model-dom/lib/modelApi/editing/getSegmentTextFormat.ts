@@ -22,9 +22,10 @@ export function getSegmentTextFormat(segment: ContentModelSegment): ContentModel
 }
 
 const removeUndefinedValues = (format: ContentModelSegmentFormat): ContentModelSegmentFormat => {
-    const textFormat: Record<string, string | undefined | boolean> = {};
+    const textFormat: Record<string, string | undefined | boolean | never[]> = {};
     Object.keys(format).filter(key => {
         const value = format[key as keyof ContentModelSegmentFormat];
+
         if (value !== undefined) {
             textFormat[key] = value;
         }
