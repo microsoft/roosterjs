@@ -30,23 +30,23 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.52% </span>
+                <span class="strong">74.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/46</span>
+                <span class='fraction'>26/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.44% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/59</span>
+                <span class='fraction'>52/60</span>
             </div>
         
             
@@ -221,7 +221,9 @@
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -231,17 +233,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -293,6 +297,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,7 +344,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -376,12 +386,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -389,6 +393,7 @@
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import type {
+    DOMSelection,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
@@ -409,6 +414,7 @@ export class EditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private disposer: (() =&gt; void) | null = null;
     private shouldHandleNextInputEvent = false;
+    private selectionAfterDelete: DOMSelection | null = null;
 &nbsp;
     /**
      * Get name of this plugin
@@ -457,6 +463,12 @@ export class EditPlugin implements EditorPlugin {
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
+<span class="branch-1 cbranch-no" title="branch not covered" >                case 'keyUp':</span>
+<span class="cstat-no" title="statement not covered" >                    if (this.selectionAfterDelete) {</span>
+<span class="cstat-no" title="statement not covered" >                        this.editor.setDOMSelection(this.selectionAfterDelete);</span>
+<span class="cstat-no" title="statement not covered" >                        this.selectionAfterDelete = null;</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    break;</span>
             }
         }
     }
@@ -537,15 +549,9 @@ export class EditPlugin implements EditorPlugin {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (handled) {
 <span class="cstat-no" title="statement not covered" >            rawEvent.preventDefault();</span>
 &nbsp;
-            // Restore the selection to avoid the cursor jump issue
+            // Restore the selection on keyup event to avoid the cursor jump issue
             // See: https://issues.chromium.org/issues/330596261
-            const selection = <span class="cstat-no" title="statement not covered" >editor.getDOMSelection();</span>
-            const doc = <span class="cstat-no" title="statement not covered" >this.editor?.getDocument();</span>
-<span class="cstat-no" title="statement not covered" >            doc?.defaultView?.requestAnimationFrame(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >                if (this.editor) {</span>
-<span class="cstat-no" title="statement not covered" >                    this.editor.setDOMSelection(selection);</span>
-                }
-            });
+<span class="cstat-no" title="statement not covered" >            this.selectionAfterDelete = editor.getDOMSelection();</span>
         }
     }
 }
@@ -556,7 +562,7 @@ export class EditPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 17 2024 22:32:16 GMT+0000 (Coordinated Universal Time)
+                at Mon May 20 2024 20:31:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
