@@ -3,6 +3,7 @@ import { createParagraph } from '../creators/createParagraph';
 import { mutateBlock } from './mutate';
 import type {
     ContentModelBlockFormat,
+    ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSegmentFormat,
     ShallowMutableContentModelBlockGroup,
@@ -16,7 +17,7 @@ import type {
  * @param blockFormat Format of the paragraph. This is only used if we need to create a new paragraph
  */
 export function ensureParagraph(
-    group: ShallowMutableContentModelBlockGroup,
+    group: ContentModelBlockGroup,
     blockFormat?: ContentModelBlockFormat,
     segmentFormat?: ContentModelSegmentFormat
 ): ContentModelParagraph;

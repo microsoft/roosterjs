@@ -1,6 +1,7 @@
 import { ensureParagraph } from './ensureParagraph';
 import type {
     ContentModelBlockFormat,
+    ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
@@ -16,7 +17,7 @@ import type {
  * @returns The parent paragraph where the segment is added to
  */
 export function addSegment(
-    group: ShallowMutableContentModelBlockGroup,
+    group: ContentModelBlockGroup,
     newSegment: ContentModelSegment,
     blockFormat?: ContentModelBlockFormat,
     segmentFormat?: ContentModelSegmentFormat

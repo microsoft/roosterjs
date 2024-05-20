@@ -24,6 +24,7 @@ import type {
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -261,7 +262,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         { ...paragraph.format, ...newParaFormat },
         paragraph.segmentFormat

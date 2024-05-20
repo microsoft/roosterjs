@@ -1,5 +1,5 @@
 import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
-import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ShallowMutableContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { ContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
 import type { ReadonlyTableSelectionContext } from './TableSelectionContext';
 
@@ -15,7 +15,7 @@ export interface InsertPoint {
     /**
      * The paragraph that contains this insert point
      */
-    paragraph: ContentModelParagraph;
+    paragraph: ShallowMutableContentModelParagraph;
 
     /**
      * Block group path of this insert point, from direct parent group to the root group

@@ -8,7 +8,6 @@ import { iterateSelections } from '../selection/iterateSelections';
 import { mutateBlock, mutateSegments } from '../common/mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
-    ContentModelParagraph,
     ContentModelSelectionMarker,
     DeleteSelectionContext,
     FormatContentModelContext,
@@ -17,6 +16,7 @@ import type {
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
     ReadonlyTableSelectionContext,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
@@ -45,7 +45,7 @@ export function deleteExpandedSelection(
         (path, tableContext, readonlyBlock, readonlySegments) => {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
-            let paragraph = createParagraph(
+            let paragraph: ShallowMutableContentModelParagraph = createParagraph(
                 true /*implicit*/,
                 undefined /*blockFormat*/,
                 model.format
@@ -131,7 +131,7 @@ export function deleteExpandedSelection(
 
 function createInsertPoint(
     marker: ContentModelSelectionMarker,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     path: ReadonlyContentModelBlockGroup[],
     tableContext: ReadonlyTableSelectionContext | undefined
 ): InsertPoint {
