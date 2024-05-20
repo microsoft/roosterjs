@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelWithDataset | RoosterJs API Reference</title>
+	<title>ContentModelTableCellCommon | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.contentmodelwithdataset.html">ContentModelWithDataset</a>
+					<a href="roosterjs_content_model_types.contentmodeltablecellcommon.html">ContentModelTableCellCommon</a>
 				</li>
 			</ul>
-			<h1>Interface ContentModelWithDataset&lt;T&gt;</h1>
+			<h1>Interface ContentModelTableCellCommon</h1>
 		</div>
 	</div>
 </header>
@@ -69,38 +69,21 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents base format of an element that supports dataset and/or metadata</p>
+						<p>Common part of Content Model of Table Cell</p>
 					</div>
 				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T</h4>
-					</li>
-				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentModelWithDataset</span>
+						<span class="target">ContentModelTableCellCommon</span>
 						<ul class="tsd-hierarchy">
-							<li>
-								<a href="roosterjs_content_model_types.contentmodeltable.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelTable</a>
-							</li>
 							<li>
 								<a href="roosterjs_content_model_types.contentmodeltablecell.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelTableCell</a>
 							</li>
 							<li>
-								<a href="roosterjs_content_model_types.contentmodelimage.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelImage</a>
-							</li>
-							<li>
-								<a href="roosterjs_content_model_types.contentmodellink.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelLink</a>
-							</li>
-							<li>
-								<a href="roosterjs_content_model_types.contentmodellistlevel.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelListLevel</a>
+								<a href="roosterjs_content_model_types.shallowmutablecontentmodeltablecell.html" class="tsd-signature-type" data-tsd-kind="Interface">ShallowMutableContentModelTableCell</a>
 							</li>
 						</ul>
 					</li>
@@ -113,7 +96,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelwithdataset.html#dataset" class="tsd-kind-icon">dataset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#isheader" class="tsd-kind-icon">is<wbr>Header</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,17 +107,47 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="dataset" class="tsd-anchor"></a>
-					<h3>dataset</h3>
-					<div class="tsd-signature tsd-kind-icon">dataset<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#datasetformat" class="tsd-signature-type" data-tsd-kind="Type alias">DatasetFormat</a></div>
+					<a name="isheader" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Header</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Header<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/88d743f/packages/roosterjs-content-model-types/lib/contentModel/format/ContentModelWithDataset.ts#L10">roosterjs-content-model-types/lib/contentModel/format/ContentModelWithDataset.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts#L40">roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>dataset of this element</p>
+							<p>Whether this cell is a table header (TH) element</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="spanabove" class="tsd-anchor"></a>
+					<h3>span<wbr>Above</h3>
+					<div class="tsd-signature tsd-kind-icon">span<wbr>Above<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts#L35">roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts:35</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether this cell is spanned from above cell</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="spanleft" class="tsd-anchor"></a>
+					<h3>span<wbr>Left</h3>
+					<div class="tsd-signature tsd-kind-icon">span<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts#L30">roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelTableCell.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether this cell is spanned from left cell</p>
 						</div>
 					</div>
 				</section>
@@ -195,11 +210,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="roosterjs_content_model_types.contentmodelwithdataset.html" class="tsd-kind-icon">Content<wbr>Model<wbr>With<wbr>Dataset</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_types.contentmodeltablecellcommon.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Table<wbr>Cell<wbr>Common</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelwithdataset.html#dataset" class="tsd-kind-icon">dataset</a>
+								<a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#isheader" class="tsd-kind-icon">is<wbr>Header</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.contentmodeltablecellcommon.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a>
 							</li>
 						</ul>
 					</li>

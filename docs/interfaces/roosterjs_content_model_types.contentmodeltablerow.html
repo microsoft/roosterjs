@@ -77,6 +77,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
+						<a href="../modules/roosterjs_content_model_types.html#mutablemark" class="tsd-signature-type" data-tsd-kind="Type alias">MutableMark</a>
+					</li>
+					<li>
+						<a href="roosterjs_content_model_types.contentmodeltablerowcommon.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelTableRowCommon</a>
+					</li>
+					<li>
 						<a href="roosterjs_content_model_types.contentmodelblockwithcache.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelBlockWithCache</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLTableRowElement</span><span class="tsd-signature-symbol">&gt;</span>
 					</li>
 					<li>
@@ -98,8 +104,10 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodeltablerow.html#cachedelement" class="tsd-kind-icon">cached<wbr>Element</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltablerow.html#cells" class="tsd-kind-icon">cells</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodeltablerow.html#dummy1" class="tsd-kind-icon">dummy1</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodeltablerow.html#dummy2" class="tsd-kind-icon">dummy2</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodeltablerow.html#format" class="tsd-kind-icon">format</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltablerow.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodeltablerow.html#height" class="tsd-kind-icon">height</a></li>
 							</ul>
 						</section>
 					</div>
@@ -114,7 +122,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.contentmodelblockwithcache.html">ContentModelBlockWithCache</a>.<a href="roosterjs_content_model_types.contentmodelblockwithcache.html#cachedelement">cachedElement</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/88d743f/packages/roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts#L8">roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts#L8">roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -129,12 +137,46 @@
 					<div class="tsd-signature tsd-kind-icon">cells<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodeltablecell.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelTableCell</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/88d743f/packages/roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts#L20">roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts#L34">roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Cells of this table</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="dummy1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> dummy1</h3>
+					<div class="tsd-signature tsd-kind-icon">dummy1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from MutableMark.dummy1</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/common/MutableMark.ts#L30">roosterjs-content-model-types/lib/contentModel/common/MutableMark.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The mutable marker to mark an object as mutable. When assign readonly object to a mutable type, compile will fail to build
+							due to this member does not exist from source type.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="dummy2" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> dummy2</h3>
+					<div class="tsd-signature tsd-kind-icon">dummy2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from MutableMark.dummy2</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/common/MutableMark.ts#L36">roosterjs-content-model-types/lib/contentModel/common/MutableMark.ts:36</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The mutable marker to mark an object as mutable. When assign readonly object to a mutable type, compile will fail to build
+							due to this member does not exist from source type.</p>
 						</div>
 					</div>
 				</section>
@@ -145,7 +187,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.contentmodelwithformat.html">ContentModelWithFormat</a>.<a href="roosterjs_content_model_types.contentmodelwithformat.html#format">format</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/88d743f/packages/roosterjs-content-model-types/lib/contentModel/format/ContentModelWithFormat.ts#L10">roosterjs-content-model-types/lib/contentModel/format/ContentModelWithFormat.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/format/ContentModelWithFormat.ts#L10">roosterjs-content-model-types/lib/contentModel/format/ContentModelWithFormat.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -154,13 +196,14 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="height" class="tsd-anchor"></a>
 					<h3>height</h3>
 					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.contentmodeltablerowcommon.html">ContentModelTableRowCommon</a>.<a href="roosterjs_content_model_types.contentmodeltablerowcommon.html#height">height</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/88d743f/packages/roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts#L15">roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8ec51b3/packages/roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts#L20">roosterjs-content-model-types/lib/contentModel/block/ContentModelTableRow.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,9 +281,15 @@
 								<a href="roosterjs_content_model_types.contentmodeltablerow.html#cells" class="tsd-kind-icon">cells</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.contentmodeltablerow.html#dummy1" class="tsd-kind-icon">dummy1</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.contentmodeltablerow.html#dummy2" class="tsd-kind-icon">dummy2</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.contentmodeltablerow.html#format" class="tsd-kind-icon">format</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.contentmodeltablerow.html#height" class="tsd-kind-icon">height</a>
 							</li>
 						</ul>
