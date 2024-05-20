@@ -5,7 +5,7 @@ import type {
     FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
-    ReadonlyContentModelDocument,
+    ShallowMutableContentModelDocument,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
@@ -18,7 +18,7 @@ import type {
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
     callback: (
-        model: ReadonlyContentModelDocument,
+        model: ShallowMutableContentModelDocument,
         previousSegment: ContentModelText,
         paragraph: ShallowMutableContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
