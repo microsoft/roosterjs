@@ -120,7 +120,7 @@ describe('getSelectedSegments', () => {
                 },
             ],
             true,
-            [s3, s4]
+            []
         );
     });
 
