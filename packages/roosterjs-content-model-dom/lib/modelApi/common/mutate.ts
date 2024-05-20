@@ -1,6 +1,4 @@
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     MutableType,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
@@ -8,6 +6,8 @@ import type {
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
     ReadonlyContentModelTable,
+    ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -44,9 +44,13 @@ export function mutateBlock<T extends ReadonlyContentModelBlockGroup | ReadonlyC
 export function mutateSegments(
     paragraph: ReadonlyContentModelParagraph,
     segments: ReadonlyContentModelSegment[]
-): [ContentModelParagraph, ContentModelSegment[], number[]] {
+): [ShallowMutableContentModelParagraph, ShallowMutableContentModelSegment[], number[]] {
     const mutablePara = mutateBlock(paragraph);
-    const result: [ContentModelParagraph, ContentModelSegment[], number[]] = [mutablePara, [], []];
+    const result: [
+        ShallowMutableContentModelParagraph,
+        ShallowMutableContentModelSegment[],
+        number[]
+    ] = [mutablePara, [], []];
 
     if (segments) {
         segments.forEach(segment => {
@@ -71,8 +75,12 @@ export function mutateSegments(
 export function mutateSegment<T extends ReadonlyContentModelSegment>(
     paragraph: ReadonlyContentModelParagraph,
     segment: T,
-    callback?: (segment: MutableType<T>, paragraph: ContentModelParagraph, index: number) => void
-): [ContentModelParagraph, MutableType<T> | null, number] {
+    callback?: (
+        segment: MutableType<T>,
+        paragraph: ShallowMutableContentModelParagraph,
+        index: number
+    ) => void
+): [ShallowMutableContentModelParagraph, MutableType<T> | null, number] {
     const [mutablePara, mutableSegments, indexes] = mutateSegments(paragraph, [segment]);
     const mutableSegment =
         (mutableSegments[0] as ReadonlyContentModelSegment) == segment
