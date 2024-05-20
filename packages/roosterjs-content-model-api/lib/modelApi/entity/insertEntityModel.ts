@@ -9,15 +9,15 @@ import {
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
     ContentModelDocument,
     ContentModelEntity,
-    ContentModelParagraph,
     FormatContentModelContext,
     InsertEntityPosition,
     InsertPoint,
     ReadonlyContentModelBlock,
+    ShallowMutableContentModelBlock,
     ShallowMutableContentModelBlockGroup,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -74,8 +74,8 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
-        const blocksToInsert: ContentModelBlock[] = [];
-        let nextParagraph: ContentModelParagraph | undefined;
+        const blocksToInsert: ShallowMutableContentModelBlock[] = [];
+        let nextParagraph: ShallowMutableContentModelParagraph | undefined;
 
         if (isBlock) {
             const nextBlock = blockParent.blocks[blockIndex];

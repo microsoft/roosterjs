@@ -18,6 +18,8 @@ import type {
     InsertPoint,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
+    ShallowMutableContentModelParagraph,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -118,7 +120,10 @@ const createNewListItem = (
     const newParagraph = createNewParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, insertPoint.marker.format);
+    const newListItem: ShallowMutableContentModelListItem = createListItem(
+        levels,
+        insertPoint.marker.format
+    );
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
@@ -143,7 +148,7 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
 
 const createNewParagraph = (insertPoint: InsertPoint) => {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         paragraph.format,
         paragraph.segmentFormat

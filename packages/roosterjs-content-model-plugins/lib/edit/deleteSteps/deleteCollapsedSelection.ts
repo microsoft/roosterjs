@@ -9,11 +9,11 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { ReadonlyBlockAndPath } from '../utils/getLeafSiblingBlock';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
@@ -109,8 +109,8 @@ function getRoot(path: ReadonlyContentModelBlockGroup[]): ReadonlyContentModelDo
 
 function shouldOutdentParagraph(
     isForward: boolean,
-    segments: ContentModelSegment[],
-    paragraph: ContentModelParagraph,
+    segments: ShallowMutableContentModelSegment[],
+    paragraph: ShallowMutableContentModelParagraph,
     path: ReadonlyContentModelBlockGroup[]
 ) {
     return (
@@ -127,7 +127,7 @@ function shouldOutdentParagraph(
  * If the last segment is BR, remove it for now. We may add it back later when normalize model.
  * So that if this is an empty paragraph, it will start to delete next block
  */
-function fixupBr(segments: ContentModelSegment[]) {
+function fixupBr(segments: ShallowMutableContentModelSegment[]) {
     if (segments[segments.length - 1]?.segmentType == 'Br') {
         const segmentsWithoutBr = segments.filter(x => x.segmentType != 'SelectionMarker');
 
