@@ -1,6 +1,5 @@
 import type {
     ContentModelBlockGroup,
-    ContentModelBlockWithCache,
     IterateSelectionsCallback,
     IterateSelectionsOption,
     ReadonlyContentModelBlockGroup,
@@ -38,20 +37,7 @@ export function iterateSelections(
     callback: ReadonlyIterateSelectionsCallback | IterateSelectionsCallback,
     option?: IterateSelectionsOption
 ): void {
-    const internalCallback: ReadonlyIterateSelectionsCallback = (
-        path,
-        tableContext,
-        block,
-        segments
-    ) => {
-        if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
-            delete (block as ContentModelBlockWithCache).cachedElement;
-        }
-
-        return (callback as ReadonlyIterateSelectionsCallback)(path, tableContext, block, segments);
-    };
-
-    internalIterateSelections([group], internalCallback, option);
+    internalIterateSelections([group], callback as ReadonlyIterateSelectionsCallback, option);
 }
 
 function internalIterateSelections(
