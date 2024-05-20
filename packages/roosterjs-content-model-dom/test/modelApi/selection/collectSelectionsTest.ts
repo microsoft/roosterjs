@@ -147,10 +147,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
             ],
             true,
             false,
-            [
-                [s3, null, []],
-                [s4, null, []],
-            ]
+            []
         );
     });
 
