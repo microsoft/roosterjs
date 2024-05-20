@@ -38,6 +38,11 @@ export interface FormatContentModelOptions {
      * When specified, use this selection range to override current selection inside editor
      */
     selectionOverride?: DOMSelection;
+
+    /**
+     * When pass to true, scroll the editing caret into view after write DOM tree if need
+     */
+    scrollCaretIntoView?: boolean;
 }
 
 /**

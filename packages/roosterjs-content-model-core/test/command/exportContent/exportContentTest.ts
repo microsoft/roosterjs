@@ -40,7 +40,29 @@ describe('exportContent', () => {
 
         expect(text).toBe(mockedText);
         expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
-        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel);
+        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel, undefined, undefined);
+    });
+
+    it('PlainText with callback', () => {
+        const mockedModel = 'MODEL' as any;
+        const getContentModelCopySpy = jasmine
+            .createSpy('getContentModelCopy')
+            .and.returnValue(mockedModel);
+        const editor: IEditor = {
+            getContentModelCopy: getContentModelCopySpy,
+        } as any;
+        const mockedText = 'TEXT';
+        const contentModelToTextSpy = spyOn(
+            contentModelToText,
+            'contentModelToText'
+        ).and.returnValue(mockedText);
+        const mockedCallbacks = 'CALLBACKS' as any;
+
+        const text = exportContent(editor, 'PlainText', mockedCallbacks);
+
+        expect(text).toBe(mockedText);
+        expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
+        expect(contentModelToTextSpy).toHaveBeenCalledWith(mockedModel, undefined, mockedCallbacks);
     });
 
     it('HTML', () => {
