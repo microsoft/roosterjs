@@ -3,6 +3,7 @@ import type { ContentModelEntity } from '../entity/ContentModelEntity';
 import type {
     ContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,
+    ShallowMutableContentModelGeneralSegment,
 } from './ContentModelGeneralSegment';
 import type { ContentModelImage, ReadonlyContentModelImage } from './ContentModelImage';
 import type {
@@ -32,3 +33,14 @@ export type ReadonlyContentModelSegment =
     | ReadonlyContentModelGeneralSegment
     | ContentModelEntity
     | ReadonlyContentModelImage;
+
+/**
+ * Union type of Content Model Segment (Shallow mutable)
+ */
+export type ShallowMutableContentModelSegment =
+    | ContentModelSelectionMarker
+    | ContentModelText
+    | ContentModelBr
+    | ShallowMutableContentModelGeneralSegment
+    | ContentModelEntity
+    | ContentModelImage;
