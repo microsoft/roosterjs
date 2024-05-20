@@ -15,7 +15,11 @@ import type {
     ReadonlyContentModelListItem,
     ShallowMutableContentModelListItem,
 } from '../blockGroup/ContentModelListItem';
-import type { ContentModelParagraph, ReadonlyContentModelParagraph } from './ContentModelParagraph';
+import type {
+    ContentModelParagraph,
+    ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
+} from './ContentModelParagraph';
 import type {
     ContentModelTable,
     ReadonlyContentModelTable,
@@ -54,6 +58,6 @@ export type ShallowMutableContentModelBlock =
     | ShallowMutableContentModelListItem
     | ShallowMutableContentModelGeneralBlock
     | ShallowMutableContentModelTable
-    | ContentModelParagraph
+    | ShallowMutableContentModelParagraph
     | ContentModelEntity
     | ContentModelDivider;
