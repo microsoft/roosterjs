@@ -1,4 +1,4 @@
-import { deleteSegment } from 'roosterjs-content-model-dom';
+import { deleteSegment, mutateBlock } from 'roosterjs-content-model-dom';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**
@@ -11,9 +11,10 @@ export const deleteAllSegmentBefore: DeleteSelectionStep = context => {
 
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
+    const mutableParagraph = mutateBlock(paragraph);
 
     for (let i = index - 1; i >= 0; i--) {
-        const segment = paragraph.segments[i];
+        const segment = mutableParagraph.segments[i];
 
         segment.isSelected = true;
 

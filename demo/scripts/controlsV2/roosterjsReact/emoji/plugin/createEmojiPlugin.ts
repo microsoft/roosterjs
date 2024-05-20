@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { isModifierKey, isNodeOfType, iterateSelections } from 'roosterjs-content-model-dom';
+import {
+    isModifierKey,
+    isNodeOfType,
+    iterateSelections,
+    mutateSegment,
+} from 'roosterjs-content-model-dom';
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
 import { MoreEmoji } from '../utils/emojiList';
 import { showEmojiCallout } from '../components/showEmojiCallout';
@@ -264,11 +269,13 @@ class EmojiPlugin implements ReactEditorPlugin {
                         previousSegment?.segmentType == 'Text' &&
                         previousSegment.text.endsWith(wordBeforeCursor)
                     ) {
-                        previousSegment.text =
-                            previousSegment.text.substring(
-                                0,
-                                previousSegment.text.length - wordBeforeCursor.length
-                            ) + emoji.codePoint;
+                        mutateSegment(block, previousSegment, segment => {
+                            segment.text =
+                                segment.text.substring(
+                                    0,
+                                    segment.text.length - wordBeforeCursor.length
+                                ) + emoji.codePoint;
+                        });
                     }
                 }
 
