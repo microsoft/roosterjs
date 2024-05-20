@@ -9,11 +9,11 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { ReadonlyBlockAndPath } from '../utils/getLeafSiblingBlock';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
@@ -26,7 +26,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
         const { paragraph, marker, path, tableContext } = context.insertPoint;
         const segments = paragraph.segments;
 
-        fixupBr(segments);
+        fixupBr(paragraph);
 
         const index = segments.indexOf(marker) + (isForward ? 1 : -1);
         const segmentToDelete = segments[index];
@@ -63,7 +63,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                         context.lastParagraph = block;
                     } else {
                         if (block.segments[block.segments.length - 1]?.segmentType == 'Br') {
-                            block.segments.pop();
+                            mutateBlock(block).segments.pop();
                         }
 
                         context.insertPoint = {
@@ -109,8 +109,8 @@ function getRoot(path: ReadonlyContentModelBlockGroup[]): ReadonlyContentModelDo
 
 function shouldOutdentParagraph(
     isForward: boolean,
-    segments: ContentModelSegment[],
-    paragraph: ContentModelParagraph,
+    segments: ReadonlyContentModelSegment[],
+    paragraph: ReadonlyContentModelParagraph,
     path: ReadonlyContentModelBlockGroup[]
 ) {
     return (
@@ -127,12 +127,14 @@ function shouldOutdentParagraph(
  * If the last segment is BR, remove it for now. We may add it back later when normalize model.
  * So that if this is an empty paragraph, it will start to delete next block
  */
-function fixupBr(segments: ContentModelSegment[]) {
+function fixupBr(paragraph: ReadonlyContentModelParagraph) {
+    const { segments } = paragraph;
+
     if (segments[segments.length - 1]?.segmentType == 'Br') {
         const segmentsWithoutBr = segments.filter(x => x.segmentType != 'SelectionMarker');
 
         if (segmentsWithoutBr[segmentsWithoutBr.length - 2]?.segmentType != 'Br') {
-            segments.pop();
+            mutateBlock(paragraph).segments.pop();
         }
     }
 }

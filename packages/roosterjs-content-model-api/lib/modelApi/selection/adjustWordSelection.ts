@@ -6,10 +6,10 @@ import {
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     ContentModelText,
     ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,9 +17,9 @@ import type {
  */
 export function adjustWordSelection(
     model: ReadonlyContentModelDocument,
-    marker: ContentModelSegment
-): ContentModelSegment[] {
-    let markerBlock: ContentModelParagraph | undefined;
+    marker: ShallowMutableContentModelSegment
+): ShallowMutableContentModelSegment[] {
+    let markerBlock: ShallowMutableContentModelParagraph | undefined;
 
     iterateSelections(model, (_, __, block, segments) => {
         //Find the block with the selection marker
@@ -32,7 +32,7 @@ export function adjustWordSelection(
     const tempSegments = markerBlock ? [...markerBlock.segments] : undefined;
 
     if (tempSegments && markerBlock) {
-        const segments: ContentModelSegment[] = [];
+        const segments: ShallowMutableContentModelSegment[] = [];
         let markerSelectionIndex = tempSegments.indexOf(marker);
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
             const currentSegment = tempSegments[i];
@@ -133,7 +133,7 @@ function findDelimiter(segment: ContentModelText, moveRightward: boolean): numbe
 }
 
 function splitTextSegment(
-    segments: ContentModelSegment[],
+    segments: ShallowMutableContentModelSegment[],
     textSegment: Readonly<ContentModelText>,
     index: number,
     found: number

@@ -10,7 +10,6 @@ import {
     updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelSegment,
     ContentModelSegmentFormat,
     ContentModelTable,
     ReadonlyContentModelBlock,
@@ -22,6 +21,7 @@ import type {
     ReadonlyTableSelectionContext,
     ShallowMutableContentModelBlock,
     ShallowMutableContentModelFormatContainer,
+    ShallowMutableContentModelSegment,
     ShallowMutableContentModelTable,
 } from 'roosterjs-content-model-types';
 
@@ -31,7 +31,7 @@ import type {
 export function clearModelFormat(
     model: ReadonlyContentModelDocument,
     blocksToClear: [ReadonlyContentModelBlockGroup[], ShallowMutableContentModelBlock][],
-    segmentsToClear: ContentModelSegment[],
+    segmentsToClear: ShallowMutableContentModelSegment[],
     tablesToClear: [ContentModelTable, boolean][]
 ) {
     iterateSelections(
@@ -110,7 +110,7 @@ function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
 }
 
 function clearSegmentsFormat(
-    segmentsToClear: ContentModelSegment[],
+    segmentsToClear: ShallowMutableContentModelSegment[],
     defaultSegmentFormat: ContentModelSegmentFormat | undefined
 ) {
     segmentsToClear.forEach(x => {

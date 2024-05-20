@@ -11,6 +11,7 @@ import {
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
     mutateBlock,
+    mutateSegment,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItem,
@@ -18,6 +19,8 @@ import type {
     InsertPoint,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
+    ShallowMutableContentModelParagraph,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -36,10 +39,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const rawEvent = formatContext?.rawEvent;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
-        const listItem = path[index];
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
 
-        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
+        if (readonlyListItem && readonlyListItem.blockGroupType === 'ListItem' && listParent) {
+            const listItem = mutateBlock(readonlyListItem);
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
 
@@ -118,7 +122,10 @@ const createNewListItem = (
     const newParagraph = createNewParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, insertPoint.marker.format);
+    const newListItem: ShallowMutableContentModelListItem = createListItem(
+        levels,
+        insertPoint.marker.format
+    );
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
@@ -143,27 +150,28 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
 
 const createNewParagraph = (insertPoint: InsertPoint) => {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         paragraph.format,
         paragraph.segmentFormat
     );
 
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
+    mutateSegment(paragraph, marker, (marker, paragraph, markerIndex) => {
+        const segments = paragraph.segments.splice(
+            markerIndex,
+            paragraph.segments.length - markerIndex
+        );
 
-    newParagraph.segments.push(...segments);
+        newParagraph.segments.push(...segments);
 
-    setParagraphNotImplicit(paragraph);
+        setParagraphNotImplicit(paragraph);
 
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
+        if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
+            paragraph.segments.push(createBr(marker.format));
+        }
 
-    normalizeParagraph(newParagraph);
+        normalizeParagraph(newParagraph);
+    });
 
     return newParagraph;
 };

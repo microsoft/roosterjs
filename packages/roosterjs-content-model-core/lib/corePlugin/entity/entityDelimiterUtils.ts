@@ -13,16 +13,20 @@ import {
     iterateSelections,
     isCharacterValue,
     findClosestBlockEntityContainer,
+    mutateSegment,
+    setParagraphNotImplicit,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
-    ContentModelBlockGroup,
     ContentModelFormatter,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     IEditor,
     KeyDownEvent,
     RangeSelection,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const DelimiterBefore = 'entityDelimiterBefore';
@@ -48,8 +52,13 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
             iterateSelections(model, (_path, _tableContext, block, _segments) => {
                 if (block?.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
-                        if (segment.segmentType == 'Text') {
-                            segment.text = segment.text.replace(ZeroWidthSpace, '');
+                        if (
+                            segment.segmentType == 'Text' &&
+                            segment.text.indexOf(ZeroWidthSpace) >= 0
+                        ) {
+                            mutateSegment(block, segment, segment => {
+                                segment.text = segment.text.replace(ZeroWidthSpace, '');
+                            });
                         }
                     });
                 }
@@ -297,15 +306,24 @@ function handleInputOnDelimiter(
 export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, context) => {
     iterateSelections(model, (_path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
-            delete block.isImplicit;
-            const selectionMarker = block.segments.find(w => w.segmentType == 'SelectionMarker');
+            const paragraph = mutateBlock(block);
+            const selectionMarker = paragraph.segments.find(
+                w => w.segmentType == 'SelectionMarker'
+            );
+
+            if (paragraph.isImplicit) {
+                setParagraphNotImplicit(paragraph);
+            }
+
             if (selectionMarker?.segmentType == 'SelectionMarker') {
-                block.segmentFormat = { ...selectionMarker.format };
+                paragraph.segmentFormat = { ...selectionMarker.format };
                 context.newPendingFormat = { ...selectionMarker.format };
             }
-            block.segments.unshift(createBr());
+
+            paragraph.segments.unshift(createBr());
         }
     });
+
     return true;
 };
 
@@ -314,8 +332,8 @@ export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, cont
  * @returns
  */
 export const handleEnterInlineEntity: ContentModelFormatter = model => {
-    let selectionBlock: ContentModelParagraph | undefined;
-    let selectionBlockParent: ContentModelBlockGroup | undefined;
+    let selectionBlock: ReadonlyContentModelParagraph | undefined;
+    let selectionBlockParent: ReadonlyContentModelBlockGroup | undefined;
 
     iterateSelections(model, (path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
@@ -325,34 +343,40 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
     });
 
     if (selectionBlock && selectionBlockParent) {
-        const selectionMarker = selectionBlock.segments.find(
+        const markerIndex = selectionBlock.segments.findIndex(
             segment => segment.segmentType == 'SelectionMarker'
         );
-        if (selectionMarker) {
-            const markerIndex = selectionBlock.segments.indexOf(selectionMarker);
-            const segmentsAfterMarker = selectionBlock.segments.splice(markerIndex);
 
-            const newPara = createParagraph(
+        if (markerIndex >= 0) {
+            const paragraph = mutateBlock(selectionBlock);
+            const segmentsAfterMarker = paragraph.segments.splice(markerIndex);
+
+            const newPara: ShallowMutableContentModelParagraph = createParagraph(
                 false,
-                selectionBlock.format,
-                selectionBlock.segmentFormat,
-                selectionBlock.decorator
+                paragraph.format,
+                paragraph.segmentFormat,
+                paragraph.decorator
             );
 
             if (
-                selectionBlock.segments.every(
+                paragraph.segments.every(
                     x => x.segmentType == 'SelectionMarker' || x.segmentType == 'Br'
                 ) ||
                 segmentsAfterMarker.every(x => x.segmentType == 'SelectionMarker')
             ) {
-                newPara.segments.push(createBr(selectionBlock.format));
+                newPara.segments.push(createBr(paragraph.format));
             }
 
             newPara.segments.push(...segmentsAfterMarker);
 
-            const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
+            const selectionBlockIndex = selectionBlockParent.blocks.indexOf(paragraph);
+
             if (selectionBlockIndex >= 0) {
-                selectionBlockParent.blocks.splice(selectionBlockIndex + 1, 0, newPara);
+                mutateBlock(selectionBlockParent).blocks.splice(
+                    selectionBlockIndex + 1,
+                    0,
+                    newPara
+                );
             }
         }
     }
