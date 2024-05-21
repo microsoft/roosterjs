@@ -249,7 +249,7 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
         const { autoLink } = this.options;
         if (event.source == 'Paste' && autoLink) {
-            createLink(editor);
+            createLink(editor, event);
         }
     }
 }
