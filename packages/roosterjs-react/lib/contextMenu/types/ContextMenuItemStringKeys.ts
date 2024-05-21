@@ -71,6 +71,15 @@ export type TableEditDeleteMenuItemStringKey =
     | 'menuNameTableDeleteRow';
 
 /**
+ * Key of localized strings of Table Options menu items
+ */
+export type TableOptionsMenuItemStringKey =
+    | 'menuNameTableSetHeaderRow'
+    | 'menuNameTableSetFirstColumn'
+    | 'menuNameTableSetBandedColumns'
+    | 'menuNameTableSetBandedRows';
+
+/**
  * Key of localized strings of Table Edit Merge menu item.
  */
 export type TableEditMergeMenuItemStringKey =
