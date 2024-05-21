@@ -210,7 +210,50 @@
 <a name='L151'></a><a href='#L151'>151</a>
 <a name='L152'></a><a href='#L152'>152</a>
 <a name='L153'></a><a href='#L153'>153</a>
-<a name='L154'></a><a href='#L154'>154</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -226,6 +269,9 @@
 <span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">55x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -363,17 +409,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">117x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { ContentModelBlockGroup, ContentModelListItem } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type {
+    ContentModelBlockGroup,
+    ContentModelListItem,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
+ * Search for all list items in the same thread as the current list item
  * @param model The content model
  * @param currentItem The current list item
- * Search for all list items in the same thread as the current list item
  */
 export function findListItemsInSameThread(
     group: ContentModelBlockGroup,
     currentItem: ContentModelListItem
-): ContentModelListItem[] {
+): ContentModelListItem[];
+&nbsp;
+/**
+ * Search for all list items in the same thread as the current list item (Readonly)
+ * @param model The content model
+ * @param currentItem The current list item
+ */
+export function findListItemsInSameThread(
+    group: ReadonlyContentModelBlockGroup,
+    currentItem: ReadonlyContentModelListItem
+): ReadonlyContentModelListItem[];
+&nbsp;
+export function findListItemsInSameThread(
+    group: ReadonlyContentModelBlockGroup,
+    currentItem: ReadonlyContentModelListItem
+): ReadonlyContentModelListItem[] {
     const items: (ContentModelListItem | null)[] = [];
 &nbsp;
     findListItems(group, items);
@@ -381,7 +447,10 @@ export function findListItemsInSameThread(
     return filterListItems(items, currentItem);
 }
 &nbsp;
-function findListItems(group: ContentModelBlockGroup, result: (ContentModelListItem | null)[]) {
+function findListItems(
+    group: ReadonlyContentModelBlockGroup,
+    result: (ReadonlyContentModelListItem | null)[]
+) {
     group.blocks.forEach(block =&gt; {
         switch (block.blockType) {
             case 'BlockGroup':
@@ -421,7 +490,7 @@ function findListItems(group: ContentModelBlockGroup, result: (ContentModelListI
     });
 }
 &nbsp;
-function pushNullIfNecessary(result: (ContentModelListItem | null)[]) {
+function pushNullIfNecessary(result: (ReadonlyContentModelListItem | null)[]) {
     const last = result[result.length - 1];
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (!last || last !== null) {
@@ -430,10 +499,10 @@ function pushNullIfNecessary(result: (ContentModelListItem | null)[]) {
 }
 &nbsp;
 function filterListItems(
-    items: (ContentModelListItem | null)[],
-    currentItem: ContentModelListItem
+    items: (ReadonlyContentModelListItem | null)[],
+    currentItem: ReadonlyContentModelListItem
 ) {
-    const result: ContentModelListItem[] = [];
+    const result: ReadonlyContentModelListItem[] = [];
     const currentIndex = items.indexOf(currentItem);
     const levelLength = currentItem.levels.length;
     const isOrderedList = currentItem.levels[levelLength - 1]?.listType == 'OL';
@@ -496,7 +565,7 @@ function filterListItems(
 }
 &nbsp;
 function areListTypesCompatible(
-    listItems: (ContentModelListItem | null)[],
+    listItems: (ReadonlyContentModelListItem | null)[],
     currentIndex: number,
     compareToIndex: number
 ): boolean {
@@ -511,7 +580,7 @@ function areListTypesCompatible(
     );
 }
 &nbsp;
-function hasStartNumberOverride(item: ContentModelListItem, levelLength: number): boolean {
+function hasStartNumberOverride(item: ReadonlyContentModelListItem, levelLength: number): boolean {
     return item.levels
         .slice(0, levelLength)
         .some(level =&gt; level.format.startNumberOverride !== undefined);
@@ -523,7 +592,7 @@ function hasStartNumberOverride(item: ContentModelListItem, levelLength: number)
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 21 2024 19:59:05 GMT+0000 (Coordinated Universal Time)
+                at Tue May 21 2024 21:57:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

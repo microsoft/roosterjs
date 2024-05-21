@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -107,7 +107,18 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -124,6 +135,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,6 +156,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -158,17 +180,18 @@
 <span class="cline-any cline-yes">86x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { BulletListType } from '../../constants/BulletListType';
+import { getMetadata, updateMetadata } from './updateMetadata';
 import { NumberingListType } from '../../constants/NumberingListType';
-import { updateMetadata } from './updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
 } from './definitionCreators';
 import type {
-    ContentModelWithDataset,
     ListMetadataFormat,
     ObjectDefinition,
+    ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -197,12 +220,22 @@ export const ListMetadataDefinition: ObjectDefinition&lt;ListMetadataFormat&gt; 
 );
 &nbsp;
 /**
+ * Get list metadata
+ * @param list The list Content Model (metadata holder)
+ */
+export function getListMetadata(
+    list: ReadonlyContentModelWithDataset&lt;ListMetadataFormat&gt;
+): ListMetadataFormat | null {
+    return getMetadata(list, ListMetadataDefinition);
+}
+&nbsp;
+/**
  * Update list metadata with a callback
  * @param list The list Content Model (metadata holder)
  * @param callback The callback function used for updating metadata
  */
 export function updateListMetadata(
-    list: ContentModelWithDataset&lt;ListMetadataFormat&gt;,
+    list: ShallowMutableContentModelWithDataset&lt;ListMetadataFormat&gt;,
     callback?: (format: ListMetadataFormat | null) =&gt; ListMetadataFormat | null
 ): ListMetadataFormat | null {
     return updateMetadata(list, callback, ListMetadataDefinition);
@@ -214,7 +247,7 @@ export function updateListMetadata(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 21 2024 19:59:05 GMT+0000 (Coordinated Universal Time)
+                at Tue May 21 2024 21:57:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
