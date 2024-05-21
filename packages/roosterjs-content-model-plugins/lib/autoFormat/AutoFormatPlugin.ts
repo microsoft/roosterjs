@@ -220,13 +220,9 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldFraction ||
                                 shouldOrdinals
                             );
-                        }
+                        },
+                        formatOptions
                     );
-
-                    editor.triggerEvent('contentChanged', {
-                        source: formatOptions.changeSource ?? ChangeSource.Format,
-                        formatApiName: formatOptions.apiName,
-                    });
 
                     break;
             }
@@ -249,7 +245,7 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
         const { autoLink } = this.options;
         if (event.source == 'Paste' && autoLink) {
-            createLink(editor, event);
+            createLink(editor);
         }
     }
 }
