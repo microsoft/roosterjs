@@ -281,8 +281,6 @@ function reconcileTextSelection(
         }
 
         onSegment(textNode, paragraph, textSegments);
-
-        delete paragraph.cachedElement;
     }
 
     return selectable;
