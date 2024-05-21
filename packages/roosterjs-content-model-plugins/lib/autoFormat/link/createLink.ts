@@ -9,6 +9,9 @@ export function createLink(editor: IEditor) {
     formatTextSegmentBeforeSelectionMarker(
         editor,
         (_model, linkSegment, _paragraph) => {
+            if (linkSegment.link) {
+                return true;
+            }
             let linkData: LinkData | null = null;
             if (!linkSegment.link && (linkData = matchLink(linkSegment.text))) {
                 addLink(linkSegment, {
@@ -20,6 +23,7 @@ export function createLink(editor: IEditor) {
                 });
                 return true;
             }
+
             return false;
         },
         {
