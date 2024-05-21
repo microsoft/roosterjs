@@ -1,10 +1,30 @@
-import type { ContentModelDivider } from './ContentModelDivider';
+import type { ContentModelDivider, ReadonlyContentModelDivider } from './ContentModelDivider';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelFormatContainer } from '../blockGroup/ContentModelFormatContainer';
-import type { ContentModelGeneralBlock } from '../blockGroup/ContentModelGeneralBlock';
-import type { ContentModelListItem } from '../blockGroup/ContentModelListItem';
-import type { ContentModelParagraph } from './ContentModelParagraph';
-import type { ContentModelTable } from './ContentModelTable';
+import type {
+    ContentModelFormatContainer,
+    ReadonlyContentModelFormatContainer,
+    ShallowMutableContentModelFormatContainer,
+} from '../blockGroup/ContentModelFormatContainer';
+import type {
+    ContentModelGeneralBlock,
+    ReadonlyContentModelGeneralBlock,
+    ShallowMutableContentModelGeneralBlock,
+} from '../blockGroup/ContentModelGeneralBlock';
+import type {
+    ContentModelListItem,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
+} from '../blockGroup/ContentModelListItem';
+import type {
+    ContentModelParagraph,
+    ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
+} from './ContentModelParagraph';
+import type {
+    ContentModelTable,
+    ReadonlyContentModelTable,
+    ShallowMutableContentModelTable,
+} from './ContentModelTable';
 
 /**
  * A union type of Content Model Block
@@ -15,5 +35,29 @@ export type ContentModelBlock =
     | ContentModelGeneralBlock
     | ContentModelTable
     | ContentModelParagraph
+    | ContentModelEntity
+    | ContentModelDivider;
+
+/**
+ * A union type of Content Model Block (Readonly)
+ */
+export type ReadonlyContentModelBlock =
+    | ReadonlyContentModelFormatContainer
+    | ReadonlyContentModelListItem
+    | ReadonlyContentModelGeneralBlock
+    | ReadonlyContentModelTable
+    | ReadonlyContentModelParagraph
+    | ContentModelEntity
+    | ReadonlyContentModelDivider;
+
+/**
+ * A union type of Content Model Block (Shallow mutable)
+ */
+export type ShallowMutableContentModelBlock =
+    | ShallowMutableContentModelFormatContainer
+    | ShallowMutableContentModelListItem
+    | ShallowMutableContentModelGeneralBlock
+    | ShallowMutableContentModelTable
+    | ShallowMutableContentModelParagraph
     | ContentModelEntity
     | ContentModelDivider;

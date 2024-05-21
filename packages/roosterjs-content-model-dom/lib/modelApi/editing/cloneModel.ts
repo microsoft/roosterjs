@@ -265,12 +265,13 @@ function cloneListItem(
     item: ContentModelListItem,
     options: CloneModelOptions
 ): ContentModelListItem {
-    const { formatHolder, levels } = item;
+    const { formatHolder, levels, cachedElement } = item;
 
     return Object.assign(
         {
             formatHolder: cloneSelectionMarker(formatHolder),
             levels: levels.map(cloneListLevel),
+            cachedElement: handleCachedElement(cachedElement, 'cache', options),
         },
         cloneBlockBase(item),
         cloneBlockGroupBase(item, options)
