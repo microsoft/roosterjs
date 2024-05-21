@@ -58,7 +58,7 @@ export function applyTableFormat(
 
         clearCache(rows);
         formatCells(rows, effectiveMetadata, metaOverrides);
-        setFirstColumnFormat(rows, effectiveMetadata, metaOverrides);
+        setFirstColumnFormat(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
         return effectiveMetadata;
     });
@@ -236,28 +236,26 @@ function formatCells(
     });
 }
 
-function setFirstColumnFormat(
+export function setFirstColumnFormat(
     rows: ContentModelTableRow[],
-    format: Partial<TableMetadataFormat>,
-    metaOverrides: MetaOverrides
+    format: Partial<TableMetadataFormat>
 ) {
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, cellIndex) => {
-            if (format.hasFirstColumn && cellIndex === 0) {
+            if (format.hasFirstColumn && cellIndex === 0 && rowIndex !== 0) {
                 cell.isHeader = true;
 
-                if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
-                    setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(
-                        cell,
-                        null /*color*/,
-                        false /*isColorOverride*/,
-                        true /*applyToSegments*/
-                    );
-                }
-
-                if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom');
+                switch (rowIndex) {
+                    case 0:
+                        setBorderColor(cell.format, 'borderBottom');
+                        break;
+                    case rows.length - 1:
+                        setBorderColor(cell.format, 'borderTop');
+                        break;
+                    default:
+                        setBorderColor(cell.format, 'borderTop');
+                        setBorderColor(cell.format, 'borderBottom');
+                        break;
                 }
             } else {
                 cell.isHeader = false;
@@ -293,6 +291,11 @@ function setHeaderRowFormat(
     });
 }
 
+/**
+ * @param format The cell format to set the border color
+ * @param key The border key to set the color
+ * @param value The color to set. If not given, it removes the color and sets the style to transparent
+ */
 function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
     const border = extractBorderValues(format[key]);
     border.color = value || '';

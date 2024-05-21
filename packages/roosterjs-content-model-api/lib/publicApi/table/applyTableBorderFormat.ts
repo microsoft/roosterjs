@@ -1,9 +1,12 @@
+import { setFirstColumnFormat } from 'roosterjs-content-model-dom/lib/modelApi/editing/applyTableFormat';
 import {
     extractBorderValues,
     getFirstSelectedTable,
     getSelectedCells,
+    hasMetadata,
     parseValueWithUnit,
     updateTableCellMetadata,
+    updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     IEditor,
@@ -364,6 +367,12 @@ export function applyTableBorderFormat(
 
                     //Format perimeter if necessary or possible
                     modifyPerimeter(tableModel, sel, borderFormat, perimeter, isRtl);
+                }
+
+                const tableMeta = hasMetadata(tableModel) ? updateTableMetadata(tableModel) : {};
+                if (tableMeta) {
+                    // Enforce first column format if necessary
+                    setFirstColumnFormat(tableModel.rows, tableMeta);
                 }
 
                 return true;
