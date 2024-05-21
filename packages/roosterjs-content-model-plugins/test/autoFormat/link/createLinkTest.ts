@@ -163,6 +163,6 @@ describe('createLink', () => {
             format: {},
         };
 
-        runTest(input, input, false);
+        runTest(input, input, true);
     });
 });
