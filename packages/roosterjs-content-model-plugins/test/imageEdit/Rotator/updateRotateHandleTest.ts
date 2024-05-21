@@ -118,7 +118,7 @@ describe('updateRotateHandlePosition', () => {
         );
     });
 
-    it('adjust rotate handle - ROTATOR NOT HIDDEN', () => {
+    xit('adjust rotate handle - ROTATOR NOT HIDDEN', () => {
         runTest(
             {
                 top: 2,

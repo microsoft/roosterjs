@@ -33,16 +33,7 @@ export function createImageWrapper(
     htmlOptions: ImageHtmlOptions,
     operation?: ImageEditOperation
 ): WrapperElements {
-    const imageClone = image.cloneNode(true) as HTMLImageElement;
-    imageClone.style.removeProperty('transform');
-    if (editInfo.src) {
-        imageClone.src = editInfo.src;
-        imageClone.removeAttribute('id');
-        imageClone.style.removeProperty('max-width');
-        imageClone.style.removeProperty('max-height');
-        imageClone.style.width = editInfo.widthPx + 'px';
-        imageClone.style.height = editInfo.heightPx + 'px';
-    }
+    const imageClone = cloneImage(image, editInfo);
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
@@ -140,4 +131,18 @@ const createBorder = (editor: IEditor, borderColor?: string) => {
         `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${borderColor};pointer-events:none;`
     );
     return resizeBorder;
+};
+
+const cloneImage = (image: HTMLImageElement, editInfo: ImageMetadataFormat) => {
+    const imageClone = image.cloneNode(true) as HTMLImageElement;
+    imageClone.style.removeProperty('transform');
+    if (editInfo.src) {
+        imageClone.src = editInfo.src;
+        imageClone.removeAttribute('id');
+        imageClone.style.removeProperty('max-width');
+        imageClone.style.removeProperty('max-height');
+        imageClone.style.width = editInfo.widthPx + 'px';
+        imageClone.style.height = editInfo.heightPx + 'px';
+    }
+    return imageClone;
 };

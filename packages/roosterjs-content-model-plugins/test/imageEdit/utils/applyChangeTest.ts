@@ -1,5 +1,5 @@
 import { applyChange } from '../../../lib/imageEdit/utils/applyChange';
-import { ChangeSource, createImage } from 'roosterjs-content-model-dom';
+import { createImage } from 'roosterjs-content-model-dom';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import type {
     ContentModelDocument,
