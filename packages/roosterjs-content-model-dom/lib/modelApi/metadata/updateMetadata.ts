@@ -1,7 +1,31 @@
 import { validate } from './validate';
-import type { ContentModelWithDataset, Definition } from 'roosterjs-content-model-types';
+import type {
+    Definition,
+    ReadonlyContentModelWithDataset,
+    ShallowMutableContentModelWithDataset,
+} from 'roosterjs-content-model-types';
 
 const EditingInfoDatasetName = 'editingInfo';
+
+/**
+ * Retrieve metadata from the given model.
+ * @param model The Content Model to retrieve metadata from
+ * @param definition Definition of this metadata type, used for validate the metadata object
+ * @returns Metadata of the model, or null if it does not contain a valid metadata
+ */
+export function getMetadata<T>(
+    model: ReadonlyContentModelWithDataset<T>,
+    definition?: Definition<T>
+): T | null {
+    const metadataString = model.dataset[EditingInfoDatasetName];
+    let obj: Object | null = null;
+
+    try {
+        obj = JSON.parse(metadataString);
+    } catch {}
+
+    return !definition || validate(obj, definition) ? (obj as T) : null;
+}
 
 /**
  * Update metadata of the given model
@@ -11,20 +35,11 @@ const EditingInfoDatasetName = 'editingInfo';
  * @returns The metadata object if any, or null
  */
 export function updateMetadata<T>(
-    model: ContentModelWithDataset<T>,
+    model: ShallowMutableContentModelWithDataset<T>,
     callback?: (metadata: T | null) => T | null,
     definition?: Definition<T>
 ): T | null {
-    const metadataString = model.dataset[EditingInfoDatasetName];
-    let obj: T | null = null;
-
-    try {
-        obj = JSON.parse(metadataString) as T;
-    } catch {}
-
-    if (definition && !validate(obj, definition)) {
-        obj = null;
-    }
+    let obj = getMetadata(model, definition);
 
     if (callback) {
         obj = callback(obj);
@@ -43,6 +58,6 @@ export function updateMetadata<T>(
  * Check if the given model has metadata
  * @param model The content model to check
  */
-export function hasMetadata<T>(model: ContentModelWithDataset<T> | HTMLElement): boolean {
+export function hasMetadata<T>(model: ReadonlyContentModelWithDataset<T> | HTMLElement): boolean {
     return !!model.dataset[EditingInfoDatasetName];
 }

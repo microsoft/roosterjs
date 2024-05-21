@@ -1,5 +1,61 @@
 import { ContentModelTableCell, TableCellMetadataFormat } from 'roosterjs-content-model-types';
-import { updateTableCellMetadata } from '../../../lib//modelApi/metadata/updateTableCellMetadata';
+import {
+    getTableCellMetadata,
+    updateTableCellMetadata,
+} from '../../../lib//modelApi/metadata/updateTableCellMetadata';
+
+describe('getTableCellMetadata', () => {
+    it('No value', () => {
+        const cell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            format: {},
+            blocks: [],
+            spanAbove: false,
+            spanLeft: false,
+            dataset: {},
+        };
+        const result = getTableCellMetadata(cell);
+
+        expect(result).toBeNull();
+    });
+
+    it('Empty value', () => {
+        const cell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            format: {},
+            blocks: [],
+            spanAbove: false,
+            spanLeft: false,
+            dataset: {
+                editingInfo: '',
+            },
+        };
+        const result = getTableCellMetadata(cell);
+
+        expect(result).toBeNull();
+    });
+
+    it('Full valid value, return original value', () => {
+        const cellFormat: TableCellMetadataFormat = {
+            bgColorOverride: true,
+        };
+        const cell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            format: {},
+            blocks: [],
+            spanAbove: false,
+            spanLeft: false,
+            dataset: {
+                editingInfo: JSON.stringify(cellFormat),
+            },
+        };
+        const result = getTableCellMetadata(cell);
+
+        expect(result).toEqual({
+            bgColorOverride: true,
+        });
+    });
+});
 
 describe('updateTableCellMetadata', () => {
     it('No value', () => {
