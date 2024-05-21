@@ -1,11 +1,12 @@
 import { addLink, ChangeSource } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker, matchLink } from 'roosterjs-content-model-api';
-import type { ContentChangedEvent, IEditor, LinkData } from 'roosterjs-content-model-types';
+import type { IEditor, LinkData } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createLink(editor: IEditor, event: ContentChangedEvent) {
+export function createLink(editor: IEditor) {
+    let anchorNode: Node | null = null;
     formatTextSegmentBeforeSelectionMarker(
         editor,
         (_model, linkSegment, _paragraph) => {
@@ -28,9 +29,12 @@ export function createLink(editor: IEditor, event: ContentChangedEvent) {
         },
         {
             changeSource: ChangeSource.AutoLink,
-            getChangeData: () => {
-                return event.data;
+            onNodeCreated: (_modelElement, node) => {
+                if (!anchorNode) {
+                    anchorNode = node;
+                }
             },
+            getChangeData: () => anchorNode,
         }
     );
 }
