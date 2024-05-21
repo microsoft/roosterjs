@@ -1,10 +1,10 @@
-import { setFirstColumnFormat } from 'roosterjs-content-model-dom/lib/modelApi/editing/applyTableFormat';
 import {
     extractBorderValues,
     getFirstSelectedTable,
     getSelectedCells,
     hasMetadata,
     parseValueWithUnit,
+    setFirstColumnFormat,
     updateTableCellMetadata,
     updateTableMetadata,
 } from 'roosterjs-content-model-dom';

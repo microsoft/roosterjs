@@ -236,6 +236,11 @@ function formatCells(
     });
 }
 
+/**
+ * Set the first column format for the table
+ * @param rows The rows of the table
+ * @param format The  table metadata format
+ */
 export function setFirstColumnFormat(
     rows: ContentModelTableRow[],
     format: Partial<TableMetadataFormat>

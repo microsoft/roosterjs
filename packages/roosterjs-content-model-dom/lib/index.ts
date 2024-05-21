@@ -123,7 +123,7 @@ export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
 export { deleteBlock } from './modelApi/editing/deleteBlock';
-export { applyTableFormat } from './modelApi/editing/applyTableFormat';
+export { applyTableFormat, setFirstColumnFormat } from './modelApi/editing/applyTableFormat';
 export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './modelApi/editing/normalizeTable';
 export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBackgroundColor';
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';
