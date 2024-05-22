@@ -130,7 +130,7 @@ function createVListFromItemNode(node: Node): VList {
     // Wrap all child nodes under a single one, and put the new list under original root node
     // so that the list can carry over styles under the root node.
     const childNodes = toArray(node.childNodes);
-    const nodeForItem = childNodes.length == 1 ? childNodes[0] : wrap(childNodes, 'SPAN');
+    const nodeForItem = wrap(childNodes, 'SPAN');
 
     // Create a temporary OL root element for this list.
     const listNode = node.ownerDocument!.createElement('ol'); // Either OL or UL is ok here
