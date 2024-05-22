@@ -58,7 +58,7 @@ export function applyTableFormat(
 
         clearCache(rows);
         formatCells(rows, effectiveMetadata, metaOverrides);
-        setFirstColumnFormat(rows, effectiveMetadata);
+        setFirstColumnFormatBorders(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
         return effectiveMetadata;
     });
@@ -176,7 +176,7 @@ function formatCells(
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
-    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven, hasFirstColumn } = format;
 
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
@@ -212,14 +212,18 @@ function formatCells(
 
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
-                const color =
-                    hasBandedRows || hasBandedColumns
-                        ? (hasBandedColumns && colIndex % 2 != 0) ||
-                          (hasBandedRows && rowIndex % 2 != 0)
-                            ? bgColorOdd
-                            : bgColorEven
-                        : bgColorEven; /* bgColorEven is the default color */
-
+                let color: string | null | undefined;
+                if (hasFirstColumn && colIndex == 0) {
+                    color = null;
+                } else {
+                    color =
+                        hasBandedRows || hasBandedColumns
+                            ? (hasBandedColumns && colIndex % 2 != 0) ||
+                              (hasBandedRows && rowIndex % 2 != 0)
+                                ? bgColorOdd
+                                : bgColorEven
+                            : bgColorEven; /* bgColorEven is the default color */
+                }
                 setTableCellBackgroundColor(
                     cell,
                     color,
@@ -237,17 +241,22 @@ function formatCells(
 }
 
 /**
- * Set the first column format for the table
+ * Set the first column format borders for the table
  * @param rows The rows of the table
- * @param format The  table metadata format
+ * @param format The table metadata format
  */
-export function setFirstColumnFormat(
+export function setFirstColumnFormatBorders(
     rows: ContentModelTableRow[],
     format: Partial<TableMetadataFormat>
 ) {
+    // Exit early hasFirstColumn is not set
+    if (!format.hasFirstColumn) {
+        return;
+    }
+
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, cellIndex) => {
-            if (format.hasFirstColumn && cellIndex === 0 && rowIndex !== 0) {
+            if (cellIndex == 0) {
                 cell.isHeader = true;
 
                 switch (rowIndex) {
@@ -274,12 +283,17 @@ function setHeaderRowFormat(
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
+    // Exit early if hasHeaderRow is not set
+    if (!format.hasHeaderRow) {
+        return;
+    }
+
     const rowIndex = 0;
 
     rows[rowIndex]?.cells.forEach((cell, cellIndex) => {
-        cell.isHeader = format.hasHeaderRow;
+        cell.isHeader = true;
 
-        if (format.hasHeaderRow && format.headerRowColor) {
+        if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                 setTableCellBackgroundColor(
                     cell,

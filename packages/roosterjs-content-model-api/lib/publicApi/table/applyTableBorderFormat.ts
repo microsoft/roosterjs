@@ -4,7 +4,7 @@ import {
     getSelectedCells,
     hasMetadata,
     parseValueWithUnit,
-    setFirstColumnFormat,
+    setFirstColumnFormatBorders,
     updateTableCellMetadata,
     updateTableMetadata,
 } from 'roosterjs-content-model-dom';
@@ -372,7 +372,7 @@ export function applyTableBorderFormat(
                 const tableMeta = hasMetadata(tableModel) ? updateTableMetadata(tableModel) : {};
                 if (tableMeta) {
                     // Enforce first column format if necessary
-                    setFirstColumnFormat(tableModel.rows, tableMeta);
+                    setFirstColumnFormatBorders(tableModel.rows, tableMeta);
                 }
 
                 return true;
