@@ -8,7 +8,7 @@ import type {
  * @param defaultFormat @optional Default format of this model
  */
 export function createContentModelDocument(
-    defaultFormat?: ContentModelSegmentFormat
+    defaultFormat?: Readonly<ContentModelSegmentFormat>
 ): ContentModelDocument {
     const result: ContentModelDocument = {
         blockGroupType: 'Document',
