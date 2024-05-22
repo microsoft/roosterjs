@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.04% </span>
+                <span class="strong">94.06% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>104/113</span>
+                <span class='fraction'>95/101</span>
             </div>
         
             
@@ -315,7 +315,11 @@
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
 <a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -374,6 +378,7 @@
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">33x</span>
 <span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
@@ -521,6 +526,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
@@ -575,21 +583,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { extractBorderValues } from '../../domUtils/style/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getTableMetadata } from '../metadata/updateTableMetadata';
 import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     ContentModelFormatState,
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelFormatContainer,
-    ContentModelImage,
-    ContentModelListItem,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
-    TableSelectionContext,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelImage,
+    ReadonlyTableSelectionContext,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -599,12 +607,12 @@ import type {
  * @param formatState Existing format state object, used for receiving the result
  */
 export function retrieveModelFormatState(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState
 ) {
-    let firstTableContext: TableSelectionContext | undefined;
-    let firstBlock: ContentModelBlock | undefined;
+    let firstTableContext: ReadonlyTableSelectionContext | undefined;
+    let firstBlock: ReadonlyContentModelBlock | undefined;
     let isFirst = true;
     let isFirstImage = true;
     let isFirstSegment = true;
@@ -631,10 +639,11 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEach(segment =&gt; {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                        const modelFormat = Object.assign({}, model.format);
-                        delete modelFormat<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>talic;
-                        delete modelFormat<span class="branch-0 cbranch-no" title="branch not covered" >?.u</span>nderline;
-                        delete modelFormat<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ontWeight;
+                        const modelFormat = { ...model.format };
+&nbsp;
+                        delete modelFormat.italic;
+                        delete modelFormat.underline;
+                        delete modelFormat.fontWeight;
 &nbsp;
                         retrieveSegmentFormat(
                             formatState,
@@ -740,7 +749,7 @@ function retrieveSegmentFormat(
 &nbsp;
 function retrieveParagraphFormat(
     result: ContentModelFormatState,
-    paragraph: ContentModelParagraph,
+    paragraph: ReadonlyContentModelParagraph,
     isFirst: boolean
 ) {
     const headingLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
@@ -755,14 +764,14 @@ function retrieveParagraphFormat(
 &nbsp;
 function retrieveStructureFormat(
     result: ContentModelFormatState,
-    path: ContentModelBlockGroup[],
+    path: ReadonlyContentModelBlockGroup[],
     isFirst: boolean
 ) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
     const containerIndex = getClosestAncestorBlockGroupIndex(path, ['FormatContainer'], []);
 &nbsp;
     if (listItemIndex &gt;= 0) {
-        const listItem = path[listItemIndex] as ContentModelListItem;
+        const listItem = path[listItemIndex] as ReadonlyContentModelListItem;
         const listType = listItem<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>evels[listItem.levels.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>istType;
 &nbsp;
         mergeValue(result, 'isBullet', listType == 'UL', isFirst);
@@ -773,13 +782,16 @@ function retrieveStructureFormat(
         result,
         'isBlockQuote',
         containerIndex &gt;= 0 &amp;&amp;
-            (path[containerIndex] as ContentModelFormatContainer)<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>agName == 'blockquote',
+            (path[containerIndex] as ReadonlyContentModelFormatContainer)<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>agName == 'blockquote',
         isFirst
     );
 }
 &nbsp;
-function retrieveTableFormat(tableContext: TableSelectionContext, result: ContentModelFormatState) {
-    const tableFormat = updateTableMetadata(tableContext.table);
+function retrieveTableFormat(
+    tableContext: ReadonlyTableSelectionContext,
+    result: ContentModelFormatState
+) {
+    const tableFormat = getTableMetadata(tableContext.table);
 &nbsp;
     result.isInTable = true;
     result.tableHasHeader = tableContext.table.rows.some(row =&gt;
@@ -791,7 +803,7 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Conten
     }
 }
 &nbsp;
-function retrieveImageFormat(image: ContentModelImage, result: ContentModelFormatState) {
+function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentModelFormatState) {
     const { format } = image;
     const borderKey = 'borderTop';
     const extractedBorder = extractBorderValues(format[borderKey]);
@@ -838,7 +850,7 @@ function px2Pt(px: string) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 22 2024 17:07:02 GMT+0000 (Coordinated Universal Time)
+                at Wed May 22 2024 23:35:04 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
