@@ -6,9 +6,13 @@ import type { IEditor, LinkData } from 'roosterjs-content-model-types';
  * @internal
  */
 export function createLink(editor: IEditor) {
+    let anchorNode: Node | null = null;
     formatTextSegmentBeforeSelectionMarker(
         editor,
         (_model, linkSegment, _paragraph) => {
+            if (linkSegment.link) {
+                return true;
+            }
             let linkData: LinkData | null = null;
             if (!linkSegment.link && (linkData = matchLink(linkSegment.text))) {
                 addLink(linkSegment, {
@@ -20,10 +24,17 @@ export function createLink(editor: IEditor) {
                 });
                 return true;
             }
+
             return false;
         },
         {
             changeSource: ChangeSource.AutoLink,
+            onNodeCreated: (_modelElement, node) => {
+                if (!anchorNode) {
+                    anchorNode = node;
+                }
+            },
+            getChangeData: () => anchorNode,
         }
     );
 }
