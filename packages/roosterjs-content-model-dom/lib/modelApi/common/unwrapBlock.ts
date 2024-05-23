@@ -1,5 +1,9 @@
+import { mutateBlock } from './mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
-import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+} from 'roosterjs-content-model-types';
 
 /**
  * Unwrap a given block group, move its child blocks to be under its parent group
@@ -7,14 +11,16 @@ import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-conten
  * @param groupToUnwrap  The block group to unwrap
  */
 export function unwrapBlock(
-    parent: ContentModelBlockGroup | null,
-    groupToUnwrap: ContentModelBlockGroup & ContentModelBlock
+    parent: ReadonlyContentModelBlockGroup | null,
+    groupToUnwrap: ReadonlyContentModelBlockGroup & ReadonlyContentModelBlock
 ) {
     const index = parent?.blocks.indexOf(groupToUnwrap) ?? -1;
 
     if (index >= 0) {
         groupToUnwrap.blocks.forEach(setParagraphNotImplicit);
 
-        parent?.blocks.splice(index, 1, ...groupToUnwrap.blocks);
+        if (parent) {
+            mutateBlock(parent)?.blocks.splice(index, 1, ...groupToUnwrap.blocks.map(mutateBlock));
+        }
     }
 }

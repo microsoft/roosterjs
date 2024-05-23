@@ -5,9 +5,9 @@ import {
     normalizeText,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelParagraph,
     DeleteSelectionContext,
     DeleteSelectionStep,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const enum DeleteWordState {
@@ -101,7 +101,7 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
 }
 
 function* iterateSegments(
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     markerIndex: number,
     forward: boolean,
     context: DeleteSelectionContext

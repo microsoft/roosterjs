@@ -599,7 +599,6 @@ describe('setSelection', () => {
                             src: '',
                             dataset: {},
                             isSelected: true,
-                            isSelectedAsImageSelection: false,
                         },
                         {
                             segmentType: 'Text',
