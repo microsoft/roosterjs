@@ -234,24 +234,28 @@ export function onDragStart(context: TableMoverContext): TableMoverInitValue {
     tableRect.style.left = `${trect.left}px`;
     div.parentNode?.appendChild(tableRect);
 
-    // Get current selection
+    // Get drag start selection
     const initialSelection = editor.getDOMSelection();
 
-    // Select first cell of the table
-    editor.setDOMSelection({
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
+    // Get Table block in content model
+    let cmTable: ContentModelTable | undefined;
 
-    // Get the table content model
-    const [cmTable] = getFirstSelectedTable(editor.getContentModelCopy('disconnected'));
-
-    // Restore selection
-    editor.setDOMSelection(initialSelection);
+    editor.formatContentModel(
+        model => {
+            [cmTable] = getFirstSelectedTable(model);
+            return false;
+        },
+        {
+            selectionOverride: {
+                type: 'table',
+                firstColumn: 0,
+                firstRow: 0,
+                lastColumn: 0,
+                lastRow: 0,
+                table: table,
+            },
+        }
+    );
 
     return {
         cmTable,

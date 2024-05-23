@@ -129,24 +129,25 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
 
     const { editor, table } = context;
 
-    // Get current selection
-    const selection = editor.getDOMSelection();
+    // Get Table block in content model
+    let cmTable: ContentModelTable | undefined;
 
-    // Select first cell of the table
-    editor.setDOMSelection({
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
-
-    // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
-
-    // Restore selection
-    editor.setDOMSelection(selection);
+    editor.formatContentModel(
+        model => {
+            [cmTable] = getFirstSelectedTable(model);
+            return false;
+        },
+        {
+            selectionOverride: {
+                type: 'table',
+                firstColumn: 0,
+                firstRow: 0,
+                lastColumn: 0,
+                lastRow: 0,
+                table: table,
+            },
+        }
+    );
 
     // Save original widths and heights
     const heights: number[] = [];
