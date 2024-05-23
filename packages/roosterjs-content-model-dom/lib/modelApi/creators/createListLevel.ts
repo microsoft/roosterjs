@@ -1,7 +1,7 @@
 import type {
     ContentModelListItemLevelFormat,
     ContentModelListLevel,
-    DatasetFormat,
+    ReadonlyDatasetFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,8 +12,8 @@ import type {
  */
 export function createListLevel(
     listType: 'OL' | 'UL',
-    format?: ContentModelListItemLevelFormat,
-    dataset?: DatasetFormat
+    format?: Readonly<ContentModelListItemLevelFormat>,
+    dataset?: ReadonlyDatasetFormat
 ): ContentModelListLevel {
     return {
         listType,

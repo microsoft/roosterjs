@@ -1,5 +1,5 @@
 import type {
-    ContentModelBlock,
+    ShallowMutableContentModelBlock,
     ShallowMutableContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
@@ -8,6 +8,9 @@ import type {
  * @param group The block group to add block into
  * @param block The block to add
  */
-export function addBlock(group: ShallowMutableContentModelBlockGroup, block: ContentModelBlock) {
+export function addBlock(
+    group: ShallowMutableContentModelBlockGroup,
+    block: ShallowMutableContentModelBlock
+) {
     group.blocks.push(block);
 }

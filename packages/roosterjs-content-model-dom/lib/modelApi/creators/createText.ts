@@ -1,9 +1,9 @@
 import { addCode, addLink } from '../common/addDecorators';
 import type {
-    ContentModelCode,
-    ContentModelLink,
     ContentModelSegmentFormat,
     ContentModelText,
+    ReadonlyContentModelCode,
+    ReadonlyContentModelLink,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -15,14 +15,14 @@ import type {
  */
 export function createText(
     text: string,
-    format?: ContentModelSegmentFormat,
-    link?: ContentModelLink,
-    code?: ContentModelCode
+    format?: Readonly<ContentModelSegmentFormat>,
+    link?: ReadonlyContentModelLink,
+    code?: ReadonlyContentModelCode
 ): ContentModelText {
     const result: ContentModelText = {
         segmentType: 'Text',
         text: text,
-        format: format ? { ...format } : {},
+        format: { ...format },
     };
 
     if (link) {
