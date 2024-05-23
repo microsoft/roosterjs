@@ -55,7 +55,6 @@ describe('applyTableBorderFormat', () => {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
-        console.log('FAILEDXXX', table.dataset);
         let formatResult: boolean | undefined;
 
         const formatContentModel = jasmine
@@ -78,8 +77,6 @@ describe('applyTableBorderFormat', () => {
             blockGroupType: 'Document',
             blocks: [expectedTable],
         });
-
-        console.log('FAILED,', model, expectedTable);
     }
     it('All Borders', () => {
         runTest(

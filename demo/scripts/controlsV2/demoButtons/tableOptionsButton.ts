@@ -1,6 +1,5 @@
 import { formatTable, getFormatState } from 'roosterjs-content-model-api';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
-import { TableOptionsMenuItemStringKey } from 'roosterjs-react';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const TableEditOperationMap: Partial<Record<
@@ -12,6 +11,15 @@ const TableEditOperationMap: Partial<Record<
     menuNameTableSetBandedColumns: 'hasBandedColumns',
     menuNameTableSetBandedRows: 'hasBandedRows',
 };
+
+/**
+ * Key of localized strings of Table Options menu items
+ */
+type TableOptionsMenuItemStringKey =
+    | 'menuNameTableSetHeaderRow'
+    | 'menuNameTableSetFirstColumn'
+    | 'menuNameTableSetBandedColumns'
+    | 'menuNameTableSetBandedRows';
 
 export const tableOptionsButton: RibbonButton<
     'ribbonButtonTableOptions' | TableOptionsMenuItemStringKey

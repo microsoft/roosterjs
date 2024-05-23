@@ -15,5 +15,4 @@ export {
     TableEditShadeMenuItemStringKey,
     TableEditMenuItemStringKey,
     TableEditAlignTableMenuItemStringKey,
-    TableOptionsMenuItemStringKey,
 } from './types/ContextMenuItemStringKeys';

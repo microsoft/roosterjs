@@ -236,6 +236,9 @@ function formatCells(
             if (format.verticalAlign && !metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
                 cell.format.verticalAlign = format.verticalAlign;
             }
+
+            // Format Header
+            cell.isHeader = false;
         });
     });
 }
@@ -261,6 +264,8 @@ export function setFirstColumnFormatBorders(
 
                 switch (rowIndex) {
                     case 0:
+                        break;
+                    case 1:
                         setBorderColor(cell.format, 'borderBottom');
                         break;
                     case rows.length - 1:
@@ -271,8 +276,6 @@ export function setFirstColumnFormatBorders(
                         setBorderColor(cell.format, 'borderBottom');
                         break;
                 }
-            } else {
-                cell.isHeader = false;
             }
         });
     });
