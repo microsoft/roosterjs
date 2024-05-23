@@ -74,4 +74,19 @@ export interface SelectionPluginState {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Color of the border of a selectedImage in dark mode. Default color: '#DB626C'
+     */
+    imageSelectionBorderColorDark?: string;
+
+    /**
+     * Background color of a selected table cell. Default color: '#C6C6C6'
+     */
+    tableCellSelectionBackgroundColor?: string;
+
+    /**
+     * Background color of a selected table cell in dark mode. Default color: '#C6C6C6'
+     */
+    tableCellSelectionBackgroundColorDark?: string;
 }

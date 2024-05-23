@@ -15,6 +15,7 @@ import type {
     ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
@@ -38,7 +39,7 @@ const CloneOption: CloneModelOptions = {
 /**
  * @internal
  */
-export function cloneModelForPaste(model: ContentModelDocument) {
+export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
     return cloneModel(model, CloneOption);
 }
 
@@ -94,7 +95,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
-            scrollCaretIntoView: true,
+            scrollCaretIntoView: false, // TODO #2633: Make a full fix to the scroll behavior
             apiName: 'paste',
         }
     );

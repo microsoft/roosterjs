@@ -5,11 +5,14 @@ import type { ContentModelImage, ContentModelImageFormat } from 'roosterjs-conte
  * @param src Image source
  * @param format @optional The format of this model
  */
-export function createImage(src: string, format?: ContentModelImageFormat): ContentModelImage {
+export function createImage(
+    src: string,
+    format?: Readonly<ContentModelImageFormat>
+): ContentModelImage {
     return {
         segmentType: 'Image',
         src: src,
-        format: format ? { ...format } : {},
+        format: { ...format },
         dataset: {},
     };
 }

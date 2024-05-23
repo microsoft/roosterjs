@@ -10,10 +10,10 @@ import type {
  */
 export function createParagraphDecorator(
     tagName: string,
-    format?: ContentModelSegmentFormat
+    format?: Readonly<ContentModelSegmentFormat>
 ): ContentModelParagraphDecorator {
     return {
         tagName: tagName.toLocaleLowerCase(),
-        format: { ...(format || {}) },
+        format: { ...format },
     };
 }

@@ -1219,16 +1219,16 @@ describe('iterateSelections', () => {
         const marker2 = createSelectionMarker();
         const cache = 'CACHE' as any;
 
+        addSegment(quote1, marker1);
+        para1.segments.push(marker2);
+        divider1.isSelected = true;
+
         quote1.cachedElement = cache;
         para1.cachedElement = cache;
         divider1.cachedElement = cache;
         quote2.cachedElement = cache;
         para2.cachedElement = cache;
         divider2.cachedElement = cache;
-
-        addSegment(quote1, marker1);
-        para1.segments.push(marker2);
-        divider1.isSelected = true;
 
         const doc = createContentModelDocument();
 

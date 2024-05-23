@@ -34,6 +34,15 @@ const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
 
+/**
+ * @internal
+ */
+export const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
+/**
+ * @internal
+ */
+export const DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR = '#C6C6C6';
+
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IEditor | null = null;
     private state: SelectionPluginState;
@@ -46,7 +55,17 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.state = {
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: options.imageSelectionBorderColor,
+            imageSelectionBorderColor:
+                options.imageSelectionBorderColor ?? DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: options.imageSelectionBorderColor
+                ? undefined
+                : DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor:
+                options.tableCellSelectionBackgroundColor ??
+                DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: options.tableCellSelectionBackgroundColor
+                ? undefined
+                : DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         };
     }
 
@@ -56,6 +75,25 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        if (!this.state.imageSelectionBorderColorDark && this.state.imageSelectionBorderColor) {
+            this.state.imageSelectionBorderColorDark = editor
+                .getColorManager()
+                .getDarkColor(this.state.imageSelectionBorderColor, undefined, 'border');
+        }
+
+        if (
+            !this.state.tableCellSelectionBackgroundColorDark &&
+            this.state.tableCellSelectionBackgroundColor
+        ) {
+            this.state.tableCellSelectionBackgroundColorDark = editor
+                .getColorManager()
+                .getDarkColor(
+                    this.state.tableCellSelectionBackgroundColor,
+                    undefined,
+                    'background'
+                );
+        }
 
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
@@ -601,6 +639,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         if (
             (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&
+            table.isContentEditable &&
             (parsedTable = parseTableCells(table)) &&
             (firstCo = findCoordinate(parsedTable, tdStart, domHelper))
         ) {

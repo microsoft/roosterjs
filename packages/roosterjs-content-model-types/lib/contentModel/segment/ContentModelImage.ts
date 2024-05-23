@@ -1,14 +1,18 @@
 import type { ContentModelImageFormat } from '../format/ContentModelImageFormat';
-import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
-import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type {
+    ContentModelSegmentBase,
+    ReadonlyContentModelSegmentBase,
+} from './ContentModelSegmentBase';
+import type {
+    ContentModelWithDataset,
+    ReadonlyContentModelWithDataset,
+} from '../format/ContentModelWithDataset';
 import type { ImageMetadataFormat } from '../format/metadata/ImageMetadataFormat';
 
 /**
- * Content Model of IMG
+ * Common part of Content Model of IMG
  */
-export interface ContentModelImage
-    extends ContentModelSegmentBase<'Image', ContentModelImageFormat>,
-        ContentModelWithDataset<ImageMetadataFormat> {
+export interface ContentModelImageCommon {
     /**
      * Image source of this IMG element
      */
@@ -29,3 +33,19 @@ export interface ContentModelImage
      */
     isSelectedAsImageSelection?: boolean;
 }
+
+/**
+ * Content Model of IMG
+ */
+export interface ContentModelImage
+    extends ContentModelImageCommon,
+        ContentModelSegmentBase<'Image', ContentModelImageFormat>,
+        ContentModelWithDataset<ImageMetadataFormat> {}
+
+/**
+ * Content Model of IMG (Readonly)
+ */
+export interface ReadonlyContentModelImage
+    extends ReadonlyContentModelSegmentBase<'Image', ContentModelImageFormat>,
+        ReadonlyContentModelWithDataset<ImageMetadataFormat>,
+        Readonly<ContentModelImageCommon> {}

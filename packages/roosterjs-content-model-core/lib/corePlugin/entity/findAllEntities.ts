@@ -1,9 +1,9 @@
-import type { ChangedEntity, ContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type { ChangedEntity, ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function findAllEntities(group: ContentModelBlockGroup, entities: ChangedEntity[]) {
+export function findAllEntities(group: ReadonlyContentModelBlockGroup, entities: ChangedEntity[]) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':
