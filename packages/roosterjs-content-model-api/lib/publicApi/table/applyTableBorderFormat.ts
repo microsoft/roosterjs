@@ -2,11 +2,11 @@ import {
     extractBorderValues,
     getFirstSelectedTable,
     getSelectedCells,
+    getTableMetadata,
     hasMetadata,
     parseValueWithUnit,
     setFirstColumnFormatBorders,
     updateTableCellMetadata,
-    updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     IEditor,
@@ -369,7 +369,7 @@ export function applyTableBorderFormat(
                     modifyPerimeter(tableModel, sel, borderFormat, perimeter, isRtl);
                 }
 
-                const tableMeta = hasMetadata(tableModel) ? updateTableMetadata(tableModel) : {};
+                const tableMeta = hasMetadata(tableModel) ? getTableMetadata(tableModel) : {};
                 if (tableMeta) {
                     // Enforce first column format if necessary
                     setFirstColumnFormatBorders(tableModel.rows, tableMeta);
