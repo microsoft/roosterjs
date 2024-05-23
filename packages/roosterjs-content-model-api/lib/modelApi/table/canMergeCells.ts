@@ -1,10 +1,10 @@
-import type { ContentModelTableRow } from 'roosterjs-content-model-types';
+import type { ReadonlyContentModelTableRow } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function canMergeCells(
-    rows: ContentModelTableRow[],
+    rows: ReadonlyContentModelTableRow[],
     firstRow: number,
     firstCol: number,
     lastRow: number,
@@ -40,7 +40,11 @@ export function canMergeCells(
     return noSpanAbove && noSpanLeft && noDifferentBelowSpan && noDifferentRightSpan;
 }
 
-function getBelowSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
+function getBelowSpanCount(
+    rows: ReadonlyContentModelTableRow[],
+    rowIndex: number,
+    colIndex: number
+) {
     let spanCount = 0;
 
     for (let row = rowIndex + 1; row < rows.length; row++) {
@@ -54,7 +58,11 @@ function getBelowSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIn
     return spanCount;
 }
 
-function getRightSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
+function getRightSpanCount(
+    rows: ReadonlyContentModelTableRow[],
+    rowIndex: number,
+    colIndex: number
+) {
     let spanCount = 0;
 
     for (let col = colIndex + 1; col < rows[rowIndex]?.cells.length; col++) {
