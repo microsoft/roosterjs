@@ -58,7 +58,7 @@ export function applyTableFormat(
 
         clearCache(rows);
         formatCells(rows, effectiveMetadata, metaOverrides);
-        setFirstColumnFormat(rows, effectiveMetadata, metaOverrides);
+        setFirstColumnFormatBorders(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
         return effectiveMetadata;
     });
@@ -176,7 +176,7 @@ function formatCells(
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
-    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven, hasFirstColumn } = format;
 
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
@@ -212,14 +212,18 @@ function formatCells(
 
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
-                const color =
-                    hasBandedRows || hasBandedColumns
-                        ? (hasBandedColumns && colIndex % 2 != 0) ||
-                          (hasBandedRows && rowIndex % 2 != 0)
-                            ? bgColorOdd
-                            : bgColorEven
-                        : bgColorEven; /* bgColorEven is the default color */
-
+                let color: string | null | undefined;
+                if (hasFirstColumn && colIndex == 0) {
+                    color = null;
+                } else {
+                    color =
+                        hasBandedRows || hasBandedColumns
+                            ? (hasBandedColumns && colIndex % 2 != 0) ||
+                              (hasBandedRows && rowIndex % 2 != 0)
+                                ? bgColorOdd
+                                : bgColorEven
+                            : bgColorEven; /* bgColorEven is the default color */
+                }
                 setTableCellBackgroundColor(
                     cell,
                     color,
@@ -232,35 +236,46 @@ function formatCells(
             if (format.verticalAlign && !metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
                 cell.format.verticalAlign = format.verticalAlign;
             }
+
+            // Format Header
+            cell.isHeader = false;
         });
     });
 }
 
-function setFirstColumnFormat(
+/**
+ * Set the first column format borders for the table
+ * @param rows The rows of the table
+ * @param format The table metadata format
+ */
+export function setFirstColumnFormatBorders(
     rows: ContentModelTableRow[],
-    format: Partial<TableMetadataFormat>,
-    metaOverrides: MetaOverrides
+    format: Partial<TableMetadataFormat>
 ) {
+    // Exit early hasFirstColumn is not set
+    if (!format.hasFirstColumn) {
+        return;
+    }
+
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, cellIndex) => {
-            if (format.hasFirstColumn && cellIndex === 0) {
+            if (cellIndex == 0) {
                 cell.isHeader = true;
 
-                if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
-                    setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(
-                        cell,
-                        null /*color*/,
-                        false /*isColorOverride*/,
-                        true /*applyToSegments*/
-                    );
+                switch (rowIndex) {
+                    case 0:
+                        break;
+                    case 1:
+                        setBorderColor(cell.format, 'borderBottom');
+                        break;
+                    case rows.length - 1:
+                        setBorderColor(cell.format, 'borderTop');
+                        break;
+                    default:
+                        setBorderColor(cell.format, 'borderTop');
+                        setBorderColor(cell.format, 'borderBottom');
+                        break;
                 }
-
-                if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom');
-                }
-            } else {
-                cell.isHeader = false;
             }
         });
     });
@@ -271,12 +286,17 @@ function setHeaderRowFormat(
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
+    // Exit early if hasHeaderRow is not set
+    if (!format.hasHeaderRow) {
+        return;
+    }
+
     const rowIndex = 0;
 
     rows[rowIndex]?.cells.forEach((cell, cellIndex) => {
-        cell.isHeader = format.hasHeaderRow;
+        cell.isHeader = true;
 
-        if (format.hasHeaderRow && format.headerRowColor) {
+        if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                 setTableCellBackgroundColor(
                     cell,
@@ -293,6 +313,11 @@ function setHeaderRowFormat(
     });
 }
 
+/**
+ * @param format The cell format to set the border color
+ * @param key The border key to set the color
+ * @param value The color to set. If not given, it removes the color and sets the style to transparent
+ */
 function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
     const border = extractBorderValues(format[key]);
     border.color = value || '';
