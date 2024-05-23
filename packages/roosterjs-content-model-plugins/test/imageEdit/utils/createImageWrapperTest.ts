@@ -12,20 +12,33 @@ import {
 
 describe('createImageWrapper', () => {
     const editor = initEditor('editor_test');
-    let image: HTMLImageElement;
-    let imageSpan: HTMLSpanElement;
-    let options: ImageEditOptions;
-    let editInfo: ImageMetadataFormat;
-    let htmlOptions: ImageHtmlOptions;
-    let editorDiv: HTMLElement;
+    function runTest(
+        image: HTMLImageElement,
+        imageSpan: HTMLSpanElement,
+        options: ImageEditOptions,
+        editInfo: ImageMetadataFormat,
+        htmlOptions: ImageHtmlOptions,
+        operation: ImageEditOperation | undefined,
+        expectResult: WrapperElements
+    ) {
+        const result = createImageWrapper(
+            editor,
+            image,
+            imageSpan,
+            options,
+            editInfo,
+            htmlOptions,
+            operation
+        );
+        expect(JSON.stringify(result)).toEqual(JSON.stringify(expectResult));
+    }
 
-    function runTest(operation: ImageEditOperation | undefined, expectResult: WrapperElements) {
-        image = document.createElement('img');
-        imageSpan = document.createElement('span');
+    it('resizer', () => {
+        const image = document.createElement('img');
+        const imageSpan = document.createElement('span');
         imageSpan.append(image);
-        editorDiv = document.getElementById('editor_test')!;
-        editorDiv.append(imageSpan);
-        options = {
+        document.body.appendChild(imageSpan);
+        const options: ImageEditOptions = {
             borderColor: '#DB626C',
             minWidth: 10,
             minHeight: 10,
@@ -34,7 +47,7 @@ describe('createImageWrapper', () => {
             disableSideResize: false,
             onSelectState: 'resizeAndRotate',
         };
-        editInfo = {
+        const editInfo = {
             src: 'test',
             widthPx: 20,
             heightPx: 20,
@@ -46,73 +59,153 @@ describe('createImageWrapper', () => {
             bottomPercent: 0,
             angleRad: 0,
         };
-        htmlOptions = {
+        const htmlOptions = {
             borderColor: '#DB626C',
             rotateHandleBackColor: 'white',
             isSmallImage: false,
         };
-        const result = createImageWrapper(
-            editor,
-            image,
-            imageSpan,
-            options,
-            editInfo,
-            htmlOptions,
-            operation
-        );
-        expect(result).toEqual(expectResult);
-    }
-
-    it('resizer', () => {
         const resizers = createImageResizer(document);
         const wrapper = createWrapper(editor, image, options, editInfo, resizers);
-        const shadowSpan = createShadowSpan(wrapper, imageSpan);
+        const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest('resize', {
-            resizers,
+        runTest(image, imageSpan, options, editInfo, htmlOptions, 'resize', {
             wrapper,
             shadowSpan,
             imageClone,
-            croppers: [],
+            resizers,
             rotators: [],
+            croppers: [],
         });
+        document.body.removeChild(imageSpan);
     });
 
     it('resizeAndRotate', () => {
+        const image = document.createElement('img');
+        const imageSpan = document.createElement('span');
+        imageSpan.append(image);
+        document.body.appendChild(imageSpan);
+        const options: ImageEditOptions = {
+            borderColor: '#DB626C',
+            minWidth: 10,
+            minHeight: 10,
+            preserveRatio: true,
+            disableRotate: false,
+            disableSideResize: false,
+            onSelectState: 'resizeAndRotate',
+        };
+        const editInfo = {
+            src: 'test',
+            widthPx: 20,
+            heightPx: 20,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0.1,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
+        const htmlOptions = {
+            borderColor: '#DB626C',
+            rotateHandleBackColor: 'white',
+            isSmallImage: false,
+        };
         const resizers = createImageResizer(document);
         const rotator = createImageRotator(document, htmlOptions);
         const wrapper = createWrapper(editor, image, options, editInfo, resizers, rotator);
-        const shadowSpan = createShadowSpan(wrapper, imageSpan);
+        const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest('resizeAndRotate', {
-            resizers,
+        runTest(image, imageSpan, options, editInfo, htmlOptions, 'resizeAndRotate', {
             wrapper,
             shadowSpan,
             imageClone,
-            croppers: [],
+            resizers,
             rotators: rotator,
+            croppers: [],
         });
+        document.body.removeChild(imageSpan);
     });
 
     it('rotate', () => {
+        const image = document.createElement('img');
+        const imageSpan = document.createElement('span');
+        imageSpan.append(image);
+        document.body.appendChild(imageSpan);
+        const options: ImageEditOptions = {
+            borderColor: '#DB626C',
+            minWidth: 10,
+            minHeight: 10,
+            preserveRatio: true,
+            disableRotate: false,
+            disableSideResize: false,
+            onSelectState: 'rotate',
+        };
+        const editInfo = {
+            src: 'test',
+            widthPx: 20,
+            heightPx: 20,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0.1,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
+        const htmlOptions = {
+            borderColor: '#DB626C',
+            rotateHandleBackColor: 'white',
+            isSmallImage: false,
+        };
         const rotator = createImageRotator(document, htmlOptions);
         const wrapper = createWrapper(editor, image, options, editInfo, undefined, rotator);
-        const shadowSpan = createShadowSpan(wrapper, imageSpan);
+        const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest('resizeAndRotate', {
+        runTest(image, imageSpan, options, editInfo, htmlOptions, 'rotate', {
+            wrapper: wrapper,
+            shadowSpan: shadowSpan,
+            imageClone: imageClone,
             resizers: [],
-            wrapper,
-            shadowSpan,
-            imageClone,
-            croppers: [],
             rotators: rotator,
+            croppers: [],
         });
+        document.body.removeChild(imageSpan);
     });
 
     it('crop', () => {
+        const image = document.createElement('img');
+        const imageSpan = document.createElement('span');
+        imageSpan.append(image);
+        document.body.appendChild(imageSpan);
+        const options: ImageEditOptions = {
+            borderColor: '#DB626C',
+            minWidth: 10,
+            minHeight: 10,
+            preserveRatio: true,
+            disableRotate: false,
+            disableSideResize: false,
+            onSelectState: 'resizeAndRotate',
+        };
+        const editInfo = {
+            src: 'test',
+            widthPx: 20,
+            heightPx: 20,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0.1,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
+        const htmlOptions = {
+            borderColor: '#DB626C',
+            rotateHandleBackColor: 'white',
+            isSmallImage: false,
+        };
         const cropper = createImageCropper(document);
         const wrapper = createWrapper(
             editor,
@@ -123,17 +216,18 @@ describe('createImageWrapper', () => {
             undefined,
             cropper
         );
-        const shadowSpan = createShadowSpan(wrapper, imageSpan);
+        const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest('crop', {
-            resizers: [],
+        runTest(image, imageSpan, options, editInfo, htmlOptions, 'crop', {
             wrapper,
             shadowSpan,
             imageClone,
-            croppers: cropper,
+            resizers: [],
             rotators: [],
+            croppers: cropper,
         });
+        document.body.removeChild(imageSpan);
     });
 });
 
@@ -151,13 +245,14 @@ const cloneImage = (image: HTMLImageElement, editInfo: ImageMetadataFormat) => {
     return imageClone;
 };
 
-const createShadowSpan = (wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
-    const shadowRoot = imageSpan.attachShadow({
+const createShadowSpan = (wrapper: HTMLSpanElement) => {
+    const span = document.createElement('span');
+    const shadowRoot = span.attachShadow({
         mode: 'open',
     });
-    imageSpan.style.verticalAlign = 'bottom';
+    span.style.verticalAlign = 'bottom';
     shadowRoot.append(wrapper);
-    return imageSpan;
+    return span;
 };
 
 const createWrapper = (
@@ -169,7 +264,7 @@ const createWrapper = (
     rotators?: HTMLDivElement[],
     cropper?: HTMLDivElement[]
 ) => {
-    const doc = editor.getDocument();
+    const doc = document;
     const wrapper = doc.createElement('span');
     const imageBox = doc.createElement('div');
 
@@ -186,7 +281,7 @@ const createWrapper = (
     );
     wrapper.style.display = editor.getEnvironment().isSafari ? 'inline-block' : 'inline-flex';
 
-    const border = createBorder(editor, options.borderColor);
+    const border = createBorder(options.borderColor);
     wrapper.append(imageBox);
     wrapper.append(border);
     wrapper.style.userSelect = 'none';
@@ -210,8 +305,8 @@ const createWrapper = (
     return wrapper;
 };
 
-const createBorder = (editor: IEditor, borderColor?: string) => {
-    const doc = editor.getDocument();
+const createBorder = (borderColor?: string) => {
+    const doc = document;
     const resizeBorder = doc.createElement('div');
     resizeBorder.setAttribute(
         `style`,

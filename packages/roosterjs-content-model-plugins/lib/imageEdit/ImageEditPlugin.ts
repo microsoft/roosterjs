@@ -57,7 +57,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private editor: IEditor | null = null;
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
-    private wrapper: HTMLSpanElement | null = null;
+    public wrapper: HTMLSpanElement | null = null;
     private imageEditInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
@@ -542,5 +542,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.editImage(editor, image, 'rotate', imageEditInfo => {
             imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
         });
+    }
+
+    //EXPOSED FOR TEST ONLY
+    public getWrapper() {
+        return this.wrapper;
     }
 }

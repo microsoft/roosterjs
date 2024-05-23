@@ -67,8 +67,8 @@ describe('checkEditInfoState', () => {
                 naturalWidth: 10,
                 naturalHeight: 10,
                 leftPercent: 0,
-                rightPercent: 0.1,
-                topPercent: 0,
+                rightPercent: 0,
+                topPercent: 0.1,
                 bottomPercent: 0,
                 angleRad: 0,
             }
