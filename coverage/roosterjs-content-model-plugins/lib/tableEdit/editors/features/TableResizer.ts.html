@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.78% </span>
+                <span class="strong">41.76% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/93</span>
+                <span class='fraction'>38/91</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.91% </span>
+                <span class="strong">43.02% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>36/88</span>
+                <span class='fraction'>37/86</span>
             </div>
         
             
@@ -322,34 +322,10 @@
 <a name='L263'></a><a href='#L263'>263</a>
 <a name='L264'></a><a href='#L264'>264</a>
 <a name='L265'></a><a href='#L265'>265</a>
-<a name='L266'></a><a href='#L266'>266</a>
-<a name='L267'></a><a href='#L267'>267</a>
-<a name='L268'></a><a href='#L268'>268</a>
-<a name='L269'></a><a href='#L269'>269</a>
-<a name='L270'></a><a href='#L270'>270</a>
-<a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a>
-<a name='L273'></a><a href='#L273'>273</a>
-<a name='L274'></a><a href='#L274'>274</a>
-<a name='L275'></a><a href='#L275'>275</a>
-<a name='L276'></a><a href='#L276'>276</a>
-<a name='L277'></a><a href='#L277'>277</a>
-<a name='L278'></a><a href='#L278'>278</a>
-<a name='L279'></a><a href='#L279'>279</a>
-<a name='L280'></a><a href='#L280'>280</a>
-<a name='L281'></a><a href='#L281'>281</a>
-<a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a>
-<a name='L284'></a><a href='#L284'>284</a>
-<a name='L285'></a><a href='#L285'>285</a>
-<a name='L286'></a><a href='#L286'>286</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L266'></a><a href='#L266'>266</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -470,22 +446,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -629,14 +589,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import { isNodeOfType, normalizeRect, normalizeTable } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import {
-    getFirstSelectedTable,
-    isNodeOfType,
-    normalizeRect,
-    normalizeTable,
-} from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 &nbsp;
@@ -758,24 +714,8 @@ function <span class="fstat-no" title="function not covered" >onDragStart(</span
 &nbsp;
     const { editor, table } = <span class="cstat-no" title="statement not covered" >context;</span>
 &nbsp;
-    // Get current selection
-    const selection = <span class="cstat-no" title="statement not covered" >editor.getDOMSelection();</span>
-&nbsp;
-    // Select first cell of the table
-<span class="cstat-no" title="statement not covered" >    editor.setDOMSelection({</span>
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
-&nbsp;
-    // Get the table content model
-    const cmTable = <span class="cstat-no" title="statement not covered" >getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];</span>
-&nbsp;
-    // Restore selection
-<span class="cstat-no" title="statement not covered" >    editor.setDOMSelection(selection);</span>
+    // Get Table block in content model
+    const cmTable = <span class="cstat-no" title="statement not covered" >getCMTableFromTable(editor, table);</span>
 &nbsp;
     // Save original widths and heights
     const heights: number[] = <span class="cstat-no" title="statement not covered" >[];</span>
@@ -919,7 +859,7 @@ function isTableBottomVisible(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 18:59:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
