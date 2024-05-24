@@ -1,39 +1,43 @@
 import { deleteSingleChar } from './deleteSingleChar';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
+import { mutateSegment } from '../common/mutate';
 import { normalizeSingleSegment } from '../common/normalizeSegment';
 import { normalizeText } from '../../domUtils/stringUtil';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     EntityRemovalOperation,
     FormatContentModelContext,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * Delete a content model segment from current selection
- * @param paragraph Parent paragraph of the segment to delete
- * @param segmentToDelete The segment to delete
+ * @param readonlyParagraph Parent paragraph of the segment to delete
+ * @param readonlySegmentToDelete The segment to delete
  * @param context @optional Context object provided by formatContentModel API
  * @param direction @optional Whether this is deleting forward or backward. This is only used for deleting entity.
  * If not specified, only selected entity will be deleted
  */
 export function deleteSegment(
-    paragraph: ContentModelParagraph,
-    segmentToDelete: ContentModelSegment,
+    readonlyParagraph: ReadonlyContentModelParagraph,
+    readonlySegmentToDelete: ReadonlyContentModelSegment,
     context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
+    const [paragraph, segmentToDelete, index] = mutateSegment(
+        readonlyParagraph,
+        readonlySegmentToDelete
+    );
     const segments = paragraph.segments;
-    const index = segments.indexOf(segmentToDelete);
     const preserveWhiteSpace = isWhiteSpacePreserved(paragraph.format.whiteSpace);
     const isForward = direction == 'forward';
     const isBackward = direction == 'backward';
 
     if (!preserveWhiteSpace) {
-        normalizePreviousSegment(segments, index);
+        normalizePreviousSegment(paragraph, segments, index);
     }
 
-    switch (segmentToDelete.segmentType) {
+    switch (segmentToDelete?.segmentType) {
         case 'Br':
         case 'Image':
         case 'SelectionMarker':
@@ -86,10 +90,17 @@ export function deleteSegment(
             } else {
                 return false;
             }
+
+        default:
+            return false;
     }
 }
 
-function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex: number) {
+function normalizePreviousSegment(
+    paragraph: ReadonlyContentModelParagraph,
+    segments: ReadonlyArray<ReadonlyContentModelSegment>,
+    currentIndex: number
+) {
     let index = currentIndex - 1;
 
     while (segments[index]?.segmentType == 'SelectionMarker') {
@@ -99,6 +110,6 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
     const segment = segments[index];
 
     if (segment) {
-        normalizeSingleSegment(segment);
+        normalizeSingleSegment(paragraph, segment);
     }
 }

@@ -1,13 +1,14 @@
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
+import { mutateBlock } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     BorderFormat,
-    ContentModelTable,
-    ContentModelTableRow,
+    ReadonlyContentModelTable,
+    ShallowMutableContentModelTableRow,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
@@ -39,42 +40,34 @@ type MetaOverrides = {
  * @param keepCellShade @optional When pass true, table cells with customized shade color will not be overwritten. @default false
  */
 export function applyTableFormat(
-    table: ContentModelTable,
+    table: ReadonlyContentModelTable,
     newFormat?: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
-    const { rows } = table;
+    const mutableTable = mutateBlock(table);
+    const { rows } = mutableTable;
 
-    updateTableMetadata(table, format => {
+    updateTableMetadata(mutableTable, format => {
         const effectiveMetadata = {
             ...DEFAULT_FORMAT,
             ...format,
-            ...(newFormat || {}),
+            ...newFormat,
         };
 
         const metaOverrides: MetaOverrides = updateOverrides(rows, !keepCellShade);
 
-        delete table.cachedElement;
-
-        clearCache(rows);
         formatCells(rows, effectiveMetadata, metaOverrides);
         setFirstColumnFormatBorders(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
+
         return effectiveMetadata;
     });
 }
 
-function clearCache(rows: ContentModelTableRow[]) {
-    rows.forEach(row => {
-        row.cells.forEach(cell => {
-            delete cell.cachedElement;
-        });
-
-        delete row.cachedElement;
-    });
-}
-
-function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean): MetaOverrides {
+function updateOverrides(
+    rows: ShallowMutableContentModelTableRow[],
+    removeCellShade: boolean
+): MetaOverrides {
     const overrides: MetaOverrides = {
         bgColorOverrides: [],
         vAlignOverrides: [],
@@ -91,7 +84,7 @@ function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean)
         overrides.borderOverrides.push(borderOverrides);
 
         row.cells.forEach(cell => {
-            updateTableCellMetadata(cell, metadata => {
+            updateTableCellMetadata(mutateBlock(cell), metadata => {
                 if (metadata && removeCellShade) {
                     bgColorOverrides.push(false);
                     delete metadata.bgColorOverride;
@@ -172,14 +165,16 @@ const BorderFormatters: Record<number, ShouldUseTransparentBorder | undefined> =
  * Apply vertical align, borders, and background color to all cells in the table
  */
 function formatCells(
-    rows: ContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven, hasFirstColumn } = format;
 
     rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, colIndex) => {
+        row.cells.forEach((readonlyCell, colIndex) => {
+            const cell = mutateBlock(readonlyCell);
+
             // Format Borders
             if (
                 !metaOverrides.borderOverrides[rowIndex][colIndex] &&
@@ -249,7 +244,7 @@ function formatCells(
  * @param format The table metadata format
  */
 export function setFirstColumnFormatBorders(
-    rows: ContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: Partial<TableMetadataFormat>
 ) {
     // Exit early hasFirstColumn is not set
@@ -258,8 +253,10 @@ export function setFirstColumnFormatBorders(
     }
 
     rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, cellIndex) => {
-            if (cellIndex == 0) {
+        row.cells.forEach((readonlyCell, cellIndex) => {
+            const cell = mutateBlock(readonlyCell);
+
+            if (cellIndex === 0) {
                 cell.isHeader = true;
 
                 switch (rowIndex) {
@@ -283,7 +280,7 @@ export function setFirstColumnFormatBorders(
 }
 
 function setHeaderRowFormat(
-    rows: ContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
@@ -294,7 +291,9 @@ function setHeaderRowFormat(
 
     const rowIndex = 0;
 
-    rows[rowIndex]?.cells.forEach((cell, cellIndex) => {
+    rows[rowIndex]?.cells.forEach((readonlyCell, cellIndex) => {
+        const cell = mutateBlock(readonlyCell);
+
         cell.isHeader = true;
 
         if (format.headerRowColor) {

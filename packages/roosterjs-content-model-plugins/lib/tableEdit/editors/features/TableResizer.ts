@@ -1,13 +1,9 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import { isNodeOfType, normalizeRect, normalizeTable } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import {
-    getFirstSelectedTable,
-    isNodeOfType,
-    normalizeRect,
-    normalizeTable,
-} from 'roosterjs-content-model-dom';
 import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
@@ -130,24 +126,7 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
     const { editor, table } = context;
 
     // Get Table block in content model
-    let cmTable: ContentModelTable | undefined;
-
-    editor.formatContentModel(
-        model => {
-            [cmTable] = getFirstSelectedTable(model);
-            return false;
-        },
-        {
-            selectionOverride: {
-                type: 'table',
-                firstColumn: 0,
-                firstRow: 0,
-                lastColumn: 0,
-                lastRow: 0,
-                table: table,
-            },
-        }
-    );
+    const cmTable = getCMTableFromTable(editor, table);
 
     // Save original widths and heights
     const heights: number[] = [];

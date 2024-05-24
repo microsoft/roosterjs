@@ -1,8 +1,9 @@
 import { hasSpacesOnly } from './hasSpacesOnly';
+import { mutateSegment } from './mutate';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
-    ContentModelText,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
 const SPACE = '\u0020';
@@ -13,15 +14,15 @@ const TRAILING_SPACE_REGEX = /\u0020+$/;
 /**
  * @internal
  */
-export function normalizeAllSegments(paragraph: ContentModelParagraph) {
+export function normalizeAllSegments(paragraph: ReadonlyContentModelParagraph) {
     const context = resetNormalizeSegmentContext();
 
     paragraph.segments.forEach(segment => {
-        normalizeSegment(segment, context);
+        normalizeSegment(paragraph, segment, context);
     });
 
-    normalizeTextSegments(context.textSegments, context.lastInlineSegment);
-    normalizeLastTextSegment(context.lastTextSegment, context.lastInlineSegment);
+    normalizeTextSegments(paragraph, context.textSegments, context.lastInlineSegment);
+    normalizeLastTextSegment(paragraph, context.lastTextSegment, context.lastInlineSegment);
 }
 
 /**
@@ -30,24 +31,25 @@ export function normalizeAllSegments(paragraph: ContentModelParagraph) {
  * @param ignoreTrailingSpaces Whether we should ignore the trailing space of the text segment @default false
  */
 export function normalizeSingleSegment(
-    segment: ContentModelSegment,
+    paragraph: ReadonlyContentModelParagraph,
+    segment: ReadonlyContentModelSegment,
     ignoreTrailingSpaces: boolean = false
 ) {
     const context = resetNormalizeSegmentContext();
 
     context.ignoreTrailingSpaces = ignoreTrailingSpaces;
-    normalizeSegment(segment, context);
+    normalizeSegment(paragraph, segment, context);
 }
 
 /**
  * @internal Export for test only
  */
 export interface NormalizeSegmentContext {
-    textSegments: ContentModelText[];
+    textSegments: ReadonlyContentModelText[];
     ignoreLeadingSpaces: boolean;
     ignoreTrailingSpaces: boolean;
-    lastTextSegment: ContentModelText | undefined;
-    lastInlineSegment: ContentModelSegment | undefined;
+    lastTextSegment: ReadonlyContentModelText | undefined;
+    lastInlineSegment: ReadonlyContentModelSegment | undefined;
 }
 
 /**
@@ -72,11 +74,15 @@ function resetNormalizeSegmentContext(
 /**
  * @internal Export for test only
  */
-export function normalizeSegment(segment: ContentModelSegment, context: NormalizeSegmentContext) {
+export function normalizeSegment(
+    paragraph: ReadonlyContentModelParagraph,
+    segment: ReadonlyContentModelSegment,
+    context: NormalizeSegmentContext
+) {
     switch (segment.segmentType) {
         case 'Br':
-            normalizeTextSegments(context.textSegments, context.lastInlineSegment);
-            normalizeLastTextSegment(context.lastTextSegment, context.lastInlineSegment);
+            normalizeTextSegments(paragraph, context.textSegments, context.lastInlineSegment);
+            normalizeLastTextSegment(paragraph, context.lastTextSegment, context.lastInlineSegment);
 
             // Line ends, reset all states
             resetNormalizeSegmentContext(context);
@@ -103,18 +109,22 @@ export function normalizeSegment(segment: ContentModelSegment, context: Normaliz
             if (!hasSpacesOnly(segment.text)) {
                 if (first == SPACE) {
                     // 1. Multiple leading space => single &nbsp; or empty (depends on if previous segment ends with space)
-                    segment.text = segment.text.replace(
-                        LEADING_SPACE_REGEX,
-                        context.ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
-                    );
+                    mutateSegment(paragraph, segment, textSegment => {
+                        textSegment.text = textSegment.text.replace(
+                            LEADING_SPACE_REGEX,
+                            context.ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
+                        );
+                    });
                 }
 
                 if (last == SPACE) {
                     // 2. Multiple trailing space => single space
-                    segment.text = segment.text.replace(
-                        TRAILING_SPACE_REGEX,
-                        context.ignoreTrailingSpaces ? SPACE : NONE_BREAK_SPACE
-                    );
+                    mutateSegment(paragraph, segment, textSegment => {
+                        textSegment.text = textSegment.text.replace(
+                            TRAILING_SPACE_REGEX,
+                            context.ignoreTrailingSpaces ? SPACE : NONE_BREAK_SPACE
+                        );
+                    });
                 }
             }
 
@@ -125,8 +135,9 @@ export function normalizeSegment(segment: ContentModelSegment, context: Normaliz
 }
 
 function normalizeTextSegments(
-    segments: ContentModelText[],
-    lastInlineSegment: ContentModelSegment | undefined
+    paragraph: ReadonlyContentModelParagraph,
+    segments: ReadonlyContentModelText[],
+    lastInlineSegment: ReadonlyContentModelSegment | undefined
 ) {
     segments.forEach(segment => {
         // 3. Segment ends with &nbsp; replace it with space if the previous char is not space so that next segment can wrap
@@ -139,18 +150,23 @@ function normalizeTextSegments(
                 text.length > 1 &&
                 text.substr(-2, 1) != SPACE
             ) {
-                segment.text = text.substring(0, text.length - 1) + SPACE;
+                mutateSegment(paragraph, segment, textSegment => {
+                    textSegment.text = text.substring(0, text.length - 1) + SPACE;
+                });
             }
         }
     });
 }
 
 function normalizeLastTextSegment(
-    segment: ContentModelText | undefined,
-    lastInlineSegment: ContentModelSegment | undefined
+    paragraph: ReadonlyContentModelParagraph,
+    segment: ReadonlyContentModelText | undefined,
+    lastInlineSegment: ReadonlyContentModelSegment | undefined
 ) {
     if (segment && segment == lastInlineSegment && segment?.text.substr(-1) == SPACE) {
         // 4. last text segment of the paragraph, remove trailing space
-        segment.text = segment.text.replace(TRAILING_SPACE_REGEX, '');
+        mutateSegment(paragraph, segment, textSegment => {
+            textSegment.text = textSegment.text.replace(TRAILING_SPACE_REGEX, '');
+        });
     }
 }

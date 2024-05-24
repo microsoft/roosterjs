@@ -4,11 +4,12 @@ import {
     unwrapBlock,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelFormatContainer,
     DeleteSelectionStep,
+    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -75,7 +76,7 @@ const isSelectionOnEmptyLine = (quote: ContentModelFormatContainer) => {
 
 const insertNewLine = (
     quote: ContentModelFormatContainer,
-    parent: ContentModelBlockGroup,
+    parent: ReadonlyContentModelBlockGroup,
     index: number
 ) => {
     const quoteLength = quote.blocks.length;
@@ -83,5 +84,5 @@ const insertNewLine = (
     const marker = createSelectionMarker();
     const newParagraph = createParagraph(false /* isImplicit */);
     newParagraph.segments.push(marker);
-    parent.blocks.splice(index + 1, 0, newParagraph);
+    mutateBlock(parent).blocks.splice(index + 1, 0, newParagraph);
 };
