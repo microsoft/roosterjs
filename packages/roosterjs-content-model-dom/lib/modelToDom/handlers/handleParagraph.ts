@@ -24,7 +24,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 ) => {
     let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
-    if (container) {
+    if (container && paragraph.segments.every(x => x.segmentType != 'General' && !x.isSelected)) {
         refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {

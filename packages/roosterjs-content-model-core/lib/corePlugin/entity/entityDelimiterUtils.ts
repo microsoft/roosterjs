@@ -14,7 +14,6 @@ import {
     isCharacterValue,
     findClosestBlockEntityContainer,
     mutateSegment,
-    setParagraphNotImplicit,
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -304,23 +303,17 @@ function handleInputOnDelimiter(
  * @returns
  */
 export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, context) => {
-    iterateSelections(model, (_path, _tableContext, block) => {
-        if (block?.blockType == 'Paragraph') {
-            const paragraph = mutateBlock(block);
-            const selectionMarker = paragraph.segments.find(
-                w => w.segmentType == 'SelectionMarker'
-            );
+    iterateSelections(model, (_path, _tableContext, readonlyBlock) => {
+        if (readonlyBlock?.blockType == 'Paragraph') {
+            const block = mutateBlock(readonlyBlock);
 
-            if (paragraph.isImplicit) {
-                setParagraphNotImplicit(paragraph);
-            }
-
+            delete block.isImplicit;
+            const selectionMarker = block.segments.find(w => w.segmentType == 'SelectionMarker');
             if (selectionMarker?.segmentType == 'SelectionMarker') {
-                paragraph.segmentFormat = { ...selectionMarker.format };
+                block.segmentFormat = { ...selectionMarker.format };
                 context.newPendingFormat = { ...selectionMarker.format };
             }
-
-            paragraph.segments.unshift(createBr());
+            block.segments.unshift(createBr());
         }
     });
 
@@ -332,45 +325,44 @@ export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, cont
  * @returns
  */
 export const handleEnterInlineEntity: ContentModelFormatter = model => {
-    let selectionBlock: ReadonlyContentModelParagraph | undefined;
+    let readonlySelectionBlock: ReadonlyContentModelParagraph | undefined;
     let selectionBlockParent: ReadonlyContentModelBlockGroup | undefined;
 
     iterateSelections(model, (path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
-            selectionBlock = block;
+            readonlySelectionBlock = block;
             selectionBlockParent = path[path.length - 1];
         }
     });
 
-    if (selectionBlock && selectionBlockParent) {
-        const markerIndex = selectionBlock.segments.findIndex(
+    if (readonlySelectionBlock && selectionBlockParent) {
+        const markerIndex = readonlySelectionBlock.segments.findIndex(
             segment => segment.segmentType == 'SelectionMarker'
         );
 
         if (markerIndex >= 0) {
-            const paragraph = mutateBlock(selectionBlock);
-            const segmentsAfterMarker = paragraph.segments.splice(markerIndex);
+            const selectionBlock = mutateBlock(readonlySelectionBlock);
+            const segmentsAfterMarker = selectionBlock.segments.splice(markerIndex);
 
             const newPara: ShallowMutableContentModelParagraph = createParagraph(
                 false,
-                paragraph.format,
-                paragraph.segmentFormat,
-                paragraph.decorator
+                selectionBlock.format,
+                selectionBlock.segmentFormat,
+                selectionBlock.decorator
             );
 
             if (
-                paragraph.segments.every(
+                selectionBlock.segments.every(
                     x => x.segmentType == 'SelectionMarker' || x.segmentType == 'Br'
                 ) ||
                 segmentsAfterMarker.every(x => x.segmentType == 'SelectionMarker')
             ) {
-                newPara.segments.push(createBr(paragraph.format));
+                newPara.segments.push(createBr(selectionBlock.format));
             }
 
             newPara.segments.push(...segmentsAfterMarker);
 
-            const selectionBlockIndex = selectionBlockParent.blocks.indexOf(paragraph);
-
+            const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
             if (selectionBlockIndex >= 0) {
                 mutateBlock(selectionBlockParent).blocks.splice(
                     selectionBlockIndex + 1,
