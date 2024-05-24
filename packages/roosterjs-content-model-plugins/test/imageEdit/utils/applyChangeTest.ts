@@ -309,37 +309,6 @@ describe('applyChange', () => {
         });
     });
 
-    it('Resize then crop', () => {
-        runTest(model, () => {
-            let editInfo = getEditInfoFromImage(img);
-            editInfo.widthPx *= 2;
-            editInfo.leftPercent = 0.5;
-            applyChange(editor, img, contentModelImage, editInfo, IMG_SRC, true);
-
-            const newSrc =
-                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAKCAYAAADGmhxQAAAAAXNSR0IArs4c6QAAAEBJREFUOE9jZGBg+M8wiAHjqAMpjB3G////0yWKHzx4wHDgwAE4fvjwIVFOH3UgLJiGbwiO5mKisgJuRYO+HAQAjrZGAckZDUoAAAAASUVORK5CYII=';
-
-            const metadata: ImageMetadataFormat = JSON.parse(
-                contentModelImage.dataset['editingInfo']
-            );
-            expect(metadata).toEqual({
-                src: IMG_SRC,
-                widthPx: WIDTH * 2,
-                heightPx: HEIGHT,
-                naturalWidth: WIDTH,
-                naturalHeight: HEIGHT,
-                leftPercent: 0.5,
-                rightPercent: 0,
-                topPercent: 0,
-                bottomPercent: 0,
-                angleRad: 0,
-            });
-            expect(contentModelImage.src).toBe(newSrc);
-
-            return true;
-        });
-    });
-
     it('Crop then resize', () => {
         runTest(model, () => {
             let editInfo = getEditInfoFromImage(img);

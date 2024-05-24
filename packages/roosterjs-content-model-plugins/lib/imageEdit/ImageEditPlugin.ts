@@ -89,7 +89,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
-            blur: {},
+            blur: {
+                beforeDispatch: () => {
+                    this.formatImageWithContentModel(editor);
+                },
+            },
         });
     }
 
@@ -129,9 +133,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
                     }
                     break;
-                case 'mouseDown':
-                    this.handleMouseDown(this.editor, event.rawEvent);
-                    break;
+
                 case 'keyDown':
                     if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
                         this.removeImageWrapper(this.editor, this.dndHelpers);
@@ -141,19 +143,17 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    private handleMouseDown(editor: IEditor, event: MouseEvent) {
-        if (this.selectedImage !== event.target) {
-            this.formatImageWithContentModel(editor);
-        }
-    }
-
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
         if (event.newSelection?.type == 'image') {
             if (this.selectedImage && this.selectedImage !== event.newSelection.image) {
-                this.removeImageWrapper(editor, this.dndHelpers);
+                this.formatImageWithContentModelOnSelectionChange(editor);
             }
             if (!this.selectedImage) {
                 this.startRotateAndResize(editor, event.newSelection.image);
+            }
+        } else {
+            if (this.selectedImage) {
+                this.formatImageWithContentModelOnSelectionChange(editor);
             }
         }
     }
@@ -200,8 +200,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.rotators = rotators;
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
-
-        editor.setEditorStyle('_DOMSelection', null);
     }
 
     public startRotateAndResize(
@@ -429,9 +427,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    private formatImageWithContentModel(editor: IEditor) {
+    private formatImageWithContentModelOnSelectionChange(editor: IEditor) {
         const selection = editor.getDOMSelection();
-        const range = selection?.type == 'range' ? selection.range : null;
+        let range: Range | null = null;
+        if (selection?.type == 'range') {
+            range = selection.range;
+        }
         const insertPoint: DOMInsertPoint | null = range
             ? { node: range?.startContainer, offset: range?.endOffset }
             : null;
@@ -464,7 +465,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             this.wasImageResized || this.isCropMode,
                             this.clonedImage
                         );
-                        if (insertPoint) {
+                        if (insertPoint && selection?.type == 'range') {
                             selectedSegments[0].isSelected = false;
                             insertPoint.marker.isSelected = true;
                         }
@@ -486,6 +487,34 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
+    private formatImageWithContentModel(editor: IEditor) {
+        if (this.lastSrc && this.selectedImage && this.imageEditInfo && this.clonedImage) {
+            editor.formatContentModel((model, _context) => {
+                const selectedSegments = getSelectedSegments(model, false);
+                if (
+                    this.lastSrc &&
+                    this.selectedImage &&
+                    this.imageEditInfo &&
+                    this.clonedImage &&
+                    selectedSegments.length === 1 &&
+                    selectedSegments[0].segmentType == 'Image'
+                ) {
+                    applyChange(
+                        editor,
+                        this.selectedImage,
+                        selectedSegments[0],
+                        this.imageEditInfo,
+                        this.lastSrc,
+                        this.wasImageResized || this.isCropMode,
+                        this.clonedImage
+                    );
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
+
     private removeImageWrapper(
         editor: IEditor,
         resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
@@ -496,6 +525,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
         resizeHelpers.forEach(helper => helper.dispose());
         this.cleanInfo();
+
         return this.getImageWrappedImage(editor.getDocument(), image);
     }
 
