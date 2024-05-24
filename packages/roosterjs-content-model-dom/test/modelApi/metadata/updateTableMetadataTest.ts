@@ -1,6 +1,81 @@
 import { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
 import { TableBorderFormat } from '../../../lib/constants/TableBorderFormat';
-import { updateTableMetadata } from '../../../lib/modelApi/metadata/updateTableMetadata';
+import {
+    getTableMetadata,
+    updateTableMetadata,
+} from '../../../lib/modelApi/metadata/updateTableMetadata';
+
+describe('getTableMetadata', () => {
+    it('No value', () => {
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {},
+        };
+        const result = getTableMetadata(table);
+
+        expect(result).toBeNull();
+    });
+
+    it('Empty value', () => {
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: '',
+            },
+        };
+        const result = getTableMetadata(table);
+
+        expect(result).toBeNull();
+    });
+
+    it('Full valid value, return original value', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: true,
+            headerRowColor: 'orange',
+            hasFirstColumn: true,
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const result = getTableMetadata(table);
+
+        expect(result).toEqual({
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: true,
+            headerRowColor: 'orange',
+            hasFirstColumn: true,
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        });
+    });
+});
 
 describe('updateTableMetadata', () => {
     it('No value', () => {

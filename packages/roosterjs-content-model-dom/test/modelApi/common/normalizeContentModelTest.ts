@@ -7,12 +7,13 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
+import { ReadonlyContentModelDocument } from 'roosterjs-content-model-types';
 
 describe('normalizeContentModel', () => {
     it('Empty model', () => {
         const model = createContentModelDocument();
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -28,7 +29,7 @@ describe('normalizeContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -46,7 +47,7 @@ describe('normalizeContentModel', () => {
         para.segments.push(text1, text2, text3);
         model.blocks.push(para);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -83,7 +84,7 @@ describe('normalizeContentModel', () => {
         para2.segments.push(text, br);
         model.blocks.push(para1, para2);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -132,7 +133,7 @@ describe('normalizeContentModel', () => {
         para2.segments.push(br3, br4);
         model.blocks.push(para1, para2);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -186,7 +187,7 @@ describe('normalizeContentModel', () => {
         para2.segments.push(text, br);
         model.blocks.push(para1, para2);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -235,7 +236,7 @@ describe('normalizeContentModel', () => {
         table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -277,7 +278,7 @@ describe('normalizeContentModel', () => {
         listItem.blocks.push(para);
         model.blocks.push(listItem);
 
-        normalizeContentModel(model);
+        normalizeContentModel(model as ReadonlyContentModelDocument);
 
         expect(model).toEqual({
             blockGroupType: 'Document',

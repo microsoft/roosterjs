@@ -7,8 +7,10 @@ import {
     TableSelectionContext,
 } from 'roosterjs-content-model-types';
 import {
+    createContentModelDocument,
     createDivider,
     createEntity,
+    createListItem,
     createParagraph,
     createSelectionMarker,
     createText,
@@ -51,6 +53,9 @@ describe('getSelectedSegments', () => {
         const s4 = createText('test4');
         const p1 = createParagraph();
         const p2 = createParagraph();
+
+        p1.segments.push(s1, s2);
+        p2.segments.push(s3, s4);
 
         runTest(
             [
@@ -100,21 +105,46 @@ describe('getSelectedSegments', () => {
         const s3 = createText('test3');
         const s4 = createText('test4');
         const b1 = createDivider('div');
+        const doc = createContentModelDocument();
 
         runTest(
             [
                 {
-                    path: [],
+                    path: [doc],
                     block: b1,
                     segments: [s1, s2],
                 },
                 {
-                    path: [],
+                    path: [doc],
                     segments: [s3, s4],
                 },
             ],
             true,
-            [s3, s4]
+            []
+        );
+    });
+
+    it('Block with list item, include format holder', () => {
+        const s1 = createText('test1');
+        const s2 = createText('test2');
+        const b1 = createDivider('div');
+        const doc = createContentModelDocument();
+        const listItem = createListItem([]);
+
+        runTest(
+            [
+                {
+                    path: [doc],
+                    block: b1,
+                    segments: [s1, s2],
+                },
+                {
+                    path: [listItem, doc],
+                    segments: [listItem.formatHolder],
+                },
+            ],
+            true,
+            [listItem.formatHolder]
         );
     });
 

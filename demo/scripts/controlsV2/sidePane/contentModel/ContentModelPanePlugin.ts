@@ -1,3 +1,4 @@
+import { cloneModel } from 'roosterjs-content-model-dom';
 import { ContentModelPane, ContentModelPaneProps } from './ContentModelPane';
 import { createRibbonPlugin, RibbonButton, RibbonPlugin } from '../../roosterjsReact/ribbon';
 import { getRefreshButton } from './buttons/refreshButton';
@@ -70,8 +71,9 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
         this.getComponent(component => {
             this.editor.formatContentModel(
                 model => {
-                    component.setContentModel(model);
-                    setCurrentContentModel(model);
+                    const clonedModel = cloneModel(model);
+                    component.setContentModel(clonedModel);
+                    setCurrentContentModel(clonedModel);
 
                     return false;
                 },
