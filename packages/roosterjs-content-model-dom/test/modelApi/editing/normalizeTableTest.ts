@@ -159,7 +159,7 @@ describe('normalizeTable', () => {
                             blockGroupType: 'TableCell',
                             spanLeft: false,
                             spanAbove: false,
-                            isHeader: false,
+                            isHeader: true,
                             format: { useBorderBox: true },
                             blocks: [
                                 {
@@ -179,6 +179,133 @@ describe('normalizeTable', () => {
                 useBorderBox: true,
             },
             widths: [120],
+            dataset: {},
+        });
+    });
+
+    it('Normalize a table with only TH', () => {
+        const table = createTable(2);
+
+        table.rows[0].cells.push(createTableCell(1, 1, true));
+        table.rows[0].cells.push(createTableCell(1, 1, true));
+        table.rows[1].cells.push(createTableCell(1, 1, true));
+        table.rows[1].cells.push(createTableCell(1, 1, true));
+
+        table.widths = [100, 100];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
+
+        normalizeTable(table);
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            rows: [
+                {
+                    height: 200,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Br',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                useBorderBox: true,
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Br',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                useBorderBox: true,
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: true,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    height: 200,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Br',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                useBorderBox: true,
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Br',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                useBorderBox: true,
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {
+                borderCollapse: true,
+                useBorderBox: true,
+            },
+            widths: [100, 100],
             dataset: {},
         });
     });
