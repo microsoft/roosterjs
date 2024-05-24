@@ -264,6 +264,7 @@ export function setFirstColumnFormatBorders(
 
                 switch (rowIndex) {
                     case 0:
+                        cell.isHeader = false;
                         break;
                     case 1:
                         setBorderColor(cell.format, 'borderBottom');
