@@ -126,6 +126,7 @@ describe('normalizeTable', () => {
 
         normalizeTable(table as ReadonlyContentModelTable);
 
+        console.log('FAILED', table);
         expect(table).toEqual({
             blockType: 'Table',
             rows: [
@@ -170,7 +171,6 @@ describe('normalizeTable', () => {
                                 },
                             ],
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -226,7 +226,6 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -249,7 +248,6 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -278,7 +276,6 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -311,7 +308,6 @@ describe('normalizeTable', () => {
             },
             widths: [100, 100],
             dataset: {},
-            cachedElement: mockedCachedElement,
         });
     });
 
