@@ -213,7 +213,7 @@ function formatCells(
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
                 let color: string | null | undefined;
-                if (hasFirstColumn && colIndex == 0) {
+                if (hasFirstColumn && colIndex == 0 && rowIndex > 0) {
                     color = null;
                 } else {
                     color =
@@ -244,7 +244,7 @@ function formatCells(
 }
 
 /**
- * Set the first column format borders for the table
+ * Set the first column format borders for the table as well as header property
  * @param rows The rows of the table
  * @param format The table metadata format
  */
