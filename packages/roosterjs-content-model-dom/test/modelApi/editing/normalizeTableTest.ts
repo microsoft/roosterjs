@@ -226,7 +226,7 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: {},
+                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -249,7 +249,7 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: {},
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -278,7 +278,7 @@ describe('normalizeTable', () => {
                             spanAbove: false,
                             isHeader: true,
                             dataset: {},
-                            cachedElement: {},
+                            cachedElement: mockedCachedElement,
                         },
                         {
                             blockGroupType: 'TableCell',
@@ -311,7 +311,7 @@ describe('normalizeTable', () => {
             },
             widths: [100, 100],
             dataset: {},
-            cachedElement: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
