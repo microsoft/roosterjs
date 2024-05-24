@@ -26,7 +26,7 @@ describe('applyTableBorderFormat', () => {
         format?: ContentModelTableCell['format']
     ) {
         // Create a table with all cells selected except the first and last row and column
-        const table = createTable(rows);
+        const table: ContentModelTable = createTable(rows);
         for (let i = 0; i < rows; i++) {
             const row = table.rows[i];
             for (let j = 0; j < columns; j++) {
