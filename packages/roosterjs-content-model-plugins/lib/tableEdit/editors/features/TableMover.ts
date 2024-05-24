@@ -1,6 +1,7 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
@@ -238,24 +239,7 @@ export function onDragStart(context: TableMoverContext): TableMoverInitValue {
     const initialSelection = editor.getDOMSelection();
 
     // Get Table block in content model
-    let cmTable: ContentModelTable | undefined;
-
-    editor.formatContentModel(
-        model => {
-            [cmTable] = getFirstSelectedTable(model);
-            return false;
-        },
-        {
-            selectionOverride: {
-                type: 'table',
-                firstColumn: 0,
-                firstRow: 0,
-                lastColumn: 0,
-                lastRow: 0,
-                table: table,
-            },
-        }
-    );
+    const cmTable = getCMTableFromTable(editor, table);
 
     return {
         cmTable,

@@ -1,10 +1,10 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
 import type { TableEditFeature } from './TableEditFeature';
 import {
     isElementOfType,
     normalizeRect,
-    getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
 } from 'roosterjs-content-model-dom';
@@ -108,24 +108,7 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
     const { editor, table } = context;
 
     // Get Table block in content model
-    let cmTable: ContentModelTable | undefined;
-
-    editor.formatContentModel(
-        model => {
-            [cmTable] = getFirstSelectedTable(model);
-            return false;
-        },
-        {
-            selectionOverride: {
-                type: 'table',
-                firstColumn: 0,
-                firstRow: 0,
-                lastColumn: 0,
-                lastRow: 0,
-                table: table,
-            },
-        }
-    );
+    const cmTable = getCMTableFromTable(editor, table);
 
     if (rect && cmTable) {
         onStart();
