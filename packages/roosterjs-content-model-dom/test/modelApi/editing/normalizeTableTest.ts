@@ -126,7 +126,6 @@ describe('normalizeTable', () => {
 
         normalizeTable(table as ReadonlyContentModelTable);
 
-        console.log('FAILED', table);
         expect(table).toEqual({
             blockType: 'Table',
             rows: [
