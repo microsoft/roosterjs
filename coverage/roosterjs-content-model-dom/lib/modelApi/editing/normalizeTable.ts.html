@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.95% </span>
+                <span class="strong">96.1% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>71/74</span>
+                <span class='fraction'>74/77</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.31% </span>
+                <span class="strong">95.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>61/64</span>
+                <span class='fraction'>64/67</span>
             </div>
         
             
@@ -212,20 +212,17 @@
 <a name='L153'></a><a href='#L153'>153</a>
 <a name='L154'></a><a href='#L154'>154</a>
 <a name='L155'></a><a href='#L155'>155</a>
-<a name='L156'></a><a href='#L156'>156</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -238,11 +235,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
@@ -257,6 +268,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-yes">111x</span>
+<span class="cline-any cline-yes">313x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">313x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -352,6 +365,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -371,11 +387,12 @@
 import { addSegment } from '../common/addSegment';
 import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
+import { mutateBlock } from '../common/mutate';
 import type {
-    ContentModelSegment,
     ContentModelSegmentFormat,
-    ContentModelTable,
-    ContentModelTableCell,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
+    ReadonlyContentModelTableCell,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -392,13 +409,15 @@ const MIN_HEIGHT = 22;
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
  * 6. default format is correctly applied
- * @param table The table to normalize
+ * @param readonlyTable The table to normalize
  * @param defaultSegmentFormat @optional Default segment format to apply to cell
  */
 export function normalizeTable(
-    table: ContentModelTable,
+    readonlyTable: ReadonlyContentModelTable,
     defaultSegmentFormat?: ContentModelSegmentFormat
 ) {
+    const table = mutateBlock(readonlyTable);
+&nbsp;
     // Always collapse border and use border box for table in roosterjs to make layout simpler
     const format = table.format;
 &nbsp;
@@ -411,7 +430,9 @@ export function normalizeTable(
     // Make sure all inner cells are not header
     // Make sure all cells have content and width
     table.rows.forEach((row, rowIndex) =&gt; {
-        row.cells.forEach((cell, colIndex) =&gt; {
+        row.cells.forEach((readonlyCell, colIndex) =&gt; {
+            const cell = mutateBlock(readonlyCell);
+&nbsp;
             if (cell.blocks.length == 0) {
                 const format = cell.format.textColor
                     ?<span class="branch-0 cbranch-no" title="branch not covered" > {</span>
@@ -506,18 +527,21 @@ function getTableCellWidth(columns: number): number {
     }
 }
 &nbsp;
-function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentModelTableCell) {
+function tryMoveBlocks(
+    targetCell: ReadonlyContentModelTableCell,
+    sourceCell: ReadonlyContentModelTableCell
+) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
         block =&gt; block.blockType == 'Paragraph' &amp;&amp; hasOnlyBrSegment(block.segments)
     );
 &nbsp;
     if (!onlyHasEmptyOrBr) {
-        targetCell.blocks.push(...sourceCell.blocks);
-        sourceCell.blocks = [];
+        mutateBlock(targetCell).blocks.push(...sourceCell.blocks);
+        mutateBlock(sourceCell).blocks = [];
     }
 }
 &nbsp;
-function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
+function hasOnlyBrSegment(segments: ReadonlyArray&lt;ReadonlyContentModelSegment&gt;): boolean {
     segments = segments.filter(s =&gt; s.segmentType != 'SelectionMarker');
 &nbsp;
     return segments.length == 0 || (segments.length == 1 &amp;&amp; segments[0].segmentType == 'Br');
@@ -529,7 +553,7 @@ function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

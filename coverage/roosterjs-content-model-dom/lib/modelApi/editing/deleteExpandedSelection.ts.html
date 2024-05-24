@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>50/50</span>
+                <span class='fraction'>54/54</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>50/50</span>
+                <span class='fraction'>51/51</span>
             </div>
         
             
@@ -199,7 +199,10 @@
 <a name='L140'></a><a href='#L140'>140</a>
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -254,6 +257,8 @@
 <span class="cline-any cline-yes">258x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">258x</span>
+<span class="cline-any cline-yes">231x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">231x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -303,13 +308,12 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -348,17 +352,18 @@ import { deleteBlock } from './deleteBlock';
 import { deleteSegment } from './deleteSegment';
 import { getSegmentTextFormat } from './getSegmentTextFormat';
 import { iterateSelections } from '../selection/iterateSelections';
+import { mutateBlock, mutateSegments } from '../common/mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelParagraph,
     ContentModelSelectionMarker,
     DeleteSelectionContext,
     FormatContentModelContext,
     InsertPoint,
     IterateSelectionsOption,
-    TableSelectionContext,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyTableSelectionContext,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
@@ -373,7 +378,7 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * at the first deleted position so that we know where to put cursor to after delete
  */
 export function deleteExpandedSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     formatContext?: FormatContentModelContext
 ): DeleteSelectionContext {
     const context: DeleteSelectionContext = {
@@ -384,10 +389,10 @@ export function deleteExpandedSelection(
 &nbsp;
     iterateSelections(
         model,
-        (path, tableContext, block, segments) =&gt; {
+        (path, tableContext, readonlyBlock, readonlySegments) =&gt; {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
-            let paragraph = createParagraph(
+            let paragraph: ShallowMutableContentModelParagraph = createParagraph(
                 true /*implicit*/,
                 undefined /*blockFormat*/,
                 model.format
@@ -395,13 +400,15 @@ export function deleteExpandedSelection(
             let markerFormat = model.format;
             let insertMarkerIndex = 0;
 &nbsp;
-            if (segments) {
+            if (readonlySegments &amp;&amp; readonlyBlock<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph') {
+                const [block, segments, indexes] = mutateSegments(readonlyBlock, readonlySegments);
+&nbsp;
                 // Delete segments inside a paragraph
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (segments[0] &amp;&amp; block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph') {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (segments[0]) {
                     // Now that we have found a paragraph with selections, we can overwrite the default paragraph with this one
                     // so we can put cursor here after delete
                     paragraph = block;
-                    insertMarkerIndex = paragraph.segments.indexOf(segments[0]);
+                    insertMarkerIndex = indexes[0];
                     markerFormat = getSegmentTextFormat(segments[0]);
 &nbsp;
                     context.lastParagraph = paragraph;
@@ -433,25 +440,24 @@ export function deleteExpandedSelection(
                         setParagraphNotImplicit(block);
                     }
                 }
-            } else if (block) {
+            } else if (readonlyBlock) {
                 // Delete a whole block (divider, table, ...)
-                const blocks = path[0].blocks;
+                const blocks = mutateBlock(path[0]).blocks;
 &nbsp;
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (deleteBlock(blocks, block, paragraph, context.formatContext)) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (deleteBlock(blocks, readonlyBlock, paragraph, context.formatContext)) {
                     context.deleteResult = 'range';
                 }
             } else <span class="missing-if-branch" title="else path not taken" >E</span>if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
-                const row = table.rows[rowIndex];
-                const cell = row.cells[colIndex];
+                const mutableTable = mutateBlock(table);
+                const row = mutableTable.rows[rowIndex];
+                const cell = mutateBlock(row.cells[colIndex]);
 &nbsp;
                 path = [cell, ...path];
                 paragraph.segments.push(createBr(model.format));
                 cell.blocks = [paragraph];
 &nbsp;
-                delete cell.cachedElement;
-                delete row.cachedElement;
                 context.deleteResult = 'range';
             }
 &nbsp;
@@ -472,9 +478,9 @@ export function deleteExpandedSelection(
 &nbsp;
 function createInsertPoint(
     marker: ContentModelSelectionMarker,
-    paragraph: ContentModelParagraph,
-    path: ContentModelBlockGroup[],
-    tableContext: TableSelectionContext | undefined
+    paragraph: ShallowMutableContentModelParagraph,
+    path: ReadonlyContentModelBlockGroup[],
+    tableContext: ReadonlyTableSelectionContext | undefined
 ): InsertPoint {
     return {
         marker,
@@ -490,7 +496,7 @@ function createInsertPoint(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.42% </span>
+                <span class="strong">99.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>170/171</span>
+                <span class='fraction'>173/174</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.39% </span>
+                <span class="strong">99.4% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>164/165</span>
+                <span class='fraction'>167/168</span>
             </div>
         
             
@@ -455,7 +455,16 @@
 <a name='L396'></a><a href='#L396'>396</a>
 <a name='L397'></a><a href='#L397'>397</a>
 <a name='L398'></a><a href='#L398'>398</a>
-<a name='L399'></a><a href='#L399'>399</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L399'></a><a href='#L399'>399</a>
+<a name='L400'></a><a href='#L400'>400</a>
+<a name='L401'></a><a href='#L401'>401</a>
+<a name='L402'></a><a href='#L402'>402</a>
+<a name='L403'></a><a href='#L403'>403</a>
+<a name='L404'></a><a href='#L404'>404</a>
+<a name='L405'></a><a href='#L405'>405</a>
+<a name='L406'></a><a href='#L406'>406</a>
+<a name='L407'></a><a href='#L407'>407</a>
+<a name='L408'></a><a href='#L408'>408</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -466,6 +475,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -629,6 +642,8 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -776,6 +791,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -798,6 +814,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -862,12 +880,12 @@ import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from './deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
+import { mutateBlock } from '../common/mutate';
 import { normalizeContentModel } from '../common/normalizeContentModel';
 import { normalizeTable } from './normalizeTable';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelListItem,
     ContentModelParagraph,
@@ -876,6 +894,10 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     MergeModelOption,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -889,7 +911,7 @@ const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
  * @returns Insert point after merge, or null if there is no insert point
  */
 export function mergeModel(
-    target: ContentModelDocument,
+    target: ReadonlyContentModelDocument,
     source: ContentModelDocument,
     context?: FormatContentModelContext,
     options?: MergeModelOption
@@ -1025,7 +1047,9 @@ function mergeTable(
     const { tableContext, marker } = markerPosition;
 &nbsp;
     if (tableContext &amp;&amp; source.blocks.length == 1 &amp;&amp; source.blocks[0] == newTable) {
-        const { table, colIndex, rowIndex } = tableContext;
+        const { table: readonlyTable, colIndex, rowIndex } = tableContext;
+        const table = mutateBlock(readonlyTable);
+&nbsp;
         for (let i = 0; i &lt; newTable.rows.length; i++) {
             for (let j = 0; j &lt; newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
@@ -1097,7 +1121,7 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     const blockIndex = listParent.blocks.indexOf(listItem || paragraph);
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (blockIndex &gt;= 0) {
-        listParent.blocks.splice(blockIndex, 0, newList);
+        mutateBlock(listParent).blocks.splice(blockIndex, 0, newList);
     }
 &nbsp;
     if (listItem) {
@@ -1111,7 +1135,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         { ...paragraph.format, ...newParaFormat },
         paragraph.segmentFormat
@@ -1122,7 +1146,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     }
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (paraIndex &gt;= 0) {
-        path[0].blocks.splice(paraIndex + 1, 0, newParagraph);
+        mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newParagraph);
     }
 &nbsp;
     const listItemIndex = getClosestAncestorBlockGroupIndex(
@@ -1144,7 +1168,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
             }
 &nbsp;
             <span class="missing-if-branch" title="else path not taken" >E</span>if (blockIndex &gt;= 0) {
-                listParent.blocks.splice(blockIndex + 1, 0, newListItem);
+                mutateBlock(listParent).blocks.splice(blockIndex + 1, 0, newListItem);
             }
 &nbsp;
             path[listItemIndex] = newListItem;
@@ -1163,21 +1187,22 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const blockIndex = path[0].blocks.indexOf(newPara);
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (blockIndex &gt;= 0) {
-        path[0].blocks.splice(blockIndex, 0, block);
+        mutateBlock(path[0]).blocks.splice(blockIndex, 0, block);
     }
 }
 &nbsp;
 function applyDefaultFormat(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block =&gt; {
         mergeBlockFormat(applyDefaultFormatOption, block);
+&nbsp;
         switch (block.blockType) {
             case 'BlockGroup':
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (block.blockGroupType == 'ListItem') {
-                    block.formatHolder.format = mergeSegmentFormat(
+                    mutateBlock(block).formatHolder.format = mergeSegmentFormat(
                         applyDefaultFormatOption,
                         format,
                         block.formatHolder.format
@@ -1196,7 +1221,9 @@ function applyDefaultFormat(
 &nbsp;
             case 'Paragraph':
                 const paragraphFormat = block.decorator?.format || {};
-                block.segments.forEach(segment =&gt; {
+                const paragraph = mutateBlock(block);
+&nbsp;
+                paragraph.segments.forEach(segment =&gt; {
                     <span class="missing-if-branch" title="if path not taken" >I</span>if (segment.segmentType == 'General') {
 <span class="cstat-no" title="statement not covered" >                        applyDefaultFormat(segment, format, applyDefaultFormatOption);</span>
                     }
@@ -1208,28 +1235,28 @@ function applyDefaultFormat(
                 });
 &nbsp;
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
-                    delete block.decorator;
+                    delete paragraph.decorator;
                 }
                 break;
         }
     });
 }
 &nbsp;
-function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
+function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyContentModelBlock) {
     if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' &amp;&amp; block.format.backgroundColor) {
-        delete block.format.backgroundColor;
+        delete mutateBlock(block).format.backgroundColor;
     }
 }
 &nbsp;
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetformat: ContentModelSegmentFormat,
+    targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetformat, ...sourceFormat }
+        ? { ...targetFormat, ...sourceFormat }
         : {
-              ...targetformat,
+              ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
 }
@@ -1258,7 +1285,7 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

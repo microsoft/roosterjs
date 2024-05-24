@@ -224,8 +224,19 @@
 <a name='L165'></a><a href='#L165'>165</a>
 <a name='L166'></a><a href='#L166'>166</a>
 <a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -343,6 +354,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -403,12 +417,16 @@ import {
     setParagraphNotImplicit,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
     InsertPoint,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
+    ShallowMutableContentModelParagraph,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 &nbsp;
@@ -459,7 +477,7 @@ export const handleEnterOnList: DeleteSelectionStep = context =&gt; {
                         lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
                             'SelectionMarker'
                     ) {
-                        lastParagraph.segments.pop();
+                        mutateBlock(lastParagraph).segments.pop();
 &nbsp;
                         nextParagraph.segments.unshift(
                             createSelectionMarker(insertPoint.marker.format)
@@ -470,7 +488,7 @@ export const handleEnterOnList: DeleteSelectionStep = context =&gt; {
                 }
             } else <span class="missing-if-branch" title="else path not taken" >E</span>if (deleteResult !== 'range') {
                 if (isEmptyListItem(listItem)) {
-                    listItem.levels.pop();
+                    mutateBlock(listItem).levels.pop();
                 } else {
                     const newListItem = createNewListItem(context, listItem, listParent);
 &nbsp;
@@ -489,7 +507,7 @@ export const handleEnterOnList: DeleteSelectionStep = context =&gt; {
     }
 };
 &nbsp;
-const isEmptyListItem = (listItem: ContentModelListItem) =&gt; {
+const isEmptyListItem = (listItem: ReadonlyContentModelListItem) =&gt; {
     return (
         listItem.blocks.length === 1 &amp;&amp;
         listItem.blocks[0].blockType === 'Paragraph' &amp;&amp;
@@ -501,24 +519,27 @@ const isEmptyListItem = (listItem: ContentModelListItem) =&gt; {
 &nbsp;
 const createNewListItem = (
     context: ValidDeleteSelectionContext,
-    listItem: ContentModelListItem,
-    listParent: ContentModelBlockGroup
+    listItem: ReadonlyContentModelListItem,
+    listParent: ReadonlyContentModelBlockGroup
 ) =&gt; {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
     const newParagraph = createNewParagraph(insertPoint);
 &nbsp;
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, insertPoint.marker.format);
+    const newListItem: ShallowMutableContentModelListItem = createListItem(
+        levels,
+        insertPoint.marker.format
+    );
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
     context.lastParagraph = newParagraph;
-    listParent.blocks.splice(listIndex + 1, 0, newListItem);
+    mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
 &nbsp;
     return newListItem;
 };
 &nbsp;
-const createNewListLevel = (listItem: ContentModelListItem) =&gt; {
+const createNewListLevel = (listItem: ReadonlyContentModelListItem) =&gt; {
     return listItem.levels.map(level =&gt; {
         return createListLevel(
             level.listType,
@@ -534,7 +555,7 @@ const createNewListLevel = (listItem: ContentModelListItem) =&gt; {
 &nbsp;
 const createNewParagraph = (insertPoint: InsertPoint) =&gt; {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         paragraph.format,
         paragraph.segmentFormat
@@ -565,7 +586,7 @@ const createNewParagraph = (insertPoint: InsertPoint) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

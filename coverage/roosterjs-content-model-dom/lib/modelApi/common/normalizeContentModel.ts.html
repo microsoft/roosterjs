@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/24</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -103,9 +103,11 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -118,10 +120,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1027x</span>
-<span class="cline-any cline-yes">1854x</span>
+<span class="cline-any cline-yes">1023x</span>
+<span class="cline-any cline-yes">1847x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1854x</span>
+<span class="cline-any cline-yes">1847x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">323x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -131,28 +133,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">323x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1443x</span>
-<span class="cline-any cline-yes">1443x</span>
+<span class="cline-any cline-yes">1436x</span>
+<span class="cline-any cline-yes">1436x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">64x</span>
-<span class="cline-any cline-yes">128x</span>
-<span class="cline-any cline-yes">309x</span>
-<span class="cline-any cline-yes">309x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">64x</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-yes">305x</span>
+<span class="cline-any cline-yes">305x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1854x</span>
-<span class="cline-any cline-yes">549x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1847x</span>
+<span class="cline-any cline-yes">546x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isBlockEmpty } from './isEmpty';
+import { mutateBlock } from './mutate';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
-import type { ContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * For a given content model, normalize it to make the model be consistent.
@@ -163,7 +166,7 @@ import type { ContentModelBlockGroup } from 'roosterjs-content-model-types';
  * - For an empty block, remove it
  * @param group The root level block group of content model to normalize
  */
-export function normalizeContentModel(group: ContentModelBlockGroup) {
+export function normalizeContentModel(group: ReadonlyContentModelBlockGroup) {
     for (let i = group.blocks.length - 1; i &gt;= 0; i--) {
         const block = group.blocks[i];
 &nbsp;
@@ -191,7 +194,7 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
         }
 &nbsp;
         if (isBlockEmpty(block)) {
-            group.blocks.splice(i, 1);
+            mutateBlock(group).blocks.splice(i, 1);
         }
     }
 }
@@ -202,7 +205,7 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

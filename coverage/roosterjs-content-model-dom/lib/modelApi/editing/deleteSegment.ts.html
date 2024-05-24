@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/41</span>
+                <span class='fraction'>44/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.32% </span>
+                <span class="strong">74.42% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/38</span>
+                <span class='fraction'>32/43</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">95.35% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>40/41</span>
+                <span class='fraction'>41/43</span>
             </div>
         
             
@@ -161,7 +161,19 @@
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -187,6 +199,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-yes">84x</span>
@@ -251,6 +266,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">82x</span>
@@ -267,40 +289,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { deleteSingleChar } from './deleteSingleChar';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
+import { mutateSegment } from '../common/mutate';
 import { normalizeSingleSegment } from '../common/normalizeSegment';
 import { normalizeText } from '../../domUtils/stringUtil';
 import type {
-    ContentModelParagraph,
-    ContentModelSegment,
     EntityRemovalOperation,
     FormatContentModelContext,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * Delete a content model segment from current selection
- * @param paragraph Parent paragraph of the segment to delete
- * @param segmentToDelete The segment to delete
+ * @param readonlyParagraph Parent paragraph of the segment to delete
+ * @param readonlySegmentToDelete The segment to delete
  * @param context @optional Context object provided by formatContentModel API
  * @param direction @optional Whether this is deleting forward or backward. This is only used for deleting entity.
  * If not specified, only selected entity will be deleted
  */
 export function deleteSegment(
-    paragraph: ContentModelParagraph,
-    segmentToDelete: ContentModelSegment,
+    readonlyParagraph: ReadonlyContentModelParagraph,
+    readonlySegmentToDelete: ReadonlyContentModelSegment,
     context?: FormatContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
+    const [paragraph, segmentToDelete, index] = mutateSegment(
+        readonlyParagraph,
+        readonlySegmentToDelete
+    );
     const segments = paragraph.segments;
-    const index = segments.indexOf(segmentToDelete);
     const preserveWhiteSpace = isWhiteSpacePreserved(paragraph.format.whiteSpace);
     const isForward = direction == 'forward';
     const isBackward = direction == 'backward';
 &nbsp;
     if (!preserveWhiteSpace) {
-        normalizePreviousSegment(segments, index);
+        normalizePreviousSegment(paragraph, segments, index);
     }
 &nbsp;
-    switch (segmentToDelete.segmentType) {
+    switch (segmentToDelete<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>egmentType) {
         case 'Br':
         case 'Image':
         case 'SelectionMarker':
@@ -353,10 +379,17 @@ export function deleteSegment(
             } else {
 <span class="cstat-no" title="statement not covered" >                return false;</span>
             }
+&nbsp;
+<span class="branch-6 cbranch-no" title="branch not covered" >        default:</span>
+<span class="cstat-no" title="statement not covered" >            return false;</span>
     }
 }
 &nbsp;
-function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex: number) {
+function normalizePreviousSegment(
+    paragraph: ReadonlyContentModelParagraph,
+    segments: ReadonlyArray&lt;ReadonlyContentModelSegment&gt;,
+    currentIndex: number
+) {
     let index = currentIndex - 1;
 &nbsp;
     while (segments[index]?.segmentType == 'SelectionMarker') {
@@ -366,7 +399,7 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
     const segment = segments[index];
 &nbsp;
     if (segment) {
-        normalizeSingleSegment(segment);
+        normalizeSingleSegment(paragraph, segment);
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -376,7 +409,7 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 23 2024 20:13:23 GMT+0000 (Coordinated Universal Time)
+                at Fri May 24 2024 00:07:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
