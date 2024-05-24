@@ -1,7 +1,8 @@
 import { isBlockEmpty } from './isEmpty';
+import { mutateBlock } from './mutate';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
-import type { ContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
  * For a given content model, normalize it to make the model be consistent.
@@ -12,7 +13,7 @@ import type { ContentModelBlockGroup } from 'roosterjs-content-model-types';
  * - For an empty block, remove it
  * @param group The root level block group of content model to normalize
  */
-export function normalizeContentModel(group: ContentModelBlockGroup) {
+export function normalizeContentModel(group: ReadonlyContentModelBlockGroup) {
     for (let i = group.blocks.length - 1; i >= 0; i--) {
         const block = group.blocks[i];
 
@@ -40,7 +41,7 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
         }
 
         if (isBlockEmpty(block)) {
-            group.blocks.splice(i, 1);
+            mutateBlock(group).blocks.splice(i, 1);
         }
     }
 }

@@ -1,14 +1,31 @@
-import type { ContentModelBlockBase } from './ContentModelBlockBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
-import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
-import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelBlockBase, ReadonlyContentModelBlockBase } from './ContentModelBlockBase';
+import type {
+    ContentModelParagraphDecorator,
+    ReadonlyContentModelParagraphDecorator,
+} from '../decorator/ContentModelParagraphDecorator';
+import type {
+    ContentModelSegment,
+    ReadonlyContentModelSegment,
+    ShallowMutableContentModelSegment,
+} from '../segment/ContentModelSegment';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+
+/**
+ * Common part of Content Model of Paragraph
+ */
+export interface ContentModelParagraphCommon {
+    /**
+     * Whether this block was created from a block HTML element or just some simple segment between other block elements.
+     * True means it doesn't have a related block element, false means it was from a block element
+     */
+    isImplicit?: boolean;
+}
 
 /**
  * Content Model of Paragraph
  */
 export interface ContentModelParagraph
-    extends ContentModelBlockWithCache,
+    extends ContentModelParagraphCommon,
         ContentModelBlockBase<'Paragraph'> {
     /**
      * Segments within this paragraph
@@ -24,10 +41,48 @@ export interface ContentModelParagraph
      * Decorator info for this paragraph, used by heading and P tags
      */
     decorator?: ContentModelParagraphDecorator;
+}
+
+/**
+ * Content Model of Paragraph (Readonly)
+ */
+export interface ReadonlyContentModelParagraph
+    extends ReadonlyContentModelBlockBase<'Paragraph'>,
+        Readonly<ContentModelParagraphCommon> {
+    /**
+     * Segments within this paragraph
+     */
+    readonly segments: ReadonlyArray<ReadonlyContentModelSegment>;
 
     /**
-     * Whether this block was created from a block HTML element or just some simple segment between other block elements.
-     * True means it doesn't have a related block element, false means it was from a block element
+     * Segment format on this paragraph. This is mostly used for default format
      */
-    isImplicit?: boolean;
+    readonly segmentFormat?: Readonly<ContentModelSegmentFormat>;
+
+    /**
+     * Decorator info for this paragraph, used by heading and P tags
+     */
+    readonly decorator?: ReadonlyContentModelParagraphDecorator;
+}
+
+/**
+ * Content Model of Paragraph (Shallow mutable)
+ */
+export interface ShallowMutableContentModelParagraph
+    extends ContentModelParagraphCommon,
+        ContentModelBlockBase<'Paragraph'> {
+    /**
+     * Segments within this paragraph
+     */
+    segments: ShallowMutableContentModelSegment[];
+
+    /**
+     * Segment format on this paragraph. This is mostly used for default format
+     */
+    segmentFormat?: ContentModelSegmentFormat;
+
+    /**
+     * Decorator info for this paragraph, used by heading and P tags
+     */
+    decorator?: ContentModelParagraphDecorator;
 }

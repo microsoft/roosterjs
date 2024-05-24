@@ -10,13 +10,13 @@ import type {
  */
 export function createFormatContainer(
     tag: Lowercase<string>,
-    format?: ContentModelFormatContainerFormat
+    format?: Readonly<ContentModelFormatContainerFormat>
 ): ContentModelFormatContainer {
     return {
         blockType: 'BlockGroup',
         blockGroupType: 'FormatContainer',
         tagName: tag,
         blocks: [],
-        format: { ...(format || {}) },
+        format: { ...format },
     };
 }

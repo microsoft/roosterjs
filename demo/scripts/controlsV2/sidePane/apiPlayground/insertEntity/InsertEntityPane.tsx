@@ -3,9 +3,9 @@ import { ApiPaneProps } from '../ApiPaneProps';
 import { insertEntity } from 'roosterjs-content-model-api';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 import {
-    ContentModelBlockGroup,
     ContentModelEntity,
     InsertEntityOptions,
+    ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 const styles = require('./InsertEntityPane.scss');
@@ -155,7 +155,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     };
 }
 
-function findAllEntities(group: ContentModelBlockGroup, result: ContentModelEntity[]) {
+function findAllEntities(group: ReadonlyContentModelBlockGroup, result: ContentModelEntity[]) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':

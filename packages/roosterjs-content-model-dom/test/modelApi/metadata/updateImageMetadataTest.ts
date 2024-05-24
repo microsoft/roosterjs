@@ -1,5 +1,75 @@
 import { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
-import { updateImageMetadata } from '../../../lib/modelApi/metadata/updateImageMetadata';
+import {
+    getImageMetadata,
+    updateImageMetadata,
+} from '../../../lib/modelApi/metadata/updateImageMetadata';
+
+describe('getImageMetadataTest', () => {
+    it('No value', () => {
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {},
+        };
+
+        const result = getImageMetadata(image);
+
+        expect(result).toBeNull();
+    });
+
+    it('Empty value', () => {
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {
+                editingInfo: '',
+            },
+        };
+
+        const result = getImageMetadata(image);
+
+        expect(result).toBeNull();
+    });
+
+    it('Full valid value, return original value', () => {
+        const imageFormat: ImageMetadataFormat = {
+            widthPx: 1,
+            heightPx: 2,
+            leftPercent: 3,
+            rightPercent: 4,
+            topPercent: 5,
+            bottomPercent: 6,
+            angleRad: 7,
+            naturalHeight: 8,
+            naturalWidth: 9,
+            src: 'test',
+        };
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {
+                editingInfo: JSON.stringify(imageFormat),
+            },
+        };
+        const result = getImageMetadata(image);
+
+        expect(result).toEqual({
+            widthPx: 1,
+            heightPx: 2,
+            leftPercent: 3,
+            rightPercent: 4,
+            topPercent: 5,
+            bottomPercent: 6,
+            angleRad: 7,
+            naturalHeight: 8,
+            naturalWidth: 9,
+            src: 'test',
+        });
+    });
+});
 
 describe('updateImageMetadataTest', () => {
     it('No value', () => {

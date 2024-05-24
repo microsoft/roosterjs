@@ -1,11 +1,15 @@
-import { updateMetadata } from './updateMetadata';
+import { getMetadata, updateMetadata } from './updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
 } from './definitionCreators';
-import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelImage,
+    ImageMetadataFormat,
+    ReadonlyContentModelImage,
+} from 'roosterjs-content-model-types';
 
 const NumberDefinition = createNumberDefinition(true);
 const BooleanDefinition = createBooleanDefinition(true);
@@ -28,6 +32,14 @@ export const ImageMetadataFormatDefinition = createObjectDefinition<Required<Ima
     flippedHorizontal: BooleanDefinition,
     flippedVertical: BooleanDefinition,
 });
+
+/**
+ * Get image metadata
+ * @param image The image Content Model
+ */
+export function getImageMetadata(image: ReadonlyContentModelImage): ImageMetadataFormat | null {
+    return getMetadata(image, ImageMetadataFormatDefinition);
+}
 
 /**
  * Update image metadata with a callback

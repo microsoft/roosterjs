@@ -7,11 +7,11 @@ import type { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-con
  */
 export function createDivider(
     tagName: 'hr' | 'div',
-    format?: ContentModelBlockFormat
+    format?: Readonly<ContentModelBlockFormat>
 ): ContentModelDivider {
     return {
         blockType: 'Divider',
         tagName,
-        format: format ? { ...format } : {},
+        format: { ...format },
     };
 }

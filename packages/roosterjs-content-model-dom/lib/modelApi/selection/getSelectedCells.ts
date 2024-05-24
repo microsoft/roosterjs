@@ -1,11 +1,16 @@
 import { hasSelectionInBlockGroup } from '../selection/hasSelectionInBlockGroup';
-import type { ContentModelTable, TableSelectionCoordinates } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelTable,
+    TableSelectionCoordinates,
+} from 'roosterjs-content-model-types';
 
 /**
  * Get selection coordinates of a table. If there is no selection, return null
  * @param table The table model to get selection from
  */
-export function getSelectedCells(table: ContentModelTable): TableSelectionCoordinates | null {
+export function getSelectedCells(
+    table: ReadonlyContentModelTable
+): TableSelectionCoordinates | null {
     let firstRow = -1;
     let firstColumn = -1;
     let lastRow = -1;

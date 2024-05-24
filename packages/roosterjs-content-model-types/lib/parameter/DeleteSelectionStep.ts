@@ -1,8 +1,8 @@
-import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ShallowMutableContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { DeleteResult } from '../enum/DeleteResult';
 import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { InsertPoint } from '../selection/InsertPoint';
-import type { TableSelectionContext } from '../selection/TableSelectionContext';
+import type { ReadonlyTableSelectionContext } from '../selection/TableSelectionContext';
 
 /**
  * Result of deleteSelection API
@@ -26,12 +26,12 @@ export interface DeleteSelectionContext extends DeleteSelectionResult {
     /**
      * Last paragraph after previous step
      */
-    lastParagraph?: ContentModelParagraph;
+    lastParagraph?: ShallowMutableContentModelParagraph;
 
     /**
      * Last table context after previous step
      */
-    lastTableContext?: TableSelectionContext;
+    lastTableContext?: ReadonlyTableSelectionContext;
 
     /**
      * Format context provided by formatContentModel API

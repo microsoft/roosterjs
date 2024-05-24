@@ -39,7 +39,6 @@ import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleB
 import { setHeadingLevelButton } from '../roosterjsReact/ribbon/buttons/setHeadingLevelButton';
 import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
 import { setTableCellShadeButton } from '../demoButtons/setTableCellShadeButton';
-import { setTableHeaderButton } from '../demoButtons/setTableHeaderButton';
 import { spaceAfterButton, spaceBeforeButton } from '../demoButtons/spaceBeforeAfterButtons';
 import { spacingButton } from '../demoButtons/spacingButton';
 import { strikethroughButton } from '../roosterjsReact/ribbon/buttons/strikethroughButton';
@@ -49,6 +48,7 @@ import { tableBorderApplyButton } from '../demoButtons/tableBorderApplyButton';
 import { tableBorderColorButton } from '../demoButtons/tableBorderColorButton';
 import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
 import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
+import { tableOptionsButton } from '../demoButtons/tableOptionsButton';
 import { tabNames } from './getTabs';
 import { textColorButton } from '../roosterjsReact/ribbon/buttons/textColorButton';
 import { underlineButton } from '../roosterjsReact/ribbon/buttons/underlineButton';
@@ -81,7 +81,7 @@ const tableButtons: RibbonButton<any>[] = [
     insertTableButton,
     formatTableButton,
     setTableCellShadeButton,
-    setTableHeaderButton,
+    tableOptionsButton,
     tableInsertButton,
     tableDeleteButton,
     tableBorderApplyButton,
@@ -171,7 +171,7 @@ const allButtons: RibbonButton<any>[] = [
     listStartNumberButton,
     formatTableButton,
     setTableCellShadeButton,
-    setTableHeaderButton,
+    tableOptionsButton,
     tableInsertButton,
     tableDeleteButton,
     tableMergeButton,
