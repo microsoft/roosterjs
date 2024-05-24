@@ -8,7 +8,6 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     BorderFormat,
-    ContentModelBlockFormat,
     ContentModelListItem,
     MarginFormat,
     PaddingFormat,
@@ -37,25 +36,22 @@ export function setModelDirection(model: ReadonlyContentModelDocument, direction
                     level.format.direction = direction;
                 });
 
-                item.blocks.forEach(block => internalSetDirection(block.format, direction));
+                item.blocks.forEach(block => internalSetDirection(block, direction));
             });
         } else if (block) {
-            internalSetDirection(block.format, direction, block);
+            internalSetDirection(block, direction);
         }
     });
 
     return paragraphOrListItemOrTable.length > 0;
 }
 
-function internalSetDirection(
-    format: ContentModelBlockFormat,
-    direction: 'ltr' | 'rtl',
-    block?: ReadonlyContentModelBlock
-) {
-    const wasRtl = format.direction == 'rtl';
+function internalSetDirection(block: ReadonlyContentModelBlock, direction: 'ltr' | 'rtl') {
+    const wasRtl = block.format.direction == 'rtl';
     const isRtl = direction == 'rtl';
 
     if (wasRtl != isRtl) {
+        const { format } = mutateBlock(block);
         format.direction = direction;
 
         // Adjust margin when change direction

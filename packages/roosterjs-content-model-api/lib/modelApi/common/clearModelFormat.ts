@@ -111,7 +111,7 @@ function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
 
 function clearSegmentsFormat(
     segmentsToClear: ShallowMutableContentModelSegment[],
-    defaultSegmentFormat: ContentModelSegmentFormat | undefined
+    defaultSegmentFormat: Readonly<ContentModelSegmentFormat> | undefined
 ) {
     segmentsToClear.forEach(x => {
         x.format = { ...(defaultSegmentFormat || {}) };
@@ -134,6 +134,7 @@ function clearTableCellFormat(
 
         if (cell.isSelected) {
             const mutableCell = mutateBlock(cell);
+
             updateTableCellMetadata(mutableCell, () => null);
             mutableCell.isHeader = false;
             mutableCell.format = {

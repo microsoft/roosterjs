@@ -985,7 +985,6 @@ describe('handleKeyDownInBlockDelimiter', () => {
                     ],
                     format: {},
                     segmentFormat: {},
-                    isImplicit: false,
                 },
                 {
                     blockType: 'Paragraph',
@@ -1082,7 +1081,6 @@ describe('handleKeyDownInBlockDelimiter', () => {
                     ],
                     format: {},
                     segmentFormat: {},
-                    isImplicit: false,
                 },
                 {
                     segmentType: 'Entity',
