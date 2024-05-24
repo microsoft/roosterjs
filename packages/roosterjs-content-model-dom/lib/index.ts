@@ -23,6 +23,7 @@ export { toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
 export { unwrap } from './domUtils/unwrap';
+export { ensureImageHasSpanParent } from './domUtils/ensureImageHasSpanParent';
 export {
     isEntityElement,
     findClosestEntityWrapper,

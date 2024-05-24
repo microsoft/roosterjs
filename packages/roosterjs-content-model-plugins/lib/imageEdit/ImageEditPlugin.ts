@@ -15,11 +15,11 @@ import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
     ChangeSource,
+    ensureImageHasSpanParent,
     getSelectedSegments,
     isElementOfType,
     isNodeOfType,
     unwrap,
-    wrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
@@ -27,6 +27,7 @@ import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     DOMInsertPoint,
+    DOMSelection,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -94,6 +95,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.formatImageWithContentModel(editor);
                 },
             },
+            dragstart: {
+                beforeDispatch: () => {
+                    this.removeImageWrapper(this.dndHelpers);
+                },
+            },
         });
     }
 
@@ -128,15 +134,23 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         this.selectedImage &&
                         this.imageEditInfo &&
                         this.shadowSpan &&
-                        event.source != ChangeSource.ImageResize
+                        event.source != ChangeSource.ImageResize &&
+                        event.source !== 'ImageEdit'
                     ) {
-                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                        this.removeImageWrapper(this.dndHelpers);
                     }
                     break;
 
-                case 'keyDown':
-                    if (this.selectedImage && this.imageEditInfo && this.shadowSpan) {
-                        this.removeImageWrapper(this.editor, this.dndHelpers);
+                case 'keyUp':
+                    if (
+                        this.editor &&
+                        this.selectedImage &&
+                        this.imageEditInfo &&
+                        this.shadowSpan
+                    ) {
+                        this.editor.focus();
+
+                        this.formatImageWithContentModel(this.editor);
                     }
                     break;
             }
@@ -146,14 +160,14 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
         if (event.newSelection?.type == 'image') {
             if (this.selectedImage && this.selectedImage !== event.newSelection.image) {
-                this.formatImageWithContentModelOnSelectionChange(editor);
+                this.formatImageWithContentModelOnSelectionChange(editor, event.newSelection);
             }
             if (!this.selectedImage) {
                 this.startRotateAndResize(editor, event.newSelection.image);
             }
-        } else {
+        } else if (event.newSelection) {
             if (this.selectedImage) {
-                this.formatImageWithContentModelOnSelectionChange(editor);
+                this.formatImageWithContentModelOnSelectionChange(editor, event.newSelection);
             }
         }
     }
@@ -164,6 +178,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation?: ImageEditOperation
     ) {
         const contentModelImage = getContentModelImage(editor);
+        ensureImageHasSpanParent(image);
         const imageSpan = image.parentElement;
         if (
             !contentModelImage ||
@@ -200,6 +215,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.rotators = rotators;
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
+
+        editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
+            `span:has(>img#${this.selectedImage.id})`,
+        ]);
     }
 
     public startRotateAndResize(
@@ -208,7 +227,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation?: 'resize' | 'rotate'
     ) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            this.removeImageWrapper(editor, this.dndHelpers);
+            this.removeImageWrapper(this.dndHelpers);
         }
         this.startEditing(editor, image, apiOperation);
         if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
@@ -335,7 +354,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     public cropImage(editor: IEditor, image: HTMLImageElement) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            image = this.removeImageWrapper(editor, this.dndHelpers) ?? image;
+            image = this.removeImageWrapper(this.dndHelpers) ?? image;
         }
 
         this.startEditing(editor, image, 'crop');
@@ -390,7 +409,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         operation: (imageEditInfo: ImageMetadataFormat) => void
     ) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            image = this.removeImageWrapper(editor, this.dndHelpers) ?? image;
+            image = this.removeImageWrapper(this.dndHelpers) ?? image;
         }
         this.startEditing(editor, image, apiOperation);
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
@@ -411,6 +430,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private cleanInfo() {
+        this.editor?.setEditorStyle('imageEdit', null);
         this.selectedImage = null;
         this.shadowSpan = null;
         this.wrapper = null;
@@ -427,15 +447,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    private formatImageWithContentModelOnSelectionChange(editor: IEditor) {
-        const selection = editor.getDOMSelection();
-        let range: Range | null = null;
+    private formatImageWithContentModelOnSelectionChange(editor: IEditor, selection: DOMSelection) {
+        let insertPoint: DOMInsertPoint | null = null;
         if (selection?.type == 'range') {
-            range = selection.range;
+            insertPoint = {
+                node: selection.range.startContainer,
+                offset: selection.range.endOffset,
+            };
+        } else if (selection.type == 'image') {
+            insertPoint = { node: selection.image, offset: selection.image.offsetWidth };
         }
-        const insertPoint: DOMInsertPoint | null = range
-            ? { node: range?.startContainer, offset: range?.endOffset }
-            : null;
         if (
             this.lastSrc &&
             this.selectedImage &&
@@ -467,79 +488,78 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         );
                         if (insertPoint && selection?.type == 'range') {
                             selectedSegments[0].isSelected = false;
+                            selectedSegments[0].isSelectedAsImageSelection = false;
                             insertPoint.marker.isSelected = true;
                         }
-
                         return true;
                     }
 
                     return false;
                 },
                 {
+                    changeSource: 'ImageEdit',
                     selectionOverride: {
                         type: 'image',
                         image: this.selectedImage,
                     },
                 }
             );
-
-            this.removeImageWrapper(editor, this.dndHelpers);
+            this.cleanInfo();
         }
     }
 
     private formatImageWithContentModel(editor: IEditor) {
         if (this.lastSrc && this.selectedImage && this.imageEditInfo && this.clonedImage) {
-            editor.formatContentModel((model, _context) => {
-                const selectedSegments = getSelectedSegments(model, false);
-                if (
-                    this.lastSrc &&
-                    this.selectedImage &&
-                    this.imageEditInfo &&
-                    this.clonedImage &&
-                    selectedSegments.length === 1 &&
-                    selectedSegments[0].segmentType == 'Image'
-                ) {
-                    applyChange(
-                        editor,
-                        this.selectedImage,
-                        selectedSegments[0],
-                        this.imageEditInfo,
-                        this.lastSrc,
-                        this.wasImageResized || this.isCropMode,
-                        this.clonedImage
-                    );
-                    return true;
+            editor.formatContentModel(
+                (model, _context) => {
+                    const selectedSegments = getSelectedSegments(model, false);
+                    if (
+                        this.lastSrc &&
+                        this.selectedImage &&
+                        this.imageEditInfo &&
+                        this.clonedImage &&
+                        selectedSegments.length === 1 &&
+                        selectedSegments[0].segmentType == 'Image'
+                    ) {
+                        applyChange(
+                            editor,
+                            this.selectedImage,
+                            selectedSegments[0],
+                            this.imageEditInfo,
+                            this.lastSrc,
+                            this.wasImageResized || this.isCropMode,
+                            this.clonedImage
+                        );
+                        selectedSegments[0].isSelected = true;
+                        selectedSegments[0].isSelectedAsImageSelection = true;
+                        return true;
+                    }
+                    return false;
+                },
+                {
+                    changeSource: 'ImageEdit',
                 }
-                return false;
-            });
+            );
+            this.cleanInfo();
         }
     }
 
-    private removeImageWrapper(
-        editor: IEditor,
-        resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]
-    ) {
-        let image: Node | null = null;
+    private removeImageWrapper(resizeHelpers: DragAndDropHelper<DragAndDropContext, any>[]) {
+        let image: HTMLImageElement | null = null;
         if (this.shadowSpan && this.shadowSpan.parentElement) {
-            image = unwrap(this.shadowSpan);
+            if (
+                this.shadowSpan.firstElementChild &&
+                isNodeOfType(this.shadowSpan.firstElementChild, 'ELEMENT_NODE') &&
+                isElementOfType(this.shadowSpan.firstElementChild, 'img')
+            ) {
+                image = this.shadowSpan.firstElementChild;
+            }
+            unwrap(this.shadowSpan);
         }
         resizeHelpers.forEach(helper => helper.dispose());
         this.cleanInfo();
 
-        return this.getImageWrappedImage(editor.getDocument(), image);
-    }
-
-    private getImageWrappedImage(doc: Document, node: Node | null): HTMLImageElement | null {
-        if (node && isNodeOfType(node, 'ELEMENT_NODE')) {
-            if (isElementOfType(node, 'img')) {
-                wrap(doc, node, 'span');
-                return node;
-            } else if (node.firstChild && node.childElementCount === 1) {
-                return this.getImageWrappedImage(doc, node.firstChild);
-            }
-            return null;
-        }
-        return null;
+        return image;
     }
 
     public flipImage(
