@@ -263,11 +263,11 @@ export function setFirstColumnFormatBorders(
                     case 0:
                         cell.isHeader = !!format.hasHeaderRow;
                         break;
-                    case 1:
-                        setBorderColor(cell.format, 'borderBottom');
-                        break;
                     case rows.length - 1:
                         setBorderColor(cell.format, 'borderTop');
+                        break;
+                    case 1:
+                        setBorderColor(cell.format, 'borderBottom');
                         break;
                     default:
                         setBorderColor(cell.format, 'borderTop');
