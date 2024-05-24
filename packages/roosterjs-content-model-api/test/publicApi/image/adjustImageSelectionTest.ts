@@ -189,7 +189,6 @@ describe('adjustImageSelection', () => {
                                 format: {},
                                 src: 'img2',
                                 dataset: {},
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'Text',

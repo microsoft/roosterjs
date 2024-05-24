@@ -154,7 +154,6 @@ describe('adjustLinkSelection', () => {
                                 link: link,
                                 dataset: {},
                                 isSelected: true,
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'Text',
@@ -228,7 +227,6 @@ describe('adjustLinkSelection', () => {
                                 link: link,
                                 dataset: {},
                                 isSelected: true,
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'Text',

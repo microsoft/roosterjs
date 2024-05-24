@@ -56,6 +56,7 @@ export type TableMetadataFormat = {
      * Table Borders Type. Use value of constant TableBorderFormat as value
      */
     tableBorderFormat?: number;
+
     /**
      * Vertical alignment for each row
      */

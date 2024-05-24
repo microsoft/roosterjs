@@ -1,12 +1,15 @@
-import { ContentModelBlockFormat } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { ensureParagraph } from '../../../lib/modelApi/common/ensureParagraph';
+import {
+    ContentModelBlockFormat,
+    ShallowMutableContentModelDocument,
+} from 'roosterjs-content-model-types';
 
 describe('ensureParagraph', () => {
     it('Empty group', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const result = ensureParagraph(doc);
 
         expect(doc).toEqual({
@@ -22,7 +25,7 @@ describe('ensureParagraph', () => {
     });
 
     it('Empty group with format', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const format: ContentModelBlockFormat = {
             backgroundColor: 'red',
         };
@@ -43,7 +46,7 @@ describe('ensureParagraph', () => {
     });
 
     it('Last block is not paragraph', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const divider = createDivider('hr');
 
         doc.blocks.push(divider);
@@ -63,8 +66,10 @@ describe('ensureParagraph', () => {
     });
 
     it('Last block is paragraph', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const paragraph = createParagraph();
+
+        paragraph.cachedElement = {} as any;
 
         doc.blocks.push(paragraph);
 
@@ -83,7 +88,7 @@ describe('ensureParagraph', () => {
     });
 
     it('Last block is paragraph, do not overwrite format', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const format: ContentModelBlockFormat = {
             backgroundColor: 'red',
         };

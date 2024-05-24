@@ -4,6 +4,7 @@ import {
     ContentModelTable,
     ContentModelTableCell,
     ContentModelTableRow,
+    ReadonlyContentModelTable,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
@@ -57,7 +58,7 @@ describe('applyTableFormat', () => {
         exportedBackgroundColors: string[][],
         expectedBorders: string[][][]
     ) {
-        const table = createTable(3, 4);
+        const table: ReadonlyContentModelTable = createTable(3, 4);
 
         applyTableFormat(table, format);
 
@@ -457,7 +458,7 @@ describe('applyTableFormat', () => {
         const table = createTable(1, 1);
         table.rows[0].cells[0].format.backgroundColor = 'red';
 
-        applyTableFormat(table, {
+        applyTableFormat(table as ReadonlyContentModelTable, {
             bgColorEven: 'green',
         });
 
@@ -466,7 +467,7 @@ describe('applyTableFormat', () => {
 
         table.rows[0].cells[0].dataset.editingInfo = '{"bgColorOverride":true}';
 
-        applyTableFormat(table, {
+        applyTableFormat(table as ReadonlyContentModelTable, {
             bgColorEven: 'blue',
         });
 
@@ -476,7 +477,7 @@ describe('applyTableFormat', () => {
         table.rows[0].cells[0].dataset.editingInfo = '{"bgColorOverride":true}';
 
         applyTableFormat(
-            table,
+            table as ReadonlyContentModelTable,
             {
                 bgColorEven: 'yellow',
             },
@@ -492,7 +493,7 @@ describe('applyTableFormat', () => {
         table.rows[0].cells[0].format.borderLeft = '1px solid red';
 
         // Try to apply green
-        applyTableFormat(table, {
+        applyTableFormat(table as ReadonlyContentModelTable, {
             topBorderColor: 'green',
         });
 
@@ -503,7 +504,7 @@ describe('applyTableFormat', () => {
         table.rows[0].cells[0].dataset.editingInfo = '{"borderOverride":true}';
 
         // Try to apply blue
-        applyTableFormat(table, {
+        applyTableFormat(table as ReadonlyContentModelTable, {
             topBorderColor: 'blue',
         });
 
@@ -531,10 +532,10 @@ describe('applyTableFormat', () => {
         };
 
         // Try to apply default format black
-        applyTableFormat(table, format);
+        applyTableFormat(table as ReadonlyContentModelTable, format);
 
         //apply HeaderRowColor
-        applyTableFormat(table, { ...format, hasHeaderRow: true });
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasHeaderRow: true });
 
         //expect HeaderRowColor text color to be applied
         table.rows[0].cells[0].blocks.forEach(block => {
@@ -578,10 +579,10 @@ describe('applyTableFormat', () => {
         };
 
         // Try to apply default format black
-        applyTableFormat(table, format);
+        applyTableFormat(table as ReadonlyContentModelTable, format);
 
         //apply HeaderRowColor
-        applyTableFormat(table, { ...format, hasHeaderRow: true });
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasHeaderRow: true });
 
         //expect HeaderRowColor text color to be applied
         table.rows[0].cells[0].blocks.forEach(block => {
@@ -613,13 +614,13 @@ describe('applyTableFormat', () => {
         };
 
         // Try to apply default format black
-        applyTableFormat(table, format);
+        applyTableFormat(table as ReadonlyContentModelTable, format);
 
         //apply HeaderRowColor
-        applyTableFormat(table, { ...format, hasHeaderRow: true });
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasHeaderRow: true });
 
         //Toggle HeaderRowColor
-        applyTableFormat(table, { ...format, hasHeaderRow: false });
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasHeaderRow: false });
 
         //expect HeaderRowColor text color to be applied
         table.rows[0].cells[0].blocks.forEach(block => {
