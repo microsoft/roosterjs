@@ -5834,6 +5834,54 @@ rimraf@^2.6.3:
   dependencies:
     glob "^7.1.3"
 
+roosterjs-editor-api@, roosterjs-editor-api@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-api/-/roosterjs-editor-api-8.62.0.tgz#60831df79835e5c096da1b0136177ef9ad144efb"
+  integrity sha512-q/uzfPkXQzaGOzSTjDqI/nwEfl59WBfyvyW9tF2dgmqjq+ZH9BAwkRbCb8Qgtz3wkRLuUUzzHIKzIhTvxvcFWQ==
+  dependencies:
+    roosterjs-editor-dom "^8.62.0"
+    roosterjs-editor-types "^8.62.0"
+    tslib "^2.3.1"
+
+roosterjs-editor-core@, roosterjs-editor-core@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-core/-/roosterjs-editor-core-8.62.0.tgz#4150b3d63dee8ac4bb458799b8695e73478f799c"
+  integrity sha512-M6zWXu4MDmZVtlz6BEHCyebNvITbEECg5z4pWIC7ln3vegMgbUjxA3IagYsYeU012TXOq7bYPi21TrTeuKmXSg==
+  dependencies:
+    roosterjs-editor-dom "^8.62.0"
+    roosterjs-editor-types "^8.62.0"
+    tslib "^2.3.1"
+
+roosterjs-editor-dom@, roosterjs-editor-dom@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-dom/-/roosterjs-editor-dom-8.62.0.tgz#71a25a724eebf49d4c761532b8126b097874d77a"
+  integrity sha512-EBbUyEi2e6YxQE+YXAMaEb1QtKFmYBEeDUh0xIZ2BEVhCRDQZOCDSqHFA35VBBPNuejpqWBxQc8b4gI1wFy2Fw==
+  dependencies:
+    roosterjs-editor-types "^8.62.0"
+    tslib "^2.3.1"
+
+roosterjs-editor-plugins@, roosterjs-editor-plugins@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-plugins/-/roosterjs-editor-plugins-8.62.0.tgz#d1f9457adb996ae68c9926b1a5444aedb193f6a4"
+  integrity sha512-+yNMu+mrRyiTEBrJ2PzqOqzRoU31MgxeZClGFQSzoBN2+ZjCm3fZ9XWeIkIT5jg8cpFQ7m0krlQGBU16VuPo9Q==
+  dependencies:
+    roosterjs-editor-api "^8.62.0"
+    roosterjs-editor-dom "^8.62.0"
+    roosterjs-editor-types "^8.62.0"
+    tslib "^2.3.1"
+
+roosterjs-editor-types-compatible@, roosterjs-editor-types-compatible@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-types-compatible/-/roosterjs-editor-types-compatible-8.62.0.tgz#f4d6b038dd2d0b3b378be1717ee75d7ee1b06b0c"
+  integrity sha512-uGtlXmAO/IdbLCYZJppKCmHDx71FXhiDr87Xd6V2wtlG8QK+Onb+v57zQF5BLizOztJKPA0LZhXIBZaPG+T1nA==
+  dependencies:
+    roosterjs-editor-types "^8.62.0"
+
+roosterjs-editor-types@, roosterjs-editor-types@^8.62.0:
+  version "8.62.0"
+  resolved "https://registry.yarnpkg.com/roosterjs-editor-types/-/roosterjs-editor-types-8.62.0.tgz#481d1f69304501986bae6a1a9051eceff12e1243"
+  integrity sha512-4OTSYKCdCqQPjOgWhVcjMX32T22B1bgyKeQmcq16F+ATBtleKRN4+2b9e2WsPN39L6t2PK+BFvITdoqKKAHVkQ==
+
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"

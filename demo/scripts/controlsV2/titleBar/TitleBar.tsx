@@ -20,10 +20,6 @@ export class TitleBar extends React.Component<TitleBarProps, {}> {
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>
-                    <a href="?legacy=1" className={styles.link}>
-                        Legacy demo site
-                    </a>
-                    {' | '}
                     <a
                         href="https://github.com/Microsoft/roosterjs/wiki"
                         target="_blank"
