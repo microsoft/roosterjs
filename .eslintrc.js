@@ -154,11 +154,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: [
-                'roosterjs-react/**/*.ts',
-                'roosterjs-react/**/*.tsx',
-                'roosterjs-color-utils/**/*.ts',
-            ],
+            files: ['roosterjs-color-utils/**/*.ts'],
             rules: {
                 'import/no-default-export': 'off',
             },

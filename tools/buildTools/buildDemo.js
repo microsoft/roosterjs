@@ -68,7 +68,6 @@ async function buildDemoSite() {
             ],
         },
         externals: getWebpackExternalCallback([
-            [/^roosterjs-editor-plugins\/.*$/, 'roosterjsLegacy'],
             [/^roosterjs-editor-adapter.*$/, 'roosterjsAdapter'],
             [/^roosterjs-react\/.*$/, 'roosterjsReact'],
             [/^roosterjs-react$/, 'roosterjsReact'],
