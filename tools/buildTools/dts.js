@@ -497,24 +497,4 @@ module.exports = {
         callback: () => dts(true /*isAmd*/, 'react'),
         enabled: options => options.dts,
     },
-    dtsCommonJsMain: {
-        message: `Generating type definition file (rooster-content-model.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, 'main'),
-        enabled: options => options.dts,
-    },
-    dtsAmdMain: {
-        message: `Generating type definition file (rooster-content-model-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, 'main'),
-        enabled: options => options.dts,
-    },
-    // dtsCommonJsAdapter: {
-    //     message: `Generating type definition file (rooster-adapter.d.ts) for CommonJs...`,
-    //     callback: () => dts(false /*isAmd*/, 'legacyAdapter'),
-    //     enabled: options => options.dts,
-    // },
-    // dtsAmdAdapter: {
-    //     message: `Generating type definition file (rooster-adapter-amd.d.ts) for AMD...`,
-    //     callback: () => dts(true /*isAmd*/, 'legacyAdapter'),
-    //     enabled: options => options.dts,
-    // },
 };

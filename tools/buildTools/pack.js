@@ -76,14 +76,4 @@ module.exports = {
     commonJsProdUi: createStep(true /*isProduction*/, false /*isAmd*/, 'react'),
     amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'react'),
     amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'react'),
-
-    commonJsDebugMain: createStep(false /*isProduction*/, false /*isAmd*/, 'main'),
-    commonJsProdMain: createStep(true /*isProduction*/, false /*isAmd*/, 'main'),
-    amdDebugMain: createStep(false /*isProduction*/, true /*isAmd*/, 'main'),
-    amdProdMain: createStep(true /*isProduction*/, true /*isAmd*/, 'main'),
-
-    commonJsDebugAdapter: createStep(false /*isProduction*/, false /*isAmd*/, 'legacyAdapter'),
-    commonJsProdAdapter: createStep(true /*isProduction*/, false /*isAmd*/, 'legacyAdapter'),
-    amdDebugAdapter: createStep(false /*isProduction*/, true /*isAmd*/, 'legacyAdapter'),
-    amdProdAdapter: createStep(true /*isProduction*/, true /*isAmd*/, 'legacyAdapter'),
 };

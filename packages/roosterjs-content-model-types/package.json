@@ -1,7 +1,0 @@
-{
-    "name": "roosterjs-content-model-types",
-    "description": "Types for roosterjs",
-    "dependencies": {},
-    "version": "0.0.0",
-    "main": "./lib/index.ts"
-}

@@ -20,10 +20,6 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>
-                    <a href="?" className={styles.link}>
-                        New demo site
-                    </a>
-                    {' | '}
                     <a
                         href="https://github.com/Microsoft/roosterjs/wiki"
                         target="_blank"
@@ -38,23 +34,6 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                     <a href="coverage/index.html" target="_blank" className={styles.link}>
                         Test
                     </a>
-                    {' | '}
-                    <a
-                        href="https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml"
-                        target="_blank">
-                        <img
-                            className={styles.externalLink}
-                            src="https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml/badge.svg"
-                            alt="Build Status"
-                        />
-                    </a>{' '}
-                    <a href="http://badge.fury.io/js/roosterjs" target="_blank">
-                        <img
-                            src="https://badge.fury.io/js/roosterjs.svg"
-                            alt="NPM Version"
-                            className={styles.externalLink}
-                        />
-                    </a>{' '}
                     <a
                         href="https://github.com/microsoft/roosterjs"
                         target="_blank"

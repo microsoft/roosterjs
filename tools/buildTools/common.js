@@ -134,18 +134,9 @@ const legacyPackages = [
     'roosterjs-editor-core',
     'roosterjs-editor-api',
     'roosterjs-editor-plugins',
-];
-const reactPackages = ['roosterjs-react'];
-const mainPackages = [
-    'roosterjs',
-    'roosterjs-content-model-types',
-    'roosterjs-content-model-dom',
-    'roosterjs-content-model-core',
-    'roosterjs-content-model-api',
-    'roosterjs-content-model-plugins',
     'roosterjs-color-utils',
 ];
-const legacyAdapterPackages = ['roosterjs-editor-adapter'];
+const reactPackages = ['roosterjs-react'];
 
 const buildConfig = {
     legacy: {
@@ -163,26 +154,6 @@ const buildConfig = {
         dependsOnReact: true,
         packages: reactPackages,
         entry: 'roosterjs-react',
-    },
-    main: {
-        jsFileBaseName: 'rooster',
-        libraryName: 'roosterjs',
-        externalHandler: undefined,
-        dependsOnLegacy: false,
-        packages: mainPackages,
-        entry: 'roosterjs',
-    },
-    legacyAdapter: {
-        jsFileBaseName: 'rooster-adapter',
-        libraryName: 'roosterjsAdapter',
-        externalHandler: getWebpackExternalCallback([
-            [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjsLegacy'],
-            [/^roosterjs-content-model.*/, 'roosterjs'],
-        ]),
-        dependsOnLegacy: true,
-        dependsOnMain: true,
-        packages: legacyAdapterPackages,
-        entry: 'roosterjs-editor-adapter',
     },
     fakeEntry: {
         packages: ['roosterjs-legacy'],

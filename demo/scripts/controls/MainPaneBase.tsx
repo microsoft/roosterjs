@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
-import { Border } from 'roosterjs-content-model-types';
 import { createUpdateContentPlugin, UpdateContentPlugin, UpdateMode } from 'roosterjs-react';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
@@ -16,7 +15,6 @@ export interface MainPaneBaseState {
     scale: number;
     isDarkMode: boolean;
     isRtl: boolean;
-    tableBorderFormat?: Border;
 }
 
 const PopoutRoot = 'mainPane';
@@ -74,6 +72,11 @@ export default abstract class MainPaneBase<T extends MainPaneBaseState> extends 
                 theme={this.getTheme(this.state.isDarkMode)}
                 className={styles.mainPane}>
                 {this.renderTitleBar()}
+                <div style={{ backgroundColor: '#ddd', border: 'solid 1px #aaa', padding: '3px' }}>
+                    This is legacy demo site for testing only. Please navigate to{' '}
+                    <a href="https://microsoft.github.io/roosterjs/index.html">New Demo Site</a> for
+                    latest version.
+                </div>
                 {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
@@ -123,28 +126,6 @@ export default abstract class MainPaneBase<T extends MainPaneBaseState> extends 
     setScale(scale: number): void {
         this.setState({
             scale: scale,
-        });
-    }
-
-    getTableBorder(): Border {
-        return this.state.tableBorderFormat;
-    }
-
-    setTableBorderColor(color: string): void {
-        this.setState({
-            tableBorderFormat: { ...this.getTableBorder(), color },
-        });
-    }
-
-    setTableBorderWidth(width: string): void {
-        this.setState({
-            tableBorderFormat: { ...this.getTableBorder(), width },
-        });
-    }
-
-    setTableBorderStyle(style: string): void {
-        this.setState({
-            tableBorderFormat: { ...this.getTableBorder(), style },
         });
     }
 
