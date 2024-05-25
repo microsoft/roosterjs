@@ -75,7 +75,7 @@ export default abstract class MainPaneBase<T extends MainPaneBaseState> extends 
                 <div style={{ backgroundColor: '#ddd', border: 'solid 1px #aaa', padding: '3px' }}>
                     This is legacy demo site for testing only. Please navigate to{' '}
                     <a href="https://microsoft.github.io/roosterjs/index.html">New Demo Site</a> for
-                    latest version.
+                    the latest version.
                 </div>
                 {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
