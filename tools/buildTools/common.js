@@ -16,12 +16,6 @@ const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const deployPath = path.join(distPath, 'deploy');
-const compatibleEnumPath = path.join(
-    packagesPath,
-    'roosterjs-editor-types',
-    'lib',
-    'compatibleEnum'
-);
 
 function collectPackages(startPath) {
     const packagePaths = glob
@@ -191,7 +185,6 @@ module.exports = {
     typescriptPath,
     distPath,
     roosterJsDistPath,
-    compatibleEnumPath,
     deployPath,
     runNode,
     err,

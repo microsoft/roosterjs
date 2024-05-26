@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { UrlPlaceholder } from './OptionState';
-import type {
-    BuildInPluginList,
-    LegacyPluginList,
-    NewPluginList,
-    OptionState,
-} from './OptionState';
+import type { BuildInPluginList, OptionState } from './OptionState';
 
 const styles = require('./OptionsPane.scss');
 
@@ -101,30 +96,7 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
     };
 }
 
-export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
-    private forcePreserveRatio = React.createRef<HTMLInputElement>();
-
-    render() {
-        return (
-            <table>
-                <tbody>
-                    {this.renderPluginItem(
-                        'imageEdit',
-                        'Image Edit Plugin',
-                        this.renderCheckBox(
-                            'Force preserve ratio',
-                            this.forcePreserveRatio,
-                            this.props.state.forcePreserveRatio,
-                            (state, value) => (state.forcePreserveRatio = value)
-                        )
-                    )}
-                </tbody>
-            </table>
-        );
-    }
-}
-
-export class Plugins extends PluginsBase<keyof NewPluginList> {
+export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();

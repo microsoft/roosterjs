@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CommandBar, ICommandBarItemProps, ICommandBarProps } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
-import { getLocalizedString, LocalizedStrings } from 'roosterjs-react';
+import { getLocalizedString, LocalizedStrings } from '../../common';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { IRenderFunction } from '@fluentui/react/lib/Utilities';

@@ -19,9 +19,6 @@ const initialState: OptionState = {
         markdown: true,
         hyperlink: true,
         customReplace: true,
-
-        // Legacy plugins
-        imageEdit: false,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
