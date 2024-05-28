@@ -1,6 +1,7 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
+
 import type {
     IEditor,
     ImageEditOperation,
@@ -59,7 +60,6 @@ export function createImageWrapper(
         rotators,
         croppers
     );
-
     const shadowSpan = createShadowSpan(wrapper, imageSpan);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }

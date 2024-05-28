@@ -7,8 +7,12 @@ import { wrap } from './wrap';
  * @param image
  * @returns the image
  */
-export function ensureImageHasSpanParent(image: HTMLImageElement): HTMLImageElement {
+export function ensureImageHasSpanParent(
+    image: HTMLImageElement,
+    entryPoint?: string
+): HTMLImageElement {
     const parent = image.parentElement;
+    // console.log(parent, entryPoint);
     if (
         parent &&
         isNodeOfType(parent, 'ELEMENT_NODE') &&

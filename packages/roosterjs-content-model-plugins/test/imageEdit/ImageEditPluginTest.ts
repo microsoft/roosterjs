@@ -1,8 +1,12 @@
-import * as formatInsertPointWithContentModel from 'roosterjs-content-model-api/lib/publicApi/utils/formatInsertPointWithContentModel';
-import { ContentModelDocument, SelectionChangedEvent } from 'roosterjs-content-model-types';
 import { getContentModelImage } from '../../lib/imageEdit/utils/getContentModelImage';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
+//import * as formatInsertPointWithContentModel from 'roosterjs-content-model-api/lib/publicApi/utils/formatInsertPointWithContentModel';
+import {
+    ContentModelDocument,
+    ImageSelection,
+    SelectionChangedEvent,
+} from 'roosterjs-content-model-types';
 
 const model: ContentModelDocument = {
     blockGroupType: 'Document',
@@ -47,30 +51,27 @@ describe('ImageEditPlugin', () => {
     it('start editing', () => {
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
+        const imageSelection = editor.getDOMSelection() as ImageSelection;
         const selection: SelectionChangedEvent = {
             eventType: 'selectionChanged',
-            newSelection: {
-                type: 'image',
-                image: image,
-            },
+            newSelection: imageSelection,
         };
+        editor.setDOMSelection(imageSelection);
         plugin.onPluginEvent(selection);
         const wrapper = plugin.getWrapper();
         expect(wrapper).toBeTruthy();
+        plugin.onPluginEvent({
+            eventType: 'selectionChanged',
+            newSelection: null,
+        });
         plugin.dispose();
     });
 
     it('remove wrapper | content changed', () => {
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
+        const imageSelection = editor.getDOMSelection() as ImageSelection;
+        const image = imageSelection.image;
         const selection: SelectionChangedEvent = {
             eventType: 'selectionChanged',
             newSelection: {
@@ -85,17 +86,19 @@ describe('ImageEditPlugin', () => {
             source: '',
         });
         const wrapper = plugin.getWrapper();
-        expect(wrapper).toBeFalsy();
+        expect(wrapper).toBe(null);
+        plugin.onPluginEvent({
+            eventType: 'selectionChanged',
+            newSelection: null,
+        });
         plugin.dispose();
     });
 
     it('remove wrapper | key down', () => {
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
+        const imageSelection = editor.getDOMSelection() as ImageSelection;
+        const image = imageSelection.image;
         const selection: SelectionChangedEvent = {
             eventType: 'selectionChanged',
             newSelection: {
@@ -110,83 +113,53 @@ describe('ImageEditPlugin', () => {
         });
         const wrapper = plugin.getWrapper();
         expect(wrapper).toBeFalsy();
-        plugin.dispose();
-    });
-
-    it('remove wrapper | mouse down', () => {
-        plugin.initialize(editor);
-        const formatInsertPointWithContentModelSpy = spyOn(
-            formatInsertPointWithContentModel,
-            'formatInsertPointWithContentModel'
-        );
-        spyOn(editor, 'getDOMSelection').and.returnValue({
-            type: 'range',
-            range: {
-                startContainer: {} as any,
-                endOffset: 1,
-            } as any,
-            isReverted: false,
-        });
-        const image = document.createElement('img');
-        image.src = 'test';
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
-        const selection: SelectionChangedEvent = {
-            eventType: 'selectionChanged',
-            newSelection: {
-                type: 'image',
-                image: image,
-            },
-        };
-        plugin.onPluginEvent(selection);
         plugin.onPluginEvent({
-            eventType: 'mouseDown',
-            rawEvent: {} as any,
+            eventType: 'selectionChanged',
+            newSelection: null,
         });
-        const wrapper = plugin.getWrapper();
-        expect(wrapper).toBeFalsy();
-        expect(formatInsertPointWithContentModelSpy).toHaveBeenCalled();
         plugin.dispose();
     });
 
     it('crop', () => {
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        image.src = 'test';
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
+        const selection = editor.getDOMSelection() as ImageSelection;
+        const image = selection.image;
+        editor.setDOMSelection(selection);
         plugin.cropImage(editor, image);
-
         const wrapper = plugin.getWrapper();
         expect(wrapper).toBeTruthy();
+        plugin.onPluginEvent({
+            eventType: 'selectionChanged',
+            newSelection: null,
+        });
         plugin.dispose();
     });
 
     it('flip', () => {
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        image.src = 'test';
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
+        const selection = editor.getDOMSelection() as ImageSelection;
+        const image = selection.image;
         plugin.flipImage(editor, image, 'horizontal');
         const imageModel = getContentModelImage(editor);
-        expect(imageModel!.dataset['editingInfo']).toBeTruthy;
+        expect(imageModel!.dataset['editingInfo']).toBeTruthy();
+        plugin.onPluginEvent({
+            eventType: 'selectionChanged',
+            newSelection: null,
+        });
         plugin.dispose();
     });
 
     it('rotate', () => {
         plugin.initialize(editor);
-        const image = document.createElement('img');
-        image.src = 'test';
-        const imageSpan = document.createElement('span');
-        imageSpan.appendChild(image);
-        document.body.appendChild(imageSpan);
-        plugin.rotateImage(editor, image, Math.PI / 2);
+        const selection = editor.getDOMSelection() as ImageSelection;
+        plugin.rotateImage(editor, selection.image, Math.PI / 2);
         const imageModel = getContentModelImage(editor);
-        expect(imageModel!.dataset['editingInfo']).toBeTruthy;
+        expect(imageModel!.dataset['editingInfo']).toBeTruthy();
+        plugin.onPluginEvent({
+            eventType: 'selectionChanged',
+            newSelection: null,
+        });
         plugin.dispose();
     });
 });

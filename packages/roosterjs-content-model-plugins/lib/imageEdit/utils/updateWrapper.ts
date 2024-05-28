@@ -108,6 +108,7 @@ export function updateWrapper(
         setSize(cropOverlays[1], undefined, 0, 0, cropBottomPx, cropRightPx, undefined);
         setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
         setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
+
         if (angleRad) {
             updateHandleCursor(croppers, angleRad);
         }
