@@ -109,7 +109,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
         const doc = this.editor.getDocument();
         const selection = this.editor.getDOMSelection();
-        console.log(selection);
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const pasteModel = this.editor.getContentModelCopy('disconnected');
