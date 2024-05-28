@@ -7,9 +7,10 @@ import {
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 
 const CELL_RESIZER_WIDTH = 4;
 /**
@@ -78,7 +79,7 @@ interface DragAndDropContext {
 }
 
 interface DragAndDropInitValue {
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
     anchorRowHeight: number;
@@ -144,7 +145,7 @@ function onDraggingHorizontal(
     // Assign new widths and heights to the CM table
     if (cmTable && anchorRow != undefined) {
         // Modify the CM Table size
-        cmTable.rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
+        mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
         // Normalize the table
         normalizeTable(cmTable);
@@ -173,13 +174,15 @@ function onDraggingVertical(
 
     // Assign new widths and heights to the CM table
     if (cmTable && anchorColumn != undefined) {
+        const mutableTable = mutateBlock(cmTable);
+
         // Modify the CM Table size
         const lastColumn = anchorColumn == cmTable.widths.length - 1;
         const change = deltaX * (isRTL ? -1 : 1);
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            cmTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            mutableTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -190,8 +193,8 @@ function onDraggingVertical(
             ) {
                 return false;
             }
-            cmTable.widths[anchorColumn] = anchorChange;
-            cmTable.widths[anchorColumn + 1] = nextAnchorChange;
+            mutableTable.widths[anchorColumn] = anchorChange;
+            mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
 
         // Normalize the table
