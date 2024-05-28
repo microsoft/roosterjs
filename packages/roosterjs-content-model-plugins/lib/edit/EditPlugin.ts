@@ -115,7 +115,6 @@ export class EditPlugin implements EditorPlugin {
                 if (typeof lastCell == 'object' && lastCell.contains(startContainer)) {
                     // When TAB in the last cell of a table, we will generate new table row, so prevent other plugins handling this event
                     // e.g. SelectionPlugin will move the focus out of table, which is conflict with this behavior
-                    console.log('handling');
                     return true;
                 }
             }
