@@ -19,7 +19,7 @@ const MIN_HEIGHT = 22;
 /**
  * Normalize a Content Model table, make sure:
  * 1. Fist cells are not spanned
- * 2. Inner cells are not header
+ * 2. Only first column and row can have headers
  * 3. All cells have content and width
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
@@ -64,7 +64,7 @@ export function normalizeTable(
 
             if (rowIndex == 0) {
                 cell.spanAbove = false;
-            } else if (rowIndex > 0 && cell.isHeader) {
+            } else if (rowIndex > 0 && colIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
             }
 
