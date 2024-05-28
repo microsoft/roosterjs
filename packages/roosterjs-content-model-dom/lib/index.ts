@@ -54,6 +54,7 @@ export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
 export { createListLevel } from './modelApi/creators/createListLevel';
 export { createEmptyModel } from './modelApi/creators/createEmptyModel';
+export { createTableRow } from './modelApi/creators/createTableRow';
 
 export { mutateBlock, mutateSegments, mutateSegment } from './modelApi/common/mutate';
 export { addBlock } from './modelApi/common/addBlock';
@@ -123,7 +124,7 @@ export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
 export { deleteBlock } from './modelApi/editing/deleteBlock';
-export { applyTableFormat } from './modelApi/editing/applyTableFormat';
+export { applyTableFormat, setFirstColumnFormatBorders } from './modelApi/editing/applyTableFormat';
 export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './modelApi/editing/normalizeTable';
 export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBackgroundColor';
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';

@@ -1,15 +1,19 @@
 import { addBlock } from '../../../lib/modelApi/common/addBlock';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelGeneralBlock, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import {
+    ContentModelGeneralBlock,
+    ContentModelParagraph,
+    ShallowMutableContentModelDocument,
+} from 'roosterjs-content-model-types';
 
 describe('addSegment', () => {
     it('Add segment to empty document', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const segment = createText('test');
         const result = addSegment(doc, segment);
 
@@ -34,7 +38,7 @@ describe('addSegment', () => {
     });
 
     it('Add segment to document contains an empty paragraph', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph(false);
         addBlock(doc, para);
 
@@ -62,7 +66,7 @@ describe('addSegment', () => {
     });
 
     it('Add segment to document contains a paragraph with existing text', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const block: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [
@@ -104,7 +108,7 @@ describe('addSegment', () => {
     });
 
     it('Add segment to document contains a paragraph with other type of block', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const div = document.createElement('div');
         const block: ContentModelGeneralBlock = {
             blockType: 'BlockGroup',
@@ -140,7 +144,7 @@ describe('addSegment', () => {
     });
 
     it('Add selection marker in empty paragraph', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
 
         doc.blocks.push(para);
@@ -168,7 +172,7 @@ describe('addSegment', () => {
     });
 
     it('Add selection marker after selection marker', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 
@@ -198,7 +202,7 @@ describe('addSegment', () => {
     });
 
     it('Add selection marker after selected segment', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const br = createBr();
 
@@ -229,7 +233,7 @@ describe('addSegment', () => {
     });
 
     it('Add selection marker after selection marker', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 
@@ -259,7 +263,7 @@ describe('addSegment', () => {
     });
 
     it('Add selection marker after selection marker that is not selected', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 
@@ -295,7 +299,7 @@ describe('addSegment', () => {
     });
 
     it('Add unselected selection marker after selection marker', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 
@@ -332,7 +336,7 @@ describe('addSegment', () => {
     });
 
     it('Add selected segment after selection marker', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 
@@ -364,7 +368,7 @@ describe('addSegment', () => {
     });
 
     it('Add selected segment after unselected selection marker', () => {
-        const doc = createContentModelDocument();
+        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
 

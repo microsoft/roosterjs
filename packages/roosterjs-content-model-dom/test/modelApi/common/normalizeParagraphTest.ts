@@ -6,6 +6,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
 import { normalizeParagraph } from '../../../lib/modelApi/common/normalizeParagraph';
+import { ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 
 describe('Normalize text that contains space', () => {
     function runTest(texts: string[], expected: string[], whiteSpace?: string) {
@@ -360,7 +361,7 @@ describe('Normalize paragraph with segmentFormat', () => {
     it('Empty paragraph', () => {
         const paragraph = createParagraph();
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -377,7 +378,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -405,7 +406,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -443,7 +444,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -482,7 +483,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',

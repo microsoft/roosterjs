@@ -8,11 +8,11 @@ import type {
  * @param format @optional The format of this model
  */
 export function createSelectionMarker(
-    format?: ContentModelSegmentFormat
+    format?: Readonly<ContentModelSegmentFormat>
 ): ContentModelSelectionMarker {
     return {
         segmentType: 'SelectionMarker',
         isSelected: true,
-        format: format ? { ...format } : {},
+        format: { ...format },
     };
 }
