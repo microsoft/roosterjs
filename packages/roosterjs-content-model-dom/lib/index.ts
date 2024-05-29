@@ -15,7 +15,7 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 export { isBlockElement } from './domToModel/utils/isBlockElement';
 export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 
-export { updateMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
+export { updateMetadata, getMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
@@ -54,7 +54,9 @@ export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
 export { createListLevel } from './modelApi/creators/createListLevel';
 export { createEmptyModel } from './modelApi/creators/createEmptyModel';
+export { createTableRow } from './modelApi/creators/createTableRow';
 
+export { mutateBlock, mutateSegments, mutateSegment } from './modelApi/common/mutate';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
@@ -122,17 +124,24 @@ export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
 export { deleteBlock } from './modelApi/editing/deleteBlock';
-export { applyTableFormat } from './modelApi/editing/applyTableFormat';
+export { applyTableFormat, setFirstColumnFormatBorders } from './modelApi/editing/applyTableFormat';
 export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './modelApi/editing/normalizeTable';
 export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBackgroundColor';
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';
 export { getSegmentTextFormat } from './modelApi/editing/getSegmentTextFormat';
 
-export { updateImageMetadata } from './modelApi/metadata/updateImageMetadata';
-export { updateTableCellMetadata } from './modelApi/metadata/updateTableCellMetadata';
-export { updateTableMetadata } from './modelApi/metadata/updateTableMetadata';
-export { updateListMetadata, ListMetadataDefinition } from './modelApi/metadata/updateListMetadata';
+export { updateImageMetadata, getImageMetadata } from './modelApi/metadata/updateImageMetadata';
+export {
+    updateTableCellMetadata,
+    getTableCellMetadata,
+} from './modelApi/metadata/updateTableCellMetadata';
+export { updateTableMetadata, getTableMetadata } from './modelApi/metadata/updateTableMetadata';
+export {
+    updateListMetadata,
+    getListMetadata,
+    ListMetadataDefinition,
+} from './modelApi/metadata/updateListMetadata';
 
 export { ChangeSource } from './constants/ChangeSource';
 export { BulletListType } from './constants/BulletListType';

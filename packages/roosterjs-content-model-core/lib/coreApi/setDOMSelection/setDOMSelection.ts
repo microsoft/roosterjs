@@ -21,8 +21,6 @@ const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
 const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
@@ -36,7 +34,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
     const doc = core.physicalRoot.ownerDocument;
-
+    const isDarkMode = core.lifecycle.isDarkMode;
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
@@ -51,12 +49,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     type: 'image',
                     image,
                 };
+                const imageSelectionColor = isDarkMode
+                    ? core.selection.imageSelectionBorderColorDark
+                    : core.selection.imageSelectionBorderColor;
+
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:auto!important; outline-color:${
-                        core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
-                    }!important;`,
+                    `outline-style:auto!important; outline-color:${imageSelectionColor}!important;`,
                     [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
                 );
                 core.api.setEditorStyle(
@@ -112,10 +112,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                         : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
 
                 core.selection.selection = selection;
+
+                const tableSelectionColor = isDarkMode
+                    ? core.selection.tableCellSelectionBackgroundColorDark
+                    : core.selection.tableCellSelectionBackgroundColor;
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    TABLE_CSS_RULE,
+                    `background-color:${tableSelectionColor}!important;`,
                     tableSelectors
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);

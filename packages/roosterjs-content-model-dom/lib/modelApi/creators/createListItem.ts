@@ -2,8 +2,8 @@ import { createListLevel } from './createListLevel';
 import { createSelectionMarker } from './createSelectionMarker';
 import type {
     ContentModelListItem,
-    ContentModelListLevel,
     ContentModelSegmentFormat,
+    ReadonlyContentModelListLevel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,8 +12,8 @@ import type {
  * @param format @optional The format of this model
  */
 export function createListItem(
-    levels: ContentModelListLevel[],
-    format?: ContentModelSegmentFormat
+    levels: ReadonlyArray<ReadonlyContentModelListLevel>,
+    format?: Readonly<ContentModelSegmentFormat>
 ): ContentModelListItem {
     const formatHolder = createSelectionMarker(format);
 

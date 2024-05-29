@@ -1,4 +1,5 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
+import { mutateSegment } from 'roosterjs-content-model-dom';
 import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -12,9 +13,11 @@ export function adjustImageSelection(editor: IEditor): ContentModelImage | null 
         model =>
             adjustSegmentSelection(
                 model,
-                target => {
+                (target, paragraph) => {
                     if (target.isSelected && target.segmentType == 'Image') {
-                        image = target;
+                        mutateSegment(paragraph, target, segment => {
+                            image = segment;
+                        });
                         return true;
                     } else {
                         return false;

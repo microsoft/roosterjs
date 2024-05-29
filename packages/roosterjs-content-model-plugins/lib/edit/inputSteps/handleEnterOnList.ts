@@ -5,11 +5,14 @@ import {
     createListLevel,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -23,11 +26,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const { path } = insertPoint;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
-        const parentBlock = path[index];
 
-        if (parentBlock?.blockGroupType === 'ListItem' && listParent) {
-            let listItem: ContentModelListItem = parentBlock;
+        if (readonlyListItem?.blockGroupType === 'ListItem' && listParent) {
+            let listItem = mutateBlock(readonlyListItem);
 
             if (isEmptyListItem(listItem)) {
                 listItem.levels.pop();
@@ -63,7 +66,7 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
     }
 };
 
-const isEmptyListItem = (listItem: ContentModelListItem) => {
+const isEmptyListItem = (listItem: ReadonlyContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
@@ -75,8 +78,8 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
 
 const createNewListItem = (
     context: ValidDeleteSelectionContext,
-    listItem: ContentModelListItem,
-    listParent: ContentModelBlockGroup
+    listItem: ReadonlyContentModelListItem,
+    listParent: ReadonlyContentModelBlockGroup
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
@@ -84,10 +87,13 @@ const createNewListItem = (
     const newParagraph = splitParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, insertPoint.marker.format);
+    const newListItem: ShallowMutableContentModelListItem = createListItem(
+        levels,
+        insertPoint.marker.format
+    );
     newListItem.blocks.push(newParagraph);
     insertPoint.paragraph = newParagraph;
-    listParent.blocks.splice(listIndex + 1, 0, newListItem);
+    mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
 
     if (context.lastParagraph == currentPara) {
         context.lastParagraph = newParagraph;
@@ -96,7 +102,7 @@ const createNewListItem = (
     return newListItem;
 };
 
-const createNewListLevel = (listItem: ContentModelListItem) => {
+const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
     return listItem.levels.map(level => {
         return createListLevel(
             level.listType,

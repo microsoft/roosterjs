@@ -4,6 +4,7 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
 import {
+    ContentModelDocument,
     DomToModelContext,
     DomToModelOptionForCreateModel,
     EditorCore,
@@ -311,7 +312,7 @@ describe('createContentModel with selection', () => {
 /*
 | Scenarios                         | can use cache | can write cache | comment                                                                                                        |
 |-----------------------------------|---------------|-----------------|----------------------------------------------------------------------------------------------------------------|
-| getContentModelCopy: connected    | true          | false           | Mostly used by demo site, we can use existing model but this should not impact cache                           |
+| getContentModelCopy: connected    | false         | false           | This is now deprecated                                                                                         |
 | getContentModelCopy: disconnected | false         | false           | Used by plugins and test code to read current model. We will return a cloned model, and do not impact cache    |
 | getContentModelCopy: clean        | false         | false           | Used by export HTML, do not use cache to make sure the model is up to date                                     |
 | formatInsertPointWithContentModel | false         | false           | Used by insertEntity (recent change), do not use cache since we need to add shadow insert point                |
@@ -362,7 +363,9 @@ describe('createContentModel and cache management', () => {
             },
         } as any;
 
-        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedNewModel);
 

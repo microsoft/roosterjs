@@ -1,6 +1,10 @@
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
-import { createSelectionPlugin } from '../../../lib/corePlugin/selection/SelectionPlugin';
+import {
+    createSelectionPlugin,
+    DEFAULT_SELECTION_BORDER_COLOR,
+    DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+} from '../../../lib/corePlugin/selection/SelectionPlugin';
 import {
     DOMEventRecord,
     DOMSelection,
@@ -9,6 +13,8 @@ import {
     PluginWithState,
     SelectionPluginState,
 } from 'roosterjs-content-model-types';
+
+const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
 
 describe('SelectionPlugin', () => {
     it('init and dispose', () => {
@@ -26,13 +32,19 @@ describe('SelectionPlugin', () => {
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any) as IEditor;
 
         plugin.initialize(editor);
 
         expect(state).toEqual({
             selection: null,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -48,6 +60,7 @@ describe('SelectionPlugin', () => {
     it('init with different options', () => {
         const plugin = createSelectionPlugin({
             imageSelectionBorderColor: 'red',
+            tableCellSelectionBackgroundColor: 'blue',
         });
         const state = plugin.getState();
         const addEventListenerSpy = jasmine.createSpy('addEventListener');
@@ -59,16 +72,59 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
         });
-
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         }));
 
         expect(state).toEqual({
             selection: null,
             imageSelectionBorderColor: 'red',
+            tableCellSelectionBackgroundColor: 'blue',
+            imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`,
+            tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}blue`,
+            tableSelection: null,
+        });
+
+        expect(attachDomEvent).toHaveBeenCalled();
+
+        plugin.dispose();
+    });
+
+    it('init with different options - transparent colors', () => {
+        const plugin = createSelectionPlugin({
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+        });
+        const state = plugin.getState();
+        const addEventListenerSpy = jasmine.createSpy('addEventListener');
+        const attachDomEvent = jasmine
+            .createSpy('attachDomEvent')
+            .and.returnValue(jasmine.createSpy('disposer'));
+        const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+        plugin.initialize(<IEditor>(<any>{
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({}),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        }));
+
+        expect(state).toEqual({
+            selection: null,
+            imageSelectionBorderColor: 'transparent',
+            tableCellSelectionBackgroundColor: 'transparent',
+            imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
+            tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
             tableSelection: null,
         });
 
@@ -116,6 +172,9 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             getElementAtCursor: getElementAtCursorSpy,
             setDOMSelection: setDOMSelectionSpy,
             getScrollContainer: getScrollContainerSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         });
         plugin.initialize(editor);
     });
@@ -134,7 +193,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             skipReselectOnFocus: false,
             tableSelection: null,
         });
@@ -150,7 +212,10 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         eventMap.focus.beforeDispatch();
         expect(plugin.getState()).toEqual({
             selection: mockedRange,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             skipReselectOnFocus: true,
             tableSelection: null,
         });
@@ -219,6 +284,9 @@ describe('SelectionPlugin scroll event ', () => {
             setDOMSelection: setDOMSelectionSpy,
             getScrollContainer: getScrollContainerSpy,
             hasFocus: hasFocusSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         });
         plugin.initialize(editor);
     });
@@ -295,6 +363,9 @@ describe('SelectionPlugin handle image selection', () => {
             attachDomEvent: (map: Record<string, any>) => {
                 return jasmine.createSpy('disposer');
             },
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -726,6 +797,9 @@ describe('SelectionPlugin handle table selection', () => {
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
             getDocument: getDocumentSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
             getEnvironment: () => ({}),
             getDOMHelper: () => domHelper,
             attachDomEvent: (map: Record<string, Record<string, DOMEventRecord>>) => {
@@ -767,7 +841,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: mockedTableSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
 
         plugin.onPluginEvent!({
@@ -776,11 +853,13 @@ describe('SelectionPlugin handle table selection', () => {
                 button: 0,
             } as any,
         });
-
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeUndefined();
     });
@@ -788,6 +867,7 @@ describe('SelectionPlugin handle table selection', () => {
     it('MouseDown - save a table selection when left click', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
         const div = document.createElement('div');
@@ -812,7 +892,10 @@ describe('SelectionPlugin handle table selection', () => {
         expect(state).toEqual({
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
 
         plugin.onPluginEvent!({
@@ -832,14 +915,71 @@ describe('SelectionPlugin handle table selection', () => {
                 startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
+    });
+
+    it('MouseDown - do not save a table selection when left click, table is not editable', () => {
+        const state = plugin.getState();
+        const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'false');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(div);
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: div,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+        expect(mouseDispatcher).toBeUndefined();
     });
 
     it('MouseDown - triple click', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
 
@@ -869,7 +1009,10 @@ describe('SelectionPlugin handle table selection', () => {
                 startNode: td,
             },
             mouseDisposer: mouseMoveDisposer,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
         expect(preventDefaultSpy).toHaveBeenCalled();
@@ -887,6 +1030,7 @@ describe('SelectionPlugin handle table selection', () => {
     it('MouseMove - in same table', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
         const tr = document.createElement('tr');
         const td1 = document.createElement('td');
         const td2 = document.createElement('td');
@@ -999,6 +1143,8 @@ describe('SelectionPlugin handle table selection', () => {
         const state = plugin.getState();
         const table1 = document.createElement('table');
         const table2 = document.createElement('table');
+        table1.setAttribute('contenteditable', 'true');
+        table2.setAttribute('contenteditable', 'true');
         const tr1 = document.createElement('tr');
         const tr2 = document.createElement('tr');
         const td1 = document.createElement('td');
@@ -1164,6 +1310,7 @@ describe('SelectionPlugin handle table selection', () => {
 
         beforeEach(() => {
             table = document.createElement('table');
+            table.setAttribute('contenteditable', 'true');
             tr1 = document.createElement('tr');
             tr2 = document.createElement('tr');
             td1 = document.createElement('td');
@@ -1205,7 +1352,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1246,44 +1396,49 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td1,
-                    startOffset: 0,
-                    endContainer: td1,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td1,
-                        startOffset: 0,
-                        endContainer: td1,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1295,14 +1450,18 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1312,40 +1471,44 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td2, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Shift+Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td2,
-                    startOffset: 0,
-                    endContainer: td2,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td2,
-                        startOffset: 0,
-                        endContainer: td2,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1358,14 +1521,18 @@ describe('SelectionPlugin handle table selection', () => {
                 rawEvent: {
                     key: 'Tab',
                     shiftKey: true,
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1375,40 +1542,44 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Tab - Next Row', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td2,
-                    startOffset: 0,
-                    endContainer: td2,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td2,
-                        startOffset: 0,
-                        endContainer: td2,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1420,14 +1591,18 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1437,40 +1612,45 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td3, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, First cell - Press Shift+Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td1,
-                    startOffset: 0,
-                    endContainer: td1,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td1,
-                        startOffset: 0,
-                        endContainer: td1,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1483,14 +1663,18 @@ describe('SelectionPlugin handle table selection', () => {
                 rawEvent: {
                     key: 'Tab',
                     shiftKey: true,
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1500,40 +1684,45 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Last cell - Press Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td4,
-                    startOffset: 0,
-                    endContainer: td4,
-                    endOffset: 0,
-                    commonAncestorContainer: tr2,
-                },
-                isReverted: false,
-            });
+            let time = 0;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td4,
-                        startOffset: 0,
-                        endContainer: td4,
-                        endOffset: 0,
-                        commonAncestorContainer: tr2,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td4,
+                              startOffset: 0,
+                              endContainer: td4,
+                              endOffset: 0,
+                              commonAncestorContainer: tr2,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td4,
+                              startOffset: 0,
+                              endContainer: td4,
+                              endOffset: 0,
+                              commonAncestorContainer: tr2,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1545,14 +1734,18 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1562,6 +1755,8 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 1);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Down', () => {
@@ -1614,7 +1809,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1679,7 +1877,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 0, col: 1 },
                     startNode: td4,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1744,7 +1945,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -1808,7 +2012,10 @@ describe('SelectionPlugin handle table selection', () => {
                     firstCo: { row: 0, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
             expect(announceSpy).not.toHaveBeenCalled();
@@ -1852,7 +2059,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 1 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -1905,7 +2115,10 @@ describe('SelectionPlugin handle table selection', () => {
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
@@ -1954,7 +2167,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 1, col: 0 },
                     startNode: td2,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2010,7 +2226,10 @@ describe('SelectionPlugin handle table selection', () => {
                     lastCo: { row: 0, col: 1 },
                     startNode: td3,
                 },
-                imageSelectionBorderColor: undefined,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             });
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledWith({
@@ -2068,6 +2287,9 @@ describe('SelectionPlugin on Safari', () => {
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
         } as any) as IEditor;
     });
 
@@ -2079,7 +2301,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: null,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(attachDomEvent).toHaveBeenCalled();
@@ -2114,7 +2339,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2145,7 +2373,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedNewSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2173,7 +2404,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2201,7 +2435,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
@@ -2229,7 +2466,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
@@ -2257,7 +2497,10 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(state).toEqual({
             selection: mockedOldSelection,
-            imageSelectionBorderColor: undefined,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
             tableSelection: null,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);

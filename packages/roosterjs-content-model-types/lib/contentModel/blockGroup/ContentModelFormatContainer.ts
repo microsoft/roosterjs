@@ -1,15 +1,19 @@
-import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
+import type {
+    ContentModelBlockBase,
+    ReadonlyContentModelBlockBase,
+    ShallowMutableContentModelBlockBase,
+} from '../block/ContentModelBlockBase';
+import type {
+    ContentModelBlockGroupBase,
+    ReadonlyContentModelBlockGroupBase,
+    ShallowMutableContentModelBlockGroupBase,
+} from './ContentModelBlockGroupBase';
 import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
 
 /**
- * Content Model of Format Container
+ * Common part of Content Model of Format Container
  */
-export interface ContentModelFormatContainer
-    extends ContentModelBlockWithCache,
-        ContentModelBlockGroupBase<'FormatContainer'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat> {
+export interface ContentModelFormatContainerCommon {
     /**
      * Tag name of this container
      */
@@ -21,3 +25,35 @@ export interface ContentModelFormatContainer
      */
     zeroFontSize?: boolean;
 }
+
+/**
+ * Content Model of Format Container
+ */
+export interface ContentModelFormatContainer
+    extends ContentModelFormatContainerCommon,
+        ContentModelBlockGroupBase<'FormatContainer'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat, HTMLElement> {}
+
+/**
+ * Content Model of Format Container (Readonly)
+ */
+export interface ReadonlyContentModelFormatContainer
+    extends Readonly<ContentModelFormatContainerCommon>,
+        ReadonlyContentModelBlockGroupBase<'FormatContainer'>,
+        ReadonlyContentModelBlockBase<
+            'BlockGroup',
+            ContentModelFormatContainerFormat,
+            HTMLElement
+        > {}
+
+/**
+ * Content Model of Format Container (Shallow mutable)
+ */
+export interface ShallowMutableContentModelFormatContainer
+    extends ContentModelFormatContainerCommon,
+        ShallowMutableContentModelBlockGroupBase<'FormatContainer'>,
+        ShallowMutableContentModelBlockBase<
+            'BlockGroup',
+            ContentModelFormatContainerFormat,
+            HTMLElement
+        > {}

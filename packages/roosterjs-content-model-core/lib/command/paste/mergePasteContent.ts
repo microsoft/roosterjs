@@ -15,6 +15,7 @@ import type {
     ContentModelDocument,
     IEditor,
     MergeModelOption,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const CloneOption: CloneModelOptions = {
@@ -24,7 +25,7 @@ const CloneOption: CloneModelOptions = {
 /**
  * @internal
  */
-export function cloneModelForPaste(model: ContentModelDocument) {
+export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
     return cloneModel(model, CloneOption);
 }
 
@@ -80,6 +81,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
+            scrollCaretIntoView: false, // TODO #2633: Make a full fix to the scroll behavior
             apiName: 'paste',
         }
     );

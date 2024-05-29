@@ -1,11 +1,11 @@
 import { canMergeCells } from './canMergeCells';
-import { getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type { ShallowMutableContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function mergeTableCells(table: ContentModelTable) {
+export function mergeTableCells(table: ShallowMutableContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (
@@ -17,10 +17,10 @@ export function mergeTableCells(table: ContentModelTable) {
                 const cell = table.rows[rowIndex].cells[colIndex];
 
                 if (cell) {
-                    cell.spanLeft = colIndex > sel.firstColumn;
-                    cell.spanAbove = rowIndex > sel.firstRow;
+                    const mutableCell = mutateBlock(cell);
 
-                    delete cell.cachedElement;
+                    mutableCell.spanLeft = colIndex > sel.firstColumn;
+                    mutableCell.spanAbove = rowIndex > sel.firstRow;
                 }
             }
 

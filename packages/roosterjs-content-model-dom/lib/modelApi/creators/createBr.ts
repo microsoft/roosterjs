@@ -4,9 +4,9 @@ import type { ContentModelBr, ContentModelSegmentFormat } from 'roosterjs-conten
  * Create a ContentModelBr model
  * @param format @optional The format of this model
  */
-export function createBr(format?: ContentModelSegmentFormat): ContentModelBr {
+export function createBr(format?: Readonly<ContentModelSegmentFormat>): ContentModelBr {
     return {
         segmentType: 'Br',
-        format: format ? { ...format } : {},
+        format: { ...format },
     };
 }

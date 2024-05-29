@@ -1,4 +1,5 @@
 import { exportContent } from 'roosterjs-content-model-core';
+import { ModelToTextCallbacks } from 'roosterjs-content-model-types';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 /**
@@ -8,6 +9,10 @@ export type ExportButtonStringKey =
     | 'buttonNameExport'
     | 'menuNameExportHTML'
     | 'menuNameExportText';
+
+const callbacks: ModelToTextCallbacks = {
+    onImage: () => '[Image]',
+};
 
 /**
  * "Export content" button on the format ribbon
@@ -30,7 +35,7 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
         if (key == 'menuNameExportHTML') {
             html = exportContent(editor);
         } else if (key == 'menuNameExportText') {
-            html = `<pre>${exportContent(editor, 'PlainText')}</pre>`;
+            html = `<pre>${exportContent(editor, 'PlainText', callbacks)}</pre>`;
         }
 
         win.document.write(editor.getTrustedHTMLHandler()(html));

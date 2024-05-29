@@ -1,17 +1,25 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import type { TableEditFeature } from './TableEditFeature';
 import {
     isElementOfType,
     normalizeRect,
-    getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
-import type { TableEditFeature } from './TableEditFeature';
 
 const CELL_RESIZER_WIDTH = 4;
+/**
+ * @internal
+ */
+export const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
+/**
+ * @internal
+ */
+export const VERTICAL_RESIZER_ID = 'verticalResizer';
 
 /**
  * @internal
@@ -99,24 +107,8 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
 
     const { editor, table } = context;
 
-    // Get current selection
-    const selection = editor.getDOMSelection();
-
-    // Select first cell of the table
-    editor.setDOMSelection({
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
-
-    // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
-
-    // Restore selection
-    editor.setDOMSelection(selection);
+    // Get Table block in content model
+    const cmTable = getCMTableFromTable(editor, table);
 
     if (rect && cmTable) {
         onStart();
@@ -223,7 +215,7 @@ function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
-        trigger.id = 'horizontalResizer';
+        trigger.id = HORIZONTAL_RESIZER_ID;
         trigger.style.top = rect.bottom - CELL_RESIZER_WIDTH + 'px';
         trigger.style.left = rect.left + 'px';
         trigger.style.width = rect.right - rect.left + 'px';
@@ -235,7 +227,7 @@ function setVerticalPosition(context: DragAndDropContext, trigger: HTMLElement) 
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
-        trigger.id = 'verticalResizer';
+        trigger.id = VERTICAL_RESIZER_ID;
         trigger.style.top = rect.top + 'px';
         trigger.style.left = (isRTL ? rect.left : rect.right) - CELL_RESIZER_WIDTH + 1 + 'px';
         trigger.style.width = CELL_RESIZER_WIDTH + 'px';

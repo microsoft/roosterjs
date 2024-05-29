@@ -1,24 +1,30 @@
-import { createText, isPunctuation, isSpace, iterateSelections } from 'roosterjs-content-model-dom';
+import {
+    createText,
+    isPunctuation,
+    isSpace,
+    iterateSelections,
+    mutateBlock,
+} from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelSegment,
     ContentModelText,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function adjustWordSelection(
-    model: ContentModelDocument,
-    marker: ContentModelSegment
-): ContentModelSegment[] {
-    let markerBlock: ContentModelParagraph | undefined;
+    model: ReadonlyContentModelDocument,
+    marker: ShallowMutableContentModelSegment
+): ShallowMutableContentModelSegment[] {
+    let markerBlock: ShallowMutableContentModelParagraph | undefined;
 
     iterateSelections(model, (_, __, block, segments) => {
         //Find the block with the selection marker
         if (block?.blockType == 'Paragraph' && segments?.length == 1 && segments[0] == marker) {
-            markerBlock = block;
+            markerBlock = mutateBlock(block);
         }
         return true;
     });
@@ -26,7 +32,7 @@ export function adjustWordSelection(
     const tempSegments = markerBlock ? [...markerBlock.segments] : undefined;
 
     if (tempSegments && markerBlock) {
-        const segments: ContentModelSegment[] = [];
+        const segments: ShallowMutableContentModelSegment[] = [];
         let markerSelectionIndex = tempSegments.indexOf(marker);
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
             const currentSegment = tempSegments[i];
@@ -127,7 +133,7 @@ function findDelimiter(segment: ContentModelText, moveRightward: boolean): numbe
 }
 
 function splitTextSegment(
-    segments: ContentModelSegment[],
+    segments: ShallowMutableContentModelSegment[],
     textSegment: Readonly<ContentModelText>,
     index: number,
     found: number

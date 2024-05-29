@@ -1,9 +1,10 @@
 import { findListItemsInSameThread } from 'roosterjs-content-model-api';
 import { getNumberingListStyle } from './getNumberingListStyle';
 import type {
-    ContentModelDocument,
     ContentModelListItem,
-    ContentModelParagraph,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 import {
     BulletListType,
@@ -26,7 +27,7 @@ interface ListTypeStyle {
  * @internal
  */
 export function getListTypeStyle(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ): ListTypeStyle | undefined {
@@ -77,13 +78,16 @@ export function getListTypeStyle(
 }
 
 const getPreviousListIndex = (
-    model: ContentModelDocument,
-    previousListItem?: ContentModelListItem
+    model: ReadonlyContentModelDocument,
+    previousListItem?: ReadonlyContentModelListItem
 ) => {
     return previousListItem ? findListItemsInSameThread(model, previousListItem).length : undefined;
 };
 
-const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
+const getPreviousListLevel = (
+    model: ReadonlyContentModelDocument,
+    paragraph: ReadonlyContentModelParagraph
+) => {
     const blocks = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],

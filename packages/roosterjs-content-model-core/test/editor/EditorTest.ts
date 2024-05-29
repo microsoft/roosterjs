@@ -135,13 +135,8 @@ describe('Editor', () => {
 
         const editor = new Editor(div);
 
-        const model1 = editor.getContentModelCopy('connected');
-
-        expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, { tryGetFromCache: true });
-
         editor.dispose();
-        expect(() => editor.getContentModelCopy('connected')).toThrow();
+        expect(() => editor.getContentModelCopy('disconnected')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
@@ -283,7 +278,9 @@ describe('Editor', () => {
             mockedModel
         );
 
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         const model = editor.getContentModelCopy('clean');
         expect(model).toBe(mockedModel);

@@ -1,10 +1,11 @@
 import { deleteExpandedSelection } from './deleteExpandedSelection';
+import { mutateBlock } from '../common/mutate';
 import type {
-    ContentModelDocument,
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -16,7 +17,7 @@ import type {
  * @returns A DeleteSelectionResult object to specify the deletion result
  */
 export function deleteSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     additionalSteps: (DeleteSelectionStep | null)[] = [],
     formatContext?: FormatContentModelContext
 ): DeleteSelectionResult {
@@ -50,7 +51,9 @@ function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
         lastParagraph != insertPoint.paragraph &&
         lastTableContext == insertPoint.tableContext
     ) {
-        insertPoint.paragraph.segments.push(...lastParagraph.segments);
-        lastParagraph.segments = [];
+        const mutableLastParagraph = mutateBlock(lastParagraph);
+
+        mutateBlock(insertPoint.paragraph).segments.push(...mutableLastParagraph.segments);
+        mutableLastParagraph.segments = [];
     }
 }

@@ -1,19 +1,17 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
-
-import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import {
-    getFirstSelectedTable,
-    isNodeOfType,
-    normalizeRect,
-    normalizeTable,
-} from 'roosterjs-content-model-dom';
-import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import { isNodeOfType, normalizeRect, normalizeTable } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
+import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
-const TABLE_RESIZER_ID = '_Table_Resizer';
+/**
+ * @internal
+ */
+export const TABLE_RESIZER_ID = '_Table_Resizer';
 
 /**
  * @internal
@@ -127,24 +125,8 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
 
     const { editor, table } = context;
 
-    // Get current selection
-    const selection = editor.getDOMSelection();
-
-    // Select first cell of the table
-    editor.setDOMSelection({
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
-
-    // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
-
-    // Restore selection
-    editor.setDOMSelection(selection);
+    // Get Table block in content model
+    const cmTable = getCMTableFromTable(editor, table);
 
     // Save original widths and heights
     const heights: number[] = [];

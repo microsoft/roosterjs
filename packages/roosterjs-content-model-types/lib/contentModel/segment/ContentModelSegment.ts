@@ -1,9 +1,16 @@
-import type { ContentModelBr } from './ContentModelBr';
+import type { ContentModelBr, ReadonlyContentModelBr } from './ContentModelBr';
 import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelGeneralSegment } from './ContentModelGeneralSegment';
-import type { ContentModelImage } from './ContentModelImage';
-import type { ContentModelSelectionMarker } from './ContentModelSelectionMarker';
-import type { ContentModelText } from './ContentModelText';
+import type {
+    ContentModelGeneralSegment,
+    ReadonlyContentModelGeneralSegment,
+    ShallowMutableContentModelGeneralSegment,
+} from './ContentModelGeneralSegment';
+import type { ContentModelImage, ReadonlyContentModelImage } from './ContentModelImage';
+import type {
+    ContentModelSelectionMarker,
+    ReadonlyContentModelSelectionMarker,
+} from './ContentModelSelectionMarker';
+import type { ContentModelText, ReadonlyContentModelText } from './ContentModelText';
 
 /**
  * Union type of Content Model Segment
@@ -13,5 +20,27 @@ export type ContentModelSegment =
     | ContentModelText
     | ContentModelBr
     | ContentModelGeneralSegment
+    | ContentModelEntity
+    | ContentModelImage;
+
+/**
+ * Union type of Content Model Segment (Readonly)
+ */
+export type ReadonlyContentModelSegment =
+    | ReadonlyContentModelSelectionMarker
+    | ReadonlyContentModelText
+    | ReadonlyContentModelBr
+    | ReadonlyContentModelGeneralSegment
+    | ContentModelEntity
+    | ReadonlyContentModelImage;
+
+/**
+ * Union type of Content Model Segment (Shallow mutable)
+ */
+export type ShallowMutableContentModelSegment =
+    | ContentModelSelectionMarker
+    | ContentModelText
+    | ContentModelBr
+    | ShallowMutableContentModelGeneralSegment
     | ContentModelEntity
     | ContentModelImage;

@@ -1,8 +1,12 @@
 import * as getIntersectedRect from '../../lib/pluginUtils/Rect/getIntersectedRect';
-import { createTableInserter } from '../../lib/tableEdit/editors/features/TableInserter';
 import { DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { getMergedFirstColumnTable, getMergedTopRowTable, getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
+import {
+    HORIZONTAL_INSERTER_ID,
+    VERTICAL_INSERTER_ID,
+    createTableInserter,
+} from '../../lib/tableEdit/editors/features/TableInserter';
 import {
     Position,
     afterTableTest,
@@ -12,9 +16,6 @@ import {
     getTableRows,
     initialize,
 } from './TableEditTestHelper';
-
-const VERTICAL_INSERTER_ID = 'verticalInserter';
-const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
 
 describe('Table Inserter tests', () => {
     let editor: IEditor;
@@ -58,10 +59,12 @@ describe('Table Inserter tests', () => {
                 // Inserter is visible, but pointer is not over it
                 return 'not clickable';
             }
-            const table = getCurrentTable(editor);
+            let table = getCurrentTable(editor);
             const rows = getTableRows(table);
             const cols = getTableColumns(table);
             inserter.dispatchEvent(new MouseEvent('click'));
+
+            table = getCurrentTable(editor);
             const newRows = getTableRows(table);
             const newCols = getTableColumns(table);
             expect(newRows).toBe(inserterType == VERTICAL_INSERTER_ID ? rows : rows + 1);
