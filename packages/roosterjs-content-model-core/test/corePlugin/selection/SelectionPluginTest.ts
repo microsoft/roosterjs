@@ -1406,37 +1406,39 @@ describe('SelectionPlugin handle table selection', () => {
         });
 
         it('From Range, Press Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td1,
-                    startOffset: 0,
-                    endContainer: td1,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td1,
-                        startOffset: 0,
-                        endContainer: td1,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1448,10 +1450,11 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
@@ -1468,40 +1471,44 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td2, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Shift+Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td2,
-                    startOffset: 0,
-                    endContainer: td2,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td2,
-                        startOffset: 0,
-                        endContainer: td2,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1514,10 +1521,11 @@ describe('SelectionPlugin handle table selection', () => {
                 rawEvent: {
                     key: 'Tab',
                     shiftKey: true,
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
@@ -1534,40 +1542,44 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Tab - Next Row', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td2,
-                    startOffset: 0,
-                    endContainer: td2,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td2,
-                        startOffset: 0,
-                        endContainer: td2,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
-
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td2,
+                              startOffset: 0,
+                              endContainer: td2,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1579,10 +1591,11 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
@@ -1599,40 +1612,45 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(td3, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, First cell - Press Shift+Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td1,
-                    startOffset: 0,
-                    endContainer: td1,
-                    endOffset: 0,
-                    commonAncestorContainer: tr1,
-                },
-                isReverted: false,
-            });
+            let time = 0;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td1,
-                        startOffset: 0,
-                        endContainer: td1,
-                        endOffset: 0,
-                        commonAncestorContainer: tr1,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1645,10 +1663,11 @@ describe('SelectionPlugin handle table selection', () => {
                 rawEvent: {
                     key: 'Tab',
                     shiftKey: true,
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
@@ -1665,40 +1684,45 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 0);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Last cell - Press Tab', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: {
-                    startContainer: td4,
-                    startOffset: 0,
-                    endContainer: td4,
-                    endOffset: 0,
-                    commonAncestorContainer: tr2,
-                },
-                isReverted: false,
-            });
+            let time = 0;
 
-            requestAnimationFrameSpy.and.callFake((func: Function) => {
-                getDOMSelectionSpy.and.returnValue({
-                    type: 'range',
-                    range: {
-                        startContainer: td4,
-                        startOffset: 0,
-                        endContainer: td4,
-                        endOffset: 0,
-                        commonAncestorContainer: tr2,
-                        collapsed: true,
-                    },
-                    isReverted: false,
-                });
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
 
-                func();
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td4,
+                              startOffset: 0,
+                              endContainer: td4,
+                              endOffset: 0,
+                              commonAncestorContainer: tr2,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td4,
+                              startOffset: 0,
+                              endContainer: td4,
+                              endOffset: 0,
+                              commonAncestorContainer: tr2,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
             const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
                 setStart: setStartSpy,
                 collapse: collapseSpy,
@@ -1710,10 +1734,11 @@ describe('SelectionPlugin handle table selection', () => {
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Tab',
+                    preventDefault: preventDefaultSpy,
                 } as any,
             });
 
-            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(0);
             expect(plugin.getState()).toEqual({
                 selection: null,
                 tableSelection: null,
@@ -1730,6 +1755,8 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(setStartSpy).toHaveBeenCalledWith(table.parentNode, 1);
             expect(announceSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(time).toBe(2);
         });
 
         it('From Range, Press Down', () => {
