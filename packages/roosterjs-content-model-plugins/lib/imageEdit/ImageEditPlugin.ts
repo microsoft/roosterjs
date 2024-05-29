@@ -395,65 +395,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    // private formatImageWithContentModelOnSelectionChange(
-    //     editor: IEditor,
-    //     insertPoint: DOMInsertPoint
-    // ) {
-    //     if (
-    //         this.lastSrc &&
-    //         this.selectedImage &&
-    //         this.imageEditInfo &&
-    //         this.clonedImage &&
-    //         insertPoint
-    //     ) {
-    //         formatInsertPointWithContentModel(
-    //             editor,
-    //             insertPoint,
-    //             (model, _context, insertPoint) => {
-    //                 const selectedSegments = getSelectedSegments(model, false);
-    //                 if (
-    //                     this.lastSrc &&
-    //                     this.selectedImage &&
-    //                     this.imageEditInfo &&
-    //                     this.clonedImage &&
-    //                     selectedSegments.length === 1 &&
-    //                     selectedSegments[0].segmentType == 'Image'
-    //                 ) {
-    //                     applyChange(
-    //                         editor,
-    //                         this.selectedImage,
-    //                         selectedSegments[0],
-    //                         this.imageEditInfo,
-    //                         this.lastSrc,
-    //                         this.wasImageResized || this.isCropMode,
-    //                         this.clonedImage
-    //                     );
-    //                     selectedSegments[0].isSelected = false;
-    //                     selectedSegments[0].isSelectedAsImageSelection = false;
-
-    //                     if (insertPoint) {
-    //                         insertPoint.marker.isSelected = true;
-    //                     }
-
-    //                     return true;
-    //                 }
-
-    //                 return false;
-    //             },
-    //             {
-    //                 changeSource: IMAGE_EDIT_CHANGE_SOURCE,
-    //                 selectionOverride: {
-    //                     type: 'image',
-    //                     image: this.selectedImage,
-    //                 },
-    //                 onNodeCreated: () => {
-    //                     this.cleanInfo();
-    //                 },
-    //             }
-    //         );
-    //     }
-    // }
-
     private formatImageWithContentModel(
         editor: IEditor,
         shouldSelectImage: boolean,

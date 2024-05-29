@@ -3,7 +3,6 @@ import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCel
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
-    ensureImageHasSpanParent,
     isCharacterValue,
     isElementOfType,
     isModifierKey,
@@ -281,28 +280,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private selectImageWithRange(image: HTMLImageElement, event: Event) {
         const range = image.ownerDocument.createRange();
+        range.selectNode(image);
 
-        ensureImageHasSpanParent(image);
-        const imageParent = image.parentElement;
-        if (
-            imageParent &&
-            isNodeOfType(imageParent, 'ELEMENT_NODE') &&
-            isElementOfType(imageParent, 'span')
-        ) {
-            range.selectNode(imageParent);
-            const domSelection = this.editor?.getDOMSelection();
-            if (domSelection?.type == 'image' && image == domSelection.image) {
-                event.preventDefault();
-            } else {
-                this.setDOMSelection(
-                    {
-                        type: 'range',
-                        isReverted: false,
-                        range,
-                    },
-                    null
-                );
-            }
+        const domSelection = this.editor?.getDOMSelection();
+        if (domSelection?.type == 'image' && image == domSelection.image) {
+            event.preventDefault();
+        } else {
+            this.setDOMSelection(
+                {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+                null
+            );
         }
     }
 

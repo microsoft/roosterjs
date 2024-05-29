@@ -13,14 +13,6 @@ export function isSingleImageInSelection(selection: Selection | Range): HTMLImag
         const node = startNode?.childNodes.item(min);
         if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
             return node;
-        } else if (
-            isNodeOfType(node, 'ELEMENT_NODE') &&
-            isElementOfType(node, 'span') &&
-            node.firstChild == node.lastChild &&
-            isNodeOfType(node.firstChild, 'ELEMENT_NODE') &&
-            isElementOfType(node.firstChild, 'img')
-        ) {
-            return node.firstChild;
         }
     }
     return null;

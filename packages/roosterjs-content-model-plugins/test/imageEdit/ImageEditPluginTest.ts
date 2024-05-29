@@ -1,12 +1,7 @@
+import { ContentModelDocument, ImageSelection } from 'roosterjs-content-model-types';
 import { getContentModelImage } from '../../lib/imageEdit/utils/getContentModelImage';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
-//import * as formatInsertPointWithContentModel from 'roosterjs-content-model-api/lib/publicApi/utils/formatInsertPointWithContentModel';
-import {
-    ContentModelDocument,
-    ImageSelection,
-    SelectionChangedEvent,
-} from 'roosterjs-content-model-types';
 
 const model: ContentModelDocument = {
     blockGroupType: 'Document',
@@ -55,10 +50,6 @@ describe('ImageEditPlugin', () => {
         plugin.flipImage(editor, image, 'horizontal');
         const imageModel = getContentModelImage(editor);
         expect(imageModel!.dataset['editingInfo']).toBeTruthy();
-        plugin.onPluginEvent({
-            eventType: 'selectionChanged',
-            newSelection: null,
-        });
         plugin.dispose();
     });
 
@@ -68,10 +59,6 @@ describe('ImageEditPlugin', () => {
         plugin.rotateImage(editor, selection.image, Math.PI / 2);
         const imageModel = getContentModelImage(editor);
         expect(imageModel!.dataset['editingInfo']).toBeTruthy();
-        plugin.onPluginEvent({
-            eventType: 'selectionChanged',
-            newSelection: null,
-        });
         plugin.dispose();
     });
 });
