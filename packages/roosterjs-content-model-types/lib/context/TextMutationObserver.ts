@@ -1,4 +1,4 @@
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 
 /**
  * A wrapper of MutationObserver to observe text change from editor

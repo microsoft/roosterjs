@@ -171,13 +171,9 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 this.invalidateCache();
             } else {
                 updateCachedSelection(this.state, newRangeEx);
-
-                console.log('Successfully reconcile' + JSON.stringify(this.state.cachedModel));
             }
         } else {
             this.state.cachedSelection = cachedSelection;
-
-            console.log('Selection not changed');
         }
     }
 }

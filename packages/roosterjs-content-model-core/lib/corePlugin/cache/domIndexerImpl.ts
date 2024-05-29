@@ -408,7 +408,7 @@ function indexNode(
     textNode: Text,
     format?: ContentModelSegmentFormat
 ) {
-    let copiedFormat = format ? { ...format } : undefined;
+    const copiedFormat = format ? { ...format } : undefined;
 
     if (copiedFormat) {
         getObjectKeys(copiedFormat).forEach(key => {

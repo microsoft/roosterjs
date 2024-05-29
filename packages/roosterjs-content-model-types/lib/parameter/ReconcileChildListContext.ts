@@ -1,5 +1,5 @@
-import type { ContentModelParagraph } from '../block/ContentModelParagraph';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 
 /**
  * Context object used by DomIndexer when reconcile mutations with child list
