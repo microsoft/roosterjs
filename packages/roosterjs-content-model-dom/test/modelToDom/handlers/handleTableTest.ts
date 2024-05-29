@@ -528,6 +528,7 @@ describe('handleTable', () => {
         expectHtml(parent.innerHTML, [
             '<table dir="rtl" style="text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td dir="ltr" style="width: 100px; height: 200px; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>',
             '<table style="text-align: center; line-height: 2; white-space: pre;"dir="rtl" ><tbody><tr><td style="width: 100px; height: 200px; text-align: left; line-height: 1; white-space: normal;" dir="ltr"></td></tr></tbody></table>',
+            '<table dir="rtl" style="text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; text-align: left; line-height: 1; white-space: normal;" dir="ltr"></td></tr></tbody></table>',
         ]);
     });
 
