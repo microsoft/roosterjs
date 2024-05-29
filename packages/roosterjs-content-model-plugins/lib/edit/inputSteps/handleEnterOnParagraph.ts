@@ -1,3 +1,4 @@
+import { mutateBlock } from 'roosterjs-content-model-dom';
 import { splitParagraph } from '../utils/splitParagraph';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
@@ -11,7 +12,7 @@ export const handleEnterOnParagraph: DeleteSelectionStep = context => {
     if (context.deleteResult == 'notDeleted' && paraIndex >= 0) {
         const newPara = splitParagraph(context.insertPoint);
 
-        path[0].blocks.splice(paraIndex + 1, 0, newPara);
+        mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newPara);
 
         context.deleteResult = 'range';
         context.lastParagraph = newPara;

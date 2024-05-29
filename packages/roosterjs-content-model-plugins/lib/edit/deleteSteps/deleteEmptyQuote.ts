@@ -7,11 +7,12 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelFormatContainer,
-    ContentModelParagraph,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelFormatContainer,
     ReadonlyContentModelParagraph,
+    ShallowMutableContentModelFormatContainer,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -83,10 +84,10 @@ const isSelectionOnEmptyLine = (
 };
 
 const insertNewLine = (
-    quote: ContentModelFormatContainer,
+    quote: ShallowMutableContentModelFormatContainer,
     parent: ReadonlyContentModelBlockGroup,
     quoteIndex: number,
-    paragraph: ContentModelParagraph
+    paragraph: ShallowMutableContentModelParagraph
 ) => {
     const paraIndex = quote.blocks.indexOf(paragraph);
 
@@ -94,7 +95,10 @@ const insertNewLine = (
         const mutableParent = mutateBlock(parent);
 
         if (paraIndex < quote.blocks.length - 1) {
-            const newQuote = createFormatContainer(quote.tagName, quote.format);
+            const newQuote: ShallowMutableContentModelFormatContainer = createFormatContainer(
+                quote.tagName,
+                quote.format
+            );
 
             newQuote.blocks.push(
                 ...quote.blocks.splice(paraIndex + 1, quote.blocks.length - paraIndex - 1)

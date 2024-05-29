@@ -4,7 +4,10 @@ import {
     normalizeParagraph,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import type { InsertPoint } from 'roosterjs-content-model-types';
+import type {
+    InsertPoint,
+    ShallowMutableContentModelParagraph,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -15,7 +18,7 @@ import type { InsertPoint } from 'roosterjs-content-model-types';
  */
 export function splitParagraph(insertPoint: InsertPoint) {
     const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         paragraph.format,
         paragraph.segmentFormat
