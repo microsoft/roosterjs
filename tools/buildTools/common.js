@@ -129,7 +129,6 @@ const legacyPackages = [
     'roosterjs-editor-api',
     'roosterjs-editor-plugins',
 ];
-// const reactPackages = ['roosterjs-react'];
 const mainPackages = [
     'roosterjs',
     'roosterjs-content-model-types',
@@ -142,15 +141,6 @@ const mainPackages = [
 const legacyAdapterPackages = ['roosterjs-editor-adapter'];
 
 const buildConfig = {
-    // react: {
-    //     jsFileBaseName: 'rooster-react',
-    //     libraryName: 'roosterjsReact',
-    //     externalHandler: getWebpackExternalCallback([]),
-    //     dependsOnLegacy: true,
-    //     dependsOnReact: true,
-    //     packages: reactPackages,
-    //     entry: 'roosterjs-react',
-    // },
     main: {
         jsFileBaseName: 'rooster',
         libraryName: 'roosterjs',

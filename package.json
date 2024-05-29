@@ -92,8 +92,7 @@
         "roosterjs-editor-dom": "^8.62.0",
         "roosterjs-editor-core": "^8.62.0",
         "roosterjs-editor-api": "^8.62.0",
-        "roosterjs-editor-plugins": "^8.62.0",
-        "roosterjs-react": "^8.56.0"
+        "roosterjs-editor-plugins": "^8.62.0"
     },
     "husky": {
         "hooks": {

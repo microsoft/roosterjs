@@ -5882,20 +5882,6 @@ roosterjs-editor-types@, roosterjs-editor-types@^8.62.0:
   resolved "https://registry.yarnpkg.com/roosterjs-editor-types/-/roosterjs-editor-types-8.62.0.tgz#481d1f69304501986bae6a1a9051eceff12e1243"
   integrity sha512-4OTSYKCdCqQPjOgWhVcjMX32T22B1bgyKeQmcq16F+ATBtleKRN4+2b9e2WsPN39L6t2PK+BFvITdoqKKAHVkQ==
 
-roosterjs-react@^8.56.0:
-  version "8.56.0"
-  resolved "https://registry.yarnpkg.com/roosterjs-react/-/roosterjs-react-8.56.0.tgz#e8b59f62690c7ef125a33195a0972883f5bf6732"
-  integrity sha512-qWVytKnkPTMdvBHOlF5uDKYcCONfxdjLsaV5LlTz8gICLaSgvVSP2QLz8qa19L3We3MQi+2CiFZ9d2odZrAkgw==
-  dependencies:
-    roosterjs-color-utils "^1.1.0"
-    roosterjs-editor-api "^8.62.0"
-    roosterjs-editor-core "^8.62.0"
-    roosterjs-editor-dom "^8.62.0"
-    roosterjs-editor-plugins "^8.62.0"
-    roosterjs-editor-types "^8.62.0"
-    roosterjs-editor-types-compatible "^8.62.0"
-    tslib "^2.3.1"
-
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"
