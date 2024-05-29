@@ -22,7 +22,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
 
         listLevelThreadFormatHandler.parse(format, ol, context, {});
 
-        expect(format.startNumberOverride).toBeUndefined();
+        expect(format.startNumberOverride).toBe(1);
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             levels: [],
@@ -91,7 +91,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
 
         listLevelThreadFormatHandler.parse(format, ol, context, {});
 
-        expect(format.startNumberOverride).toBeUndefined();
+        expect(format.startNumberOverride).toBe(1);
         expect(context.listFormat).toEqual({
             threadItemCounts: [2, 0],
             levels: [

@@ -13,7 +13,7 @@ export const listLevelThreadFormatHandler: FormatHandler<ListThreadFormat> = {
             const depth = levels.length;
 
             if (
-                typeof threadItemCounts[depth] === 'number' &&
+                threadItemCounts[depth] === undefined ||
                 element.start != threadItemCounts[depth] + 1
             ) {
                 format.startNumberOverride = element.start;

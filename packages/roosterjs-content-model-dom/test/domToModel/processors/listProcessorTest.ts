@@ -56,7 +56,7 @@ describe('listProcessor', () => {
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([
-                { listType: 'OL', format: {}, dataset: {} },
+                { listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} },
             ]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
             expect(context.segmentFormat).toEqual({});
@@ -88,7 +88,7 @@ describe('listProcessor', () => {
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([
-                { listType: 'OL', format: {}, dataset: {} },
+                { listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} },
             ]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
             expect(context.segmentFormat).toEqual({
@@ -212,6 +212,7 @@ describe('listProcessor', () => {
                                 paddingBottom: '2px',
                                 paddingLeft: '2px',
                                 listStylePosition: 'inside',
+                                startNumberOverride: 1,
                             },
                             dataset: {},
                         },
@@ -254,6 +255,7 @@ describe('listProcessor', () => {
                                 marginBottom: '0px',
                                 marginLeft: '0px',
                                 marginRight: '0px',
+                                startNumberOverride: 1,
                             },
                             dataset: {},
                         },
@@ -468,7 +470,7 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    format: {},
+                    format: { startNumberOverride: 1 },
                     dataset: {},
                 },
             ]);
@@ -492,7 +494,7 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    format: {},
+                    format: { startNumberOverride: 1 },
                     dataset: {
                         editingInfo: JSON.stringify({ orderedStyleType: 1, unorderedStyleType: 2 }),
                     },
@@ -520,7 +522,7 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    format: {},
+                    format: { startNumberOverride: 1 },
                     dataset: { editingInfo: metadata },
                 },
             ]);
@@ -544,7 +546,9 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    format: {},
+                    format: {
+                        startNumberOverride: 1,
+                    },
                     dataset: {
                         editingInfo: JSON.stringify({
                             orderedStyleType: NumberingListType.Max,
@@ -576,7 +580,7 @@ describe('listProcessor process metadata', () => {
                 {
                     listType: 'OL',
                     dataset: { editingInfo },
-                    format: {},
+                    format: { startNumberOverride: 1 },
                 },
             ]);
         });
@@ -601,6 +605,7 @@ describe('listProcessor process metadata', () => {
                     listType: 'OL',
                     format: {
                         listStyleType: 'decimal',
+                        startNumberOverride: 1,
                     },
                     dataset: {
                         editingInfo: JSON.stringify({ orderedStyleType: NumberingListType.Max }),
@@ -622,6 +627,49 @@ describe('listProcessor process metadata', () => {
         ol.appendChild(li);
 
         context.blockFormat.direction = 'rtl';
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        listProcessor(group, ol, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {
+                                direction: 'rtl',
+                                startNumberOverride: 1,
+                            },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: false,
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Context has list number', () => {
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+        const group = createContentModelDocument();
+
+        ol.start = 2;
+        ol.appendChild(li);
+
+        context.blockFormat.direction = 'rtl';
+        context.listFormat.threadItemCounts[0] = 1;
 
         childProcessor.and.callFake(originalChildProcessor);
 

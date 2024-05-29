@@ -156,7 +156,15 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 1,
+                                },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
@@ -177,7 +185,13 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         ],
                         levels: [
                             { listType: 'OL', format: {}, dataset: {} },
-                            { listType: 'OL', format: {}, dataset: {} },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    startNumberOverride: 1,
+                                },
+                                dataset: {},
+                            },
                         ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
@@ -2088,12 +2102,12 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {},
+                                format: { startNumberOverride: 1 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: { listStyleType: '"1) "' },
+                                format: { listStyleType: '"1) "', startNumberOverride: 1 },
                                 dataset: {},
                             },
                         ],
