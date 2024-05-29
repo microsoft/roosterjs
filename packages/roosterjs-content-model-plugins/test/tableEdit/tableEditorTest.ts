@@ -80,7 +80,7 @@ describe('TableEdit', () => {
                 handler
             );
             const feature = editor.getDocument().getElementById(TABLE_RESIZER_ID);
-            expect(!!feature).toBe(fsalse);
+            expect(!!feature).toBe(false);
         });
 
         //Not reliable
