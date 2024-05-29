@@ -6,6 +6,7 @@ import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
+    cloneModel,
     createContentModelDocument,
     createSelectionMarker,
     getFirstSelectedTable,
@@ -17,11 +18,12 @@ import {
     setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
     DOMInsertPoint,
     DOMSelection,
     IEditor,
+    ReadonlyContentModelTable,
     Rect,
+    ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const TABLE_MOVER_LENGTH = 12;
@@ -125,7 +127,7 @@ export interface TableMoverContext {
  * Exported for testing
  */
 export interface TableMoverInitValue {
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     tableRect: HTMLDivElement;
 }
@@ -331,9 +333,9 @@ export function onDragEnd(
 
                     if (ip && initValue?.cmTable) {
                         // Insert new table
-                        const doc = createContentModelDocument();
-                        doc.blocks.push(initValue.cmTable);
-                        insertionSuccess = !!mergeModel(model, doc, context, {
+                        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
+                        doc.blocks.push(mutateBlock(initValue.cmTable));
+                        insertionSuccess = !!mergeModel(model, cloneModel(doc), context, {
                             mergeFormat: 'none',
                             insertPosition: ip,
                         });

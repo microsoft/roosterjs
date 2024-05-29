@@ -1,10 +1,15 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
-import { isNodeOfType, normalizeRect, normalizeTable } from 'roosterjs-content-model-dom';
+import {
+    isNodeOfType,
+    mutateBlock,
+    normalizeRect,
+    normalizeTable,
+} from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable, Rect } from 'roosterjs-content-model-types';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
@@ -117,7 +122,7 @@ interface DragAndDropInitValue {
     originalRect: DOMRect;
     originalHeights: number[];
     originalWidths: number[];
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
 }
 
 function onDragStart(context: DragAndDropContext, event: MouseEvent) {
@@ -168,16 +173,18 @@ function onDragging(
 
     // Assign new widths and heights to the CM table
     if (cmTable && cmTable.rows && (shouldResizeX || shouldResizeY)) {
+        const mutableTable = mutateBlock(cmTable);
+
         // Modify the CM Table size
         for (let i = 0; i < cmTable.rows.length; i++) {
             for (let j = 0; j < cmTable.rows[i].cells.length; j++) {
                 const cell = cmTable.rows[i].cells[j];
                 if (cell) {
                     if (shouldResizeX && i == 0) {
-                        cmTable.widths[j] = (originalWidths[j] ?? 0) * ratioX;
+                        mutableTable.widths[j] = (originalWidths[j] ?? 0) * ratioX;
                     }
                     if (shouldResizeY && j == 0) {
-                        cmTable.rows[i].height = (originalHeights[i] ?? 0) * ratioY;
+                        mutableTable.rows[i].height = (originalHeights[i] ?? 0) * ratioY;
                     }
                 }
             }
