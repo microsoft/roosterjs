@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -108,14 +108,23 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,26 +156,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { canMergeCells } from './canMergeCells';
-import { getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, TableVerticalMergeOperation } from 'roosterjs-content-model-types';
+import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type {
+    ShallowMutableContentModelTable,
+    TableVerticalMergeOperation,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
  */
-export function mergeTableRow(table: ContentModelTable, operation: TableVerticalMergeOperation) {
+export function mergeTableRow(
+    table: ShallowMutableContentModelTable,
+    operation: TableVerticalMergeOperation
+) {
     const sel = getSelectedCells(table);
     const mergeAbove = operation == 'mergeAbove';
 &nbsp;
@@ -187,7 +199,7 @@ export function mergeTableRow(table: ContentModelTable, operation: TableVertical
                         colIndex
                     )
                 ) {
-                    cell.spanAbove = true;
+                    mutateBlock(cell).spanAbove = true;
 &nbsp;
                     let newSelectedRow = mergingRowIndex;
 &nbsp;
@@ -197,14 +209,11 @@ export function mergeTableRow(table: ContentModelTable, operation: TableVertical
                         newSelectedRow--;
                     }
 &nbsp;
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (table.rows[newSelectedRow]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[colIndex]) {
-                        table.rows[newSelectedRow].cells[colIndex].isSelected = true;
+                    const newCell = table.rows[newSelectedRow]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[colIndex];
 &nbsp;
-                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
-                        delete table.rows[newSelectedRow].cachedElement;
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (newCell) {
+                        mutateBlock(newCell).isSelected = true;
                     }
-&nbsp;
-                    delete cell.cachedElement;
                 }
             }
         }
@@ -217,7 +226,7 @@ export function mergeTableRow(table: ContentModelTable, operation: TableVertical
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 29 2024 16:20:38 GMT+0000 (Coordinated Universal Time)
+                at Wed May 29 2024 17:17:53 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

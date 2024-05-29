@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.44% </span>
+                <span class="strong">98.46% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>63/64</span>
+                <span class='fraction'>64/65</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.39% </span>
+                <span class="strong">98.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>61/62</span>
+                <span class='fraction'>62/63</span>
             </div>
         
             
@@ -231,8 +231,12 @@
 <a name='L172'></a><a href='#L172'>172</a>
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -275,6 +279,7 @@
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -403,6 +408,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getListAnnounceData } from 'roosterjs-content-model-api';
@@ -418,6 +424,7 @@ import {
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
     mutateBlock,
+    mutateSegment,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItem,
@@ -445,10 +452,11 @@ export const handleEnterOnList: DeleteSelectionStep = context =&gt; {
         const rawEvent = formatContext<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>awEvent;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 &nbsp;
-        const listItem = path[index];
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
 &nbsp;
-        if (listItem &amp;&amp; listItem.blockGroupType === 'ListItem' &amp;&amp; listParent) {
+        if (readonlyListItem &amp;&amp; readonlyListItem.blockGroupType === 'ListItem' &amp;&amp; listParent) {
+            const listItem = mutateBlock(readonlyListItem);
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
 &nbsp;
@@ -561,21 +569,22 @@ const createNewParagraph = (insertPoint: InsertPoint) =&gt; {
         paragraph.segmentFormat
     );
 &nbsp;
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
+    mutateSegment(paragraph, marker, (marker, paragraph, markerIndex) =&gt; {
+        const segments = paragraph.segments.splice(
+            markerIndex,
+            paragraph.segments.length - markerIndex
+        );
 &nbsp;
-    newParagraph.segments.push(...segments);
+        newParagraph.segments.push(...segments);
 &nbsp;
-    setParagraphNotImplicit(paragraph);
+        setParagraphNotImplicit(paragraph);
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (paragraph.segments.every(x =&gt; x.segmentType == 'SelectionMarker')) {
-<span class="cstat-no" title="statement not covered" >        paragraph.segments.push(createBr(marker.format));</span>
-    }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (paragraph.segments.every(x =&gt; x.segmentType == 'SelectionMarker')) {
+<span class="cstat-no" title="statement not covered" >            paragraph.segments.push(createBr(marker.format));</span>
+        }
 &nbsp;
-    normalizeParagraph(newParagraph);
+        normalizeParagraph(newParagraph);
+    });
 &nbsp;
     return newParagraph;
 };
@@ -586,7 +595,7 @@ const createNewParagraph = (insertPoint: InsertPoint) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 29 2024 16:20:38 GMT+0000 (Coordinated Universal Time)
+                at Wed May 29 2024 17:17:53 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

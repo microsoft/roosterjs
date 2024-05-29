@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>41/41</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/37</span>
+                <span class='fraction'>39/39</span>
             </div>
         
             
@@ -155,8 +155,7 @@
 <a name='L96'></a><a href='#L96'>96</a>
 <a name='L97'></a><a href='#L97'>97</a>
 <a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L99'></a><a href='#L99'>99</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -189,6 +188,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,14 +204,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,22 +258,22 @@ import {
     applyTableFormat,
     getOperationalBlocks,
     isBlockGroupOfType,
+    mutateBlock,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     BorderFormat,
-    ContentModelBlock,
-    ContentModelBlockFormat,
-    ContentModelDocument,
     ContentModelListItem,
     MarginFormat,
     PaddingFormat,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
  */
-export function setModelDirection(model: ContentModelDocument, direction: 'ltr' | 'rtl') {
+export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl') {
     const paragraphOrListItemOrTable = getOperationalBlocks&lt;ContentModelListItem&gt;(
         model,
         ['ListItem'],
@@ -286,30 +284,29 @@ export function setModelDirection(model: ContentModelDocument, direction: 'ltr' 
         if (isBlockGroupOfType&lt;ContentModelListItem&gt;(block, 'ListItem')) {
             const items = findListItemsInSameThread(model, block);
 &nbsp;
-            items.forEach(item =&gt; {
+            items.forEach(readonlyItem =&gt; {
+                const item = mutateBlock(readonlyItem);
+&nbsp;
                 item.levels.forEach(level =&gt; {
                     level.format.direction = direction;
                 });
 &nbsp;
-                item.blocks.forEach(block =&gt; internalSetDirection(block.format, direction));
+                item.blocks.forEach(block =&gt; internalSetDirection(block, direction));
             });
         } else <span class="missing-if-branch" title="else path not taken" >E</span>if (block) {
-            internalSetDirection(block.format, direction, block);
+            internalSetDirection(block, direction);
         }
     });
 &nbsp;
     return paragraphOrListItemOrTable.length &gt; 0;
 }
 &nbsp;
-function internalSetDirection(
-    format: ContentModelBlockFormat,
-    direction: 'ltr' | 'rtl',
-    block?: ContentModelBlock
-) {
-    const wasRtl = format.direction == 'rtl';
+function internalSetDirection(block: ReadonlyContentModelBlock, direction: 'ltr' | 'rtl') {
+    const wasRtl = block.format.direction == 'rtl';
     const isRtl = direction == 'rtl';
 &nbsp;
     if (wasRtl != isRtl) {
+        const { format } = mutateBlock(block);
         format.direction = direction;
 &nbsp;
         // Adjust margin when change direction
@@ -326,7 +323,7 @@ function internalSetDirection(
             block.rows.forEach(row =&gt; {
                 row.cells.forEach(cell =&gt; {
                     // Optimise by skipping cells with unchanged borders
-                    updateTableCellMetadata(cell, metadata =&gt; {
+                    updateTableCellMetadata(mutateBlock(cell), metadata =&gt; {
                         <span class="missing-if-branch" title="else path not taken" >E</span>if (metadata<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>orderOverride) {
                             const storeBorderLeft = cell.format.borderLeft;
                             setProperty(cell.format, 'borderLeft', cell.format.borderRight);
@@ -361,7 +358,7 @@ function setProperty(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 29 2024 16:20:38 GMT+0000 (Coordinated Universal Time)
+                at Wed May 29 2024 17:17:53 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
