@@ -1,7 +1,7 @@
 import { clearSelectedCells } from './clearSelectedCells';
 import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
+    ShallowMutableContentModelTable,
     TableVerticalInsertOperation,
 } from 'roosterjs-content-model-types';
 
@@ -10,12 +10,16 @@ import type {
  * @param table The table model where the row is to be inserted
  * @param operation The operation to be performed
  */
-export function insertTableRow(table: ContentModelTable, operation: TableVerticalInsertOperation) {
+export function insertTableRow(
+    table: ShallowMutableContentModelTable,
+    operation: TableVerticalInsertOperation
+) {
     const sel = getSelectedCells(table);
     const insertAbove = operation == 'insertAbove';
 
     if (sel) {
         clearSelectedCells(table, sel);
+
         for (let i = sel.firstRow; i <= sel.lastRow; i++) {
             const sourceRow = table.rows[insertAbove ? sel.firstRow : sel.lastRow];
 
