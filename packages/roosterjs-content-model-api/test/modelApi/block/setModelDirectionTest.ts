@@ -6,6 +6,7 @@ describe('setModelDirection', () => {
     const style = 'double';
     const color = '#AABBCC';
     const testBorderString = `${width} ${style} ${color}`;
+    const mockedCachedElement = 'CACHE' as any;
 
     function runTest(
         model: ContentModelDocument,
@@ -42,6 +43,7 @@ describe('setModelDirection', () => {
                                 isSelected: true,
                             },
                         ],
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             },
@@ -80,6 +82,7 @@ describe('setModelDirection', () => {
                         format: {},
                         isSelected: true,
                         tagName: 'hr',
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             },
@@ -134,6 +137,7 @@ describe('setModelDirection', () => {
                                 format: {},
                             },
                         ],
+                        cachedElement: mockedCachedElement,
                     },
                     {
                         blockType: 'BlockGroup',
@@ -164,6 +168,7 @@ describe('setModelDirection', () => {
                                 format: {},
                             },
                         ],
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             },
@@ -265,6 +270,7 @@ describe('setModelDirection', () => {
                                             editingInfo: '{"borderOverride":true}',
                                         },
                                         isSelected: true,
+                                        cachedElement: mockedCachedElement,
                                     },
                                     {
                                         blockGroupType: 'TableCell',
@@ -279,13 +285,16 @@ describe('setModelDirection', () => {
                                             editingInfo: '{"borderOverride":true}',
                                         },
                                         isSelected: true,
+                                        cachedElement: mockedCachedElement,
                                     },
                                 ],
+                                cachedElement: mockedCachedElement,
                             },
                         ],
                         format: {},
                         widths: [],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
                 format: {},
@@ -371,6 +380,7 @@ describe('setModelDirection', () => {
                                             editingInfo: '{"borderOverride":true}',
                                         },
                                         isSelected: true,
+                                        cachedElement: mockedCachedElement,
                                     },
                                     {
                                         blockGroupType: 'TableCell',
@@ -385,8 +395,10 @@ describe('setModelDirection', () => {
                                             editingInfo: '{"borderOverride":true}',
                                         },
                                         isSelected: true,
+                                        cachedElement: mockedCachedElement,
                                     },
                                 ],
+                                cachedElement: mockedCachedElement,
                             },
                         ],
                         format: {
@@ -394,6 +406,7 @@ describe('setModelDirection', () => {
                         },
                         widths: [],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
                 format: {},
