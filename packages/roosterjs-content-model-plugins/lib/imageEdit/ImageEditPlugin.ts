@@ -57,7 +57,7 @@ const IMAGE_EDIT_CHANGE_SOURCE = 'ImageEdit';
  * - Flip image
  */
 export class ImageEditPlugin implements ImageEditor, EditorPlugin {
-    private editor: IEditor | null = null;
+    protected editor: IEditor | null = null;
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
     public wrapper: HTMLSpanElement | null = null;
@@ -74,7 +74,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
 
-    constructor(private options: ImageEditOptions = DefaultOptions) {}
+    constructor(protected options: ImageEditOptions = DefaultOptions) {}
 
     /**
      * Get name of this plugin
