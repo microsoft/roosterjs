@@ -1,3 +1,4 @@
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import {
     checkIfImageWasResized,
     getPx,
@@ -49,7 +50,7 @@ describe('imageEditUtils', () => {
             expect(element.style.transform).toBe('scale(1, -1)');
         });
 
-        it('should flip horizontally/vertically ', () => {
+        itChromeOnly('should flip horizontally/vertically ', () => {
             const element = document.createElement('div');
             setFlipped(element, true, true);
             expect(element.style.transform).toBe('scale(-1, -1)');

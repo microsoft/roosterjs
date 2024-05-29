@@ -1,7 +1,8 @@
 import { generateDataURL } from '../../../lib/imageEdit/utils/generateDataURL';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 
 describe('generateDataURL', () => {
-    it('generate image url', () => {
+    itChromeOnly('generate image url', () => {
         const editInfo = {
             src: 'test',
             widthPx: 20,

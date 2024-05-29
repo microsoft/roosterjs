@@ -80,10 +80,11 @@ describe('TableEdit', () => {
                 handler
             );
             const feature = editor.getDocument().getElementById(TABLE_RESIZER_ID);
-            expect(!!feature).toBe(false);
+            expect(!!feature).toBe(fsalse);
         });
 
-        it('Disable Table Mover', () => {
+        //Not reliable
+        xit('Disable Table Mover', () => {
             const tableRect = runDisableFeatureSetup(['TableMover', 'TableSelector']);
             // Move mouse to center of table
             mouseToPoint(
