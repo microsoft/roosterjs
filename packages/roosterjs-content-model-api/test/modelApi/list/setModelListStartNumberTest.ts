@@ -2,6 +2,8 @@ import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setModelListStartNumber } from '../../../lib/modelApi/list/setModelListStartNumber';
 
 describe('setModelListStartNumber', () => {
+    const mockedCachedElement = 'CACHE' as any;
+
     function runTest(model: ContentModelDocument, value: number, expected: boolean) {
         // Act
         const actual = setModelListStartNumber(model, value);
@@ -29,6 +31,7 @@ describe('setModelListStartNumber', () => {
                                 },
                             ],
                             format: {},
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     levels: [
@@ -40,6 +43,7 @@ describe('setModelListStartNumber', () => {
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
                             },
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     formatHolder: {
@@ -48,6 +52,7 @@ describe('setModelListStartNumber', () => {
                         format: {},
                     },
                     format: {},
+                    cachedElement: mockedCachedElement,
                 },
                 {
                     blockType: 'BlockGroup',
@@ -68,6 +73,7 @@ describe('setModelListStartNumber', () => {
                                 },
                             ],
                             format: {},
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     levels: [
@@ -79,6 +85,7 @@ describe('setModelListStartNumber', () => {
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
                             },
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     formatHolder: {
@@ -87,6 +94,7 @@ describe('setModelListStartNumber', () => {
                         format: {},
                     },
                     format: {},
+                    cachedElement: mockedCachedElement,
                 },
             ],
             format: {},

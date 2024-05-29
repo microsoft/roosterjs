@@ -6,7 +6,10 @@ import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model
  * @param editor The editor to operate on
  * @param newFormat The segment format to apply
  */
-export function applySegmentFormat(editor: IEditor, newFormat: ContentModelSegmentFormat) {
+export function applySegmentFormat(
+    editor: IEditor,
+    newFormat: Readonly<ContentModelSegmentFormat>
+) {
     formatSegmentWithContentModel(
         editor,
         'applySegmentFormat',

@@ -1,5 +1,7 @@
 import { addParser } from './utils/addParser';
-import { BorderKeys } from 'roosterjs-content-model-dom';
+import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
+import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
+import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './utils/linkParser';
@@ -9,9 +11,11 @@ import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedCo
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import type {
+    BeforePasteEvent,
     BorderFormat,
     ContentModelBlockFormat,
     ContentModelTableCellFormat,
+    DomToModelOptionForSanitizing,
     EditorPlugin,
     FormatParser,
     IEditor,
@@ -33,7 +37,21 @@ export class PastePlugin implements EditorPlugin {
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
      * @param allowExcelNoBorderTable Allow table copied from Excel without border
      */
-    constructor(private allowExcelNoBorderTable?: boolean) {}
+    constructor(
+        private allowExcelNoBorderTable?: boolean,
+        private domToModelForSanitizing: Pick<
+            DomToModelOptionForSanitizing,
+            | 'additionalAllowedTags'
+            | 'additionalDisallowedTags'
+            | 'styleSanitizers'
+            | 'attributeSanitizers'
+        > = {
+            styleSanitizers: DefaultSanitizers,
+            additionalAllowedTags: [],
+            additionalDisallowedTags: [],
+            attributeSanitizers: {},
+        }
+    ) {}
 
     /**
      * Get name of this plugin
@@ -115,6 +133,35 @@ export class PastePlugin implements EditorPlugin {
         if (pasteType === 'mergeFormat') {
             addParser(event.domToModelOption, 'block', blockElementParser);
             addParser(event.domToModelOption, 'listLevel', blockElementParser);
+        }
+
+        this.setEventSanitizers(event);
+    }
+
+    private setEventSanitizers(event: BeforePasteEvent) {
+        if (this.domToModelForSanitizing) {
+            const {
+                styleSanitizers,
+                attributeSanitizers,
+                additionalAllowedTags,
+                additionalDisallowedTags,
+            } = this.domToModelForSanitizing;
+            getObjectKeys(styleSanitizers).forEach(key =>
+                chainSanitizerCallback(
+                    event.domToModelOption.styleSanitizers,
+                    key,
+                    styleSanitizers[key]
+                )
+            );
+            getObjectKeys(attributeSanitizers).forEach(key =>
+                chainSanitizerCallback(
+                    event.domToModelOption.attributeSanitizers,
+                    key,
+                    attributeSanitizers[key]
+                )
+            );
+            event.domToModelOption.additionalAllowedTags.push(...additionalAllowedTags);
+            event.domToModelOption.additionalDisallowedTags.push(...additionalDisallowedTags);
         }
     }
 }

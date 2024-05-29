@@ -1,18 +1,100 @@
 import { clearModelFormat } from '../../../lib/modelApi/common/clearModelFormat';
 import {
+    ContentModelBlockFormat,
+    ContentModelFormatContainerFormat,
+    ContentModelListItemLevelFormat,
+    ContentModelSegmentFormat,
+    ContentModelTableCellFormat,
+    ContentModelTableFormat,
+    ReadonlyContentModelListLevel,
+    ReadonlyContentModelParagraphDecorator,
+    ReadonlyDatasetFormat,
+} from 'roosterjs-content-model-types';
+import {
     createContentModelDocument,
-    createDivider,
-    createFormatContainer,
-    createListItem,
-    createListLevel,
-    createParagraph,
+    createDivider as originalCreateDivider,
+    createFormatContainer as originalCreateFormatContainer,
+    createListItem as originalCreateListItem,
+    createListLevel as originalCreateListLevel,
+    createParagraph as originalCreateParagraph,
     createSelectionMarker,
-    createTable,
-    createTableCell,
+    createTable as originalCreateTable,
+    createTableCell as originalCreateTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
 
 describe('clearModelFormat', () => {
+    const mockedCachedElement = 'CACHE' as any;
+
+    function createDivider(tagName: 'hr' | 'div', format?: Readonly<ContentModelBlockFormat>) {
+        const result = originalCreateDivider(tagName, format);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createFormatContainer(
+        tag: Lowercase<string>,
+        format?: Readonly<ContentModelFormatContainerFormat>
+    ) {
+        const result = originalCreateFormatContainer(tag, format);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createListItem(
+        levels: ReadonlyArray<ReadonlyContentModelListLevel>,
+        format?: Readonly<ContentModelSegmentFormat>
+    ) {
+        const result = originalCreateListItem(levels, format);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createListLevel(
+        listType: 'OL' | 'UL',
+        format?: Readonly<ContentModelListItemLevelFormat>,
+        dataset?: ReadonlyDatasetFormat
+    ) {
+        const result = originalCreateListLevel(listType, format, dataset);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createParagraph(
+        isImplicit?: boolean,
+        blockFormat?: Readonly<ContentModelBlockFormat>,
+        segmentFormat?: Readonly<ContentModelSegmentFormat>,
+        decorator?: ReadonlyContentModelParagraphDecorator
+    ) {
+        const result = originalCreateParagraph(isImplicit, blockFormat, segmentFormat, decorator);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createTable(rowCount: number, format?: Readonly<ContentModelTableFormat>) {
+        const result = originalCreateTable(rowCount, format);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
+    function createTableCell(
+        spanLeftOrColSpan?: boolean | number,
+        spanAboveOrRowSpan?: boolean | number,
+        isHeader?: boolean,
+        format?: Readonly<ContentModelTableCellFormat>,
+        dataset?: ReadonlyDatasetFormat
+    ) {
+        const result = originalCreateTableCell(
+            spanLeftOrColSpan,
+            spanAboveOrRowSpan,
+            isHeader,
+            format,
+            dataset
+        );
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
+
     it('Empty model', () => {
         const model = createContentModelDocument();
 
@@ -55,6 +137,7 @@ describe('clearModelFormat', () => {
                             text: 'test',
                         },
                     ],
+                    cachedElement: mockedCachedElement,
                 },
             ],
         });
@@ -450,6 +533,7 @@ describe('clearModelFormat', () => {
                             text: 'test',
                         },
                     ],
+                    cachedElement: mockedCachedElement,
                 },
             ],
         });
@@ -613,6 +697,7 @@ describe('clearModelFormat', () => {
                     blockType: 'Paragraph',
                     format: { lineHeight: '10px' },
                     segments: [],
+                    cachedElement: mockedCachedElement,
                 },
                 {
                     blockType: 'BlockGroup',
@@ -624,6 +709,7 @@ describe('clearModelFormat', () => {
                             blockType: 'Paragraph',
                             format: { lineHeight: '20px' },
                             segments: [],
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -670,6 +756,7 @@ describe('clearModelFormat', () => {
                             blockType: 'Paragraph',
                             format: { lineHeight: '50px' },
                             segments: [],
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                 },
@@ -677,6 +764,7 @@ describe('clearModelFormat', () => {
                     blockType: 'Paragraph',
                     format: { lineHeight: '60px' },
                     segments: [],
+                    cachedElement: mockedCachedElement,
                 },
             ],
         });
