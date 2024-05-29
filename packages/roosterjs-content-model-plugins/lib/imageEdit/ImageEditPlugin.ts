@@ -3,7 +3,6 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import { getContentModelImage } from './utils/getContentModelImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
@@ -14,9 +13,7 @@ import { updateImageEditInfo } from './utils/updateImageEditInfo';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
-    ChangeSource,
     ensureImageHasSpanParent,
-    getSelectedSegments,
     getSelectedSegmentsAndParagraphs,
     isElementOfType,
     isNodeOfType,
@@ -27,14 +24,12 @@ import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
-    DOMInsertPoint,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
     ImageEditor,
     ImageMetadataFormat,
     PluginEvent,
-    SelectionChangedEvent,
 } from 'roosterjs-content-model-types';
 
 const DefaultOptions: Partial<ImageEditOptions> = {
@@ -93,7 +88,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
             blur: {
-                beforeDispatch: event => {
+                beforeDispatch: () => {
                     this.formatImageWithContentModel(
                         editor,
                         true /* shouldSelectImage */,
@@ -124,75 +119,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
-        if (this.editor) {
-            switch (event.eventType) {
-                case 'selectionChanged':
-                    this.handleSelectionChangedEvent(this.editor, event);
-                    break;
-                case 'contentChanged':
-                    if (
-                        event.source !== ChangeSource.ImageResize &&
-                        event.source !== IMAGE_EDIT_CHANGE_SOURCE &&
-                        event.source !== 'editImage'
-                    ) {
-                        this.removeImageWrapper();
-                    }
-                    if (event.source == 'beforeCopyCut') {
-                        this.formatImageWithContentModel(this.editor, false, false);
-                    }
-                    break;
-                case 'mouseUp':
-                    this.removeImageWrapper();
-                    if (this.selectedImage) {
-                        this.handleMouseUp(this.editor);
-                    }
-                    break;
-                case 'keyDown':
-                    this.removeImageWrapper();
-                    break;
-                case 'keyUp':
-                    this.formatImageWithContentModel(this.editor, false, false);
-                    break;
-            }
-        }
-    }
-
-    private handleMouseUp(editor: IEditor) {
-        const selection = editor.getDOMSelection();
-        if (
-            selection &&
-            selection.type == 'range' &&
-            isNodeOfType(selection.range.startContainer, 'ELEMENT_NODE')
-        ) {
-            const node = selection.range.startContainer;
-            const insertPoint: DOMInsertPoint = {
-                node,
-                offset: node.offsetLeft,
-            };
-            if (this.selectedImage) {
-                this.formatImageWithContentModelOnSelectionChange(editor, insertPoint);
-            }
-        }
-    }
-
-    private handleSelectionChangedEvent(editor: IEditor, event: SelectionChangedEvent) {
-        if (event.newSelection?.type == 'image') {
-            if (this.selectedImage && this.selectedImage !== event.newSelection.image) {
-                const insertPoint: DOMInsertPoint = {
-                    node: event.newSelection.image,
-                    offset: event.newSelection.image.offsetLeft,
-                };
-                this.formatImageWithContentModelOnSelectionChange(editor, insertPoint);
-            }
-            if (!this.selectedImage) {
-                this.startRotateAndResize(editor, event.newSelection.image);
-            }
-        } else if (!event.newSelection) {
-            this.removeImageWrapper();
-            this.cleanInfo();
-        }
-    }
+    onPluginEvent(_event: PluginEvent) {}
 
     private startEditing(
         editor: IEditor,
@@ -362,12 +289,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     public isOperationAllowed(operation: ImageEditOperation): boolean {
-        return (
-            operation === 'resize' ||
-            operation === 'rotate' ||
-            operation === 'flip' ||
-            operation === 'crop'
-        );
+        return operation === 'resize' || operation === 'rotate' || operation === 'flip';
     }
 
     public canRegenerateImage(image: HTMLImageElement): boolean {
@@ -473,64 +395,64 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    private formatImageWithContentModelOnSelectionChange(
-        editor: IEditor,
-        insertPoint: DOMInsertPoint
-    ) {
-        if (
-            this.lastSrc &&
-            this.selectedImage &&
-            this.imageEditInfo &&
-            this.clonedImage &&
-            insertPoint
-        ) {
-            formatInsertPointWithContentModel(
-                editor,
-                insertPoint,
-                (model, _context, insertPoint) => {
-                    const selectedSegments = getSelectedSegments(model, false);
-                    if (
-                        this.lastSrc &&
-                        this.selectedImage &&
-                        this.imageEditInfo &&
-                        this.clonedImage &&
-                        selectedSegments.length === 1 &&
-                        selectedSegments[0].segmentType == 'Image'
-                    ) {
-                        applyChange(
-                            editor,
-                            this.selectedImage,
-                            selectedSegments[0],
-                            this.imageEditInfo,
-                            this.lastSrc,
-                            this.wasImageResized || this.isCropMode,
-                            this.clonedImage
-                        );
-                        selectedSegments[0].isSelected = false;
-                        selectedSegments[0].isSelectedAsImageSelection = false;
+    // private formatImageWithContentModelOnSelectionChange(
+    //     editor: IEditor,
+    //     insertPoint: DOMInsertPoint
+    // ) {
+    //     if (
+    //         this.lastSrc &&
+    //         this.selectedImage &&
+    //         this.imageEditInfo &&
+    //         this.clonedImage &&
+    //         insertPoint
+    //     ) {
+    //         formatInsertPointWithContentModel(
+    //             editor,
+    //             insertPoint,
+    //             (model, _context, insertPoint) => {
+    //                 const selectedSegments = getSelectedSegments(model, false);
+    //                 if (
+    //                     this.lastSrc &&
+    //                     this.selectedImage &&
+    //                     this.imageEditInfo &&
+    //                     this.clonedImage &&
+    //                     selectedSegments.length === 1 &&
+    //                     selectedSegments[0].segmentType == 'Image'
+    //                 ) {
+    //                     applyChange(
+    //                         editor,
+    //                         this.selectedImage,
+    //                         selectedSegments[0],
+    //                         this.imageEditInfo,
+    //                         this.lastSrc,
+    //                         this.wasImageResized || this.isCropMode,
+    //                         this.clonedImage
+    //                     );
+    //                     selectedSegments[0].isSelected = false;
+    //                     selectedSegments[0].isSelectedAsImageSelection = false;
 
-                        if (insertPoint) {
-                            insertPoint.marker.isSelected = true;
-                        }
+    //                     if (insertPoint) {
+    //                         insertPoint.marker.isSelected = true;
+    //                     }
 
-                        return true;
-                    }
+    //                     return true;
+    //                 }
 
-                    return false;
-                },
-                {
-                    changeSource: IMAGE_EDIT_CHANGE_SOURCE,
-                    selectionOverride: {
-                        type: 'image',
-                        image: this.selectedImage,
-                    },
-                    onNodeCreated: () => {
-                        this.cleanInfo();
-                    },
-                }
-            );
-        }
-    }
+    //                 return false;
+    //             },
+    //             {
+    //                 changeSource: IMAGE_EDIT_CHANGE_SOURCE,
+    //                 selectionOverride: {
+    //                     type: 'image',
+    //                     image: this.selectedImage,
+    //                 },
+    //                 onNodeCreated: () => {
+    //                     this.cleanInfo();
+    //                 },
+    //             }
+    //         );
+    //     }
+    // }
 
     private formatImageWithContentModel(
         editor: IEditor,

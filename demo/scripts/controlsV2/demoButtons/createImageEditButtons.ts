@@ -10,7 +10,8 @@ function createImageCropButton(handler: ImageEditor): RibbonButton<'buttonNameCr
         key: 'buttonNameCropImage',
         unlocalizedText: 'Crop Image',
         iconName: 'Crop',
-        isDisabled: formatState => !formatState.canAddImageAltText,
+        isDisabled: formatState =>
+            !formatState.canAddImageAltText || !handler.isOperationAllowed('crop'),
         onClick: editor => {
             const selection = editor.getDOMSelection();
             if (selection.type === 'image' && selection.image) {
