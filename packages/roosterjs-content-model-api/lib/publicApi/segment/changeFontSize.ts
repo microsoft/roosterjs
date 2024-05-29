@@ -2,9 +2,9 @@ import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContent
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { setFontSizeInternal } from './setFontSize';
 import type {
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     IEditor,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -36,7 +36,7 @@ export function changeFontSize(editor: IEditor, change: 'increase' | 'decrease')
 function changeFontSizeInternal(
     change: 'increase' | 'decrease',
     format: ContentModelSegmentFormat,
-    paragraph: ContentModelParagraph | null
+    paragraph: ShallowMutableContentModelParagraph | null
 ) {
     if (format.fontSize) {
         const sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');

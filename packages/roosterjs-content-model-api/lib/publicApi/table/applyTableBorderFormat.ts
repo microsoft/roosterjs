@@ -2,6 +2,7 @@ import {
     extractBorderValues,
     getFirstSelectedTable,
     getSelectedCells,
+    mutateBlock,
     getTableMetadata,
     hasMetadata,
     parseValueWithUnit,
@@ -11,10 +12,10 @@ import {
 import type {
     IEditor,
     Border,
-    ContentModelTable,
-    ContentModelTableCell,
     BorderOperations,
     TableSelectionCoordinates,
+    ReadonlyContentModelTableCell,
+    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -394,22 +395,21 @@ export function applyTableBorderFormat(
  * @param positions The positions to apply
  */
 function applyBorderFormat(
-    cell: ContentModelTableCell,
+    cell: ReadonlyContentModelTableCell,
     borderFormat: string,
     positions: BorderPositions[]
 ) {
+    const mutableCell = mutateBlock(cell);
+
     positions.forEach(pos => {
-        cell.format[pos] = borderFormat;
+        mutableCell.format[pos] = borderFormat;
     });
 
-    updateTableCellMetadata(cell, metadata => {
+    updateTableCellMetadata(mutableCell, metadata => {
         metadata = metadata || {};
         metadata.borderOverride = true;
         return metadata;
     });
-
-    // Cell was modified, so delete cached element
-    delete cell.cachedElement;
 }
 
 /**
@@ -422,7 +422,7 @@ function applyBorderFormat(
  * @param perimeter Where in the perimeter to apply
  */
 function modifyPerimeter(
-    tableModel: ContentModelTable,
+    tableModel: ReadonlyContentModelTable,
     sel: TableSelectionCoordinates,
     borderFormat: string,
     perimeter: Perimeter,

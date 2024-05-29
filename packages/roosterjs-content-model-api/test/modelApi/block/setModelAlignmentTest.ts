@@ -1,15 +1,26 @@
+import { ContentModelBlockFormat } from 'roosterjs-content-model-types';
 import { setModelAlignment } from '../../../lib/modelApi/block/setModelAlignment';
 import {
     createContentModelDocument,
     createListItem,
     createListLevel,
-    createParagraph,
+    createParagraph as originalCreateParagraph,
     createTable,
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
 
 describe('align left', () => {
+    const mockedCachedElement = 'CACHE' as any;
+
+    function createParagraph(isImplicit?: boolean, format?: ContentModelBlockFormat) {
+        const result = originalCreateParagraph(isImplicit, format);
+
+        result.cachedElement = mockedCachedElement;
+
+        return result;
+    }
+
     it('Empty group', () => {
         const group = createContentModelDocument();
 
@@ -62,6 +73,7 @@ describe('align left', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [text1],
+                    cachedElement: mockedCachedElement,
                 },
                 {
                     blockType: 'Paragraph',
@@ -74,6 +86,7 @@ describe('align left', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [text3],
+                    cachedElement: mockedCachedElement,
                 },
             ],
         });

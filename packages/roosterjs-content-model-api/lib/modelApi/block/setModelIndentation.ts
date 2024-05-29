@@ -163,7 +163,7 @@ function isMultilevelSelection(
 }
 
 function calculateMarginValue(
-    format: ContentModelBlockFormat,
+    format: Readonly<ContentModelBlockFormat>,
     isIndent: boolean,
     length: number = IndentStepInPixel
 ): number | null {

@@ -1,7 +1,7 @@
 import { canMergeCells } from './canMergeCells';
-import { getSelectedCells } from 'roosterjs-content-model-dom';
+import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
+    ShallowMutableContentModelTable,
     TableHorizontalMergeOperation,
 } from 'roosterjs-content-model-types';
 
@@ -9,7 +9,7 @@ import type {
  * @internal
  */
 export function mergeTableColumn(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     operation: TableHorizontalMergeOperation
 ) {
     const sel = getSelectedCells(table);
@@ -32,22 +32,19 @@ export function mergeTableColumn(
                         mergingColIndex
                     )
                 ) {
-                    cell.spanLeft = true;
+                    mutateBlock(cell).spanLeft = true;
 
                     let newSelectedCol = mergingColIndex;
 
                     while (table.rows[rowIndex]?.cells[newSelectedCol]?.spanLeft) {
-                        delete table.rows[rowIndex].cells[newSelectedCol].cachedElement;
+                        mutateBlock(table.rows[rowIndex].cells[newSelectedCol]);
                         newSelectedCol--;
                     }
 
-                    if (table.rows[rowIndex]?.cells[newSelectedCol]) {
-                        table.rows[rowIndex].cells[newSelectedCol].isSelected = true;
-
-                        delete table.rows[rowIndex].cells[newSelectedCol].cachedElement;
+                    const newCell = table.rows[rowIndex]?.cells[newSelectedCol];
+                    if (newCell) {
+                        mutateBlock(newCell).isSelected = true;
                     }
-
-                    delete cell.cachedElement;
                 }
 
                 delete table.rows[rowIndex].cachedElement;

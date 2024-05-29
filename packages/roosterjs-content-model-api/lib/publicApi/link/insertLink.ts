@@ -49,7 +49,11 @@ export function insertLink(
 
         editor.formatContentModel(
             (model, context) => {
-                const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+                const segments = getSelectedSegments(
+                    model,
+                    false /*includingFormatHolder*/,
+                    true /*mutate*/
+                );
                 const originalText = segments
                     .map(x => (x.segmentType == 'Text' ? x.text : ''))
                     .join('');
