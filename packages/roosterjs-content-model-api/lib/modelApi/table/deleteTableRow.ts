@@ -1,19 +1,19 @@
 import { collapseTableSelection } from '../selection/collapseTableSelection';
-import { getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type { ShallowMutableContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function deleteTableRow(table: ContentModelTable) {
+export function deleteTableRow(table: ShallowMutableContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (sel) {
         table.rows[sel.firstRow].cells.forEach((cell, colIndex) => {
-            const cellInNextRow = table.rows[sel.lastRow + 1]?.cells[colIndex];
+            const cellInNextCell = table.rows[sel.lastRow + 1]?.cells[colIndex];
 
-            if (cellInNextRow) {
-                cellInNextRow.spanAbove = cellInNextRow.spanAbove && cell.spanAbove;
+            if (cellInNextCell) {
+                mutateBlock(cellInNextCell).spanAbove = cellInNextCell.spanAbove && cell.spanAbove;
             }
         });
 

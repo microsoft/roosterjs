@@ -1,8 +1,8 @@
 import { alignTable } from '../table/alignTable';
-import { getOperationalBlocks } from 'roosterjs-content-model-dom';
+import { getOperationalBlocks, mutateBlock } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     ContentModelListItem,
+    ReadonlyContentModelDocument,
     TableAlignOperation,
 } from 'roosterjs-content-model-types';
 
@@ -50,7 +50,7 @@ const TableAlignMap: Record<
  * @internal
  */
 export function setModelAlignment(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
@@ -59,8 +59,10 @@ export function setModelAlignment(
         ['TableCell']
     );
 
-    paragraphOrListItemOrTable.forEach(({ block }) => {
+    paragraphOrListItemOrTable.forEach(({ block: readonlyBlock }) => {
+        const block = mutateBlock(readonlyBlock);
         const newAlignment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+
         if (block.blockType === 'Table' && alignment !== 'justify') {
             alignTable(
                 block,
@@ -69,7 +71,7 @@ export function setModelAlignment(
         } else if (block) {
             if (block.blockType === 'BlockGroup' && block.blockGroupType === 'ListItem') {
                 block.blocks.forEach(b => {
-                    const { format } = b;
+                    const { format } = mutateBlock(b);
                     format.textAlign = newAlignment;
                 });
             }
