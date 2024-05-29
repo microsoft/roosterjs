@@ -1,7 +1,7 @@
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
-import { parseTableCells } from 'roosterjs-content-model-dom/lib';
+import { parseTableCells } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     EditorPlugin,
