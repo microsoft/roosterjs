@@ -14,7 +14,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
     },
     apply: (format, element) => {
         if (format.direction) {
-            element.style.direction = format.direction;
+            element.dir = format.direction;
         }
     },
 };

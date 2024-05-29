@@ -2,6 +2,7 @@ import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { expectHtml } from '../../testUtils';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 import {
     DomIndexer,
@@ -524,9 +525,10 @@ describe('handleTable', () => {
 
         handleTable(document, parent, table, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
-        );
+        expectHtml(parent.innerHTML, [
+            '<table dir="rtl" style="text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td dir="ltr" style="width: 100px; height: 200px; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>',
+            '<table style="text-align: center; line-height: 2; white-space: pre;"dir="rtl" ><tbody><tr><td style="width: 100px; height: 200px; text-align: left; line-height: 1; white-space: normal;" dir="ltr"></td></tr></tbody></table>',
+        ]);
     });
 
     it('TR has background color', () => {

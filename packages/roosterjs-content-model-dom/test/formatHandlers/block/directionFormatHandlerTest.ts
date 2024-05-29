@@ -79,6 +79,6 @@ describe('directionFormatHandler.apply', () => {
     it('LTR start', () => {
         format.direction = 'ltr';
         directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr;"></div>');
+        expect(div.outerHTML).toBe('<div dir="ltr"></div>');
     });
 });
