@@ -110,6 +110,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.editplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.editplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.editplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_plugins.editplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a></li>
 							</ul>
 						</section>
 					</div>
@@ -145,7 +146,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a642521/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L57">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7a4d8c/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L58">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -170,7 +171,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a642521/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L31">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7a4d8c/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L32">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -193,7 +194,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a642521/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L41">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7a4d8c/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L42">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -227,7 +228,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a642521/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L69">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7a4d8c/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L70">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:70</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,6 +248,42 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="willhandleeventexclusively" class="tsd-anchor"></a>
+					<h3>will<wbr>Handle<wbr>Event<wbr>Exclusively</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of EditorPlugin.willHandleEventExclusively</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7a4d8c/packages/roosterjs-content-model-plugins/lib/edit/EditPlugin.ts#L94">roosterjs-content-model-plugins/lib/edit/EditPlugin.ts:94</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the plugin should handle the given event exclusively.
+										Handle an event exclusively means other plugin will not receive this event in
+										onPluginEvent method.
+										If two plugins will return true in willHandleEventExclusively() for the same event,
+									the final result depends on the order of the plugins are added into editor</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The event to check:</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -326,6 +363,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_content_model_plugins.editplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_content_model_plugins.editplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a>
 							</li>
 						</ul>
 					</li>
