@@ -2,11 +2,12 @@ import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
+import { mutateBlock } from '../common/mutate';
 import type {
-    ContentModelSegment,
     ContentModelSegmentFormat,
-    ContentModelTable,
-    ContentModelTableCell,
+    ReadonlyContentModelSegment,
+    ReadonlyContentModelTable,
+    ReadonlyContentModelTableCell,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -18,18 +19,20 @@ const MIN_HEIGHT = 22;
 /**
  * Normalize a Content Model table, make sure:
  * 1. Fist cells are not spanned
- * 2. Inner cells are not header
+ * 2. Only first column and row can have headers
  * 3. All cells have content and width
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
  * 6. default format is correctly applied
- * @param table The table to normalize
+ * @param readonlyTable The table to normalize
  * @param defaultSegmentFormat @optional Default segment format to apply to cell
  */
 export function normalizeTable(
-    table: ContentModelTable,
+    readonlyTable: ReadonlyContentModelTable,
     defaultSegmentFormat?: ContentModelSegmentFormat
 ) {
+    const table = mutateBlock(readonlyTable);
+
     // Always collapse border and use border box for table in roosterjs to make layout simpler
     const format = table.format;
 
@@ -42,7 +45,9 @@ export function normalizeTable(
     // Make sure all inner cells are not header
     // Make sure all cells have content and width
     table.rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, colIndex) => {
+        row.cells.forEach((readonlyCell, colIndex) => {
+            const cell = mutateBlock(readonlyCell);
+
             if (cell.blocks.length == 0) {
                 const format = cell.format.textColor
                     ? {
@@ -59,7 +64,7 @@ export function normalizeTable(
 
             if (rowIndex == 0) {
                 cell.spanAbove = false;
-            } else if (rowIndex > 0 && cell.isHeader) {
+            } else if (rowIndex > 0 && colIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
                 delete cell.cachedElement;
             }
@@ -137,18 +142,21 @@ function getTableCellWidth(columns: number): number {
     }
 }
 
-function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentModelTableCell) {
+function tryMoveBlocks(
+    targetCell: ReadonlyContentModelTableCell,
+    sourceCell: ReadonlyContentModelTableCell
+) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
         block => block.blockType == 'Paragraph' && hasOnlyBrSegment(block.segments)
     );
 
     if (!onlyHasEmptyOrBr) {
-        targetCell.blocks.push(...sourceCell.blocks);
-        sourceCell.blocks = [];
+        mutateBlock(targetCell).blocks.push(...sourceCell.blocks);
+        mutateBlock(sourceCell).blocks = [];
     }
 }
 
-function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
+function hasOnlyBrSegment(segments: ReadonlyArray<ReadonlyContentModelSegment>): boolean {
     segments = segments.filter(s => s.segmentType != 'SelectionMarker');
 
     return segments.length == 0 || (segments.length == 1 && segments[0].segmentType == 'Br');

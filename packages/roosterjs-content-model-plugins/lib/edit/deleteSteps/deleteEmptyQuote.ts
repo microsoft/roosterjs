@@ -3,12 +3,15 @@ import {
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
     createFormatContainer,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelFormatContainer,
     ContentModelParagraph,
     DeleteSelectionStep,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -65,8 +68,8 @@ const isEmptyQuote = (quote: ContentModelFormatContainer) => {
 };
 
 const isSelectionOnEmptyLine = (
-    quote: ContentModelFormatContainer,
-    paragraph: ContentModelParagraph
+    quote: ReadonlyContentModelFormatContainer,
+    paragraph: ReadonlyContentModelParagraph
 ) => {
     const paraIndex = quote.blocks.indexOf(paragraph);
 
@@ -81,13 +84,15 @@ const isSelectionOnEmptyLine = (
 
 const insertNewLine = (
     quote: ContentModelFormatContainer,
-    parent: ContentModelBlockGroup,
+    parent: ReadonlyContentModelBlockGroup,
     quoteIndex: number,
     paragraph: ContentModelParagraph
 ) => {
     const paraIndex = quote.blocks.indexOf(paragraph);
 
     if (paraIndex >= 0) {
+        const mutableParent = mutateBlock(parent);
+
         if (paraIndex < quote.blocks.length - 1) {
             const newQuote = createFormatContainer(quote.tagName, quote.format);
 
@@ -95,14 +100,14 @@ const insertNewLine = (
                 ...quote.blocks.splice(paraIndex + 1, quote.blocks.length - paraIndex - 1)
             );
 
-            parent.blocks.splice(quoteIndex + 1, 0, newQuote);
+            mutableParent.blocks.splice(quoteIndex + 1, 0, newQuote);
         }
 
-        parent.blocks.splice(quoteIndex + 1, 0, paragraph);
+        mutableParent.blocks.splice(quoteIndex + 1, 0, paragraph);
         quote.blocks.splice(paraIndex, 1);
 
         if (quote.blocks.length == 0) {
-            parent.blocks.splice(quoteIndex, 0);
+            mutableParent.blocks.splice(quoteIndex, 0);
         }
     }
 };

@@ -150,7 +150,6 @@ describe('removeLink', () => {
                             dataset: {},
                             format: {},
                             isSelected: true,
-                            isSelectedAsImageSelection: false,
                         },
                     ],
                 },
