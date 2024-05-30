@@ -1,6 +1,6 @@
-import { addSegment, createSelectionMarker } from 'roosterjs-content-model-dom';
+import { addSegment, createSelectionMarker, mutateBlock } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTableRow,
+    ShallowMutableContentModelTableRow,
     TableSelectionCoordinates,
 } from 'roosterjs-content-model-types';
 
@@ -8,12 +8,12 @@ import type {
  * @internal
  */
 export function collapseTableSelection(
-    rows: ContentModelTableRow[],
+    rows: ShallowMutableContentModelTableRow[],
     selection: TableSelectionCoordinates
 ) {
     const { firstColumn, firstRow } = selection;
     const cell = rows[firstRow]?.cells[firstColumn];
     if (cell) {
-        addSegment(cell, createSelectionMarker());
+        addSegment(mutateBlock(cell), createSelectionMarker());
     }
 }

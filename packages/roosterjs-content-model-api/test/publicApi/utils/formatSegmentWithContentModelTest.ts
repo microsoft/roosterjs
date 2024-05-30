@@ -1,5 +1,9 @@
 import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
-import { IEditor } from 'roosterjs-content-model-types';
+import {
+    ContentModelBlockFormat,
+    IEditor,
+    ReadonlyContentModelParagraphDecorator,
+} from 'roosterjs-content-model-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -9,7 +13,7 @@ import {
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
-    createParagraph,
+    createParagraph as originalCreateParagraph,
     createSelectionMarker,
     createText,
 } from 'roosterjs-content-model-dom';
@@ -21,6 +25,18 @@ describe('formatSegment', () => {
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
     let context: FormatContentModelContext | undefined;
+    const mockedCachedElement = 'CACHE' as any;
+
+    function createParagraph(
+        isImplicit?: boolean,
+        blockFormat?: Readonly<ContentModelBlockFormat>,
+        segmentFormat?: Readonly<ContentModelSegmentFormat>,
+        decorator?: ReadonlyContentModelParagraphDecorator
+    ) {
+        const result = originalCreateParagraph(isImplicit, blockFormat, segmentFormat, decorator);
+        result.cachedElement = mockedCachedElement;
+        return result;
+    }
 
     const apiName = 'mockedApi';
 
@@ -68,13 +84,16 @@ describe('formatSegment', () => {
 
     it('doc with selection', () => {
         model = createContentModelDocument();
-        const para = createParagraph();
-        const text = createText('test');
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
 
-        text.isSelected = true;
+        text1.isSelected = true;
 
-        para.segments.push(text);
-        model.blocks.push(para);
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        model.blocks.push(para1, para2);
 
         const callback = jasmine
             .createSpy('callback')
@@ -93,7 +112,7 @@ describe('formatSegment', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test',
+                            text: 'test1',
                             isSelected: true,
                             format: {
                                 fontFamily: 'test',
@@ -101,12 +120,24 @@ describe('formatSegment', () => {
                         },
                     ],
                 },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                    ],
+                    cachedElement: mockedCachedElement,
+                },
             ],
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith(text.format, true, text, para);
+        expect(callback).toHaveBeenCalledWith(text1.format, true, text1, para1);
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],

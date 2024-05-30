@@ -1,12 +1,12 @@
-import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import { createTableCell, getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type { ShallowMutableContentModelTable } from 'roosterjs-content-model-types';
 
 const MIN_WIDTH = 30;
 
 /**
  * @internal
  */
-export function splitTableCellHorizontally(table: ContentModelTable) {
+export function splitTableCellHorizontally(table: ShallowMutableContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (sel) {
@@ -20,11 +20,10 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                 )
             ) {
                 table.rows.forEach((row, rowIndex) => {
-                    delete row.cells[colIndex].cachedElement;
+                    mutateBlock(row.cells[colIndex]);
 
                     if (rowIndex >= sel.firstRow && rowIndex <= sel.lastRow) {
-                        row.cells[colIndex + 1].spanLeft = false;
-                        delete row.cells[colIndex + 1].cachedElement;
+                        mutateBlock(row.cells[colIndex + 1]).spanLeft = false;
                     }
                 });
             } else {
