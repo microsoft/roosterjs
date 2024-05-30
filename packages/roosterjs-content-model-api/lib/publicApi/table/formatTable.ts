@@ -1,6 +1,7 @@
 import {
     applyTableFormat,
     getFirstSelectedTable,
+    mutateBlock,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-dom';
 import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
@@ -22,7 +23,7 @@ export function formatTable(editor: IEditor, format: TableMetadataFormat, keepCe
                 // Wipe border metadata
                 tableModel.rows.forEach(row => {
                     row.cells.forEach(cell => {
-                        updateTableCellMetadata(cell, metadata => {
+                        updateTableCellMetadata(mutateBlock(cell), metadata => {
                             if (metadata) {
                                 delete metadata.borderOverride;
                             }

@@ -1,8 +1,8 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import type {
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     IEditor,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,7 +29,7 @@ export function setFontSize(editor: IEditor, fontSize: string) {
 export function setFontSizeInternal(
     fontSize: string,
     format: ContentModelSegmentFormat,
-    paragraph: ContentModelParagraph | null
+    paragraph: ShallowMutableContentModelParagraph | null
 ) {
     format.fontSize = fontSize;
 
