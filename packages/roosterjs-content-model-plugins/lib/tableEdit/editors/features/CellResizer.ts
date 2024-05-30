@@ -1,10 +1,10 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
+import { getCMTableFromTable } from '../utils/getTableFromContentModel';
 import type { TableEditFeature } from './TableEditFeature';
 import {
     isElementOfType,
     normalizeRect,
-    getFirstSelectedTable,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
 } from 'roosterjs-content-model-dom';
@@ -45,18 +45,18 @@ export function createCellResizer(
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: DragAndDropContext = { editor, td, table, isRTL, zoomScale, onStart };
+    const context: CellResizerContext = { editor, td, table, isRTL, zoomScale, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
-    const handler: DragAndDropHandler<DragAndDropContext, DragAndDropInitValue> = {
+    const handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue> = {
         onDragStart,
         // Horizontal modifies row height, vertical modifies column width
         onDragging: isHorizontal ? onDraggingHorizontal : onDraggingVertical,
         onDragEnd: onEnd,
     };
 
-    const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
+    const featureHandler = new DragAndDropHelper<CellResizerContext, CellResizerInitValue>(
         div,
         context,
         setPosition,
@@ -68,7 +68,11 @@ export function createCellResizer(
     return { node: td, div, featureHandler };
 }
 
-interface DragAndDropContext {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface CellResizerContext {
     editor: IEditor;
     td: HTMLTableCellElement;
     table: HTMLTableElement;
@@ -77,7 +81,11 @@ interface DragAndDropContext {
     onStart: () => void;
 }
 
-interface DragAndDropInitValue {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface CellResizerInitValue {
     cmTable: ContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
@@ -85,7 +93,11 @@ interface DragAndDropInitValue {
     allWidths: number[];
 }
 
-function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDropInitValue {
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragStart(context: CellResizerContext, event: MouseEvent): CellResizerInitValue {
     const { td, onStart } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
 
@@ -107,24 +119,8 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
 
     const { editor, table } = context;
 
-    // Get current selection
-    const selection = editor.getDOMSelection();
-
-    // Select first cell of the table
-    editor.setDOMSelection({
-        type: 'table',
-        firstColumn: 0,
-        firstRow: 0,
-        lastColumn: 0,
-        lastRow: 0,
-        table: table,
-    });
-
-    // Get the table content model
-    const cmTable = getFirstSelectedTable(editor.getContentModelCopy('disconnected'))[0];
-
-    // Restore selection
-    editor.setDOMSelection(selection);
+    // Get Table block in content model
+    const cmTable = getCMTableFromTable(editor, table);
 
     if (rect && cmTable) {
         onStart();
@@ -147,10 +143,14 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
     }
 }
 
-function onDraggingHorizontal(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDraggingHorizontal(
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number,
     deltaY: number
 ) {
@@ -178,10 +178,14 @@ function onDraggingHorizontal(
     }
 }
 
-function onDraggingVertical(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDraggingVertical(
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number
 ) {
     const { table, isRTL } = context;
@@ -227,7 +231,7 @@ function onDraggingVertical(
     }
 }
 
-function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setHorizontalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
@@ -239,7 +243,7 @@ function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement
     }
 }
 
-function setVerticalPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setVerticalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {

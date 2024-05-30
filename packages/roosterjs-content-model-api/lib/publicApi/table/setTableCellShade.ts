@@ -1,8 +1,8 @@
 import {
     hasSelectionInBlockGroup,
     getFirstSelectedTable,
-    normalizeTable,
     setTableCellBackgroundColor,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -19,12 +19,14 @@ export function setTableCellShade(editor: IEditor, color: string | null) {
             const [table] = getFirstSelectedTable(model);
 
             if (table) {
-                normalizeTable(table);
-
                 table.rows.forEach(row =>
                     row.cells.forEach(cell => {
                         if (hasSelectionInBlockGroup(cell)) {
-                            setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
+                            setTableCellBackgroundColor(
+                                mutateBlock(cell),
+                                color,
+                                true /*isColorOverride*/
+                            );
                         }
                     })
                 );

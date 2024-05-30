@@ -13,16 +13,19 @@ import {
     iterateSelections,
     isCharacterValue,
     findClosestBlockEntityContainer,
+    mutateSegment,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
     CompositionEndEvent,
-    ContentModelBlockGroup,
     ContentModelFormatter,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     IEditor,
     KeyDownEvent,
     RangeSelection,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelParagraph,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const DelimiterBefore = 'entityDelimiterBefore';
@@ -48,8 +51,13 @@ export function preventTypeInDelimiter(node: HTMLElement, editor: IEditor) {
             iterateSelections(model, (_path, _tableContext, block, _segments) => {
                 if (block?.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
-                        if (segment.segmentType == 'Text') {
-                            segment.text = segment.text.replace(ZeroWidthSpace, '');
+                        if (
+                            segment.segmentType == 'Text' &&
+                            segment.text.indexOf(ZeroWidthSpace) >= 0
+                        ) {
+                            mutateSegment(block, segment, segment => {
+                                segment.text = segment.text.replace(ZeroWidthSpace, '');
+                            });
                         }
                     });
                 }
@@ -295,8 +303,10 @@ function handleInputOnDelimiter(
  * @returns
  */
 export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, context) => {
-    iterateSelections(model, (_path, _tableContext, block) => {
-        if (block?.blockType == 'Paragraph') {
+    iterateSelections(model, (_path, _tableContext, readonlyBlock) => {
+        if (readonlyBlock?.blockType == 'Paragraph') {
+            const block = mutateBlock(readonlyBlock);
+
             delete block.isImplicit;
             const selectionMarker = block.segments.find(w => w.segmentType == 'SelectionMarker');
             if (selectionMarker?.segmentType == 'SelectionMarker') {
@@ -306,6 +316,7 @@ export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, cont
             block.segments.unshift(createBr());
         }
     });
+
     return true;
 };
 
@@ -314,25 +325,26 @@ export const handleKeyDownInBlockDelimiter: ContentModelFormatter = (model, cont
  * @returns
  */
 export const handleEnterInlineEntity: ContentModelFormatter = model => {
-    let selectionBlock: ContentModelParagraph | undefined;
-    let selectionBlockParent: ContentModelBlockGroup | undefined;
+    let readonlySelectionBlock: ReadonlyContentModelParagraph | undefined;
+    let selectionBlockParent: ReadonlyContentModelBlockGroup | undefined;
 
     iterateSelections(model, (path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
-            selectionBlock = block;
+            readonlySelectionBlock = block;
             selectionBlockParent = path[path.length - 1];
         }
     });
 
-    if (selectionBlock && selectionBlockParent) {
-        const selectionMarker = selectionBlock.segments.find(
+    if (readonlySelectionBlock && selectionBlockParent) {
+        const markerIndex = readonlySelectionBlock.segments.findIndex(
             segment => segment.segmentType == 'SelectionMarker'
         );
-        if (selectionMarker) {
-            const markerIndex = selectionBlock.segments.indexOf(selectionMarker);
+
+        if (markerIndex >= 0) {
+            const selectionBlock = mutateBlock(readonlySelectionBlock);
             const segmentsAfterMarker = selectionBlock.segments.splice(markerIndex);
 
-            const newPara = createParagraph(
+            const newPara: ShallowMutableContentModelParagraph = createParagraph(
                 false,
                 selectionBlock.format,
                 selectionBlock.segmentFormat,
@@ -352,7 +364,11 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
 
             const selectionBlockIndex = selectionBlockParent.blocks.indexOf(selectionBlock);
             if (selectionBlockIndex >= 0) {
-                selectionBlockParent.blocks.splice(selectionBlockIndex + 1, 0, newPara);
+                mutateBlock(selectionBlockParent).blocks.splice(
+                    selectionBlockIndex + 1,
+                    0,
+                    newPara
+                );
             }
         }
     }
