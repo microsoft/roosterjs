@@ -2,7 +2,11 @@ import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { handleEnterOnParagraph } from './inputSteps/handleEnterOnParagraph';
-import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-content-model-types';
+import type {
+    DeleteSelectionContext,
+    IEditor,
+    ValidDeleteSelectionContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -12,7 +16,25 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
 
     editor.formatContentModel(
         (model, context) => {
-            const result = deleteSelection(model, getInputSteps(selection, rawEvent), context);
+            // 1. delete the expanded selection if any, then merge paragraph
+            let result = deleteSelection(model, [], context);
+
+            // 2. Add line break
+            if (selection && selection.type != 'table') {
+                // For ENTER key, although we may have deleted something, since we still need to split the line, we always treat it as not delete
+                // so further delete steps can keep working
+                result.deleteResult = 'notDeleted';
+
+                const steps = rawEvent.shiftKey
+                    ? [handleEnterOnParagraph]
+                    : [handleEnterOnList, deleteEmptyQuote, handleEnterOnParagraph];
+
+                steps.forEach(step => {
+                    if (isValidDeleteSelectionContext(result)) {
+                        step(result);
+                    }
+                });
+            }
 
             if (result.deleteResult == 'range') {
                 // We have deleted something, next input should inherit the segment format from deleted content, so set pending format here
@@ -33,22 +55,8 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
     );
 }
 
-function getInputSteps(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
-    const result: DeleteSelectionStep[] = [clearDeleteResult];
-
-    if (selection && selection.type != 'table') {
-        if (rawEvent.shiftKey) {
-            result.push(handleEnterOnParagraph);
-        } else {
-            result.push(handleEnterOnList, deleteEmptyQuote, handleEnterOnParagraph);
-        }
-    }
-
-    return result;
+function isValidDeleteSelectionContext(
+    context: DeleteSelectionContext
+): context is ValidDeleteSelectionContext {
+    return !!context.insertPoint;
 }
-
-const clearDeleteResult: DeleteSelectionStep = context => {
-    // For ENTER key, although we may have deleted something, since we still need to split the line, we always treat it as not delete
-    // so further delete steps can keep working
-    context.deleteResult = 'notDeleted';
-};
