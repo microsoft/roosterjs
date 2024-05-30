@@ -70,6 +70,12 @@ export interface EditorOptions {
     knownColors?: Record<string, Colors>;
 
     /**
+     * Whether to use cached known colors for dark mode
+     * If false, the getDarkColor function will be called every time when color is needed
+     */
+    skipKnownColorsWhenGetDarkColor?: boolean;
+
+    /**
      * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree
      * This is required when trusted-type Content-Security-Policy (CSP) is enabled.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types

@@ -39,6 +39,7 @@ const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/
 const VARIABLE_PREFIX = 'var(';
 const VARIABLE_POSTFIX = ')';
 const COLOR_VAR_PREFIX = '--darkColor';
+const COLOR_VAR_ENFORCE_FALLBACK_KEY = 'fallback-color';
 
 /**
  * Get color from given HTML element
@@ -98,8 +99,11 @@ export function setColor(
 
     if (darkColorHandler && color) {
         const key = existingKey || `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
+        const knownDarkModeColor = darkColorHandler.skipKnownColorsWhenGetDarkColor
+            ? null
+            : darkColorHandler.knownColors?.[key]?.darkModeColor;
         const darkModeColor =
-            darkColorHandler.knownColors?.[key]?.darkModeColor ||
+            knownDarkModeColor ||
             darkColorHandler.getDarkColor(
                 color,
                 undefined /*baseLAValue*/,
@@ -107,12 +111,18 @@ export function setColor(
                 element
             );
 
-        darkColorHandler.updateKnownColor(isDarkMode, key, {
-            lightModeColor: color,
-            darkModeColor,
-        });
+        if (darkModeColor != null) {
+            darkColorHandler.updateKnownColor(isDarkMode, key, {
+                lightModeColor: color,
+                darkModeColor,
+            });
 
-        color = isDarkMode ? `${VARIABLE_PREFIX}${key}, ${color}${VARIABLE_POSTFIX}` : color;
+            color = isDarkMode ? `${VARIABLE_PREFIX}${key}, ${color}${VARIABLE_POSTFIX}` : color;
+        } else {
+            color = isDarkMode
+                ? `${VARIABLE_PREFIX}${COLOR_VAR_ENFORCE_FALLBACK_KEY}, ${color}${VARIABLE_POSTFIX}`
+                : color;
+        }
     }
 
     element.removeAttribute(isBackground ? 'bgcolor' : 'color');

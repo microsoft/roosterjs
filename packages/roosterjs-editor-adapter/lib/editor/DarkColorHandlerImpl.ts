@@ -35,12 +35,17 @@ class DarkColorHandlerImpl implements DarkColorHandler {
         }
 
         if (isDarkMode && lightModeColor) {
+            darkModeColor = darkModeColor || this.innerHandler.getDarkColor(lightModeColor);
+
+            if (!darkModeColor) {
+                return lightModeColor;
+            }
+
             colorKey =
                 colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
-
             this.innerHandler.updateKnownColor(isDarkMode, colorKey, {
                 lightModeColor,
-                darkModeColor: darkModeColor || this.innerHandler.getDarkColor(lightModeColor),
+                darkModeColor,
             });
 
             return `var(${colorKey}, ${lightModeColor})`;
