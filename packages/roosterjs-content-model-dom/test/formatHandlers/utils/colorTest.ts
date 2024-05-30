@@ -491,6 +491,41 @@ describe('setColor with darkColorHandler', () => {
             darkModeColor: '--dark_green',
         });
     });
+
+    it('no existing color, set valid color, skip known colors, getDarkColor return null', () => {
+        knownColors = {
+            white: {
+                lightModeColor: 'white',
+                darkModeColor: 'black',
+            },
+        };
+        getDarkColorSpy = jasmine.createSpy('getDarkColor').and.callFake((color: string) => null);
+
+        darkColorHandler = {
+            knownColors,
+            getDarkColor: getDarkColorSpy,
+            updateKnownColor: updateKnownColorSpy,
+            reset: null!,
+            skipKnownColorsWhenGetDarkColor: true,
+        };
+
+        const lightDiv = document.createElement('div');
+        const darkDiv = document.createElement('div');
+
+        setColor(lightDiv, 'white', true, false, darkColorHandler);
+        setColor(lightDiv, 'white', false, false, darkColorHandler);
+        setColor(darkDiv, 'white', true, true, darkColorHandler);
+        setColor(darkDiv, 'white', false, true, darkColorHandler);
+
+        expect(lightDiv.outerHTML).toBe(
+            '<div style="color: white; background-color: white;"></div>'
+        );
+        expect(darkDiv.outerHTML).toBe(
+            '<div style="color: var(--darkColor_fallback-color, white); background-color: var(--darkColor_fallback-color, white);"></div>'
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
+        expect(updateKnownColorSpy).toHaveBeenCalledTimes(0);
+    });
 });
 
 describe('parseColor', () => {
