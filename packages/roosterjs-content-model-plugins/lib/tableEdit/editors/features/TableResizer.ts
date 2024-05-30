@@ -102,6 +102,10 @@ class TableResizer extends DragAndDropHelper<TableResizerContext, TableResizerIn
     }
 }
 
+/**
+ * @internal
+ * Exported for testing
+ */
 export interface TableResizerContext {
     table: HTMLTableElement;
     isRTL: boolean;
@@ -113,6 +117,10 @@ export interface TableResizerContext {
     contentDiv?: EventTarget | null;
 }
 
+/**
+ * @internal
+ * Exported for testing
+ */
 export interface TableResizerInitValue {
     originalRect: DOMRect;
     originalHeights: number[];
