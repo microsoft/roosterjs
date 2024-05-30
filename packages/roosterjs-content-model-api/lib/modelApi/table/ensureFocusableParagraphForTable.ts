@@ -1,10 +1,10 @@
-import { createBr, createParagraph } from 'roosterjs-content-model-dom';
+import { createBr, createParagraph, mutateBlock } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelParagraph,
-    ContentModelTable,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -14,9 +14,9 @@ import type {
  * @returns a new paragraph that can but put focus in, or undefined if not needed
  */
 export function ensureFocusableParagraphForTable(
-    model: ContentModelDocument,
-    path: ContentModelBlockGroup[],
-    table: ContentModelTable
+    model: ReadonlyContentModelDocument,
+    path: ReadonlyContentModelBlockGroup[],
+    table: ReadonlyContentModelTable
 ): ContentModelParagraph | undefined {
     let paragraph: ContentModelParagraph | undefined;
     const firstCell = table.rows.filter(row => row.cells.length > 0)[0]?.cells[0];
@@ -30,12 +30,12 @@ export function ensureFocusableParagraphForTable(
         if (!paragraph) {
             // If there is not a paragraph under this cell, create one
             paragraph = createEmptyParagraph(model);
-            firstCell.blocks.push(paragraph);
+            mutateBlock(firstCell).blocks.push(paragraph);
         }
     } else {
         // No table cell at all, which means the whole table is deleted. So we need to remove it from content model.
-        let block: ContentModelBlock = table;
-        let parent: ContentModelBlockGroup | undefined;
+        let block: ReadonlyContentModelBlock = table;
+        let parent: ReadonlyContentModelBlockGroup | undefined;
         paragraph = createEmptyParagraph(model);
 
         // If the table is the only block of its parent and parent is a FormatContainer, remove the parent as well.
@@ -44,7 +44,7 @@ export function ensureFocusableParagraphForTable(
             const index = parent.blocks.indexOf(block) ?? -1;
 
             if (parent && index >= 0) {
-                parent.blocks.splice(index, 1, paragraph);
+                mutateBlock(parent).blocks.splice(index, 1, paragraph);
             }
 
             if (
@@ -64,7 +64,7 @@ export function ensureFocusableParagraphForTable(
     return paragraph;
 }
 
-function createEmptyParagraph(model: ContentModelDocument) {
+function createEmptyParagraph(model: ReadonlyContentModelDocument) {
     const newPara = createParagraph(false /*isImplicit*/, undefined /*blockFormat*/, model.format);
     const br = createBr(model.format);
 

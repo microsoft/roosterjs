@@ -2,6 +2,8 @@ import { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-mode
 import { setModelListStyle } from '../../../lib/modelApi/list/setModelListStyle';
 
 describe('setModelListStyle', () => {
+    const mockedCachedElement = 'CACHE' as any;
+
     function runTest(model: ContentModelDocument, style: ListMetadataFormat, expected: boolean) {
         // Act
         const actual = setModelListStyle(model, style);
@@ -29,6 +31,7 @@ describe('setModelListStyle', () => {
                                 },
                             ],
                             format: {},
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     levels: [
@@ -40,6 +43,7 @@ describe('setModelListStyle', () => {
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
                             },
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     formatHolder: {
@@ -48,6 +52,7 @@ describe('setModelListStyle', () => {
                         format: {},
                     },
                     format: {},
+                    cachedElement: mockedCachedElement,
                 },
                 {
                     blockType: 'BlockGroup',
@@ -68,6 +73,7 @@ describe('setModelListStyle', () => {
                                 },
                             ],
                             format: {},
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     levels: [
@@ -79,6 +85,7 @@ describe('setModelListStyle', () => {
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
                             },
+                            cachedElement: mockedCachedElement,
                         },
                     ],
                     formatHolder: {
@@ -87,6 +94,7 @@ describe('setModelListStyle', () => {
                         format: {},
                     },
                     format: {},
+                    cachedElement: mockedCachedElement,
                 },
             ],
             format: {},

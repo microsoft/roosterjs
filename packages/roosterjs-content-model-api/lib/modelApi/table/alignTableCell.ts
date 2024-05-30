@@ -1,7 +1,11 @@
-import { getSelectedCells, updateTableCellMetadata } from 'roosterjs-content-model-dom';
+import {
+    getSelectedCells,
+    mutateBlock,
+    updateTableCellMetadata,
+} from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
-    ContentModelTableCell,
+    ShallowMutableContentModelTable,
+    ShallowMutableContentModelTableCell,
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
 } from 'roosterjs-content-model-types';
@@ -28,7 +32,7 @@ const VerticalAlignValueMap: Partial<Record<
  * @internal
  */
 export function alignTableCellHorizontally(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     operation: TableCellHorizontalAlignOperation
 ) {
     alignTableCellInternal(table, cell => {
@@ -40,7 +44,7 @@ export function alignTableCellHorizontally(
  * @internal
  */
 export function alignTableCellVertically(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     operation: TableCellVerticalAlignOperation
 ) {
     alignTableCellInternal(table, cell => {
@@ -55,8 +59,8 @@ export function alignTableCellVertically(
 }
 
 function alignTableCellInternal(
-    table: ContentModelTable,
-    callback: (cell: ContentModelTableCell) => void
+    table: ShallowMutableContentModelTable,
+    callback: (cell: ShallowMutableContentModelTableCell) => void
 ) {
     const sel = getSelectedCells(table);
 
@@ -69,11 +73,11 @@ function alignTableCellInternal(
                 if (format) {
                     delete cell.cachedElement;
 
-                    callback(cell);
+                    callback(mutateBlock(cell));
 
                     cell.blocks.forEach(block => {
-                        if (block.blockType === 'Paragraph') {
-                            delete block.format.textAlign;
+                        if (block.blockType === 'Paragraph' && block.format.textAlign) {
+                            delete mutateBlock(block).format.textAlign;
                         }
                     });
                 }

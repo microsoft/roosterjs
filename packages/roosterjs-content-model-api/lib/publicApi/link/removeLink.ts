@@ -21,7 +21,11 @@ export function removeLink(editor: IEditor) {
                     (!!target.link && target.link.format.href == ref.link!.format.href)
             );
 
-            const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+            const segments = getSelectedSegments(
+                model,
+                false /*includingFormatHolder*/,
+                true /*mutate*/
+            );
             let isChanged = false;
 
             segments.forEach(segment => {

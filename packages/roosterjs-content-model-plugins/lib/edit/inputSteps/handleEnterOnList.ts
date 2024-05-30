@@ -11,6 +11,7 @@ import {
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
     mutateBlock,
+    mutateSegment,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItem,
@@ -38,10 +39,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
         const rawEvent = formatContext?.rawEvent;
         const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
 
-        const listItem = path[index];
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
 
-        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
+        if (readonlyListItem && readonlyListItem.blockGroupType === 'ListItem' && listParent) {
+            const listItem = mutateBlock(readonlyListItem);
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
 
@@ -154,21 +156,22 @@ const createNewParagraph = (insertPoint: InsertPoint) => {
         paragraph.segmentFormat
     );
 
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
+    mutateSegment(paragraph, marker, (marker, paragraph, markerIndex) => {
+        const segments = paragraph.segments.splice(
+            markerIndex,
+            paragraph.segments.length - markerIndex
+        );
 
-    newParagraph.segments.push(...segments);
+        newParagraph.segments.push(...segments);
 
-    setParagraphNotImplicit(paragraph);
+        setParagraphNotImplicit(paragraph);
 
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
+        if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
+            paragraph.segments.push(createBr(marker.format));
+        }
 
-    normalizeParagraph(newParagraph);
+        normalizeParagraph(newParagraph);
+    });
 
     return newParagraph;
 };
