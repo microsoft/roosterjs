@@ -45,18 +45,18 @@ export function createCellResizer(
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: cellResizerContext = { editor, td, table, isRTL, zoomScale, onStart };
+    const context: CellResizerContext = { editor, td, table, isRTL, zoomScale, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
-    const handler: DragAndDropHandler<cellResizerContext, cellResizerInitValue> = {
+    const handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue> = {
         onDragStart,
         // Horizontal modifies row height, vertical modifies column width
         onDragging: isHorizontal ? onDraggingHorizontal : onDraggingVertical,
         onDragEnd: onEnd,
     };
 
-    const featureHandler = new DragAndDropHelper<cellResizerContext, cellResizerInitValue>(
+    const featureHandler = new DragAndDropHelper<CellResizerContext, CellResizerInitValue>(
         div,
         context,
         setPosition,
@@ -72,7 +72,7 @@ export function createCellResizer(
  * @internal
  * Exported for testing
  */
-export interface cellResizerContext {
+export interface CellResizerContext {
     editor: IEditor;
     td: HTMLTableCellElement;
     table: HTMLTableElement;
@@ -85,7 +85,7 @@ export interface cellResizerContext {
  * @internal
  * Exported for testing
  */
-export interface cellResizerInitValue {
+export interface CellResizerInitValue {
     cmTable: ContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
@@ -97,7 +97,7 @@ export interface cellResizerInitValue {
  * @internal
  * Exported for testing
  */
-export function onDragStart(context: cellResizerContext, event: MouseEvent): cellResizerInitValue {
+export function onDragStart(context: CellResizerContext, event: MouseEvent): CellResizerInitValue {
     const { td, onStart } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
 
@@ -148,9 +148,9 @@ export function onDragStart(context: cellResizerContext, event: MouseEvent): cel
  * Exported for testing
  */
 export function onDraggingHorizontal(
-    context: cellResizerContext,
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: cellResizerInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number,
     deltaY: number
 ) {
@@ -183,9 +183,9 @@ export function onDraggingHorizontal(
  * Exported for testing
  */
 export function onDraggingVertical(
-    context: cellResizerContext,
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: cellResizerInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number
 ) {
     const { table, isRTL } = context;
@@ -231,7 +231,7 @@ export function onDraggingVertical(
     }
 }
 
-function setHorizontalPosition(context: cellResizerContext, trigger: HTMLElement) {
+function setHorizontalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
@@ -243,7 +243,7 @@ function setHorizontalPosition(context: cellResizerContext, trigger: HTMLElement
     }
 }
 
-function setVerticalPosition(context: cellResizerContext, trigger: HTMLElement) {
+function setVerticalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {

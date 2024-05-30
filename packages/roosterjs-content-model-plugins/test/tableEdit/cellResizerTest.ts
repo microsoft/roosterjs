@@ -5,8 +5,8 @@ import { getCurrentTable } from './TableEditTestHelper';
 import { getModelTable } from './tableData';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
 import {
-    cellResizerContext,
-    cellResizerInitValue,
+    CellResizerContext,
+    CellResizerInitValue,
     onDragStart,
     onDraggingHorizontal,
     onDraggingVertical,
@@ -62,7 +62,7 @@ describe('Cell Resizer tests', () => {
         const targetTd = (target as HTMLTableElement).rows[0].cells[0];
 
         const onStartSpy = jasmine.createSpy('onStart');
-        const context: cellResizerContext = {
+        const context: CellResizerContext = {
             editor: editor,
             td: targetTd as HTMLTableCellElement,
             table: target as HTMLTableElement,
@@ -101,7 +101,7 @@ describe('Cell Resizer tests', () => {
                 return;
             }
 
-            const initValue: cellResizerInitValue = {
+            const initValue: CellResizerInitValue = {
                 cmTable: cmTable,
                 anchorColumn: cellColumn,
                 anchorRow: cellRow,
@@ -112,7 +112,7 @@ describe('Cell Resizer tests', () => {
             const targetTd = (target as HTMLTableElement).rows[cellRow].cells[cellColumn];
 
             const onStartSpy = jasmine.createSpy('onStart');
-            const context: cellResizerContext = {
+            const context: CellResizerContext = {
                 editor: editor,
                 td: targetTd as HTMLTableCellElement,
                 table: target as HTMLTableElement,
@@ -176,7 +176,7 @@ describe('Cell Resizer tests', () => {
                 return;
             }
 
-            const initValue: cellResizerInitValue = {
+            const initValue: CellResizerInitValue = {
                 cmTable: cmTable,
                 anchorColumn: cellColumn,
                 anchorRow: cellRow,
@@ -187,7 +187,7 @@ describe('Cell Resizer tests', () => {
             const targetTd = (target as HTMLTableElement).rows[cellRow].cells[cellColumn];
 
             const onStartSpy = jasmine.createSpy('onStart');
-            const context: cellResizerContext = {
+            const context: CellResizerContext = {
                 editor: editor,
                 td: targetTd as HTMLTableCellElement,
                 table: target as HTMLTableElement,
