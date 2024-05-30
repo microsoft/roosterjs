@@ -33,7 +33,7 @@ new Editor(div, options);
 
 After
 
-```
+```ts
 const options: EditorAdapterOptions = {
     legacyPlugins: [], /// Array of V8 plugins
     plugins: [], /// Array of v9 plugins
