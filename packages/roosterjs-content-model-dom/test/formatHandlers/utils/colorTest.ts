@@ -122,6 +122,7 @@ describe('getColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            skipKnownColorsWhenGetDarkColor: false,
         };
     });
 
@@ -351,6 +352,7 @@ describe('setColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            skipKnownColorsWhenGetDarkColor: false,
         };
     });
 
