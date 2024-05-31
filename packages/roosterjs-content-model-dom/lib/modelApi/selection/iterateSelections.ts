@@ -1,5 +1,7 @@
 import type {
     ContentModelBlockGroup,
+    ContentModelBlockWithCache,
+    ContentModelDocument,
     IterateSelectionsCallback,
     IterateSelectionsOption,
     ReadonlyContentModelBlockGroup,
@@ -7,6 +9,17 @@ import type {
     ReadonlyIterateSelectionsCallback,
     ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ * This is a temporary type to pass the information of whether element cache should be persisted when possible
+ */
+export interface ContentModelDocumentWithPersistedCache extends ContentModelDocument {
+    /**
+     * When set to
+     */
+    persistCache?: boolean;
+}
 
 /**
  * Iterate all selected elements in a given model
@@ -37,7 +50,26 @@ export function iterateSelections(
     callback: ReadonlyIterateSelectionsCallback | IterateSelectionsCallback,
     option?: IterateSelectionsOption
 ): void {
-    internalIterateSelections([group], callback as ReadonlyIterateSelectionsCallback, option);
+    const persistCache =
+        group.blockGroupType == 'Document'
+            ? (group as ContentModelDocumentWithPersistedCache).persistCache
+            : false;
+    const internalCallback: ReadonlyIterateSelectionsCallback = persistCache
+        ? (callback as ReadonlyIterateSelectionsCallback)
+        : (path, tableContext, block, segments) => {
+              if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
+                  delete (block as ContentModelBlockWithCache).cachedElement;
+              }
+
+              return (callback as ReadonlyIterateSelectionsCallback)(
+                  path,
+                  tableContext,
+                  block,
+                  segments
+              );
+          };
+
+    internalIterateSelections([group], internalCallback, option);
 }
 
 function internalIterateSelections(

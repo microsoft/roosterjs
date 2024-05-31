@@ -369,4 +369,9 @@ export interface EditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * Enabled experimental features
+     */
+    readonly experimentalFeatures: ReadonlyArray<string>;
 }
