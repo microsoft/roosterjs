@@ -17,7 +17,7 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
     editor.formatContentModel(
         (model, context) => {
             // 1. delete the expanded selection if any, then merge paragraph
-            let result = deleteSelection(model, [], context);
+            const result = deleteSelection(model, [], context);
 
             // 2. Add line break
             if (selection && selection.type != 'table') {
