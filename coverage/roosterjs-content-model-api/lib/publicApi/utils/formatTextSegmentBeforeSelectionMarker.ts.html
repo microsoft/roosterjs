@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -112,7 +112,19 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,35 +159,47 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">35x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getSelectedSegmentsAndParagraphs, mutateSegment } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
     ContentModelSegmentFormat,
     ContentModelText,
     FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
+    ShallowMutableContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -187,9 +211,9 @@ import type {
 export function formatTextSegmentBeforeSelectionMarker(
     editor: IEditor,
     callback: (
-        model: ContentModelDocument,
+        model: ShallowMutableContentModelDocument,
         previousSegment: ContentModelText,
-        paragraph: ContentModelParagraph,
+        paragraph: ShallowMutableContentModelParagraph,
         markerFormat: ContentModelSegmentFormat,
         context: FormatContentModelContext
     ) =&gt; boolean,
@@ -202,22 +226,34 @@ export function formatTextSegmentBeforeSelectionMarker(
             model,
             false /*includeFormatHolder*/
         );
+        let rewrite = false;
 &nbsp;
-        if (selectedSegmentsAndParagraphs.length &gt; 0 &amp;&amp; selectedSegmentsAndParagraphs[0][1]) {
-            const marker = selectedSegmentsAndParagraphs[0][0];
-            const paragraph = selectedSegmentsAndParagraphs[0][1];
-            const markerIndex = paragraph.segments.indexOf(marker);
-            if (marker.segmentType === 'SelectionMarker' &amp;&amp; markerIndex &gt; 0) {
-                const previousSegment = paragraph.segments[markerIndex - 1];
-                if (previousSegment &amp;&amp; previousSegment.segmentType === 'Text') {
-                    result = true;
+        if (
+            selectedSegmentsAndParagraphs.length &gt; 0 &amp;&amp;
+            selectedSegmentsAndParagraphs[0][0].segmentType == 'SelectionMarker' &amp;&amp;
+            selectedSegmentsAndParagraphs[0][1]
+        ) {
+            mutateSegment(
+                selectedSegmentsAndParagraphs[0][1],
+                selectedSegmentsAndParagraphs[0][0],
+                (marker, paragraph, markerIndex) =&gt; {
+                    const previousSegment = paragraph.segments[markerIndex - 1];
 &nbsp;
-                    return callback(model, previousSegment, paragraph, marker.format, context);
+                    if (previousSegment &amp;&amp; previousSegment.segmentType === 'Text') {
+                        result = true;
+                        rewrite = callback(
+                            model,
+                            previousSegment,
+                            paragraph,
+                            marker.format,
+                            context
+                        );
+                    }
                 }
-            }
+            );
         }
 &nbsp;
-        return false;
+        return rewrite;
     }, options);
 &nbsp;
     return result;
@@ -229,7 +265,7 @@ export function formatTextSegmentBeforeSelectionMarker(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 30 2024 23:23:02 GMT+0000 (Coordinated Universal Time)
+                at Fri May 31 2024 17:44:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

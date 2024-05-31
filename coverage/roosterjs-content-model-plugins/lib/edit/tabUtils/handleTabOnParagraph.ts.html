@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98% </span>
+                <span class="strong">98.04% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/50</span>
+                <span class='fraction'>50/51</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.78% </span>
+                <span class="strong">97.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/45</span>
+                <span class='fraction'>45/46</span>
             </div>
         
             
@@ -165,8 +165,25 @@
 <a name='L106'></a><a href='#L106'>106</a>
 <a name='L107'></a><a href='#L107'>107</a>
 <a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -237,6 +254,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -250,19 +268,25 @@
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -273,12 +297,17 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
-import { setModelIndentation } from 'roosterjs-content-model-api';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { setModelIndentation } from 'roosterjs-content-model-api';
+import {
+    createSelectionMarker,
+    createText,
+    mutateBlock,
+    mutateSegment,
+} from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const tabSpaces = '    ';
@@ -300,8 +329,8 @@ const space = ' ';
  * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to outdent the whole paragraph
  */
 export function handleTabOnParagraph(
-    model: ContentModelDocument,
-    paragraph: ContentModelParagraph,
+    model: ReadonlyContentModelDocument,
+    paragraph: ReadonlyContentModelParagraph,
     rawEvent: KeyboardEvent,
     context?: FormatContentModelContext
 ) {
@@ -345,7 +374,8 @@ export function handleTabOnParagraph(
                     firstSelectedSegment.format
                 );
                 const marker = createSelectionMarker(firstSelectedSegment.format);
-                paragraph.segments.splice(
+&nbsp;
+                mutateBlock(paragraph).segments.splice(
                     firstSelectedSegmentIndex,
                     lastSelectedSegmentIndex - firstSelectedSegmentIndex + 1,
                     spaceText,
@@ -358,19 +388,25 @@ export function handleTabOnParagraph(
             const markerIndex = paragraph.segments.findIndex(
                 segment =&gt; segment.segmentType === 'SelectionMarker'
             );
+&nbsp;
             if (!rawEvent.shiftKey) {
                 const markerFormat = paragraph.segments[markerIndex].format;
                 const tabText = createText(tabSpaces, markerFormat);
-                paragraph.segments.splice(markerIndex, 0, tabText);
+&nbsp;
+                mutateBlock(paragraph).segments.splice(markerIndex, 0, tabText);
             } else {
                 const tabText = paragraph.segments[markerIndex - 1];
                 const tabSpacesLength = tabSpaces.length;
+&nbsp;
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (tabText.segmentType == 'Text') {
                     const tabSpaceTextLength = tabText.text.length - tabSpacesLength;
+&nbsp;
                     if (tabText.text === tabSpaces) {
-                        paragraph.segments.splice(markerIndex - 1, 1);
+                        mutateBlock(paragraph).segments.splice(markerIndex - 1, 1);
                     } else if (tabText.text.substring(tabSpaceTextLength) === tabSpaces) {
-                        tabText.text = tabText.text.substring(0, tabSpaceTextLength);
+                        mutateSegment(paragraph, tabText, text =&gt; {
+                            text.text = text.text.substring(0, tabSpaceTextLength);
+                        });
                     } else {
                         return false;
                     }
@@ -388,7 +424,7 @@ export function handleTabOnParagraph(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 30 2024 23:23:02 GMT+0000 (Coordinated Universal Time)
+                at Fri May 31 2024 17:44:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.12% </span>
+                <span class="strong">94.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>80/85</span>
+                <span class='fraction'>81/86</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.9% </span>
+                <span class="strong">93.98% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>77/82</span>
+                <span class='fraction'>78/83</span>
             </div>
         
             
@@ -313,11 +313,15 @@
 <a name='L254'></a><a href='#L254'>254</a>
 <a name='L255'></a><a href='#L255'>255</a>
 <a name='L256'></a><a href='#L256'>256</a>
-<a name='L257'></a><a href='#L257'>257</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -508,6 +512,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -578,9 +584,10 @@ import {
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 &nbsp;
 const CELL_RESIZER_WIDTH = 4;
 /**
@@ -657,7 +664,7 @@ export interface CellResizerContext {
  * Exported for testing
  */
 export interface CellResizerInitValue {
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
     anchorRowHeight: number;
@@ -731,7 +738,7 @@ export function onDraggingHorizontal(
     // Assign new widths and heights to the CM table
     <span class="missing-if-branch" title="else path not taken" >E</span>if (cmTable &amp;&amp; anchorRow != undefined) {
         // Modify the CM Table size
-        cmTable.rows[anchorRow].height = (anchorRowHeight ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> + deltaY;
+        mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> + deltaY;
 &nbsp;
         // Normalize the table
         normalizeTable(cmTable);
@@ -764,13 +771,15 @@ export function onDraggingVertical(
 &nbsp;
     // Assign new widths and heights to the CM table
     <span class="missing-if-branch" title="else path not taken" >E</span>if (cmTable &amp;&amp; anchorColumn != undefined) {
+        const mutableTable = mutateBlock(cmTable);
+&nbsp;
         // Modify the CM Table size
         const lastColumn = anchorColumn == cmTable.widths.length - 1;
         const change = deltaX * (isRTL ? <span class="branch-0 cbranch-no" title="branch not covered" >-1 </span>: 1);
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            cmTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            mutableTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -781,8 +790,8 @@ export function onDraggingVertical(
             ) {
 <span class="cstat-no" title="statement not covered" >                return false;</span>
             }
-            cmTable.widths[anchorColumn] = anchorChange;
-            cmTable.widths[anchorColumn + 1] = nextAnchorChange;
+            mutableTable.widths[anchorColumn] = anchorChange;
+            mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
 &nbsp;
         // Normalize the table
@@ -832,7 +841,7 @@ function setVerticalPosition(context: CellResizerContext, trigger: HTMLElement) 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 30 2024 23:23:02 GMT+0000 (Coordinated Universal Time)
+                at Fri May 31 2024 17:44:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
