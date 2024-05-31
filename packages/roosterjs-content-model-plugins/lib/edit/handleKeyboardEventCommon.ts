@@ -1,9 +1,9 @@
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
     DeleteResult,
     FormatContentModelContext,
     IEditor,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,7 +12,7 @@ import type {
  */
 export function handleKeyboardEventResult(
     editor: IEditor,
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     rawEvent: KeyboardEvent,
     result: DeleteResult,
     context: FormatContentModelContext

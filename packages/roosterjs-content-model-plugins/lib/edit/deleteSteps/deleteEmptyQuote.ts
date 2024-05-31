@@ -80,7 +80,7 @@ const insertNewLine = (
     index: number
 ) => {
     const quoteLength = quote.blocks.length;
-    quote.blocks.splice(quoteLength - 1, 1);
+    mutateBlock(quote).blocks.splice(quoteLength - 1, 1);
     const marker = createSelectionMarker();
     const newParagraph = createParagraph(false /* isImplicit */);
     newParagraph.segments.push(marker);
