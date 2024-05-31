@@ -1,9 +1,6 @@
 import { isGeneralSegment } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
     ContentModelParagraph,
-    ContentModelSegment,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelSegment,
@@ -16,18 +13,18 @@ export type BlockAndPath = {
     /**
      * The sibling block
      */
-    block: ContentModelBlock;
+    block: ReadonlyContentModelBlock;
 
     /**
      * Path of this sibling block
      */
-    path: ContentModelBlockGroup[];
+    path: ReadonlyContentModelBlockGroup[];
 
     /**
      * If the input block is under a general segment, it is possible there are sibling segments under the same paragraph.
      * Use this property to return the sibling sibling under the same paragraph
      */
-    siblingSegment?: ContentModelSegment;
+    siblingSegment?: ReadonlyContentModelSegment;
 };
 
 /**
@@ -55,8 +52,8 @@ export type ReadonlyBlockAndPath = {
  * @internal
  */
 export function getLeafSiblingBlock(
-    path: ContentModelBlockGroup[],
-    block: ContentModelBlock,
+    path: ReadonlyContentModelBlockGroup[],
+    block: ReadonlyContentModelBlock,
     isNext: boolean
 ): BlockAndPath | null;
 

@@ -1,6 +1,7 @@
 import { keyboardDelete } from './keyboardDelete';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
+import { parseTableCells } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     EditorPlugin,
@@ -80,6 +81,46 @@ export class EditPlugin implements EditorPlugin {
                     break;
             }
         }
+    }
+
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check:
+     */
+    willHandleEventExclusively(event: PluginEvent) {
+        if (
+            this.editor &&
+            event.eventType == 'keyDown' &&
+            event.rawEvent.key == 'Tab' &&
+            !event.rawEvent.shiftKey
+        ) {
+            const selection = this.editor.getDOMSelection();
+            const startContainer =
+                selection?.type == 'range' && selection.range.collapsed
+                    ? selection.range.startContainer
+                    : null;
+            const table = startContainer
+                ? this.editor.getDOMHelper().findClosestElementAncestor(startContainer, 'table')
+                : null;
+            const parsedTable = table && parseTableCells(table);
+
+            if (parsedTable) {
+                const lastRow = parsedTable[parsedTable.length - 1];
+                const lastCell = lastRow && lastRow[lastRow.length - 1];
+
+                if (typeof lastCell == 'object' && lastCell.contains(startContainer)) {
+                    // When TAB in the last cell of a table, we will generate new table row, so prevent other plugins handling this event
+                    // e.g. SelectionPlugin will move the focus out of table, which is conflict with this behavior
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {

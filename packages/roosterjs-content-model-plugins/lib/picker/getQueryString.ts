@@ -1,12 +1,15 @@
 import { splitTextSegment } from '../pluginUtils/splitTextSegment';
-import type { ContentModelParagraph, ContentModelText } from 'roosterjs-content-model-types';
+import type {
+    ContentModelText,
+    ShallowMutableContentModelParagraph,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function getQueryString(
     triggerCharacter: string,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     previousSegment: ContentModelText,
     splittedSegmentResult?: ContentModelText[]
 ): string {

@@ -112,7 +112,7 @@ export function setModelIndentation(
 
                     break;
                 } else if (currentParent.blockGroupType == 'FormatContainer' && index >= 0) {
-                    delete currentParent.cachedElement;
+                    mutateBlock(currentParent);
 
                     currentBlock = currentParent;
                     currentParent = path[index + 1];
@@ -163,7 +163,7 @@ function isMultilevelSelection(
 }
 
 function calculateMarginValue(
-    format: ContentModelBlockFormat,
+    format: Readonly<ContentModelBlockFormat>,
     isIndent: boolean,
     length: number = IndentStepInPixel
 ): number | null {
