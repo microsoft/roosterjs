@@ -23,8 +23,6 @@ export function mergeTableCells(table: ShallowMutableContentModelTable) {
                     mutableCell.spanAbove = rowIndex > sel.firstRow;
                 }
             }
-
-            delete table.rows[rowIndex].cachedElement;
         }
     }
 }

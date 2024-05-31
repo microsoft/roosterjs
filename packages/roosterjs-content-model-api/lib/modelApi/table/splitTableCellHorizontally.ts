@@ -46,7 +46,7 @@ export function splitTableCellHorizontally(table: ShallowMutableContentModelTabl
                         }
                         row.cells.splice(colIndex + 1, 0, newCell);
 
-                        delete row.cells[colIndex].cachedElement;
+                        mutateBlock(row.cells[colIndex]);
                     }
                 });
 

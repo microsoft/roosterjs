@@ -4,7 +4,6 @@ import {
     getSelectedCells,
     mutateBlock,
     getTableMetadata,
-    hasMetadata,
     parseValueWithUnit,
     setFirstColumnFormatBorders,
     updateTableCellMetadata,
@@ -370,10 +369,10 @@ export function applyTableBorderFormat(
                     modifyPerimeter(tableModel, sel, borderFormat, perimeter, isRtl);
                 }
 
-                const tableMeta = hasMetadata(tableModel) ? getTableMetadata(tableModel) : {};
+                const tableMeta = getTableMetadata(tableModel);
                 if (tableMeta) {
                     // Enforce first column format if necessary
-                    setFirstColumnFormatBorders(tableModel.rows, tableMeta);
+                    setFirstColumnFormatBorders(mutateBlock(tableModel).rows, tableMeta);
                 }
 
                 return true;

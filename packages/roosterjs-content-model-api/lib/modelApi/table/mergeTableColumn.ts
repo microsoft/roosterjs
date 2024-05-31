@@ -46,8 +46,6 @@ export function mergeTableColumn(
                         mutateBlock(newCell).isSelected = true;
                     }
                 }
-
-                delete table.rows[rowIndex].cachedElement;
             }
         }
     }
