@@ -14,7 +14,10 @@ import type {
  * Minimum width for a table cell
  */
 export const MIN_ALLOWED_TABLE_CELL_WIDTH: number = 30;
-const MIN_HEIGHT = 22;
+/**
+ * Minimum height for a table cell
+ */
+export const MIN_ALLOWED_TABLE_CELL_HEIGHT: number = 22;
 
 /**
  * Normalize a Content Model table, make sure:
@@ -77,8 +80,8 @@ export function normalizeTable(
         });
 
         // Make sure table has correct width and height array
-        if (row.height < MIN_HEIGHT) {
-            row.height = MIN_HEIGHT;
+        if (row.height < MIN_ALLOWED_TABLE_CELL_HEIGHT) {
+            row.height = MIN_ALLOWED_TABLE_CELL_HEIGHT;
         }
     });
 
