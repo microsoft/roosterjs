@@ -1,6 +1,6 @@
 import { areSameSelection } from './areSameSelection';
 import { createTextMutationObserver } from './textMutationObserver';
-import { domIndexerImpl } from './domIndexerImpl';
+import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCachedSelection } from './updateCachedSelection';
 import type {
     CachePluginState,
@@ -24,17 +24,24 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = option.disableCache
-            ? {}
-            : {
-                  domIndexer: domIndexerImpl,
-                  textMutationObserver: createTextMutationObserver(
-                      contentDiv,
-                      domIndexerImpl,
-                      this.onMutation,
-                      this.onSkipMutation
-                  ),
-              };
+        if (option.disableCache) {
+            this.state = {};
+        } else {
+            const domIndexer = new DomIndexerImpl(
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf('PersistCache') >= 0
+            );
+
+            this.state = {
+                domIndexer: domIndexer,
+                textMutationObserver: createTextMutationObserver(
+                    contentDiv,
+                    domIndexer,
+                    this.onMutation,
+                    this.onSkipMutation
+                ),
+            };
+        }
     }
 
     /**

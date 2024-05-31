@@ -1,6 +1,6 @@
 import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
 import { createCachePlugin } from '../../../lib/corePlugin/cache/CachePlugin';
-import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
     CachePluginState,
     DomIndexer,
@@ -75,7 +75,7 @@ describe('CachePlugin', () => {
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
-                domIndexer: domIndexerImpl,
+                domIndexer: new DomIndexerImpl(),
                 textMutationObserver: mockedObserver,
             });
             expect(startObservingSpy).toHaveBeenCalledTimes(1);
