@@ -7,6 +7,7 @@ import {
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     normalizeTable,
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
@@ -146,14 +147,18 @@ function onDraggingHorizontal(
         // Modify the CM Table size
         cmTable.rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
-        // Normalize the table
-        normalizeTable(cmTable);
+        // Normalize the new height value
+        const newHeight =
+            cmTable.rows[anchorRow] &&
+            cmTable.rows[anchorRow].height > MIN_ALLOWED_TABLE_CELL_HEIGHT
+                ? cmTable.rows[anchorRow].height
+                : MIN_ALLOWED_TABLE_CELL_HEIGHT;
 
         // Writeback CM Table size changes to DOM Table
         const tableRow = table.rows[anchorRow];
         for (let col = 0; col < tableRow.cells.length; col++) {
             const td = tableRow.cells[col];
-            td.style.height = cmTable.rows[anchorRow].height + 'px';
+            td.style.height = newHeight + 'px';
         }
 
         return true;
