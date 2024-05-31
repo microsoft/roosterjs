@@ -1,4 +1,5 @@
 import { getCurrentContentModel } from '../currentModel';
+import { mutateBlock } from 'roosterjs-content-model-dom';
 import { RibbonButton } from '../../../roosterjsReact/ribbon';
 
 export const exportButton: RibbonButton<'buttonNameExport'> = {
@@ -10,7 +11,7 @@ export const exportButton: RibbonButton<'buttonNameExport'> = {
 
         if (model) {
             editor.formatContentModel(currentModel => {
-                currentModel.blocks = model.blocks;
+                mutateBlock(currentModel).blocks = model.blocks;
 
                 return true;
             });

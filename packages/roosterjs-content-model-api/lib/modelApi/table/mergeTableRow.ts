@@ -37,8 +37,7 @@ export function mergeTableRow(
                     let newSelectedRow = mergingRowIndex;
 
                     while (table.rows[newSelectedRow]?.cells[colIndex]?.spanAbove) {
-                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
-                        delete table.rows[newSelectedRow].cachedElement;
+                        mutateBlock(table.rows[newSelectedRow].cells[colIndex]);
                         newSelectedRow--;
                     }
 

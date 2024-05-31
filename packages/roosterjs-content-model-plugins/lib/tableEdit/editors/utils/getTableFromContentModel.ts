@@ -1,12 +1,12 @@
 import { getFirstSelectedTable } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Get ContentModelTable from a table element if it is present in the content model
  */
 export function getCMTableFromTable(editor: IEditor, table: HTMLTableElement) {
-    let cmTable: ContentModelTable | undefined;
+    let cmTable: ReadonlyContentModelTable | undefined;
 
     editor.formatContentModel(
         model => {

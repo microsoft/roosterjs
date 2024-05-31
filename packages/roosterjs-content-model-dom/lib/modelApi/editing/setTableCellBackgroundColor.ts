@@ -55,8 +55,6 @@ export function setTableCellBackgroundColor(
             removeAdaptiveCellColor(cell);
         }
     }
-
-    delete cell.cachedElement;
 }
 
 function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {

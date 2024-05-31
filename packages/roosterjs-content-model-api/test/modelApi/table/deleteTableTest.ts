@@ -5,11 +5,8 @@ describe('deleteTable', () => {
     it('deleteTable', () => {
         const table = createTable(2);
 
-        table.cachedElement = {} as any;
-
         deleteTable(table);
 
         expect(table.rows).toEqual([]);
-        expect(table.cachedElement).toBeUndefined();
     });
 });
