@@ -17,7 +17,8 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const PERCENTAGE_REGEX = /%/;
-const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
+// Default line height in browsers according to https://developer.mozilla.org/en-US/docs/Web/CSS/line-height#normal
+const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
 
 /**
  * @internal
@@ -55,20 +56,17 @@ const wordDesktopElementProcessor = (
     };
 };
 
-function removeNonValidLineHeight(
-    format: ContentModelBlockFormat,
-    element: HTMLElement,
-    context: DomToModelContext,
-    defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
-): void {
+function removeNonValidLineHeight(format: ContentModelBlockFormat, element: HTMLElement): void {
     //If the line height is less than the browser default line height, line between the text is going to be too narrow
     let parsedLineHeight: number;
     if (
         PERCENTAGE_REGEX.test(element.style.lineHeight) &&
-        !isNaN((parsedLineHeight = parseInt(element.style.lineHeight))) &&
-        parsedLineHeight < DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE
+        !isNaN((parsedLineHeight = parseInt(element.style.lineHeight)))
     ) {
-        format.lineHeight = defaultStyle.lineHeight;
+        format.lineHeight = (
+            DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE *
+            (parsedLineHeight / 100)
+        ).toString();
     }
 }
 
