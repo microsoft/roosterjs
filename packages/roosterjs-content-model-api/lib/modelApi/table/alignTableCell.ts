@@ -71,8 +71,6 @@ function alignTableCellInternal(
                 const format = cell?.format;
 
                 if (format) {
-                    delete cell.cachedElement;
-
                     callback(mutateBlock(cell));
 
                     cell.blocks.forEach(block => {
