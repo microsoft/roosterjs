@@ -143,13 +143,12 @@ function onDraggingHorizontal(
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
     // Assign new widths and heights to the CM table
-    if (cmTable && anchorRow != undefined) {
+    if (cmTable && anchorRow != undefined && cmTable.rows[anchorRow] != undefined) {
         // Modify the CM Table size
         cmTable.rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
         // Normalize the new height value
         const newHeight =
-            cmTable.rows[anchorRow] &&
             cmTable.rows[anchorRow].height > MIN_ALLOWED_TABLE_CELL_HEIGHT
                 ? cmTable.rows[anchorRow].height
                 : MIN_ALLOWED_TABLE_CELL_HEIGHT;
