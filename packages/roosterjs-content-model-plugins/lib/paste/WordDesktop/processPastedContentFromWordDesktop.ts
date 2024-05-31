@@ -32,7 +32,7 @@ export function processPastedContentFromWordDesktop(
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, trustedHTMLHandler);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
-    addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
+    addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
@@ -56,7 +56,7 @@ const wordDesktopElementProcessor = (
     };
 };
 
-function removeNonValidLineHeight(format: ContentModelBlockFormat, element: HTMLElement): void {
+function adjustPercentileLineHeight(format: ContentModelBlockFormat, element: HTMLElement): void {
     //If the line height is less than the browser default line height, line between the text is going to be too narrow
     let parsedLineHeight: number;
     if (
