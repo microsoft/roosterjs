@@ -5,11 +5,11 @@ import {
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelEntity,
-    ContentModelParagraph,
-    ContentModelSegment,
     IEditor,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelParagraph,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -122,9 +122,9 @@ function getNewRange(
 }
 
 function findPairedDelimiter(
-    entitySegment: ContentModelSegment,
-    path: ContentModelBlockGroup[],
-    paragraph: ContentModelParagraph,
+    entitySegment: ReadonlyContentModelSegment,
+    path: ReadonlyContentModelBlockGroup[],
+    paragraph: ReadonlyContentModelParagraph,
     movingBefore: boolean
 ) {
     let entity: ContentModelEntity | null = null;

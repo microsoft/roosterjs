@@ -5,5 +5,4 @@ import type { ShallowMutableContentModelTable } from 'roosterjs-content-model-ty
  */
 export function deleteTable(table: ShallowMutableContentModelTable) {
     table.rows = [];
-    delete table.cachedElement;
 }
