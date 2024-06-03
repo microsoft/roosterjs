@@ -1,6 +1,6 @@
 import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
     CacheSelection,
     ContentModelDocument,
@@ -24,7 +24,7 @@ describe('domIndexerImpl.onSegment', () => {
         const paragraph = 'Paragraph' as any;
         const segment = 'Segment' as any;
 
-        domIndexerImpl.onSegment(node, paragraph, [segment]);
+        new DomIndexerImpl().onSegment(node, paragraph, [segment]);
 
         expect(node).toEqual({
             __roosterjsContentModel: { paragraph: 'Paragraph', segments: ['Segment'] },
@@ -33,6 +33,12 @@ describe('domIndexerImpl.onSegment', () => {
 });
 
 describe('domIndexerImpl.onParagraph', () => {
+    let domIndexerImpl: DomIndexerImpl;
+
+    beforeEach(() => {
+        domIndexerImpl = new DomIndexerImpl();
+    });
+
     it('Paragraph, no child', () => {
         const node = document.createElement('div');
 
@@ -163,6 +169,12 @@ describe('domIndexerImpl.onParagraph', () => {
 });
 
 describe('domIndexerImpl.onTable', () => {
+    let domIndexerImpl: DomIndexerImpl;
+
+    beforeEach(() => {
+        domIndexerImpl = new DomIndexerImpl();
+    });
+
     it('onTable', () => {
         const node = {} as any;
         const rows = 'ROWS' as any;
@@ -181,10 +193,12 @@ describe('domIndexerImpl.onTable', () => {
 describe('domIndexerImpl.reconcileSelection', () => {
     let setSelectionSpy: jasmine.Spy;
     let model: ContentModelDocument;
+    let domIndexerImpl: DomIndexerImpl;
 
     beforeEach(() => {
         model = createContentModelDocument();
         setSelectionSpy = spyOn(setSelection, 'setSelection').and.callThrough();
+        domIndexerImpl = new DomIndexerImpl();
     });
 
     it('no old range, fake range', () => {

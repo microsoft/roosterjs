@@ -1,6 +1,6 @@
 import { areSameSelection } from './areSameSelection';
 import { createTextMutationObserver } from './textMutationObserver';
-import { domIndexerImpl } from './domIndexerImpl';
+import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCachedSelection } from './updateCachedSelection';
 import type {
     CachePluginState,
@@ -26,7 +26,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.state = option.disableCache
             ? {}
             : {
-                  domIndexer: domIndexerImpl,
+                  domIndexer: new DomIndexerImpl(
+                      option.experimentalFeatures &&
+                          option.experimentalFeatures.indexOf('PersistCache') >= 0
+                  ),
                   textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
               };
     }

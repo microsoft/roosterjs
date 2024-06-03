@@ -45,6 +45,7 @@ describe('createEditorContext', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -91,6 +92,7 @@ describe('createEditorContext', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -135,6 +137,7 @@ describe('createEditorContext', () => {
             pendingFormat: mockedPendingFormat,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -181,6 +184,7 @@ describe('createEditorContext', () => {
             pendingFormat: mockedPendingFormat,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });
@@ -234,6 +238,7 @@ describe('createEditorContext - checkZoomScale', () => {
             domIndexer: undefined,
             pendingFormat: undefined,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });
@@ -285,6 +290,7 @@ describe('createEditorContext - checkRootDir', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -303,6 +309,7 @@ describe('createEditorContext - checkRootDir', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });

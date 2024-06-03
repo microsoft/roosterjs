@@ -100,6 +100,7 @@ describe('createEditorCore', () => {
             contextMenu: 'contextMenu' as any,
             domHelper: mockedDOMHelper,
             disposeErrorHandler: undefined,
+            experimentalFeatures: [],
             ...additionalResult,
         });
 
