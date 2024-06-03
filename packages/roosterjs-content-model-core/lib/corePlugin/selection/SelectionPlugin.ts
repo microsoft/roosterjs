@@ -344,10 +344,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         editor.getDOMHelper()
                     );
 
-                    const rangeKey = key == Tab ? this.getTabKey(rawEvent) : key;
-
-                    if (this.state.tableSelection) {
-                        win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
+                    if (this.state.tableSelection && !rawEvent.defaultPrevented) {
+                        if (key == Tab) {
+                            this.handleSelectionInTable(this.getTabKey(rawEvent));
+                            rawEvent.preventDefault();
+                        } else {
+                            win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                        }
                     }
                 }
                 break;

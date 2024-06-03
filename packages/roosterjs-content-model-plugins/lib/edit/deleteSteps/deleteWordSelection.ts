@@ -2,6 +2,7 @@ import {
     isPunctuation,
     isSpace,
     isWhiteSpacePreserved,
+    mutateBlock,
     normalizeText,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -35,7 +36,7 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
         const startIndex = paragraph.segments.indexOf(marker);
         const deleteNext = direction == 'forward';
 
-        const iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
+        const iterator = iterateSegments(mutateBlock(paragraph), startIndex, deleteNext, context);
         let curr = iterator.next();
 
         for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
