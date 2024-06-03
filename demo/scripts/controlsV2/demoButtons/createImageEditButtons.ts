@@ -15,7 +15,7 @@ function createImageCropButton(handler: ImageEditor): RibbonButton<'buttonNameCr
         onClick: editor => {
             const selection = editor.getDOMSelection();
             if (selection.type === 'image' && selection.image) {
-                handler.cropImage(editor, selection.image);
+                handler.cropImage(selection.image);
             }
         },
     };
@@ -44,7 +44,7 @@ function createImageRotateButton(handler: ImageEditor): RibbonButton<'buttonName
             if (selection.type === 'image' && selection.image) {
                 const rotateDirection = direction as 'left' | 'right';
                 const rad = degreeToRad(rotateDirection == 'left' ? 270 : 90);
-                handler.rotateImage(editor, selection.image, rad);
+                handler.rotateImage(selection.image, rad);
             }
         },
     };
@@ -71,11 +71,7 @@ function createImageFlipButton(handler: ImageEditor): RibbonButton<'buttonNameFl
         onClick: (editor, flipDirection) => {
             const selection = editor.getDOMSelection();
             if (selection.type === 'image' && selection.image) {
-                handler.flipImage(
-                    editor,
-                    selection.image,
-                    flipDirection as 'horizontal' | 'vertical'
-                );
+                handler.flipImage(selection.image, flipDirection as 'horizontal' | 'vertical');
             }
         },
     };

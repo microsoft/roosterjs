@@ -91,13 +91,13 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, node, strings, uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateLeft':
-                imageEdit?.rotateImage(editor, node as HTMLImageElement, -Math.PI / 2);
+                imageEdit?.rotateImage(node as HTMLImageElement, -Math.PI / 2);
                 break;
             case 'menuNameImageRotateRight':
-                imageEdit?.rotateImage(editor, node as HTMLImageElement, Math.PI / 2);
+                imageEdit?.rotateImage(node as HTMLImageElement, Math.PI / 2);
                 break;
         }
     },
@@ -116,13 +116,13 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, node, strings, uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateFlipHorizontally':
-                imageEdit?.flipImage(editor, node as HTMLImageElement, 'horizontal');
+                imageEdit?.flipImage(node as HTMLImageElement, 'horizontal');
                 break;
             case 'menuNameImageRotateFlipVertically':
-                imageEdit?.flipImage(editor, node as HTMLImageElement, 'vertical');
+                imageEdit?.flipImage(node as HTMLImageElement, 'vertical');
                 break;
         }
     },
@@ -137,8 +137,8 @@ const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
-        imageEdit?.cropImage(editor, node as HTMLImageElement);
+    onClick: (_, _editor, node, strings, uiUtilities, imageEdit) => {
+        imageEdit?.cropImage(node as HTMLImageElement);
     },
 };
 

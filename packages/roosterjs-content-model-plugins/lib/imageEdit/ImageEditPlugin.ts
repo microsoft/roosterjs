@@ -296,12 +296,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image) || canRegenerateImage(this.selectedImage);
     }
 
-    public cropImage(editor: IEditor, image: HTMLImageElement) {
+    public cropImage(image: HTMLImageElement) {
+        if (!this.editor) {
+            return;
+        }
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             image = this.removeImageWrapper() ?? image;
         }
 
-        this.startEditing(editor, image, 'crop');
+        this.startEditing(this.editor, image, 'crop');
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
         }
@@ -470,36 +473,36 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return image;
     }
 
-    public flipImage(
-        editor: IEditor,
-        image: HTMLImageElement,
-        direction: 'horizontal' | 'vertical'
-    ) {
-        this.editImage(editor, image, 'flip', imageEditInfo => {
-            const angleRad = imageEditInfo.angleRad || 0;
-            const isInVerticalPostion =
-                (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
-                (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
-            if (isInVerticalPostion) {
-                if (direction === 'horizontal') {
-                    imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
+    public flipImage(image: HTMLImageElement, direction: 'horizontal' | 'vertical') {
+        if (this.editor) {
+            this.editImage(this.editor, image, 'flip', imageEditInfo => {
+                const angleRad = imageEditInfo.angleRad || 0;
+                const isInVerticalPostion =
+                    (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
+                    (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
+                if (isInVerticalPostion) {
+                    if (direction === 'horizontal') {
+                        imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
+                    } else {
+                        imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
+                    }
                 } else {
-                    imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
+                    if (direction === 'vertical') {
+                        imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
+                    } else {
+                        imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
+                    }
                 }
-            } else {
-                if (direction === 'vertical') {
-                    imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
-                } else {
-                    imageEditInfo.flippedHorizontal = !imageEditInfo.flippedHorizontal;
-                }
-            }
-        });
+            });
+        }
     }
 
-    public rotateImage(editor: IEditor, image: HTMLImageElement, angleRad: number) {
-        this.editImage(editor, image, 'rotate', imageEditInfo => {
-            imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
-        });
+    public rotateImage(image: HTMLImageElement, angleRad: number) {
+        if (this.editor) {
+            this.editImage(this.editor, image, 'rotate', imageEditInfo => {
+                imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
+            });
+        }
     }
 
     //EXPOSED FOR TEST ONLY
