@@ -29,6 +29,7 @@ describe('EditPlugin', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
+            isExperimentalFeatureEnabled: () => true,
         } as any) as IEditor;
     });
 
