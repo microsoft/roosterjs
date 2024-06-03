@@ -1,11 +1,16 @@
-import { enumerateComputedStyle, removeUnnecessaryAttribute, removeUnnecessarySpan, removeUnnecessaryStyle } from './removeUnnecessarySpan';
+import {
+    enumerateComputedStyle,
+    removeUnnecessaryAttribute,
+    removeUnnecessarySpan,
+    removeUnnecessaryStyle,
+} from './removeUnnecessarySpan';
 import { isEntityElement } from '../../domUtils/entityUtils';
 import { mergeNode } from './mergeNode';
 
 /**
  * @internal
  */
-export function optimize(root: Node, isRecursive = false) {
+export function optimize(root: Node, isRecursive: boolean = false) {
     /**
      * Do no do any optimization to entity
      */
@@ -15,7 +20,7 @@ export function optimize(root: Node, isRecursive = false) {
     if (!isRecursive && root.parentElement != null) {
         const computedAttributes = {} as Record<string, Attr>;
         // html doesn't provide computed attributes, use parent's attributes directly
-        Array.from(root.parentElement.attributes).forEach((attr) => {
+        Array.from(root.parentElement.attributes).forEach(attr => {
             computedAttributes[attr.name] = attr;
         });
         removeUnnecessaryAttribute(root, computedAttributes);
