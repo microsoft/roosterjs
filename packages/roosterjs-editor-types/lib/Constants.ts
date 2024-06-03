@@ -1,5 +1,7 @@
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
+/**
+ * Inheritable CSS properties
+ * Ref: https://www.w3.org/TR/CSS21/propidx.html
+ */
 export const INHERITABLE_PROPERTIES = (
     'border-spacing,caption-side,color,' +
     'cursor,direction,empty-cells,font-family,font-size,font-style,font-variant,font-weight,' +

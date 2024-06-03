@@ -10,7 +10,12 @@ export function enumerateInheritedStyle(
 ) {
     element.style.cssText.split(';').forEach(value => {
         const [key, valueText] = value.split(':').map(part => part.trim());
-        if (!key || !valueText || !INHERITABLE_PROPERTIES.includes(key)) {
+        if (
+            !key ||
+            !valueText ||
+            (element.tagName == 'A' && key === 'color') || // The color of a link is not inherited
+            !INHERITABLE_PROPERTIES.includes(key)
+        ) {
             return;
         }
         const values = new Set(valueText.split(',').map(value => value.trim()));

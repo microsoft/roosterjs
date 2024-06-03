@@ -318,9 +318,7 @@ describe('Paste with clipboardData', () => {
                         {
                             segmentType: 'Text',
                             text: 'Test',
-                            format: {
-                                textColor: 'rgb(0, 0, 0)',
-                            },
+                            format: {},
                         },
                         {
                             segmentType: 'SelectionMarker',

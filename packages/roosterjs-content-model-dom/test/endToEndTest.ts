@@ -135,7 +135,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             '1\r\n2',
-            '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;">1</li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;">2</li></ul>'
         );
     });
 
@@ -1609,8 +1609,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'test',
-            '<span style="color: red;"><a href="#" style="color: red; display: block;">test</a></span>',
-            '<span style="color: red;"><a style="color: red; display: block;" href="#">test</a></span>'
+            '<span style="color: red;"><a href="#" style="color: red; display: block;">test</a></span>'
         );
     });
 
