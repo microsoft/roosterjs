@@ -5,11 +5,11 @@ import { handleTabOnTable } from './tabUtils/handleTabOnTable';
 import { handleTabOnTableCell } from './tabUtils/handleTabOnTableCell';
 import { setModelIndentation } from 'roosterjs-content-model-api';
 import type {
-    ContentModelDocument,
     ContentModelListItem,
     ContentModelTableCell,
     FormatContentModelContext,
     IEditor,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -51,7 +51,7 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
  * - If it is a list item, call handleTabOnList to handle the tab key.
  */
 function handleTab(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     rawEvent: KeyboardEvent,
     context: FormatContentModelContext
 ) {
