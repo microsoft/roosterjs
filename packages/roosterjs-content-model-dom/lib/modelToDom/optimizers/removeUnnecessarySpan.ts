@@ -5,9 +5,9 @@ import { isNodeOfType } from '../../domUtils/isNodeOfType';
  */
 export function removeUnnecessaryAttribute(root: Node, computedAttributes: Record<string, Attr>) {
     if (!isNodeOfType(root, 'ELEMENT_NODE')) {
-        return
+        return;
     }
-    let newComputedAttributes = {
+    const newComputedAttributes = {
         ...computedAttributes,
     };
     for (let i = root.attributes.length - 1; i >= 0; i--) {
@@ -27,16 +27,18 @@ export function removeUnnecessaryAttribute(root: Node, computedAttributes: Recor
 /**
  * @internal
  */
-export function enumerateComputedStyle(element: HTMLElement, handler: (key: string, value: Set<string>) => void) {
-    element.style.cssText.split(";").forEach((value) => {
-        let [key, valueText] = value.split(":");
+export function enumerateComputedStyle(
+    element: HTMLElement,
+    handler: (key: string, value: Set<string>) => void
+) {
+    element.style.cssText.split(';').forEach(value => {
+        const [key, valueText] = value.split(':');
         if (!key || !valueText) {
             return;
         }
-        key = key.trim();
-        let values = new Set(valueText.split(",").map((value) => value.trim()));
+        const values = new Set(valueText.split(',').map(value => value.trim()));
 
-        handler(key, values);
+        handler(key.trim(), values);
     });
 }
 
@@ -45,21 +47,24 @@ export function enumerateComputedStyle(element: HTMLElement, handler: (key: stri
  */
 export function removeUnnecessaryStyle(root: Node, computedCSS: Record<string, Set<string>>) {
     if (!isNodeOfType(root, 'ELEMENT_NODE')) {
-        return
+        return;
     }
-    let newComputedCSS = {
-        ...computedCSS
-    }
+    const newComputedCSS = {
+        ...computedCSS,
+    };
     enumerateComputedStyle(root, (key, values) => {
-        if (computedCSS[key]?.size === values.size && [...computedCSS[key]].every((value) => values.has(value))) {
+        if (
+            computedCSS[key]?.size === values.size &&
+            [...computedCSS[key]].every(value => values.has(value))
+        ) {
             root.style.removeProperty(key);
         } else {
             newComputedCSS[key] = values;
         }
     });
 
-    if (root.style.cssText === "") {
-        root.removeAttribute("style");
+    if (root.style.cssText === '') {
+        root.removeAttribute('style');
     }
 
     for (let child = root.firstChild; child; child = child.nextSibling) {

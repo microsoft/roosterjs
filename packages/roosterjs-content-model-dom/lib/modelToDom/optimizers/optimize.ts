@@ -13,14 +13,14 @@ export function optimize(root: Node, isRecursive = false) {
         return;
     }
     if (!isRecursive && root.parentElement != null) {
-        let computedAttributes = {} as Record<string, Attr>;
+        const computedAttributes = {} as Record<string, Attr>;
         // html doesn't provide computed attributes, use parent's attributes directly
         Array.from(root.parentElement.attributes).forEach((attr) => {
             computedAttributes[attr.name] = attr;
         });
         removeUnnecessaryAttribute(root, computedAttributes);
 
-        let computedStyle = {} as Record<string, Set<string>>;
+        const computedStyle = {} as Record<string, Set<string>>;
         enumerateComputedStyle(root.parentElement, (key, values) => {
             computedStyle[key] = values;
         });
