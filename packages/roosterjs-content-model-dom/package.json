@@ -3,7 +3,8 @@
     "description": "Content Model for roosterjs",
     "dependencies": {
         "tslib": "^2.3.1",
-        "roosterjs-content-model-types": ""
+        "roosterjs-content-model-types": "",
+        "roosterjs-editor-types": ""
     },
     "version": "0.0.0",
     "main": "./lib/index.ts"
