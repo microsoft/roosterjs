@@ -1,12 +1,10 @@
 import {
     unwrapBlock,
     getClosestAncestorBlockGroupIndex,
-    isBlockGroupOfType,
     createFormatContainer,
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelFormatContainer,
     DeleteSelectionStep,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelFormatContainer,
@@ -21,7 +19,11 @@ import type {
 export const deleteEmptyQuote: DeleteSelectionStep = context => {
     const { deleteResult } = context;
 
-    if (deleteResult == 'nothingToDelete' || deleteResult == 'notDeleted') {
+    if (
+        deleteResult == 'nothingToDelete' ||
+        deleteResult == 'notDeleted' ||
+        deleteResult == 'range'
+    ) {
         const { insertPoint, formatContext } = context;
         const { path, paragraph } = insertPoint;
         const rawEvent = formatContext?.rawEvent as KeyboardEvent;
@@ -35,52 +37,36 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
         if (quote && quote.blockGroupType === 'FormatContainer' && quote.tagName == 'blockquote') {
             const parent = path[index + 1];
             const quoteBlockIndex = parent.blocks.indexOf(quote);
-            const blockQuote = parent.blocks[quoteBlockIndex];
 
-            if (
-                isBlockGroupOfType<ContentModelFormatContainer>(blockQuote, 'FormatContainer') &&
-                blockQuote.tagName === 'blockquote'
+            if (isEmptyQuote(quote)) {
+                unwrapBlock(parent, quote);
+                rawEvent?.preventDefault();
+                context.deleteResult = 'range';
+            } else if (
+                rawEvent?.key === 'Enter' &&
+                quote.blocks.indexOf(paragraph) >= 0 &&
+                isEmptyParagraph(paragraph)
             ) {
-                if (isEmptyQuote(blockQuote)) {
-                    unwrapBlock(parent, blockQuote);
-                    rawEvent?.preventDefault();
-                    context.deleteResult = 'range';
-                } else if (
-                    isSelectionOnEmptyLine(blockQuote, paragraph) &&
-                    rawEvent?.key === 'Enter'
-                ) {
-                    insertNewLine(blockQuote, parent, quoteBlockIndex, paragraph);
-                    rawEvent?.preventDefault();
-                    context.deleteResult = 'range';
-                }
+                insertNewLine(mutateBlock(quote), parent, quoteBlockIndex, paragraph);
+                rawEvent?.preventDefault();
+                context.deleteResult = 'range';
             }
         }
     }
 };
 
-const isEmptyQuote = (quote: ContentModelFormatContainer) => {
+const isEmptyQuote = (quote: ReadonlyContentModelFormatContainer) => {
     return (
         quote.blocks.length === 1 &&
         quote.blocks[0].blockType === 'Paragraph' &&
-        quote.blocks[0].segments.every(
-            s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
-        )
+        isEmptyParagraph(quote.blocks[0])
     );
 };
 
-const isSelectionOnEmptyLine = (
-    quote: ReadonlyContentModelFormatContainer,
-    paragraph: ReadonlyContentModelParagraph
-) => {
-    const paraIndex = quote.blocks.indexOf(paragraph);
-
-    if (paraIndex >= 0) {
-        return paragraph.segments.every(
-            s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
-        );
-    } else {
-        return false;
-    }
+const isEmptyParagraph = (paragraph: ReadonlyContentModelParagraph) => {
+    return paragraph.segments.every(
+        s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
+    );
 };
 
 const insertNewLine = (

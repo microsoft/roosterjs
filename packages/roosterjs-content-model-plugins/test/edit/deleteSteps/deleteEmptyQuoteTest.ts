@@ -126,6 +126,218 @@ describe('deleteEmptyQuote', () => {
             ],
             format: {},
         };
-        runTest(model, model, 'notDeleted');
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
+            ],
+            format: {},
+        };
+        runTest(model, expectedModel, 'notDeleted');
+    });
+});
+
+describe('delete with Enter', () => {
+    it('Enter in empty paragraph in middle of quote', () => {
+        function runTest(
+            model: ContentModelDocument,
+            expectedModel: ContentModelDocument,
+            deleteResult: string
+        ) {
+            const result = deleteSelection(model, [deleteEmptyQuote], {
+                rawEvent: {
+                    key: 'Enter',
+                    preventDefault: () => {},
+                } as any,
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+            });
+            normalizeContentModel(model);
+            expect(result.deleteResult).toEqual(deleteResult);
+            expect(model).toEqual(expectedModel);
+        }
+
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
+            ],
+            format: {},
+        };
+
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                textColor: 'rgb(102, 102, 102)',
+                            },
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {
+                                textColor: 'rgb(102, 102, 102)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
+            ],
+            format: {},
+        };
+        runTest(model, expectedModel, 'range');
     });
 });

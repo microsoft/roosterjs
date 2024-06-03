@@ -159,6 +159,8 @@ export class EditPlugin implements EditorPlugin {
                 case 'Enter':
                     if (this.handleEnterKey) {
                         keyboardEnter(editor, rawEvent);
+                    } else {
+                        keyboardInput(editor, rawEvent);
                     }
                     break;
 

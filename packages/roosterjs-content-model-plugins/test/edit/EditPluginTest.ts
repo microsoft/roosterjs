@@ -1,4 +1,5 @@
 import * as keyboardDelete from '../../lib/edit/keyboardDelete';
+import * as keyboardEnter from '../../lib/edit/keyboardEnter';
 import * as keyboardInput from '../../lib/edit/keyboardInput';
 import * as keyboardTab from '../../lib/edit/keyboardTab';
 import { DOMEventRecord, IEditor } from 'roosterjs-content-model-types';
@@ -10,6 +11,7 @@ describe('EditPlugin', () => {
     let eventMap: Record<string, any>;
     let attachDOMEventSpy: jasmine.Spy;
     let getEnvironmentSpy: jasmine.Spy;
+    let isExperimentalFeatureEnabledSpy: jasmine.Spy;
 
     beforeEach(() => {
         attachDOMEventSpy = jasmine
@@ -21,6 +23,9 @@ describe('EditPlugin', () => {
         getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
             isAndroid: true,
         });
+        isExperimentalFeatureEnabledSpy = jasmine
+            .createSpy('isExperimentalFeatureEnabled')
+            .and.returnValue(false);
 
         editor = ({
             attachDomEvent: attachDOMEventSpy,
@@ -29,7 +34,7 @@ describe('EditPlugin', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
-            isExperimentalFeatureEnabled: () => true,
+            isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
         } as any) as IEditor;
     });
 
@@ -41,11 +46,13 @@ describe('EditPlugin', () => {
         let keyboardDeleteSpy: jasmine.Spy;
         let keyboardInputSpy: jasmine.Spy;
         let keyboardTabSpy: jasmine.Spy;
+        let keyboardEnterSpy: jasmine.Spy;
 
         beforeEach(() => {
             keyboardDeleteSpy = spyOn(keyboardDelete, 'keyboardDelete');
             keyboardInputSpy = spyOn(keyboardInput, 'keyboardInput');
             keyboardTabSpy = spyOn(keyboardTab, 'keyboardTab');
+            keyboardEnterSpy = spyOn(keyboardEnter, 'keyboardEnter');
         });
 
         it('Backspace', () => {
@@ -61,6 +68,8 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -76,6 +85,8 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Shift+Delete', () => {
@@ -91,6 +102,8 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Tab', () => {
@@ -107,6 +120,50 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+        });
+
+        it('Enter, keyboardEnter not enabled', () => {
+            plugin = new EditPlugin();
+            const rawEvent = { which: 13, key: 'Enter' } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.takeSnapshot = addUndoSnapshotSpy;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('Enter, keyboardEnter enabled', () => {
+            isExperimentalFeatureEnabledSpy.and.callFake(
+                (featureName: string) => featureName == 'PersistCache'
+            );
+            plugin = new EditPlugin();
+            const rawEvent = { which: 13, key: 'Enter' } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.takeSnapshot = addUndoSnapshotSpy;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
@@ -125,6 +182,8 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Default prevented', () => {
@@ -139,6 +198,8 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Trigger entity event first', () => {
@@ -175,6 +236,8 @@ describe('EditPlugin', () => {
                 key: 'Delete',
             } as any);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
     });
 
