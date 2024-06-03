@@ -39,7 +39,7 @@ const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/
 const VARIABLE_PREFIX = 'var(';
 const VARIABLE_POSTFIX = ')';
 const COLOR_VAR_PREFIX = '--darkColor';
-const COLOR_VAR_ENFORCE_FALLBACK_KEY = 'fallback-color';
+const COLOR_VAR_ENFORCE_FALLBACK_KEY = `${COLOR_VAR_PREFIX}_fallback-color`;
 
 /**
  * Get color from given HTML element

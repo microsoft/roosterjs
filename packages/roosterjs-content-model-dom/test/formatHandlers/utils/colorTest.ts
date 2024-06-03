@@ -494,7 +494,7 @@ describe('setColor with darkColorHandler', () => {
 
     it('no existing color, set valid color, skip known colors, getDarkColor return null', () => {
         knownColors = {
-            white: {
+            '--darkColor_white': {
                 lightModeColor: 'white',
                 darkModeColor: 'black',
             },
@@ -518,10 +518,10 @@ describe('setColor with darkColorHandler', () => {
         setColor(darkDiv, 'white', false, true, darkColorHandler);
 
         expect(lightDiv.outerHTML).toBe(
-            '<div style="color: white; background-color: white;"></div>'
+            '<div style="background-color: white; color: white;"></div>'
         );
         expect(darkDiv.outerHTML).toBe(
-            '<div style="color: var(--darkColor_fallback-color, white); background-color: var(--darkColor_fallback-color, white);"></div>'
+            '<div style="background-color: var(--darkColor_fallback-color, white); color: var(--darkColor_fallback-color, white);"></div>'
         );
         expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
         expect(updateKnownColorSpy).toHaveBeenCalledTimes(0);

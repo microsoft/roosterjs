@@ -129,6 +129,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
@@ -180,6 +181,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             mockedGetDarkColor,
+            undefined,
             undefined
         );
     });
@@ -213,6 +215,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
@@ -246,6 +249,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
@@ -279,6 +283,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
@@ -312,6 +317,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
@@ -345,6 +351,7 @@ describe('createEditorCore', () => {
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
             mockedDiv,
             getDarkColorFallback,
+            undefined,
             undefined
         );
     });
