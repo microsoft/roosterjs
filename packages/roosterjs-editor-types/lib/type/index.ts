@@ -24,3 +24,4 @@ export {
     Definition,
 } from './Definition';
 export { CoreCreator } from './CoreCreator';
+export { INHERITABLE_PROPERTIES } from '../Constants';

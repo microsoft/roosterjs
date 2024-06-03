@@ -1,4 +1,4 @@
-import { INHERITABLE_PROPERTIES } from 'roosterjs-editor-dom/lib/htmlSanitizer/getInheritableStyles';
+import { INHERITABLE_PROPERTIES } from 'roosterjs-editor-types';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 
 /**
