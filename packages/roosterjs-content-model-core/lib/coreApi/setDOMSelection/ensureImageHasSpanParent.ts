@@ -1,18 +1,14 @@
-import { isElementOfType } from './isElementOfType';
-import { isNodeOfType } from './isNodeOfType';
-import { wrap } from './wrap';
+import { isElementOfType, isNodeOfType, wrap } from 'roosterjs-content-model-dom';
 
 /**
+ * @internal
  * Ensure image is wrapped by a span element
  * @param image
  * @returns the image
  */
-export function ensureImageHasSpanParent(
-    image: HTMLImageElement,
-    entryPoint?: string
-): HTMLImageElement {
+export function ensureImageHasSpanParent(image: HTMLImageElement): HTMLImageElement {
     const parent = image.parentElement;
-    // console.log(parent, entryPoint);
+
     if (
         parent &&
         isNodeOfType(parent, 'ELEMENT_NODE') &&

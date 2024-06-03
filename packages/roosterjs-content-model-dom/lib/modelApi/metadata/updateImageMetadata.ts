@@ -18,7 +18,7 @@ const BooleanDefinition = createBooleanDefinition(true);
  * @internal
  * Definition of ImageMetadataFormat
  */
-export const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
+const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetadataFormat>>({
     widthPx: NumberDefinition,
     heightPx: NumberDefinition,
     leftPercent: NumberDefinition,
@@ -34,6 +34,7 @@ export const ImageMetadataFormatDefinition = createObjectDefinition<Required<Ima
 });
 
 /**
+ * @internal
  * Get image metadata
  * @param image The image Content Model
  */

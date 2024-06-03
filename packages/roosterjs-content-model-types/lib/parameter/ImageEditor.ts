@@ -20,12 +20,7 @@ export type ImageEditOperation =
     /**
      * Flip an image
      */
-    | 'flip'
-
-    /**
-     * Resize and rotate an image
-     */
-    | 'resizeAndRotate';
+    | 'flip';
 
 /**
  * Define the common operation of an image editor

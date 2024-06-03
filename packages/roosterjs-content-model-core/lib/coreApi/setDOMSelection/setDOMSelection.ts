@@ -1,13 +1,9 @@
 import { addRangeToSelection } from './addRangeToSelection';
+import { ensureImageHasSpanParent } from './ensureImageHasSpanParent';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
-import {
-    ensureImageHasSpanParent,
-    isNodeOfType,
-    parseTableCells,
-    toArray,
-} from 'roosterjs-content-model-dom';
+import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,
@@ -55,8 +51,8 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:auto!important; outline-color:${imageSelectionColor}!important;display: ${
-                        core.environment.isSafari ? 'inline-block' : 'inline-flex'
+                    `outline-style:solid!important; outline-color:${imageSelectionColor}!important;display: ${
+                        core.environment.isSafari ? '-webkit-inline-flex' : 'inline-flex'
                     };`,
                     [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
                 );

@@ -1,4 +1,4 @@
-import { MIN_HEIGHT_WIDTH } from '../constants/constants';
+import { isASmallImage } from './imageEditUtils';
 import type { IEditor, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
@@ -24,9 +24,3 @@ export const getHTMLImageOptions = (
         isSmallImage: isASmallImage(editInfo.widthPx ?? 0, editInfo.heightPx ?? 0),
     };
 };
-
-function isASmallImage(widthPx: number, heightPx: number): boolean {
-    return widthPx && heightPx && (widthPx < MIN_HEIGHT_WIDTH || heightPx < MIN_HEIGHT_WIDTH)
-        ? true
-        : false;
-}

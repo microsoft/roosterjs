@@ -13,7 +13,6 @@ import { updateImageEditInfo } from './utils/updateImageEditInfo';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
-    ensureImageHasSpanParent,
     getSelectedSegmentsAndParagraphs,
     isElementOfType,
     isNodeOfType,
@@ -39,7 +38,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     preserveRatio: true,
     disableRotate: false,
     disableSideResize: false,
-    onSelectState: 'resizeAndRotate',
+    onSelectState: 'resize',
 };
 
 const IMAGE_EDIT_CHANGE_SOURCE = 'ImageEdit';
@@ -127,7 +126,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation?: ImageEditOperation
     ) {
         const contentModelImage = getContentModelImage(editor);
-        ensureImageHasSpanParent(image);
         const imageSpan = image.parentElement;
         if (
             !contentModelImage ||
@@ -293,7 +291,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     public canRegenerateImage(image: HTMLImageElement): boolean {
-        return canRegenerateImage(image) || canRegenerateImage(this.selectedImage);
+        return canRegenerateImage(image);
     }
 
     public cropImage(image: HTMLImageElement) {
@@ -411,7 +409,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.shadowSpan
         ) {
             editor.formatContentModel(
-                (model, _) => {
+                (model, context) => {
                     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
                         model,
                         false
