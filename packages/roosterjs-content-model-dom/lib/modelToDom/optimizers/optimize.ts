@@ -1,11 +1,8 @@
-import {
-    enumerateComputedStyle,
-    removeUnnecessaryAttribute,
-    removeUnnecessarySpan,
-    removeUnnecessaryStyle,
-} from './removeUnnecessarySpan';
+import { enumerateInheritedStyle, removeUnnecessaryStyle } from './removeUnnecessaryStyle';
 import { isEntityElement } from '../../domUtils/entityUtils';
 import { mergeNode } from './mergeNode';
+import { removeUnnecessaryAttribute } from './removeUnnecessaryAttribute';
+import { removeUnnecessarySpan } from './removeUnnecessarySpan';
 
 /**
  * @internal
@@ -26,7 +23,7 @@ export function optimize(root: Node, isRecursive: boolean = false) {
         removeUnnecessaryAttribute(root, computedAttributes);
 
         const computedStyle = {} as Record<string, Set<string>>;
-        enumerateComputedStyle(root.parentElement, (key, values) => {
+        enumerateInheritedStyle(root.parentElement, (key, values) => {
             computedStyle[key] = values;
         });
         removeUnnecessaryStyle(root, computedStyle);
