@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">75.51% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/48</span>
+                <span class='fraction'>37/49</span>
             </div>
         
             
@@ -316,7 +316,9 @@
 <a name='L257'></a><a href='#L257'>257</a>
 <a name='L258'></a><a href='#L258'>258</a>
 <a name='L259'></a><a href='#L259'>259</a>
-<a name='L260'></a><a href='#L260'>260</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -520,6 +522,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -534,9 +541,6 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -583,8 +587,8 @@ import {
     isElementOfType,
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
-    normalizeTable,
     mutateBlock,
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
@@ -736,18 +740,18 @@ export function onDraggingHorizontal(
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 &nbsp;
     // Assign new widths and heights to the CM table
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (cmTable &amp;&amp; anchorRow != undefined) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (cmTable &amp;&amp; anchorRow != undefined &amp;&amp; cmTable.rows[anchorRow] != undefined) {
         // Modify the CM Table size
         mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> + deltaY;
 &nbsp;
-        // Normalize the table
-        normalizeTable(cmTable);
+        // Normalize the new height value
+        const newHeight = Math.max(cmTable.rows[anchorRow].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 &nbsp;
         // Writeback CM Table size changes to DOM Table
         const tableRow = table.rows[anchorRow];
         for (let col = 0; col &lt; tableRow.cells.length; col++) {
             const td = tableRow.cells[col];
-            td.style.height = cmTable.rows[anchorRow].height + 'px';
+            td.style.height = newHeight + 'px';
         }
 &nbsp;
         return true;
@@ -779,7 +783,12 @@ export function onDraggingVertical(
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            mutableTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            // Normalize the new width value
+            const newWidth = Math.max(
+                allWidths[anchorColumn] + change,
+                MIN_ALLOWED_TABLE_CELL_WIDTH
+            );
+            mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -793,9 +802,6 @@ export function onDraggingVertical(
             mutableTable.widths[anchorColumn] = anchorChange;
             mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
-&nbsp;
-        // Normalize the table
-        normalizeTable(cmTable);
 &nbsp;
         // Writeback CM Table size changes to DOM Table
         for (let row = 0; row &lt; table.rows.length; row++) {
@@ -841,7 +847,7 @@ function setVerticalPosition(context: CellResizerContext, trigger: HTMLElement) 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jun 03 2024 18:47:58 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 04 2024 22:06:23 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
