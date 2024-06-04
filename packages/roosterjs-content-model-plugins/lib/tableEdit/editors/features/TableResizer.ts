@@ -2,10 +2,10 @@ import { createElement } from '../../../pluginUtils/CreateElement/createElement'
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
 import {
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
     isNodeOfType,
     mutateBlock,
     normalizeRect,
-    normalizeTable,
 } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
@@ -209,9 +209,6 @@ export function onDragging(
             }
         }
 
-        // Normalize the table
-        normalizeTable(cmTable);
-
         // Writeback CM Table size changes to DOM Table
         for (let row = 0; row < table.rows.length; row++) {
             const tableRow = table.rows[row];
@@ -221,10 +218,23 @@ export function onDragging(
                 continue;
             }
 
+            // Normalize the new height value
+            const newHeight =
+                cmTable.rows[row].height > MIN_ALLOWED_TABLE_CELL_HEIGHT
+                    ? cmTable.rows[row].height
+                    : MIN_ALLOWED_TABLE_CELL_HEIGHT;
+
             for (let col = 0; col < tableRow.cells.length; col++) {
                 const td = tableRow.cells[col];
-                td.style.width = cmTable.widths[col] + 'px';
-                td.style.height = cmTable.rows[row].height + 'px';
+
+                // Normalize the new width value
+                const newWidth =
+                    cmTable.widths[col] > MIN_ALLOWED_TABLE_CELL_HEIGHT
+                        ? cmTable.widths[col]
+                        : MIN_ALLOWED_TABLE_CELL_HEIGHT;
+
+                td.style.width = newWidth + 'px';
+                td.style.height = newHeight + 'px';
             }
         }
         return true;

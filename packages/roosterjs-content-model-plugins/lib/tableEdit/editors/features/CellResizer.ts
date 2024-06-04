@@ -6,7 +6,6 @@ import {
     isElementOfType,
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
-    normalizeTable,
     mutateBlock,
     MIN_ALLOWED_TABLE_CELL_HEIGHT,
 } from 'roosterjs-content-model-dom';
@@ -206,7 +205,12 @@ export function onDraggingVertical(
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            mutableTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            // Normalize the new width value
+            const newWidth =
+                allWidths[anchorColumn] + change < MIN_ALLOWED_TABLE_CELL_WIDTH
+                    ? MIN_ALLOWED_TABLE_CELL_WIDTH
+                    : allWidths[anchorColumn] + change;
+            mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -220,9 +224,6 @@ export function onDraggingVertical(
             mutableTable.widths[anchorColumn] = anchorChange;
             mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
-
-        // Normalize the table
-        normalizeTable(cmTable);
 
         // Writeback CM Table size changes to DOM Table
         for (let row = 0; row < table.rows.length; row++) {
