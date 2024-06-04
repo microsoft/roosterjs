@@ -47,6 +47,7 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
+        experimentalFeatures: options.experimentalFeatures ? [...options.experimentalFeatures] : [],
     };
 }
 

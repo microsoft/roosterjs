@@ -57,4 +57,9 @@ export interface EditorContext {
      * Root Font size in Px.
      */
     rootFontSize?: number;
+
+    /**
+     * Enabled experimental features
+     */
+    experimentalFeatures?: ReadonlyArray<string>;
 }

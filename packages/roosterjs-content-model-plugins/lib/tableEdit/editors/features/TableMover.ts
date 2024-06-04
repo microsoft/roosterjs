@@ -6,21 +6,24 @@ import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
+    cloneModel,
     createContentModelDocument,
     createSelectionMarker,
     getFirstSelectedTable,
     isNodeOfType,
     mergeModel,
+    mutateBlock,
     normalizeRect,
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
     DOMInsertPoint,
     DOMSelection,
     IEditor,
+    ReadonlyContentModelTable,
     Rect,
+    ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const TABLE_MOVER_LENGTH = 12;
@@ -124,7 +127,7 @@ export interface TableMoverContext {
  * Exported for testing
  */
 export interface TableMoverInitValue {
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     tableRect: HTMLDivElement;
 }
@@ -325,14 +328,14 @@ export function onDragEnd(
                     const [oldTable, path] = getFirstSelectedTable(model);
                     if (oldTable) {
                         const index = path[0].blocks.indexOf(oldTable);
-                        path[0].blocks.splice(index, 1);
+                        mutateBlock(path[0]).blocks.splice(index, 1);
                     }
 
                     if (ip && initValue?.cmTable) {
                         // Insert new table
-                        const doc = createContentModelDocument();
-                        doc.blocks.push(initValue.cmTable);
-                        insertionSuccess = !!mergeModel(model, doc, context, {
+                        const doc: ShallowMutableContentModelDocument = createContentModelDocument();
+                        doc.blocks.push(mutateBlock(initValue.cmTable));
+                        insertionSuccess = !!mergeModel(model, cloneModel(doc), context, {
                             mergeFormat: 'none',
                             insertPosition: ip,
                         });
@@ -347,7 +350,7 @@ export function onDragEnd(
                                 if (markerParagraph?.blockType == 'Paragraph') {
                                     const marker = createSelectionMarker(model.format);
 
-                                    markerParagraph.segments.unshift(marker);
+                                    mutateBlock(markerParagraph).segments.unshift(marker);
                                     setParagraphNotImplicit(markerParagraph);
                                     setSelection(FirstCell, marker);
                                 }

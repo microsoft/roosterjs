@@ -114,7 +114,8 @@ function internalMoveUpSegmentFormat(
 
     if (
         firstFormat?.[formatKey] &&
-        segments.every(segment => segment.format[formatKey] == firstFormat[formatKey])
+        segments.every(segment => segment.format[formatKey] == firstFormat[formatKey]) &&
+        target[formatKey] != firstFormat[formatKey]
     ) {
         target[formatKey] = firstFormat[formatKey];
         return true;

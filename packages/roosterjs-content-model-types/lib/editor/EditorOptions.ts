@@ -1,3 +1,4 @@
+import type { ExperimentalFeature } from './ExperimentalFeature';
 import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
@@ -25,11 +26,14 @@ export interface EditorOptions {
     defaultModelToDomOptions?: ModelToDomOption;
 
     /**
-     * Whether content model should be cached in order to improve editing performance.
-     * Pass true to disable the cache.
-     * @default false
+     * @deprecated
      */
     disableCache?: boolean;
+
+    /**
+     * Enabled experimental features
+     */
+    experimentalFeatures?: (ExperimentalFeature | string)[];
 
     /**
      * List of plugins.

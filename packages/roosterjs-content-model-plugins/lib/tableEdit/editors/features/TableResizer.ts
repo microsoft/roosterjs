@@ -1,10 +1,15 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
-import { isNodeOfType, normalizeRect, normalizeTable } from 'roosterjs-content-model-dom';
+import {
+    isNodeOfType,
+    mutateBlock,
+    normalizeRect,
+    normalizeTable,
+} from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import type { ContentModelTable, IEditor, Rect } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable, Rect } from 'roosterjs-content-model-types';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
@@ -49,7 +54,7 @@ export function createTableResizer(
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: DragAndDropContext = {
+    const context: TableResizerContext = {
         isRTL,
         table,
         zoomScale,
@@ -79,14 +84,14 @@ export function createTableResizer(
     return { node: table, div, featureHandler };
 }
 
-class TableResizer extends DragAndDropHelper<DragAndDropContext, DragAndDropInitValue> {
+class TableResizer extends DragAndDropHelper<TableResizerContext, TableResizerInitValue> {
     private disposer: undefined | (() => void);
 
     constructor(
         trigger: HTMLElement,
-        context: DragAndDropContext,
-        onSubmit: (context: DragAndDropContext, trigger: HTMLElement) => void,
-        handler: DragAndDropHandler<DragAndDropContext, DragAndDropInitValue>,
+        context: TableResizerContext,
+        onSubmit: (context: TableResizerContext, trigger: HTMLElement) => void,
+        handler: DragAndDropHandler<TableResizerContext, TableResizerInitValue>,
         zoomScale: number,
         forceMobile?: boolean,
         onTableEditorCreated?: OnTableEditorCreatedCallback
@@ -102,7 +107,11 @@ class TableResizer extends DragAndDropHelper<DragAndDropContext, DragAndDropInit
     }
 }
 
-interface DragAndDropContext {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableResizerContext {
     table: HTMLTableElement;
     isRTL: boolean;
     zoomScale: number;
@@ -113,14 +122,25 @@ interface DragAndDropContext {
     contentDiv?: EventTarget | null;
 }
 
-interface DragAndDropInitValue {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface TableResizerInitValue {
     originalRect: DOMRect;
     originalHeights: number[];
     originalWidths: number[];
-    cmTable: ContentModelTable | undefined;
+    cmTable: ReadonlyContentModelTable | undefined;
 }
 
-function onDragStart(context: DragAndDropContext, event: MouseEvent) {
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragStart(
+    context: TableResizerContext,
+    event: MouseEvent
+): TableResizerInitValue {
     context.onStart();
 
     const { editor, table } = context;
@@ -146,10 +166,14 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
     };
 }
 
-function onDragging(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragging(
+    context: TableResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
+    initValue: TableResizerInitValue,
     deltaX: number,
     deltaY: number
 ) {
@@ -168,16 +192,18 @@ function onDragging(
 
     // Assign new widths and heights to the CM table
     if (cmTable && cmTable.rows && (shouldResizeX || shouldResizeY)) {
+        const mutableTable = mutateBlock(cmTable);
+
         // Modify the CM Table size
         for (let i = 0; i < cmTable.rows.length; i++) {
             for (let j = 0; j < cmTable.rows[i].cells.length; j++) {
                 const cell = cmTable.rows[i].cells[j];
                 if (cell) {
                     if (shouldResizeX && i == 0) {
-                        cmTable.widths[j] = (originalWidths[j] ?? 0) * ratioX;
+                        mutableTable.widths[j] = (originalWidths[j] ?? 0) * ratioX;
                     }
                     if (shouldResizeY && j == 0) {
-                        cmTable.rows[i].height = (originalHeights[i] ?? 0) * ratioY;
+                        mutableTable.rows[i].height = (originalHeights[i] ?? 0) * ratioY;
                     }
                 }
             }
@@ -207,10 +233,14 @@ function onDragging(
     }
 }
 
-function onDragEnd(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragEnd(
+    context: TableResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue | undefined
+    initValue: TableResizerInitValue | undefined
 ) {
     if (context.editor.isDisposed()) {
         return false;
@@ -229,7 +259,7 @@ function onDragEnd(
     return false;
 }
 
-function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setDivPosition(context: TableResizerContext, trigger: HTMLElement) {
     const { table, isRTL } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -241,7 +271,7 @@ function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
     }
 }
 
-function hideResizer(context: DragAndDropContext, trigger: HTMLElement) {
+function hideResizer(context: TableResizerContext, trigger: HTMLElement) {
     trigger.style.visibility = 'hidden';
 }
 

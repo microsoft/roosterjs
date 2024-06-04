@@ -66,7 +66,6 @@ export function normalizeTable(
                 cell.spanAbove = false;
             } else if (rowIndex > 0 && colIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
-                delete cell.cachedElement;
             }
 
             if (colIndex == 0) {
