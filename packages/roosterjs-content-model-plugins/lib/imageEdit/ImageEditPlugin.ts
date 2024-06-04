@@ -16,6 +16,7 @@ import {
     getSelectedSegmentsAndParagraphs,
     isElementOfType,
     isNodeOfType,
+    mutateSegment,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -419,27 +420,31 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     if (!selectedSegmentsAndParagraphs[0]) {
                         return false;
                     }
+
                     const segment = selectedSegmentsAndParagraphs[0][0];
+                    const paragraph = selectedSegmentsAndParagraphs[0][1];
 
-                    if (
-                        this.lastSrc &&
-                        this.selectedImage &&
-                        this.imageEditInfo &&
-                        this.clonedImage &&
-                        segment.segmentType == 'Image'
-                    ) {
-                        applyChange(
-                            editor,
-                            this.selectedImage,
-                            segment,
-                            this.imageEditInfo,
-                            this.lastSrc,
-                            this.wasImageResized || this.isCropMode,
-                            this.clonedImage
-                        );
-                        segment.isSelected = shouldSelectImage;
-                        segment.isSelectedAsImageSelection = shouldSelectAsImageSelection;
-
+                    if (paragraph && segment.segmentType == 'Image') {
+                        mutateSegment(paragraph, segment, image => {
+                            if (
+                                this.lastSrc &&
+                                this.selectedImage &&
+                                this.imageEditInfo &&
+                                this.clonedImage
+                            ) {
+                                applyChange(
+                                    editor,
+                                    this.selectedImage,
+                                    image,
+                                    this.imageEditInfo,
+                                    this.lastSrc,
+                                    this.wasImageResized || this.isCropMode,
+                                    this.clonedImage
+                                );
+                                image.isSelected = shouldSelectImage;
+                                image.isSelectedAsImageSelection = shouldSelectAsImageSelection;
+                            }
+                        });
                         return true;
                     }
 
