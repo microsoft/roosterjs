@@ -12,7 +12,7 @@ describe('updateWrapper', () => {
         preserveRatio: true,
         disableRotate: false,
         disableSideResize: false,
-        onSelectState: 'resizeAndRotate',
+        onSelectState: 'resize',
     };
     const editInfo = {
         src: 'test',
