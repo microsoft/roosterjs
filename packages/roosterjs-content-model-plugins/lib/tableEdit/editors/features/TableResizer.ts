@@ -219,19 +219,13 @@ export function onDragging(
             }
 
             // Normalize the new height value
-            const newHeight =
-                cmTable.rows[row].height > MIN_ALLOWED_TABLE_CELL_HEIGHT
-                    ? cmTable.rows[row].height
-                    : MIN_ALLOWED_TABLE_CELL_HEIGHT;
+            const newHeight = Math.max(cmTable.rows[row].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
             for (let col = 0; col < tableRow.cells.length; col++) {
                 const td = tableRow.cells[col];
 
                 // Normalize the new width value
-                const newWidth =
-                    cmTable.widths[col] > MIN_ALLOWED_TABLE_CELL_HEIGHT
-                        ? cmTable.widths[col]
-                        : MIN_ALLOWED_TABLE_CELL_HEIGHT;
+                const newWidth = Math.max(cmTable.widths[col], MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
                 td.style.width = newWidth + 'px';
                 td.style.height = newHeight + 'px';

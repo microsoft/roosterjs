@@ -164,10 +164,7 @@ export function onDraggingHorizontal(
         mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
         // Normalize the new height value
-        const newHeight =
-            cmTable.rows[anchorRow].height > MIN_ALLOWED_TABLE_CELL_HEIGHT
-                ? cmTable.rows[anchorRow].height
-                : MIN_ALLOWED_TABLE_CELL_HEIGHT;
+        const newHeight = Math.max(cmTable.rows[anchorRow].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
         // Writeback CM Table size changes to DOM Table
         const tableRow = table.rows[anchorRow];
@@ -206,10 +203,10 @@ export function onDraggingVertical(
         if (lastColumn) {
             // Only the last column changes
             // Normalize the new width value
-            const newWidth =
-                allWidths[anchorColumn] + change < MIN_ALLOWED_TABLE_CELL_WIDTH
-                    ? MIN_ALLOWED_TABLE_CELL_WIDTH
-                    : allWidths[anchorColumn] + change;
+            const newWidth = Math.max(
+                allWidths[anchorColumn] + change,
+                MIN_ALLOWED_TABLE_CELL_WIDTH
+            );
             mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
