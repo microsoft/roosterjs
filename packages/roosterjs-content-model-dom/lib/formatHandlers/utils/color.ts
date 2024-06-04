@@ -98,14 +98,17 @@ export function setColor(
 
     if (darkColorHandler && color) {
         const key = existingKey || `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
-        const darkModeColor =
-            darkColorHandler.knownColors?.[key]?.darkModeColor ||
-            darkColorHandler.getDarkColor(
+        let darkModeColor = darkColorHandler.knownColors?.[key]?.darkModeColor;
+
+        if (!darkModeColor || darkColorHandler.alwaysGetDarkColor) {
+            darkModeColor = darkColorHandler.getDarkColor(
                 color,
                 undefined /*baseLAValue*/,
                 isBackground ? 'background' : 'text',
-                element
+                element,
+                darkModeColor
             );
+        }
 
         darkColorHandler.updateKnownColor(isDarkMode, key, {
             lightModeColor: color,

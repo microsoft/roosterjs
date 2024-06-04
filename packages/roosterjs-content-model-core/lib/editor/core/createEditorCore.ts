@@ -40,7 +40,8 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback,
-            options.knownColors
+            options.knownColors,
+            !!options.alwaysGetDarkColor
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domHelper: createDOMHelper(contentDiv),

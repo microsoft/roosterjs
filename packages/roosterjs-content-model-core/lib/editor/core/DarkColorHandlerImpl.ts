@@ -8,7 +8,8 @@ class DarkColorHandlerImpl implements DarkColorHandler {
     constructor(
         private readonly root: HTMLElement,
         public getDarkColor: ColorTransformFunction,
-        public readonly knownColors: Record<string, Colors>
+        public readonly knownColors: Record<string, Colors>,
+        public readonly alwaysGetDarkColor: boolean
     ) {}
 
     updateKnownColor(isDarkMode: boolean, key?: string, colorPair?: Colors): void {
@@ -48,7 +49,8 @@ class DarkColorHandlerImpl implements DarkColorHandler {
 export function createDarkColorHandler(
     root: HTMLElement,
     getDarkColor: ColorTransformFunction,
-    knownColors: Record<string, Colors> = {}
+    knownColors: Record<string, Colors> = {},
+    alwaysGetDarkColor: boolean
 ): DarkColorHandler {
-    return new DarkColorHandlerImpl(root, getDarkColor, knownColors);
+    return new DarkColorHandlerImpl(root, getDarkColor, knownColors, alwaysGetDarkColor);
 }
