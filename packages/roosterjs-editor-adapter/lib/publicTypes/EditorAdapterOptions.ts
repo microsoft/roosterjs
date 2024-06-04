@@ -1,5 +1,5 @@
 import type { EditorOptions } from 'roosterjs-content-model-types';
-import type { EditorPlugin, ExperimentalFeatures } from 'roosterjs-editor-types';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Options for editor adapter
@@ -14,7 +14,7 @@ export interface EditorAdapterOptions extends EditorOptions {
     /**
      * Specify the enabled experimental features
      */
-    experimentalFeatures?: ExperimentalFeatures[];
+    experimentalFeatures?: string[];
 
     /**
      * Legacy plugins using IEditor interface

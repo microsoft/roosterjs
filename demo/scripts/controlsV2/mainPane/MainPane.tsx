@@ -368,6 +368,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             knownColors={this.knownColors}
                             disableCache={this.state.initState.disableCache}
                             announcerStringGetter={getAnnouncingString}
+                            experimentalFeatures={Array.from(
+                                this.state.initState.experimentalFeatures
+                            )}
                         />
                     )}
                 </div>

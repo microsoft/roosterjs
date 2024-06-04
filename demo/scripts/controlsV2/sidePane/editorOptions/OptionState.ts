@@ -1,6 +1,6 @@
 import { AutoFormatOptions, CustomReplace, MarkdownOptions } from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
-import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
 
 export interface NewPluginList {
     autoFormat: boolean;
@@ -43,6 +43,7 @@ export interface OptionState {
     // Editor options
     isRtl: boolean;
     disableCache: boolean;
+    experimentalFeatures: Set<ExperimentalFeature>;
 }
 
 export interface OptionPaneProps extends OptionState, SidePaneElementProps {}
