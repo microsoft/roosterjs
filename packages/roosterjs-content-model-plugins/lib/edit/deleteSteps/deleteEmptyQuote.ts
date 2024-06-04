@@ -29,8 +29,8 @@ export const deleteEmptyQuote: DeleteSelectionStep = context => {
         const rawEvent = formatContext?.rawEvent as KeyboardEvent;
         const index = getClosestAncestorBlockGroupIndex(
             path,
-            ['FormatContainer', 'ListItem'],
-            ['TableCell']
+            ['FormatContainer'],
+            ['TableCell', 'ListItem']
         );
         const quote = path[index];
 
