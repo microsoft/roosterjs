@@ -44,16 +44,16 @@ export interface ImageEditor {
      * Rotate selected image to the given angle (in rad)
      * @param angleRad The angle to rotate to
      */
-    rotateImage(image: HTMLImageElement, angleRad: number): void;
+    rotateImage(angleRad: number): void;
 
     /**
      * Flip the image.
      * @param direction Direction of flip, can be vertical or horizontal
      */
-    flipImage(image: HTMLImageElement, direction: 'vertical' | 'horizontal'): void;
+    flipImage(direction: 'vertical' | 'horizontal'): void;
 
     /**
      * Start to crop selected image
      */
-    cropImage(image: HTMLImageElement): void;
+    cropImage(): void;
 }

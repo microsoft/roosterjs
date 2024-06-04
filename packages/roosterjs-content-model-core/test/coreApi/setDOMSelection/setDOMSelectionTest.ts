@@ -310,7 +310,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;display: inline-flex;',
+                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
                 ['span:has(>img#image_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -370,7 +370,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:red!important;display: inline-flex;',
+                'outline-style:solid!important; outline-color:red!important;display: inline-flex;',
                 ['span:has(>img#image_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -437,7 +437,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:DarkColorMock-red!important;display: inline-flex;',
+                'outline-style:solid!important; outline-color:DarkColorMock-red!important;display: inline-flex;',
                 ['span:has(>img#image_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -498,7 +498,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;display: inline-flex;',
+                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
                 ['span:has(>img#image_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -559,7 +559,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;display: inline-flex;',
+                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
                 ['span:has(>img#image_0_0)']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(

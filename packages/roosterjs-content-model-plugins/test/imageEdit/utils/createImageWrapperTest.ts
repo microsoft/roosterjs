@@ -45,7 +45,7 @@ describe('createImageWrapper', () => {
             preserveRatio: true,
             disableRotate: false,
             disableSideResize: false,
-            onSelectState: 'resizeAndRotate',
+            onSelectState: 'resize',
         };
         const editInfo = {
             src: 'test',
@@ -75,54 +75,6 @@ describe('createImageWrapper', () => {
             imageClone,
             resizers,
             rotators: [],
-            croppers: [],
-        });
-        document.body.removeChild(imageSpan);
-    });
-
-    it('resizeAndRotate', () => {
-        const image = document.createElement('img');
-        const imageSpan = document.createElement('span');
-        imageSpan.append(image);
-        document.body.appendChild(imageSpan);
-        const options: ImageEditOptions = {
-            borderColor: '#DB626C',
-            minWidth: 10,
-            minHeight: 10,
-            preserveRatio: true,
-            disableRotate: false,
-            disableSideResize: false,
-            onSelectState: 'resizeAndRotate',
-        };
-        const editInfo = {
-            src: 'test',
-            widthPx: 20,
-            heightPx: 20,
-            naturalWidth: 10,
-            naturalHeight: 10,
-            leftPercent: 0,
-            rightPercent: 0,
-            topPercent: 0.1,
-            bottomPercent: 0,
-            angleRad: 0,
-        };
-        const htmlOptions = {
-            borderColor: '#DB626C',
-            rotateHandleBackColor: 'white',
-            isSmallImage: false,
-        };
-        const resizers = createImageResizer(document);
-        const rotator = createImageRotator(document, htmlOptions);
-        const wrapper = createWrapper(editor, image, options, editInfo, resizers, rotator);
-        const shadowSpan = createShadowSpan(wrapper);
-        const imageClone = cloneImage(image, editInfo);
-
-        runTest(image, imageSpan, options, editInfo, htmlOptions, 'resizeAndRotate', {
-            wrapper,
-            shadowSpan,
-            imageClone,
-            resizers,
-            rotators: rotator,
             croppers: [],
         });
         document.body.removeChild(imageSpan);
@@ -187,7 +139,7 @@ describe('createImageWrapper', () => {
             preserveRatio: true,
             disableRotate: false,
             disableSideResize: false,
-            onSelectState: 'resizeAndRotate',
+            onSelectState: 'resize',
         };
         const editInfo = {
             src: 'test',

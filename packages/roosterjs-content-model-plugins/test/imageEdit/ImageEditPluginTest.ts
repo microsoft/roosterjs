@@ -45,9 +45,7 @@ describe('ImageEditPlugin', () => {
 
     it('flip', () => {
         plugin.initialize(editor);
-        const selection = editor.getDOMSelection() as ImageSelection;
-        const image = selection.image;
-        plugin.flipImage(image, 'horizontal');
+        plugin.flipImage('horizontal');
         const imageModel = getContentModelImage(editor);
         expect(imageModel!.dataset['editingInfo']).toBeTruthy();
         plugin.dispose();
@@ -55,8 +53,7 @@ describe('ImageEditPlugin', () => {
 
     it('rotate', () => {
         plugin.initialize(editor);
-        const selection = editor.getDOMSelection() as ImageSelection;
-        plugin.rotateImage(selection.image, Math.PI / 2);
+        plugin.rotateImage(Math.PI / 2);
         const imageModel = getContentModelImage(editor);
         expect(imageModel!.dataset['editingInfo']).toBeTruthy();
         plugin.dispose();

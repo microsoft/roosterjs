@@ -12,11 +12,8 @@ function createImageCropButton(handler: ImageEditor): RibbonButton<'buttonNameCr
         iconName: 'Crop',
         isDisabled: formatState =>
             !formatState.canAddImageAltText || !handler.isOperationAllowed('crop'),
-        onClick: editor => {
-            const selection = editor.getDOMSelection();
-            if (selection.type === 'image' && selection.image) {
-                handler.cropImage(selection.image);
-            }
+        onClick: () => {
+            handler.cropImage();
         },
     };
 }
@@ -39,13 +36,10 @@ function createImageRotateButton(handler: ImageEditor): RibbonButton<'buttonName
             items: directions,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
-        onClick: (editor, direction) => {
-            const selection = editor.getDOMSelection();
-            if (selection.type === 'image' && selection.image) {
-                const rotateDirection = direction as 'left' | 'right';
-                const rad = degreeToRad(rotateDirection == 'left' ? 270 : 90);
-                handler.rotateImage(selection.image, rad);
-            }
+        onClick: (_editor, direction) => {
+            const rotateDirection = direction as 'left' | 'right';
+            const rad = degreeToRad(rotateDirection == 'left' ? 270 : 90);
+            handler.rotateImage(rad);
         },
     };
 }
@@ -68,11 +62,8 @@ function createImageFlipButton(handler: ImageEditor): RibbonButton<'buttonNameFl
             items: flipDirections,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
-        onClick: (editor, flipDirection) => {
-            const selection = editor.getDOMSelection();
-            if (selection.type === 'image' && selection.image) {
-                handler.flipImage(selection.image, flipDirection as 'horizontal' | 'vertical');
-            }
+        onClick: (_editor, flipDirection) => {
+            handler.flipImage(flipDirection as 'horizontal' | 'vertical');
         },
     };
 }

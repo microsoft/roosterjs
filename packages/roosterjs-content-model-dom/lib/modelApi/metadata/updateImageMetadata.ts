@@ -34,7 +34,6 @@ const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetad
 });
 
 /**
- * @internal
  * Get image metadata
  * @param image The image Content Model
  */

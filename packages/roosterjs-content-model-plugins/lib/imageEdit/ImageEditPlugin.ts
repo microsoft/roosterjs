@@ -294,10 +294,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image);
     }
 
-    public cropImage(image: HTMLImageElement) {
-        if (!this.editor) {
+    public cropImage() {
+        const selection = this.editor?.getDOMSelection();
+        if (!this.editor || !selection || selection.type !== 'image') {
             return;
         }
+        let image = selection.image;
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             image = this.removeImageWrapper() ?? image;
         }
@@ -471,7 +473,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return image;
     }
 
-    public flipImage(image: HTMLImageElement, direction: 'horizontal' | 'vertical') {
+    public flipImage(direction: 'horizontal' | 'vertical') {
+        const selection = this.editor?.getDOMSelection();
+        if (!this.editor || !selection || selection.type !== 'image') {
+            return;
+        }
+        const image = selection.image;
         if (this.editor) {
             this.editImage(this.editor, image, 'flip', imageEditInfo => {
                 const angleRad = imageEditInfo.angleRad || 0;
@@ -495,7 +502,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    public rotateImage(image: HTMLImageElement, angleRad: number) {
+    public rotateImage(angleRad: number) {
+        const selection = this.editor?.getDOMSelection();
+        if (!this.editor || !selection || selection.type !== 'image') {
+            return;
+        }
+        const image = selection.image;
         if (this.editor) {
             this.editImage(this.editor, image, 'rotate', imageEditInfo => {
                 imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
