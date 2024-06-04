@@ -29,7 +29,7 @@ describe('getHTMLImageOptions', () => {
                 preserveRatio: true,
                 disableRotate: false,
                 disableSideResize: false,
-                onSelectState: 'resizeAndRotate',
+                onSelectState: 'resize',
             },
             {
                 src: 'test',
@@ -61,7 +61,7 @@ describe('getHTMLImageOptions', () => {
                 preserveRatio: true,
                 disableRotate: false,
                 disableSideResize: false,
-                onSelectState: 'resizeAndRotate',
+                onSelectState: 'resize',
             },
             {
                 src: 'test',
