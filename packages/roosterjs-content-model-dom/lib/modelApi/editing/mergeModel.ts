@@ -14,6 +14,7 @@ import type {
     ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelDocument,
+    ContentModelHyperLinkFormat,
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegmentFormat,
@@ -347,7 +348,7 @@ function applyDefaultFormat(
                 break;
 
             case 'Paragraph':
-                const paragraphFormat = block.decorator?.format || {};
+                const paraFormat = block.decorator?.format || {};
                 const paragraph = mutateBlock(block);
 
                 paragraph.segments.forEach(segment => {
@@ -356,9 +357,18 @@ function applyDefaultFormat(
                     }
 
                     segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
-                        ...paragraphFormat,
+                        ...paraFormat,
                         ...segment.format,
                     });
+
+                    if (segment.link) {
+                        segment.link.format = mergeLinkFormat(
+                            applyDefaultFormatOption,
+                            format,
+                            paraFormat,
+                            segment.link.format
+                        );
+                    }
                 });
 
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
@@ -373,6 +383,50 @@ function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyConte
     if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' && block.format.backgroundColor) {
         delete mutateBlock(block).format.backgroundColor;
     }
+}
+
+function mergeLinkFormat(
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    targetFormat: ContentModelSegmentFormat,
+    paraFormat: ContentModelSegmentFormat,
+    linkFormat: ContentModelHyperLinkFormat
+) {
+    const segmentFormat = mergeSegmentFormat(
+        applyDefaultFormatOption,
+        getSegmentFormatInLinkFormat(targetFormat),
+        {
+            ...getSegmentFormatInLinkFormat(paraFormat),
+            ...getSegmentFormatInLinkFormat(linkFormat),
+        }
+    );
+
+    if (applyDefaultFormatOption == 'keepSourceEmphasisFormat') {
+        delete linkFormat.backgroundColor;
+        delete linkFormat.textColor;
+    }
+
+    return {
+        ...linkFormat,
+        ...segmentFormat,
+    };
+}
+
+function getSegmentFormatInLinkFormat(
+    targetFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const result = {
+        textColor: targetFormat.textColor,
+        backgroundColor: targetFormat.backgroundColor,
+        underline: targetFormat.underline,
+    };
+
+    getObjectKeys(result).forEach(key => {
+        if (result[key] == undefined) {
+            delete result[key];
+        }
+    });
+
+    return result;
 }
 
 function mergeSegmentFormat(
