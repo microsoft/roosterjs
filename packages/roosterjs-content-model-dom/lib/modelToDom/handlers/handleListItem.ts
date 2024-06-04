@@ -1,6 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
+import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
@@ -40,7 +41,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
 
-        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        stackFormat(context, listItem.formatHolder.format, () => {
+            context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        });
     } else {
         // There is no level for this list item, that means it should be moved out of the list
         // For each paragraph, make it not implicit so it will have a DIV around it, to avoid more paragraphs connected together
