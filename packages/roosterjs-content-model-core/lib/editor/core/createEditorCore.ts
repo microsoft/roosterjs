@@ -3,6 +3,7 @@ import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import { createEditorCorePlugins } from '../../corePlugin/createEditorCorePlugins';
+import { generateColorKey } from 'roosterjs-content-model-dom';
 import type {
     EditorEnvironment,
     PluginState,
@@ -40,7 +41,8 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback,
-            options.knownColors
+            options.knownColors,
+            options.generateColorKey ?? generateColorKey
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domHelper: createDOMHelper(contentDiv),

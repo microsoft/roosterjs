@@ -1,5 +1,9 @@
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
-import type { DarkColorHandler, Colors } from 'roosterjs-content-model-types';
+import type {
+    DarkColorHandler,
+    Colors,
+    ColorTransformFunction,
+} from 'roosterjs-content-model-types';
 
 /**
  * List of deprecated colors
@@ -97,15 +101,13 @@ export function setColor(
     color = fallbackColor ?? color;
 
     if (darkColorHandler && color) {
-        const key = existingKey || `${COLOR_VAR_PREFIX}_${color.replace(/[^\d\w]/g, '_')}`;
+        const colorType = isBackground ? 'background' : 'text';
+        const key =
+            existingKey ||
+            darkColorHandler.generateColorKey(color, undefined /*baseLValue*/, colorType, element);
         const darkModeColor =
             darkColorHandler.knownColors?.[key]?.darkModeColor ||
-            darkColorHandler.getDarkColor(
-                color,
-                undefined /*baseLAValue*/,
-                isBackground ? 'background' : 'text',
-                element
-            );
+            darkColorHandler.getDarkColor(color, undefined /*baseLValue*/, colorType, element);
 
         darkColorHandler.updateKnownColor(isDarkMode, key, {
             lightModeColor: color,
@@ -118,6 +120,15 @@ export function setColor(
     element.removeAttribute(isBackground ? 'bgcolor' : 'color');
     element.style.setProperty(isBackground ? 'background-color' : 'color', color || null);
 }
+
+/**
+ * Generate color key for dark color
+ * @param lightColor The input light color
+ * @returns Key of the color
+ */
+export const generateColorKey: ColorTransformFunction = lightColor => {
+    return `${COLOR_VAR_PREFIX}_${lightColor.replace(/[^\d\w]/g, '_')}`;
+};
 
 /**
  * Parse color string to r/g/b value.
