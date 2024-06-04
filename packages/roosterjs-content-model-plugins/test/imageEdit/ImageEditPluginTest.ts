@@ -1,4 +1,4 @@
-import { ContentModelDocument, ImageSelection } from 'roosterjs-content-model-types';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { getContentModelImage } from '../../lib/imageEdit/utils/getContentModelImage';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
