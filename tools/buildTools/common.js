@@ -16,6 +16,7 @@ const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const deployPath = path.join(distPath, 'deploy');
+const legacyDemoPath = path.join(rootPath, 'assets/legacy-demo');
 
 function collectPackages(startPath) {
     const packagePaths = glob
@@ -185,4 +186,5 @@ module.exports = {
     getWebpackExternalCallback,
     buildConfig,
     versions,
+    legacyDemoPath,
 };

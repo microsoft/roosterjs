@@ -11,6 +11,7 @@ const {
     runWebPack,
     getWebpackExternalCallback,
     buildConfig,
+    legacyDemoPath,
 } = require('./common');
 
 const filesToCopy = Object.values(buildConfig)
@@ -85,10 +86,19 @@ async function buildDemoSite() {
         fs.copyFileSync(source + '.map', target + '.map');
     });
 
-    fs.copyFileSync(
-        path.resolve(sourcePathRoot, 'index.html'),
-        path.resolve(deployPath, 'index.html')
-    );
+    const legacyDemoFiles = fs.readdirSync(legacyDemoPath);
+    const legacyDemoDistPath = path.join(deployPath, 'legacyDemo');
+
+    if (!fs.existsSync(legacyDemoDistPath)) {
+        fs.mkdirSync(legacyDemoDistPath);
+    }
+
+    legacyDemoFiles.forEach(legacyDemoFile => {
+        fs.copyFileSync(
+            path.resolve(legacyDemoPath, legacyDemoFile),
+            path.resolve(legacyDemoDistPath, legacyDemoFile)
+        );
+    });
 }
 
 module.exports = {
