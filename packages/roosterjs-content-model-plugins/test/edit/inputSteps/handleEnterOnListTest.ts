@@ -2438,4 +2438,222 @@ describe('handleEnterOnList - keyboardEnter', () => {
         };
         runTest(input, true, expected, false, 1);
     });
+
+    it('List item contains multiple blocks', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                                {
+                                    text: 'test2',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            segments: [
+                                {
+                                    text: 'test3',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'test4',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                                {
+                                    text: 'test2',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            segments: [
+                                {
+                                    text: 'test3',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'test4',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        runTest(model, false, expectedModel, false, 1);
+    });
 });

@@ -24,7 +24,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
 
     if (deleteResult == 'notDeleted' || deleteResult == 'nothingToDelete') {
         const { path } = insertPoint;
-        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
+        const index = getClosestAncestorBlockGroupIndex(
+            path,
+            ['ListItem'],
+            ['TableCell', 'FormatContainer']
+        );
 
         const readonlyListItem = path[index];
         const listParent = path[index + 1];
@@ -84,6 +88,7 @@ const createNewListItem = (
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
     const currentPara = insertPoint.paragraph;
+    const paraIndex = listItem.blocks.indexOf(currentPara);
     const newParagraph = splitParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
@@ -91,7 +96,17 @@ const createNewListItem = (
         levels,
         insertPoint.marker.format
     );
+
     newListItem.blocks.push(newParagraph);
+
+    const remainingBlockCount = listItem.blocks.length - paraIndex - 1;
+
+    if (paraIndex >= 0 && remainingBlockCount > 0) {
+        newListItem.blocks.push(
+            ...mutateBlock(listItem).blocks.splice(paraIndex + 1, remainingBlockCount)
+        );
+    }
+
     insertPoint.paragraph = newParagraph;
     mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
 
