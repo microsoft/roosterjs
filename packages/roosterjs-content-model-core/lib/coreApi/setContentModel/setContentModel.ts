@@ -20,7 +20,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
 
     if (option?.shouldMaintainSelection) {
-        if (CSS.highlights && Highlight) {
+        if ('highlights' in CSS && Highlight) {
             const selectionEl = document.querySelector(SelectionSelector);
             if (selectionEl && selectionEl.textContent) {
                 const textRange = new Range();
