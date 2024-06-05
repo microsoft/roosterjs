@@ -86,6 +86,11 @@ async function buildDemoSite() {
         fs.copyFileSync(source + '.map', target + '.map');
     });
 
+    fs.copyFileSync(
+        path.resolve(sourcePathRoot, 'index.html'),
+        path.resolve(deployPath, 'index.html')
+    );
+
     const legacyDemoFiles = fs.readdirSync(legacyDemoPath);
     const legacyDemoDistPath = path.join(deployPath, 'legacyDemo');
 
