@@ -29,7 +29,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-// An object to provide keys of required properties of segment format, the do NOT use any of its values
+// An object to provide keys of required properties of segment format, do NOT use any of its values
 const RequiredEmptySegmentFormat: Required<ContentModelSegmentFormat> = {
     backgroundColor: null!,
     fontFamily: null!,
