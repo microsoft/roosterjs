@@ -348,7 +348,7 @@ function applyDefaultFormat(
                 break;
 
             case 'Paragraph':
-                const decoratorFormat = block.decorator?.format || {};
+                const paragraphFormat = block.decorator?.format || {};
                 const paragraph = mutateBlock(block);
 
                 paragraph.segments.forEach(segment => {
@@ -357,7 +357,7 @@ function applyDefaultFormat(
                     }
 
                     segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
-                        ...decoratorFormat,
+                        ...paragraphFormat,
                         ...segment.format,
                     });
 
