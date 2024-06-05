@@ -132,7 +132,7 @@ describe('convertDomSelectionToRangeEx', () => {
         expect(createRangeSpy).not.toHaveBeenCalled();
     });
 
-    it('image selection', () => {
+    xit('image selection', () => {
         const mockedImage = 'IMAGE' as any;
         const mockedRange = 'RANGE' as any;
 

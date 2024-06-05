@@ -60,7 +60,7 @@ describe('keyboardEnter', () => {
             expect();
         });
 
-        keyboardEnter(editor, rawEvent);
+        keyboardEnter(editor, rawEvent, true);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(input).toEqual(output);

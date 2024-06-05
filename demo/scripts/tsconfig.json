@@ -13,16 +13,6 @@
         "paths": {
             "roosterjs": ["packages/roosterjs/lib/index"],
             "roosterjs/lib/*": ["packages/roosterjs/lib/*"],
-            "roosterjs-editor-dom": ["packages/roosterjs-editor-dom/lib/index"],
-            "roosterjs-editor-dom/lib/*": ["packages/roosterjs-editor-dom/lib/*"],
-            "roosterjs-editor-core": ["packages/roosterjs-editor-core/lib/index"],
-            "roosterjs-editor-core/lib/*": ["packages/roosterjs-editor-core/lib/*"],
-            "roosterjs-editor-api": ["packages/roosterjs-editor-api/lib/index"],
-            "roosterjs-editor-api/lib/*": ["packages/roosterjs-editor-api/lib/*"],
-            "roosterjs-editor-plugins": ["packages/roosterjs-editor-plugins/lib/index"],
-            "roosterjs-editor-plugins/lib/*": ["packages/roosterjs-editor-plugins/lib/*"],
-            "roosterjs-editor-types": ["packages/roosterjs-editor-types/lib/index"],
-            "roosterjs-editor-types/lib/*": ["packages/roosterjs-editor-types/lib/*"],
             "roosterjs-color-utils": ["packages/roosterjs-color-utils/lib/index"],
             "roosterjs-color-utils/lib/*": ["packages/roosterjs-color-utils/lib/*"],
             "roosterjs-content-model-types": ["packages/roosterjs-content-model-types/lib/index"],
@@ -33,16 +23,12 @@
             "roosterjs-content-model-core/lib/*": ["packages/roosterjs-content-model-core/lib/*"],
             "roosterjs-content-model-api": ["packages/roosterjs-content-model-api/lib/index"],
             "roosterjs-content-model-api/lib/*": ["packages/roosterjs-content-model-api/lib/*"],
-            "roosterjs-editor-adapter": ["packages/roosterjs-editor-adapter/lib/index"],
-            "roosterjs-editor-adapter/lib/*": ["packages/roosterjs-editor-adapter/lib/*"],
             "roosterjs-content-model-plugins": [
                 "packages/roosterjs-content-model-plugins/lib/index"
             ],
             "roosterjs-content-model-plugins/lib/*": [
                 "packages/roosterjs-content-model-plugins/lib/*"
-            ],
-            "roosterjs-react": ["packages/roosterjs-react/lib/index"],
-            "roosterjs-react/lib/*": ["packages/roosterjs-react/lib/*"]
+            ]
         }
     },
     "include": ["./**/*.ts", "./**/*.tsx"]

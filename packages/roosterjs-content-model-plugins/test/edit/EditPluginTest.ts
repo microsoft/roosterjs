@@ -123,7 +123,7 @@ describe('EditPlugin', () => {
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
         });
 
-        it('Enter, keyboardEnter not enabled', () => {
+        it('Enter, normal enter not enabled', () => {
             plugin = new EditPlugin();
             const rawEvent = { which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
@@ -138,12 +138,12 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(keyboardInputSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, false);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
-        it('Enter, keyboardEnter enabled', () => {
+        it('Enter, normal enter enabled', () => {
             isExperimentalFeatureEnabledSpy.and.callFake(
                 (featureName: string) => featureName == 'PersistCache'
             );
@@ -162,7 +162,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
