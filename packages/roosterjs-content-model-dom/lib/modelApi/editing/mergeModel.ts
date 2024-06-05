@@ -29,6 +29,21 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+// An object to provide keys of required properties of segment format, the do NOT use any of its values
+const RequiredEmptySegmentFormat: Required<ContentModelSegmentFormat> = {
+    backgroundColor: null!,
+    fontFamily: null!,
+    fontSize: null!,
+    fontWeight: null!,
+    italic: null!,
+    letterSpacing: null!,
+    lineHeight: null!,
+    strikethrough: null!,
+    superOrSubScriptSequence: null!,
+    textColor: null!,
+    underline: null!,
+};
+const KeysOfSegmentFormat = getObjectKeys(RequiredEmptySegmentFormat);
 
 /**
  * Merge source model into target mode
@@ -447,18 +462,6 @@ function getFormatWithoutSegmentFormat(
     const resultFormat = {
         ...sourceFormat,
     };
-
-    delete resultFormat.backgroundColor;
-    delete resultFormat.fontFamily;
-    delete resultFormat.fontSize;
-    delete resultFormat.fontWeight;
-    delete resultFormat.italic;
-    delete resultFormat.letterSpacing;
-    delete resultFormat.lineHeight;
-    delete resultFormat.strikethrough;
-    delete resultFormat.superOrSubScriptSequence;
-    delete resultFormat.textColor;
-    delete resultFormat.underline;
-
+    KeysOfSegmentFormat.forEach(key => delete resultFormat[key]);
     return resultFormat;
 }
