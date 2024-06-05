@@ -356,12 +356,10 @@ function applyDefaultFormat(
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format = mergeSegmentFormat(
-                        applyDefaultFormatOption,
-                        format,
-                        segment.format,
-                        decoratorFormat
-                    );
+                    segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
+                        ...decoratorFormat,
+                        ...segment.format,
+                    });
 
                     if (segment.link) {
                         segment.link.format = mergeSegmentFormat(
@@ -410,11 +408,10 @@ function getSegmentFormatInLinkFormat(
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
     targetFormat: ContentModelSegmentFormat,
-    sourceFormat: ContentModelSegmentFormat,
-    decoratorFormat: ContentModelSegmentFormat = {}
+    sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetFormat, ...decoratorFormat, ...sourceFormat }
+        ? { ...targetFormat, ...sourceFormat }
         : {
               ...getFormatWithoutSegmentFormat(sourceFormat),
               ...targetFormat,
@@ -441,7 +438,8 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
 }
 
 /**
- * Segment format can also contain other type of metadata, for example in Images/Hyperlink we want to preserve those properties
+ * Segment format can also contain other type of metadata, for example in Images/Hyperlink,
+ * we want to preserve these properties when merging format
  */
 function getFormatWithoutSegmentFormat(
     sourceFormat: ContentModelSegmentFormat
