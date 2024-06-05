@@ -102,8 +102,6 @@ export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 
-export { getClosestAncestorBlockGroupIndex } from './modelApi/editing/getClosestAncestorBlockGroupIndex';
-
 export { iterateSelections } from './modelApi/selection/iterateSelections';
 export {
     getFirstSelectedListItem,
@@ -134,6 +132,8 @@ export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBack
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';
 export { getSegmentTextFormat } from './modelApi/editing/getSegmentTextFormat';
+export { getClosestAncestorBlockGroupIndex } from './modelApi/editing/getClosestAncestorBlockGroupIndex';
+export { runEditSteps } from './modelApi/editing/runEditSteps';
 
 export { updateImageMetadata, getImageMetadata } from './modelApi/metadata/updateImageMetadata';
 export {

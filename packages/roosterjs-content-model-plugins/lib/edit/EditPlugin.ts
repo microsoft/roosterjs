@@ -26,7 +26,7 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleEnterKey = false;
+    private handleNormalEnter = false;
 
     /**
      * Get name of this plugin
@@ -43,7 +43,7 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleEnterKey = this.editor.isExperimentalFeatureEnabled('PersistCache');
+        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('PersistCache');
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -157,11 +157,7 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
-                    if (this.handleEnterKey) {
-                        keyboardEnter(editor, rawEvent);
-                    } else {
-                        keyboardInput(editor, rawEvent);
-                    }
+                    keyboardEnter(editor, rawEvent, this.handleNormalEnter);
                     break;
 
                 default:

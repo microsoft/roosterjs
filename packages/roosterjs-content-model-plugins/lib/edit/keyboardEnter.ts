@@ -1,17 +1,17 @@
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
-import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { deleteSelection, normalizeContentModel, runEditSteps } from 'roosterjs-content-model-dom';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { handleEnterOnParagraph } from './inputSteps/handleEnterOnParagraph';
-import type {
-    DeleteSelectionContext,
-    IEditor,
-    ValidDeleteSelectionContext,
-} from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
+export function keyboardEnter(
+    editor: IEditor,
+    rawEvent: KeyboardEvent,
+    handleNormalEnter: boolean
+) {
     const selection = editor.getDOMSelection();
 
     editor.formatContentModel(
@@ -25,15 +25,13 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
                 // so further delete steps can keep working
                 result.deleteResult = 'notDeleted';
 
-                const steps = rawEvent.shiftKey
-                    ? [handleEnterOnParagraph]
-                    : [handleEnterOnList, deleteEmptyQuote, handleEnterOnParagraph];
+                const steps = rawEvent.shiftKey ? [] : [handleEnterOnList, deleteEmptyQuote];
 
-                steps.forEach(step => {
-                    if (isValidDeleteSelectionContext(result)) {
-                        step(result);
-                    }
-                });
+                if (handleNormalEnter) {
+                    steps.push(handleEnterOnParagraph);
+                }
+
+                runEditSteps(steps, result);
             }
 
             if (result.deleteResult == 'range') {
@@ -53,10 +51,4 @@ export function keyboardEnter(editor: IEditor, rawEvent: KeyboardEvent) {
             scrollCaretIntoView: true,
         }
     );
-}
-
-function isValidDeleteSelectionContext(
-    context: DeleteSelectionContext
-): context is ValidDeleteSelectionContext {
-    return !!context.insertPoint;
 }

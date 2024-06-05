@@ -1828,7 +1828,7 @@ describe('handleEnterOnList - keyboardEnter', () => {
                     },
                 });
 
-                keyboardEnter(editor, mockedEvent);
+                keyboardEnter(editor, mockedEvent, true);
             },
             input,
             expectedResult,
