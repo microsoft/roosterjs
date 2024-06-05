@@ -10,6 +10,7 @@ import { changeImageButton } from '../demoButtons/changeImageButton';
 import { clearFormatButton } from '../roosterjsReact/ribbon/buttons/clearFormatButton';
 import { codeButton } from '../roosterjsReact/ribbon/buttons/codeButton';
 import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
+import { createImageEditButtons } from '../demoButtons/createImageEditButtons';
 import { decreaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/decreaseFontSizeButton';
 import { decreaseIndentButton } from '../roosterjsReact/ribbon/buttons/decreaseIndentButton';
 import { fontButton } from '../roosterjsReact/ribbon/buttons/fontButton';
@@ -21,6 +22,7 @@ import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton'
 import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
 import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
+import { ImageEditor } from 'roosterjs-content-model-types';
 import { increaseFontSizeButton } from '../roosterjsReact/ribbon/buttons/increaseFontSizeButton';
 import { increaseIndentButton } from '../roosterjsReact/ribbon/buttons/increaseIndentButton';
 import { insertImageButton } from '../roosterjsReact/ribbon/buttons/insertImageButton';
@@ -191,7 +193,11 @@ const allButtons: RibbonButton<any>[] = [
     spaceAfterButton,
     pasteButton,
 ];
-export function getButtons(id: tabNames, formatPlainerPlugin?: FormatPainterPlugin) {
+export function getButtons(
+    id: tabNames,
+    formatPlainerPlugin?: FormatPainterPlugin,
+    imageEditor?: ImageEditor
+) {
     switch (id) {
         case 'text':
             return [createFormatPainterButton(formatPlainerPlugin), ...textButtons];
@@ -200,7 +206,9 @@ export function getButtons(id: tabNames, formatPlainerPlugin?: FormatPainterPlug
         case 'insert':
             return insertButtons;
         case 'image':
-            return imageButtons;
+            return imageEditor
+                ? [...imageButtons, ...createImageEditButtons(imageEditor)]
+                : imageButtons;
         case 'table':
             return tableButtons;
         case 'all':

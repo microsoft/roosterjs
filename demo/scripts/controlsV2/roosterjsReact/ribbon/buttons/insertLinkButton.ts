@@ -1,5 +1,5 @@
 import { adjustLinkSelection, insertLink } from 'roosterjs-content-model-api';
-import { showInputDialog } from 'roosterjs-react/lib/inputDialog';
+import { showInputDialog } from '../../inputDialog';
 import type { InsertLinkButtonStringKey } from '../type/RibbonButtonStringKeys';
 import type { RibbonButton } from '../type/RibbonButton';
 
