@@ -1,7 +1,7 @@
 import { checkEditInfoState } from './checkEditInfoState';
 import { generateDataURL } from './generateDataURL';
 import { getGeneratedImageSize } from './generateImageSize';
-import { updateImageEditInfo } from './updateImageEditInfo';
+import { getSelectedImageMetadata, updateImageEditInfo } from './updateImageEditInfo';
 import type {
     ContentModelImage,
     IEditor,
@@ -28,7 +28,7 @@ export function applyChange(
     editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
-    const initEditInfo = updateImageEditInfo(contentModelImage, editingImage ?? image) ?? undefined;
+    const initEditInfo = getSelectedImageMetadata(editor, editingImage ?? image) ?? undefined;
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {
@@ -64,11 +64,11 @@ export function applyChange(
     if (newSrc == editInfo.src) {
         // If newSrc is the same with original one, it means there is only size change, but no rotation, no cropping,
         // so we don't need to keep edit info, we can delete it
-        updateImageEditInfo(contentModelImage, image, null);
+        updateImageEditInfo(contentModelImage, null);
     } else {
         // Otherwise, save the new edit info to the image so that next time when we edit the same image, we know
         // the edit info
-        updateImageEditInfo(contentModelImage, image, editInfo);
+        updateImageEditInfo(contentModelImage, editInfo);
     }
 
     // Write back the change to image, and set its new size

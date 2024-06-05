@@ -1,13 +1,7 @@
-import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
-import { getContentModelImage } from '../../../lib/imageEdit/utils/getContentModelImage';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { getSelectedContentModelImage } from '../../../lib/imageEdit/utils/getSelectedContentModelImage';
 
-describe('getContentModelImage', () => {
-    const createEditor = (model: ContentModelDocument) => {
-        return <IEditor>{
-            getContentModelCopy: (mode: 'clean' | 'disconnected') => model,
-        };
-    };
-
+describe('getSelectedContentModelImage', () => {
     it('should return image model', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -44,8 +38,7 @@ describe('getContentModelImage', () => {
                 textColor: '#000000',
             },
         };
-        const editor = createEditor(model);
-        const result = getContentModelImage(editor);
+        const result = getSelectedContentModelImage(model);
         expect(result).toEqual({
             segmentType: 'Image',
             src: 'test',
@@ -98,8 +91,7 @@ describe('getContentModelImage', () => {
                 textColor: '#000000',
             },
         };
-        const editor = createEditor(model);
-        const result = getContentModelImage(editor);
+        const result = getSelectedContentModelImage(model);
         expect(result).toEqual(null);
     });
 });

@@ -1,5 +1,5 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { getContentModelImage } from '../../lib/imageEdit/utils/getContentModelImage';
+import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
 
@@ -44,18 +44,22 @@ describe('ImageEditPlugin', () => {
     const editor = initEditor('image_edit', [plugin], model);
 
     it('flip', () => {
+        const image = new Image();
+        image.src = 'test';
         plugin.initialize(editor);
         plugin.flipImage('horizontal');
-        const imageModel = getContentModelImage(editor);
-        expect(imageModel!.dataset['editingInfo']).toBeTruthy();
+        const dataset = getSelectedImageMetadata(editor, image);
+        expect(dataset).toBeTruthy();
         plugin.dispose();
     });
 
     it('rotate', () => {
+        const image = new Image();
+        image.src = 'test';
         plugin.initialize(editor);
         plugin.rotateImage(Math.PI / 2);
-        const imageModel = getContentModelImage(editor);
-        expect(imageModel!.dataset['editingInfo']).toBeTruthy();
+        const dataset = getSelectedImageMetadata(editor, image);
+        expect(dataset).toBeTruthy();
         plugin.dispose();
     });
 });

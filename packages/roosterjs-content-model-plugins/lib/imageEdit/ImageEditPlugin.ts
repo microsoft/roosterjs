@@ -3,13 +3,12 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { getContentModelImage } from './utils/getContentModelImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
+import { getSelectedImageMetadata } from './utils/updateImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
-import { updateImageEditInfo } from './utils/updateImageEditInfo';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
@@ -126,16 +125,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         apiOperation?: ImageEditOperation
     ) {
-        const contentModelImage = getContentModelImage(editor);
         const imageSpan = image.parentElement;
-        if (
-            !contentModelImage ||
-            !imageSpan ||
-            (imageSpan && !isElementOfType(imageSpan, 'span'))
-        ) {
+        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
             return;
         }
-        this.imageEditInfo = updateImageEditInfo(contentModelImage, image);
+        this.imageEditInfo = getSelectedImageMetadata(editor, image);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const {
@@ -412,7 +406,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.shadowSpan
         ) {
             editor.formatContentModel(
-                (model, context) => {
+                model => {
                     const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
                         model,
                         false
