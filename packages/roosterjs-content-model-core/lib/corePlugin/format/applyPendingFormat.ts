@@ -1,6 +1,7 @@
 import {
     createText,
     iterateSelections,
+    mutateSegment,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
@@ -40,19 +41,25 @@ export function applyPendingFormat(
 
                         // For space, there can be &#32 (space) or &#160 (&nbsp;), we treat them as the same
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
-                            marker.format = { ...format };
-                            previousSegment.text = text.substring(0, text.length - data.length);
+                            mutateSegment(block, previousSegment, previousSegment => {
+                                previousSegment.text = text.substring(0, text.length - data.length);
+                            });
 
-                            const newText = createText(
-                                data == ANSI_SPACE ? NON_BREAK_SPACE : data,
-                                {
-                                    ...previousSegment.format,
-                                    ...format,
-                                }
-                            );
+                            mutateSegment(block, marker, (marker, block) => {
+                                marker.format = { ...format };
 
-                            block.segments.splice(index, 0, newText);
-                            setParagraphNotImplicit(block);
+                                const newText = createText(
+                                    data == ANSI_SPACE ? NON_BREAK_SPACE : data,
+                                    {
+                                        ...previousSegment.format,
+                                        ...format,
+                                    }
+                                );
+
+                                block.segments.splice(index, 0, newText);
+                                setParagraphNotImplicit(block);
+                            });
+
                             isChanged = true;
                         }
                     }

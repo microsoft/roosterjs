@@ -12,7 +12,7 @@ export const DEFAULT_TABLE_MERGED =
 /**
  * Regular 3 x 3 Table
  */
-export function getModelTable(): ContentModelTable {
+export function getModelTable(id?: string): ContentModelTable {
     /*
      *   ——————————————
      *  | a1 | b1 | c1 |
@@ -233,7 +233,7 @@ export function getModelTable(): ContentModelTable {
                 ],
             },
         ],
-        format: {},
+        format: id ? { id: id } : {},
         widths: [50, 50, 50],
         dataset: {},
     };
@@ -242,7 +242,7 @@ export function getModelTable(): ContentModelTable {
 /**
  * 3 x 3 Table with merged central column
  */
-export function getMergedCenterColumnTable(): ContentModelTable {
+export function getMergedCenterColumnTable(id?: string): ContentModelTable {
     /*
      *   ——————————————
      *  | a1 |    | c1 |
@@ -439,7 +439,7 @@ export function getMergedCenterColumnTable(): ContentModelTable {
                 ],
             },
         ],
-        format: {},
+        format: id ? { id: id } : {},
         widths: [50, 50, 50],
         dataset: {},
     };
@@ -448,7 +448,7 @@ export function getMergedCenterColumnTable(): ContentModelTable {
 /**
  * 3 x 3 Table with merged central row
  */
-export function getMergedCenterRowTable(): ContentModelTable {
+export function getMergedCenterRowTable(id?: string): ContentModelTable {
     /*
      *   ——————————————
      *  | a1 | b1 | c1 |
@@ -645,7 +645,7 @@ export function getMergedCenterRowTable(): ContentModelTable {
                 ],
             },
         ],
-        format: {},
+        format: id ? { id: id } : {},
         widths: [50, 50, 50],
         dataset: {},
     };
@@ -654,7 +654,7 @@ export function getMergedCenterRowTable(): ContentModelTable {
 /**
  * 2 x 2 Table with merged top row
  */
-export function getMergedTopRowTable(): ContentModelTable {
+export function getMergedTopRowTable(id?: string): ContentModelTable {
     /*
      *   —————————
      *  | a1      |
@@ -750,7 +750,7 @@ export function getMergedTopRowTable(): ContentModelTable {
                 ],
             },
         ],
-        format: {},
+        format: id ? { id: id } : {},
         widths: [50, 50],
         dataset: {},
     };
@@ -759,7 +759,7 @@ export function getMergedTopRowTable(): ContentModelTable {
 /**
  * 2 x 2 Table with merged first column
  */
-export function getMergedFirstColumnTable(): ContentModelTable {
+export function getMergedFirstColumnTable(id?: string): ContentModelTable {
     /*
      *   —————————
      *  | a1 | b1 |
@@ -855,7 +855,7 @@ export function getMergedFirstColumnTable(): ContentModelTable {
                 ],
             },
         ],
-        format: {},
+        format: id ? { id: id } : {},
         widths: [50, 50],
         dataset: {},
     };

@@ -1,6 +1,6 @@
 import { AutoFormatOptions, CustomReplace, MarkdownOptions } from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
-import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
 
 export interface BuildInPluginList {
     autoFormat: boolean;
@@ -15,6 +15,7 @@ export interface BuildInPluginList {
     sampleEntity: boolean;
     markdown: boolean;
     hyperlink: boolean;
+    imageEditPlugin: boolean;
     customReplace: boolean;
 }
 
@@ -40,7 +41,7 @@ export interface OptionState {
     // Editor options
     isRtl: boolean;
     disableCache: boolean;
-    applyChangesOnMouseUp: boolean;
+    experimentalFeatures: Set<ExperimentalFeature>;
 }
 
 export interface OptionPaneProps extends OptionState, SidePaneElementProps {}

@@ -45,6 +45,34 @@ describe('TableEditPlugin', () => {
         document.body = document.createElement('body');
     });
 
+    it('onPluginEvent - input', () => {
+        const disposerSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
+        plugin.onPluginEvent({ eventType: 'input', rawEvent: null });
+        expect(disposerSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('onPluginEvent - contentChanged', () => {
+        const disposerSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
+        plugin.onPluginEvent({ eventType: 'contentChanged', source: null });
+        expect(disposerSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('onPluginEvent - scroll', () => {
+        const disposerSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
+        plugin.onPluginEvent({
+            eventType: 'scroll',
+            rawEvent: null,
+            scrollContainer: editor.getScrollContainer(),
+        });
+        expect(disposerSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('onPluginEvent - zoomChanged', () => {
+        const disposerSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
+        plugin.onPluginEvent({ eventType: 'zoomChanged', newZoomScale: 1 });
+        expect(disposerSpy).toHaveBeenCalledWith(null);
+    });
+
     it('setTableEditor - Dismiss table editor on mouse out', () => {
         const ele = createElement(
             {

@@ -1,6 +1,5 @@
 import { AutoFormatCode } from './AutoFormatCode';
 import { CodeElement } from './CodeElement';
-import { HyperLinkCode } from './HyperLinkCode';
 import { MarkdownCode } from './MarkdownCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
@@ -10,6 +9,7 @@ import {
     PastePluginCode,
     TableEditPluginCode,
     ShortcutPluginCode,
+    ImageEditPluginCode,
 } from './SimplePluginCode';
 
 export class PluginsCodeBase extends CodeElement {
@@ -44,7 +44,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
-            pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
+            pluginList.imageEditPlugin && new ImageEditPluginCode(),
         ]);
     }
 }

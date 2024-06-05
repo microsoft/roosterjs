@@ -1,4 +1,5 @@
 import { emojiReplacements } from './getReplacements';
+import { ExperimentalFeature } from 'roosterjs-content-model-types';
 import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -17,6 +18,7 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
     },
@@ -28,7 +30,6 @@ const initialState: OptionState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    applyChangesOnMouseUp: false,
     isRtl: false,
     disableCache: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
@@ -52,6 +53,7 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     customReplacements: emojiReplacements,
+    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

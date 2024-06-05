@@ -8,12 +8,17 @@ import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
     BeforePasteEvent,
+    ContentModelBlockFormat,
     ContentModelListItemLevelFormat,
     ContentModelTableFormat,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
+
+const PERCENTAGE_REGEX = /%/;
+// Default line height in browsers according to https://developer.mozilla.org/en-US/docs/Web/CSS/line-height#normal
+const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
 
 /**
  * @internal
@@ -27,6 +32,7 @@ export function processPastedContentFromWordDesktop(
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, trustedHTMLHandler);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
@@ -49,6 +55,20 @@ const wordDesktopElementProcessor = (
         }
     };
 };
+
+function adjustPercentileLineHeight(format: ContentModelBlockFormat, element: HTMLElement): void {
+    //If the line height is less than the browser default line height, line between the text is going to be too narrow
+    let parsedLineHeight: number;
+    if (
+        PERCENTAGE_REGEX.test(element.style.lineHeight) &&
+        !isNaN((parsedLineHeight = parseInt(element.style.lineHeight)))
+    ) {
+        format.lineHeight = (
+            DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE *
+            (parsedLineHeight / 100)
+        ).toString();
+    }
+}
 
 function listLevelParser(
     format: ContentModelListItemLevelFormat,

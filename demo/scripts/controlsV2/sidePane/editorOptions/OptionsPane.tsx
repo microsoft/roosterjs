@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Code } from './Code';
 import { DefaultFormatPane } from './DefaultFormatPane';
 import { EditorCode } from './codes/EditorCode';
+import { ExperimentalFeatures } from './ExperimentalFeatures';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
 import { Plugins } from './Plugins';
@@ -54,6 +55,12 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                         <b>Plugins</b>
                     </summary>
                     <Plugins state={this.state} resetState={this.resetState} />
+                </details>
+                <details>
+                    <summary>
+                        <b>Experimental features</b>
+                    </summary>
+                    <ExperimentalFeatures state={this.state} resetState={this.resetState} />
                 </details>
                 <div>
                     <br />
@@ -121,7 +128,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             pluginList: { ...this.state.pluginList },
             defaultFormat: { ...this.state.defaultFormat },
             forcePreserveRatio: this.state.forcePreserveRatio,
-            applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
+
             isRtl: this.state.isRtl,
             disableCache: this.state.disableCache,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
@@ -132,6 +139,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             autoFormatOptions: { ...this.state.autoFormatOptions },
             markdownOptions: { ...this.state.markdownOptions },
             customReplacements: this.state.customReplacements,
+            experimentalFeatures: this.state.experimentalFeatures,
         };
 
         if (callback) {

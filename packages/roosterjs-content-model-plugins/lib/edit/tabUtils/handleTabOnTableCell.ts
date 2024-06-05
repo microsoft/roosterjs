@@ -2,28 +2,36 @@ import { clearSelectedCells, insertTableRow } from 'roosterjs-content-model-api'
 import {
     createSelectionMarker,
     getFirstSelectedTable,
+    mutateBlock,
     normalizeTable,
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelDocument, ContentModelTableCell } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelTableCell,
+} from 'roosterjs-content-model-types';
 
 /**
  * When the cursor is on the last cell of a table, add new row and focus first new cell.
  * @internal
  */
 export function handleTabOnTableCell(
-    model: ContentModelDocument,
-    cell: ContentModelTableCell,
+    model: ReadonlyContentModelDocument,
+    cell: ReadonlyContentModelTableCell,
     rawEvent: KeyboardEvent
 ) {
-    const tableModel = getFirstSelectedTable(model)[0];
+    const readonlyTableModel = getFirstSelectedTable(model)[0];
+
     // Check if cursor is on last cell of the table
     if (
         !rawEvent.shiftKey &&
-        tableModel &&
-        tableModel.rows[tableModel.rows.length - 1]?.cells[tableModel.widths.length - 1] === cell
+        readonlyTableModel &&
+        readonlyTableModel.rows[readonlyTableModel.rows.length - 1]?.cells[
+            readonlyTableModel.widths.length - 1
+        ] === cell
     ) {
+        const tableModel = mutateBlock(readonlyTableModel);
         insertTableRow(tableModel, 'insertBelow');
 
         // Clear Table selection
@@ -40,7 +48,7 @@ export function handleTabOnTableCell(
         if (markerParagraph.blockType == 'Paragraph') {
             const marker = createSelectionMarker(model.format);
 
-            markerParagraph.segments.unshift(marker);
+            mutateBlock(markerParagraph).segments.unshift(marker);
             setParagraphNotImplicit(markerParagraph);
             setSelection(tableModel.rows[tableModel.rows.length - 1].cells[0], marker);
         }

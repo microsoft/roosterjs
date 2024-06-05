@@ -1,8 +1,8 @@
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type {
-    ContentModelParagraph,
     ContentModelText,
     FormatContentModelContext,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const FRACTIONS: Record<string, string> = {
@@ -16,7 +16,7 @@ const FRACTIONS: Record<string, string> = {
  */
 export function transformFraction(
     previousSegment: ContentModelText,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ): boolean {
     const fraction = previousSegment.text.split(' ').pop()?.trim();
