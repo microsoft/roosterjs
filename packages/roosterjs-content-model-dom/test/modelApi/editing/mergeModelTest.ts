@@ -3743,4 +3743,96 @@ describe('mergeModel', () => {
             dataset: {},
         });
     });
+
+    it('Keep image width when merging with keepSourceEmphasisFormat', () => {
+        const targetModel = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        para.segments.push(marker);
+        targetModel.blocks.push(para);
+
+        marker.format = {
+            fontFamily: 'Calibri',
+            fontSize: '11pt',
+            textColor: '#000000',
+        };
+
+        const sourceModel = createContentModelDocument();
+        sourceModel.blocks.push({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                {
+                    segmentType: 'Image',
+                    format: {
+                        fontFamily: 'Remove this',
+                        fontSize: 'Remove this',
+                        textColor: 'Remove this',
+                        backgroundColor: 'imageColor',
+                        width: 'imageWidth',
+                        maxWidth: 'imageMaxWidth',
+                        height: 'imageHeight',
+                        maxHeight: 'imageMaxHeight',
+                        id: 'imageId',
+                        marginBottom: '0px',
+                        marginLeft: '0px',
+                        marginRight: '0px',
+                        marginTop: '0px',
+                        borderBottom: 'border',
+                        borderBottomLeftRadius: 'border',
+                        borderBottomRightRadius: 'border',
+                        borderLeft: 'border',
+                        borderRadius: 'border',
+                        borderTop: 'border',
+                        borderRight: 'border',
+                        borderTopLeftRadius: 'border',
+                        borderTopRightRadius: 'border',
+                        boxShadow: 'border',
+                        display: 'display',
+                        float: 'float',
+                        minHeight: 'minHeight',
+                        minWidth: 'minWidth',
+                        verticalAlign: 'top',
+                    },
+                    dataset: {},
+                    src: 'https://www.bing.com',
+                },
+            ],
+        });
+
+        mergeModel(targetModel, sourceModel, undefined, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        const block = targetModel.blocks[0] as ContentModelParagraph;
+        expect(block.segments[0].format).toEqual({
+            fontFamily: 'Calibri',
+            fontSize: '11pt',
+            textColor: '#000000',
+            width: 'imageWidth',
+            maxWidth: 'imageMaxWidth',
+            height: 'imageHeight',
+            maxHeight: 'imageMaxHeight',
+            id: 'imageId',
+            marginBottom: '0px',
+            marginLeft: '0px',
+            marginRight: '0px',
+            marginTop: '0px',
+            borderBottom: 'border',
+            borderBottomLeftRadius: 'border',
+            borderBottomRightRadius: 'border',
+            borderLeft: 'border',
+            borderRadius: 'border',
+            borderTop: 'border',
+            borderRight: 'border',
+            borderTopLeftRadius: 'border',
+            borderTopRightRadius: 'border',
+            boxShadow: 'border',
+            display: 'display',
+            float: 'float',
+            minHeight: 'minHeight',
+            minWidth: 'minWidth',
+            verticalAlign: 'top',
+        });
+    });
 });

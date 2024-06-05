@@ -348,7 +348,7 @@ function applyDefaultFormat(
                 break;
 
             case 'Paragraph':
-                const paraFormat = block.decorator?.format || {};
+                const decoratorFormat = block.decorator?.format || {};
                 const paragraph = mutateBlock(block);
 
                 paragraph.segments.forEach(segment => {
@@ -356,16 +356,17 @@ function applyDefaultFormat(
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
-                        ...paraFormat,
-                        ...segment.format,
-                    });
+                    segment.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        format,
+                        segment.format,
+                        decoratorFormat
+                    );
 
                     if (segment.link) {
-                        segment.link.format = mergeLinkFormat(
+                        segment.link.format = mergeSegmentFormat(
                             applyDefaultFormatOption,
-                            format,
-                            paraFormat,
+                            getSegmentFormatInLinkFormat(format),
                             segment.link.format
                         );
                     }
@@ -385,46 +386,23 @@ function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyConte
     }
 }
 
-function mergeLinkFormat(
-    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetFormat: ContentModelSegmentFormat,
-    paraFormat: ContentModelSegmentFormat,
-    linkFormat: ContentModelHyperLinkFormat
-) {
-    const segmentFormat = mergeSegmentFormat(
-        applyDefaultFormatOption,
-        getSegmentFormatInLinkFormat(targetFormat),
-        {
-            ...getSegmentFormatInLinkFormat(paraFormat),
-            ...getSegmentFormatInLinkFormat(linkFormat),
-        }
-    );
-
-    if (applyDefaultFormatOption == 'keepSourceEmphasisFormat') {
-        delete linkFormat.backgroundColor;
-        delete linkFormat.textColor;
-    }
-
-    return {
-        ...linkFormat,
-        ...segmentFormat,
-    };
-}
-
+/**
+ * Hyperlink format type definition only contains textColor, backgroundColor and underline.
+ * So create a minimum object with the styles supported in Hyperlink to be used in merge.
+ */
 function getSegmentFormatInLinkFormat(
     targetFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
-    const result = {
-        textColor: targetFormat.textColor,
-        backgroundColor: targetFormat.backgroundColor,
-        underline: targetFormat.underline,
-    };
-
-    getObjectKeys(result).forEach(key => {
-        if (result[key] == undefined) {
-            delete result[key];
-        }
-    });
+    const result: ContentModelHyperLinkFormat = {};
+    if (targetFormat.textColor) {
+        result.textColor = targetFormat.textColor;
+    }
+    if (targetFormat.backgroundColor) {
+        result.backgroundColor = targetFormat.backgroundColor;
+    }
+    if (targetFormat.underline) {
+        result.underline = targetFormat.underline;
+    }
 
     return result;
 }
@@ -432,11 +410,13 @@ function getSegmentFormatInLinkFormat(
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
     targetFormat: ContentModelSegmentFormat,
-    sourceFormat: ContentModelSegmentFormat
+    sourceFormat: ContentModelSegmentFormat,
+    decoratorFormat: ContentModelSegmentFormat = {}
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetFormat, ...sourceFormat }
+        ? { ...targetFormat, ...decoratorFormat, ...sourceFormat }
         : {
+              ...getFormatWithoutSegmentFormat(sourceFormat),
               ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
@@ -458,4 +438,29 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
 
     return result;
+}
+
+/**
+ * Segment format can also contain other type of metadata, for example in Images/Hyperlink we want to preserve those properties
+ */
+function getFormatWithoutSegmentFormat(
+    sourceFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const resultFormat = {
+        ...sourceFormat,
+    };
+
+    delete resultFormat.backgroundColor;
+    delete resultFormat.fontFamily;
+    delete resultFormat.fontSize;
+    delete resultFormat.fontWeight;
+    delete resultFormat.italic;
+    delete resultFormat.letterSpacing;
+    delete resultFormat.lineHeight;
+    delete resultFormat.strikethrough;
+    delete resultFormat.superOrSubScriptSequence;
+    delete resultFormat.textColor;
+    delete resultFormat.underline;
+
+    return resultFormat;
 }
