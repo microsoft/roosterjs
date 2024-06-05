@@ -108,6 +108,11 @@ describe('Content Model Auto Format Plugin Test', () => {
                     changeSource: 'AutoFormat',
                     apiName: formatOptions.apiName,
                 });
+                const triggerEvent = spyOn(editor, 'triggerEvent');
+                expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                    source: 'AutoFormat',
+                    formatApiName: formatOptions.apiName,
+                });
             });
         }
 
@@ -316,6 +321,11 @@ describe('Content Model Auto Format Plugin Test', () => {
                     }
                 );
             });
+            const triggerEvent = spyOn(editor, 'triggerEvent');
+            expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                source: 'AutoLink',
+                formatApiName: '',
+            });
         }
 
         it('should call createLinkAfterSpace', () => {
@@ -392,6 +402,11 @@ describe('Content Model Auto Format Plugin Test', () => {
                 expect(options).toEqual({
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
+                });
+                const triggerEvent = spyOn(editor, 'triggerEvent');
+                expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                    source: 'AutoFormat',
+                    formatApiName: formatOption.apiName,
                 });
             });
         }
@@ -473,6 +488,11 @@ describe('Content Model Auto Format Plugin Test', () => {
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
                 });
+                const triggerEvent = spyOn(editor, 'triggerEvent');
+                expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                    source: 'AutoFormat',
+                    formatApiName: formatOption.apiName,
+                });
             });
         }
 
@@ -538,6 +558,11 @@ describe('Content Model Auto Format Plugin Test', () => {
                 expect(options).toEqual({
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
+                });
+                const triggerEvent = spyOn(editor, 'triggerEvent');
+                expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                    source: 'AutoFormat',
+                    formatApiName: formatOption.apiName,
                 });
             });
         }

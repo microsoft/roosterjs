@@ -220,9 +220,14 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 shouldFraction ||
                                 shouldOrdinals
                             );
-                        },
-                        formatOptions
+                        }
                     );
+                    if (formatOptions.changeSource) {
+                        editor.triggerEvent('contentChanged', {
+                            source: formatOptions.changeSource,
+                            formatApiName: formatOptions.apiName,
+                        });
+                    }
 
                     break;
             }
