@@ -20,12 +20,24 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
 
     if (option?.shouldMaintainSelection) {
-        editorContext.selectionClassName = SelectionClassName;
-        core.api.setEditorStyle(core, SelectionClassName, 'background-color: #ddd!important', [
-            SelectionSelector,
-        ]);
+        if (CSS.highlights && Highlight) {
+            const selectionEl = document.querySelector(SelectionSelector);
+            if (selectionEl && selectionEl.textContent) {
+                const textRange = new Range();
+                textRange.setStart(selectionEl, 0);
+                textRange.setEnd(selectionEl, selectionEl.textContent.length);
+                const highlight = new Highlight(textRange);
+                CSS.highlights.set(SelectionClassName, highlight);
+            }
+        } else {
+            editorContext.selectionClassName = SelectionClassName;
+            core.api.setEditorStyle(core, SelectionClassName, 'background-color: #ddd!important', [
+                SelectionSelector,
+            ]);
+        }
     } else {
         core.api.setEditorStyle(core, SelectionClassName, null /*rule*/);
+        CSS.highlights.delete(SelectionClassName);
     }
 
     const modelToDomContext = option
