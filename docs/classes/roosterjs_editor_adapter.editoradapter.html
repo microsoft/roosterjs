@@ -89,7 +89,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></li>
+					<li><span class="tsd-signature-type">ILegacyEditor</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -203,7 +203,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L114">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L114">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -237,14 +237,14 @@
 					<a name="addcontenteditfeature" class="tsd-anchor"></a>
 					<h3>add<wbr>Content<wbr>Edit<wbr>Feature</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Content<wbr>Edit<wbr>Feature<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.genericcontenteditfeature.html" class="tsd-signature-type" data-tsd-kind="Interface">GenericContentEditFeature</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Content<wbr>Edit<wbr>Feature<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GenericContentEditFeature</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#addcontenteditfeature">addContentEditFeature</a></p>
+								<p>Implementation of ILegacyEditor.addContentEditFeature</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L963">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:963</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L963">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:963</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -255,7 +255,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>feature: <a href="../interfaces/roosterjs_editor_types.genericcontenteditfeature.html" class="tsd-signature-type" data-tsd-kind="Interface">GenericContentEditFeature</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>feature: <span class="tsd-signature-type">GenericContentEditFeature</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The feature to add</p>
 									</div>
@@ -269,33 +269,26 @@
 					<a name="adddomeventhandler" class="tsd-anchor"></a>
 					<h3>add<wbr>Dom<wbr>Event<wbr>Handler</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Dom<wbr>Event<wbr>Handler<span class="tsd-signature-symbol">(</span>nameOrMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/roosterjs_editor_types.html#domeventhandler" class="tsd-signature-type" data-tsd-kind="Type alias">DOMEventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, handler<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#domeventhandler" class="tsd-signature-type" data-tsd-kind="Type alias">DOMEventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Dom<wbr>Event<wbr>Handler<span class="tsd-signature-symbol">(</span>nameOrMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">DOMEventHandler</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, handler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">DOMEventHandler</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#adddomeventhandler">addDomEventHandler</a></p>
+								<p>Implementation of ILegacyEditor.addDomEventHandler</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L614">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:614</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L614">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:614</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Add a custom DOM event handler to handle events not handled by roosterjs.
-									Caller need to take the responsibility to dispose the handler properly</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>nameOrMap: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/roosterjs_editor_types.html#domeventhandler" class="tsd-signature-type" data-tsd-kind="Type alias">DOMEventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>nameOrMap: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">DOMEventHandler</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> handler: <a href="../modules/roosterjs_editor_types.html#domeventhandler" class="tsd-signature-type" data-tsd-kind="Type alias">DOMEventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> handler: <span class="tsd-signature-type">DOMEventHandler</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-							<p>A dispose function. Call the function to dispose this event handler</p>
 							<ul class="tsd-parameters">
 								<li class="tsd-parameter-signature">
 									<ul class="tsd-signatures tsd-kind-type-literal">
@@ -315,14 +308,14 @@
 					<a name="addundosnapshot" class="tsd-anchor"></a>
 					<h3>add<wbr>Undo<wbr>Snapshot</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span>, changeSource<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, canUndoByBackspace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, additionalData<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.contentchangeddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentChangedData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span>, end<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span>, changeSource<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, canUndoByBackspace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, additionalData<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#addundosnapshot">addUndoSnapshot</a></p>
+								<p>Implementation of ILegacyEditor.addUndoSnapshot</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L721">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:721</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L721">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:721</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -335,7 +328,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span>, end<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The callback function to perform formatting, returns a data object which will be used as
 										the data field in ContentChangedEvent if changeSource is not null.</p>
@@ -343,17 +336,17 @@
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-signature">
 											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, end<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span>, end<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
 													<h4 class="tsd-parameters-title">Parameters</h4>
 													<ul class="tsd-parameters">
 														<li>
-															<h5>start: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h5>
+															<h5>start: <span class="tsd-signature-type">default</span></h5>
 														</li>
 														<li>
-															<h5>end: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h5>
+															<h5>end: <span class="tsd-signature-type">default</span></h5>
 														</li>
 													</ul>
 													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
@@ -376,7 +369,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> additionalData: <a href="../interfaces/roosterjs_editor_types.contentchangeddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentChangedData</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> additionalData: <span class="tsd-signature-type">default</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -394,7 +387,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#announce">announce</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L403">roosterjs-content-model-core/lib/editor/Editor.ts:403</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L403">roosterjs-content-model-core/lib/editor/Editor.ts:403</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -426,7 +419,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#attachdomevent">attachDomEvent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L271">roosterjs-content-model-core/lib/editor/Editor.ts:271</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L271">roosterjs-content-model-core/lib/editor/Editor.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -468,9 +461,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#collapsenodes">collapseNodes</a></p>
+								<p>Implementation of ILegacyEditor.collapseNodes</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L330">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:330</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L330">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:330</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -517,16 +510,11 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#contains">contains</a></p>
+								<p>Implementation of ILegacyEditor.contains</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L281">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:281</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L281">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:281</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Check if the node falls in the editor content</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -534,7 +522,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>True if the given node is in editor content, otherwise false</p>
 						</li>
 					</ul>
 				</section>
@@ -547,9 +534,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#deletenode">deleteNode</a></p>
+								<p>Implementation of ILegacyEditor.deleteNode</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L239">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:239</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L239">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:239</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -575,14 +562,14 @@
 					<a name="deleteselectedcontent" class="tsd-anchor"></a>
 					<h3>delete<wbr>Selected<wbr>Content</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">delete<wbr>Selected<wbr>Content<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></li>
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Selected<wbr>Content<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#deleteselectedcontent">deleteSelectedContent</a></p>
+								<p>Implementation of ILegacyEditor.deleteSelectedContent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L447">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:447</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L447">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:447</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -590,7 +577,7 @@
 									<p>Delete selected content</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -603,10 +590,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#dispose">dispose</a></p>
+								<p>Implementation of ILegacyEditor.dispose</p>
 								<p>Overrides <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L155">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L155">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:155</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -622,14 +609,14 @@
 					<a name="ensuretypeincontainer" class="tsd-anchor"></a>
 					<h3>ensure<wbr>Type<wbr>InContainer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">ensure<wbr>Type<wbr>InContainer<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, keyboardEvent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">KeyboardEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">ensure<wbr>Type<wbr>InContainer<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span>, keyboardEvent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">KeyboardEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#ensuretypeincontainer">ensureTypeInContainer</a></p>
+								<p>Implementation of ILegacyEditor.ensureTypeInContainer</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1035">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1035</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1035">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1035</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -642,7 +629,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>position: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h5>
+									<h5>position: <span class="tsd-signature-type">default</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The position that user is about to type to</p>
 									</div>
@@ -667,10 +654,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#focus">focus</a></p>
+								<p>Implementation of ILegacyEditor.focus</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#focus">focus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L229">roosterjs-content-model-core/lib/editor/Editor.ts:229</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L229">roosterjs-content-model-core/lib/editor/Editor.ts:229</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -693,7 +680,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#formatcontentmodel">formatContentModel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L170">roosterjs-content-model-core/lib/editor/Editor.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L170">roosterjs-content-model-core/lib/editor/Editor.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -730,14 +717,14 @@
 					<a name="getblockelementatnode" class="tsd-anchor"></a>
 					<h3>get<wbr>Block<wbr>Element<wbr>AtNode</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Element<wbr>AtNode<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockElement</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Element<wbr>AtNode<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getblockelementatnode">getBlockElementAtNode</a></p>
+								<p>Implementation of ILegacyEditor.getBlockElementAtNode</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L277">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L277">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:277</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -754,7 +741,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type" data-tsd-kind="Interface">BlockElement</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>The BlockElement result</p>
 						</li>
 					</ul>
@@ -763,14 +750,14 @@
 					<a name="getblocktraverser" class="tsd-anchor"></a>
 					<h3>get<wbr>Block<wbr>Traverser</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Traverser<span class="tsd-signature-symbol">(</span>startFrom<span class="tsd-signature-symbol">?: </span><a href="../enums/roosterjs_editor_types.contentposition.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ContentPosition</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblecontentposition.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleContentPosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Traverser<span class="tsd-signature-symbol">(</span>startFrom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ContentPosition</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleContentPosition</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getblocktraverser">getBlockTraverser</a></p>
+								<p>Implementation of ILegacyEditor.getBlockTraverser</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L868">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:868</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L868">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:868</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -781,13 +768,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>startFrom: <a href="../enums/roosterjs_editor_types.contentposition.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ContentPosition</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblecontentposition.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleContentPosition</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>startFrom: <span class="tsd-signature-type">ContentPosition</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleContentPosition</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Start position of the traverser. Default value is ContentPosition.SelectionStart</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>A content traverser, or null if editor never got focus before</p>
 						</li>
 					</ul>
@@ -796,14 +783,14 @@
 					<a name="getbodytraverser" class="tsd-anchor"></a>
 					<h3>get<wbr>Body<wbr>Traverser</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Body<wbr>Traverser<span class="tsd-signature-symbol">(</span>startNode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Body<wbr>Traverser<span class="tsd-signature-symbol">(</span>startNode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getbodytraverser">getBodyTraverser</a></p>
+								<p>Implementation of ILegacyEditor.getBodyTraverser</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L848">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:848</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L848">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:848</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -820,7 +807,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -835,7 +822,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getcolormanager">getColorManager</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L354">roosterjs-content-model-core/lib/editor/Editor.ts:354</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L354">roosterjs-content-model-core/lib/editor/Editor.ts:354</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -851,14 +838,14 @@
 					<a name="getcontent" class="tsd-anchor"></a>
 					<h3>get<wbr>Content</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">?: </span><a href="../enums/roosterjs_editor_types.getcontentmode.html" class="tsd-signature-type" data-tsd-kind="Enumeration">GetContentMode</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblegetcontentmode.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleGetContentMode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GetContentMode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleGetContentMode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getcontent">getContent</a></p>
+								<p>Implementation of ILegacyEditor.getContent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L352">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:352</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L352">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:352</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -869,7 +856,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>mode: <a href="../enums/roosterjs_editor_types.getcontentmode.html" class="tsd-signature-type" data-tsd-kind="Enumeration">GetContentMode</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblegetcontentmode.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleGetContentMode</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>mode: <span class="tsd-signature-type">GetContentMode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleGetContentMode</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>specify what kind of HTML content to retrieve</p>
 									</div>
@@ -891,7 +878,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getcontentmodelcopy">getContentModelCopy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L96">roosterjs-content-model-core/lib/editor/Editor.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L96">roosterjs-content-model-core/lib/editor/Editor.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -923,14 +910,14 @@
 					<a name="getcontentsearcherofcursor" class="tsd-anchor"></a>
 					<h3>get<wbr>Content<wbr>Searcher<wbr>OfCursor</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<wbr>Searcher<wbr>OfCursor<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ipositioncontentsearcher.html" class="tsd-signature-type" data-tsd-kind="Interface">IPositionContentSearcher</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<wbr>Searcher<wbr>OfCursor<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getcontentsearcherofcursor">getContentSearcherOfCursor</a></p>
+								<p>Implementation of ILegacyEditor.getContentSearcherOfCursor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L883">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:883</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L883">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:883</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -941,14 +928,14 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-type">PluginEvent</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Optional, if specified, editor will try to get cached result from the event object first.
 										If it is not cached before, query from DOM and cache the result into the event object</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.ipositioncontentsearcher.html" class="tsd-signature-type" data-tsd-kind="Interface">IPositionContentSearcher</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>A content traverser, or null if editor never got focus before</p>
 						</li>
 					</ul>
@@ -964,7 +951,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getcore">getCore</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L413">roosterjs-content-model-core/lib/editor/Editor.ts:413</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L413">roosterjs-content-model-core/lib/editor/Editor.ts:413</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -988,9 +975,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getcustomdata">getCustomData</a></p>
+								<p>Implementation of ILegacyEditor.getCustomData</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L818">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:818</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L818">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:818</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1072,7 +1059,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getdomhelper">getDOMHelper</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L190">roosterjs-content-model-core/lib/editor/Editor.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L190">roosterjs-content-model-core/lib/editor/Editor.ts:190</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1095,7 +1082,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getdomselection">getDOMSelection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L136">roosterjs-content-model-core/lib/editor/Editor.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L136">roosterjs-content-model-core/lib/editor/Editor.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1111,14 +1098,14 @@
 					<a name="getdarkcolorhandler" class="tsd-anchor"></a>
 					<h3>get<wbr>Dark<wbr>Color<wbr>Handler</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Dark<wbr>Color<wbr>Handler<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.darkcolorhandler.html" class="tsd-signature-type" data-tsd-kind="Interface">DarkColorHandler</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Dark<wbr>Color<wbr>Handler<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getdarkcolorhandler">getDarkColorHandler</a></p>
+								<p>Implementation of ILegacyEditor.getDarkColorHandler</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1120">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1120</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1120">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1126,7 +1113,7 @@
 									<p>Get a darkColorHandler object for this editor.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.darkcolorhandler.html" class="tsd-signature-type" data-tsd-kind="Interface">DarkColorHandler</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1134,14 +1121,14 @@
 					<a name="getdefaultformat" class="tsd-anchor"></a>
 					<h3>get<wbr>Default<wbr>Format</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Default<wbr>Format<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.defaultformat.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultFormat</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Default<wbr>Format<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getdefaultformat">getDefaultFormat</a></p>
+								<p>Implementation of ILegacyEditor.getDefaultFormat</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L830">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:830</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L830">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:830</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1149,7 +1136,7 @@
 									<p>Get default format of this editor</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.defaultformat.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultFormat</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>Default format object of this editor</p>
 						</li>
 					</ul>
@@ -1163,10 +1150,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getdocument">getDocument</a></p>
+								<p>Implementation of ILegacyEditor.getDocument</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getdocument">getDocument</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L222">roosterjs-content-model-core/lib/editor/Editor.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L222">roosterjs-content-model-core/lib/editor/Editor.ts:222</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1188,9 +1175,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#geteditordomattribute">getEditorDomAttribute</a></p>
+								<p>Implementation of ILegacyEditor.getEditorDomAttribute</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L924">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:924</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L924">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:924</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1215,14 +1202,14 @@
 					<a name="getelementatcursor" class="tsd-anchor"></a>
 					<h3>get<wbr>Element<wbr>AtCursor</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<wbr>AtCursor<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, startFrom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span>, event<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Element<wbr>AtCursor<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, startFrom<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span>, event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getelementatcursor">getElementAtCursor</a></p>
+								<p>Implementation of ILegacyEditor.getElementAtCursor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L565">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:565</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L565">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:565</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1250,7 +1237,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-type">PluginEvent</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Optional, if specified, editor will try to get cached result from the event object first.
 										If it is not cached before, query from DOM and cache the result into the event object</p>
@@ -1272,7 +1259,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getenvironment">getEnvironment</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L129">roosterjs-content-model-core/lib/editor/Editor.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L129">roosterjs-content-model-core/lib/editor/Editor.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1288,14 +1275,14 @@
 					<a name="getfocusedposition" class="tsd-anchor"></a>
 					<h3>get<wbr>Focused<wbr>Position</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Focused<wbr>Position<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Focused<wbr>Position<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getfocusedposition">getFocusedPosition</a></p>
+								<p>Implementation of ILegacyEditor.getFocusedPosition</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L539">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:539</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L539">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:539</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1303,7 +1290,7 @@
 									<p>Get current focused position. Return null if editor doesn&#39;t have focus at this time.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1311,14 +1298,14 @@
 					<a name="getpendableformatstate" class="tsd-anchor"></a>
 					<h3>get<wbr>Pendable<wbr>Format<wbr>State</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Pendable<wbr>Format<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.pendableformatstate.html" class="tsd-signature-type" data-tsd-kind="Interface">PendableFormatState</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Pendable<wbr>Format<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PendableFormatState</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getpendableformatstate">getPendableFormatState</a></p>
+								<p>Implementation of ILegacyEditor.getPendableFormatState</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1016">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1016</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1016">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1016</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1328,7 +1315,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.pendableformatstate.html" class="tsd-signature-type" data-tsd-kind="Interface">PendableFormatState</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">PendableFormatState</span></h4>
 							<p>The pending format state</p>
 						</li>
 					</ul>
@@ -1344,7 +1331,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getpendingformat">getPendingFormat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L183">roosterjs-content-model-core/lib/editor/Editor.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L183">roosterjs-content-model-core/lib/editor/Editor.ts:183</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1365,9 +1352,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getrelativedistancetoeditor">getRelativeDistanceToEditor</a></p>
+								<p>Implementation of ILegacyEditor.getRelativeDistanceToEditor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L937">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:937</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L937">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:937</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1408,10 +1395,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getscrollcontainer">getScrollContainer</a></p>
+								<p>Implementation of ILegacyEditor.getScrollContainer</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getscrollcontainer">getScrollContainer</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L371">roosterjs-content-model-core/lib/editor/Editor.ts:371</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L371">roosterjs-content-model-core/lib/editor/Editor.ts:371</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1427,14 +1414,14 @@
 					<a name="getselectedregions" class="tsd-anchor"></a>
 					<h3>get<wbr>Selected<wbr>Regions</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Selected<wbr>Regions<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">?: </span><a href="../enums/roosterjs_editor_types.regiontype.html#table" class="tsd-signature-type" data-tsd-kind="Enumeration member">Table</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleregiontype.html#table" class="tsd-signature-type" data-tsd-kind="Enumeration member">Table</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.region.html" class="tsd-signature-type" data-tsd-kind="Interface">Region</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Selected<wbr>Regions<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Table</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Table</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getselectedregions">getSelectedRegions</a></p>
+								<p>Implementation of ILegacyEditor.getSelectedRegions</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L598">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:598</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L598">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:598</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1445,10 +1432,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>type: <a href="../enums/roosterjs_editor_types.regiontype.html#table" class="tsd-signature-type" data-tsd-kind="Enumeration member">Table</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleregiontype.html#table" class="tsd-signature-type" data-tsd-kind="Enumeration member">Table</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>type: <span class="tsd-signature-type">Table</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Table</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.region.html" class="tsd-signature-type" data-tsd-kind="Interface">Region</a><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1456,14 +1443,14 @@
 					<a name="getselectionpath" class="tsd-anchor"></a>
 					<h3>get<wbr>Selection<wbr>Path</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.selectionpath.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectionPath</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getselectionpath">getSelectionPath</a></p>
+								<p>Implementation of ILegacyEditor.getSelectionPath</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L517">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:517</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L517">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:517</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1472,7 +1459,7 @@
 									It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.selectionpath.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectionPath</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>current selection path, or null if editor never got focus before</p>
 						</li>
 					</ul>
@@ -1486,9 +1473,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getselectionrange">getSelectionRange</a></p>
+								<p>Implementation of ILegacyEditor.getSelectionRange</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L493">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:493</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L493">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:493</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1516,14 +1503,14 @@
 					<a name="getselectionrangeex" class="tsd-anchor"></a>
 					<h3>get<wbr>Selection<wbr>Range<wbr>Ex</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Range<wbr>Ex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Range<wbr>Ex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SelectionRangeEx</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getselectionrangeex">getSelectionRangeEx</a></p>
+								<p>Implementation of ILegacyEditor.getSelectionRangeEx</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L506">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:506</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L506">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:506</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1532,7 +1519,7 @@
 									It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SelectionRangeEx</span></h4>
 							<p>current selection range, or null if editor never got focus before</p>
 						</li>
 					</ul>
@@ -1541,14 +1528,14 @@
 					<a name="getselectiontraverser" class="tsd-anchor"></a>
 					<h3>get<wbr>Selection<wbr>Traverser</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Traverser<span class="tsd-signature-symbol">(</span>range<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Selection<wbr>Traverser<span class="tsd-signature-symbol">(</span>range<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getselectiontraverser">getSelectionTraverser</a></p>
+								<p>Implementation of ILegacyEditor.getSelectionTraverser</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L856">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:856</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L856">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:856</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1562,7 +1549,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> range: <span class="tsd-signature-type">Range</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.icontenttraverser.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentTraverser</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">default</span></h4>
 							<p>A content traverser, or null if editor never got focus before</p>
 						</li>
 					</ul>
@@ -1571,14 +1558,14 @@
 					<a name="getsizetransformer" class="tsd-anchor"></a>
 					<h3>get<wbr>Size<wbr>Transformer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Size<wbr>Transformer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#sizetransformer" class="tsd-signature-type" data-tsd-kind="Type alias">SizeTransformer</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Size<wbr>Transformer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SizeTransformer</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getsizetransformer">getSizeTransformer</a></p>
+								<p>Implementation of ILegacyEditor.getSizeTransformer</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1113">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1113</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1113">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1113</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1588,7 +1575,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/roosterjs_editor_types.html#sizetransformer" class="tsd-signature-type" data-tsd-kind="Type alias">SizeTransformer</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SizeTransformer</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1603,7 +1590,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getsnapshotsmanager">getSnapshotsManager</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L279">roosterjs-content-model-core/lib/editor/Editor.ts:279</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L279">roosterjs-content-model-core/lib/editor/Editor.ts:279</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1619,14 +1606,14 @@
 					<a name="getstylebasedformatstate" class="tsd-anchor"></a>
 					<h3>get<wbr>Style<wbr>Based<wbr>Format<wbr>State</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Style<wbr>Based<wbr>Format<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.stylebasedformatstate.html" class="tsd-signature-type" data-tsd-kind="Interface">StyleBasedFormatState</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Style<wbr>Based<wbr>Format<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StyleBasedFormatState</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getstylebasedformatstate">getStyleBasedFormatState</a></p>
+								<p>Implementation of ILegacyEditor.getStyleBasedFormatState</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L994">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:994</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L994">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:994</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1636,7 +1623,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.stylebasedformatstate.html" class="tsd-signature-type" data-tsd-kind="Interface">StyleBasedFormatState</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">StyleBasedFormatState</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1649,10 +1636,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#gettrustedhtmlhandler">getTrustedHTMLHandler</a></p>
+								<p>Implementation of ILegacyEditor.getTrustedHTMLHandler</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#gettrustedhtmlhandler">getTrustedHTMLHandler</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L364">roosterjs-content-model-core/lib/editor/Editor.ts:364</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L364">roosterjs-content-model-core/lib/editor/Editor.ts:364</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1671,14 +1658,14 @@
 					<a name="getundostate" class="tsd-anchor"></a>
 					<h3>get<wbr>Undo<wbr>State</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Undo<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.editorundostate.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorUndoState</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Undo<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EditorUndoState</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getundostate">getUndoState</a></p>
+								<p>Implementation of ILegacyEditor.getUndoState</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L797">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:797</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L797">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:797</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1686,7 +1673,7 @@
 									<p>Whether there is an available undo/redo snapshot</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.editorundostate.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorUndoState</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EditorUndoState</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1699,10 +1686,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getvisibleviewport">getVisibleViewport</a></p>
+								<p>Implementation of ILegacyEditor.getVisibleViewport</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#getvisibleviewport">getVisibleViewport</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L378">roosterjs-content-model-core/lib/editor/Editor.ts:378</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L378">roosterjs-content-model-core/lib/editor/Editor.ts:378</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1723,9 +1710,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#getzoomscale">getZoomScale</a></p>
+								<p>Implementation of ILegacyEditor.getZoomScale</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1084">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1084</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1084">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1084</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1749,10 +1736,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#hasfocus">hasFocus</a></p>
+								<p>Implementation of ILegacyEditor.hasFocus</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#hasfocus">hasFocus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L238">roosterjs-content-model-core/lib/editor/Editor.ts:238</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L238">roosterjs-content-model-core/lib/editor/Editor.ts:238</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1769,14 +1756,14 @@
 					<a name="insertcontent" class="tsd-anchor"></a>
 					<h3>insert<wbr>Content</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">insert<wbr>Content<span class="tsd-signature-symbol">(</span>content<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, option<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#insertoption" class="tsd-signature-type" data-tsd-kind="Type alias">InsertOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Content<span class="tsd-signature-symbol">(</span>content<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InsertOption</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#insertcontent">insertContent</a></p>
+								<p>Implementation of ILegacyEditor.insertContent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L421">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:421</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L421">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:421</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1790,7 +1777,7 @@
 									<h5>content: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> option: <a href="../modules/roosterjs_editor_types.html#insertoption" class="tsd-signature-type" data-tsd-kind="Type alias">InsertOption</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> option: <span class="tsd-signature-type">InsertOption</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Insert options. Default value is:
 											position: ContentPosition.SelectionStart
@@ -1808,14 +1795,14 @@
 					<a name="insertnode" class="tsd-anchor"></a>
 					<h3>insert<wbr>Node</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">insert<wbr>Node<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, option<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#insertoption" class="tsd-signature-type" data-tsd-kind="Type alias">InsertOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Node<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, option<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">InsertOption</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#insertnode">insertNode</a></p>
+								<p>Implementation of ILegacyEditor.insertNode</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L193">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L193">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:193</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1832,7 +1819,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> option: <a href="../modules/roosterjs_editor_types.html#insertoption" class="tsd-signature-type" data-tsd-kind="Type alias">InsertOption</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> option: <span class="tsd-signature-type">InsertOption</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Insert options. Default value is:
 											position: ContentPosition.SelectionStart
@@ -1856,10 +1843,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isdarkmode">isDarkMode</a></p>
+								<p>Implementation of ILegacyEditor.isDarkMode</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#isdarkmode">isDarkMode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L289">roosterjs-content-model-core/lib/editor/Editor.ts:289</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L289">roosterjs-content-model-core/lib/editor/Editor.ts:289</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1881,10 +1868,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isdisposed">isDisposed</a></p>
+								<p>Implementation of ILegacyEditor.isDisposed</p>
 								<p>Overrides <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#isdisposed">isDisposed</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L179">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L179">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:179</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1906,9 +1893,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isempty">isEmpty</a></p>
+								<p>Implementation of ILegacyEditor.isEmpty</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L343">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:343</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L343">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:343</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1934,14 +1921,14 @@
 					<a name="isfeatureenabled" class="tsd-anchor"></a>
 					<h3>is<wbr>Feature<wbr>Enabled</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Feature<wbr>Enabled<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Feature<wbr>Enabled<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ExperimentalFeatures</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleExperimentalFeatures</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isfeatureenabled">isFeatureEnabled</a></p>
+								<p>Implementation of ILegacyEditor.isFeatureEnabled</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1070">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1070</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1070">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1070</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1952,7 +1939,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>feature: <a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a></h5>
+									<h5>feature: <span class="tsd-signature-type">ExperimentalFeatures</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleExperimentalFeatures</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The feature to check</p>
 									</div>
@@ -1971,9 +1958,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isinime">isInIME</a></p>
+								<p>Implementation of ILegacyEditor.isInIME</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1129">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1129</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1129">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1995,10 +1982,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#isinshadowedit">isInShadowEdit</a></p>
+								<p>Implementation of ILegacyEditor.isInShadowEdit</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#isinshadowedit">isInShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L326">roosterjs-content-model-core/lib/editor/Editor.ts:326</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L326">roosterjs-content-model-core/lib/editor/Editor.ts:326</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2014,14 +2001,14 @@
 					<a name="ispositionatbeginning" class="tsd-anchor"></a>
 					<h3>is<wbr>Position<wbr>AtBeginning</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Position<wbr>AtBeginning<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Position<wbr>AtBeginning<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#ispositionatbeginning">isPositionAtBeginning</a></p>
+								<p>Implementation of ILegacyEditor.isPositionAtBeginning</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L591">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:591</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L591">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:591</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2033,7 +2020,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>position: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a></h5>
+									<h5>position: <span class="tsd-signature-type">default</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The position to check</p>
 									</div>
@@ -2048,14 +2035,14 @@
 					<a name="paste" class="tsd-anchor"></a>
 					<h3>paste</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">paste<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ClipboardData</a>, pasteAsText<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, applyCurrentFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, pasteAsImage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">paste<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span>, pasteAsText<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, applyCurrentFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, pasteAsImage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#paste">paste</a></p>
+								<p>Implementation of ILegacyEditor.paste</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L463">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:463</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L463">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:463</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2066,7 +2053,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ClipboardData</a></h5>
+									<h5>clipboardData: <span class="tsd-signature-type">default</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Clipboard data retrieved from clipboard</p>
 									</div>
@@ -2092,28 +2079,23 @@
 					<a name="queryelements" class="tsd-anchor"></a>
 					<h3>query<wbr>Elements</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">query<wbr>Elements<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, scopeOrCallback<span class="tsd-signature-symbol">?: </span><a href="../enums/roosterjs_editor_types.queryscope.html" class="tsd-signature-type" data-tsd-kind="Enumeration">QueryScope</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblequeryscope.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleQueryScope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span>, callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">query<wbr>Elements<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, scopeOrCallback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">QueryScope</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleQueryScope</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span>, callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#queryelements">queryElements</a></p>
+								<p>Implementation of ILegacyEditor.queryElements</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L288">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:288</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L288">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:288</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Query HTML elements in editor by tag name</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>selector: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>scopeOrCallback: <a href="../enums/roosterjs_editor_types.queryscope.html" class="tsd-signature-type" data-tsd-kind="Enumeration">QueryScope</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblequeryscope.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleQueryScope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>scopeOrCallback: <span class="tsd-signature-type">QueryScope</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleQueryScope</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></h5>
@@ -2138,7 +2120,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></h4>
-							<p>HTML Element array of the query result</p>
 						</li>
 					</ul>
 				</section>
@@ -2151,9 +2132,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#redo">redo</a></p>
+								<p>Implementation of ILegacyEditor.redo</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L707">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:707</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L707">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:707</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2169,14 +2150,14 @@
 					<a name="removecontenteditfeature" class="tsd-anchor"></a>
 					<h3>remove<wbr>Content<wbr>Edit<wbr>Feature</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Content<wbr>Edit<wbr>Feature<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.genericcontenteditfeature.html" class="tsd-signature-type" data-tsd-kind="Interface">GenericContentEditFeature</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Content<wbr>Edit<wbr>Feature<span class="tsd-signature-symbol">(</span>feature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GenericContentEditFeature</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#removecontenteditfeature">removeContentEditFeature</a></p>
+								<p>Implementation of ILegacyEditor.removeContentEditFeature</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L976">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:976</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L976">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:976</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2187,7 +2168,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>feature: <a href="../interfaces/roosterjs_editor_types.genericcontenteditfeature.html" class="tsd-signature-type" data-tsd-kind="Interface">GenericContentEditFeature</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>feature: <span class="tsd-signature-type">GenericContentEditFeature</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEvent</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The feature to remove</p>
 									</div>
@@ -2206,9 +2187,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#replacenode">replaceNode</a></p>
+								<p>Implementation of ILegacyEditor.replaceNode</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L256">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:256</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L256">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:256</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2253,7 +2234,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#restoresnapshot">restoreSnapshot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L212">roosterjs-content-model-core/lib/editor/Editor.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L212">roosterjs-content-model-core/lib/editor/Editor.ts:212</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2278,14 +2259,14 @@
 					<a name="runasync" class="tsd-anchor"></a>
 					<h3>run<wbr>Async</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">run<wbr>Async<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">run<wbr>Async<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#runasync">runAsync</a></p>
+								<p>Implementation of ILegacyEditor.runAsync</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L898">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:898</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L898">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:898</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2296,21 +2277,21 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>callback: <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+									<h5>callback: <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The callback function to run</p>
 									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-signature">
 											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
 													<h4 class="tsd-parameters-title">Parameters</h4>
 													<ul class="tsd-parameters">
 														<li>
-															<h5>editor: <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></h5>
+															<h5>editor: <span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></h5>
 														</li>
 													</ul>
 													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2341,28 +2322,23 @@
 					<a name="select" class="tsd-anchor"></a>
 					<h3>select</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">select<span class="tsd-signature-symbol">(</span>arg1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.selectionpath.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectionPath</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol"> | </span><a href="../modules/roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a>, arg2<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.tableselection.html" class="tsd-signature-type" data-tsd-kind="Interface">TableSelection</a>, arg3<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span>, arg4<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">select<span class="tsd-signature-symbol">(</span>arg1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectionRangeEx</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span>, arg2<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span>, arg3<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span>, arg4<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#select">select</a></p>
+								<p>Implementation of ILegacyEditor.select</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L522">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:522</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L522">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:522</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Select content by range</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>arg1: <span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.selectionpath.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectionPath</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol"> | </span><a href="../modules/roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></h5>
+									<h5>arg1: <span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectionRangeEx</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> arg2: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/roosterjs_editor_types.tableselection.html" class="tsd-signature-type" data-tsd-kind="Interface">TableSelection</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> arg2: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">default</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> arg3: <span class="tsd-signature-type">Node</span></h5>
@@ -2372,7 +2348,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>True if content is selected, otherwise false</p>
 						</li>
 					</ul>
 				</section>
@@ -2385,9 +2360,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#setcontent">setContent</a></p>
+								<p>Implementation of ILegacyEditor.setContent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L376">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:376</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L376">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:376</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2425,7 +2400,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#setdomselection">setDOMSelection</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L146">roosterjs-content-model-core/lib/editor/Editor.ts:146</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L146">roosterjs-content-model-core/lib/editor/Editor.ts:146</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2455,10 +2430,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#setdarkmodestate">setDarkModeState</a></p>
+								<p>Implementation of ILegacyEditor.setDarkModeState</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#setdarkmodestate">setDarkModeState</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L297">roosterjs-content-model-core/lib/editor/Editor.ts:297</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L297">roosterjs-content-model-core/lib/editor/Editor.ts:297</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2488,9 +2463,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#seteditordomattribute">setEditorDomAttribute</a></p>
+								<p>Implementation of ILegacyEditor.setEditorDomAttribute</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L916">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:916</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L916">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:916</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2528,7 +2503,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#seteditorstyle">setEditorStyle</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L389">roosterjs-content-model-core/lib/editor/Editor.ts:389</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L389">roosterjs-content-model-core/lib/editor/Editor.ts:389</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2573,7 +2548,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#setlogicalroot">setLogicalRoot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L156">roosterjs-content-model-core/lib/editor/Editor.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L156">roosterjs-content-model-core/lib/editor/Editor.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2603,9 +2578,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#setzoomscale">setZoomScale</a></p>
+								<p>Implementation of ILegacyEditor.setZoomScale</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1094">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1094</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1094">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1094</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2637,10 +2612,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#startshadowedit">startShadowEdit</a></p>
+								<p>Implementation of ILegacyEditor.startShadowEdit</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#startshadowedit">startShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L338">roosterjs-content-model-core/lib/editor/Editor.ts:338</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L338">roosterjs-content-model-core/lib/editor/Editor.ts:338</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2666,10 +2641,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#stopshadowedit">stopShadowEdit</a></p>
+								<p>Implementation of ILegacyEditor.stopShadowEdit</p>
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#stopshadowedit">stopShadowEdit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L346">roosterjs-content-model-core/lib/editor/Editor.ts:346</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L346">roosterjs-content-model-core/lib/editor/Editor.ts:346</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2692,7 +2667,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#takesnapshot">takeSnapshot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L198">roosterjs-content-model-core/lib/editor/Editor.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L198">roosterjs-content-model-core/lib/editor/Editor.ts:198</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2717,14 +2692,14 @@
 					<a name="transformtodarkcolor" class="tsd-anchor"></a>
 					<h3>transform<wbr>ToDark<wbr>Color</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">transform<wbr>ToDark<wbr>Color<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, direction<span class="tsd-signature-symbol">?: </span><a href="../enums/roosterjs_editor_types.colortransformdirection.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ColorTransformDirection</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblecolortransformdirection.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleColorTransformDirection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">transform<wbr>ToDark<wbr>Color<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, direction<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ColorTransformDirection</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleColorTransformDirection</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#transformtodarkcolor">transformToDarkColor</a></p>
+								<p>Implementation of ILegacyEditor.transformToDarkColor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1048">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1048</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L1048">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:1048</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2741,7 +2716,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>direction: <a href="../enums/roosterjs_editor_types.colortransformdirection.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ColorTransformDirection</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblecolortransformdirection.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleColorTransformDirection</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>direction: <span class="tsd-signature-type">ColorTransformDirection</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatibleColorTransformDirection</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The transform direction. @default ColorTransformDirection.LightToDark</p>
 									</div>
@@ -2760,9 +2735,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#triggercontentchangedevent">triggerContentChangedEvent</a></p>
+								<p>Implementation of ILegacyEditor.triggerContentChangedEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L683">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:683</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L683">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:683</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2800,7 +2775,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="roosterjs_content_model_core.editor.html">Editor</a>.<a href="roosterjs_content_model_core.editor.html#triggerevent">triggerEvent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L252">roosterjs-content-model-core/lib/editor/Editor.ts:252</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-content-model-core/lib/editor/Editor.ts#L252">roosterjs-content-model-core/lib/editor/Editor.ts:252</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2846,14 +2821,14 @@
 					<a name="triggerpluginevent" class="tsd-anchor"></a>
 					<h3>trigger<wbr>Plugin<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">trigger<wbr>Plugin<wbr>Event&lt;T&gt;<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, data<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#plugineventdata" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEventData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, broadcast<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#plugineventfromtype" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEventFromType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">trigger<wbr>Plugin<wbr>Event&lt;T&gt;<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PluginEventData</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, broadcast<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PluginEventFromType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#triggerpluginevent">triggerPluginEvent</a></p>
+								<p>Implementation of ILegacyEditor.triggerPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L658">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:658</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L658">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:658</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2864,7 +2839,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.plugineventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">PluginEventType</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleplugineventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatiblePluginEventType</a></h4>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PluginEventType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CompatiblePluginEventType</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2876,7 +2851,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>data: <a href="../modules/roosterjs_editor_types.html#plugineventdata" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEventData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>data: <span class="tsd-signature-type">PluginEventData</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>data of the event with given type, this is the rest part of PluginEvent with the given type</p>
 									</div>
@@ -2889,7 +2864,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/roosterjs_editor_types.html#plugineventfromtype" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEventFromType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">PluginEventFromType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>the event object which is really passed into plugins. Some plugin may modify the event object so
 							the result of this function provides a chance to read the modified result</p>
 						</li>
@@ -2904,9 +2879,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.ieditor.html">IEditor</a>.<a href="../interfaces/roosterjs_editor_types.ieditor.html#undo">undo</a></p>
+								<p>Implementation of ILegacyEditor.undo</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b4fc6d6/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L700">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:700</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f722a40/packages/roosterjs-editor-adapter/lib/editor/EditorAdapter.ts#L700">roosterjs-editor-adapter/lib/editor/EditorAdapter.ts:700</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2949,27 +2924,6 @@
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_adapter.html">roosterjs-<wbr>editor-<wbr>adapter</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_api.html">roosterjs-<wbr>editor-<wbr>api</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_editor_types_compatible.html">roosterjs-<wbr>editor-<wbr>types-<wbr>compatible</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_react.html">roosterjs-<wbr>react</a>
 					</li>
 				</ul>
 			</nav>
@@ -3261,9 +3215,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
