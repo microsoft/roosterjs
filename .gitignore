@@ -14,5 +14,3 @@ dist/
 # Mac files
 .DS_Store
 
-# Temp files
-packages/roosterjs-editor-types/lib/compatibleEnum/

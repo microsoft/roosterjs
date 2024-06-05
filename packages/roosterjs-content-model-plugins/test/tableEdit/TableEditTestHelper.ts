@@ -1,6 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
-import { DOMEventHandlerFunction } from 'roosterjs-editor-types';
+import { ContentModelTable, DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
 import { normalizeTable } from 'roosterjs-content-model-dom';
 import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeatureName';
 import { TableEditor } from '../../lib/tableEdit/editors/TableEditor';

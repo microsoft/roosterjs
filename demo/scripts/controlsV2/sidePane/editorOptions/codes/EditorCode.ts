@@ -32,6 +32,7 @@ export class EditorCode extends CodeElement {
         code += defaultFormat ? this.indent('defaultSegmentFormat: defaultSegmentFormat,\n') : '';
         code += this.indent(`getDarkColor: ${darkMode},\n`);
         code += '};\n';
+        code += `let editor = new roosterjs.Editor(contentDiv, options);\n`;
         code += this.buttons ? this.buttons.getCode() : '';
 
         return code;

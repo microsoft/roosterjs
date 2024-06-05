@@ -2,7 +2,7 @@ import { AutoFormatOptions, CustomReplace, MarkdownOptions } from 'roosterjs-con
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
 
-export interface NewPluginList {
+export interface BuildInPluginList {
     autoFormat: boolean;
     edit: boolean;
     paste: boolean;
@@ -18,8 +18,6 @@ export interface NewPluginList {
     imageEditPlugin: boolean;
     customReplace: boolean;
 }
-
-export interface BuildInPluginList extends NewPluginList {}
 
 export interface OptionState {
     pluginList: BuildInPluginList;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UrlPlaceholder } from './OptionState';
-import type { BuildInPluginList, NewPluginList, OptionState } from './OptionState';
+import type { BuildInPluginList, OptionState } from './OptionState';
 
 const styles = require('./OptionsPane.scss');
 
@@ -96,7 +96,7 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
     };
 }
 
-export class Plugins extends PluginsBase<keyof NewPluginList> {
+export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();
