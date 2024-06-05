@@ -20,8 +20,8 @@ export class TitleBar extends React.Component<TitleBarProps, {}> {
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>
-                    <a href="?legacy=1" className={styles.link}>
-                        Legacy demo site
+                    <a href="./legacyDemo/index.html" className={styles.link}>
+                        Legacy demo
                     </a>
                     {' | '}
                     <a

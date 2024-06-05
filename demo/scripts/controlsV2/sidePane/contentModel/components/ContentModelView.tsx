@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ButtonGroup } from './ButtonGroup';
 import { ContentModelJson } from './model/ContentModelJson';
 import { css } from '@fluentui/react/lib/Utilities';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { useProperty } from '../hooks/useProperty';
 import {
     ContentModelBlockWithCache,
