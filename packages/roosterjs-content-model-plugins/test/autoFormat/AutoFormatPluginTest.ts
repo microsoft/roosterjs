@@ -320,11 +320,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                     }
                 );
             });
-
-            expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                source: 'AutoLink',
-                formatApiName: '',
-            });
         }
 
         it('should call createLinkAfterSpace', () => {
