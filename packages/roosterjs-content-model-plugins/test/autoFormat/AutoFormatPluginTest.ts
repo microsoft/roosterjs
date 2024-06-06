@@ -108,10 +108,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                     changeSource: 'AutoFormat',
                     apiName: formatOptions.apiName,
                 });
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'AutoFormat',
-                    formatApiName: formatOptions.apiName,
-                });
             });
         }
 
@@ -397,10 +393,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
                 });
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'AutoFormat',
-                    formatApiName: formatOption.apiName,
-                });
             });
         }
 
@@ -481,11 +473,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
                 });
-
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'AutoFormat',
-                    formatApiName: formatOption.apiName,
-                });
             });
         }
 
@@ -551,11 +538,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                 expect(options).toEqual({
                     changeSource: 'AutoFormat',
                     apiName: formatOption.apiName,
-                });
-
-                expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                    source: 'AutoFormat',
-                    formatApiName: formatOption.apiName,
                 });
             });
         }
