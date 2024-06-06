@@ -42,9 +42,9 @@ export function formatSegmentWithContentModel(
                 false /*includingEntity*/,
                 true /*mutate*/
             );
-            let isCollapsedSelection = segmentAndParagraphs.every(
-                x => x[0].segmentType == 'SelectionMarker'
-            );
+            let isCollapsedSelection =
+                segmentAndParagraphs.length >= 1 &&
+                segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
 
             if (isCollapsedSelection) {
                 const para = segmentAndParagraphs[0][1];

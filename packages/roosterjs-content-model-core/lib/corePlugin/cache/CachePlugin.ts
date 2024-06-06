@@ -149,9 +149,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
     };
 
     private invalidateCache() {
-        if (!this.editor?.isInShadowEdit() && this.state.cachedModel) {
-            console.error('Clear cache');
-
+        if (!this.editor?.isInShadowEdit()) {
             this.state.cachedModel = undefined;
             this.state.cachedSelection = undefined;
         }

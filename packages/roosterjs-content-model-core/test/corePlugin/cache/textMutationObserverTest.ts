@@ -1,10 +1,30 @@
-import * as TextMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
+import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
+import { DomIndexer, TextMutationObserver } from 'roosterjs-content-model-types';
+import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
 
 describe('TextMutationObserverImpl', () => {
+    let domIndexer: DomIndexer;
+    let onSkipMutation: jasmine.Spy;
+    let observer: TextMutationObserver;
+
+    beforeEach(() => {
+        domIndexer = new DomIndexerImpl();
+        onSkipMutation = jasmine.createSpy('onSkipMutation');
+    });
+
+    afterEach(() => {
+        observer?.stopObserving();
+    });
+
     it('init', () => {
         const div = document.createElement('div');
         const onMutation = jasmine.createSpy('onMutation');
-        TextMutationObserver.createTextMutationObserver(div, onMutation);
+        textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         expect(onMutation).not.toHaveBeenCalled();
     });
@@ -12,7 +32,13 @@ describe('TextMutationObserverImpl', () => {
     it('not text change', async () => {
         const div = document.createElement('div');
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+
+        observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
 
@@ -33,7 +59,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+        const observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
 
@@ -56,7 +87,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(span);
 
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+        const observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
 
@@ -77,7 +113,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+        const observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
 
@@ -88,8 +129,10 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledTimes(2);
         expect(onMutation).toHaveBeenCalledWith(false);
+
+        observer.stopObserving();
     });
 
     it('flush mutation', async () => {
@@ -99,7 +142,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+        const observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
 
@@ -120,7 +168,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        const observer = TextMutationObserver.createTextMutationObserver(div, onMutation);
+        const observer = textMutationObserver.createTextMutationObserver(
+            div,
+            domIndexer,
+            onMutation,
+            onSkipMutation
+        );
 
         observer.startObserving();
         observer.flushMutations();
