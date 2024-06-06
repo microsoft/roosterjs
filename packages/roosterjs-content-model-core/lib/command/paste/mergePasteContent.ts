@@ -81,7 +81,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
-            scrollCaretIntoView: false, // TODO #2633: Make a full fix to the scroll behavior
+            scrollCaretIntoView: true,
             apiName: 'paste',
         }
     );

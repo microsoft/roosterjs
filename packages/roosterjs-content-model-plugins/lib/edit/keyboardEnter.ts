@@ -48,7 +48,7 @@ export function keyboardEnter(
         },
         {
             rawEvent,
-            scrollCaretIntoView: false,
+            scrollCaretIntoView: true,
         }
     );
 }
