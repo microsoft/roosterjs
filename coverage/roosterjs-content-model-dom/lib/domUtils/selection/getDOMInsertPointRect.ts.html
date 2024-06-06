@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-plugins/lib/pluginUtils/Rect/getDOMInsertPointRect.ts</title>
+    <title>Code coverage report for roosterjs-content-model-dom/lib/domUtils/selection/getDOMInsertPointRect.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/pluginUtils/Rect</a> getDOMInsertPointRect.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-dom/lib/domUtils/selection</a> getDOMInsertPointRect.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.45% </span>
+                <span class="strong">71.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/31</span>
+                <span class='fraction'>23/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">57.69% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/26</span>
+                <span class='fraction'>15/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.45% </span>
+                <span class="strong">71.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/31</span>
+                <span class='fraction'>23/32</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -120,7 +120,9 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,50 +131,41 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,9 +174,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isNodeOfType } from '../isNodeOfType';
+import { normalizeRect } from '../normalizeRect';
 import type { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -191,38 +194,38 @@ import type { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
  * @param doc The document object
  * @param pos The input DOM insert point
  */
-export function <span class="fstat-no" title="function not covered" >getDOMInsertPointRect(</span>doc: Document, pos: DOMInsertPoint): Rect | null {
-    let { node, offset } = <span class="cstat-no" title="statement not covered" >pos;</span>
-    const range = <span class="cstat-no" title="statement not covered" >doc.createRange();</span>
+export function getDOMInsertPointRect(doc: Document, pos: DOMInsertPoint): Rect | null {
+    let { node, offset } = pos;
+    const range = doc.createRange();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    range.setStart(node, offset);</span>
+    range.setStart(node, offset);
 &nbsp;
     // 1) try to get rect using range.getBoundingClientRect()
-    let rect = <span class="cstat-no" title="statement not covered" >normalizeRect(range.getBoundingClientRect());</span>
+    let rect = normalizeRect(range.getBoundingClientRect());
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (rect) {</span>
-<span class="cstat-no" title="statement not covered" >        return rect;</span>
+    if (rect) {
+        return rect;
     }
 &nbsp;
     // 2) try to get rect using range.getClientRects
-<span class="cstat-no" title="statement not covered" >    while (node.lastChild) {</span>
-<span class="cstat-no" title="statement not covered" >        if (offset == node.childNodes.length) {</span>
-<span class="cstat-no" title="statement not covered" >            node = node.lastChild;</span>
-<span class="cstat-no" title="statement not covered" >            offset = node.childNodes.length;</span>
+    while (node.lastChild) {
+        if (offset == node.childNodes.length) {
+            node = node.lastChild;
+            offset = node.childNodes.length;
         } else {
-<span class="cstat-no" title="statement not covered" >            node = node.childNodes[offset];</span>
-<span class="cstat-no" title="statement not covered" >            offset = 0;</span>
+            node = node.childNodes[offset];
+            offset = 0;
         }
     }
 &nbsp;
-    const rects = <span class="cstat-no" title="statement not covered" >range.getClientRects &amp;&amp; range.getClientRects();</span>
-<span class="cstat-no" title="statement not covered" >    rect = rects &amp;&amp; rects.length == 1 ? normalizeRect(rects[0]) : null;</span>
-<span class="cstat-no" title="statement not covered" >    if (rect) {</span>
+    const rects = range.getClientRects &amp;&amp; range.getClientRects();
+    rect = rects &amp;&amp; rects.length == 1 ? <span class="branch-0 cbranch-no" title="branch not covered" >normalizeRect(rects[0]) </span>: null;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (rect) {
 <span class="cstat-no" title="statement not covered" >        return rect;</span>
     }
 &nbsp;
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-<span class="cstat-no" title="statement not covered" >    if (isNodeOfType(node, 'TEXT_NODE')) {</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (isNodeOfType(node, 'TEXT_NODE')) {
         const span = <span class="cstat-no" title="statement not covered" >node.ownerDocument.createElement('span');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        span.textContent = '\u200b';</span>
@@ -236,11 +239,11 @@ export function <span class="fstat-no" title="function not covered" >getDOMInser
     }
 &nbsp;
     // 4) try getBoundingClientRect on element
-<span class="cstat-no" title="statement not covered" >    if (isNodeOfType(node, 'ELEMENT_NODE') &amp;&amp; node.getBoundingClientRect) {</span>
-<span class="cstat-no" title="statement not covered" >        rect = normalizeRect(node.getBoundingClientRect());</span>
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (isNodeOfType(node, 'ELEMENT_NODE') &amp;&amp; node.getBoundingClientRect) {
+        rect = normalizeRect(node.getBoundingClientRect());
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (rect) {</span>
-<span class="cstat-no" title="statement not covered" >            return rect;</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (rect) {
+            return rect;
         }
     }
 &nbsp;
@@ -253,7 +256,7 @@ export function <span class="fstat-no" title="function not covered" >getDOMInser
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 06 2024 14:15:23 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 06 2024 16:23:55 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
