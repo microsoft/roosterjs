@@ -24,9 +24,10 @@ export interface ColorOptions {
     /**
      * A util function to generate color key for dark mode color.
      * By default, the color key is generated from the light mode color. For example,
-     * color "#123456" will have the key "_123456", and
-     * color "rgb(0,0,0)" will have key "rgb_0_0_0_".
+     * color "#123456" will have the key "--darkColor__123456", and
+     * color "rgb(0,0,0)" will have key "--darkColor_rgb_0_0_0_".
      * Pass in this function to customize this behavior.
+     * The return value must be a valid CSS variable, starts with "--"
      */
     generateColorKey?: ColorTransformFunction;
 
