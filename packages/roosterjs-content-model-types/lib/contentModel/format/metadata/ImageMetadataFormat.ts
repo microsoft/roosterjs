@@ -20,6 +20,20 @@ export type ImageResizeMetadataFormat = {
 };
 
 /**
+ *  Metadata for inline image flip
+ */
+export interface ImageFlipMetadataFormat {
+    /**
+     * If true, the image was flipped.
+     */
+    flippedVertical?: boolean;
+    /**
+     * If true, the image was flipped.
+     */
+    flippedHorizontal?: boolean;
+}
+
+/**
  * Metadata for inline image crop
  */
 export type ImageCropMetadataFormat = {
@@ -64,7 +78,8 @@ export type ImageRotateMetadataFormat = {
  */
 export type ImageMetadataFormat = ImageResizeMetadataFormat &
     ImageCropMetadataFormat &
-    ImageRotateMetadataFormat & {
+    ImageRotateMetadataFormat &
+    ImageFlipMetadataFormat & {
         /**
          * Original src of the image. This value will not be changed when edit image. We can always use it
          * to get the original image so that all editing operation will be on top of the original image.

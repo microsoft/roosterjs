@@ -50,6 +50,7 @@ describe('createDomToModelContextForSanitizing', () => {
             {
                 defaultFormat: undefined,
                 rootFontSize: 16,
+                experimentalFeatures: [],
             },
             undefined,
             {
@@ -94,6 +95,7 @@ describe('createDomToModelContextForSanitizing', () => {
             {
                 defaultFormat: mockedDefaultFormat,
                 rootFontSize: 16,
+                experimentalFeatures: [],
             },
             mockedOption,
             {

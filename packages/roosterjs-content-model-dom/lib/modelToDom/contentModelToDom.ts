@@ -1,5 +1,6 @@
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { toArray } from '../domUtils/toArray';
+import type { ContentModelDocumentWithPersistedCache } from '../modelApi/selection/iterateSelections';
 import type {
     ContentModelDocument,
     DOMSelection,
@@ -29,6 +30,10 @@ export function contentModelToDom(
 
     if (model.hasRevertedRangeSelection && range?.type == 'range') {
         range.isReverted = true;
+    }
+
+    if (context.domIndexer && context.allowCacheElement) {
+        (model as ContentModelDocumentWithPersistedCache).persistCache = true;
     }
 
     root.normalize();

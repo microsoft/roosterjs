@@ -1,9 +1,14 @@
-import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import {
+    createSelectionMarker,
+    createText,
+    mutateBlock,
+    mutateSegment,
+} from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
     FormatContentModelContext,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const tabSpaces = '    ';
@@ -25,8 +30,8 @@ const space = ' ';
  * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to outdent the whole paragraph
  */
 export function handleTabOnParagraph(
-    model: ContentModelDocument,
-    paragraph: ContentModelParagraph,
+    model: ReadonlyContentModelDocument,
+    paragraph: ReadonlyContentModelParagraph,
     rawEvent: KeyboardEvent,
     context?: FormatContentModelContext
 ) {
@@ -70,7 +75,8 @@ export function handleTabOnParagraph(
                     firstSelectedSegment.format
                 );
                 const marker = createSelectionMarker(firstSelectedSegment.format);
-                paragraph.segments.splice(
+
+                mutateBlock(paragraph).segments.splice(
                     firstSelectedSegmentIndex,
                     lastSelectedSegmentIndex - firstSelectedSegmentIndex + 1,
                     spaceText,
@@ -83,19 +89,25 @@ export function handleTabOnParagraph(
             const markerIndex = paragraph.segments.findIndex(
                 segment => segment.segmentType === 'SelectionMarker'
             );
+
             if (!rawEvent.shiftKey) {
                 const markerFormat = paragraph.segments[markerIndex].format;
                 const tabText = createText(tabSpaces, markerFormat);
-                paragraph.segments.splice(markerIndex, 0, tabText);
+
+                mutateBlock(paragraph).segments.splice(markerIndex, 0, tabText);
             } else {
                 const tabText = paragraph.segments[markerIndex - 1];
                 const tabSpacesLength = tabSpaces.length;
+
                 if (tabText.segmentType == 'Text') {
                     const tabSpaceTextLength = tabText.text.length - tabSpacesLength;
+
                     if (tabText.text === tabSpaces) {
-                        paragraph.segments.splice(markerIndex - 1, 1);
+                        mutateBlock(paragraph).segments.splice(markerIndex - 1, 1);
                     } else if (tabText.text.substring(tabSpaceTextLength) === tabSpaces) {
-                        tabText.text = tabText.text.substring(0, tabSpaceTextLength);
+                        mutateSegment(paragraph, tabText, text => {
+                            text.text = text.text.substring(0, tabSpaceTextLength);
+                        });
                     } else {
                         return false;
                     }

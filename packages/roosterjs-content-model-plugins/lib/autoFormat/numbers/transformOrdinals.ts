@@ -1,8 +1,8 @@
 import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
 import type {
-    ContentModelParagraph,
     ContentModelText,
     FormatContentModelContext,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const getOrdinal = (value: number) => {
@@ -19,7 +19,7 @@ const getOrdinal = (value: number) => {
  */
 export function transformOrdinals(
     previousSegment: ContentModelText,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ): boolean {
     const value = previousSegment.text.split(' ').pop()?.trim();

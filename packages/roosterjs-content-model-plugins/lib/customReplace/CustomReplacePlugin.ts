@@ -1,11 +1,11 @@
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import type {
-    ContentModelParagraph,
     ContentModelText,
     EditorInputEvent,
     EditorPlugin,
     IEditor,
     PluginEvent,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -34,7 +34,7 @@ export interface CustomReplace {
         previousSegment: ContentModelText,
         stringToReplace: string,
         replacementString: string,
-        paragraph?: ContentModelParagraph
+        paragraph?: ShallowMutableContentModelParagraph
     ) => boolean;
 }
 

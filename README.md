@@ -51,22 +51,22 @@ There are also some extension packages to provide additional functionalities.
 1. [roosterjs-color-utils](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_color_utils.html):
    Provide color transformation utility to make editor work under dark mode.
 
-2. [roosterjs-react](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_react.html):
-   Provide a React wrapper of roosterjs so it can be easily used with React.
-
 To be compatible with old (8.\*) versions, you can use `EditorAdapter` class from the following package which can act as a 8.\* Editor:
 
 1. [roosterjs-editor-adapter](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_adapter.html):
    Provide a adapter class `EditorAdapter` to work with Editor (9.\*) and legacy plugins (via [EditorAdapterOptions.legacyPlugins](https://microsoft.github.io/roosterjs/docs/interfaces/roosterjs_editor_adapter.editoradapteroptions.html#legacyplugins))
 
-And the following packages are for old (8.\*) compatibility:
+All old packages (8.\*) are moved to branch [roosterjsv8](https://github.com/microsoft/roosterjs/tree/roosterjsv8), including
 
-1. [roosterjs-editor-core](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_core.html):
-2. [roosterjs-editor-api](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_api.html):
-3. [roosterjs-editor-dom](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_dom.html):
-4. [roosterjs-editor-plugins](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_plugins.html):
-5. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
-6. [roosterjs-editor-types-compatible](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types_compatible.html):
+1. roosterjs-editor-core
+2. roosterjs-editor-api
+3. roosterjs-editor-dom
+4. roosterjs-editor-plugins
+5. roosterjs-editor-types
+6. roosterjs-editor-types-compatible
+7. roosterjs-react
+
+We will not update these branches any more unless there are new security bugs.
 
 ### APIs
 
