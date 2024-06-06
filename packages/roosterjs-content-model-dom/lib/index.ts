@@ -82,7 +82,7 @@ export {
     getColor,
     setColor,
     parseColor,
-    generateColorKey,
+    defaultGenerateColorKey,
 } from './formatHandlers/utils/color';
 
 export {

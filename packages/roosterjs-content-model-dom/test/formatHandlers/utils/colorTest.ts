@@ -1,5 +1,10 @@
 import { Colors, DarkColorHandler } from 'roosterjs-content-model-types';
-import { getColor, parseColor, setColor } from '../../../lib/formatHandlers/utils/color';
+import {
+    defaultGenerateColorKey,
+    getColor,
+    parseColor,
+    setColor,
+} from '../../../lib/formatHandlers/utils/color';
 
 describe('getColor without darkColorHandler', () => {
     it('no color', () => {
@@ -122,6 +127,7 @@ describe('getColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            generateColorKey: defaultGenerateColorKey,
         };
     });
 
@@ -351,6 +357,7 @@ describe('setColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            generateColorKey: defaultGenerateColorKey,
         };
     });
 

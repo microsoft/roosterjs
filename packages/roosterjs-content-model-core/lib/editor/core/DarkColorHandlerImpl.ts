@@ -1,3 +1,4 @@
+import { defaultGenerateColorKey } from 'roosterjs-content-model-dom';
 import type {
     DarkColorHandler,
     ColorTransformFunction,
@@ -50,7 +51,7 @@ export function createDarkColorHandler(
     root: HTMLElement,
     getDarkColor: ColorTransformFunction,
     knownColors: Record<string, Colors> = {},
-    generateColorKey: ColorTransformFunction
+    generateColorKey: ColorTransformFunction = defaultGenerateColorKey
 ): DarkColorHandler {
     return new DarkColorHandlerImpl(root, getDarkColor, knownColors, generateColorKey);
 }

@@ -126,7 +126,7 @@ export function setColor(
  * @param lightColor The input light color
  * @returns Key of the color
  */
-export const generateColorKey: ColorTransformFunction = lightColor => {
+export const defaultGenerateColorKey: ColorTransformFunction = lightColor => {
     return `${COLOR_VAR_PREFIX}_${lightColor.replace(/[^\d\w]/g, '_')}`;
 };
 
