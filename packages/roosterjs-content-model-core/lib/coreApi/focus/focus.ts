@@ -10,7 +10,12 @@ export const focus: Focus = core => {
         const { api, domHelper, selection } = core;
 
         if (!domHelper.hasFocus() && selection.selection?.type == 'range') {
-            api.setDOMSelection(core, selection.selection, true /*skipSelectionChangedEvent*/);
+            api.setDOMSelection(
+                core,
+                selection.selection,
+                undefined /* previousSelection */,
+                true /*skipSelectionChangedEvent*/
+            );
         }
 
         // fallback, in case editor still have no focus

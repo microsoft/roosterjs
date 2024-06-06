@@ -3,6 +3,7 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
+import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api/lib';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImageMetadata } from './utils/updateImageEditInfo';
@@ -23,11 +24,14 @@ import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    DOMInsertPoint,
+    DOMSelection,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
     ImageEditor,
     ImageMetadataFormat,
+    ImageSelection,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
@@ -118,7 +122,25 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(_event: PluginEvent) {}
+    onPluginEvent(event: PluginEvent) {
+        if (event.eventType == 'selectionChanged' && this.editor) {
+            const selection = event.newSelection;
+            const previousSelection = event.previousSelection;
+            console.log('selectionChanged', selection, previousSelection);
+            if (previousSelection?.type == 'image' && selection && this.shadowSpan) {
+                const previousImage = previousSelection.image;
+                if (previousImage) {
+                    this.formatImageWhenSelectionChange(this.editor, selection, previousSelection);
+                }
+            }
+            if (selection && selection.type == 'image') {
+                const image = selection.image;
+                if (image) {
+                    this.startRotateAndResize(this.editor, image);
+                }
+            }
+        }
+    }
 
     private startEditing(
         editor: IEditor,
@@ -126,7 +148,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation?: ImageEditOperation
     ) {
         const imageSpan = image.parentElement;
-        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
+        if (
+            !imageSpan ||
+            (imageSpan && !isElementOfType(imageSpan, 'span')) ||
+            image.width <= 0 ||
+            image.height <= 0
+        ) {
             return;
         }
         this.imageEditInfo = getSelectedImageMetadata(editor, image);
@@ -171,6 +198,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             this.removeImageWrapper();
         }
+
         this.startEditing(editor, image, apiOperation);
         if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
             this.dndHelpers = [
@@ -448,6 +476,98 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     changeSource: IMAGE_EDIT_CHANGE_SOURCE,
                     onNodeCreated: () => {
                         this.cleanInfo();
+                    },
+                }
+            );
+        }
+    }
+
+    private createInsertPoint(selection: DOMSelection): DOMInsertPoint | null {
+        if (selection.type === 'image' && selection.image) {
+            return {
+                node: selection.image,
+                offset: selection.image.offsetLeft,
+            };
+        } else if (
+            selection.type === 'range' &&
+            isNodeOfType(selection.range.startContainer, 'ELEMENT_NODE')
+        ) {
+            return {
+                node: selection.range.startContainer,
+                offset: selection.range.startContainer.offsetLeft,
+            };
+        }
+        return null;
+    }
+
+    private formatImageWhenSelectionChange(
+        editor: IEditor,
+        newSelection: DOMSelection,
+        previousSelection: ImageSelection
+    ) {
+        const insertPoint = this.createInsertPoint(newSelection);
+        if (
+            insertPoint &&
+            this.lastSrc &&
+            this.selectedImage &&
+            this.imageEditInfo &&
+            this.clonedImage &&
+            this.shadowSpan
+        ) {
+            formatInsertPointWithContentModel(
+                editor,
+                insertPoint,
+                (model, _, insertPoint) => {
+                    const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
+                        model,
+                        false
+                    );
+                    if (!selectedSegmentsAndParagraphs[0]) {
+                        return false;
+                    }
+
+                    const segment = selectedSegmentsAndParagraphs[0][0];
+                    const paragraph = selectedSegmentsAndParagraphs[0][1];
+
+                    if (paragraph && segment.segmentType == 'Image') {
+                        mutateSegment(paragraph, segment, image => {
+                            if (
+                                this.lastSrc &&
+                                this.selectedImage &&
+                                this.imageEditInfo &&
+                                this.clonedImage
+                            ) {
+                                applyChange(
+                                    editor,
+                                    this.selectedImage,
+                                    image,
+                                    this.imageEditInfo,
+                                    this.lastSrc,
+                                    this.wasImageResized || this.isCropMode,
+                                    this.clonedImage
+                                );
+                                console.log('formatImageWhenSelectionChange', insertPoint);
+                                if (insertPoint) {
+                                    insertPoint.marker.isSelected = true;
+                                    image.isSelected = false;
+                                    image.isSelectedAsImageSelection = false;
+                                }
+                            }
+                        });
+
+                        return true;
+                    }
+
+                    return false;
+                },
+                {
+                    changeSource: IMAGE_EDIT_CHANGE_SOURCE,
+                    onNodeCreated: () => {
+                        this.cleanInfo();
+                    },
+                    selectionOverride: {
+                        type: 'image',
+                        image: previousSelection.image,
                     },
                 }
             );

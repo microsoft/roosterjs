@@ -23,7 +23,12 @@ const SELECTION_SELECTOR = '*::selection';
 /**
  * @internal
  */
-export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
+export const setDOMSelection: SetDOMSelection = (
+    core,
+    selection,
+    previousSelection,
+    skipSelectionChangedEvent
+) => {
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
@@ -150,6 +155,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
         const eventData: SelectionChangedEvent = {
             eventType: 'selectionChanged',
             newSelection: selection,
+            previousSelection: previousSelection,
         };
 
         core.api.triggerEvent(core, eventData, true /*broadcast*/);

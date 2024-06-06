@@ -55,7 +55,7 @@ export interface IEditor {
      * This is the replacement of IEditor.select.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection | null): void;
+    setDOMSelection(selection: DOMSelection | null, previousSelection?: DOMSelection): void;
 
     /**
      * Set a new logical root (most likely due to focus change)

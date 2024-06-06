@@ -141,8 +141,10 @@ const cloneImage = (image: HTMLImageElement, editInfo: ImageMetadataFormat) => {
         imageClone.removeAttribute('id');
         imageClone.style.removeProperty('max-width');
         imageClone.style.removeProperty('max-height');
-        imageClone.style.width = editInfo.widthPx + 'px';
-        imageClone.style.height = editInfo.heightPx + 'px';
+        if (editInfo.widthPx && editInfo.heightPx) {
+            imageClone.style.width = editInfo.widthPx + 'px';
+            imageClone.style.height = editInfo.heightPx + 'px';
+        }
     }
     return imageClone;
 };

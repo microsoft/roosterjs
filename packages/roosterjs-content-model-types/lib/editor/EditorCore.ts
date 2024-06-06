@@ -70,6 +70,7 @@ export type SetContentModel = (
 export type SetDOMSelection = (
     core: EditorCore,
     selection: DOMSelection | null,
+    previousSelection?: DOMSelection,
     skipSelectionChangedEvent?: boolean
 ) => void;
 

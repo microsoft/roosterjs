@@ -1,6 +1,6 @@
+import { getPath } from './getPath';
 import { isElementOfType, isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import type { EditorCore, SnapshotSelection } from 'roosterjs-content-model-types';
-import { getPath } from './getPath';
 
 /**
  * @internal
@@ -30,6 +30,7 @@ export function createSnapshotSelection(core: EditorCore): SnapshotSelection {
                     range: newRange,
                     isReverted: !!selection.isReverted,
                 },
+                selection,
                 true /*skipSelectionChangedEvent*/
             );
         }

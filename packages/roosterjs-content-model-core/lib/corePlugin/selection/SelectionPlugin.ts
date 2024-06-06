@@ -176,7 +176,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.selectImageWithRange(image, rawEvent);
             return;
         } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeOrAfterElement(editor, selection.image);
+            this.selectBeforeOrAfterElement(
+                editor,
+                selection.image,
+                undefined /* after */,
+                selection
+            );
             return;
         }
 
@@ -523,7 +528,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
+    private selectBeforeOrAfterElement(
+        editor: IEditor,
+        element: HTMLElement,
+        after?: boolean,
+        previousSelection?: DOMSelection
+    ) {
         const doc = editor.getDocument();
         const parent = element.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(element);
@@ -539,7 +549,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     range: range,
                     isReverted: false,
                 },
-                null /*tableSelection*/
+                null /*tableSelection*/,
+                previousSelection
             );
         }
     }
@@ -686,9 +697,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private setDOMSelection(
         selection: DOMSelection | null,
-        tableSelection: TableSelectionInfo | null
+        tableSelection: TableSelectionInfo | null,
+        previousSelection?: DOMSelection
     ) {
-        this.editor?.setDOMSelection(selection);
+        this.editor?.setDOMSelection(selection, previousSelection);
         this.state.tableSelection = tableSelection;
     }
 
