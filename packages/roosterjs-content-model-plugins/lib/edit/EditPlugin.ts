@@ -1,4 +1,5 @@
 import { keyboardDelete } from './keyboardDelete';
+import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import { parseTableCells } from 'roosterjs-content-model-dom';
@@ -25,6 +26,7 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
+    private handleNormalEnter = false;
 
     /**
      * Get name of this plugin
@@ -41,6 +43,8 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('PersistCache');
+
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
                 beforeinput: {
@@ -153,6 +157,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
+                    keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                    break;
+
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
