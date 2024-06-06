@@ -1,4 +1,5 @@
-import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
+import { isNodeOfType } from '../isNodeOfType';
+import { normalizeRect } from '../normalizeRect';
 import type { DOMInsertPoint, Rect } from 'roosterjs-content-model-types';
 
 /**
