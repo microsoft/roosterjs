@@ -126,7 +126,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (event.eventType == 'selectionChanged' && this.editor) {
             const selection = event.newSelection;
             const previousSelection = event.previousSelection;
-            console.log('selectionChanged', selection, previousSelection);
+
             if (previousSelection?.type == 'image' && selection && this.shadowSpan) {
                 const previousImage = previousSelection.image;
                 if (previousImage) {
@@ -546,7 +546,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wasImageResized || this.isCropMode,
                                     this.clonedImage
                                 );
-                                console.log('formatImageWhenSelectionChange', insertPoint);
                                 if (insertPoint) {
                                     insertPoint.marker.isSelected = true;
                                     image.isSelected = false;
