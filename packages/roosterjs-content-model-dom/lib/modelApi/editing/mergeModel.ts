@@ -14,6 +14,7 @@ import type {
     ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelDocument,
+    ContentModelHyperLinkFormat,
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegmentFormat,
@@ -28,6 +29,21 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+// An object to provide keys of required properties of segment format, do NOT use any of its values
+const RequiredEmptySegmentFormat: Required<ContentModelSegmentFormat> = {
+    backgroundColor: null!,
+    fontFamily: null!,
+    fontSize: null!,
+    fontWeight: null!,
+    italic: null!,
+    letterSpacing: null!,
+    lineHeight: null!,
+    strikethrough: null!,
+    superOrSubScriptSequence: null!,
+    textColor: null!,
+    underline: null!,
+};
+const KeysOfSegmentFormat = getObjectKeys(RequiredEmptySegmentFormat);
 
 /**
  * Merge source model into target mode
@@ -359,6 +375,14 @@ function applyDefaultFormat(
                         ...paragraphFormat,
                         ...segment.format,
                     });
+
+                    if (segment.link) {
+                        segment.link.format = mergeSegmentFormat(
+                            applyDefaultFormatOption,
+                            getSegmentFormatInLinkFormat(format),
+                            segment.link.format
+                        );
+                    }
                 });
 
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
@@ -375,6 +399,27 @@ function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyConte
     }
 }
 
+/**
+ * Hyperlink format type definition only contains textColor, backgroundColor and underline.
+ * So create a minimum object with the styles supported in Hyperlink to be used in merge.
+ */
+function getSegmentFormatInLinkFormat(
+    targetFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const result: ContentModelHyperLinkFormat = {};
+    if (targetFormat.textColor) {
+        result.textColor = targetFormat.textColor;
+    }
+    if (targetFormat.backgroundColor) {
+        result.backgroundColor = targetFormat.backgroundColor;
+    }
+    if (targetFormat.underline) {
+        result.underline = targetFormat.underline;
+    }
+
+    return result;
+}
+
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
     targetFormat: ContentModelSegmentFormat,
@@ -383,6 +428,7 @@ function mergeSegmentFormat(
     return applyDefaultFormatOption == 'mergeAll'
         ? { ...targetFormat, ...sourceFormat }
         : {
+              ...getFormatWithoutSegmentFormat(sourceFormat),
               ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
@@ -404,4 +450,18 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
 
     return result;
+}
+
+/**
+ * Segment format can also contain other type of metadata, for example in Images/Hyperlink,
+ * we want to preserve these properties when merging format
+ */
+function getFormatWithoutSegmentFormat(
+    sourceFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const resultFormat = {
+        ...sourceFormat,
+    };
+    KeysOfSegmentFormat.forEach(key => delete resultFormat[key]);
+    return resultFormat;
 }

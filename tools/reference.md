@@ -35,22 +35,12 @@ There are also some extension packages to provide additional functionalities.
 1. [roosterjs-color-utils](modules/roosterjs_color_utils.html):
    Provide color transformation utility to make editor work under dark mode.
 
-2. [roosterjs-react](modules/roosterjs_react.html):
-   Provide a React wrapper of roosterjs so it can be easily used with React.
-
 To be compatible with old (8.\*) versions, you can use `EditorAdapter` class from the following package which can act as a 8.\* Editor:
 
 1. [roosterjs-editor-adapter](modules/roosterjs_editor_adapter.html):
    Provide a adapter class `EditorAdapter` to work with Editor (9.\*) and legacy plugins (via [EditorAdapterOptions.legacyPlugins](interfaces/roosterjs_editor_adapter.editoradapteroptions.html#legacyplugins))
 
-And the following packages are for old (8.\*) compatibility:
-
-1. [roosterjs-editor-core](modules/roosterjs_editor_core.html):
-2. [roosterjs-editor-api](modules/roosterjs_editor_api.html):
-3. [roosterjs-editor-dom](modules/roosterjs_editor_dom.html):
-4. [roosterjs-editor-plugins](modules/roosterjs_editor_plugins.html):
-5. [roosterjs-editor-types](modules/roosterjs_editor_types.html):
-6. [roosterjs-editor-types-compatible](modules/roosterjs_editor_types_compatible.html):
+To view references document for legacy (v8.\*) packages, please download the doc [here](../legacyDemo/roosterjs_v8_doc.zip)
 
 ## See also
 

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
-import { getDOMInsertPointRect } from 'roosterjs-content-model-plugins';
+import { getDOMInsertPointRect, getObjectKeys } from 'roosterjs-content-model-dom';
 import { getLocalizedString } from '../../common/index';
-import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';

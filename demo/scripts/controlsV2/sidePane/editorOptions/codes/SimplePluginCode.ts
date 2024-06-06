@@ -34,8 +34,8 @@ export class TableEditPluginCode extends SimplePluginCode {
     }
 }
 
-export class ImageEditCode extends SimplePluginCode {
+export class ImageEditPluginCode extends SimplePluginCode {
     constructor() {
-        super('ImageEdit', 'roosterjsLegacy');
+        super('ImageEditPlugin');
     }
 }

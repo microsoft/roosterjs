@@ -2,7 +2,6 @@ var webpack = require('webpack');
 var webpackConfig = require('../webpack.config');
 var webpackDevServer = require('webpack-dev-server');
 var detect = require('detect-port');
-var processConstEnum = require('./buildTools/processConstEnum');
 
 function startWebpackDevServer() {
     port = webpackConfig.devServer.port;
@@ -24,5 +23,4 @@ function startWebpackDevServer() {
         });
 }
 
-processConstEnum();
 +startWebpackDevServer();

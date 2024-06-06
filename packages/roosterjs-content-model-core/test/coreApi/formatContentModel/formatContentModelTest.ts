@@ -1,3 +1,4 @@
+import * as scrollCaretIntoView from '../../../lib/coreApi/formatContentModel/scrollCaretIntoView';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { ChangeSource, createImage } from 'roosterjs-content-model-dom';
 import { formatContentModel } from '../../../lib/coreApi/formatContentModel/formatContentModel';
@@ -21,7 +22,6 @@ describe('formatContentModel', () => {
     let hasFocus: jasmine.Spy;
     let getClientWidth: jasmine.Spy;
     let announce: jasmine.Spy;
-    let findClosestElementAncestor: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -43,7 +43,6 @@ describe('formatContentModel', () => {
         hasFocus = jasmine.createSpy('hasFocus');
         getClientWidth = jasmine.createSpy('getClientWidth');
         announce = jasmine.createSpy('announce');
-        findClosestElementAncestor = jasmine.createSpy('findClosestElementAncestor ');
 
         core = ({
             api: {
@@ -64,7 +63,6 @@ describe('formatContentModel', () => {
             domHelper: {
                 hasFocus,
                 getClientWidth,
-                findClosestElementAncestor,
             },
         } as any) as EditorCore;
     });
@@ -554,14 +552,14 @@ describe('formatContentModel', () => {
         });
 
         it('Has scrollCaretIntoView, and callback return true', () => {
-            const scrollIntoViewSpy = jasmine.createSpy('scrollIntoView');
-            const mockedImage = { scrollIntoView: scrollIntoViewSpy } as any;
+            const scrollCaretIntoViewSpy = spyOn(scrollCaretIntoView, 'scrollCaretIntoView');
+            const mockedImage = 'IMAGE' as any;
 
-            findClosestElementAncestor.and.returnValue(mockedImage);
             setContentModel.and.returnValue({
                 type: 'image',
                 image: mockedImage,
             });
+
             formatContentModel(
                 core,
                 (model, context) => {
@@ -574,8 +572,10 @@ describe('formatContentModel', () => {
                 }
             );
 
-            expect(findClosestElementAncestor).toHaveBeenCalledWith(mockedImage);
-            expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+            expect(scrollCaretIntoViewSpy).toHaveBeenCalledWith(core, {
+                type: 'image',
+                image: mockedImage,
+            });
         });
     });
 
