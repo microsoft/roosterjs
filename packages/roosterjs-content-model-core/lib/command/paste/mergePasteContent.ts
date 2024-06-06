@@ -1,7 +1,7 @@
 import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing';
-import { EmptySegmentFormat } from '../../corePlugin/cache/EmptySegmentFormat';
 import {
     ChangeSource,
+    EmptySegmentFormat,
     cloneModel,
     domToContentModel,
     getSegmentTextFormat,

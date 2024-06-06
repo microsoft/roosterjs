@@ -1,5 +1,5 @@
-import { EmptySegmentFormat } from './EmptySegmentFormat';
 import {
+    EmptySegmentFormat,
     createSelectionMarker,
     createText,
     getObjectKeys,

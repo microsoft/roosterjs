@@ -155,3 +155,4 @@ export { NumberingListType } from './constants/NumberingListType';
 export { TableBorderFormat } from './constants/TableBorderFormat';
 export { OrderedListStyleMap } from './constants/OrderedListStyleMap';
 export { UnorderedListStyleMap } from './constants/UnorderedListStyleMap';
+export { EmptySegmentFormat } from './constants/EmptySegmentFormat';

@@ -5,6 +5,7 @@ import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from './deleteSelection';
+import { EmptySegmentFormat } from '../../constants/EmptySegmentFormat';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
 import { mutateBlock } from '../common/mutate';
@@ -29,21 +30,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-// An object to provide keys of required properties of segment format, do NOT use any of its values
-const RequiredEmptySegmentFormat: Required<ContentModelSegmentFormat> = {
-    backgroundColor: null!,
-    fontFamily: null!,
-    fontSize: null!,
-    fontWeight: null!,
-    italic: null!,
-    letterSpacing: null!,
-    lineHeight: null!,
-    strikethrough: null!,
-    superOrSubScriptSequence: null!,
-    textColor: null!,
-    underline: null!,
-};
-const KeysOfSegmentFormat = getObjectKeys(RequiredEmptySegmentFormat);
+const KeysOfSegmentFormat = getObjectKeys(EmptySegmentFormat);
 
 /**
  * Merge source model into target mode

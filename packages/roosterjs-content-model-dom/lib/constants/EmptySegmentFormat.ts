@@ -1,9 +1,9 @@
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Provide a default empty instance of segment format with all its properties
  */
-export const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
+export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> = {
     backgroundColor: '',
     fontFamily: '',
     fontSize: '',
