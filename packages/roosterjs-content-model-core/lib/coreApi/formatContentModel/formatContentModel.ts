@@ -1,4 +1,5 @@
-import { ChangeSource, getSelectionRootNode } from 'roosterjs-content-model-dom';
+import { ChangeSource } from 'roosterjs-content-model-dom';
+import { scrollCaretIntoView } from './scrollCaretIntoView';
 import type {
     ChangedEntity,
     ContentChangedEvent,
@@ -25,13 +26,11 @@ export const formatContentModel: FormatContentModel = (
     domToModelOptions
 ) => {
     const {
-        apiName,
         onNodeCreated,
         getChangeData,
-        changeSource,
         rawEvent,
         selectionOverride,
-        scrollCaretIntoView,
+        scrollCaretIntoView: scroll,
     } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
@@ -70,21 +69,17 @@ export const formatContentModel: FormatContentModel = (
 
             handlePendingFormat(core, context, selection);
 
-            if (selection && scrollCaretIntoView) {
-                const selectionRoot = getSelectionRootNode(selection);
-                const rootElement =
-                    selectionRoot && core.domHelper.findClosestElementAncestor(selectionRoot);
-
-                rootElement?.scrollIntoView();
+            if (scroll && (selection?.type == 'range' || selection?.type == 'image')) {
+                scrollCaretIntoView(core, selection);
             }
 
             const eventData: ContentChangedEvent = {
                 eventType: 'contentChanged',
                 contentModel: clearModelCache ? undefined : model,
                 selection: clearModelCache ? undefined : selection,
-                source: changeSource || ChangeSource.Format,
+                source: options?.changeSource || ChangeSource.Format,
                 data: getChangeData?.(),
-                formatApiName: apiName,
+                formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
             };
 

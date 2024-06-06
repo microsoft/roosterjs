@@ -18,11 +18,9 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
-
-        // Legacy plugins
-        imageEdit: false,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -32,7 +30,6 @@ const initialState: OptionState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    applyChangesOnMouseUp: false,
     isRtl: false,
     disableCache: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',

@@ -1,14 +1,9 @@
 import { addRangeToSelection } from './addRangeToSelection';
+import { ensureImageHasSpanParent } from './ensureImageHasSpanParent';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
-import {
-    isElementOfType,
-    isNodeOfType,
-    parseTableCells,
-    toArray,
-    wrap,
-} from 'roosterjs-content-model-dom';
+import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,
@@ -56,7 +51,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:auto!important; outline-color:${imageSelectionColor}!important;`,
+                    `outline-style:solid!important; outline-color:${imageSelectionColor}!important;display: ${
+                        core.environment.isSafari ? '-webkit-inline-flex' : 'inline-flex'
+                    };`,
                     [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
                 );
                 core.api.setEditorStyle(
@@ -243,21 +240,4 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
 
         addRangeToSelection(doc, range, isReverted);
     }
-}
-
-function ensureImageHasSpanParent(image: HTMLImageElement): HTMLImageElement {
-    const parent = image.parentElement;
-
-    if (
-        parent &&
-        isNodeOfType(parent, 'ELEMENT_NODE') &&
-        isElementOfType(parent, 'span') &&
-        parent.firstChild == image &&
-        parent.lastChild == image
-    ) {
-        return image;
-    }
-
-    wrap(image.ownerDocument, image, 'span');
-    return image;
 }

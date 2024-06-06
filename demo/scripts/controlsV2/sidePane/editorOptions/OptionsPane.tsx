@@ -3,9 +3,9 @@ import { Code } from './Code';
 import { DefaultFormatPane } from './DefaultFormatPane';
 import { EditorCode } from './codes/EditorCode';
 import { ExperimentalFeatures } from './ExperimentalFeatures';
-import { LegacyPlugins, Plugins } from './Plugins';
 import { MainPane } from '../../mainPane/MainPane';
 import { OptionPaneProps, OptionState } from './OptionState';
+import { Plugins } from './Plugins';
 
 const htmlStart =
     '<html>\n' +
@@ -23,8 +23,6 @@ const htmlButtons =
     '<button id=buttonDark>Dark mode</button>\n';
 '<button id=buttonDark>Dark Mode</button>\n';
 const jsCode = '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n';
-const legacyJsCode =
-    '<script src="https://microsoft.github.io/roosterjs/rooster-legacy-min.js"></script>\n<script src="https://microsoft.github.io/roosterjs/rooster-adapter-min.js"></script>\n';
 const htmlEnd = '</body>\n' + '</html>';
 
 export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
@@ -39,7 +37,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     }
     render() {
         const editorCode = new EditorCode(this.state);
-        const html = this.getHtml(editorCode.requireLegacyCode());
+        const html = this.getHtml();
 
         return (
             <div>
@@ -57,12 +55,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                         <b>Plugins</b>
                     </summary>
                     <Plugins state={this.state} resetState={this.resetState} />
-                </details>
-                <details>
-                    <summary>
-                        <b>Legacy Plugins</b>
-                    </summary>
-                    <LegacyPlugins state={this.state} resetState={this.resetState} />
                 </details>
                 <details>
                     <summary>
@@ -136,7 +128,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             pluginList: { ...this.state.pluginList },
             defaultFormat: { ...this.state.defaultFormat },
             forcePreserveRatio: this.state.forcePreserveRatio,
-            applyChangesOnMouseUp: this.state.applyChangesOnMouseUp,
+
             isRtl: this.state.isRtl,
             disableCache: this.state.disableCache,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
@@ -165,7 +157,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         let code = editor.getCode();
         let json = {
             title: 'RoosterJs',
-            html: this.getHtml(editor.requireLegacyCode()),
+            html: this.getHtml(),
             head: '',
             js: code,
             js_pre_processor: 'typescript',
@@ -188,9 +180,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }, true);
     };
 
-    private getHtml(requireLegacyCode: boolean) {
-        return `${htmlStart}${htmlButtons}${jsCode}${
-            requireLegacyCode ? legacyJsCode : ''
-        }${htmlEnd}`;
+    private getHtml() {
+        return `${htmlStart}${htmlButtons}${jsCode}${htmlEnd}`;
     }
 }

@@ -22,6 +22,7 @@ export { getObjectKeys } from './domUtils/getObjectKeys';
 export { toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
+export { unwrap } from './domUtils/unwrap';
 export {
     isEntityElement,
     findClosestEntityWrapper,
@@ -91,6 +92,7 @@ export {
 
 export { isBold } from './domUtils/style/isBold';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
+export { getDOMInsertPointRect } from './domUtils/selection/getDOMInsertPointRect';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
@@ -125,7 +127,11 @@ export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
 export { deleteBlock } from './modelApi/editing/deleteBlock';
 export { applyTableFormat, setFirstColumnFormatBorders } from './modelApi/editing/applyTableFormat';
-export { normalizeTable, MIN_ALLOWED_TABLE_CELL_WIDTH } from './modelApi/editing/normalizeTable';
+export {
+    normalizeTable,
+    MIN_ALLOWED_TABLE_CELL_WIDTH,
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
+} from './modelApi/editing/normalizeTable';
 export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBackgroundColor';
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';

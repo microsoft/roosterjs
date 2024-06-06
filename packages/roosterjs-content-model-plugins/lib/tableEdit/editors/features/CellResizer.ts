@@ -6,8 +6,8 @@ import {
     isElementOfType,
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
-    normalizeTable,
     mutateBlock,
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
@@ -159,18 +159,18 @@ export function onDraggingHorizontal(
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
     // Assign new widths and heights to the CM table
-    if (cmTable && anchorRow != undefined) {
+    if (cmTable && anchorRow != undefined && cmTable.rows[anchorRow] != undefined) {
         // Modify the CM Table size
         mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
-        // Normalize the table
-        normalizeTable(cmTable);
+        // Normalize the new height value
+        const newHeight = Math.max(cmTable.rows[anchorRow].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
         // Writeback CM Table size changes to DOM Table
         const tableRow = table.rows[anchorRow];
         for (let col = 0; col < tableRow.cells.length; col++) {
             const td = tableRow.cells[col];
-            td.style.height = cmTable.rows[anchorRow].height + 'px';
+            td.style.height = newHeight + 'px';
         }
 
         return true;
@@ -202,7 +202,12 @@ export function onDraggingVertical(
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            mutableTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            // Normalize the new width value
+            const newWidth = Math.max(
+                allWidths[anchorColumn] + change,
+                MIN_ALLOWED_TABLE_CELL_WIDTH
+            );
+            mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -216,9 +221,6 @@ export function onDraggingVertical(
             mutableTable.widths[anchorColumn] = anchorChange;
             mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
-
-        // Normalize the table
-        normalizeTable(cmTable);
 
         // Writeback CM Table size changes to DOM Table
         for (let row = 0; row < table.rows.length; row++) {

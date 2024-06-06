@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RoosterJs Demo Site</title>
+        <style>
+            #mainPane {
+                position: absolute;
+                left: 10px;
+                right: 10px;
+                top: 10px;
+                bottom: 10px;
+            }
+        </style>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="require-trusted-types-for 'script'; trusted-types dompurify;"
+        />
+    </head>
+    <body>
+        <div id="mainPane"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.14.0/umd/react.production.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.14.0/umd/react-dom.production.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fluentui-react/8.60.1/fluentui-react.min.js"></script>
+        <script src="rooster-legacy-min.js"></script>
+        <script src="rooster-min.js"></script>
+        <script src="rooster-adapter-min.js"></script>
+        <script src="rooster-react-min.js"></script>
+        <script src="demo.js"></script>
+    </body>
+</html>

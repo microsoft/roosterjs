@@ -91,7 +91,7 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateLeft':
                 imageEdit?.rotateImage(-Math.PI / 2);
@@ -116,7 +116,7 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateFlipHorizontally':
                 imageEdit?.flipImage('horizontal');
@@ -137,7 +137,7 @@ const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (_, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         imageEdit?.cropImage();
     },
 };
