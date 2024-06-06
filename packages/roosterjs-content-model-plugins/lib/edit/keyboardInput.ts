@@ -36,7 +36,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
                 }
             },
             {
-                scrollCaretIntoView: false, // TODO #2633: Make a full fix to the scroll behavior
+                scrollCaretIntoView: true,
                 rawEvent,
             }
         );
