@@ -1,5 +1,5 @@
 import { FormatStatePane, FormatStatePaneProps, FormatStatePaneState } from './FormatStatePane';
-import { getDOMInsertPointRect } from 'roosterjs-content-model-plugins';
+import { getDOMInsertPointRect } from 'roosterjs-content-model-dom';
 import { getFormatState } from 'roosterjs-content-model-api';
 import { PluginEvent } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
