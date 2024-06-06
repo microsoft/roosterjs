@@ -3533,4 +3533,306 @@ describe('mergeModel', () => {
             tableContext: undefined,
         });
     });
+
+    it('Merge Link Format with mergeAll option', () => {
+        const newTarget: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const mergeLinkSourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+        mergeModel(newTarget, mergeLinkSourceModel, undefined, {
+            mergeFormat: 'mergeAll',
+        });
+
+        const para = newTarget.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                backgroundColor: 'rgb(32, 31, 30)',
+                underline: true,
+            },
+            dataset: {},
+        });
+    });
+
+    it('Merge Link Format with keepSourceEmphasisFormat option', () => {
+        const targetModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+
+        mergeModel(targetModel, sourceModel, undefined, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        const para = targetModel.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: '#000000',
+                underline: true,
+            },
+            dataset: {},
+        });
+    });
+
+    it('Keep image width when merging with keepSourceEmphasisFormat', () => {
+        const targetModel = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        para.segments.push(marker);
+        targetModel.blocks.push(para);
+
+        marker.format = {
+            fontFamily: 'Calibri',
+            fontSize: '11pt',
+            textColor: '#000000',
+        };
+
+        const sourceModel = createContentModelDocument();
+        sourceModel.blocks.push({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                {
+                    segmentType: 'Image',
+                    format: {
+                        fontFamily: 'Remove this',
+                        fontSize: 'Remove this',
+                        textColor: 'Remove this',
+                        backgroundColor: 'imageColor',
+                        width: 'imageWidth',
+                        maxWidth: 'imageMaxWidth',
+                        height: 'imageHeight',
+                        maxHeight: 'imageMaxHeight',
+                        id: 'imageId',
+                        marginBottom: '0px',
+                        marginLeft: '0px',
+                        marginRight: '0px',
+                        marginTop: '0px',
+                        borderBottom: 'border',
+                        borderBottomLeftRadius: 'border',
+                        borderBottomRightRadius: 'border',
+                        borderLeft: 'border',
+                        borderRadius: 'border',
+                        borderTop: 'border',
+                        borderRight: 'border',
+                        borderTopLeftRadius: 'border',
+                        borderTopRightRadius: 'border',
+                        boxShadow: 'border',
+                        display: 'display',
+                        float: 'float',
+                        minHeight: 'minHeight',
+                        minWidth: 'minWidth',
+                        verticalAlign: 'top',
+                    },
+                    dataset: {},
+                    src: 'https://www.bing.com',
+                },
+            ],
+        });
+
+        mergeModel(targetModel, sourceModel, undefined, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        const block = targetModel.blocks[0] as ContentModelParagraph;
+        expect(block.segments[0].format).toEqual({
+            fontFamily: 'Calibri',
+            fontSize: '11pt',
+            textColor: '#000000',
+            width: 'imageWidth',
+            maxWidth: 'imageMaxWidth',
+            height: 'imageHeight',
+            maxHeight: 'imageMaxHeight',
+            id: 'imageId',
+            marginBottom: '0px',
+            marginLeft: '0px',
+            marginRight: '0px',
+            marginTop: '0px',
+            borderBottom: 'border',
+            borderBottomLeftRadius: 'border',
+            borderBottomRightRadius: 'border',
+            borderLeft: 'border',
+            borderRadius: 'border',
+            borderTop: 'border',
+            borderRight: 'border',
+            borderTopLeftRadius: 'border',
+            borderTopRightRadius: 'border',
+            boxShadow: 'border',
+            display: 'display',
+            float: 'float',
+            minHeight: 'minHeight',
+            minWidth: 'minWidth',
+            verticalAlign: 'top',
+        });
+    });
 });
