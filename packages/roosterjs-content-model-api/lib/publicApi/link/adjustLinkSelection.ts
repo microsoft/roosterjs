@@ -18,7 +18,11 @@ export function adjustLinkSelection(editor: IEditor): [string, string | null] {
                 target => !!target.isSelected && !!target.link,
                 (target, ref) => !!target.link && target.link.format.href == ref.link!.format.href
             );
-            let segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+            let segments = getSelectedSegments(
+                model,
+                false /*includingFormatHolder*/,
+                true /*mutate*/
+            );
             const firstSegment = segments[0];
 
             if (segments.length == 1 && firstSegment.segmentType == 'SelectionMarker') {

@@ -6,10 +6,11 @@ import {
     isElementOfType,
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
-    normalizeTable,
+    mutateBlock,
+    MIN_ALLOWED_TABLE_CELL_HEIGHT,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
-import type { ContentModelTable, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 
 const CELL_RESIZER_WIDTH = 4;
 /**
@@ -45,18 +46,18 @@ export function createCellResizer(
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: DragAndDropContext = { editor, td, table, isRTL, zoomScale, onStart };
+    const context: CellResizerContext = { editor, td, table, isRTL, zoomScale, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
-    const handler: DragAndDropHandler<DragAndDropContext, DragAndDropInitValue> = {
+    const handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue> = {
         onDragStart,
         // Horizontal modifies row height, vertical modifies column width
         onDragging: isHorizontal ? onDraggingHorizontal : onDraggingVertical,
         onDragEnd: onEnd,
     };
 
-    const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
+    const featureHandler = new DragAndDropHelper<CellResizerContext, CellResizerInitValue>(
         div,
         context,
         setPosition,
@@ -68,7 +69,11 @@ export function createCellResizer(
     return { node: td, div, featureHandler };
 }
 
-interface DragAndDropContext {
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface CellResizerContext {
     editor: IEditor;
     td: HTMLTableCellElement;
     table: HTMLTableElement;
@@ -77,15 +82,23 @@ interface DragAndDropContext {
     onStart: () => void;
 }
 
-interface DragAndDropInitValue {
-    cmTable: ContentModelTable | undefined;
+/**
+ * @internal
+ * Exported for testing
+ */
+export interface CellResizerInitValue {
+    cmTable: ReadonlyContentModelTable | undefined;
     anchorColumn: number | undefined;
     anchorRow: number | undefined;
     anchorRowHeight: number;
     allWidths: number[];
 }
 
-function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDropInitValue {
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDragStart(context: CellResizerContext, event: MouseEvent): CellResizerInitValue {
     const { td, onStart } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
 
@@ -131,10 +144,14 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDro
     }
 }
 
-function onDraggingHorizontal(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDraggingHorizontal(
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number,
     deltaY: number
 ) {
@@ -142,18 +159,18 @@ function onDraggingHorizontal(
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
     // Assign new widths and heights to the CM table
-    if (cmTable && anchorRow != undefined) {
+    if (cmTable && anchorRow != undefined && cmTable.rows[anchorRow] != undefined) {
         // Modify the CM Table size
-        cmTable.rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
+        mutateBlock(cmTable).rows[anchorRow].height = (anchorRowHeight ?? 0) + deltaY;
 
-        // Normalize the table
-        normalizeTable(cmTable);
+        // Normalize the new height value
+        const newHeight = Math.max(cmTable.rows[anchorRow].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
         // Writeback CM Table size changes to DOM Table
         const tableRow = table.rows[anchorRow];
         for (let col = 0; col < tableRow.cells.length; col++) {
             const td = tableRow.cells[col];
-            td.style.height = cmTable.rows[anchorRow].height + 'px';
+            td.style.height = newHeight + 'px';
         }
 
         return true;
@@ -162,10 +179,14 @@ function onDraggingHorizontal(
     }
 }
 
-function onDraggingVertical(
-    context: DragAndDropContext,
+/**
+ * @internal
+ * Exported for testing
+ */
+export function onDraggingVertical(
+    context: CellResizerContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
+    initValue: CellResizerInitValue,
     deltaX: number
 ) {
     const { table, isRTL } = context;
@@ -173,13 +194,20 @@ function onDraggingVertical(
 
     // Assign new widths and heights to the CM table
     if (cmTable && anchorColumn != undefined) {
+        const mutableTable = mutateBlock(cmTable);
+
         // Modify the CM Table size
         const lastColumn = anchorColumn == cmTable.widths.length - 1;
         const change = deltaX * (isRTL ? -1 : 1);
         // This is the last column
         if (lastColumn) {
             // Only the last column changes
-            cmTable.widths[anchorColumn] = allWidths[anchorColumn] + change;
+            // Normalize the new width value
+            const newWidth = Math.max(
+                allWidths[anchorColumn] + change,
+                MIN_ALLOWED_TABLE_CELL_WIDTH
+            );
+            mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
@@ -190,12 +218,9 @@ function onDraggingVertical(
             ) {
                 return false;
             }
-            cmTable.widths[anchorColumn] = anchorChange;
-            cmTable.widths[anchorColumn + 1] = nextAnchorChange;
+            mutableTable.widths[anchorColumn] = anchorChange;
+            mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
         }
-
-        // Normalize the table
-        normalizeTable(cmTable);
 
         // Writeback CM Table size changes to DOM Table
         for (let row = 0; row < table.rows.length; row++) {
@@ -211,7 +236,7 @@ function onDraggingVertical(
     }
 }
 
-function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setHorizontalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {
@@ -223,7 +248,7 @@ function setHorizontalPosition(context: DragAndDropContext, trigger: HTMLElement
     }
 }
 
-function setVerticalPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setVerticalPosition(context: CellResizerContext, trigger: HTMLElement) {
     const { td, isRTL } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
     if (rect) {

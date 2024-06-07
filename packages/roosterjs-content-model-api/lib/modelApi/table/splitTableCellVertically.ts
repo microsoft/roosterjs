@@ -1,12 +1,15 @@
-import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
+import { createTableCell, getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type {
+    ContentModelTableRow,
+    ShallowMutableContentModelTable,
+} from 'roosterjs-content-model-types';
 
 const MIN_HEIGHT = 22;
 
 /**
  * @internal
  */
-export function splitTableCellVertically(table: ContentModelTable) {
+export function splitTableCellVertically(table: ShallowMutableContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (sel) {
@@ -14,11 +17,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
             const row = table.rows[rowIndex];
             const belowRow = table.rows[rowIndex + 1];
 
-            row.cells.forEach(cell => {
-                delete cell.cachedElement;
-            });
-
-            delete row.cachedElement;
+            row.cells.forEach(mutateBlock);
 
             if (
                 belowRow?.cells.every(
@@ -30,12 +29,9 @@ export function splitTableCellVertically(table: ContentModelTable) {
             ) {
                 belowRow.cells.forEach((belowCell, colIndex) => {
                     if (colIndex >= sel.firstColumn && colIndex <= sel.lastColumn) {
-                        belowCell.spanAbove = false;
-                        delete belowCell.cachedElement;
+                        mutateBlock(belowCell).spanAbove = false;
                     }
                 });
-
-                delete belowRow.cachedElement;
             } else {
                 const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
                 const newRow: ContentModelTableRow = {

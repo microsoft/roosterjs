@@ -1,12 +1,15 @@
 import { createText } from 'roosterjs-content-model-dom';
-import type { ContentModelParagraph, ContentModelText } from 'roosterjs-content-model-types';
+import type {
+    ContentModelText,
+    ShallowMutableContentModelParagraph,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function splitTextSegment(
     textSegment: ContentModelText,
-    parent: ContentModelParagraph,
+    parent: ShallowMutableContentModelParagraph,
     start: number,
     end: number
 ): ContentModelText {

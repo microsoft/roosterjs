@@ -1,7 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { defaultGenerateColorKey, DeprecatedColors } from '../../../lib';
 import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
-import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from '../../testUtils';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {
@@ -110,6 +110,7 @@ describe('textColorFormatHandler.apply', () => {
         context.darkColorHandler = {
             updateKnownColor: () => {},
             getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
+            generateColorKey: defaultGenerateColorKey,
         } as any;
 
         format = {};

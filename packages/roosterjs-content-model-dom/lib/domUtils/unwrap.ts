@@ -1,5 +1,4 @@
 /**
- * @internal
  * Removes the node and keep all children in place, return the parentNode where the children are attached
  * @param node the node to remove
  */

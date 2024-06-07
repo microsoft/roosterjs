@@ -1,22 +1,5 @@
-import { createTableCell as originalCreateTableCell } from 'roosterjs-content-model-dom';
+import { createTableCell } from 'roosterjs-content-model-dom';
 import { setTableCellBackgroundColor } from '../../../lib/modelApi/editing/setTableCellBackgroundColor';
-import {
-    ContentModelTableCellFormat,
-    ShallowMutableContentModelTableCell,
-} from 'roosterjs-content-model-types';
-
-function createTableCell(
-    spanLeftOrColSpan?: boolean | number,
-    spanAboveOrRowSpan?: boolean | number,
-    isHeader?: boolean,
-    format?: ContentModelTableCellFormat
-): ShallowMutableContentModelTableCell {
-    const cell = originalCreateTableCell(spanLeftOrColSpan, spanAboveOrRowSpan, isHeader, format);
-
-    cell.cachedElement = {} as any;
-
-    return cell;
-}
 
 describe('setTableCellBackgroundColor', () => {
     it('Set to null', () => {

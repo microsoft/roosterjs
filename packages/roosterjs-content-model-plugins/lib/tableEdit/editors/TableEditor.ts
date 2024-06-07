@@ -100,7 +100,10 @@ export class TableEditor {
             .some(feature => feature?.div == node);
     }
 
-    onMouseMove(x: number, y: number) {
+    /**
+     * public only for testing purposes
+     */
+    public onMouseMove(x: number, y: number) {
         // Get whole table rect
         const tableRect = normalizeRect(this.table.getBoundingClientRect());
 
@@ -337,6 +340,7 @@ export class TableEditor {
 
         if (this.range) {
             this.editor.setDOMSelection({ type: 'range', range: this.range, isReverted: false });
+            this.range = null;
         }
 
         this.editor.takeSnapshot(); // Pass in an empty callback to make sure ContentChangedEvent is triggered

@@ -8,7 +8,7 @@ import {
     TableEditMenuItemStringKey,
     TableEditMergeMenuItemStringKey,
     TableEditSplitMenuItemStringKey,
-} from 'roosterjs-react';
+} from '../roosterjsReact/contextMenu';
 import type { RibbonButton } from '../roosterjsReact/ribbon';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {

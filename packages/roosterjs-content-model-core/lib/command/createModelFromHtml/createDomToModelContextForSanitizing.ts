@@ -41,6 +41,7 @@ export function createDomToModelContextForSanitizing(
         {
             defaultFormat,
             ...getRootComputedStyleForContext(document),
+            experimentalFeatures: [],
         },
         defaultOption,
         {

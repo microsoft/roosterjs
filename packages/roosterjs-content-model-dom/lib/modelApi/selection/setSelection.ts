@@ -141,7 +141,13 @@ function setSelectionToTable(
     } else {
         table.rows.forEach(row =>
             row.cells.forEach(cell => {
+                const wasInSelection = isInSelection;
+
                 isInSelection = setSelectionToBlockGroup(cell, isInSelection, start, end);
+
+                if (wasInSelection && isInSelection) {
+                    mutateBlock(cell).isSelected = true;
+                }
             })
         );
     }

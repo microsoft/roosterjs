@@ -10,12 +10,12 @@ import {
     PickerHelper,
     PickerPlugin,
     PickerSelectionChangMode,
-    getDOMInsertPointRect,
 } from 'roosterjs-content-model-plugins';
 import {
     createContentModelDocument,
     createEntity,
     createParagraph,
+    getDOMInsertPointRect,
 } from 'roosterjs-content-model-dom';
 
 const itemStyle = mergeStyles({

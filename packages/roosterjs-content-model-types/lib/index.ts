@@ -65,6 +65,7 @@ export {
     ImageCropMetadataFormat,
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
+    ImageFlipMetadataFormat,
 } from './contentModel/format/metadata/ImageMetadataFormat';
 export { TableCellMetadataFormat } from './contentModel/format/metadata/TableCellMetadataFormat';
 
@@ -326,7 +327,15 @@ export {
 export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IEditor } from './editor/IEditor';
-export { EditorOptions } from './editor/EditorOptions';
+export { ExperimentalFeature } from './editor/ExperimentalFeature';
+export {
+    EditorOptions,
+    ColorOptions,
+    ContentModelOptions,
+    SelectionOptions,
+    PasteOptions,
+    EditorBaseOptions,
+} from './editor/EditorOptions';
 export {
     CreateContentModel,
     CreateEditorContext,

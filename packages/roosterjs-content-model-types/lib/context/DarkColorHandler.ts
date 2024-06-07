@@ -61,4 +61,9 @@ export interface DarkColorHandler {
      * A util function to transform light mode color to dark mode color
      */
     getDarkColor: ColorTransformFunction;
+
+    /**
+     * Generate color key for dark mode color.
+     */
+    generateColorKey: ColorTransformFunction;
 }

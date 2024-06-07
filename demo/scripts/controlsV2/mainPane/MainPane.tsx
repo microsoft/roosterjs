@@ -5,13 +5,11 @@ import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlug
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { createEmojiPlugin } from '../roosterjsReact/emoji';
 import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
-import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
 import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
 import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
 import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { darkModeButton } from '../demoButtons/darkModeButton';
 import { Editor } from 'roosterjs-content-model-core';
-import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { exportContentButton } from '../demoButtons/exportContentButton';
@@ -54,6 +52,7 @@ import {
     CustomReplacePlugin,
     EditPlugin,
     HyperlinkPlugin,
+    ImageEditPlugin,
     MarkdownPlugin,
     PastePlugin,
     ShortcutPlugin,
@@ -100,6 +99,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private formatPainterPlugin: FormatPainterPlugin;
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
+    private imageEditPlugin: ImageEditPlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -137,6 +137,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
+        this.imageEditPlugin = new ImageEditPlugin();
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -288,7 +289,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private renderRibbon() {
         return (
             <Ribbon
-                buttons={getButtons(this.state.activeTab, this.formatPainterPlugin)}
+                buttons={getButtons(
+                    this.state.activeTab,
+                    this.formatPainterPlugin,
+                    this.imageEditPlugin
+                )}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
@@ -310,14 +315,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private resetEditor() {
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
-                const legacyPluginList = createLegacyPlugins(this.state.initState);
-
-                return legacyPluginList.length > 0
-                    ? new EditorAdapter(div, {
-                          ...options,
-                          legacyPlugins: legacyPluginList,
-                      })
-                    : new Editor(div, options);
+                return new Editor(div, options);
             },
         });
     }
@@ -370,6 +368,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             knownColors={this.knownColors}
                             disableCache={this.state.initState.disableCache}
                             announcerStringGetter={getAnnouncingString}
+                            experimentalFeatures={Array.from(
+                                this.state.initState.experimentalFeatures
+                            )}
                         />
                     )}
                 </div>
@@ -502,13 +503,16 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
+            pluginList.imageEditPlugin && this.imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),
             pluginList.contextMenu && createContextMenuPlugin(),
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
-            pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),
+            pluginList.contextMenu &&
+                imageMenu &&
+                createImageEditMenuProvider(this.imageEditPlugin),
             pluginList.hyperlink &&
                 new HyperlinkPlugin(
                     linkTitle?.indexOf(UrlPlaceholder) >= 0

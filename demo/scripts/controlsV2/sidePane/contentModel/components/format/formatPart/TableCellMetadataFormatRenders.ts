@@ -1,6 +1,6 @@
 import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
+import { TableCellMetadataFormat } from 'roosterjs-content-model-types';
 
 export const TableCellMetadataFormatRenders: FormatRenderer<TableCellMetadataFormat>[] = [
     createCheckboxFormatRenderer<TableCellMetadataFormat>(

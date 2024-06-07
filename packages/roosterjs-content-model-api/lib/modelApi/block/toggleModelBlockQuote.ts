@@ -8,20 +8,23 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { WrapBlockStep1Result } from '../common/wrapBlock';
 import type {
-    ContentModelBlock,
     ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
     ContentModelListItem,
-    OperationalBlocks,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelFormatContainer,
+    ReadonlyContentModelListItem,
+    ReadonlyOperationalBlocks,
+    ShallowMutableContentModelBlock,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function toggleModelBlockQuote(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     formatLtr: ContentModelFormatContainerFormat,
     formatRtl: ContentModelFormatContainerFormat
 ): boolean {
@@ -40,7 +43,7 @@ export function toggleModelBlockQuote(
             createFormatContainer('blockquote', isRtl ? formatRtl : formatLtr);
         const canMerge = (
             isRtl: boolean,
-            target: ContentModelBlock,
+            target: ShallowMutableContentModelBlock,
             current?: ContentModelFormatContainer
         ): target is ContentModelFormatContainer =>
             canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
@@ -60,13 +63,13 @@ export function toggleModelBlockQuote(
 }
 
 function canMergeQuote(
-    target: ContentModelBlock,
+    target: ShallowMutableContentModelBlock,
     format: ContentModelFormatContainerFormat
 ): target is ContentModelFormatContainer {
     return isQuote(target) && areSameFormats(format, target.format);
 }
 
-function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer {
+function isQuote(block: ReadonlyContentModelBlock): block is ReadonlyContentModelFormatContainer {
     return (
         isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer') &&
         block.tagName == 'blockquote'
@@ -74,7 +77,9 @@ function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer
 }
 
 function areAllBlockQuotes(
-    blockAndParents: OperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
+    blockAndParents: ReadonlyOperationalBlocks<
+        ReadonlyContentModelFormatContainer | ReadonlyContentModelListItem
+    >[]
 ): blockAndParents is {
     block: ContentModelFormatContainer;
     parent: ContentModelBlockGroup;

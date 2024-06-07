@@ -15,7 +15,12 @@ export type ImageEditOperation =
     /**
      * Crop an image
      */
-    | 'crop';
+    | 'crop'
+
+    /**
+     * Flip an image
+     */
+    | 'flip';
 
 /**
  * Define the common operation of an image editor

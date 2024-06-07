@@ -1,14 +1,9 @@
 import * as TestHelper from '../TestHelper';
-import { DOMEventHandlerFunction } from 'roosterjs-editor-types';
-import { getObjectKeys, normalizeTable } from 'roosterjs-content-model-dom';
+import { ContentModelTable, DOMEventHandlerFunction, IEditor } from 'roosterjs-content-model-types';
+import { normalizeTable } from 'roosterjs-content-model-dom';
 import { TableEditFeatureName } from '../../lib/tableEdit/editors/features/TableEditFeatureName';
+import { TableEditor } from '../../lib/tableEdit/editors/TableEditor';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
-import {
-    ContentModelTable,
-    DOMEventRecord,
-    EditorCore,
-    IEditor,
-} from 'roosterjs-content-model-types';
 
 /**
  * Function to be called before each Table Edit test
@@ -23,37 +18,17 @@ export function beforeTableTest(
 ) {
     const plugin = new TableEditPlugin('.' + anchorContainerSelector, undefined, disabledFeatures);
 
-    let handler: Record<string, DOMEventHandlerFunction> = {};
-    const attachDomEvent = jasmine
-        .createSpy('attachDomEvent')
-        .and.callFake((core: EditorCore, eventMap: Record<string, DOMEventRecord<Event>>) => {
-            getObjectKeys(eventMap || {}).forEach(key => {
-                const eventname = key as keyof HTMLElementEventMap;
-                const { beforeDispatch } = eventMap[key];
-                const onEvent = (event: HTMLElementEventMap[typeof eventname]) => {
-                    beforeDispatch && beforeDispatch(event);
-                };
-                handler[eventname] = onEvent;
-            });
-            return () => {
-                handler = {};
-            };
-        });
-
-    const coreApiOverride = {
-        attachDomEvent,
-    };
     const editor = TestHelper.initEditor(
         TEST_ID,
         [plugin],
         undefined,
-        coreApiOverride,
+        undefined,
         anchorContainerSelector
     );
 
     plugin.initialize(editor);
 
-    return { editor, plugin, handler };
+    return { editor, plugin };
 }
 
 /**
@@ -62,7 +37,11 @@ export function beforeTableTest(
  * @param plugin The plugin to be disposed
  * @param TEST_ID The id of the editor div
  */
-export function afterTableTest(editor: IEditor, plugin: TableEditPlugin, TEST_ID: string) {
+export function afterTableTest(
+    editor: IEditor,
+    plugin: TableEditor | TableEditPlugin,
+    TEST_ID: string
+) {
     plugin.dispose();
     !editor.isDisposed() && editor.dispose();
     TestHelper.removeElement(TEST_ID);
