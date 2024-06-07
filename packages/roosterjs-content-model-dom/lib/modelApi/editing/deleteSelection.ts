@@ -1,12 +1,12 @@
 import { deleteExpandedSelection } from './deleteExpandedSelection';
 import { mutateBlock } from '../common/mutate';
+import { runEditSteps } from './runEditSteps';
 import type {
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
     FormatContentModelContext,
     ReadonlyContentModelDocument,
-    ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,21 +22,14 @@ export function deleteSelection(
     formatContext?: FormatContentModelContext
 ): DeleteSelectionResult {
     const context = deleteExpandedSelection(model, formatContext);
+    const steps = additionalSteps.filter(
+        (x: DeleteSelectionStep | null): x is DeleteSelectionStep => !!x
+    );
 
-    additionalSteps.forEach(step => {
-        if (step && isValidDeleteSelectionContext(context)) {
-            step(context);
-        }
-    });
+    runEditSteps(steps, context);
 
     mergeParagraphAfterDelete(context);
     return context;
-}
-
-function isValidDeleteSelectionContext(
-    context: DeleteSelectionContext
-): context is ValidDeleteSelectionContext {
-    return !!context.insertPoint;
 }
 
 // If we end up with multiple paragraphs impacted, we need to merge them

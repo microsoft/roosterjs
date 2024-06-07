@@ -77,7 +77,13 @@ export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
-export { DeprecatedColors, getColor, setColor, parseColor } from './formatHandlers/utils/color';
+export {
+    DeprecatedColors,
+    getColor,
+    setColor,
+    parseColor,
+    defaultGenerateColorKey,
+} from './formatHandlers/utils/color';
 
 export {
     createDomToModelContext,
@@ -103,8 +109,6 @@ export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
-
-export { getClosestAncestorBlockGroupIndex } from './modelApi/editing/getClosestAncestorBlockGroupIndex';
 
 export { iterateSelections } from './modelApi/selection/iterateSelections';
 export {
@@ -136,6 +140,8 @@ export { setTableCellBackgroundColor } from './modelApi/editing/setTableCellBack
 export { retrieveModelFormatState } from './modelApi/editing/retrieveModelFormatState';
 export { getListStyleTypeFromString } from './modelApi/editing/getListStyleTypeFromString';
 export { getSegmentTextFormat } from './modelApi/editing/getSegmentTextFormat';
+export { getClosestAncestorBlockGroupIndex } from './modelApi/editing/getClosestAncestorBlockGroupIndex';
+export { runEditSteps } from './modelApi/editing/runEditSteps';
 
 export { updateImageMetadata, getImageMetadata } from './modelApi/metadata/updateImageMetadata';
 export {

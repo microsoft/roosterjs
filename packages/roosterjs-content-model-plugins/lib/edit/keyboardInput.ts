@@ -1,6 +1,4 @@
-import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteSelection, isModifierKey, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -14,11 +12,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
 
         editor.formatContentModel(
             (model, context) => {
-                const result = deleteSelection(model, getInputSteps(selection, rawEvent), context);
-
-                // We have deleted selection then we will let browser to handle the input.
-                // With this combined operation, we don't wan to mass up the cached model so clear it
-                context.clearModelCache = true;
+                const result = deleteSelection(model, [], context);
 
                 // Skip undo snapshot here and add undo snapshot before the operation so that we don't add another undo snapshot in middle of this replace operation
                 context.skipUndoSnapshot = true;
@@ -45,27 +39,12 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
     }
 }
 
-function getInputSteps(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
-    return shouldHandleEnterKey(selection, rawEvent) ? [handleEnterOnList, deleteEmptyQuote] : [];
-}
-
 function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
     if (!selection) {
         return false; // Nothing to delete
-    } else if (
-        !isModifierKey(rawEvent) &&
-        (rawEvent.key == 'Enter' || rawEvent.key == 'Space' || rawEvent.key.length == 1)
-    ) {
-        return (
-            selection.type != 'range' ||
-            !selection.range.collapsed ||
-            shouldHandleEnterKey(selection, rawEvent)
-        );
+    } else if (!isModifierKey(rawEvent) && (rawEvent.key == 'Space' || rawEvent.key.length == 1)) {
+        return selection.type != 'range' || !selection.range.collapsed;
     } else {
         return false;
     }
 }
-
-const shouldHandleEnterKey = (selection: DOMSelection | null, rawEvent: KeyboardEvent) => {
-    return selection && selection.type == 'range' && rawEvent.key == 'Enter' && !rawEvent.shiftKey;
-};

@@ -1,7 +1,5 @@
 import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { deleteEmptyQuote } from '../../lib/edit/deleteSteps/deleteEmptyQuote';
-import { handleEnterOnList } from '../../lib/edit/inputSteps/handleEnterOnList';
 import { keyboardInput } from '../../lib/edit/keyboardInput';
 import {
     ContentModelDocument,
@@ -107,7 +105,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
         });
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
@@ -139,7 +136,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
             newPendingFormat: undefined,
         });
@@ -169,7 +165,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
             newPendingFormat: undefined,
         });
@@ -199,7 +194,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
             newPendingFormat: undefined,
         });
@@ -285,7 +279,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
             newPendingFormat: undefined,
         });
@@ -317,36 +310,6 @@ describe('keyboardInput', () => {
             newImages: [],
         });
         expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-    });
-
-    it('Enter input, table selection, no modifier key, deleteSelection returns range', () => {
-        getDOMSelectionSpy.and.returnValue({
-            type: 'table',
-        });
-        deleteSelectionSpy.and.returnValue({
-            deleteResult: 'range',
-        });
-
-        const rawEvent = {
-            key: 'Enter',
-        } as any;
-
-        keyboardInput(editor, rawEvent);
-
-        expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(takeSnapshotSpy).toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
-        expect(formatResult).toBeTrue();
-        expect(mockedContext).toEqual({
-            deletedEntities: [],
-            newEntities: [],
-            newImages: [],
-            clearModelCache: true,
-            skipUndoSnapshot: true,
-            newPendingFormat: undefined,
-        });
-        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('Letter input, expanded selection, no modifier key, deleteSelection returns range, has segment format', () => {
@@ -381,50 +344,6 @@ describe('keyboardInput', () => {
             deletedEntities: [],
             newEntities: [],
             newImages: [],
-            clearModelCache: true,
-            skipUndoSnapshot: true,
-            newPendingFormat: mockedFormat,
-        });
-        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
-    });
-
-    it('Enter key input on collapsed range', () => {
-        const mockedFormat = 'FORMAT' as any;
-        getDOMSelectionSpy.and.returnValue({
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        });
-        deleteSelectionSpy.and.returnValue({
-            deleteResult: 'range',
-            insertPoint: {
-                marker: {
-                    format: mockedFormat,
-                },
-            },
-        });
-
-        const rawEvent = {
-            key: 'Enter',
-        } as any;
-
-        keyboardInput(editor, rawEvent);
-
-        expect(getDOMSelectionSpy).toHaveBeenCalled();
-        expect(takeSnapshotSpy).toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(
-            mockedModel,
-            [handleEnterOnList, deleteEmptyQuote],
-            mockedContext
-        );
-        expect(formatResult).toBeTrue();
-        expect(mockedContext).toEqual({
-            deletedEntities: [],
-            newEntities: [],
-            newImages: [],
-            clearModelCache: true,
             skipUndoSnapshot: true,
             newPendingFormat: mockedFormat,
         });

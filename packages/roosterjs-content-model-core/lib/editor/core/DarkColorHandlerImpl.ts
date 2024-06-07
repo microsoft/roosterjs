@@ -1,3 +1,4 @@
+import { defaultGenerateColorKey } from 'roosterjs-content-model-dom';
 import type {
     DarkColorHandler,
     ColorTransformFunction,
@@ -8,7 +9,8 @@ class DarkColorHandlerImpl implements DarkColorHandler {
     constructor(
         private readonly root: HTMLElement,
         public getDarkColor: ColorTransformFunction,
-        public readonly knownColors: Record<string, Colors>
+        public readonly knownColors: Record<string, Colors>,
+        public generateColorKey: ColorTransformFunction
     ) {}
 
     updateKnownColor(isDarkMode: boolean, key?: string, colorPair?: Colors): void {
@@ -48,7 +50,8 @@ class DarkColorHandlerImpl implements DarkColorHandler {
 export function createDarkColorHandler(
     root: HTMLElement,
     getDarkColor: ColorTransformFunction,
-    knownColors: Record<string, Colors> = {}
+    knownColors: Record<string, Colors> = {},
+    generateColorKey: ColorTransformFunction = defaultGenerateColorKey
 ): DarkColorHandler {
-    return new DarkColorHandlerImpl(root, getDarkColor, knownColors);
+    return new DarkColorHandlerImpl(root, getDarkColor, knownColors, generateColorKey);
 }

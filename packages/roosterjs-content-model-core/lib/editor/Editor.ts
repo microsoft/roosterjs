@@ -32,6 +32,7 @@ import type {
     CachedElementHandler,
     DomToModelOptionForCreateModel,
     AnnounceData,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -404,6 +405,14 @@ export class Editor implements IEditor {
         const core = this.getCore();
 
         core.api.announce(core, announceData);
+    }
+
+    /**
+     * Check if a given feature is enabled
+     * @param featureName The name of feature to check
+     */
+    isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean {
+        return this.getCore().experimentalFeatures.indexOf(featureName) >= 0;
     }
 
     /**

@@ -2,7 +2,7 @@ import * as getListAnnounceData from 'roosterjs-content-model-api/lib/modelApi/l
 import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { editingTestCommon } from '../editingTestCommon';
 import { handleEnterOnList } from '../../../lib/edit/inputSteps/handleEnterOnList';
-import { keyboardInput } from '../../../lib/edit/keyboardInput';
+import { keyboardEnter } from '../../../lib/edit/keyboardEnter';
 import {
     ContentModelDocument,
     ContentModelListItem,
@@ -30,7 +30,11 @@ describe('handleEnterOnList', () => {
             newEntities: [],
             newImages: [],
         };
-        const result = deleteSelection(model, [handleEnterOnList], context);
+        const result = deleteSelection(
+            model,
+            [context => (context.deleteResult = 'notDeleted'), handleEnterOnList],
+            context
+        );
         normalizeContentModel(model);
 
         expect(model).toEqual(expectedModel);
@@ -961,6 +965,48 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        listStyleType: 'decimal',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":1}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -971,11 +1017,6 @@ describe('handleEnterOnList', () => {
                         {
                             blockType: 'Paragraph',
                             segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
                                 {
                                     segmentType: 'Br',
                                     format: {},
@@ -1004,6 +1045,7 @@ describe('handleEnterOnList', () => {
                     },
                     format: {},
                 },
+                listItem,
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
@@ -1044,7 +1086,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range', null);
+        runTest(model, expectedModel, 'range', listItem);
     });
 
     it('enter on multiple list items with selected text', () => {
@@ -1210,6 +1252,48 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        listStyleType: 'decimal',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":1}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -1257,11 +1341,6 @@ describe('handleEnterOnList', () => {
                             blockType: 'Paragraph',
                             segments: [
                                 {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
                                     segmentType: 'Br',
                                     format: {},
                                 },
@@ -1289,6 +1368,7 @@ describe('handleEnterOnList', () => {
                     },
                     format: {},
                 },
+                listItem,
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
@@ -1312,7 +1392,6 @@ describe('handleEnterOnList', () => {
                                 marginTop: '0px',
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
-                                startNumberOverride: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
@@ -1329,7 +1408,7 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range', null);
+        runTest(model, expectedModel, 'range', listItem);
     });
 
     it('expanded range mixed list with paragraph', () => {
@@ -1436,6 +1515,49 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        listStyleType: 'decimal',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":1}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -1475,52 +1597,11 @@ describe('handleEnterOnList', () => {
                     },
                     format: {},
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'st',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                                listStyleType: 'decimal',
-                                startNumberOverride: undefined,
-                            },
-                            dataset: {
-                                editingInfo: '{"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: false,
-                        format: {},
-                    },
-                    format: {},
-                },
+                listItem,
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range', null);
+        runTest(model, expectedModel, 'range', listItem);
     });
 
     it('expanded range with mixed list with paragraph | different styles', () => {
@@ -1628,6 +1709,48 @@ describe('handleEnterOnList', () => {
             ],
             format: {},
         };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'st',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'OL',
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {
+                        editingInfo: '{"orderedStyleType":3}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -1668,56 +1791,15 @@ describe('handleEnterOnList', () => {
                         listStyleType: '"1) "',
                     },
                 },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'st',
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                marginTop: '0px',
-                                marginBottom: '0px',
-                                startNumberOverride: undefined,
-                                listStyleType: 'lower-alpha',
-                            },
-                            dataset: {
-                                editingInfo: '{"orderedStyleType":3}',
-                            },
-                        },
-                    ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: false,
-                        format: {},
-                    },
-                    format: {},
-                },
+                listItem,
             ],
             format: {},
         };
-        runTest(model, expectedModel, 'range', null);
+        runTest(model, expectedModel, 'range', listItem);
     });
 });
 
-describe(' handleEnterOnList - keyboardInput', () => {
+describe('handleEnterOnList - keyboardEnter', () => {
     function runTest(
         input: ContentModelDocument,
         isShiftKey: boolean,
@@ -1746,7 +1828,7 @@ describe(' handleEnterOnList - keyboardInput', () => {
                     },
                 });
 
-                keyboardInput(editor, mockedEvent);
+                keyboardEnter(editor, mockedEvent, true);
             },
             input,
             expectedResult,
@@ -2312,9 +2394,19 @@ describe(' handleEnterOnList - keyboardInput', () => {
                                     text: 'test',
                                     format: {},
                                 },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
                                 {
                                     segmentType: 'SelectionMarker',
                                     isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
                                     format: {},
                                 },
                             ],
@@ -2344,6 +2436,224 @@ describe(' handleEnterOnList - keyboardInput', () => {
             ],
             format: {},
         };
-        runTest(input, true, expected, true, 0);
+        runTest(input, true, expected, false, 1);
+    });
+
+    it('List item contains multiple blocks', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                                {
+                                    text: 'test2',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            segments: [
+                                {
+                                    text: 'test3',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'test4',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                                {
+                                    text: 'test2',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            segments: [
+                                {
+                                    text: 'test3',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'test4',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        runTest(model, false, expectedModel, false, 1);
     });
 });

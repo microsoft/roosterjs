@@ -1,7 +1,7 @@
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
+import { defaultGenerateColorKey, DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
 import { expectHtml } from '../../testUtils';
 import {
     BackgroundColorFormat,
@@ -113,6 +113,7 @@ describe('backgroundColorFormatHandler.apply', () => {
         context.darkColorHandler = {
             updateKnownColor: () => {},
             getDarkColor: (lightColor: string) => `var(--darkColor_${lightColor}, ${lightColor})`,
+            generateColorKey: defaultGenerateColorKey,
         } as any;
 
         backgroundColorFormatHandler.apply(format, div, context);
