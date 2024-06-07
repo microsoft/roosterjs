@@ -1,4 +1,5 @@
 import { addRangeToSelection } from './addRangeToSelection';
+import { areSameSelection } from '../../corePlugin/cache/areSameSelection';
 import { ensureImageHasSpanParent } from './ensureImageHasSpanParent';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
@@ -24,6 +25,12 @@ const SELECTION_SELECTOR = '*::selection';
  * @internal
  */
 export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
+    const existingSelection = core.api.getDOMSelection(core);
+
+    if (existingSelection && selection && areSameSelection(existingSelection, selection)) {
+        return;
+    }
+
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
@@ -150,6 +157,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
         const eventData: SelectionChangedEvent = {
             eventType: 'selectionChanged',
             newSelection: selection,
+            previousSelection: existingSelection,
         };
 
         core.api.triggerEvent(core, eventData, true /*broadcast*/);

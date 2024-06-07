@@ -3,6 +3,7 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
+import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api/lib';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImageMetadata } from './utils/updateImageEditInfo';
@@ -16,6 +17,7 @@ import {
     isElementOfType,
     isNodeOfType,
     mutateSegment,
+    toArray,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -23,6 +25,8 @@ import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    DOMInsertPoint,
+    DOMSelection,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -42,6 +46,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
 };
 
 const IMAGE_EDIT_CHANGE_SOURCE = 'ImageEdit';
+const MouseLeftButton = 0;
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -86,15 +91,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
-            blur: {
-                beforeDispatch: () => {
-                    this.formatImageWithContentModel(
-                        editor,
-                        true /* shouldSelectImage */,
-                        true /* shouldSelectAsImageSelection*/
-                    );
-                },
-            },
+            // blur: {
+            //     beforeDispatch: () => {
+            //         this.formatImageWithContentModel(
+            //             editor,
+            //             true /* shouldSelectImage */,
+            //             true /* shouldSelectAsImageSelection*/
+            //         );
+            //     },
+            // },
         });
     }
 
@@ -118,7 +123,46 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(_event: PluginEvent) {}
+    onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
+
+        switch (event.eventType) {
+            case 'selectionChanged':
+                {
+                    const selection = event.newSelection;
+                    const previousSelection = event.previousSelection;
+
+                    if (previousSelection?.type == 'image' && selection && this.shadowSpan) {
+                        const previousImage = previousSelection.image;
+                        if (previousImage) {
+                            this.formatImageWhenSelectionChange(this.editor, selection);
+                        }
+                    }
+                }
+
+                break;
+
+            // case 'keyUp':
+            case 'mouseUp':
+                {
+                    const selection = this.editor.getDOMSelection();
+
+                    if (
+                        selection?.type == 'image' &&
+                        (event.eventType != 'mouseUp' || event.rawEvent.button == MouseLeftButton)
+                    ) {
+                        const image = selection.image;
+
+                        if (image) {
+                            this.startRotateAndResize(this.editor, image);
+                        }
+                    }
+                }
+                break;
+        }
+    }
 
     private startEditing(
         editor: IEditor,
@@ -126,7 +170,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation?: ImageEditOperation
     ) {
         const imageSpan = image.parentElement;
-        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
+        if (
+            !imageSpan ||
+            (imageSpan && !isElementOfType(imageSpan, 'span')) ||
+            image.width <= 0 ||
+            image.height <= 0
+        ) {
             return;
         }
         this.imageEditInfo = getSelectedImageMetadata(editor, image);
@@ -171,6 +220,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             this.removeImageWrapper();
         }
+
         this.startEditing(editor, image, apiOperation);
         if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
             this.dndHelpers = [
@@ -439,6 +489,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 image.isSelectedAsImageSelection = shouldSelectAsImageSelection;
                             }
                         });
+
+                        this.cleanInfo();
                         return true;
                     }
 
@@ -446,11 +498,51 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 },
                 {
                     changeSource: IMAGE_EDIT_CHANGE_SOURCE,
-                    onNodeCreated: () => {
-                        this.cleanInfo();
-                    },
                 }
             );
+        }
+    }
+
+    private formatImageWhenSelectionChange(editor: IEditor, newSelection: DOMSelection) {
+        const { selectedImage, imageEditInfo, lastSrc, clonedImage } = this;
+
+        if (
+            selectedImage?.parentNode &&
+            lastSrc &&
+            imageEditInfo &&
+            clonedImage &&
+            this.shadowSpan
+        ) {
+            const parent = selectedImage.parentNode;
+            const index = toArray(parent.childNodes).indexOf(selectedImage);
+            const domIp: DOMInsertPoint = {
+                node: parent,
+                offset: index,
+            };
+
+            formatInsertPointWithContentModel(editor, domIp, (model, context, insertPoint) => {
+                if (insertPoint) {
+                    const { paragraph, marker } = insertPoint;
+                    const markerIndex = paragraph.segments.indexOf(marker);
+                    const image = paragraph.segments[markerIndex + 1];
+
+                    if (markerIndex >= 0 && image?.segmentType == 'Image') {
+                        applyChange(
+                            editor,
+                            selectedImage,
+                            image,
+                            imageEditInfo,
+                            lastSrc,
+                            this.wasImageResized || this.isCropMode,
+                            clonedImage
+                        );
+
+                        return true;
+                    }
+                }
+
+                return false;
+            });
         }
     }
 

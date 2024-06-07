@@ -9,4 +9,9 @@ export interface SelectionChangedEvent extends BasePluginEvent<'selectionChanged
      * The new selection after change
      */
     newSelection: DOMSelection | null;
+
+    /**
+     * Previous selection before change
+     */
+    previousSelection: DOMSelection | null;
 }

@@ -18,7 +18,6 @@ import type {
     SelectionPluginState,
     EditorOptions,
     DOMHelper,
-    MouseUpEvent,
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
@@ -26,8 +25,6 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
-const MouseMiddleButton = 1;
-const MouseRightButton = 2;
 const Up = 'ArrowUp';
 const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
@@ -48,7 +45,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private isSafari = false;
-    private isMac = false;
     private scrollTopCache: number = 0;
 
     constructor(options: EditorOptions) {
@@ -99,7 +95,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
-        this.isMac = !!env.isMac;
         document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
             this.disposer = this.editor.attachDomEvent({
@@ -142,7 +137,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'mouseUp':
-                this.onMouseUp(event);
+                this.onMouseUp();
                 break;
 
             case 'keyDown':
@@ -166,17 +161,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-        if (
-            rawEvent.button === MouseRightButton &&
-            (image =
-                this.getClickingImage(rawEvent) ??
-                this.getContainedTargetImage(rawEvent, selection)) &&
-            image.isContentEditable
-        ) {
+        if ((image = this.getClickingImage(rawEvent)) && image.isContentEditable) {
             this.selectImageWithRange(image, rawEvent);
-            return;
-        } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeOrAfterElement(editor, selection.image);
+
             return;
         }
 
@@ -297,20 +284,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private onMouseUp(event: MouseUpEvent) {
-        let image: HTMLImageElement | null;
-
-        if (
-            (image = this.getClickingImage(event.rawEvent)) &&
-            image.isContentEditable &&
-            event.rawEvent.button != MouseMiddleButton &&
-            (event.rawEvent.button ==
-                MouseRightButton /* it's not possible to drag using right click */ ||
-                event.isClicking)
-        ) {
-            this.selectImageWithRange(image, event.rawEvent);
-        }
-
+    private onMouseUp() {
         this.detachMouseEvent();
     }
 
@@ -551,27 +525,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             ? target
             : null;
     }
-
-    // MacOS will not create a mouseUp event if contextMenu event is not prevent defaulted.
-    // Make sure we capture image target even if image is wrapped
-    private getContainedTargetImage = (
-        event: MouseEvent,
-        previousSelection: DOMSelection | null
-    ): HTMLImageElement | null => {
-        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
-            return null;
-        }
-
-        const target = event.target as Node;
-        if (
-            isNodeOfType(target, 'ELEMENT_NODE') &&
-            isElementOfType(target, 'span') &&
-            target.firstChild === previousSelection.image
-        ) {
-            return previousSelection.image;
-        }
-        return null;
-    };
 
     private onFocus = () => {
         if (!this.state.skipReselectOnFocus && this.state.selection) {
