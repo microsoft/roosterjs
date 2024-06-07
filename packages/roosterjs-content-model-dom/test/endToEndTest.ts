@@ -135,7 +135,58 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             '1\r\n2',
-            '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;">1</li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-left: 0in;">2</li></ul>'
+        );
+    });
+
+    it('list with partially same format in list item and segment', () => {
+        runTest(
+            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div><span style="font-size: 12pt; font-family: Arial; font-weight: bold">test</span></div></li></ul></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {
+                                            fontFamily: 'Arial',
+                                            fontSize: '12pt',
+                                            textColor: 'red',
+                                            fontWeight: 'bold',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                segmentFormat: {
+                                    fontFamily: 'Arial',
+                                    fontSize: '12pt',
+                                    textColor: 'red',
+                                },
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Arial',
+                                fontSize: '10pt',
+                                textColor: 'red',
+                            },
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            'test',
+            '<ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div style="font-size: 12pt;"><b>test</b></div></li></ul>'
         );
     });
 

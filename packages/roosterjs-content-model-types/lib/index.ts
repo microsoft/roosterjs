@@ -328,7 +328,14 @@ export { DarkColorHandler, Colors, ColorTransformFunction } from './context/Dark
 
 export { IEditor } from './editor/IEditor';
 export { ExperimentalFeature } from './editor/ExperimentalFeature';
-export { EditorOptions } from './editor/EditorOptions';
+export {
+    EditorOptions,
+    ColorOptions,
+    ContentModelOptions,
+    SelectionOptions,
+    PasteOptions,
+    EditorBaseOptions,
+} from './editor/EditorOptions';
 export {
     CreateContentModel,
     CreateEditorContext,
