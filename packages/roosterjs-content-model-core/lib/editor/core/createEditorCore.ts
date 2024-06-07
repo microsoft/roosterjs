@@ -40,12 +40,14 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback,
-            options.knownColors
+            options.knownColors,
+            options.generateColorKey
         ),
         trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
+        experimentalFeatures: options.experimentalFeatures ? [...options.experimentalFeatures] : [],
     };
 }
 

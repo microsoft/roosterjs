@@ -1,6 +1,11 @@
-import { EntityState } from 'roosterjs-editor-types';
 import { insertEntity } from 'roosterjs-content-model-api';
-import type { EditorPlugin, Entity, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    EditorPlugin,
+    Entity,
+    EntityState,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 
 const EntityType = 'SampleEntity';
 

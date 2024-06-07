@@ -1,7 +1,7 @@
 import { createContextMenuProvider } from '../utils/createContextMenuProvider';
 import { EditorPlugin, IEditor, ImageEditor } from 'roosterjs-content-model-types';
 import { formatImageWithContentModel } from 'roosterjs-content-model-api';
-import { iterateSelections, updateImageMetadata } from 'roosterjs-content-model-dom';
+import { iterateSelections, mutateBlock, updateImageMetadata } from 'roosterjs-content-model-dom';
 import { setImageAltText } from 'roosterjs-content-model-api';
 import { showInputDialog } from '../../inputDialog/utils/showInputDialog';
 import type { ContextMenuItem } from '../types/ContextMenuItem';
@@ -91,7 +91,7 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateLeft':
                 imageEdit?.rotateImage(-Math.PI / 2);
@@ -116,7 +116,7 @@ const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (key, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         switch (key) {
             case 'menuNameImageRotateFlipHorizontally':
                 imageEdit?.flipImage('horizontal');
@@ -137,7 +137,7 @@ const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEditor
             imageEditor.canRegenerateImage(node as HTMLImageElement)
         );
     },
-    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
+    onClick: (_, _editor, _node, _strings, _uiUtilities, imageEdit) => {
         imageEdit?.cropImage();
     },
 };
@@ -208,7 +208,7 @@ function removeImage(editor: IEditor) {
                         const index = block.segments.indexOf(segment);
 
                         if (index >= 0) {
-                            block.segments.splice(index, 1);
+                            mutateBlock(block).segments.splice(index, 1);
                             changed = true;
                         }
                     }

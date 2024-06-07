@@ -92,7 +92,11 @@ export function createTableInserter(
     return null;
 }
 
-class TableInsertHandler implements Disposable {
+/**
+ * @internal
+ * Exported for test only
+ */
+export class TableInsertHandler implements Disposable {
     private disposer: undefined | (() => void);
     constructor(
         private div: HTMLDivElement,

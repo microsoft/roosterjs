@@ -68,7 +68,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     constructor(
         private onInitialize: (core: EditorAdapterCore) => ILegacyEditor,
         legacyPlugins: LegacyEditorPlugin[] = [],
-        private experimentalFeatures: ExperimentalFeatures[] = []
+        private experimentalFeatures: string[] = []
     ) {
         const editPlugin = createEditPlugin();
 
@@ -178,7 +178,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     private createEditorCore(editor: IEditor): EditorAdapterCore {
         return {
             customData: {},
-            experimentalFeatures: this.experimentalFeatures ?? [],
+            experimentalFeatures: (this.experimentalFeatures as ExperimentalFeatures[]) ?? [],
             sizeTransformer: createSizeTransformer(editor),
             darkColorHandler: createDarkColorHandler(editor.getColorManager()),
             edit: this.edit,

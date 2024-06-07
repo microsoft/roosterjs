@@ -16,12 +16,7 @@ const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const deployPath = path.join(distPath, 'deploy');
-const compatibleEnumPath = path.join(
-    packagesPath,
-    'roosterjs-editor-types',
-    'lib',
-    'compatibleEnum'
-);
+const legacyDemoPath = path.join(rootPath, 'assets/legacy-demo');
 
 function collectPackages(startPath) {
     const packagePaths = glob
@@ -135,7 +130,6 @@ const legacyPackages = [
     'roosterjs-editor-api',
     'roosterjs-editor-plugins',
 ];
-const reactPackages = ['roosterjs-react'];
 const mainPackages = [
     'roosterjs',
     'roosterjs-content-model-types',
@@ -148,22 +142,6 @@ const mainPackages = [
 const legacyAdapterPackages = ['roosterjs-editor-adapter'];
 
 const buildConfig = {
-    legacy: {
-        jsFileBaseName: 'rooster-legacy',
-        libraryName: 'roosterjsLegacy',
-        externalHandler: undefined,
-        packages: legacyPackages,
-        entry: 'roosterjs-legacy',
-    },
-    react: {
-        jsFileBaseName: 'rooster-react',
-        libraryName: 'roosterjsReact',
-        externalHandler: getWebpackExternalCallback([]),
-        dependsOnLegacy: true,
-        dependsOnReact: true,
-        packages: reactPackages,
-        entry: 'roosterjs-react',
-    },
     main: {
         jsFileBaseName: 'rooster',
         libraryName: 'roosterjs',
@@ -198,7 +176,6 @@ module.exports = {
     typescriptPath,
     distPath,
     roosterJsDistPath,
-    compatibleEnumPath,
     deployPath,
     runNode,
     err,
@@ -209,4 +186,5 @@ module.exports = {
     getWebpackExternalCallback,
     buildConfig,
     versions,
+    legacyDemoPath,
 };

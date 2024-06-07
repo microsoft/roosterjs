@@ -18,6 +18,7 @@ import type { DarkColorHandler } from '../context/DarkColorHandler';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type { EntityState } from '../parameter/FormatContentModelContext';
+import type { ExperimentalFeature } from './ExperimentalFeature';
 
 /**
  * An interface of Editor, built on top of Content Model
@@ -227,4 +228,10 @@ export interface IEditor {
      * @param announceData Data to announce
      */
     announce(announceData: AnnounceData): void;
+
+    /**
+     * Check if a given feature is enabled
+     * @param featureName The name of feature to check
+     */
+    isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean;
 }

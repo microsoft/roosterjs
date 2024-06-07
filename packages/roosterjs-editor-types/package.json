@@ -1,7 +1,0 @@
-{
-    "name": "roosterjs-editor-types",
-    "description": "Type definition for roosterjs",
-    "dependencies": {},
-    "version": "0.0.0",
-    "main": "./lib/index.ts"
-}

@@ -49,7 +49,7 @@ export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent) {
                 rawEvent,
                 changeSource: ChangeSource.Keyboard,
                 getChangeData: () => rawEvent.which,
-                scrollCaretIntoView: false, // TODO #2633: Make a full fix to the scroll behavior
+                scrollCaretIntoView: true,
                 apiName: rawEvent.key == 'Delete' ? 'handleDeleteKey' : 'handleBackspaceKey',
             }
         );
