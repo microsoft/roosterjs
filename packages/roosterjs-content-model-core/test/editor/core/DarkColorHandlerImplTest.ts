@@ -28,14 +28,21 @@ describe('DarkColorHandlerImpl.ctor', () => {
         );
     });
 
-    it('with knownColors', () => {
+    it('with knownColors and generateColorKey', () => {
         const div = document.createElement('div');
         const mockedGetDarkColor = jasmine.createSpy('getDarkColor');
         const mockedKnownColors = 'KNOWN' as any;
-        const handler = createDarkColorHandler(div, mockedGetDarkColor, mockedKnownColors);
+        const mockedGenerateColorKey = 'KEY' as any;
+        const handler = createDarkColorHandler(
+            div,
+            mockedGetDarkColor,
+            mockedKnownColors,
+            mockedGenerateColorKey
+        );
 
         expect(handler.knownColors).toEqual(mockedKnownColors);
         expect(handler.getDarkColor).toBe(mockedGetDarkColor);
+        expect(handler.generateColorKey).toBe(mockedGenerateColorKey);
     });
 });
 

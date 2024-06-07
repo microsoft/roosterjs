@@ -1,5 +1,10 @@
 import { Colors, DarkColorHandler } from 'roosterjs-content-model-types';
-import { getColor, parseColor, setColor } from '../../../lib/formatHandlers/utils/color';
+import {
+    defaultGenerateColorKey,
+    getColor,
+    parseColor,
+    setColor,
+} from '../../../lib/formatHandlers/utils/color';
 
 describe('getColor without darkColorHandler', () => {
     it('no color', () => {
@@ -122,6 +127,7 @@ describe('getColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            generateColorKey: defaultGenerateColorKey,
         };
     });
 
@@ -351,6 +357,7 @@ describe('setColor with darkColorHandler', () => {
             getDarkColor: getDarkColorSpy,
             updateKnownColor: updateKnownColorSpy,
             reset: null!,
+            generateColorKey: defaultGenerateColorKey,
         };
     });
 
@@ -485,6 +492,49 @@ describe('setColor with darkColorHandler', () => {
             darkModeColor: '--dark_red',
         });
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_green', {
+            lightModeColor: 'green',
+            darkModeColor: '--dark_green',
+        });
+    });
+
+    it('with customized generateColorKey', () => {
+        const generateColorKeySpy = jasmine
+            .createSpy('generateColorKey')
+            .and.callFake((color: string) => '--' + color + '_key');
+
+        const lightDiv = document.createElement('div');
+        const darkDiv = document.createElement('div');
+
+        darkColorHandler.generateColorKey = generateColorKeySpy;
+
+        setColor(lightDiv, 'red', true, false, darkColorHandler);
+        setColor(lightDiv, 'green', false, false, darkColorHandler);
+        setColor(darkDiv, 'red', true, true, darkColorHandler);
+        setColor(darkDiv, 'green', false, true, darkColorHandler);
+
+        expect(lightDiv.outerHTML).toBe('<div style="background-color: red; color: green;"></div>');
+        expect(darkDiv.outerHTML).toBe(
+            '<div style="background-color: var(--red_key, red); color: var(--green_key, green);"></div>'
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', lightDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', lightDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', darkDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', darkDiv);
+        expect(updateKnownColorSpy).toHaveBeenCalledTimes(4);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--red_key', {
+            lightModeColor: 'red',
+            darkModeColor: '--dark_red',
+        });
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--green_key', {
+            lightModeColor: 'green',
+            darkModeColor: '--dark_green',
+        });
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--red_key', {
+            lightModeColor: 'red',
+            darkModeColor: '--dark_red',
+        });
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--green_key', {
             lightModeColor: 'green',
             darkModeColor: '--dark_green',
         });
