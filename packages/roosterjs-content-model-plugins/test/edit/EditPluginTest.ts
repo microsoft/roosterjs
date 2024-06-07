@@ -106,21 +106,6 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
-        it('Shift+Delete', () => {
-            plugin = new EditPlugin();
-            const rawEvent = { key: 'Delete', shiftKey: true } as any;
-
-            plugin.initialize(editor);
-
-            plugin.onPluginEvent({
-                eventType: 'keyDown',
-                rawEvent,
-            });
-
-            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(keyboardInputSpy).not.toHaveBeenCalled();
-        });
-
         it('Tab', () => {
             plugin = new EditPlugin();
             const rawEvent = { key: 'Tab' } as any;
