@@ -19,7 +19,6 @@ import type {
     DomIndexer,
     DOMSelection,
     RangeSelectionForCache,
-    ReconcileChildListContext,
     Selectable,
 } from 'roosterjs-content-model-types';
 
@@ -38,6 +37,36 @@ interface IndexedSegmentNode extends Node {
 
 interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
+}
+
+/**
+ * Context object used by DomIndexer when reconcile mutations with child list
+ */
+interface ReconcileChildListContext {
+    /**
+     * Index of segment in current paragraph
+     */
+    segIndex: number;
+
+    /**
+     * The current paragraph that we are handling
+     */
+    paragraph?: ContentModelParagraph;
+
+    /**
+     * Text node that is added from mutation but has not been handled. This can happen when we first see an added node then later we see a removed one.
+     * e.g. Type text in an empty paragraph (&lt;div&gt;&lt;br&gt;&lt;/div&gt;), so a text node will be added and &lt;BR&gt; will be removed.
+     * Set to a valid text node means we need to handle it later. If it is finally not handled, that means we need to clear cache
+     * Set to undefined (initial value) means no pending text node is hit yet (valid case)
+     * Set to null means there was a pending text node which is already handled, so if we see another pending text node,
+     * we should clear cache since we don't know how to handle it
+     */
+    pendingTextNode?: Text | null;
+
+    /**
+     * Format of the removed segment, this will be used as the format for newly created segment
+     */
+    format?: ContentModelSegmentFormat;
 }
 
 function isIndexedSegment(node: Node): node is IndexedSegmentNode {
@@ -302,12 +331,11 @@ export class DomIndexerImpl implements DomIndexer {
         return selectable;
     }
 
-    reconcileChildList(
-        addedNodes: ArrayLike<Node>,
-        removedNodes: ArrayLike<Node>,
-        context: ReconcileChildListContext
-    ): boolean {
+    reconcileChildList(addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>): boolean {
         let canHandle = true;
+        const context: ReconcileChildListContext = {
+            segIndex: -1,
+        };
 
         // First process added nodes
         const addedNode = addedNodes[0];
@@ -327,7 +355,7 @@ export class DomIndexerImpl implements DomIndexer {
             canHandle = false;
         }
 
-        return canHandle;
+        return canHandle && !context.pendingTextNode;
     }
 
     private reconcileAddedNode(node: Text, context: ReconcileChildListContext): boolean {

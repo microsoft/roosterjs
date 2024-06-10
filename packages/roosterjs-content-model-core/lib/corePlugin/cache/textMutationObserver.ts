@@ -1,7 +1,6 @@
 import type {
     ContentModelDocument,
     DomIndexer,
-    ReconcileChildListContext,
     TextMutationObserver,
 } from 'roosterjs-content-model-types';
 
@@ -41,12 +40,12 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     private onMutationInternal = (mutations: MutationRecord[]) => {
-        const context: ReconcileChildListContext = {
-            segIndex: -1,
-        };
         let canHandle = true;
         let firstTarget: Node | null = null;
         let lastTextChangeNode: Node | null = null;
+        let addedNodes: Node[] = [];
+        let removedNodes: Node[] = [];
+        let reconcileText = false;
 
         for (let i = 0; i < mutations.length && canHandle; i++) {
             const mutation = mutations[i];
@@ -65,7 +64,7 @@ class TextMutationObserverImpl implements TextMutationObserver {
                         canHandle = false;
                     } else {
                         lastTextChangeNode = mutation.target;
-                        this.onMutation(true /*textOnly*/);
+                        reconcileText = true;
                     }
                     break;
 
@@ -77,18 +76,21 @@ class TextMutationObserverImpl implements TextMutationObserver {
                     }
 
                     if (canHandle) {
-                        canHandle = this.domIndexer.reconcileChildList(
-                            mutation.addedNodes,
-                            mutation.removedNodes,
-                            context
-                        );
+                        addedNodes = addedNodes.concat(Array.from(mutation.addedNodes));
+                        removedNodes = removedNodes.concat(Array.from(mutation.removedNodes));
                     }
 
                     break;
             }
         }
 
-        if (!canHandle || context.pendingTextNode) {
+        if (canHandle && (addedNodes.length > 0 || removedNodes.length > 0)) {
+            canHandle = this.domIndexer.reconcileChildList(addedNodes, removedNodes);
+        }
+
+        if (canHandle && reconcileText) {
+            this.onMutation(true /*textOnly*/);
+        } else if (!canHandle) {
             this.onMutation(false /*textOnly*/);
         }
     };

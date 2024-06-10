@@ -1,4 +1,3 @@
-import type { ReconcileChildListContext } from '../parameter/ReconcileChildListContext';
 import type { CacheSelection } from '../pluginState/CachePluginState';
 import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
@@ -49,9 +48,14 @@ export interface DomIndexer {
         oldSelection?: CacheSelection
     ) => boolean;
 
-    reconcileChildList: (
-        addedNodes: ArrayLike<Node>,
-        removedNodes: ArrayLike<Node>,
-        context: ReconcileChildListContext
-    ) => boolean;
+    /**
+     * When child list of editor content is changed, we can use this method to do sync the change from editor into content model.
+     * This is mostly used when user start to type in an empty line. In that case browser will remove the existing BR node in the empty line if any,
+     * and create a new TEXT node for the typed text. Here we use these information to remove original Br segment and create a new Text segment
+     * in content model. But if we find anything that cannot be handled, return false so caller will invalidate the cached model
+     * @param addedNodes Nodes added by browser during mutation
+     * @param removedNodes Nodes removed by browser during mutation
+     * @returns True if the changed nodes are successfully reconciled, otherwise false
+     */
+    reconcileChildList: (addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>) => boolean;
 }
