@@ -129,7 +129,7 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(onMutation).toHaveBeenCalledTimes(2);
+        expect(onMutation).toHaveBeenCalledTimes(1);
         expect(onMutation).toHaveBeenCalledWith(false);
 
         observer.stopObserving();
