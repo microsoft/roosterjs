@@ -22,20 +22,32 @@ import type {
     Selectable,
 } from 'roosterjs-content-model-types';
 
-interface SegmentItem {
+/**
+ * @internal Export for test only
+ */
+export interface SegmentItem {
     paragraph: ContentModelParagraph;
     segments: ContentModelSegment[];
 }
 
-interface TableItem {
+/**
+ * @internal Export for test only
+ */
+export interface TableItem {
     tableRows: ContentModelTableRow[];
 }
 
-interface IndexedSegmentNode extends Node {
+/**
+ * @internal Export for test only
+ */
+export interface IndexedSegmentNode extends Node {
     __roosterjsContentModel: SegmentItem;
 }
 
-interface IndexedTableElement extends HTMLTableElement {
+/**
+ * @internal Export for test only
+ */
+export interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
 }
 
@@ -89,7 +101,7 @@ function getIndexedSegmentItem(node: Node | null): SegmentItem | null {
  * Implementation of DomIndexer
  */
 export class DomIndexerImpl implements DomIndexer {
-    constructor(public readonly persistCache?: boolean) {}
+    constructor(private readonly persistCache?: boolean) {}
 
     onSegment(segmentNode: Node, paragraph: ContentModelParagraph, segment: ContentModelSegment[]) {
         const indexedText = segmentNode as IndexedSegmentNode;
@@ -204,6 +216,37 @@ export class DomIndexerImpl implements DomIndexer {
         }
 
         return false;
+    }
+
+    reconcileChildList(addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>): boolean {
+        if (!this.persistCache) {
+            return false;
+        }
+
+        let canHandle = true;
+        const context: ReconcileChildListContext = {
+            segIndex: -1,
+        };
+
+        // First process added nodes
+        const addedNode = addedNodes[0];
+
+        if (addedNodes.length == 1 && isNodeOfType(addedNode, 'TEXT_NODE')) {
+            canHandle = this.reconcileAddedNode(addedNode, context);
+        } else if (addedNodes.length > 0) {
+            canHandle = false;
+        }
+
+        // Second, process removed nodes
+        const removedNode = removedNodes[0];
+
+        if (canHandle && removedNodes.length == 1) {
+            canHandle = this.reconcileRemovedNode(removedNode, context);
+        } else if (removedNodes.length > 0) {
+            canHandle = false;
+        }
+
+        return canHandle && !context.pendingTextNode;
     }
 
     private isCollapsed(selection: RangeSelectionForCache): boolean {
@@ -331,33 +374,6 @@ export class DomIndexerImpl implements DomIndexer {
         return selectable;
     }
 
-    reconcileChildList(addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>): boolean {
-        let canHandle = true;
-        const context: ReconcileChildListContext = {
-            segIndex: -1,
-        };
-
-        // First process added nodes
-        const addedNode = addedNodes[0];
-
-        if (addedNodes.length == 1 && isNodeOfType(addedNode, 'TEXT_NODE')) {
-            canHandle = this.reconcileAddedNode(addedNode, context);
-        } else if (addedNodes.length > 0) {
-            canHandle = false;
-        }
-
-        // Second, process removed nodes
-        const removedNode = removedNodes[0];
-
-        if (canHandle && removedNodes.length == 1) {
-            canHandle = this.reconcileRemovedNode(removedNode, context);
-        } else if (removedNodes.length > 0) {
-            canHandle = false;
-        }
-
-        return canHandle && !context.pendingTextNode;
-    }
-
     private reconcileAddedNode(node: Text, context: ReconcileChildListContext): boolean {
         let segmentItem: SegmentItem | null = null;
         let index = -1;
@@ -408,6 +424,11 @@ export class DomIndexerImpl implements DomIndexer {
             context.format = removingSegment.format;
             context.paragraph = segmentItem.paragraph;
             context.segIndex = segmentItem.paragraph.segments.indexOf(segmentItem.segments[0]);
+
+            if (context.segIndex < 0) {
+                // Indexed segment is not under paragraph, something wrong happens, we cannot keep handling
+                return false;
+            }
 
             for (let i = 0; i < segmentItem.segments.length; i++) {
                 const index = segmentItem.paragraph.segments.indexOf(segmentItem.segments[i]);
