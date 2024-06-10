@@ -1,5 +1,5 @@
 import { ImageEditor } from 'roosterjs-content-model-types';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal

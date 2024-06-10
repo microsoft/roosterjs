@@ -3,11 +3,6 @@ import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
-import { createEmojiPlugin } from '../roosterjsReact/emoji';
-import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
-import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
-import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
-import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { darkModeButton } from '../demoButtons/darkModeButton';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
@@ -23,9 +18,7 @@ import { getTheme } from '../theme/themes';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
-import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
-import { Rooster } from '../roosterjsReact/rooster';
 import { SamplePickerPlugin } from '../plugins/SamplePickerPlugin';
 import { SidePane } from '../sidePane/SidePane';
 import { SidePanePlugin } from '../sidePane/SidePanePlugin';
@@ -33,10 +26,23 @@ import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
-import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
+import {
+    createContextMenuPlugin,
+    createEmojiPlugin,
+    createImageEditMenuProvider,
+    createListEditMenuProvider,
+    createPasteOptionPlugin,
+    createRibbonPlugin,
+    createTableEditMenuProvider,
+    redoButton,
+    Rooster,
+    undoButton,
+    Ribbon,
+} from 'roosterjs-react';
 import {
     Border,
     Colors,
@@ -59,10 +65,6 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
-import {
-    createContextMenuPlugin,
-    createTableEditMenuProvider,
-} from '../roosterjsReact/contextMenu';
 
 const styles = require('./MainPane.scss');
 

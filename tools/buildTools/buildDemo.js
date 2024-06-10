@@ -68,7 +68,12 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: getWebpackExternalCallback([[/^roosterjs-content-model.*/, 'roosterjs']]),
+        externals: getWebpackExternalCallback([
+            [/^roosterjs-editor-plugins\/.*$/, 'roosterjsLegacy'],
+            [/^roosterjs-react\/.*$/, 'roosterjsReact'],
+            [/^roosterjs-react$/, 'roosterjsReact'],
+            [/^roosterjs-content-model.*/, 'roosterjs'],
+        ]),
         stats: 'minimal',
         mode: 'production',
         optimization: {
