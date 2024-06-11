@@ -46,7 +46,7 @@ export function getListTypeStyle(
         listMarkerSegment.segmentType == 'Text'
     ) {
         const listMarker = listMarkerSegment.text.trim();
-        const bulletType = bulletListType[listMarker];
+        const bulletType = bulletListType.get(listMarker);
 
         if (bulletType && shouldSearchForBullet) {
             return { listType: 'UL', styleType: bulletType };
@@ -117,16 +117,16 @@ const getPreviousListStyle = (list?: ContentModelListItem) => {
     }
 };
 
-const bulletListType: Record<string, number> = {
-    '*': BulletListType.Disc,
-    '-': BulletListType.Dash,
-    '--': BulletListType.Square,
-    '->': BulletListType.LongArrow,
-    '-->': BulletListType.DoubleLongArrow,
-    '=>': BulletListType.UnfilledArrow,
-    '>': BulletListType.ShortArrow,
-    '—': BulletListType.Hyphen,
-};
+const bulletListType: Map<string, number> = new Map<string, number>([
+    ['*', BulletListType.Disc],
+    ['-', BulletListType.Dash],
+    ['--', BulletListType.Square],
+    ['->', BulletListType.LongArrow],
+    ['-->', BulletListType.DoubleLongArrow],
+    ['=>', BulletListType.UnfilledArrow],
+    ['>', BulletListType.ShortArrow],
+    ['—', BulletListType.Hyphen],
+]);
 
 const isNewList = (listMarker: string) => {
     const marker = listMarker.replace(/[^\w\s]/g, '');
