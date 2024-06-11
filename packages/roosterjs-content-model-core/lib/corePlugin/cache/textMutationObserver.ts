@@ -11,7 +11,8 @@ class TextMutationObserverImpl implements TextMutationObserver {
         private contentDiv: HTMLDivElement,
         private domIndexer: DomIndexer,
         private onMutation: (isTextChangeOnly: boolean) => void,
-        private onSkipMutation: (newModel: ContentModelDocument) => void
+        private onSkipMutation: (newModel: ContentModelDocument) => void,
+        private areNodesUnderEntity: (nodes: Node[]) => boolean
     ) {
         this.observer = new MutationObserver(this.onMutationInternal);
     }
@@ -46,6 +47,12 @@ class TextMutationObserverImpl implements TextMutationObserver {
         let addedNodes: Node[] = [];
         let removedNodes: Node[] = [];
         let reconcileText = false;
+
+        const nodeSet = new Set<Node>(mutations.map(x => x.target));
+
+        if (this.areNodesUnderEntity(Array.from(nodeSet))) {
+            return;
+        }
 
         for (let i = 0; i < mutations.length && canHandle; i++) {
             const mutation = mutations[i];
@@ -103,7 +110,14 @@ export function createTextMutationObserver(
     contentDiv: HTMLDivElement,
     domIndexer: DomIndexer,
     onMutation: (isTextChangeOnly: boolean) => void,
-    onSkipMutation: (newModel: ContentModelDocument) => void
+    onSkipMutation: (newModel: ContentModelDocument) => void,
+    areNodesUnderEntity: (nodes: Node[]) => boolean
 ): TextMutationObserver {
-    return new TextMutationObserverImpl(contentDiv, domIndexer, onMutation, onSkipMutation);
+    return new TextMutationObserverImpl(
+        contentDiv,
+        domIndexer,
+        onMutation,
+        onSkipMutation,
+        areNodesUnderEntity
+    );
 }

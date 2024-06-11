@@ -1,6 +1,7 @@
 import { areSameSelection } from './areSameSelection';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
+import { findClosestEntityWrapper, getSelectionRootNode } from 'roosterjs-content-model-dom';
 import { updateCachedSelection } from './updateCachedSelection';
 import type {
     CachePluginState,
@@ -9,6 +10,7 @@ import type {
     PluginWithState,
     EditorOptions,
     ContentModelDocument,
+    DOMHelper,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,6 +19,7 @@ import type {
 class CachePlugin implements PluginWithState<CachePluginState> {
     private editor: IEditor | null = null;
     private state: CachePluginState;
+    private logicalRoot: HTMLElement | null = null;
 
     /**
      * Construct a new instance of CachePlugin class
@@ -38,7 +41,8 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     contentDiv,
                     domIndexer,
                     this.onMutation,
-                    this.onSkipMutation
+                    this.onSkipMutation,
+                    this.areNodesUnderEntity
                 ),
             };
         }
@@ -71,6 +75,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      */
     dispose() {
         this.state.textMutationObserver?.stopObserving();
+        this.logicalRoot = null;
 
         if (this.editor) {
             this.editor
@@ -99,6 +104,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
 
         switch (event.eventType) {
+            case 'logicalRootChanged':
+                this.logicalRoot = event.logicalRoot;
+                break;
+
             case 'keyDown':
             case 'input':
                 if (!this.state.textMutationObserver) {
@@ -159,26 +168,45 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
-        const newRangeEx = editor.getDOMSelection() || undefined;
+        const selection = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
             forceUpdate ||
             !cachedSelection ||
-            !newRangeEx ||
-            !areSameSelection(newRangeEx, cachedSelection);
+            !selection ||
+            !areSameSelection(selection, cachedSelection);
 
         if (isSelectionChanged) {
             if (
                 !model ||
-                !newRangeEx ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
+                !selection ||
+                (!this.state.domIndexer?.reconcileSelection(model, selection, cachedSelection) &&
+                    !this.isNodeUnderEntity(editor.getDOMHelper(), getSelectionRootNode(selection)))
             ) {
                 this.invalidateCache();
             } else {
-                updateCachedSelection(this.state, newRangeEx);
+                updateCachedSelection(this.state, selection);
             }
         } else {
             this.state.cachedSelection = cachedSelection;
+        }
+    }
+
+    private areNodesUnderEntity = (nodes: Node[]) => {
+        const domHelper = this.editor?.getDOMHelper();
+
+        return !!domHelper && nodes.every(node => this.isNodeUnderEntity(domHelper, node));
+    };
+
+    private isNodeUnderEntity(domHelper: DOMHelper, node: Node | undefined) {
+        const entity = node && findClosestEntityWrapper(node, domHelper);
+
+        if (!entity) {
+            return false;
+        } else if (this.logicalRoot) {
+            return this.logicalRoot.contains(node);
+        } else {
+            return domHelper.isNodeInEditor(node);
         }
     }
 }

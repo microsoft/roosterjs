@@ -20,7 +20,9 @@ export function getDOMInsertPointRect(doc: Document, pos: DOMInsertPoint): Rect 
         return rect;
     }
 
-    // 2) try to get rect using range.getClientRects
+    // 2) Normalize this selection and try again
+    // If selection is at beginning of a TEXT node, we will get node=text.parentNode and offset=0
+    // This will move it down to the real text node
     while (node.lastChild) {
         if (offset == node.childNodes.length) {
             node = node.lastChild;
@@ -31,24 +33,19 @@ export function getDOMInsertPointRect(doc: Document, pos: DOMInsertPoint): Rect 
         }
     }
 
-    const rects = range.getClientRects && range.getClientRects();
-    rect = rects && rects.length == 1 ? normalizeRect(rects[0]) : null;
+    range.setStart(node, offset);
+    range.setEnd(node, offset);
+    rect = normalizeRect(range.getBoundingClientRect());
+
     if (rect) {
         return rect;
     }
 
-    // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-    if (isNodeOfType(node, 'TEXT_NODE')) {
-        const span = node.ownerDocument.createElement('span');
-
-        span.textContent = '\u200b';
-        range.insertNode(span);
-        rect = normalizeRect(span.getBoundingClientRect());
-        span.parentNode?.removeChild(span);
-
-        if (rect) {
-            return rect;
-        }
+    // 3) try to get rect using range.getClientRects
+    const rects = range.getClientRects && range.getClientRects();
+    rect = rects && rects.length == 1 ? normalizeRect(rects[0]) : null;
+    if (rect) {
+        return rect;
     }
 
     // 4) try getBoundingClientRect on element
