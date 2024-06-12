@@ -19,7 +19,8 @@ import type {
  * @param options The editor options
  */
 export function createDomToModelSettings(
-    options: EditorOptions
+    options: EditorOptions,
+    additionalOptions: (DomToModelOption | undefined)[]
 ): ContentModelSettings<DomToModelOption, DomToModelSettings> {
     const builtIn: DomToModelOption = {
         processorOverride: {
@@ -31,7 +32,7 @@ export function createDomToModelSettings(
     return {
         builtIn,
         customized,
-        calculated: createDomToModelConfig([builtIn, customized]),
+        calculated: createDomToModelConfig([builtIn, customized, ...additionalOptions]),
     };
 }
 
@@ -41,7 +42,8 @@ export function createDomToModelSettings(
  * @param options The editor options
  */
 export function createModelToDomSettings(
-    options: EditorOptions
+    options: EditorOptions,
+    additionalOptions: (ModelToDomOption | undefined)[]
 ): ContentModelSettings<ModelToDomOption, ModelToDomSettings> {
     const builtIn: ModelToDomOption = {
         metadataAppliers: {
@@ -54,6 +56,6 @@ export function createModelToDomSettings(
     return {
         builtIn,
         customized,
-        calculated: createModelToDomConfig([builtIn, customized]),
+        calculated: createModelToDomConfig([builtIn, customized, ...additionalOptions]),
     };
 }

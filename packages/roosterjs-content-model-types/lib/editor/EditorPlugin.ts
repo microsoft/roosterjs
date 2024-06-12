@@ -1,5 +1,12 @@
+import { DomToModelOption } from '../context/DomToModelOption';
+import { ModelToDomOption } from '../context/ModelToDomOption';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { IEditor } from './IEditor';
+
+export interface PluginContentModelConfig {
+    domToModelOption?: DomToModelOption;
+    modelToDomOption?: ModelToDomOption;
+}
 
 /**
  * Interface of an editor plugin
@@ -42,4 +49,6 @@ export interface EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent?: (event: PluginEvent) => void;
+
+    getContentModelConfig?: () => PluginContentModelConfig;
 }

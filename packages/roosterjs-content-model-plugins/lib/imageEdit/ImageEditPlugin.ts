@@ -3,9 +3,11 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
+import { findEditingImage } from './utils/findEditingImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImageMetadata } from './utils/updateImageEditInfo';
+import { ImageAndParagraph } from './types/ImageAndParagraph';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
@@ -24,12 +26,16 @@ import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     EditorPlugin,
+    FormatApplier,
+    FormatParser,
     IEditor,
     ImageEditOperation,
     ImageEditor,
     ImageMetadataFormat,
     PluginEvent,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
+import type { EditableImageFormat } from './types/EditableImageFormat';
 
 const DefaultOptions: Partial<ImageEditOptions> = {
     borderColor: '#DB626C',
@@ -67,6 +73,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
+
+    private isEditing = false;
 
     constructor(protected options: ImageEditOptions = DefaultOptions) {}
 
@@ -118,7 +126,112 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(_event: PluginEvent) {}
+    onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
+
+        if (event.eventType == 'selectionChanged') {
+            if (event.newSelection?.type == 'image' || this.isEditing) {
+                this.editor.formatContentModel(model => {
+                    const oldEditingImage = findEditingImage(model);
+                    const newEditingImage = this.getSelectedImage(model);
+                    const format = newEditingImage?.image.format as EditableImageFormat;
+                    let result = false;
+
+                    if (oldEditingImage?.image != newEditingImage?.image) {
+                        if (
+                            this.isEditing &&
+                            oldEditingImage &&
+                            oldEditingImage.image != newEditingImage?.image
+                        ) {
+                            this.setIsEditing(oldEditingImage, false /*isEditing*/);
+
+                            result = true;
+                        }
+
+                        this.isEditing = false;
+
+                        if (newEditingImage && !format.isEditing) {
+                            this.setIsEditing(newEditingImage, true /*isEditing*/);
+
+                            this.isEditing = true;
+                            result = true;
+                        }
+                    }
+
+                    return result;
+                });
+            }
+        }
+    }
+
+    getContentModelConfig() {
+        return {
+            domToModelOption: {
+                additionalFormatParsers: {
+                    image: [this.editingFormatParser],
+                },
+            },
+            modelToDomOption: {
+                additionalFormatAppliers: {
+                    image: [this.editingFormatApplier],
+                },
+            },
+        };
+    }
+
+    private setIsEditing(imageAndParagraph: ImageAndParagraph, isEditing: boolean) {
+        mutateSegment(imageAndParagraph.paragraph, imageAndParagraph.image, image => {
+            (image.format as EditableImageFormat).isEditing = isEditing;
+        });
+    }
+
+    private getSelectedImage(model: ReadonlyContentModelDocument): ImageAndParagraph | null {
+        const selections = getSelectedSegmentsAndParagraphs(model, false);
+
+        if (selections.length == 1 && selections[0][0].segmentType == 'Image' && selections[0][1]) {
+            return {
+                image: selections[0][0],
+                paragraph: selections[0][1],
+            };
+        } else {
+            return null;
+        }
+    }
+
+    private editingFormatParser: FormatParser<EditableImageFormat> = (format, image) => {
+        const parent = image.parentNode;
+
+        if (
+            this.isEditing &&
+            parent &&
+            isNodeOfType(parent, 'ELEMENT_NODE') &&
+            isElementOfType(parent, 'span') &&
+            parent.shadowRoot
+        ) {
+            format.isEditing = true;
+        }
+    };
+
+    private editingFormatApplier: FormatApplier<EditableImageFormat> = (format, image, context) => {
+        const parent = image.parentNode;
+
+        if (
+            format.isEditing &&
+            parent &&
+            isNodeOfType(parent, 'ELEMENT_NODE') &&
+            isElementOfType(parent, 'span') &&
+            !parent.shadowRoot
+        ) {
+            const shadowRoot = parent.attachShadow({ mode: 'open' });
+            const tempSpan = image.ownerDocument.createElement('span');
+
+            // TODO
+            tempSpan.textContent = '---EDITING---';
+            shadowRoot.appendChild(tempSpan);
+        }
+    };
 
     private startEditing(
         editor: IEditor,
