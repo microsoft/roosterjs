@@ -1005,4 +1005,31 @@ describe('getListTypeStyle', () => {
         };
         runTest(model, undefined);
     });
+
+    it('"Constructor" should not trigger list', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'constructor',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(model, undefined);
+    });
 });
