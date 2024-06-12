@@ -2620,4 +2620,51 @@ describe('insertEntityModel, use insert point', () => {
             ],
         });
     });
+
+    it('Block entity, Has insert point override which is right after real marker', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('test');
+        const markerReal = createSelectionMarker();
+        const markerOverride = createSelectionMarker();
+
+        text1.isSelected = true;
+        para1.segments.push(text1);
+
+        markerOverride.isSelected = false;
+        para2.segments.push(markerReal, markerOverride);
+
+        model.blocks.push(para1, para2);
+
+        const ip: InsertPoint = {
+            path: [model],
+            paragraph: para2,
+            marker: markerOverride,
+        };
+
+        insertEntityModel(model, Entity, 'focus', false, true, undefined, ip);
+
+        console.log(JSON.stringify(model));
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test', format: {}, isSelected: true }],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        Entity,
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'SelectionMarker', isSelected: false, format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });
