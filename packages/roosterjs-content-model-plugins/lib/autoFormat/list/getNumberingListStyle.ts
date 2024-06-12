@@ -16,11 +16,11 @@ const enum Character {
     DoubleParenthesis = 4,
 }
 
-const characters: Record<string, number> = {
-    '.': Character.Dot,
-    '-': Character.Dash,
-    ')': Character.Parenthesis,
-};
+const characters: Map<string, number> = new Map<string, number>([
+    ['.', Character.Dot],
+    ['-', Character.Dash],
+    [')', Character.Parenthesis],
+]);
 
 const lowerRomanTypes = [
     NumberingListType.LowerRoman,
@@ -122,7 +122,7 @@ const identifyNumberingListType = (
 ): number | undefined => {
     const separatorCharacter = isDoubleParenthesis
         ? Character.DoubleParenthesis
-        : characters[numbering[numbering.length - 1]];
+        : characters.get(numbering[numbering.length - 1]);
     // if separator is not valid, no need to check if the number is valid.
     if (separatorCharacter) {
         const number = isDoubleParenthesis ? numbering.slice(1, -1) : numbering.slice(0, -1);
