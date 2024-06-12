@@ -3,26 +3,26 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
+import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api/lib';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
+import { getEditInfoMetadata } from './utils/updateImageEditInfo';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
-import { getSelectedImageMetadata } from './utils/updateImageEditInfo';
+import { getSelectedContentModelImage } from './utils/getSelectedContentModelImage';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { isElementOfType, isNodeOfType, toArray, unwrap } from 'roosterjs-content-model-dom';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
-import {
-    getSelectedSegmentsAndParagraphs,
-    isElementOfType,
-    isNodeOfType,
-    mutateSegment,
-    unwrap,
-} from 'roosterjs-content-model-dom';
+
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    ContentModelImage,
+    DOMInsertPoint,
+    //DOMSelection,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -86,15 +86,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
-            blur: {
-                beforeDispatch: () => {
-                    this.formatImageWithContentModel(
-                        editor,
-                        true /* shouldSelectImage */,
-                        true /* shouldSelectAsImageSelection*/
-                    );
-                },
-            },
+            // blur: {
+            //     beforeDispatch: () => {
+            //         this.formatImageWithContentModel(
+            //             editor,
+            //             true /* shouldSelectImage */,
+            //             true /* shouldSelectAsImageSelection*/
+            //         );
+            //     },
+            // },
         });
     }
 
@@ -118,20 +118,58 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(_event: PluginEvent) {}
+    onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
+
+        switch (event.eventType) {
+            case 'selectionChanged':
+                {
+                    const previousSelection = event.previousSelection;
+                    if (previousSelection?.type == 'image' && this.shadowSpan) {
+                        const previousImage = previousSelection.image;
+                        if (previousImage) {
+                            this.formatImageWhenSelectionChange(this.editor);
+                        }
+                    }
+                }
+                break;
+            case 'mouseUp':
+                {
+                    const domSelection = this.editor.getDOMSelection();
+                    if (
+                        domSelection?.type == 'image' &&
+                        event.isClicking &&
+                        event.rawEvent.button == 0
+                    ) {
+                        this.startRotateAndResize(this.editor, domSelection.image);
+                    }
+                }
+                break;
+        }
+    }
 
     private startEditing(
         editor: IEditor,
         image: HTMLImageElement,
+        contentModelImage: ContentModelImage,
         apiOperation?: ImageEditOperation
     ) {
         const imageSpan = image.parentElement;
-        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
-            return;
+
+        if (
+            !imageSpan ||
+            (imageSpan && !isElementOfType(imageSpan, 'span')) ||
+            image.width <= 0 ||
+            image.height <= 0
+        ) {
+            return false;
         }
-        this.imageEditInfo = getSelectedImageMetadata(editor, image);
+        this.imageEditInfo = getEditInfoMetadata(image, contentModelImage);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+
         const {
             resizers,
             rotators,
@@ -159,8 +197,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
         editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
-            `span:has(>img#${this.selectedImage.id})`,
+            `span:has(>img#${image.id})`,
         ]);
+
+        return this.shadowSpan;
     }
 
     public startRotateAndResize(
@@ -171,7 +211,20 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             this.removeImageWrapper();
         }
-        this.startEditing(editor, image, apiOperation);
+
+        editor.formatContentModel((model, context) => {
+            const modelImage = getSelectedContentModelImage(model);
+            if (modelImage && !modelImage.editingWrapper) {
+                const shadowSpan = this.startEditing(editor, image, modelImage, apiOperation);
+                if (shadowSpan) {
+                    modelImage.editingWrapper = shadowSpan;
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        });
+
         if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
             this.dndHelpers = [
                 ...getDropAndDragHelpers(
@@ -289,17 +342,50 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image);
     }
 
+    private getEditingModelImage(editor: IEditor, image: HTMLImageElement) {
+        let contentModelImage: ContentModelImage | null = null;
+        editor.formatContentModel(model => {
+            const modelImage = getSelectedContentModelImage(model);
+            if (modelImage) {
+                if (
+                    modelImage.editingWrapper &&
+                    this.wrapper &&
+                    this.selectedImage &&
+                    this.shadowSpan &&
+                    this.editor &&
+                    this.lastSrc &&
+                    this.clonedImage
+                ) {
+                    const metadata = getEditInfoMetadata(image, modelImage);
+                    applyChange(
+                        this.editor,
+                        this.selectedImage,
+                        modelImage,
+                        metadata,
+                        this.lastSrc,
+                        this.wasImageResized || this.isCropMode,
+                        this.clonedImage
+                    );
+                }
+                modelImage.editingWrapper = undefined;
+                contentModelImage = modelImage;
+                return true;
+            }
+            return false;
+        });
+        return contentModelImage;
+    }
+
     public cropImage() {
         const selection = this.editor?.getDOMSelection();
         if (!this.editor || !selection || selection.type !== 'image') {
             return;
         }
-        let image = selection.image;
-        if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            image = this.removeImageWrapper() ?? image;
+        const contentModelImage = this.getEditingModelImage(this.editor, selection.image);
+        if (!contentModelImage) {
+            return;
         }
-
-        this.startEditing(this.editor, image, 'crop');
+        this.startEditing(this.editor, selection.image, contentModelImage, 'crop');
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
         }
@@ -350,28 +436,65 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         apiOperation: ImageEditOperation,
         operation: (imageEditInfo: ImageMetadataFormat) => void
     ) {
-        if (this.wrapper && this.selectedImage && this.shadowSpan) {
-            image = this.removeImageWrapper() ?? image;
-        }
-        this.startEditing(editor, image, apiOperation);
-        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
-            return;
-        }
+        editor.formatContentModel(
+            model => {
+                const imageModel = getSelectedContentModelImage(model);
+                if (imageModel) {
+                    const imageEditInfo = getEditInfoMetadata(image, imageModel);
+                    if (imageModel.editingWrapper && this.lastSrc && this.clonedImage) {
+                        applyChange(
+                            editor,
+                            image,
+                            imageModel,
+                            imageEditInfo,
+                            this.lastSrc,
+                            this.wasImageResized || this.isCropMode,
+                            this.clonedImage
+                        );
+                    }
+                    if (this.wrapper && this.selectedImage && this.shadowSpan) {
+                        image = this.removeImageWrapper() ?? image;
+                    }
+                    this.startEditing(editor, image, imageModel, apiOperation);
+                    if (
+                        !this.selectedImage ||
+                        !this.imageEditInfo ||
+                        !this.wrapper ||
+                        !this.clonedImage ||
+                        !this.lastSrc
+                    ) {
+                        return false;
+                    }
 
-        operation(this.imageEditInfo);
+                    operation(this.imageEditInfo);
 
-        updateWrapper(
-            this.imageEditInfo,
-            this.options,
-            this.selectedImage,
-            this.clonedImage,
-            this.wrapper
-        );
+                    updateWrapper(
+                        this.imageEditInfo,
+                        this.options,
+                        this.selectedImage,
+                        this.clonedImage,
+                        this.wrapper
+                    );
 
-        this.formatImageWithContentModel(
-            editor,
-            true /* shouldSelect*/,
-            true /* shouldSelectAsImageSelection*/
+                    applyChange(
+                        editor,
+                        this.selectedImage,
+                        imageModel,
+                        this.imageEditInfo,
+                        this.lastSrc,
+                        this.wasImageResized || this.isCropMode,
+                        this.clonedImage
+                    );
+                    imageModel.isSelected = true;
+                    imageModel.isSelectedAsImageSelection = true;
+                    imageModel.editingWrapper = undefined;
+                    return true;
+                }
+                return false;
+            },
+            {
+                changeSource: IMAGE_EDIT_CHANGE_SOURCE,
+            }
         );
     }
 
@@ -393,64 +516,109 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    private formatImageWithContentModel(
-        editor: IEditor,
-        shouldSelectImage: boolean,
-        shouldSelectAsImageSelection: boolean
-    ) {
+    // private formatImageWithContentModel(
+    //     editor: IEditor,
+    //     shouldSelectImage: boolean,
+    //     shouldSelectAsImageSelection: boolean
+    // ) {
+    //     if (
+    //         this.lastSrc &&
+    //         this.selectedImage &&
+    //         this.imageEditInfo &&
+    //         this.clonedImage &&
+    //         this.shadowSpan
+    //     ) {
+    //         editor.formatContentModel(
+    //             model => {
+    //                 const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
+    //                     model,
+    //                     false
+    //                 );
+    //                 if (!selectedSegmentsAndParagraphs[0]) {
+    //                     return false;
+    //                 }
+
+    //                 const segment = selectedSegmentsAndParagraphs[0][0];
+    //                 const paragraph = selectedSegmentsAndParagraphs[0][1];
+
+    //                 if (paragraph && segment.segmentType == 'Image') {
+    //                     mutateSegment(paragraph, segment, image => {
+    //                         if (
+    //                             this.lastSrc &&
+    //                             this.selectedImage &&
+    //                             this.imageEditInfo &&
+    //                             this.clonedImage
+    //                         ) {
+    //                             applyChange(
+    //                                 editor,
+    //                                 this.selectedImage,
+    //                                 image,
+    //                                 this.imageEditInfo,
+    //                                 this.lastSrc,
+    //                                 this.wasImageResized || this.isCropMode,
+    //                                 this.clonedImage
+    //                             );
+    //                             image.isSelected = shouldSelectImage;
+    //                             image.isSelectedAsImageSelection = shouldSelectAsImageSelection;
+    //                             image.isEditing = undefined;
+    //                         }
+    //                     });
+
+    //                     this.cleanInfo();
+    //                     return true;
+    //                 }
+
+    //                 return false;
+    //             },
+    //             {
+    //                 changeSource: IMAGE_EDIT_CHANGE_SOURCE,
+    //             }
+    //         );
+    //     }
+    // }
+
+    private formatImageWhenSelectionChange(editor: IEditor) {
+        const { selectedImage, imageEditInfo, lastSrc, clonedImage } = this;
+
         if (
-            this.lastSrc &&
-            this.selectedImage &&
-            this.imageEditInfo &&
-            this.clonedImage &&
+            selectedImage?.parentNode &&
+            lastSrc &&
+            imageEditInfo &&
+            clonedImage &&
             this.shadowSpan
         ) {
-            editor.formatContentModel(
-                model => {
-                    const selectedSegmentsAndParagraphs = getSelectedSegmentsAndParagraphs(
-                        model,
-                        false
-                    );
-                    if (!selectedSegmentsAndParagraphs[0]) {
-                        return false;
-                    }
+            const parent = selectedImage.parentNode;
+            const index = toArray(parent.childNodes).indexOf(selectedImage);
+            const domIp: DOMInsertPoint = {
+                node: parent,
+                offset: index,
+            };
+            formatInsertPointWithContentModel(editor, domIp, (model, context, insertPoint) => {
+                if (insertPoint) {
+                    const { paragraph, marker } = insertPoint;
+                    const markerIndex = paragraph.segments.indexOf(marker);
+                    const image = paragraph.segments[markerIndex + 1];
 
-                    const segment = selectedSegmentsAndParagraphs[0][0];
-                    const paragraph = selectedSegmentsAndParagraphs[0][1];
+                    if (markerIndex >= 0 && image?.segmentType == 'Image') {
+                        applyChange(
+                            editor,
+                            selectedImage,
+                            image,
+                            imageEditInfo,
+                            lastSrc,
+                            this.wasImageResized || this.isCropMode,
+                            clonedImage
+                        );
 
-                    if (paragraph && segment.segmentType == 'Image') {
-                        mutateSegment(paragraph, segment, image => {
-                            if (
-                                this.lastSrc &&
-                                this.selectedImage &&
-                                this.imageEditInfo &&
-                                this.clonedImage
-                            ) {
-                                applyChange(
-                                    editor,
-                                    this.selectedImage,
-                                    image,
-                                    this.imageEditInfo,
-                                    this.lastSrc,
-                                    this.wasImageResized || this.isCropMode,
-                                    this.clonedImage
-                                );
-                                image.isSelected = shouldSelectImage;
-                                image.isSelectedAsImageSelection = shouldSelectAsImageSelection;
-                            }
-                        });
+                        image.editingWrapper = undefined;
                         return true;
                     }
-
-                    return false;
-                },
-                {
-                    changeSource: IMAGE_EDIT_CHANGE_SOURCE,
-                    onNodeCreated: () => {
-                        this.cleanInfo();
-                    },
                 }
-            );
+
+                return false;
+            });
+
+            this.cleanInfo();
         }
     }
 

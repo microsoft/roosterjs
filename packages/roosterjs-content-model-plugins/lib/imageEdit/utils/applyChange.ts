@@ -1,7 +1,8 @@
 import { checkEditInfoState } from './checkEditInfoState';
 import { generateDataURL } from './generateDataURL';
+import { getEditInfoMetadata, updateImageEditInfo } from './updateImageEditInfo';
 import { getGeneratedImageSize } from './generateImageSize';
-import { getSelectedImageMetadata, updateImageEditInfo } from './updateImageEditInfo';
+
 import type {
     ContentModelImage,
     IEditor,
@@ -28,7 +29,7 @@ export function applyChange(
     editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
-    const initEditInfo = getSelectedImageMetadata(editor, editingImage ?? image) ?? undefined;
+    const initEditInfo = getEditInfoMetadata(editingImage ?? image, contentModelImage) ?? undefined;
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {

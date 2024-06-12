@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
+import { isElementOfType } from '../../domUtils/isElementOfType';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import type { ContentModelImage, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 
@@ -49,6 +50,14 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
             type: 'image',
             image: img,
         };
+    }
+
+    if (
+        imageModel.editingWrapper &&
+        img.parentElement &&
+        isElementOfType(img.parentElement, 'span')
+    ) {
+        img.parentElement.replaceWith(imageModel.editingWrapper);
     }
 
     handleSegmentCommon(doc, img, element, imageModel, context, segmentNodes);

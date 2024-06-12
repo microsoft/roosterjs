@@ -168,7 +168,7 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
 
 function shouldShowImageEditItems(editor: IEditor, _: Node) {
     const selection = editor.getDOMSelection();
-    return selection.type === 'image' && !!selection.image;
+    return selection && selection.type === 'image' && !!selection.image;
 }
 
 /**

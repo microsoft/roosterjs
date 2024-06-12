@@ -35,6 +35,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
         if (context.isInSelection) {
             image.isSelected = true;
         }
+
         if (context.selection?.type == 'image' && context.selection.image == element) {
             image.isSelectedAsImageSelection = true;
             image.isSelected = true;

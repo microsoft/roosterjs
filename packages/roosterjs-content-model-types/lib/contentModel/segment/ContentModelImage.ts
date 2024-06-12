@@ -32,6 +32,11 @@ export interface ContentModelImageCommon {
      * Whether this image is selected as image selection (show a border around the image)
      */
     isSelectedAsImageSelection?: boolean;
+
+    /**
+     * Whether image is being edited
+     */
+    editingWrapper?: HTMLElement;
 }
 
 /**

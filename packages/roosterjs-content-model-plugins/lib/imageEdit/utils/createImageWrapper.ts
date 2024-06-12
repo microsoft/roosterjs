@@ -68,6 +68,7 @@ const createShadowSpan = (wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
+    imageSpan.id = 'editing';
     imageSpan.style.verticalAlign = 'bottom';
     shadowRoot.appendChild(wrapper);
     return imageSpan;

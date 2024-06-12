@@ -66,11 +66,13 @@ export type SetContentModel = (
  * @param core The EditorCore object
  * @param selection The selection to set
  * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
+ * @param previousSelection The selection before selection changed
  */
 export type SetDOMSelection = (
     core: EditorCore,
     selection: DOMSelection | null,
-    skipSelectionChangedEvent?: boolean
+    skipSelectionChangedEvent?: boolean,
+    previousSelection?: DOMSelection
 ) => void;
 
 /**
@@ -219,6 +221,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param selection The selection to set
      * @param skipSelectionChangedEvent @param Pass true to skip triggering a SelectionChangedEvent
+     * @param previousSelection The selection before selection changed
      */
     setDOMSelection: SetDOMSelection;
 

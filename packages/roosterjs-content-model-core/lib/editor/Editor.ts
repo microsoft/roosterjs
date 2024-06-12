@@ -144,10 +144,15 @@ export class Editor implements IEditor {
      * Set DOMSelection into editor content.
      * @param selection The selection to set
      */
-    setDOMSelection(selection: DOMSelection | null) {
+    setDOMSelection(selection: DOMSelection | null, previousSelection?: DOMSelection) {
         const core = this.getCore();
 
-        core.api.setDOMSelection(core, selection);
+        core.api.setDOMSelection(
+            core,
+            selection,
+            undefined /* skipSelectionChangeEvent */,
+            previousSelection
+        );
     }
 
     /**
