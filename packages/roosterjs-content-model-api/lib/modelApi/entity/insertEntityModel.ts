@@ -118,7 +118,25 @@ function getInsertPoint(
     context?: FormatContentModelContext
 ): InsertPoint | null {
     if (insertPointOverride) {
-        return insertPointOverride;
+        const { paragraph, marker, tableContext, path } = insertPointOverride;
+        const index = paragraph.segments.indexOf(marker);
+        const previousSegment = index > 0 ? paragraph.segments[index - 1] : null;
+
+        // It is possible that the real selection is right before the override selection marker.
+        // This happens when:
+        // [Override marker][Entity node to wrap][Real marker]
+        // Then we will move the entity node into entity wrapper, causes the override marker and real marker are at the same place
+        // And recreating content model causes real marker to appear before override marker.
+        // Once that happens, we need to use the real marker instead so that after insert entity, real marker can be placed
+        // after new entity (if insertPointOverride==true)
+        return previousSegment?.segmentType == 'SelectionMarker' && previousSegment.isSelected
+            ? {
+                  marker: previousSegment,
+                  paragraph,
+                  tableContext,
+                  path,
+              }
+            : insertPointOverride;
     } else {
         const deleteResult = deleteSelection(model, [], context);
         const insertPoint = deleteResult.insertPoint;
