@@ -3737,7 +3737,7 @@ describe('mergeModel', () => {
                 anchorClass: 'bolt-link',
                 borderRadius: '2px',
                 textAlign: 'start',
-                textColor: '#000000',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
                 underline: true,
             },
             dataset: {},
