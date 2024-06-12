@@ -1,5 +1,5 @@
 import { MainPane } from '../mainPane/MainPane';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const DropDownItems = {
     'zoom50%': '50%',

@@ -1,5 +1,5 @@
-import { RibbonButton } from '../roosterjsReact/ribbon';
 import { setImageBoxShadow } from 'roosterjs-content-model-api';
+import type { RibbonButton } from 'roosterjs-react';
 
 const STYLES_NAMES: Record<string, string> = {
     noShadow: 'noShadow',

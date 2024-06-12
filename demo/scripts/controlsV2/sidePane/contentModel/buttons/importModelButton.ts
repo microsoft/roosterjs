@@ -1,6 +1,6 @@
 import { isBlockGroupOfType } from 'roosterjs-content-model-dom';
-import { showInputDialog } from '../../../roosterjsReact/inputDialog/utils/showInputDialog';
-import type { RibbonButton } from '../../../roosterjsReact/ribbon/type/RibbonButton';
+import { showInputDialog } from 'roosterjs-react';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal
