@@ -5,11 +5,11 @@ import type {
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
-const FRACTIONS: Record<string, string> = {
-    '1/2': '½',
-    '1/4': '¼',
-    '3/4': '¾',
-};
+const FRACTIONS: Map<string, string> = new Map<string, string>([
+    ['1/2', '½'],
+    ['1/4', '¼'],
+    ['3/4', '¾'],
+]);
 
 /**
  * @internal
@@ -20,11 +20,13 @@ export function transformFraction(
     context: FormatContentModelContext
 ): boolean {
     const fraction = previousSegment.text.split(' ').pop()?.trim();
-    if (fraction && FRACTIONS[fraction]) {
+    const text = fraction ? FRACTIONS.get(fraction) : undefined;
+
+    if (fraction && text) {
         const textLength = previousSegment.text.length - 1;
         const textIndex = textLength - fraction.length;
         const textSegment = splitTextSegment(previousSegment, paragraph, textIndex, textLength);
-        textSegment.text = FRACTIONS[fraction];
+        textSegment.text = text;
 
         context.canUndoByBackspace = true;
         return true;
