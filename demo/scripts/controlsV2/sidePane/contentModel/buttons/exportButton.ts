@@ -1,6 +1,6 @@
 import { getCurrentContentModel } from '../currentModel';
 import { mutateBlock } from 'roosterjs-content-model-dom';
-import { RibbonButton } from '../../../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 export const exportButton: RibbonButton<'buttonNameExport'> = {
     key: 'buttonNameExport',

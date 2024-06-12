@@ -3,7 +3,7 @@ import { Callout } from '@fluentui/react/lib/Callout';
 import { DOMInsertPoint } from 'roosterjs-content-model-types';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
-import { ReactEditorPlugin, UIUtilities } from '../roosterjsReact/common';
+import { ReactEditorPlugin, UIUtilities } from 'roosterjs-react';
 import {
     PickerDirection,
     PickerHandler,

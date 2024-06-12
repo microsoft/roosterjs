@@ -1,5 +1,5 @@
 import { ContentModelPanePlugin } from '../ContentModelPanePlugin';
-import { RibbonButton } from '../../../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 export function getRefreshButton(
     plugin: ContentModelPanePlugin

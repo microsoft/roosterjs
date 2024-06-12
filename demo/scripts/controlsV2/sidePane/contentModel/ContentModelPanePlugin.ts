@@ -1,11 +1,12 @@
 import { cloneModel } from 'roosterjs-content-model-dom';
 import { ContentModelPane, ContentModelPaneProps } from './ContentModelPane';
-import { createRibbonPlugin, RibbonButton, RibbonPlugin } from '../../roosterjsReact/ribbon';
+import { createRibbonPlugin } from 'roosterjs-react';
 import { getRefreshButton } from './buttons/refreshButton';
 import { IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 
 export class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
