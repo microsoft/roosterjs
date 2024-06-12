@@ -475,23 +475,23 @@ function dts(isAmd, target) {
 }
 
 module.exports = {
-    // dtsCommonJsUi: {
-    //     message: `Generating type definition file (rooster-react.d.ts) for CommonJs...`,
-    //     callback: () => dts(false /*isAmd*/, 'react'),
-    //     enabled: options => options.dts,
-    // },
-    // dtsAmdUi: {
-    //     message: `Generating type definition file (rooster-react-amd.d.ts) for AMD...`,
-    //     callback: () => dts(true /*isAmd*/, 'react'),
-    //     enabled: options => options.dts,
-    // },
+    dtsCommonJsUi: {
+        message: `Generating type definition file (rooster-react.d.ts) for CommonJs...`,
+        callback: () => dts(false /*isAmd*/, 'react'),
+        enabled: options => options.dts,
+    },
+    dtsAmdUi: {
+        message: `Generating type definition file (rooster-react-amd.d.ts) for AMD...`,
+        callback: () => dts(true /*isAmd*/, 'react'),
+        enabled: options => options.dts,
+    },
     dtsCommonJsMain: {
-        message: `Generating type definition file (rooster-content-model.d.ts) for CommonJs...`,
+        message: `Generating type definition file (rooster.d.ts) for CommonJs...`,
         callback: () => dts(false /*isAmd*/, 'main'),
         enabled: options => options.dts,
     },
     dtsAmdMain: {
-        message: `Generating type definition file (rooster-content-model-amd.d.ts) for AMD...`,
+        message: `Generating type definition file (rooster-amd.d.ts) for AMD...`,
         callback: () => dts(true /*isAmd*/, 'main'),
         enabled: options => options.dts,
     },
