@@ -1,5 +1,5 @@
 import { changeImage } from 'roosterjs-content-model-api';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 function createInput(doc: Document): HTMLInputElement {
     const input = doc.createElement('input');

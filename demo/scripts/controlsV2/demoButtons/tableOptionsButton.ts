@@ -1,6 +1,6 @@
 import { formatTable, getFormatState } from 'roosterjs-content-model-api';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<
     TableOptionsMenuItemStringKey,

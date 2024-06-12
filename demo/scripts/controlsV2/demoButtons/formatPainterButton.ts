@@ -1,5 +1,5 @@
 import { FormatPainterHandler } from '../plugins/FormatPainterPlugin';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal
