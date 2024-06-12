@@ -2645,8 +2645,6 @@ describe('insertEntityModel, use insert point', () => {
 
         insertEntityModel(model, Entity, 'focus', false, true, undefined, ip);
 
-        console.log(JSON.stringify(model));
-
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
