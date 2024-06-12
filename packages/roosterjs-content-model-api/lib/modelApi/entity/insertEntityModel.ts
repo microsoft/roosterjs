@@ -118,7 +118,18 @@ function getInsertPoint(
     context?: FormatContentModelContext
 ): InsertPoint | null {
     if (insertPointOverride) {
-        return insertPointOverride;
+        const { paragraph, marker, tableContext, path } = insertPointOverride;
+        const index = paragraph.segments.indexOf(marker);
+        const previousSegment = index > 0 ? paragraph.segments[index - 1] : null;
+
+        return previousSegment?.segmentType == 'SelectionMarker' && previousSegment.isSelected
+            ? {
+                  marker: previousSegment,
+                  paragraph,
+                  tableContext,
+                  path,
+              }
+            : insertPointOverride;
     } else {
         const deleteResult = deleteSelection(model, [], context);
         const insertPoint = deleteResult.insertPoint;
