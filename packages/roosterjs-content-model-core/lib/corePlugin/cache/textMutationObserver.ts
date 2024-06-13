@@ -1,5 +1,6 @@
 import type {
     ContentModelDocument,
+    DOMSelection,
     DomIndexer,
     TextMutationObserver,
 } from 'roosterjs-content-model-types';
@@ -11,7 +12,10 @@ class TextMutationObserverImpl implements TextMutationObserver {
         private contentDiv: HTMLDivElement,
         private domIndexer: DomIndexer,
         private onMutation: (isTextChangeOnly: boolean) => void,
-        private onSkipMutation: (newModel: ContentModelDocument) => void
+        private onSkipMutation: (
+            newModel: ContentModelDocument,
+            selection?: DOMSelection | null
+        ) => void
     ) {
         this.observer = new MutationObserver(this.onMutationInternal);
     }
@@ -29,11 +33,11 @@ class TextMutationObserverImpl implements TextMutationObserver {
         this.observer.disconnect();
     }
 
-    flushMutations(model: ContentModelDocument) {
+    flushMutations(model?: ContentModelDocument, selection?: DOMSelection | null) {
         const mutations = this.observer.takeRecords();
 
         if (model) {
-            this.onSkipMutation(model);
+            this.onSkipMutation(model, selection);
         } else {
             this.onMutationInternal(mutations);
         }

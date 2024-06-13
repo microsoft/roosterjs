@@ -26,8 +26,6 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
-const MouseMiddleButton = 1;
-const MouseRightButton = 2;
 const Up = 'ArrowUp';
 const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
@@ -167,16 +165,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // Image selection
         if (
-            rawEvent.button === MouseRightButton &&
+            rawEvent.button == MouseLeftButton &&
             (image =
                 this.getClickingImage(rawEvent) ??
                 this.getContainedTargetImage(rawEvent, selection)) &&
             image.isContentEditable
         ) {
-            this.selectImageWithRange(image, rawEvent);
-            return;
-        } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeOrAfterElement(editor, selection.image);
+            this.setDOMSelection(
+                {
+                    type: 'image',
+                    image: image,
+                },
+                null
+            );
+
             return;
         }
 
@@ -278,39 +280,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private selectImageWithRange(image: HTMLImageElement, event: Event) {
-        const range = image.ownerDocument.createRange();
-        range.selectNode(image);
-
-        const domSelection = this.editor?.getDOMSelection();
-        if (domSelection?.type == 'image' && image == domSelection.image) {
-            event.preventDefault();
-        } else {
-            this.setDOMSelection(
-                {
-                    type: 'range',
-                    isReverted: false,
-                    range,
-                },
-                null
-            );
-        }
-    }
-
     private onMouseUp(event: MouseUpEvent) {
-        let image: HTMLImageElement | null;
-
-        if (
-            (image = this.getClickingImage(event.rawEvent)) &&
-            image.isContentEditable &&
-            event.rawEvent.button != MouseMiddleButton &&
-            (event.rawEvent.button ==
-                MouseRightButton /* it's not possible to drag using right click */ ||
-                event.isClicking)
-        ) {
-            this.selectImageWithRange(image, event.rawEvent);
-        }
-
         this.detachMouseEvent();
     }
 
@@ -330,7 +300,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                         rawEvent.stopPropagation();
                     } else if (key !== 'Delete' && key !== 'Backspace') {
-                        this.selectBeforeOrAfterElement(editor, selection.image);
+                        // this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 }
                 break;

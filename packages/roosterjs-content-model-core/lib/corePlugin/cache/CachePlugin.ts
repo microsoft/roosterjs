@@ -9,6 +9,7 @@ import type {
     PluginWithState,
     EditorOptions,
     ContentModelDocument,
+    DOMSelection,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -135,10 +136,11 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
     };
 
-    private onSkipMutation = (newModel: ContentModelDocument) => {
+    private onSkipMutation = (newModel: ContentModelDocument, selection?: DOMSelection | null) => {
         if (!this.editor?.isInShadowEdit()) {
             this.state.cachedModel = newModel;
-            this.state.cachedSelection = undefined;
+
+            updateCachedSelection(this.state, selection || undefined);
         }
     };
 

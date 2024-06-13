@@ -131,38 +131,41 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             return;
         }
 
-        if (event.eventType == 'selectionChanged') {
-            if (event.newSelection?.type == 'image' || this.isEditing) {
-                this.editor.formatContentModel(model => {
-                    const oldEditingImage = findEditingImage(model);
-                    const newEditingImage = this.getSelectedImage(model);
-                    const format = newEditingImage?.image.format as EditableImageFormat;
-                    let result = false;
+        switch (event.eventType) {
+            case 'mouseUp':
+            case 'keyUp':
+                const selection = this.editor.getDOMSelection();
 
-                    if (oldEditingImage?.image != newEditingImage?.image) {
-                        if (
-                            this.isEditing &&
-                            oldEditingImage &&
-                            oldEditingImage.image != newEditingImage?.image
-                        ) {
-                            this.setIsEditing(oldEditingImage, false /*isEditing*/);
+                if (selection?.type == 'image' || this.isEditing) {
+                    this.editor?.formatContentModel(model => {
+                        const oldEditingImage = findEditingImage(model);
+                        const newEditingImage = this.getSelectedImage(model);
+                        const format = newEditingImage?.image.format as EditableImageFormat;
+                        let result = false;
 
-                            result = true;
+                        if (oldEditingImage?.image != newEditingImage?.image) {
+                            if (
+                                this.isEditing &&
+                                oldEditingImage &&
+                                oldEditingImage.image != newEditingImage?.image
+                            ) {
+                                this.setIsEditing(oldEditingImage, false /*isEditing*/);
+                                result = true;
+                            }
+
+                            this.isEditing = false;
+
+                            if (newEditingImage && !format.isEditing) {
+                                this.setIsEditing(newEditingImage, true /*isEditing*/);
+                                this.isEditing = true;
+                                result = true;
+                            }
                         }
 
-                        this.isEditing = false;
-
-                        if (newEditingImage && !format.isEditing) {
-                            this.setIsEditing(newEditingImage, true /*isEditing*/);
-
-                            this.isEditing = true;
-                            result = true;
-                        }
-                    }
-
-                    return result;
-                });
-            }
+                        return result;
+                    });
+                }
+                break;
         }
     }
 
@@ -225,11 +228,28 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             !parent.shadowRoot
         ) {
             const shadowRoot = parent.attachShadow({ mode: 'open' });
-            const tempSpan = image.ownerDocument.createElement('span');
 
             // TODO
-            tempSpan.textContent = '---EDITING---';
-            shadowRoot.appendChild(tempSpan);
+            const win = image.ownerDocument.defaultView ?? window;
+            const tempImg = image.cloneNode();
+            const div = win.document.createElement('div');
+            const innerDiv = win.document.createElement('div');
+
+            div.style.display = 'inline-block';
+            div.appendChild(tempImg);
+            div.appendChild(innerDiv);
+
+            innerDiv.textContent = 'Editing';
+
+            shadowRoot.appendChild(div);
+
+            // Hide selection
+            // https://stackoverflow.com/questions/47625017/override-styles-in-a-shadow-root-element
+            const sheet: any = new win.CSSStyleSheet();
+
+            sheet.replaceSync('*::selection { background-color: transparent !important; }');
+
+            (shadowRoot as any).adoptedStyleSheets.push(sheet);
         }
     };
 
