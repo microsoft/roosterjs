@@ -140,6 +140,7 @@ const mainPackages = [
     'roosterjs-color-utils',
 ];
 const legacyAdapterPackages = ['roosterjs-editor-adapter'];
+const reactPackages = ['roosterjs-react'];
 
 const buildConfig = {
     main: {
@@ -162,8 +163,15 @@ const buildConfig = {
         packages: legacyAdapterPackages,
         entry: 'roosterjs-editor-adapter',
     },
-    fakeEntry: {
-        packages: ['roosterjs-legacy'],
+    react: {
+        jsFileBaseName: 'rooster-react',
+        libraryName: 'roosterjsReact',
+        externalHandler: getWebpackExternalCallback(mainPackages.map(p => [p, 'roosterjs'])),
+        dependsOnLegacy: false,
+        dependsOnMain: true,
+        dependsOnReact: true,
+        packages: reactPackages,
+        entry: 'roosterjs-react',
     },
 };
 

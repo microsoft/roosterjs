@@ -1,6 +1,7 @@
 import { editTable } from 'roosterjs-content-model-api';
 import { TableOperation } from 'roosterjs-content-model-types';
-import {
+import type {
+    RibbonButton,
     TableEditAlignMenuItemStringKey,
     TableEditAlignTableMenuItemStringKey,
     TableEditDeleteMenuItemStringKey,
@@ -8,8 +9,7 @@ import {
     TableEditMenuItemStringKey,
     TableEditMergeMenuItemStringKey,
     TableEditSplitMenuItemStringKey,
-} from '../roosterjsReact/contextMenu';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+} from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
     menuNameTableInsertAbove: 'insertAbove',

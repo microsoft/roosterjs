@@ -88,11 +88,7 @@
     },
     "dependencies": {
         "roosterjs-editor-types": "^8.62.0",
-        "roosterjs-editor-types-compatible": "^8.62.0",
-        "roosterjs-editor-dom": "^8.62.0",
-        "roosterjs-editor-core": "^8.62.0",
-        "roosterjs-editor-api": "^8.62.0",
-        "roosterjs-editor-plugins": "^8.62.0"
+        "roosterjs-editor-dom": "^8.62.0"
     },
     "husky": {
         "hooks": {

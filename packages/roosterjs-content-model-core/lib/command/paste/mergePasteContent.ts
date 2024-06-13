@@ -1,6 +1,7 @@
 import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing';
 import {
     ChangeSource,
+    EmptySegmentFormat,
     cloneModel,
     domToContentModel,
     getSegmentTextFormat,
@@ -12,25 +13,10 @@ import type {
     ClipboardData,
     CloneModelOptions,
     ContentModelDocument,
-    ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
     ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
-
-const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
-    backgroundColor: '',
-    fontFamily: '',
-    fontSize: '',
-    fontWeight: '',
-    italic: false,
-    letterSpacing: '',
-    lineHeight: '',
-    strikethrough: false,
-    superOrSubScriptSequence: '',
-    textColor: '',
-    underline: false,
-};
 
 const CloneOption: CloneModelOptions = {
     includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),

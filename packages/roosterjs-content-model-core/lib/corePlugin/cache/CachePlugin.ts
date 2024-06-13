@@ -8,6 +8,7 @@ import type {
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    ContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -23,15 +24,24 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = option.disableCache
-            ? {}
-            : {
-                  domIndexer: new DomIndexerImpl(
-                      option.experimentalFeatures &&
-                          option.experimentalFeatures.indexOf('PersistCache') >= 0
-                  ),
-                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
-              };
+        if (option.disableCache) {
+            this.state = {};
+        } else {
+            const domIndexer = new DomIndexerImpl(
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf('PersistCache') >= 0
+            );
+
+            this.state = {
+                domIndexer: domIndexer,
+                textMutationObserver: createTextMutationObserver(
+                    contentDiv,
+                    domIndexer,
+                    this.onMutation,
+                    this.onSkipMutation
+                ),
+            };
+        }
     }
 
     /**
@@ -122,6 +132,13 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             } else {
                 this.invalidateCache();
             }
+        }
+    };
+
+    private onSkipMutation = (newModel: ContentModelDocument) => {
+        if (!this.editor?.isInShadowEdit()) {
+            this.state.cachedModel = newModel;
+            this.state.cachedSelection = undefined;
         }
     };
 

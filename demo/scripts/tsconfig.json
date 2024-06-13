@@ -11,23 +11,14 @@
         "preserveConstEnums": false,
         "noUnusedLocals": true,
         "paths": {
-            "roosterjs": ["packages/roosterjs/lib/index"],
-            "roosterjs/lib/*": ["packages/roosterjs/lib/*"],
             "roosterjs-color-utils": ["packages/roosterjs-color-utils/lib/index"],
-            "roosterjs-color-utils/lib/*": ["packages/roosterjs-color-utils/lib/*"],
+            "roosterjs-react": ["packages/roosterjs-react/lib/index"],
             "roosterjs-content-model-types": ["packages/roosterjs-content-model-types/lib/index"],
-            "roosterjs-content-model-types/lib/*": ["packages/roosterjs-content-model-types/lib/*"],
             "roosterjs-content-model-dom": ["packages/roosterjs-content-model-dom/lib/index"],
-            "roosterjs-content-model-dom/lib/*": ["packages/roosterjs-content-model-dom/lib/*"],
             "roosterjs-content-model-core": ["packages/roosterjs-content-model-core/lib/index"],
-            "roosterjs-content-model-core/lib/*": ["packages/roosterjs-content-model-core/lib/*"],
             "roosterjs-content-model-api": ["packages/roosterjs-content-model-api/lib/index"],
-            "roosterjs-content-model-api/lib/*": ["packages/roosterjs-content-model-api/lib/*"],
             "roosterjs-content-model-plugins": [
                 "packages/roosterjs-content-model-plugins/lib/index"
-            ],
-            "roosterjs-content-model-plugins/lib/*": [
-                "packages/roosterjs-content-model-plugins/lib/*"
             ]
         }
     },

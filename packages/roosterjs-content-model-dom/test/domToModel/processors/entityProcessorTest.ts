@@ -259,6 +259,7 @@ describe('entityProcessor', () => {
             onSegment: onSegmentSpy,
             onTable: null!,
             reconcileSelection: null!,
+            reconcileChildList: null!,
         };
 
         context.domIndexer = domIndexer;

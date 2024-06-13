@@ -18,6 +18,7 @@ describe('setContentModel', () => {
     let createModelToDomContextWithConfigSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
+    let flushMutationsSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -34,8 +35,9 @@ describe('setContentModel', () => {
         ).and.returnValue(mockedContext);
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        flushMutationsSpy = jasmine.createSpy('flushMutations');
 
-        core = ({
+        core = {
             physicalRoot: mockedDiv,
             logicalRoot: mockedDiv,
             api: {
@@ -44,13 +46,17 @@ describe('setContentModel', () => {
                 getDOMSelection: getDOMSelectionSpy,
             },
             lifecycle: {},
-            cache: {},
+            cache: {
+                textMutationObserver: {
+                    flushMutations: flushMutationsSpy,
+                },
+            },
             environment: {
                 modelToDomSettings: {
                     calculated: mockedConfig,
                 },
             },
-        } as any) as EditorCore;
+        } as any;
     });
 
     it('no default option, no shadow edit', () => {
@@ -75,7 +81,7 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(core.cache.cachedSelection).toBe(mockedRange);
-        expect(core.cache.cachedModel).toBe(mockedModel);
+        expect(flushMutationsSpy).toHaveBeenCalledWith(mockedModel);
     });
 
     it('with default option, no shadow edit', () => {
