@@ -67,10 +67,10 @@ function createStep(isProduction, isAmd, target) {
 }
 
 module.exports = {
-    // commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'react'),
-    // commonJsProdUi: createStep(true /*isProduction*/, false /*isAmd*/, 'react'),
-    // amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'react'),
-    // amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'react'),
+    commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'react'),
+    commonJsProdUi: createStep(true /*isProduction*/, false /*isAmd*/, 'react'),
+    amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'react'),
+    amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'react'),
 
     commonJsDebugMain: createStep(false /*isProduction*/, false /*isAmd*/, 'main'),
     commonJsProdMain: createStep(true /*isProduction*/, false /*isAmd*/, 'main'),

@@ -1,29 +1,15 @@
-import { BackgroundColorKeys } from '../roosterjsReact/colorPicker/types/stringKeys';
-import { renderColorPicker } from '../roosterjsReact/colorPicker/component/renderColorPicker';
-import { setTableCellShade } from 'roosterjs-content-model-api';
 import {
-    getColorPickerContainerClassName,
-    getColorPickerItemClassName,
-} from '../roosterjsReact/colorPicker/utils/getClassNamesForColorPicker';
-import {
-    BackgroundColorDropDownItems,
-    BackgroundColors,
+    BackgroundColorKeys,
     getBackgroundColorValue,
-} from '../roosterjsReact/colorPicker/utils/backgroundColors';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+    getColorPickerDropDown,
+} from 'roosterjs-react';
+import { setTableCellShade } from 'roosterjs-content-model-api';
+import type { RibbonButton } from 'roosterjs-react';
 
 export const setTableCellShadeButton: RibbonButton<
     'ribbonButtonSetTableCellShade' | BackgroundColorKeys
 > = {
-    dropDownMenu: {
-        items: BackgroundColorDropDownItems,
-        itemClassName: getColorPickerItemClassName(),
-        allowLivePreview: true,
-        itemRender: (item, onClick) => renderColorPicker(item, BackgroundColors, onClick),
-        commandBarSubMenuProperties: {
-            className: getColorPickerContainerClassName(),
-        },
-    },
+    dropDownMenu: getColorPickerDropDown('background'),
     key: 'ribbonButtonSetTableCellShade',
     unlocalizedText: 'Set table shade color',
     iconName: 'BackgroundColor',

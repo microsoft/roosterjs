@@ -1,6 +1,6 @@
 import { exportContent } from 'roosterjs-content-model-core';
 import { ModelToTextCallbacks } from 'roosterjs-content-model-types';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * Key of localized strings of Zoom button

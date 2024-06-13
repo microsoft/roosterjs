@@ -21,6 +21,7 @@
     "typedocOptions": {
         "entryPoints": [
             "../packages/roosterjs-color-utils/lib/index.ts",
+            "../packages/roosterjs-react/lib/index.ts",
             "../packages/roosterjs-content-model-types/lib/index.ts",
             "../packages/roosterjs-content-model-dom/lib/index.ts",
             "../packages/roosterjs-content-model-core/lib/index.ts",

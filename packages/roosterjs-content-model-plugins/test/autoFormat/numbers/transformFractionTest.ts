@@ -85,4 +85,18 @@ describe('transformFraction', () => {
         };
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
+
+    it('"constructor"', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'constructor',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
 });

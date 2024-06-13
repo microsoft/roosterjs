@@ -3,8 +3,9 @@ import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { ContentModelDocumentView } from './components/model/ContentModelDocumentView';
 import { exportButton } from './buttons/exportButton';
 import { importModelButton } from './buttons/importModelButton';
-import { Ribbon, RibbonButton, RibbonPlugin } from '../../roosterjsReact/ribbon';
+import { Ribbon } from 'roosterjs-react';
 import { SidePaneElementProps } from '../SidePaneElement';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 
 const styles = require('./ContentModelPane.scss');
 

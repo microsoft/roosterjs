@@ -1,6 +1,6 @@
 import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { DomIndexerImpl, IndexedSegmentNode } from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
     CacheSelection,
     ContentModelDocument,
@@ -735,5 +735,183 @@ describe('domIndexerImpl.reconcileSelection', () => {
         });
         expect(setSelectionSpy).toHaveBeenCalled();
         expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+});
+
+describe('domIndexerImpl.reconcileChildList', () => {
+    it('Empty array', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const result = domIndexer.reconcileChildList([], []);
+
+        expect(result).toBeTrue();
+    });
+
+    it('Removed BR, not indexed', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br = document.createElement('br');
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Removed BR, indexed, segment is not under paragraph', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment = createBr();
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [],
+        });
+    });
+
+    it('Removed BR, indexed, segment is under paragraph', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment1 = createText('test1');
+        const segment2 = createBr();
+        const segment3 = createText('test3');
+
+        paragraph.segments.push(segment1, segment2, segment3);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment2],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeTrue();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment3],
+        });
+    });
+
+    it('Removed two BR, indexed', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br1: Node = document.createElement('br');
+        const br2: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment1 = createBr();
+        const segment2 = createBr();
+        const segment3 = createText('test3');
+
+        paragraph.segments.push(segment1, segment2, segment3);
+
+        (br1 as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment1],
+        };
+
+        (br2 as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment2],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br1, br2]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment2, segment3],
+        });
+    });
+
+    it('Added BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const result = domIndexer.reconcileChildList([br], []);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Added Text', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Text = document.createTextNode('test');
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Added Text, remove BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+        const text: Text = document.createTextNode('test');
+
+        const paragraph = createParagraph();
+        const segment = createBr({
+            fontSize: '10pt',
+        });
+
+        paragraph.segments.push(segment);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([text], [br]);
+
+        expect(result).toBeTrue();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontSize: '10pt',
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Added two Texts, remove BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+        const text1: Text = document.createTextNode('test1');
+        const text2: Text = document.createTextNode('test2');
+
+        const paragraph = createParagraph();
+        const segment = createBr({
+            fontSize: '10pt',
+        });
+
+        paragraph.segments.push(segment);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([text1, text2], [br]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment],
+        });
     });
 });

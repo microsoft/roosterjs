@@ -1,7 +1,7 @@
 import { applyTableBorderFormat } from 'roosterjs-content-model-api';
 import { BorderOperations } from 'roosterjs-content-model-types';
 import { MainPane } from '../mainPane/MainPane';
-import { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const TABLE_OPERATIONS: Record<string, BorderOperations> = {
     menuNameTableAllBorder: 'allBorders',

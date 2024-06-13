@@ -1,5 +1,5 @@
 import { MainPane } from '../mainPane/MainPane';
-import { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const WIDTH = [0.25, 0.5, 0.75, 1, 1.5, 2.25, 3, 4.5, 6];
 

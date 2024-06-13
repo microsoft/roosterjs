@@ -1,6 +1,6 @@
 import { extractClipboardItems } from 'roosterjs-content-model-dom';
 import { paste } from 'roosterjs-content-model-core';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal
