@@ -38,11 +38,11 @@ export function createImageWrapper(
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
-    if (!options.disableRotate && operation === 'rotate') {
+    if (!options.disableRotate && (operation === 'rotate' || operation === 'resizeAndRotate')) {
         rotators = createImageRotator(doc, htmlOptions);
     }
     let resizers: HTMLDivElement[] = [];
-    if (operation === 'resize') {
+    if (operation === 'resize' || operation === 'resizeAndRotate') {
         resizers = createImageResizer(doc);
     }
 

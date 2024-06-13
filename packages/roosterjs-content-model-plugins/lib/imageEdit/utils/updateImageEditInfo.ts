@@ -4,6 +4,7 @@ import type {
     ContentModelImage,
     IEditor,
     ImageMetadataFormat,
+    ReadonlyContentModelImage,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -37,6 +38,14 @@ function getInitialEditInfo(image: HTMLImageElement): ImageMetadataFormat {
         bottomPercent: 0,
         angleRad: 0,
     };
+}
+
+export function getImageMetadata(
+    contentModelImage: ReadonlyContentModelImage,
+    image: HTMLImageElement
+): ImageMetadataFormat {
+    console.log(contentModelImage.dataset);
+    return { ...getInitialEditInfo(image), ...contentModelImage.dataset };
 }
 
 /**
