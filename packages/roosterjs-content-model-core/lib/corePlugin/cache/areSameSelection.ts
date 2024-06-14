@@ -1,10 +1,15 @@
-import type { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
+import type {
+    CacheSelection,
+    DOMSelection,
+    RangeSelection,
+    RangeSelectionForCache,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Check if the given selections are the same
  */
-export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection): boolean {
+export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection | DOMSelection): boolean {
     if (sel1 == sel2) {
         return true;
     }
@@ -25,12 +30,36 @@ export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection): bool
 
         case 'range':
         default:
-            return (
-                sel2.type == 'range' &&
-                sel1.range.startContainer == sel2.start.node &&
-                sel1.range.endContainer == sel2.end.node &&
-                sel1.range.startOffset == sel2.start.offset &&
-                sel1.range.endOffset == sel2.end.offset
-            );
+            if (sel2.type == 'range') {
+                const { startContainer, startOffset, endContainer, endOffset } = sel1.range;
+
+                if (isCacheSelection(sel2)) {
+                    const { start, end } = sel2;
+
+                    return (
+                        startContainer == start.node &&
+                        endContainer == end.node &&
+                        startOffset == start.offset &&
+                        endOffset == end.offset
+                    );
+                } else {
+                    const { range } = sel2;
+
+                    return (
+                        startContainer == range.startContainer &&
+                        endContainer == range.endContainer &&
+                        startOffset == range.startOffset &&
+                        endOffset == range.endOffset
+                    );
+                }
+            } else {
+                return false;
+            }
     }
+}
+
+function isCacheSelection(
+    sel: RangeSelectionForCache | RangeSelection
+): sel is RangeSelectionForCache {
+    return !!(sel as RangeSelectionForCache).start;
 }

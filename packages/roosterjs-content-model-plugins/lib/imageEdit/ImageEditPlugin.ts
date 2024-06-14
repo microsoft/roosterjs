@@ -179,21 +179,21 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         imageEditInfo &&
                         clonedImage
                     ) {
-                        mutateSegment(
-                            previousSelectedImage.paragraph,
-                            previousSelectedImage.image,
-                            image => {
-                                applyChange(
-                                    editor,
-                                    selectedImage,
-                                    image,
-                                    imageEditInfo,
-                                    lastSrc,
-                                    this.wasImageResized || this.isCropMode,
-                                    clonedImage
-                                );
-                            }
-                        );
+                        // mutateSegment(
+                        //     previousSelectedImage.paragraph,
+                        //     previousSelectedImage.image,
+                        //     image => {
+                        //         applyChange(
+                        //             editor,
+                        //             selectedImage,
+                        //             image,
+                        //             imageEditInfo,
+                        //             lastSrc,
+                        //             this.wasImageResized || this.isCropMode,
+                        //             clonedImage
+                        //         );
+                        //     }
+                        // );
 
                         setIsEditing(previousSelectedImage, false);
                         this.cleanInfo();
@@ -649,7 +649,31 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             isElementOfType(parent, 'span') &&
             !parent.shadowRoot
         ) {
-            this.startRotateAndResize(this.editor, image, parent);
+            const shadowRoot = parent.attachShadow({ mode: 'open' });
+
+            // TODO
+            const win = image.ownerDocument.defaultView ?? window;
+            const tempImg = image.cloneNode();
+            const div = win.document.createElement('div');
+            const innerDiv = win.document.createElement('div');
+
+            div.style.display = 'inline-block';
+            div.appendChild(tempImg);
+            div.appendChild(innerDiv);
+
+            innerDiv.textContent = 'Editing';
+
+            shadowRoot.appendChild(div);
+
+            // Hide selection
+            // https://stackoverflow.com/questions/47625017/override-styles-in-a-shadow-root-element
+            const sheet: any = new win.CSSStyleSheet();
+
+            sheet.replaceSync('*::selection { background-color: transparent !important; }');
+
+            (shadowRoot as any).adoptedStyleSheets.push(sheet);
+
+            //  this.startRotateAndResize(this.editor, image, parent);
         }
     };
 
