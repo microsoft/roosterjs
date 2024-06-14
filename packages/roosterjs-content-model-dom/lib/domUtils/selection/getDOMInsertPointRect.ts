@@ -34,7 +34,7 @@ function normalizeInsertPoint(pos: DOMInsertPoint) {
 }
 
 function tryGetRectFromPos(pos: DOMInsertPoint, range: Range): Rect | null {
-    let { node, offset } = pos;
+    const { node, offset } = pos;
 
     range.setStart(node, offset);
     range.setEnd(node, offset);
