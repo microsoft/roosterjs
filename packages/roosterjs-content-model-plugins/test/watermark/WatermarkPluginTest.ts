@@ -8,7 +8,6 @@ describe('WatermarkPlugin', () => {
     let formatContentModelSpy: jasmine.Spy;
     let isModelEmptyFastSpy: jasmine.Spy;
     let setEditorStyleSpy: jasmine.Spy;
-    let isDarkModeSpy: jasmine.Spy;
 
     const mockedModel = 'Model' as any;
 
