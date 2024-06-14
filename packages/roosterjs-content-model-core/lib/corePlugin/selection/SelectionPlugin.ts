@@ -163,12 +163,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const selection = editor.getDOMSelection();
         let image: HTMLImageElement | null;
 
-        // Table selection
+        // Image selection
+
         if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
-
-        // Image selection
         if (
             rawEvent.button === MouseLeftButton &&
             (image =
@@ -303,6 +302,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     if (key === 'Escape') {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                         rawEvent.stopPropagation();
+                    } else if (key !== 'Delete' && key !== 'Backspace') {
+                        this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 }
                 break;
@@ -497,7 +498,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
         const doc = editor.getDocument();
-        const parent = element.parentNode;
+        let parent = element.parentNode;
+        if (isNodeOfType(parent, 'ELEMENT_NODE') && parent.shadowRoot && parent.parentNode) {
+            element = parent;
+            parent = parent.parentNode;
+        }
         const index = parent && toArray(parent.childNodes).indexOf(element);
 
         if (parent && index !== null && index >= 0) {

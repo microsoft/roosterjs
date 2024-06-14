@@ -4,7 +4,6 @@ import type {
     ContentModelImage,
     IEditor,
     ImageMetadataFormat,
-    ReadonlyContentModelImage,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,9 +11,10 @@ import type {
  */
 export function updateImageEditInfo(
     contentModelImage: ContentModelImage,
-    newImageMetadata?: ImageMetadataFormat | null
-) {
-    updateImageMetadata(
+    image: HTMLImageElement,
+    newImageMetadata?: ImageMetadataFormat | null | undefined
+): ImageMetadataFormat {
+    const contentModelMetadata = updateImageMetadata(
         contentModelImage,
         newImageMetadata !== undefined
             ? format => {
@@ -23,6 +23,7 @@ export function updateImageEditInfo(
               }
             : undefined
     );
+    return { ...getInitialEditInfo(image), ...contentModelMetadata };
 }
 
 function getInitialEditInfo(image: HTMLImageElement): ImageMetadataFormat {
@@ -40,14 +41,6 @@ function getInitialEditInfo(image: HTMLImageElement): ImageMetadataFormat {
     };
 }
 
-export function getImageMetadata(
-    contentModelImage: ReadonlyContentModelImage,
-    image: HTMLImageElement
-): ImageMetadataFormat {
-    console.log(contentModelImage.dataset);
-    return { ...getInitialEditInfo(image), ...contentModelImage.dataset };
-}
-
 /**
  * @internal
  * @returns
@@ -60,7 +53,8 @@ export function getSelectedImageMetadata(
     editor.formatContentModel(model => {
         const selectedImage = getSelectedContentModelImage(model);
         if (selectedImage) {
-            imageMetadata = { ...imageMetadata, ...selectedImage.dataset };
+            imageMetadata = updateImageEditInfo(selectedImage, image);
+            return true;
         }
         return false;
     });
