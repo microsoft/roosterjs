@@ -1,4 +1,4 @@
-import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { ChangeSource, getObjectKeys } from 'roosterjs-content-model-dom';
 import { isModelEmptyFast } from './isModelEmptyFast';
 import type { WatermarkFormat } from './WatermarkFormat';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
@@ -17,6 +17,7 @@ export class WatermarkPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private format: WatermarkFormat;
     private isShowing = false;
+    private darkTextColor: string | null = null;
 
     /**
      * Create an instance of Watermark plugin
@@ -69,6 +70,25 @@ export class WatermarkPlugin implements EditorPlugin {
             // When input text, editor must not be empty, so we can do hide watermark now without checking content model
             this.showHide(editor, false /*isEmpty*/);
         } else if (
+            event.eventType == 'contentChanged' &&
+            (event.source == ChangeSource.SwitchToDarkMode ||
+                event.source == ChangeSource.SwitchToLightMode) &&
+            this.isShowing
+        ) {
+            // When the placeholder is shown and user switches the mode, we need to update watermark style
+            if (
+                event.source == ChangeSource.SwitchToDarkMode &&
+                !this.darkTextColor &&
+                this.format.textColor
+            ) {
+                // Get the dark color only once when dark mode is enabled for the first time
+                this.darkTextColor = editor
+                    .getColorManager()
+                    .getDarkColor(this.format.textColor, undefined, 'text');
+            }
+
+            this.applyWatermarkStyle(editor);
+        } else if (
             event.eventType == 'editorReady' ||
             event.eventType == 'contentChanged' ||
             event.eventType == 'input' ||
@@ -93,17 +113,24 @@ export class WatermarkPlugin implements EditorPlugin {
     }
 
     protected show(editor: IEditor) {
+        this.applyWatermarkStyle(editor);
+        this.isShowing = true;
+    }
+
+    private applyWatermarkStyle(editor: IEditor) {
         let rule = `position: absolute; pointer-events: none; content: "${this.watermark}";`;
+        const format = {
+            ...this.format,
+            textColor: editor.isDarkMode() ? this.darkTextColor : this.format.textColor,
+        };
 
         getObjectKeys(styleMap).forEach(x => {
-            if (this.format[x]) {
-                rule += `${styleMap[x]}: ${this.format[x]}!important;`;
+            if (format[x]) {
+                rule += `${styleMap[x]}: ${format[x]}!important;`;
             }
         });
 
         editor.setEditorStyle(WATERMARK_CONTENT_KEY, rule, 'before');
-
-        this.isShowing = true;
     }
 
     protected hide(editor: IEditor) {
