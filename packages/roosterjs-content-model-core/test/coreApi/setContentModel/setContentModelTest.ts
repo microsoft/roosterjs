@@ -81,7 +81,7 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(core.cache.cachedSelection).toBe(mockedRange);
-        expect(flushMutationsSpy).toHaveBeenCalledWith(mockedModel);
+        expect(flushMutationsSpy).toHaveBeenCalledWith(true);
     });
 
     it('with default option, no shadow edit', () => {

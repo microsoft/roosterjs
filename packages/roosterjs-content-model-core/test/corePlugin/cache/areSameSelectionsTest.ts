@@ -1,7 +1,7 @@
-import { areSameSelection } from '../../../lib/corePlugin/cache/areSameSelection';
+import { areSameSelections } from '../../../lib/corePlugin/cache/areSameSelections';
 import { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
 
-describe('areSameSelection', () => {
+describe('areSameSelections', () => {
     const startContainer = 'MockedStartContainer' as any;
     const endContainer = 'MockedEndContainer' as any;
     const startOffset = 1;
@@ -10,7 +10,7 @@ describe('areSameSelection', () => {
     const image = 'MockedImage' as any;
 
     function runTest(r1: DOMSelection, r2: CacheSelection, result: boolean) {
-        expect(areSameSelection(r1, r2)).toBe(result);
+        expect(areSameSelections(r1, r2)).toBe(result);
     }
 
     it('Same object', () => {

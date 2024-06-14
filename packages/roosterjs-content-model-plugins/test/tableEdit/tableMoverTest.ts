@@ -18,119 +18,122 @@ describe('Table Mover Tests', () => {
     let targetId = 'tableSelectionTestId';
     let tableEdit: TableEditPlugin;
     let node: HTMLDivElement;
-    const cmTable: ContentModelTable = {
-        blockType: 'Table',
-        rows: [
-            {
-                height: 20,
-                format: {},
-                cells: [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'a1',
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                                isImplicit: true,
-                            },
-                        ],
-                        format: {},
-                        spanLeft: false,
-                        spanAbove: false,
-                        isHeader: false,
-                        dataset: {},
-                    },
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'z1',
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                            },
-                        ],
-                        format: {},
-                        spanLeft: false,
-                        spanAbove: false,
-                        isHeader: false,
-                        dataset: {},
-                    },
-                ],
+
+    function createCmTable(): ContentModelTable {
+        return {
+            blockType: 'Table',
+            rows: [
+                {
+                    height: 20,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'a1',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'z1',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    height: 20,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'a2',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'z2',
+                                            format: {},
+                                        },
+                                        {
+                                            segmentType: 'SelectionMarker',
+                                            isSelected: true,
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {
+                id: `${targetId}`,
             },
-            {
-                height: 20,
-                format: {},
-                cells: [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'a2',
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                                isImplicit: true,
-                            },
-                        ],
-                        format: {},
-                        spanLeft: false,
-                        spanAbove: false,
-                        isHeader: false,
-                        dataset: {},
-                    },
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'z2',
-                                        format: {},
-                                    },
-                                    {
-                                        segmentType: 'SelectionMarker',
-                                        isSelected: true,
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                            },
-                        ],
-                        format: {},
-                        spanLeft: false,
-                        spanAbove: false,
-                        isHeader: false,
-                        dataset: {},
-                    },
-                ],
-            },
-        ],
-        format: {
-            id: `${targetId}`,
-        },
-        widths: [10, 10],
-        dataset: {},
-    };
+            widths: [10, 10],
+            dataset: {},
+        };
+    }
 
     beforeEach(() => {
         document.body.innerHTML = '';
@@ -143,7 +146,7 @@ describe('Table Mover Tests', () => {
             plugins: [tableEdit],
             initialModel: {
                 blockGroupType: 'Document',
-                blocks: [{ ...cmTable }],
+                blocks: [createCmTable()],
                 format: {},
             },
         };
@@ -529,7 +532,7 @@ describe('Table Mover Tests', () => {
             const divRect = document.createElement('div');
 
             const initValue: TableMoverInitValue = {
-                cmTable: cmTable,
+                cmTable: createCmTable(),
                 initialSelection: null,
                 tableRect: divRect,
             };
@@ -619,7 +622,7 @@ describe('Table Mover Tests', () => {
             const divRect = document.createElement('div');
 
             const initValue: TableMoverInitValue = {
-                cmTable: cmTable,
+                cmTable: createCmTable(),
                 initialSelection: null,
                 tableRect: divRect,
             };
@@ -701,7 +704,7 @@ describe('Table Mover Tests', () => {
             const divRect = document.createElement('div');
 
             const initValue: TableMoverInitValue = {
-                cmTable: cmTable,
+                cmTable: createCmTable(),
                 initialSelection: null,
                 tableRect: divRect,
             };

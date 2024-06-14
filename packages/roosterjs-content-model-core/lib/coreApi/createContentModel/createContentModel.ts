@@ -1,4 +1,3 @@
-import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
 import {
     cloneModel,
     createDomToModelContext,
@@ -33,8 +32,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         selectionOverride == 'none'
             ? undefined
             : selectionOverride || core.api.getDOMSelection(core) || undefined;
-    const saveIndex = !option && !selectionOverride;
-    const editorContext = core.api.createEditorContext(core, saveIndex);
+    const editorContext = core.api.createEditorContext(core, false /*saveIndex*/);
     const settings = core.environment.domToModelSettings;
     const domToModelContext = option
         ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
@@ -44,12 +42,5 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         domToModelContext.selection = selection;
     }
 
-    const model = domToContentModel(core.logicalRoot, domToModelContext);
-
-    if (saveIndex) {
-        core.cache.cachedModel = model;
-        updateCachedSelection(core.cache, selection);
-    }
-
-    return model;
+    return domToContentModel(core.logicalRoot, domToModelContext);
 };

@@ -1,7 +1,7 @@
 import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
+import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
 import {
     ContentModelDocument,
@@ -65,7 +65,7 @@ describe('createContentModel', () => {
 
         const model = createContentModel(core);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core, true);
+        expect(createEditorContext).toHaveBeenCalledWith(core, false);
         expect(getDOMSelection).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext);
         expect(model).toBe(mockedModel);
@@ -345,7 +345,7 @@ describe('createContentModel and cache management', () => {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
-        updateCachedSelectionSpy = spyOn(updateCachedSelection, 'updateCachedSelection');
+        updateCachedSelectionSpy = spyOn(updateCache, 'updateCache');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
 
@@ -470,11 +470,11 @@ describe('createContentModel and cache management', () => {
         }
 
         it('no option, no selectionOverride, no shadow edit', () => {
-            runTest(undefined, false, false, false, true, false);
+            runTest(undefined, false, false, false, false, false);
         });
 
         it('no option, no selectionOverride, has shadow edit', () => {
-            runTest(undefined, false, true, false, true, false);
+            runTest(undefined, false, true, false, false, false);
         });
 
         it('no option, has selectionOverride, no shadow edit', () => {
