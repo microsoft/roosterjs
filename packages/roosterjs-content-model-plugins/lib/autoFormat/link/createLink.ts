@@ -1,4 +1,4 @@
-import { addLink, ChangeSource } from 'roosterjs-content-model-dom';
+import { addLink, ChangeSource, isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker, matchLink } from 'roosterjs-content-model-api';
 import type { IEditor, LinkData } from 'roosterjs-content-model-types';
 
@@ -30,7 +30,11 @@ export function createLink(editor: IEditor) {
         {
             changeSource: ChangeSource.AutoLink,
             onNodeCreated: (_modelElement, node) => {
-                if (!anchorNode) {
+                if (
+                    !anchorNode &&
+                    isNodeOfType(node, 'ELEMENT_NODE') &&
+                    isElementOfType(node, 'a')
+                ) {
                     anchorNode = node;
                 }
             },
