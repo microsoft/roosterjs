@@ -169,15 +169,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                 let result = false;
                 if (previousSelectedImage?.image != editingImage?.image) {
-                    const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
+                    //  const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
                     if (
                         this.isEditing &&
                         previousSelectedImage &&
-                        previousSelectedImage.image !== editingImage?.image &&
-                        lastSrc &&
-                        selectedImage &&
-                        imageEditInfo &&
-                        clonedImage
+                        previousSelectedImage.image !== editingImage?.image
+                        // lastSrc &&
+                        // selectedImage &&
+                        // imageEditInfo &&
+                        // clonedImage
                     ) {
                         // mutateSegment(
                         //     previousSelectedImage.paragraph,

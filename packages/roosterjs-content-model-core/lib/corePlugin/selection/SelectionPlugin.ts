@@ -163,6 +163,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const selection = editor.getDOMSelection();
         let image: HTMLImageElement | null;
 
+        // Table selection
+        if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
+            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+        }
+
         // Image selection
         if (
             rawEvent.button === MouseLeftButton &&
