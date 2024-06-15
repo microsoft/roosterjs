@@ -65,7 +65,7 @@ describe('createContentModel', () => {
 
         const model = createContentModel(core);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core, false);
+        expect(createEditorContext).toHaveBeenCalledWith(core, true);
         expect(getDOMSelection).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext);
         expect(model).toBe(mockedModel);
@@ -326,7 +326,7 @@ describe('createContentModel and cache management', () => {
     let cloneModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let createEditorContextSpy: jasmine.Spy;
-    let updateCachedSelectionSpy: jasmine.Spy;
+    let updateCacheSpy: jasmine.Spy;
 
     const mockedSelection = 'SELECTION' as any;
     const mockedFragment = 'FRAGMENT' as any;
@@ -345,7 +345,7 @@ describe('createContentModel and cache management', () => {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
-        updateCachedSelectionSpy = spyOn(updateCache, 'updateCache');
+        updateCacheSpy = spyOn(updateCache, 'updateCache');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
 
@@ -385,14 +385,17 @@ describe('createContentModel and cache management', () => {
         }
 
         if (allowIndex && !useCache) {
-            expect(core.cache.cachedModel).toBe(mockedNewModel);
-            expect(updateCachedSelectionSpy).toHaveBeenCalled();
+            expect(updateCacheSpy).toHaveBeenCalledWith(
+                core.cache,
+                mockedNewModel,
+                mockedSelection
+            );
         } else if (hasCache) {
             expect(core.cache.cachedModel).toBe(mockedModel);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         } else {
             expect(core.cache.cachedModel).toBe(null!);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         }
     }
 
@@ -470,11 +473,11 @@ describe('createContentModel and cache management', () => {
         }
 
         it('no option, no selectionOverride, no shadow edit', () => {
-            runTest(undefined, false, false, false, false, false);
+            runTest(undefined, false, false, false, true, false);
         });
 
         it('no option, no selectionOverride, has shadow edit', () => {
-            runTest(undefined, false, true, false, false, false);
+            runTest(undefined, false, true, false, true, false);
         });
 
         it('no option, has selectionOverride, no shadow edit', () => {
