@@ -1,4 +1,4 @@
-import { updateCache } from 'roosterjs-content-model-core/lib/corePlugin/cache/updateCache';
+import { updateCache } from '../../corePlugin/cache/updateCache';
 import {
     contentModelToDom,
     createModelToDomContext,
