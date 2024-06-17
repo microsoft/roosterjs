@@ -36,3 +36,4 @@ export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './pick
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
+export { EditableImageFormat } from './imageEdit/types/EditableImageFormat';

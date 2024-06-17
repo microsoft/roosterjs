@@ -1,7 +1,10 @@
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom/lib';
-import { ImageAndParagraph } from '../types/ImageAndParagraph';
-import { ReadonlyContentModelDocument } from 'roosterjs-content-model-types/lib';
+import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import type { ReadonlyContentModelDocument } from 'roosterjs-content-model-types';
+import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 
+/**
+ * @internal
+ */
 export function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndParagraph | null {
     const selections = getSelectedSegmentsAndParagraphs(model, false);
 

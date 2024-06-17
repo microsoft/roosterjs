@@ -3,7 +3,6 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { EditableImageFormat } from './types/EditableImageFormat';
 import { findEditingImage } from './utils/findEditingImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
@@ -15,6 +14,7 @@ import { Rotator } from './Rotator/rotatorContext';
 import { setIsEditing } from './utils/setIsEditing';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
+import type { EditableImageFormat } from './types/EditableImageFormat';
 import {
     getSelectedSegmentsAndParagraphs,
     isElementOfType,
@@ -227,6 +227,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     return true;
                 }
                 this.isEditing = false;
+                this.isCropMode = false;
 
                 if (editingImage && !format.isEditing && selection?.type == 'image') {
                     setIsEditing(editingImage, true);
@@ -255,18 +256,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
-        this.createWrapper(editor, image, imageSpan, this.imageEditInfo, apiOperation);
-    }
-
-    private createWrapper(
-        editor: IEditor,
-        image: HTMLImageElement,
-        imageSpan: HTMLSpanElement,
-        imageEditInfo: ImageMetadataFormat,
-        apiOperation?: ImageEditOperation
-    ) {
         this.lastSrc = image.getAttribute('src');
-        this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, imageEditInfo);
+        this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         const {
             resizers,
             rotators,
@@ -279,7 +270,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             image,
             imageSpan,
             this.options,
-            imageEditInfo,
+            this.imageEditInfo,
             this.imageHTMLOptions,
             apiOperation || this.options.onSelectState
         );
@@ -296,7 +287,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
             `span:has(>img#${this.selectedImage.id})`,
         ]);
-        return shadowSpan;
     }
 
     public startRotateAndResize(
@@ -305,7 +295,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         imageSpan: HTMLSpanElement
     ) {
         if (this.imageEditInfo) {
-            this.createWrapper(editor, image, imageSpan, this.imageEditInfo, 'resizeAndRotate');
+            this.startEditing(editor, image, 'resizeAndRotate');
 
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
                 this.dndHelpers = [
@@ -430,54 +420,77 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image);
     }
 
-    public cropImage() {
-        const selection = this.editor?.getDOMSelection();
-        if (!this.editor || !selection || selection.type !== 'image') {
-            return;
+    private startCropMode(editor: IEditor, image: HTMLImageElement, imageSpan: HTMLSpanElement) {
+        if (this.imageEditInfo) {
+            this.startEditing(editor, image, 'crop');
+            if (this.imageEditInfo && this.selectedImage && this.wrapper && this.clonedImage) {
+                this.dndHelpers = [
+                    ...getDropAndDragHelpers(
+                        this.wrapper,
+                        this.imageEditInfo,
+                        this.options,
+                        ImageEditElementClass.CropHandle,
+                        Cropper,
+                        () => {
+                            if (
+                                this.imageEditInfo &&
+                                this.selectedImage &&
+                                this.wrapper &&
+                                this.clonedImage
+                            ) {
+                                updateWrapper(
+                                    this.imageEditInfo,
+                                    this.options,
+                                    this.selectedImage,
+                                    this.clonedImage,
+                                    this.wrapper,
+                                    undefined,
+                                    this.croppers
+                                );
+                                this.isCropMode = true;
+                            }
+                        },
+                        this.zoomScale
+                    ),
+                ];
+                updateWrapper(
+                    this.imageEditInfo,
+                    this.options,
+                    this.selectedImage,
+                    this.clonedImage,
+                    this.wrapper,
+                    undefined,
+                    this.croppers
+                );
+            }
         }
-        this.startEditing(this.editor, selection.image, 'crop');
-        if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
-            return;
-        }
-        this.dndHelpers = [
-            ...getDropAndDragHelpers(
-                this.wrapper,
-                this.imageEditInfo,
-                this.options,
-                ImageEditElementClass.CropHandle,
-                Cropper,
-                () => {
-                    if (
-                        this.imageEditInfo &&
-                        this.selectedImage &&
-                        this.wrapper &&
-                        this.clonedImage
-                    ) {
-                        updateWrapper(
-                            this.imageEditInfo,
-                            this.options,
-                            this.selectedImage,
-                            this.clonedImage,
-                            this.wrapper,
-                            undefined,
-                            this.croppers
-                        );
-                        this.isCropMode = true;
-                    }
-                },
-                this.zoomScale
-            ),
-        ];
+    }
 
-        updateWrapper(
-            this.imageEditInfo,
-            this.options,
-            this.selectedImage,
-            this.clonedImage,
-            this.wrapper,
-            undefined,
-            this.croppers
-        );
+    public cropImage() {
+        if (!this.editor) {
+            return;
+        }
+        this.editor.focus();
+        const selection = this.editor.getDOMSelection();
+        if (selection?.type == 'image') {
+            const image = selection.image;
+            const imageSpan = image.parentElement;
+            if (imageSpan && imageSpan && isElementOfType(imageSpan, 'span')) {
+                this.editor.formatContentModel(model => {
+                    const editingImage = getSelectedImage(model);
+                    if (editingImage && editingImage.image && this.editor) {
+                        setIsEditing(editingImage, true);
+                        mutateSegment(editingImage.paragraph, editingImage.image, image => {
+                            this.imageEditInfo = updateImageEditInfo(image, selection.image);
+                        });
+                        this.isEditing = true;
+                        this.isCropMode = true;
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        }
     }
 
     private editImage(
@@ -575,6 +588,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 image.isSelectedAsImageSelection = shouldSelectAsImageSelection;
                                 (image.format as EditableImageFormat).isEditing = false;
                                 this.isEditing = false;
+                                this.isCropMode = false;
                             }
                         });
                         return true;
@@ -677,7 +691,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             isElementOfType(parent, 'span') &&
             !parent.shadowRoot
         ) {
-            this.startRotateAndResize(this.editor, image, parent);
+            if (this.isCropMode) {
+                this.startCropMode(this.editor, image, parent);
+            } else {
+                this.startRotateAndResize(this.editor, image, parent);
+            }
         }
     };
 

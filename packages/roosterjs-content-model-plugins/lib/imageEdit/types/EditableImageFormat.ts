@@ -1,13 +1,8 @@
 import type { ContentModelImageFormat } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Type for editable image format
  */
-export type EditingFormat = {
+export type EditableImageFormat = ContentModelImageFormat & {
     isEditing?: boolean;
 };
-
-/**
- * @internal
- */
-export type EditableImageFormat = ContentModelImageFormat & EditingFormat;
