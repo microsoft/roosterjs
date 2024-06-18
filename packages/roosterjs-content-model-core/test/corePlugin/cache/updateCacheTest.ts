@@ -1,14 +1,17 @@
 import { CachePluginState } from 'roosterjs-content-model-types';
-import { updateCachedSelection } from '../../../lib/corePlugin/cache/updateCachedSelection';
+import { updateCache } from '../../../lib/corePlugin/cache/updateCache';
 
-describe('updateCachedSelection', () => {
+describe('updateCache', () => {
+    const mockedModel = 'MODEL' as any;
+
     it('Update to undefined', () => {
         const state: CachePluginState = {};
 
-        updateCachedSelection(state, undefined);
+        updateCache(state, mockedModel, undefined);
 
         expect(state).toEqual({
             cachedSelection: undefined,
+            cachedModel: mockedModel,
         });
     });
 
@@ -18,10 +21,11 @@ describe('updateCachedSelection', () => {
             type: 'table',
         } as any;
 
-        updateCachedSelection(state, mockedSelection);
+        updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
             cachedSelection: mockedSelection,
+            cachedModel: mockedModel,
         });
     });
 
@@ -31,10 +35,11 @@ describe('updateCachedSelection', () => {
             type: 'image',
         } as any;
 
-        updateCachedSelection(state, mockedSelection);
+        updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
             cachedSelection: mockedSelection,
+            cachedModel: mockedModel,
         });
     });
 
@@ -51,7 +56,7 @@ describe('updateCachedSelection', () => {
             isReverted: false,
         } as any;
 
-        updateCachedSelection(state, mockedSelection);
+        updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
             cachedSelection: {
@@ -66,6 +71,7 @@ describe('updateCachedSelection', () => {
                 },
                 isReverted: false,
             } as any,
+            cachedModel: mockedModel,
         });
     });
 });

@@ -1,5 +1,5 @@
 import { addRangeToSelection } from './addRangeToSelection';
-import { areSameSelection } from '../../corePlugin/cache/areSameSelection';
+import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureImageHasSpanParent } from './ensureImageHasSpanParent';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
@@ -27,7 +27,7 @@ const SELECTION_SELECTOR = '*::selection';
 export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
     const existingSelection = core.api.getDOMSelection(core);
 
-    if (existingSelection && selection && areSameSelection(existingSelection, selection)) {
+    if (existingSelection && selection && areSameSelections(existingSelection, selection)) {
         return;
     }
 

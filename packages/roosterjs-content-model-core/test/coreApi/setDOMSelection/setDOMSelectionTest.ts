@@ -1,4 +1,5 @@
 import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
+import * as ensureImageHasSpanParent from '../../../lib/coreApi/setDOMSelection/ensureImageHasSpanParent';
 import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../../lib/coreApi/setDOMSelection/setDOMSelection';
 import {
@@ -39,7 +40,7 @@ describe('setDOMSelection', () => {
         createElementSpy = jasmine.createSpy('createElement').and.returnValue({
             appendChild: appendChildSpy,
         });
-        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelectionSpy').and.returnValue(null);
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
@@ -919,6 +920,131 @@ describe('setDOMSelection', () => {
                 ['#table_0', '#table_0 *'],
                 selectionColor,
                 selectionColorDark
+            );
+        });
+    });
+
+    describe('Same selection', () => {
+        beforeEach(() => {
+            querySelectorAllSpy.and.returnValue([]);
+            spyOn(ensureImageHasSpanParent, 'ensureImageHasSpanParent').and.callFake(
+                image => image
+            );
+        });
+
+        function runTest(
+            originalSelection: DOMSelection | null,
+            newSelection: DOMSelection | null,
+            expectedCalled: boolean
+        ) {
+            getDOMSelectionSpy.and.returnValue(originalSelection);
+
+            setDOMSelection(core, newSelection);
+
+            if (expectedCalled) {
+                expect(triggerEventSpy).toHaveBeenCalledWith(
+                    core,
+                    {
+                        eventType: 'selectionChanged',
+                        newSelection: null,
+                    },
+                    true
+                );
+                expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+                expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                    core,
+                    '_DOMSelectionHideCursor',
+                    null
+                );
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                    core,
+                    '_DOMSelectionHideSelection',
+                    null
+                );
+            } else {
+                expect(triggerEventSpy).not.toHaveBeenCalled();
+                expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+                expect(setEditorStyleSpy).not.toHaveBeenCalled();
+            }
+        }
+
+        it('From null selection', () => {
+            runTest(null, null, true);
+        });
+
+        it('From range selection, same', () => {
+            runTest(
+                {
+                    type: 'range',
+                    range: {
+                        startContainer: 'C1',
+                        startOffset: 'O1',
+                        endContainer: 'C2',
+                        endOffset: 'O2',
+                    } as any,
+                    isReverted: false,
+                },
+                {
+                    type: 'range',
+                    range: {
+                        startContainer: 'C1',
+                        startOffset: 'O1',
+                        endContainer: 'C2',
+                        endOffset: 'O2',
+                    } as any,
+                    isReverted: false,
+                },
+                false
+            );
+        });
+
+        it('From image selection, same', () => {
+            let mockedImage: any;
+
+            mockedImage = {
+                parentElement: {
+                    ownerDocument: doc,
+                    firstElementChild: mockedImage,
+                    lastElementChild: mockedImage,
+                    appendChild: appendChildSpy,
+                },
+                ownerDocument: doc,
+            } as any;
+
+            runTest(
+                {
+                    type: 'image',
+                    image: mockedImage,
+                },
+                {
+                    type: 'image',
+                    image: mockedImage,
+                },
+                false
+            );
+        });
+
+        it('From table selection, same', () => {
+            runTest(
+                {
+                    type: 'table',
+                    table: 'T1' as any,
+                    firstColumn: 0,
+                    firstRow: 0,
+                    lastColumn: 1,
+                    lastRow: 1,
+                },
+                {
+                    type: 'table',
+                    table: 'T1' as any,
+                    firstColumn: 0,
+                    firstRow: 0,
+                    lastColumn: 1,
+                    lastRow: 1,
+                },
+                false
             );
         });
     });

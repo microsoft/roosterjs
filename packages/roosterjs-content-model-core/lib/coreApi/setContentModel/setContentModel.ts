@@ -1,4 +1,4 @@
-import { updateCachedSelection } from '../../corePlugin/cache/updateCachedSelection';
+import { updateCache } from '../../corePlugin/cache/updateCache';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -37,16 +37,16 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 
     if (!core.lifecycle.shadowEditFragment) {
-        updateCachedSelection(core.cache, selection || undefined);
+        // Clear pending mutations since we will use our latest model object to replace existing cache
+        core.cache.textMutationObserver?.flushMutations(true /*ignoreMutations*/);
+
+        updateCache(core.cache, model, selection);
 
         if (!option?.ignoreSelection && selection) {
             core.api.setDOMSelection(core, selection);
         } else {
             core.selection.selection = selection;
         }
-
-        // Clear pending mutations since we will use our latest model object to replace existing cache
-        core.cache.textMutationObserver?.flushMutations(model);
     }
 
     return selection;
