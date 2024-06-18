@@ -163,7 +163,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
         const selection = editor.getDOMSelection();
-        console.log('mouseUp', selection);
+
         if (
             (event.isClicking &&
                 selection &&
@@ -177,9 +177,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
-            console.log('keyDownHandler');
             const selection = editor.getDOMSelection();
-            console.log('keyDownHandler', selection);
             if (!isModifierKey(event.rawEvent)) {
                 this.selectionChangeHandler(editor, selection);
             } else if (selection?.type == 'image') {

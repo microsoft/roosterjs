@@ -40,22 +40,6 @@ const model: ContentModelDocument = {
 };
 
 describe('ImageEditPlugin', () => {
-    it('mouseUp', () => {
-        const plugin = new ImageEditPlugin();
-        const editor = initEditor('image_edit', [plugin], model);
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: 'mouseUp',
-            isClicking: true,
-            rawEvent: {
-                button: 0,
-            } as any,
-        });
-
-        expect(plugin.isEditingImage).toBeTruthy();
-        plugin.dispose();
-    });
-
     it('keyDown', () => {
         const plugin = new ImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], model);
@@ -74,6 +58,57 @@ describe('ImageEditPlugin', () => {
             } as any,
         });
         expect(plugin.isEditingImage).toBeFalsy();
+        plugin.dispose();
+    });
+
+    it('mouseUp', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                id: 'image_0',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 0,
+            } as any,
+        });
+
+        expect(plugin.isEditingImage).toBeTruthy();
         plugin.dispose();
     });
 
