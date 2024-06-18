@@ -1,8 +1,8 @@
 import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
-import { getSelectionRootNode } from 'roosterjs-content-model-dom';
 import { updateCache } from './updateCache';
+import { getSelectionRootNode } from 'roosterjs-content-model-dom';
 import type { Mutation } from './textMutationObserver';
 import type {
     CachePluginState,
@@ -145,6 +145,15 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                 case 'text':
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
+                    break;
+
+                case 'elementId':
+                    const element = mutation.element;
+
+                    if (!this.state.domIndexer?.reconcileElementId(element)) {
+                        this.invalidateCache();
+                    }
+
                     break;
 
                 case 'unknown':

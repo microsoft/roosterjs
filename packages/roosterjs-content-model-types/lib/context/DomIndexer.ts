@@ -49,6 +49,13 @@ export interface DomIndexer {
     ) => boolean;
 
     /**
+     * When id is changed from DOM element, update the new ID to related content model if possible
+     * @param element The element that has id changed
+     * @returns True if successfully updated, otherwise false
+     */
+    reconcileElementId: (element: HTMLElement) => boolean;
+
+    /**
      * When child list of editor content is changed, we can use this method to do sync the change from editor into content model.
      * This is mostly used when user start to type in an empty line. In that case browser will remove the existing BR node in the empty line if any,
      * and create a new TEXT node for the typed text. Here we use these information to remove original Br segment and create a new Text segment

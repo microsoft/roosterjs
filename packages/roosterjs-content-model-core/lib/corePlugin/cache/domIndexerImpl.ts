@@ -3,6 +3,7 @@ import {
     createSelectionMarker,
     createText,
     getObjectKeys,
+    isElementOfType,
     isNodeOfType,
     setSelection,
 } from 'roosterjs-content-model-dom';
@@ -14,7 +15,6 @@ import type {
     ContentModelSegmentFormat,
     ContentModelSelectionMarker,
     ContentModelTable,
-    ContentModelTableRow,
     ContentModelText,
     DomIndexer,
     DOMSelection,
@@ -34,7 +34,7 @@ export interface SegmentItem {
  * @internal Export for test only
  */
 export interface TableItem {
-    tableRows: ContentModelTableRow[];
+    table: ContentModelTable;
 }
 
 /**
@@ -96,6 +96,23 @@ function getIndexedSegmentItem(node: Node | null): SegmentItem | null {
     return node && isIndexedSegment(node) ? node.__roosterjsContentModel : null;
 }
 
+function getIndexedTableItem(element: HTMLTableElement): TableItem | null {
+    const index = (element as IndexedTableElement).__roosterjsContentModel;
+    const table = index?.table;
+
+    if (
+        table?.blockType == 'Table' &&
+        Array.isArray(table.rows) &&
+        table.rows.every(
+            x => Array.isArray(x?.cells) && x.cells.every(y => y?.blockGroupType == 'TableCell')
+        )
+    ) {
+        return index;
+    } else {
+        return null;
+    }
+}
+
 /**
  * @internal
  * Implementation of DomIndexer
@@ -140,7 +157,7 @@ export class DomIndexerImpl implements DomIndexer {
 
     onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
         const indexedTable = tableElement as IndexedTableElement;
-        indexedTable.__roosterjsContentModel = { tableRows: table.rows };
+        indexedTable.__roosterjsContentModel = { table };
     }
 
     reconcileSelection(
@@ -164,8 +181,38 @@ export class DomIndexerImpl implements DomIndexer {
 
         switch (newSelection.type) {
             case 'image':
+                const indexedImage = getIndexedSegmentItem(newSelection.image);
+                const image = indexedImage?.segments[0];
+
+                if (image) {
+                    image.isSelected = true;
+                    setSelection(model, image);
+
+                    return true;
+                } else {
+                    return false;
+                }
+
             case 'table':
-                // For image and table selection, we just clear the cached model since during selecting the element id might be changed
+                const indexedTable = getIndexedTableItem(newSelection.table);
+
+                if (indexedTable) {
+                    const firstCell =
+                        indexedTable.table.rows[newSelection.firstRow]?.cells[
+                            newSelection.firstColumn
+                        ];
+                    const lastCell =
+                        indexedTable.table.rows[newSelection.lastRow]?.cells[
+                            newSelection.lastColumn
+                        ];
+
+                    if (firstCell && lastCell) {
+                        setSelection(model, firstCell, lastCell);
+
+                        return true;
+                    }
+                }
+
                 return false;
 
             case 'range':
@@ -247,6 +294,32 @@ export class DomIndexerImpl implements DomIndexer {
         }
 
         return canHandle && !context.pendingTextNode;
+    }
+
+    reconcileElementId(element: HTMLElement) {
+        if (isElementOfType(element, 'img')) {
+            const indexedImg = getIndexedSegmentItem(element);
+
+            if (indexedImg?.segments[0]?.segmentType == 'Image') {
+                indexedImg.segments[0].format.id = element.id;
+
+                return true;
+            } else {
+                return false;
+            }
+        } else if (isElementOfType(element, 'table')) {
+            const indexedTable = getIndexedTableItem(element);
+
+            if (indexedTable) {
+                indexedTable.table.format.id = element.id;
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     private isCollapsed(selection: RangeSelectionForCache): boolean {

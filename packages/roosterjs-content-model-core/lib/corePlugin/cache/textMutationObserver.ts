@@ -2,6 +2,7 @@ import { createDOMHelper } from '../../editor/core/DOMHelperImpl';
 import {
     findClosestBlockEntityContainer,
     findClosestEntityWrapper,
+    isNodeOfType,
 } from 'roosterjs-content-model-dom';
 import type { DOMHelper, TextMutationObserver } from 'roosterjs-content-model-types';
 
@@ -75,8 +76,15 @@ class TextMutationObserverImpl implements TextMutationObserver {
             switch (mutation.type) {
                 case 'attributes':
                     if (this.domHelper.isNodeInEditor(target, true /*excludingSelf*/)) {
-                        // We cannot handle attributes changes on editor content for now
-                        canHandle = false;
+                        if (
+                            mutation.attributeName == 'id' &&
+                            isNodeOfType(target, 'ELEMENT_NODE')
+                        ) {
+                            this.onMutation({ type: 'elementId', element: target });
+                        } else {
+                            // We cannot handle attributes changes on editor content for now
+                            canHandle = false;
+                        }
                     }
                     break;
 
@@ -133,6 +141,10 @@ export type MutationType =
      */
     | 'unknown'
     /**
+     * Element id is changed
+     */
+    | 'elementId'
+    /**
      * Only text is changed
      */
     | 'text'
@@ -156,6 +168,13 @@ export interface UnknownMutation extends MutationBase<'unknown'> {}
 /**
  * @internal
  */
+export interface ElementIdMutation extends MutationBase<'elementId'> {
+    element: HTMLElement;
+}
+
+/**
+ * @internal
+ */
 export interface TextMutation extends MutationBase<'text'> {}
 
 /**
@@ -169,7 +188,7 @@ export interface ChildListMutation extends MutationBase<'childList'> {
 /**
  * @internal
  */
-export type Mutation = UnknownMutation | TextMutation | ChildListMutation;
+export type Mutation = UnknownMutation | ElementIdMutation | TextMutation | ChildListMutation;
 
 /**
  * @internal
