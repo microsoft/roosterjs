@@ -1,6 +1,7 @@
 import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
+import { getSelectionRootNode } from 'roosterjs-content-model-dom';
 import { updateCache } from './updateCache';
 import type { Mutation } from './textMutationObserver';
 import type {
@@ -23,7 +24,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param option The editor option
      * @param contentDiv The editor content DIV
      */
-    constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
+    constructor(option: EditorOptions, private contentDiv: HTMLDivElement) {
         this.state = option.disableCache
             ? {}
             : {
@@ -31,7 +32,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                       option.experimentalFeatures &&
                           option.experimentalFeatures.indexOf('PersistCache') >= 0
                   ),
-                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+                  textMutationObserver: createTextMutationObserver(this.onMutation),
               };
     }
 
@@ -52,7 +53,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
 
-        this.state.textMutationObserver?.startObserving();
+        this.state.textMutationObserver?.startObserving(this.contentDiv);
     }
 
     /**
@@ -90,6 +91,15 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
 
         switch (event.eventType) {
+            case 'logicalRootChanged':
+                const observer = this.state.textMutationObserver;
+
+                if (observer) {
+                    observer.stopObserving();
+                    observer.startObserving(event.logicalRoot);
+                }
+                break;
+
             case 'keyDown':
             case 'input':
                 if (!this.state.textMutationObserver) {
@@ -161,23 +171,37 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
-        const newRangeEx = editor.getDOMSelection() || undefined;
+        const newSelection = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
             forceUpdate ||
             !cachedSelection ||
-            !newRangeEx ||
-            !areSameSelections(newRangeEx, cachedSelection);
+            !newSelection ||
+            !areSameSelections(newSelection, cachedSelection);
 
         if (isSelectionChanged) {
-            if (
-                !model ||
-                !newRangeEx ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
-            ) {
+            if (!model || !newSelection) {
+                // No model or selection, we can't update cache, so invalidate it
                 this.invalidateCache();
+            } else if (
+                !this.state.domIndexer?.reconcileSelection(model, newSelection, cachedSelection)
+            ) {
+                // There is cached model and selection, but we failed to reconcile the selection
+                const selectionRoot = getSelectionRootNode(newSelection);
+
+                if (
+                    selectionRoot &&
+                    !this.state.textMutationObserver?.shouldIgnoreNode(selectionRoot)
+                ) {
+                    // Invalidate cache if the selection is not under entity
+                    this.invalidateCache();
+                } else {
+                    // For the case when selection is under entity, we can ignore this selection change and just update cache directly
+                    updateCache(this.state, model, newSelection);
+                }
             } else {
-                updateCache(this.state, model, newRangeEx);
+                // Successfully reconciled model selection, update the cache
+                updateCache(this.state, model, newSelection);
             }
         } else {
             this.state.cachedSelection = cachedSelection;

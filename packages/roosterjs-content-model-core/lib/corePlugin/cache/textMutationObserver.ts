@@ -1,17 +1,21 @@
-import type { TextMutationObserver } from 'roosterjs-content-model-types';
+import { createDOMHelper } from 'roosterjs-content-model-core/lib/editor/core/DOMHelperImpl';
+import {
+    findClosestBlockEntityContainer,
+    findClosestEntityWrapper,
+} from 'roosterjs-content-model-dom';
+import type { DOMHelper, TextMutationObserver } from 'roosterjs-content-model-types';
 
 class TextMutationObserverImpl implements TextMutationObserver {
     private observer: MutationObserver;
+    private domHelper: DOMHelper | null = null;
 
-    constructor(
-        private contentDiv: HTMLDivElement,
-        private onMutation: (mutation: Mutation) => void
-    ) {
+    constructor(private onMutation: (mutation: Mutation) => void) {
         this.observer = new MutationObserver(this.onMutationInternal);
     }
 
-    startObserving() {
-        this.observer.observe(this.contentDiv, {
+    startObserving(logicalRoot: HTMLElement) {
+        this.domHelper = createDOMHelper(logicalRoot);
+        this.observer.observe(logicalRoot, {
             subtree: true,
             childList: true,
             attributes: true,
@@ -20,6 +24,7 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     stopObserving() {
+        this.domHelper = null;
         this.observer.disconnect();
     }
 
@@ -31,7 +36,22 @@ class TextMutationObserverImpl implements TextMutationObserver {
         }
     }
 
+    shouldIgnoreNode(node: Node): boolean {
+        if (!this.domHelper) {
+            return false;
+        }
+
+        return !!(
+            findClosestEntityWrapper(node, this.domHelper) ||
+            findClosestBlockEntityContainer(node, this.domHelper)
+        );
+    }
+
     private onMutationInternal = (mutations: MutationRecord[]) => {
+        if (!this.domHelper) {
+            return;
+        }
+
         let canHandle = true;
         let firstTarget: Node | null = null;
         let lastTextChangeNode: Node | null = null;
@@ -39,12 +59,28 @@ class TextMutationObserverImpl implements TextMutationObserver {
         let removedNodes: Node[] = [];
         let reconcileText = false;
 
+        const ignoredNodes = new Set<Node>();
+        const includedNodes = new Set<Node>();
+
         for (let i = 0; i < mutations.length && canHandle; i++) {
             const mutation = mutations[i];
+            const target = mutation.target;
+
+            if (ignoredNodes.has(target)) {
+                continue;
+            } else if (!includedNodes.has(target)) {
+                if (this.shouldIgnoreNode(target)) {
+                    ignoredNodes.add(target);
+
+                    continue;
+                } else {
+                    includedNodes.add(target);
+                }
+            }
 
             switch (mutation.type) {
                 case 'attributes':
-                    if (mutation.target != this.contentDiv) {
+                    if (this.domHelper.isNodeInEditor(target, true /*excludingSelf*/)) {
                         // We cannot handle attributes changes on editor content for now
                         canHandle = false;
                     }
@@ -145,8 +181,7 @@ export type Mutation = UnknownMutation | TextMutation | ChildListMutation;
  * @internal
  */
 export function createTextMutationObserver(
-    contentDiv: HTMLDivElement,
     onMutation: (mutation: Mutation) => void
 ): TextMutationObserver {
-    return new TextMutationObserverImpl(contentDiv, onMutation);
+    return new TextMutationObserverImpl(onMutation);
 }

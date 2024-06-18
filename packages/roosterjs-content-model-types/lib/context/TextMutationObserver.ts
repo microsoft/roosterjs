@@ -5,12 +5,19 @@ export interface TextMutationObserver {
     /**
      * Start observing mutations from editor
      */
-    startObserving(): void;
+    startObserving(logicalRoot: HTMLElement): void;
 
     /**
      * Stop observing mutations from editor
      */
     stopObserving(): void;
+
+    /**
+     * Check if the given node should be ignored for mutation.
+     * We ignore all mutations under entity
+     * @param node The node to check
+     */
+    shouldIgnoreNode(node: Node): boolean;
 
     /**
      * Flush all pending mutations and update cached model if need
