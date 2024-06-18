@@ -1,3 +1,4 @@
+import * as getSelectionRootNode from 'roosterjs-content-model-dom/lib/domUtils/selection/getSelectionRootNode';
 import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
 import { createCachePlugin } from '../../../lib/corePlugin/cache/CachePlugin';
 import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
@@ -79,6 +80,52 @@ describe('CachePlugin', () => {
                 textMutationObserver: mockedObserver,
             });
             expect(startObservingSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('logicalRootChanged event', () => {
+        it('Change to a new node', () => {
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+            const mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+            const mockedNode = 'NODE' as any;
+
+            const textMutationObserverSpy = spyOn(
+                textMutationObserver,
+                'createTextMutationObserver'
+            ).and.returnValue(mockedObserver);
+
+            init({});
+
+            const state = plugin.getState();
+
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+
+            expect(stopObservingSpy).toHaveBeenCalledTimes(0);
+            expect(startObservingSpy).toHaveBeenCalledTimes(1);
+            expect(textMutationObserverSpy).toHaveBeenCalledTimes(1);
+
+            plugin.onPluginEvent({
+                eventType: 'logicalRootChanged',
+                logicalRoot: mockedNode,
+            });
+
+            expect(state).toEqual({
+                cachedModel: undefined,
+                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+            });
+            expect(stopObservingSpy).toHaveBeenCalledTimes(1);
+            expect(startObservingSpy).toHaveBeenCalledTimes(2);
+            expect(textMutationObserverSpy).toHaveBeenCalledTimes(2);
+            expect(textMutationObserverSpy.calls.argsFor(1)[0]).toBe(mockedNode);
+
+            plugin.dispose();
         });
     });
 
@@ -380,18 +427,27 @@ describe('CachePlugin', () => {
         let stopObservingSpy: jasmine.Spy;
         let mockedObserver: any;
         let reconcileChildListSpy: jasmine.Spy;
+        let getSelectionRootNodeSpy: jasmine.Spy;
+        let shouldIgnoreNodeSpy: jasmine.Spy;
         let mockedIndexer: DomIndexer;
+        const mockedSelectionRoot = 'ROOT' as any;
 
         beforeEach(() => {
             reconcileChildListSpy = jasmine.createSpy('reconcileChildList');
             startObservingSpy = jasmine.createSpy('startObserving');
             stopObservingSpy = jasmine.createSpy('stopObserving');
+            shouldIgnoreNodeSpy = jasmine.createSpy('shouldIgnoreNode');
 
             mockedObserver = {
                 startObserving: startObservingSpy,
                 stopObserving: stopObservingSpy,
+                shouldIgnoreNode: shouldIgnoreNodeSpy,
             } as any;
 
+            getSelectionRootNodeSpy = spyOn(
+                getSelectionRootNode,
+                'getSelectionRootNode'
+            ).and.returnValue(mockedSelectionRoot);
             spyOn(textMutationObserver, 'createTextMutationObserver').and.callFake(
                 (_: any, _onMutation: any) => {
                     onMutation = _onMutation;
@@ -528,6 +584,96 @@ describe('CachePlugin', () => {
                 textMutationObserver: mockedObserver,
                 cachedModel: 'MODEL' as any,
                 cachedSelection: 'SELECTION' as any,
+            });
+        });
+
+        it('text, no new selection', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            getDOMSelectionSpy.and.returnValue(null);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
+
+        it('text, no cached model', () => {
+            const state = plugin.getState();
+            state.cachedModel = undefined;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
+
+        it('text, should ignore node', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+            reconcileChildListSpy.and.returnValue(false);
+            shouldIgnoreNodeSpy.and.returnValue(true);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: 'MODEL' as any,
+                cachedSelection: 'NEWSELECTION' as any,
+            });
+        });
+
+        it('text, no selection root (should never happen)', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+            reconcileChildListSpy.and.returnValue(false);
+            getSelectionRootNodeSpy.and.returnValue(null);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
             });
         });
     });

@@ -1,4 +1,4 @@
-import { createDOMHelper } from 'roosterjs-content-model-core/lib/editor/core/DOMHelperImpl';
+import { createDOMHelper } from '../../editor/core/DOMHelperImpl';
 import {
     findClosestBlockEntityContainer,
     findClosestEntityWrapper,
@@ -7,15 +7,18 @@ import type { DOMHelper, TextMutationObserver } from 'roosterjs-content-model-ty
 
 class TextMutationObserverImpl implements TextMutationObserver {
     private observer: MutationObserver;
-    private domHelper: DOMHelper | null = null;
+    private domHelper: DOMHelper;
 
-    constructor(private onMutation: (mutation: Mutation) => void) {
+    constructor(
+        private contentDiv: HTMLDivElement,
+        private onMutation: (mutation: Mutation) => void
+    ) {
         this.observer = new MutationObserver(this.onMutationInternal);
+        this.domHelper = createDOMHelper(contentDiv);
     }
 
-    startObserving(logicalRoot: HTMLElement) {
-        this.domHelper = createDOMHelper(logicalRoot);
-        this.observer.observe(logicalRoot, {
+    startObserving() {
+        this.observer.observe(this.contentDiv, {
             subtree: true,
             childList: true,
             attributes: true,
@@ -24,7 +27,6 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     stopObserving() {
-        this.domHelper = null;
         this.observer.disconnect();
     }
 
@@ -37,10 +39,6 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     shouldIgnoreNode(node: Node): boolean {
-        if (!this.domHelper) {
-            return false;
-        }
-
         return !!(
             findClosestEntityWrapper(node, this.domHelper) ||
             findClosestBlockEntityContainer(node, this.domHelper)
@@ -48,10 +46,6 @@ class TextMutationObserverImpl implements TextMutationObserver {
     }
 
     private onMutationInternal = (mutations: MutationRecord[]) => {
-        if (!this.domHelper) {
-            return;
-        }
-
         let canHandle = true;
         let firstTarget: Node | null = null;
         let lastTextChangeNode: Node | null = null;
@@ -181,7 +175,8 @@ export type Mutation = UnknownMutation | TextMutation | ChildListMutation;
  * @internal
  */
 export function createTextMutationObserver(
+    contentDiv: HTMLDivElement,
     onMutation: (mutation: Mutation) => void
 ): TextMutationObserver {
-    return new TextMutationObserverImpl(onMutation);
+    return new TextMutationObserverImpl(contentDiv, onMutation);
 }

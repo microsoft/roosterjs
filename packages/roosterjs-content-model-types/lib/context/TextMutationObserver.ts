@@ -5,7 +5,7 @@ export interface TextMutationObserver {
     /**
      * Start observing mutations from editor
      */
-    startObserving(logicalRoot: HTMLElement): void;
+    startObserving(): void;
 
     /**
      * Stop observing mutations from editor

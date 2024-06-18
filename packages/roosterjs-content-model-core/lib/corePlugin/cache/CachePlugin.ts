@@ -24,7 +24,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param option The editor option
      * @param contentDiv The editor content DIV
      */
-    constructor(option: EditorOptions, private contentDiv: HTMLDivElement) {
+    constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
         this.state = option.disableCache
             ? {}
             : {
@@ -32,7 +32,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                       option.experimentalFeatures &&
                           option.experimentalFeatures.indexOf('PersistCache') >= 0
                   ),
-                  textMutationObserver: createTextMutationObserver(this.onMutation),
+                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
               };
     }
 
@@ -53,7 +53,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
 
-        this.state.textMutationObserver?.startObserving(this.contentDiv);
+        this.state.textMutationObserver?.startObserving();
     }
 
     /**
@@ -92,11 +92,15 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
         switch (event.eventType) {
             case 'logicalRootChanged':
-                const observer = this.state.textMutationObserver;
+                this.invalidateCache();
 
-                if (observer) {
-                    observer.stopObserving();
-                    observer.startObserving(event.logicalRoot);
+                if (this.state.textMutationObserver) {
+                    this.state.textMutationObserver.stopObserving();
+                    this.state.textMutationObserver = createTextMutationObserver(
+                        event.logicalRoot,
+                        this.onMutation
+                    );
+                    this.state.textMutationObserver.startObserving();
                 }
                 break;
 
@@ -190,7 +194,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 const selectionRoot = getSelectionRootNode(newSelection);
 
                 if (
-                    selectionRoot &&
+                    !selectionRoot ||
                     !this.state.textMutationObserver?.shouldIgnoreNode(selectionRoot)
                 ) {
                     // Invalidate cache if the selection is not under entity

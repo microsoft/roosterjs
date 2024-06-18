@@ -5,9 +5,9 @@ export interface DOMHelper {
     /**
      * Check if the given DOM node is in editor
      * @param node The node to check
-     * @param excludeSelf When pass true, the function will return false if the passed in node is the root node itself
+     * @param excludeRoot When pass true, the function will return false if the passed in node is the root node itself
      */
-    isNodeInEditor(node: Node, excludeSelf?: boolean): boolean;
+    isNodeInEditor(node: Node, excludeRoot?: boolean): boolean;
 
     /**
      * Query HTML elements in editor by tag name.
