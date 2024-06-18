@@ -65,7 +65,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     protected editor: IEditor | null = null;
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
-    public wrapper: HTMLSpanElement | null = null;
+    protected wrapper: HTMLSpanElement | null = null;
     private imageEditInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
@@ -78,7 +78,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
-    private isEditing = false;
+    //EXPOSED FOR TEST ONLY
+    protected isEditing = false;
 
     constructor(protected options: ImageEditOptions = DefaultOptions) {}
 
@@ -117,6 +118,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.isEditing = false;
         this.cleanInfo();
         if (this.disposer) {
             this.disposer();
@@ -161,6 +163,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
         const selection = editor.getDOMSelection();
+        console.log('mouseUp', selection);
         if (
             (event.isClicking &&
                 selection &&
@@ -174,7 +177,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
+            console.log('keyDownHandler');
             const selection = editor.getDOMSelection();
+            console.log('keyDownHandler', selection);
             if (!isModifierKey(event.rawEvent)) {
                 this.selectionChangeHandler(editor, selection);
             } else if (selection?.type == 'image') {
@@ -289,11 +294,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         ]);
     }
 
-    public startRotateAndResize(
-        editor: IEditor,
-        image: HTMLImageElement,
-        imageSpan: HTMLSpanElement
-    ) {
+    public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, 'resizeAndRotate');
 
@@ -420,7 +421,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image);
     }
 
-    private startCropMode(editor: IEditor, image: HTMLImageElement, imageSpan: HTMLSpanElement) {
+    private startCropMode(editor: IEditor, image: HTMLImageElement) {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, 'crop');
             if (this.imageEditInfo && this.selectedImage && this.wrapper && this.clonedImage) {
@@ -692,15 +693,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             !parent.shadowRoot
         ) {
             if (this.isCropMode) {
-                this.startCropMode(this.editor, image, parent);
+                this.startCropMode(this.editor, image);
             } else {
-                this.startRotateAndResize(this.editor, image, parent);
+                this.startRotateAndResize(this.editor, image);
             }
         }
     };
 
     //EXPOSED FOR TEST ONLY
-    public getWrapper() {
-        return this.wrapper;
+    public get isEditingImage() {
+        return this.isEditing;
     }
 }

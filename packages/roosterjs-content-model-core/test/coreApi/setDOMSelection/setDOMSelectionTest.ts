@@ -21,6 +21,7 @@ describe('setDOMSelection', () => {
     let mockedRange = 'RANGE' as any;
     let createElementSpy: jasmine.Spy;
     let appendChildSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         querySelectorAllSpy = jasmine.createSpy('querySelectorAll');
@@ -38,6 +39,7 @@ describe('setDOMSelection', () => {
         createElementSpy = jasmine.createSpy('createElement').and.returnValue({
             appendChild: appendChildSpy,
         });
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
@@ -59,6 +61,7 @@ describe('setDOMSelection', () => {
             api: {
                 triggerEvent: triggerEventSpy,
                 setEditorStyle: setEditorStyleSpy,
+                getDOMSelection: getDOMSelectionSpy,
             },
             domHelper: {
                 hasFocus: hasFocusSpy,

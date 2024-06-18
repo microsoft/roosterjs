@@ -40,10 +40,55 @@ const model: ContentModelDocument = {
 };
 
 describe('ImageEditPlugin', () => {
-    const plugin = new ImageEditPlugin();
-    const editor = initEditor('image_edit', [plugin], model);
+    it('mouseUp', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 0,
+            } as any,
+        });
+
+        expect(plugin.isEditingImage).toBeTruthy();
+        plugin.dispose();
+    });
+
+    it('keyDown', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 0,
+            } as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'k',
+            } as any,
+        });
+        expect(plugin.isEditingImage).toBeFalsy();
+        plugin.dispose();
+    });
+
+    it('cropImage', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.cropImage();
+        expect(plugin.isEditingImage).toBeTruthy();
+        plugin.dispose();
+    });
 
     it('flip', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
         const image = new Image();
         image.src = 'test';
         plugin.initialize(editor);
@@ -54,6 +99,8 @@ describe('ImageEditPlugin', () => {
     });
 
     it('rotate', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
         const image = new Image();
         image.src = 'test';
         plugin.initialize(editor);

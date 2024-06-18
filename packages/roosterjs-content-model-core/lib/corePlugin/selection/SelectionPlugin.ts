@@ -18,7 +18,6 @@ import type {
     SelectionPluginState,
     EditorOptions,
     DOMHelper,
-    MouseUpEvent,
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
@@ -140,7 +139,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'mouseUp':
-                this.onMouseUp(event);
+                this.onMouseUp();
                 break;
 
             case 'keyDown':
@@ -164,10 +163,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-
         if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
+
         if (
             rawEvent.button === MouseLeftButton &&
             (image =
@@ -283,7 +282,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onMouseUp(event: MouseUpEvent) {
+    private onMouseUp() {
         this.detachMouseEvent();
     }
 
@@ -523,7 +522,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private getClickingImage(event: UIEvent): HTMLImageElement | null {
         const target = event.target as Node;
-
         return isNodeOfType(target, 'ELEMENT_NODE') && isElementOfType(target, 'img')
             ? target
             : null;
