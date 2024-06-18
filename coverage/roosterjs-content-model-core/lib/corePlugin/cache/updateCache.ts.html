@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-core/lib/corePlugin/cache/areSameSelection.ts</title>
+    <title>Code coverage report for roosterjs-content-model-core/lib/corePlugin/cache/updateCache.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/corePlugin/cache</a> areSameSelection.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/corePlugin/cache</a> updateCache.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -93,34 +93,29 @@
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">48x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">179x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">179x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">109x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">218x</span>
+<span class="cline-any cline-yes">109x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,40 +124,48 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type {
+    CachePluginState,
+    ContentModelDocument,
+    DOMSelection,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
- * Check if the given selections are the same
  */
-export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection): boolean {
-    if (sel1 == sel2) {
-        return true;
-    }
+export function updateCache(
+    state: CachePluginState,
+    model: ContentModelDocument,
+    selection: DOMSelection | null | undefined
+) {
+    state.cachedModel = model;
 &nbsp;
-    switch (sel1.type) {
-        case 'image':
-            return sel2.type == 'image' &amp;&amp; sel2.image == sel1.image;
-&nbsp;
-        case 'table':
-            return (
-                sel2.type == 'table' &amp;&amp;
-                sel2.table == sel1.table &amp;&amp;
-                sel2.firstColumn == sel1.firstColumn &amp;&amp;
-                sel2.lastColumn == sel1.lastColumn &amp;&amp;
-                sel2.firstRow == sel1.firstRow &amp;&amp;
-                sel2.lastRow == sel1.lastRow
-            );
-&nbsp;
-        case 'range':
-        default:
-            return (
-                sel2.type == 'range' &amp;&amp;
-                sel1.range.startContainer == sel2.start.node &amp;&amp;
-                sel1.range.endContainer == sel2.end.node &amp;&amp;
-                sel1.range.startOffset == sel2.start.offset &amp;&amp;
-                sel1.range.endOffset == sel2.end.offset
-            );
+    if (selection?.type == 'range') {
+        const {
+            range: { startContainer, startOffset, endContainer, endOffset },
+            isReverted,
+        } = selection;
+        state.cachedSelection = {
+            type: 'range',
+            isReverted: isReverted,
+            start: {
+                node: startContainer,
+                offset: startOffset,
+            },
+            end: {
+                node: endContainer,
+                offset: endOffset,
+            },
+        };
+    } else {
+        state.cachedSelection = selection ?? undefined;
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -172,7 +175,7 @@ export function areSameSelection(sel1: DOMSelection, sel2: CacheSelection): bool
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jun 18 2024 17:09:26 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 18 2024 19:22:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
