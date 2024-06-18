@@ -1,7 +1,7 @@
-import { areSameSelection } from '../../../lib/corePlugin/cache/areSameSelection';
+import { areSameSelections } from '../../../lib/corePlugin/cache/areSameSelections';
 import { CacheSelection, DOMSelection } from 'roosterjs-content-model-types';
 
-describe('areSameSelection', () => {
+describe('areSameSelections', () => {
     const startContainer = 'MockedStartContainer' as any;
     const endContainer = 'MockedEndContainer' as any;
     const startOffset = 1;
@@ -9,8 +9,8 @@ describe('areSameSelection', () => {
     const table = 'MockedTable' as any;
     const image = 'MockedImage' as any;
 
-    function runTest(r1: DOMSelection, r2: CacheSelection, result: boolean) {
-        expect(areSameSelection(r1, r2)).toBe(result);
+    function runTest(r1: DOMSelection, r2: DOMSelection | CacheSelection, result: boolean) {
+        expect(areSameSelections(r1, r2)).toBe(result);
     }
 
     it('Same object', () => {
@@ -250,6 +250,110 @@ describe('areSameSelection', () => {
                     node: endContainer,
                     offset: 4,
                 },
+                isReverted: false,
+            },
+            false
+        );
+    });
+
+    it('different normal range - 5', () => {
+        runTest(
+            {
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
+                isReverted: false,
+            },
+            {
+                type: 'range',
+                range: {
+                    startContainer: 'Container 2' as any,
+                    startOffset: startOffset,
+                    endContainer: endContainer,
+                    endOffset: endOffset,
+                } as any,
+                isReverted: false,
+            },
+            false
+        );
+    });
+
+    it('different normal range - 6', () => {
+        runTest(
+            {
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
+                isReverted: false,
+            },
+            {
+                type: 'range',
+                range: {
+                    startContainer: startContainer,
+                    startOffset: startOffset,
+                    endContainer: 'Container 2' as any,
+                    endOffset: endOffset,
+                } as any,
+                isReverted: false,
+            },
+            false
+        );
+    });
+
+    it('different normal range - 7', () => {
+        runTest(
+            {
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
+                isReverted: false,
+            },
+            {
+                type: 'range',
+                range: {
+                    startContainer: startContainer,
+                    startOffset: 3,
+                    endContainer: endContainer,
+                    endOffset: endOffset,
+                } as any,
+                isReverted: false,
+            },
+            false
+        );
+    });
+
+    it('different normal range - 8', () => {
+        runTest(
+            {
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
+                isReverted: false,
+            },
+            {
+                type: 'range',
+                range: {
+                    startContainer: startContainer,
+                    startOffset: startOffset,
+                    endContainer: endContainer,
+                    endOffset: 4,
+                } as any,
                 isReverted: false,
             },
             false

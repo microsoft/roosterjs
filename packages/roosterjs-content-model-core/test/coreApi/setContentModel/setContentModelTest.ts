@@ -1,5 +1,6 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
+import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { setContentModel } from '../../../lib/coreApi/setContentModel/setContentModel';
 
@@ -19,6 +20,7 @@ describe('setContentModel', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let flushMutationsSpy: jasmine.Spy;
+    let updateCacheSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -81,7 +83,7 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(core.cache.cachedSelection).toBe(mockedRange);
-        expect(flushMutationsSpy).toHaveBeenCalledWith(mockedModel);
+        expect(flushMutationsSpy).toHaveBeenCalledWith(true);
     });
 
     it('with default option, no shadow edit', () => {
@@ -250,5 +252,23 @@ describe('setContentModel', () => {
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(core.selection.selection).toBe(null);
+    });
+
+    it('Flush mutation before update cache', () => {
+        const mockedRange = {
+            type: 'image',
+        } as any;
+
+        updateCacheSpy = spyOn(updateCache, 'updateCache');
+        contentModelToDomSpy.and.returnValue(mockedRange);
+
+        core.selection = {
+            selection: 'SELECTION' as any,
+            tableSelection: null,
+        };
+        setContentModel(core, mockedModel);
+
+        expect(flushMutationsSpy).toHaveBeenCalledBefore(updateCacheSpy);
+        expect(updateCacheSpy).toHaveBeenCalledBefore(setDOMSelectionSpy);
     });
 });

@@ -1,7 +1,7 @@
 import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
+import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
 import {
     ContentModelDocument,
@@ -326,7 +326,7 @@ describe('createContentModel and cache management', () => {
     let cloneModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let createEditorContextSpy: jasmine.Spy;
-    let updateCachedSelectionSpy: jasmine.Spy;
+    let updateCacheSpy: jasmine.Spy;
 
     const mockedSelection = 'SELECTION' as any;
     const mockedFragment = 'FRAGMENT' as any;
@@ -345,7 +345,7 @@ describe('createContentModel and cache management', () => {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
-        updateCachedSelectionSpy = spyOn(updateCachedSelection, 'updateCachedSelection');
+        updateCacheSpy = spyOn(updateCache, 'updateCache');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
 
@@ -385,14 +385,17 @@ describe('createContentModel and cache management', () => {
         }
 
         if (allowIndex && !useCache) {
-            expect(core.cache.cachedModel).toBe(mockedNewModel);
-            expect(updateCachedSelectionSpy).toHaveBeenCalled();
+            expect(updateCacheSpy).toHaveBeenCalledWith(
+                core.cache,
+                mockedNewModel,
+                mockedSelection
+            );
         } else if (hasCache) {
             expect(core.cache.cachedModel).toBe(mockedModel);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         } else {
             expect(core.cache.cachedModel).toBe(null!);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         }
     }
 

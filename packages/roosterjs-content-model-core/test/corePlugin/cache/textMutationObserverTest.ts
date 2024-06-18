@@ -1,16 +1,8 @@
 import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
-import { DomIndexer, TextMutationObserver } from 'roosterjs-content-model-types';
-import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { TextMutationObserver } from 'roosterjs-content-model-types';
 
 describe('TextMutationObserverImpl', () => {
-    let domIndexer: DomIndexer;
-    let onSkipMutation: jasmine.Spy;
     let observer: TextMutationObserver;
-
-    beforeEach(() => {
-        domIndexer = new DomIndexerImpl();
-        onSkipMutation = jasmine.createSpy('onSkipMutation');
-    });
 
     afterEach(() => {
         observer?.stopObserving();
@@ -19,39 +11,32 @@ describe('TextMutationObserverImpl', () => {
     it('init', () => {
         const div = document.createElement('div');
         const onMutation = jasmine.createSpy('onMutation');
-        textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        textMutationObserver.createTextMutationObserver(div, onMutation);
 
         expect(onMutation).not.toHaveBeenCalled();
-        expect(onSkipMutation).not.toHaveBeenCalled();
     });
 
-    it('not text change', async () => {
+    it('no text change', async () => {
         const div = document.createElement('div');
         const onMutation = jasmine.createSpy('onMutation');
 
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
-        div.appendChild(document.createElement('br'));
+        const br = document.createElement('br');
+        div.appendChild(br);
 
         await new Promise<void>(resolve => {
             window.setTimeout(resolve, 10);
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith(false);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [br],
+            removedNodes: [],
+        });
     });
 
     it('text change', async () => {
@@ -61,12 +46,7 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
@@ -77,8 +57,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith(true);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
     });
 
     it('text change in deeper node', async () => {
@@ -91,12 +70,7 @@ describe('TextMutationObserverImpl', () => {
 
         const onMutation = jasmine.createSpy('onMutation');
 
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
@@ -107,8 +81,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith(true);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
     });
 
     it('text and non-text change', async () => {
@@ -119,25 +92,26 @@ describe('TextMutationObserverImpl', () => {
 
         const onMutation = jasmine.createSpy('onMutation');
 
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
         text.nodeValue = '1';
-        div.appendChild(document.createElement('br'));
+
+        const br = document.createElement('br');
+        div.appendChild(br);
 
         await new Promise<void>(resolve => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith(false);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(2);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [br],
+            removedNodes: [],
+        });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
     });
 
     it('flush mutation', async () => {
@@ -147,12 +121,7 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
@@ -163,8 +132,9 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(onMutation).toHaveBeenCalledWith(true);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'text',
+        });
     });
 
     it('flush mutation without change', async () => {
@@ -174,12 +144,7 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
         observer.flushMutations();
@@ -189,7 +154,6 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).not.toHaveBeenCalled();
-        expect(onSkipMutation).not.toHaveBeenCalled();
     });
 
     it('flush mutation with a new model', async () => {
@@ -199,12 +163,7 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(text);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
@@ -218,7 +177,6 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).not.toHaveBeenCalled();
-        expect(onSkipMutation).toHaveBeenCalledWith(newModel);
     });
 
     it('flush mutation when type in new line - 1', async () => {
@@ -229,18 +187,11 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(br);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
         div.replaceChild(text, br);
-
-        const reconcileChildListSpy = spyOn(domIndexer, 'reconcileChildList').and.returnValue(true);
 
         observer.flushMutations();
 
@@ -248,9 +199,12 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(reconcileChildListSpy).toHaveBeenCalledWith([text], [br]);
-        expect(onMutation).not.toHaveBeenCalled();
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [text],
+            removedNodes: [br],
+        });
     });
 
     it('flush mutation when type in new line - 2', async () => {
@@ -261,12 +215,7 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(br);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
@@ -274,17 +223,19 @@ describe('TextMutationObserverImpl', () => {
         div.removeChild(br);
         text.nodeValue = 'test';
 
-        const reconcileChildListSpy = spyOn(domIndexer, 'reconcileChildList').and.returnValue(true);
-
         observer.flushMutations();
 
         await new Promise<void>(resolve => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(reconcileChildListSpy).toHaveBeenCalledWith([text], [br]);
-        expect(onMutation).toHaveBeenCalledWith(true);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(2);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [text],
+            removedNodes: [br],
+        });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
     });
 
     it('flush mutation when type in new line, fail to reconcile', async () => {
@@ -295,20 +246,11 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(br);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
         div.replaceChild(text, br);
-
-        const reconcileChildListSpy = spyOn(domIndexer, 'reconcileChildList').and.returnValue(
-            false
-        );
 
         observer.flushMutations();
 
@@ -316,9 +258,12 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(reconcileChildListSpy).toHaveBeenCalledWith([text], [br]);
-        expect(onMutation).toHaveBeenCalledWith(false);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [text],
+            removedNodes: [br],
+        });
     });
 
     it('mutation happens in different root', async () => {
@@ -333,21 +278,12 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(div2);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
         div1.removeChild(br);
         div2.appendChild(text);
-
-        const reconcileChildListSpy = spyOn(domIndexer, 'reconcileChildList').and.returnValue(
-            false
-        );
 
         observer.flushMutations();
 
@@ -355,9 +291,8 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(reconcileChildListSpy).not.toHaveBeenCalled();
-        expect(onMutation).toHaveBeenCalledWith(false);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
     });
 
     it('attribute change', async () => {
@@ -367,20 +302,11 @@ describe('TextMutationObserverImpl', () => {
         div.appendChild(div1);
 
         const onMutation = jasmine.createSpy('onMutation');
-        observer = textMutationObserver.createTextMutationObserver(
-            div,
-            domIndexer,
-            onMutation,
-            onSkipMutation
-        );
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
 
         observer.startObserving();
 
         div1.id = 'div1';
-
-        const reconcileChildListSpy = spyOn(domIndexer, 'reconcileChildList').and.returnValue(
-            false
-        );
 
         observer.flushMutations();
 
@@ -388,8 +314,7 @@ describe('TextMutationObserverImpl', () => {
             window.setTimeout(resolve, 10);
         });
 
-        expect(reconcileChildListSpy).not.toHaveBeenCalled();
-        expect(onMutation).toHaveBeenCalledWith(false);
-        expect(onSkipMutation).not.toHaveBeenCalled();
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
     });
 });
