@@ -1,7 +1,7 @@
 import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
-import * as ensureImageHasSpanParent from '../../../lib/coreApi/setDOMSelection/ensureImageHasSpanParent';
 import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../../lib/coreApi/setDOMSelection/setDOMSelection';
+
 import {
     DEFAULT_SELECTION_BORDER_COLOR,
     DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
@@ -314,8 +314,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -374,8 +374,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:red!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:auto!important; outline-color:red!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -441,8 +441,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:DarkColorMock-red!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:auto!important; outline-color:DarkColorMock-red!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
@@ -502,8 +502,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -563,8 +563,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0_0)']
+                'outline-style:auto!important; outline-color:#DB626C!important;',
+                ['#image_0_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -927,9 +927,6 @@ describe('setDOMSelection', () => {
     describe('Same selection', () => {
         beforeEach(() => {
             querySelectorAllSpy.and.returnValue([]);
-            spyOn(ensureImageHasSpanParent, 'ensureImageHasSpanParent').and.callFake(
-                image => image
-            );
         });
 
         function runTest(
