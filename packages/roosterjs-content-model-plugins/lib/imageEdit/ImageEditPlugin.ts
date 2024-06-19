@@ -250,12 +250,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private startEditing(
         editor: IEditor,
         image: HTMLImageElement,
-        apiOperation?: ImageEditOperation
+        apiOperation: ImageEditOperation[]
     ) {
-        const imageSpan = image.parentElement;
-        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
-            return;
-        }
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
@@ -271,11 +267,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         } = createImageWrapper(
             editor,
             image,
-            imageSpan,
             this.options,
             this.imageEditInfo,
             this.imageHTMLOptions,
-            apiOperation || this.options.onSelectState
+            apiOperation
         );
         this.shadowSpan = shadowSpan;
         this.selectedImage = image;
@@ -294,7 +289,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
         if (this.imageEditInfo) {
-            this.startEditing(editor, image, 'resizeAndRotate');
+            this.startEditing(editor, image, ['resize', 'rotate']);
 
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
                 this.dndHelpers = [
@@ -421,7 +416,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private startCropMode(editor: IEditor, image: HTMLImageElement) {
         if (this.imageEditInfo) {
-            this.startEditing(editor, image, 'crop');
+            this.startEditing(editor, image, ['crop']);
             if (this.imageEditInfo && this.selectedImage && this.wrapper && this.clonedImage) {
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
@@ -501,7 +496,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
             image = this.removeImageWrapper() ?? image;
         }
-        this.startEditing(editor, image, apiOperation);
+        this.startEditing(editor, image, [apiOperation]);
         if (!this.selectedImage || !this.imageEditInfo || !this.wrapper || !this.clonedImage) {
             return;
         }

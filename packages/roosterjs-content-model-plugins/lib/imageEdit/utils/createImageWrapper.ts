@@ -1,6 +1,7 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
+import { wrap } from 'roosterjs-content-model-dom';
 
 import type {
     IEditor,
@@ -28,26 +29,25 @@ export interface WrapperElements {
 export function createImageWrapper(
     editor: IEditor,
     image: HTMLImageElement,
-    imageSpan: HTMLSpanElement,
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
-    operation?: ImageEditOperation
+    operation: ImageEditOperation[]
 ): WrapperElements {
     const imageClone = cloneImage(image, editInfo);
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
-    if (!options.disableRotate && (operation === 'rotate' || operation === 'resizeAndRotate')) {
+    if (!options.disableRotate && operation.indexOf('rotate') > -1) {
         rotators = createImageRotator(doc, htmlOptions);
     }
     let resizers: HTMLDivElement[] = [];
-    if (operation === 'resize' || operation === 'resizeAndRotate') {
+    if (operation.indexOf('resize') > -1) {
         resizers = createImageResizer(doc);
     }
 
     let croppers: HTMLDivElement[] = [];
-    if (operation === 'crop') {
+    if (operation.indexOf('crop') > -1) {
         croppers = createImageCropper(doc);
     }
 
@@ -60,6 +60,7 @@ export function createImageWrapper(
         rotators,
         croppers
     );
+    const imageSpan = wrap(doc, image, 'span');
     const shadowSpan = createShadowSpan(wrapper, imageSpan);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
@@ -95,7 +96,9 @@ const createWrapper = (
         'style',
         `font-size: 24px; margin: 0px; transform: rotate(${editInfo.angleRad ?? 0}rad);`
     );
-    wrapper.style.display = editor.getEnvironment().isSafari ? 'inline-block' : 'inline-flex';
+    wrapper.style.display = editor.getEnvironment().isSafari
+        ? '-webkit-inline-flex'
+        : 'inline-flex';
 
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);
