@@ -9,6 +9,8 @@ import type {
     EditorCore,
     EditorCorePlugins,
     EditorOptions,
+    DomToModelOption,
+    ModelToDomOption,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -18,6 +20,20 @@ import type {
  */
 export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
     const corePlugins = createEditorCorePlugins(options, contentDiv);
+    const plugins = (options.plugins ?? []).filter(x => !!x);
+    const domToModelOptions: DomToModelOption[] = [];
+    const modelToDomOptions: ModelToDomOption[] = [];
+
+    plugins.forEach(plugin => {
+        const contentModelConfig = plugin.getContentModelConfig?.();
+        if (contentModelConfig?.domToModelOption) {
+            domToModelOptions.push(contentModelConfig.domToModelOption);
+        }
+
+        if (contentModelConfig?.modelToDomOption) {
+            modelToDomOptions.push(contentModelConfig.modelToDomOption);
+        }
+    });
 
     return {
         physicalRoot: contentDiv,
@@ -31,12 +47,17 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
             corePlugins.domEvent,
             corePlugins.selection,
             corePlugins.entity,
-            ...(options.plugins ?? []).filter(x => !!x),
+            ...plugins,
             corePlugins.undo,
             corePlugins.contextMenu,
             corePlugins.lifecycle,
         ],
-        environment: createEditorEnvironment(contentDiv, options),
+        environment: createEditorEnvironment(
+            contentDiv,
+            options,
+            domToModelOptions,
+            modelToDomOptions
+        ),
         darkColorHandler: createDarkColorHandler(
             contentDiv,
             options.getDarkColor ?? getDarkColorFallback,
@@ -53,15 +74,17 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
 
 function createEditorEnvironment(
     contentDiv: HTMLElement,
-    options: EditorOptions
+    options: EditorOptions,
+    domToModelOptionsFromPlugins: (DomToModelOption | undefined)[],
+    modelToDomOptionsFromPlugins: (ModelToDomOption | undefined)[]
 ): EditorEnvironment {
     const navigator = contentDiv.ownerDocument.defaultView?.navigator;
     const userAgent = navigator?.userAgent ?? '';
     const appVersion = navigator?.appVersion ?? '';
 
     return {
-        domToModelSettings: createDomToModelSettings(options),
-        modelToDomSettings: createModelToDomSettings(options),
+        domToModelSettings: createDomToModelSettings(options, domToModelOptionsFromPlugins),
+        modelToDomSettings: createModelToDomSettings(options, modelToDomOptionsFromPlugins),
         isMac: appVersion.indexOf('Mac') != -1,
         isAndroid: /android/i.test(userAgent),
         isSafari:
