@@ -165,8 +165,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         const selection = editor.getDOMSelection();
 
         if (
-            (event.isClicking &&
-                selection &&
+            (selection &&
                 selection.type == 'image' &&
                 event.rawEvent.button == LEFT_MOUSE_BUTTON) ||
             this.isEditing
