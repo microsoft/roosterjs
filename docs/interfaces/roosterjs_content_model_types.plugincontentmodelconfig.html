@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>StringDefinition | RoosterJs API Reference</title>
+	<title>PluginContentModelConfig | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.stringdefinition.html">StringDefinition</a>
+					<a href="roosterjs_content_model_types.plugincontentmodelconfig.html">PluginContentModelConfig</a>
 				</li>
 			</ul>
-			<h1>Interface StringDefinition</h1>
+			<h1>Interface PluginContentModelConfig</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>String property definition. This definition can also be used for string based enum property</p>
+						<p>Configuration for content model of a plugin</p>
 					</div>
 				</div>
 			</section>
@@ -77,12 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_content_model_types.definitionbase.html" class="tsd-signature-type" data-tsd-kind="Interface">DefinitionBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;string&quot;</span><span class="tsd-signature-symbol">&gt;</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">StringDefinition</span>
-							</li>
-						</ul>
+						<span class="target">PluginContentModelConfig</span>
 					</li>
 				</ul>
 			</section>
@@ -93,10 +88,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.stringdefinition.html#allownull" class="tsd-kind-icon">allow<wbr>Null</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.stringdefinition.html#isoptional" class="tsd-kind-icon">is<wbr>Optional</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.stringdefinition.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.stringdefinition.html#value" class="tsd-kind-icon">value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.plugincontentmodelconfig.html#domtomodeloption" class="tsd-kind-icon">dom<wbr>ToModel<wbr>Option</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.plugincontentmodelconfig.html#modeltodomoption" class="tsd-kind-icon">model<wbr>ToDom<wbr>Option</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,66 +97,33 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="allownull" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> allow<wbr>Null</h3>
-					<div class="tsd-signature tsd-kind-icon">allow<wbr>Null<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="domtomodeloption" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dom<wbr>ToModel<wbr>Option</h3>
+					<div class="tsd-signature tsd-kind-icon">dom<wbr>ToModel<wbr>Option<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_content_model_types.definitionbase.html">DefinitionBase</a>.<a href="roosterjs_content_model_types.definitionbase.html#allownull">allowNull</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/metadata/Definition.ts#L25">roosterjs-content-model-types/lib/metadata/Definition.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L13">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this property is allowed to be null</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="isoptional" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Optional</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>Optional<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_content_model_types.definitionbase.html">DefinitionBase</a>.<a href="roosterjs_content_model_types.definitionbase.html#isoptional">isOptional</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/metadata/Definition.ts#L20">roosterjs-content-model-types/lib/metadata/Definition.ts:20</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether this property is optional</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;string&quot;</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_content_model_types.definitionbase.html">DefinitionBase</a>.<a href="roosterjs_content_model_types.definitionbase.html#type">type</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/metadata/Definition.ts#L15">roosterjs-content-model-types/lib/metadata/Definition.ts:15</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Type of this property</p>
+							<p>The option for additional format parses</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="modeltodomoption" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> model<wbr>ToDom<wbr>Option</h3>
+					<div class="tsd-signature tsd-kind-icon">model<wbr>ToDom<wbr>Option<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/metadata/Definition.ts#L35">roosterjs-content-model-types/lib/metadata/Definition.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6da05f7/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L18">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An optional value of this property. When specified, the given property must have exactly same value of this value</p>
+							<p>The option for additional format appliers</p>
 						</div>
 					</div>
 				</section>
@@ -209,19 +169,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.stringdefinition.html" class="tsd-kind-icon">String<wbr>Definition</a>
+						<a href="roosterjs_content_model_types.plugincontentmodelconfig.html" class="tsd-kind-icon">Plugin<wbr>Content<wbr>Model<wbr>Config</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.stringdefinition.html#allownull" class="tsd-kind-icon">allow<wbr>Null</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.stringdefinition.html#isoptional" class="tsd-kind-icon">is<wbr>Optional</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.stringdefinition.html#type" class="tsd-kind-icon">type</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.plugincontentmodelconfig.html#domtomodeloption" class="tsd-kind-icon">dom<wbr>ToModel<wbr>Option</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.stringdefinition.html#value" class="tsd-kind-icon">value</a>
+								<a href="roosterjs_content_model_types.plugincontentmodelconfig.html#modeltodomoption" class="tsd-kind-icon">model<wbr>ToDom<wbr>Option</a>
 							</li>
 						</ul>
 					</li>
