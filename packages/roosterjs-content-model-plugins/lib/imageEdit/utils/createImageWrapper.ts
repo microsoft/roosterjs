@@ -1,6 +1,7 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
+import { wrap } from 'roosterjs-content-model-dom';
 
 import type {
     IEditor,
@@ -28,7 +29,6 @@ export interface WrapperElements {
 export function createImageWrapper(
     editor: IEditor,
     image: HTMLImageElement,
-    imageSpan: HTMLSpanElement,
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
@@ -60,6 +60,7 @@ export function createImageWrapper(
         rotators,
         croppers
     );
+    const imageSpan = wrap(doc, image, 'span');
     const shadowSpan = createShadowSpan(wrapper, imageSpan);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
@@ -97,7 +98,9 @@ const createWrapper = (
             editInfo.angleRad ?? 0
         }rad); text-align: left;`
     );
-    wrapper.style.display = editor.getEnvironment().isSafari ? 'inline-block' : 'inline-flex';
+    wrapper.style.display = editor.getEnvironment().isSafari
+        ? '-webkit-inline-flex'
+        : 'inline-flex';
 
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);

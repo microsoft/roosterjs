@@ -24,7 +24,7 @@ describe('createImageWrapper', () => {
         const result = createImageWrapper(
             editor,
             image,
-            imageSpan,
+
             options,
             editInfo,
             htmlOptions,
