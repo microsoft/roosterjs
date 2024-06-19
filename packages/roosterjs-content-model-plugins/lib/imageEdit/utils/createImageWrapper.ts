@@ -93,9 +93,7 @@ const createWrapper = (
     imageBox.appendChild(image);
     wrapper.setAttribute(
         'style',
-        `max-width: 100%; position: relative; display: inline-flex; font-size: 24px; margin: 0px; transform: rotate(${
-            editInfo.angleRad ?? 0
-        }rad); text-align: left;`
+        `font-size: 24px; margin: 0px; transform: rotate(${editInfo.angleRad ?? 0}rad);`
     );
     wrapper.style.display = editor.getEnvironment().isSafari ? 'inline-block' : 'inline-flex';
 

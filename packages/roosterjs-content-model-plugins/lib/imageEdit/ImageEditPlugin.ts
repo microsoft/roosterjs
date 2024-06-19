@@ -167,7 +167,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             (event.isClicking &&
                 selection &&
-                selection?.type == 'image' &&
+                selection.type == 'image' &&
                 event.rawEvent.button == LEFT_MOUSE_BUTTON) ||
             this.isEditing
         ) {
@@ -226,14 +226,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                     setIsEditing(previousSelectedImage, false);
                     this.cleanInfo();
-
-                    return true;
+                    result = true;
                 }
+
                 this.isEditing = false;
                 this.isCropMode = false;
 
                 if (editingImage && !format.isEditing && selection?.type == 'image') {
                     setIsEditing(editingImage, true);
+
                     this.isEditing = true;
                     mutateSegment(editingImage.paragraph, editingImage.image, image => {
                         this.imageEditInfo = updateImageEditInfo(image, selection.image);
@@ -683,7 +684,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.editor &&
             format.isEditing &&
-            this.imageEditInfo &&
             isElementOfType(image, 'img') &&
             parent &&
             isNodeOfType(parent, 'ELEMENT_NODE') &&
