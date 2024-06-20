@@ -1,5 +1,4 @@
 import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
-import type { EditableImageFormat } from '../types/EditableImageFormat';
 import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 
 /**
@@ -24,7 +23,7 @@ export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAn
 
                     switch (segment.segmentType) {
                         case 'Image':
-                            if ((segment.format as EditableImageFormat).isEditing) {
+                            if (segment.dataset.isEditing) {
                                 return {
                                     paragraph: block,
                                     image: segment,
