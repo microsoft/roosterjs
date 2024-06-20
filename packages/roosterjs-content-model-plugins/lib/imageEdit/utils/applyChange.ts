@@ -83,11 +83,5 @@ export function applyChange(
     if (wasResizedOrCropped || state == 'FullyChanged') {
         contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
         contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
-
-        // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
-        image.style.removeProperty('width');
-        image.style.removeProperty('height');
-        image.style.removeProperty('max-width');
-        image.style.removeProperty('max-height');
     }
 }

@@ -497,11 +497,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
         const doc = editor.getDocument();
-        let parent = element.parentNode;
-        if (isNodeOfType(parent, 'ELEMENT_NODE') && parent.shadowRoot && parent.parentNode) {
-            element = parent;
-            parent = parent.parentNode;
-        }
+        const parent = element.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(element);
 
         if (parent && index !== null && index >= 0) {
@@ -522,6 +518,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private getClickingImage(event: UIEvent): HTMLImageElement | null {
         const target = event.target as Node;
+
         return isNodeOfType(target, 'ELEMENT_NODE') && isElementOfType(target, 'img')
             ? target
             : null;
