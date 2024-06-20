@@ -12,8 +12,8 @@ class DOMHelperImpl implements DOMHelper {
         return this.contentDiv.textContent || '';
     }
 
-    isNodeInEditor(node: Node): boolean {
-        return this.contentDiv.contains(node);
+    isNodeInEditor(node: Node, excludeRoot?: boolean): boolean {
+        return excludeRoot && node == this.contentDiv ? false : this.contentDiv.contains(node);
     }
 
     calculateZoomScale(): number {
