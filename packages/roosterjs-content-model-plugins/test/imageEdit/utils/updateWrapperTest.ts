@@ -32,15 +32,12 @@ describe('updateWrapper', () => {
         isSmallImage: false,
     };
     const image = document.createElement('img');
-    const imageSpan = document.createElement('span');
-    imageSpan.appendChild(image);
-    document.body.appendChild(imageSpan);
+    document.body.appendChild(image);
 
     it('should update size', () => {
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
-            imageSpan,
             options,
             editInfo,
             htmlOptions,

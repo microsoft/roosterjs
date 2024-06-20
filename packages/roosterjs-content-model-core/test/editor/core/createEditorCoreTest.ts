@@ -108,8 +108,8 @@ describe('createEditorCore', () => {
             options,
             contentDiv
         );
-        expect(createDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(options);
-        expect(createDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(options);
+        expect(createDefaultSettings.createDomToModelSettings).toHaveBeenCalledWith(options, []);
+        expect(createDefaultSettings.createModelToDomSettings).toHaveBeenCalledWith(options, []);
     }
 
     it('No options', () => {

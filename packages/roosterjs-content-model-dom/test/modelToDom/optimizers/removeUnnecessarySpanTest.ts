@@ -54,12 +54,12 @@ describe('removeUnnecessarySpan', () => {
         expect(div.innerHTML).toBe('test1<span id="a">test2</span><b>test3</b>');
     });
 
-    it('Do not remove image span', () => {
+    it('Remove image span', () => {
         const div = document.createElement('div');
-        div.innerHTML = '<span><img src="test" /></span>';
+        div.innerHTML = '<span><img src="test"></span>';
 
         removeUnnecessarySpan(div);
 
-        expect(div.innerHTML).toBe('<span><img src="test"></span>');
+        expect(div.innerHTML).toBe('<img src="test">');
     });
 });

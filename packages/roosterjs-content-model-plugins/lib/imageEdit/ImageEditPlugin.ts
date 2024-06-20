@@ -125,10 +125,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         apiOperation?: ImageEditOperation
     ) {
-        const imageSpan = image.parentElement;
-        if (!imageSpan || (imageSpan && !isElementOfType(imageSpan, 'span'))) {
-            return;
-        }
         this.imageEditInfo = getSelectedImageMetadata(editor, image);
         this.lastSrc = image.getAttribute('src');
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
@@ -142,7 +138,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         } = createImageWrapper(
             editor,
             image,
-            imageSpan,
             this.options,
             this.imageEditInfo,
             this.imageHTMLOptions,

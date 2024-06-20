@@ -1,5 +1,22 @@
+import type { DomToModelOption } from '../context/DomToModelOption';
+import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { IEditor } from './IEditor';
+
+/**
+ * Configuration for content model of a plugin
+ */
+export interface PluginContentModelConfig {
+    /**
+     * The option for additional format parses
+     */
+    domToModelOption?: DomToModelOption;
+
+    /**
+     * The option for additional format appliers
+     */
+    modelToDomOption?: ModelToDomOption;
+}
 
 /**
  * Interface of an editor plugin
@@ -42,4 +59,10 @@ export interface EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent?: (event: PluginEvent) => void;
+
+    /**
+     * This configuration will add additional format parses and applier to the editor
+     * @returns The content model configuration for this plugin
+     */
+    getContentModelConfig?: () => PluginContentModelConfig;
 }
