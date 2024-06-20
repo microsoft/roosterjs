@@ -467,7 +467,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
                         if (typeof cell != 'string') {
                             tabMove = true;
-                            this.setRangeSelectionInTable(cell, 0, this.editor, true);
+                            this.setRangeSelectionInTable(
+                                cell,
+                                0,
+                                this.editor,
+                                true /* selectAll */
+                            );
                             lastCo.row = row;
                             lastCo.col = col;
                             break;
@@ -488,7 +493,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
-            if (!collapsed && lastCo && tabMove == false) {
+            if (!collapsed && lastCo && !tabMove) {
                 this.state.tableSelection = tableSel;
                 this.updateTableSelection(lastCo);
             }
