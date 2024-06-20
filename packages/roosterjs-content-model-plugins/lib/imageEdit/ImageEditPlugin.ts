@@ -17,18 +17,24 @@ import {
     isNodeOfType,
     mutateSegment,
     unwrap,
+    wrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    ContentModelImage,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
     ImageEditor,
     ImageMetadataFormat,
     PluginEvent,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelImage,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const DefaultOptions: Partial<ImageEditOptions> = {
@@ -112,13 +118,77 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
+    private isEditing = false;
+
     /**
      * Core method for a plugin. Once an event happens in editor, editor will call this
      * method of each plugin to handle the event as long as the event is not handled
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(_event: PluginEvent) {}
+    onPluginEvent(event: PluginEvent) {
+        if (event.eventType == 'mouseUp') {
+            // call async since we haven't change the mouse up for image selection yet
+            // We can remove this once we use mouse down for selection
+            this.editor?.getDocument().defaultView?.setTimeout(this.onMouseUp, 100);
+        }
+    }
+
+    private onMouseUp = () => {
+        if (this.editor) {
+            const selection = this.editor.getDOMSelection();
+
+            if (selection?.type == 'image' || this.isEditing) {
+                const doc = this.editor.getDocument();
+                let editingImageModel: ContentModelImage | undefined;
+
+                this.editor.formatContentModel(
+                    model => {
+                        const editingImage = findEditingImage(model);
+                        const selectedImage = getSelectedImage(model);
+                        let result = false;
+
+                        if (editingImage && editingImage != selectedImage) {
+                            mutateSegment(
+                                editingImage.paragraph,
+                                editingImage.image,
+                                image => delete image.dataset.isEditing
+                            );
+
+                            result = true;
+                        }
+
+                        this.isEditing = false;
+
+                        if (selectedImage) {
+                            mutateSegment(selectedImage.paragraph, selectedImage.image, image => {
+                                editingImageModel = image;
+                                image.dataset.isEditing = 'true';
+                            });
+
+                            result = true;
+                            this.isEditing = true;
+                        }
+
+                        return result;
+                    },
+                    {
+                        onNodeCreated: (model, node) => {
+                            if (editingImageModel && model == editingImageModel) {
+                                const wrapper = wrap(doc, node, 'span');
+                                const clonedImage = node.cloneNode();
+                                const shadowRoot = wrapper.attachShadow({ mode: 'open' });
+
+                                shadowRoot.appendChild(clonedImage);
+                                shadowRoot.appendChild(doc.createTextNode('---Editing---'));
+                            }
+                        },
+                    },
+                    { tryGetFromCache: true }
+                );
+            }
+        }
+    };
 
     private startEditing(
         editor: IEditor,
@@ -512,5 +582,67 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     //EXPOSED FOR TEST ONLY
     public getWrapper() {
         return this.wrapper;
+    }
+}
+
+interface ImageAndParagraph {
+    image: ReadonlyContentModelImage;
+    paragraph: ReadonlyContentModelParagraph;
+}
+
+function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAndParagraph | null {
+    for (let i = 0; i < group.blocks.length; i++) {
+        const block = group.blocks[i];
+
+        switch (block.blockType) {
+            case 'BlockGroup':
+                const result = findEditingImage(block);
+
+                if (result) {
+                    return result;
+                }
+                break;
+
+            case 'Paragraph':
+                for (let j = 0; j < block.segments.length; j++) {
+                    const segment = block.segments[j];
+
+                    switch (segment.segmentType) {
+                        case 'Image':
+                            if (segment.dataset.isEditing == 'true') {
+                                return {
+                                    paragraph: block,
+                                    image: segment,
+                                };
+                            }
+                            break;
+
+                        case 'General':
+                            const result = findEditingImage(segment);
+
+                            if (result) {
+                                return result;
+                            }
+                            break;
+                    }
+                }
+
+                break;
+        }
+    }
+
+    return null;
+}
+
+function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndParagraph | null {
+    const selections = getSelectedSegmentsAndParagraphs(model, false);
+
+    if (selections.length == 1 && selections[0][0].segmentType == 'Image' && selections[0][1]) {
+        return {
+            image: selections[0][0],
+            paragraph: selections[0][1],
+        };
+    } else {
+        return null;
     }
 }
