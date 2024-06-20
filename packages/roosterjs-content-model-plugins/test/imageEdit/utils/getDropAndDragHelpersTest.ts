@@ -23,7 +23,7 @@ describe('getDropAndDragHelpers', () => {
         preserveRatio: true,
         disableRotate: false,
         disableSideResize: false,
-        onSelectState: 'resize',
+        onSelectState: ['resize'],
     };
     const editInfo = {
         src: 'test',
