@@ -411,6 +411,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             }
 
             let lastCo = findCoordinate(tableSel?.parsedTable, end, domHelper);
+            let tabMove = false;
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
             if (lastCo && tableSel.table == table) {
@@ -465,7 +466,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         const cell = parsedTable[row][col];
 
                         if (typeof cell != 'string') {
-                            this.setRangeSelectionInTable(cell, 0, this.editor);
+                            tabMove = true;
+                            this.setRangeSelectionInTable(cell, 0, this.editor, true);
                             lastCo.row = row;
                             lastCo.col = col;
                             break;
@@ -486,20 +488,29 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
-            if (!collapsed && lastCo) {
+            if (!collapsed && lastCo && tabMove == false) {
                 this.state.tableSelection = tableSel;
                 this.updateTableSelection(lastCo);
             }
         }
     }
 
-    private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
-        // Get deepest editable position in the cell
-        const { node, offset } = normalizePos(cell, nodeOffset);
-
+    private setRangeSelectionInTable(
+        cell: Node,
+        nodeOffset: number,
+        editor: IEditor,
+        selectAll?: boolean
+    ) {
         const range = editor.getDocument().createRange();
-        range.setStart(node, offset);
-        range.collapse(true /*toStart*/);
+        if (selectAll) {
+            range.selectNodeContents(cell);
+        } else {
+            // Get deepest editable position in the cell
+            const { node, offset } = normalizePos(cell, nodeOffset);
+
+            range.setStart(node, offset);
+            range.collapse(true /* toStart */);
+        }
 
         this.setDOMSelection(
             {
