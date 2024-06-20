@@ -1,15 +1,19 @@
 import {
     EmptySegmentFormat,
+    createParagraph,
     createSelectionMarker,
     createText,
     getObjectKeys,
     isElementOfType,
+    isEntityDelimiter,
     isNodeOfType,
     setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
     CacheSelection,
+    ContentModelBlockGroup,
     ContentModelDocument,
+    ContentModelEntity,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
@@ -40,6 +44,14 @@ export interface TableItem {
 /**
  * @internal Export for test only
  */
+export interface BlockEntityDelimiterItem {
+    entity: ContentModelEntity;
+    parent: ContentModelBlockGroup;
+}
+
+/**
+ * @internal Export for test only
+ */
 export interface IndexedSegmentNode extends Node {
     __roosterjsContentModel: SegmentItem;
 }
@@ -49,6 +61,13 @@ export interface IndexedSegmentNode extends Node {
  */
 export interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
+}
+
+/**
+ * @internal Export for test only
+ */
+export interface IndexedEntityDelimiter extends HTMLElement {
+    __roosterjsContentModel: BlockEntityDelimiterItem;
 }
 
 /**
@@ -89,6 +108,17 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
         paragraph.blockType == 'Paragraph' &&
         Array.isArray(paragraph.segments) &&
         Array.isArray(segments)
+    );
+}
+
+function isIndexedDelimiter(node: Node): node is IndexedEntityDelimiter {
+    const { entity, parent } = (node as IndexedEntityDelimiter).__roosterjsContentModel ?? {};
+
+    return (
+        entity?.blockType == 'Entity' &&
+        entity.wrapper &&
+        parent?.blockGroupType &&
+        Array.isArray(parent.blocks)
     );
 }
 
@@ -160,6 +190,23 @@ export class DomIndexerImpl implements DomIndexer {
         indexedTable.__roosterjsContentModel = { table };
     }
 
+    onBlockEntity(entity: ContentModelEntity, group: ContentModelBlockGroup) {
+        this.onBlockEntityDelimiter(entity.wrapper.previousSibling, entity, group);
+        this.onBlockEntityDelimiter(entity.wrapper.nextSibling, entity, group);
+    }
+
+    private onBlockEntityDelimiter(
+        node: Node | null,
+        entity: ContentModelEntity,
+        parent: ContentModelBlockGroup
+    ) {
+        if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityDelimiter(node) && node.firstChild) {
+            const indexedDelimiter = node.firstChild as IndexedEntityDelimiter;
+
+            indexedDelimiter.__roosterjsContentModel = { entity, parent };
+        }
+    }
+
     reconcileSelection(
         model: ContentModelDocument,
         newSelection: DOMSelection,
@@ -169,11 +216,10 @@ export class DomIndexerImpl implements DomIndexer {
             if (
                 oldSelection.type == 'range' &&
                 this.isCollapsed(oldSelection) &&
-                isNodeOfType(oldSelection.start.node, 'TEXT_NODE')
+                isNodeOfType(oldSelection.start.node, 'TEXT_NODE') &&
+                isIndexedSegment(oldSelection.start.node)
             ) {
-                if (isIndexedSegment(oldSelection.start.node)) {
-                    this.reconcileTextSelection(oldSelection.start.node);
-                }
+                this.reconcileTextSelection(oldSelection.start.node);
             } else {
                 setSelection(model);
             }
@@ -229,7 +275,11 @@ export class DomIndexerImpl implements DomIndexer {
                     delete model.hasRevertedRangeSelection;
 
                     if (collapsed) {
-                        return !!this.reconcileNodeSelection(startContainer, startOffset);
+                        return !!this.reconcileNodeSelection(
+                            startContainer,
+                            startOffset,
+                            model.format
+                        );
                     } else if (
                         startContainer == endContainer &&
                         isNodeOfType(startContainer, 'TEXT_NODE')
@@ -328,9 +378,19 @@ export class DomIndexerImpl implements DomIndexer {
         return start.node == end.node && start.offset == end.offset;
     }
 
-    private reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
+    private reconcileNodeSelection(
+        node: Node,
+        offset: number,
+        defaultFormat?: ContentModelSegmentFormat
+    ): Selectable | undefined {
         if (isNodeOfType(node, 'TEXT_NODE')) {
-            return isIndexedSegment(node) ? this.reconcileTextSelection(node, offset) : undefined;
+            if (isIndexedSegment(node)) {
+                return this.reconcileTextSelection(node, offset);
+            } else if (isIndexedDelimiter(node)) {
+                return this.reconcileDelimiterSelection(node, defaultFormat);
+            } else {
+                return undefined;
+            }
         } else if (offset >= node.childNodes.length) {
             return this.insertMarker(node.lastChild, true /*isAfter*/);
         } else {
@@ -442,9 +502,54 @@ export class DomIndexerImpl implements DomIndexer {
             if (!this.persistCache) {
                 delete paragraph.cachedElement;
             }
+        } else if (first?.segmentType == 'Entity' && first == last) {
+            const wrapper = first.wrapper;
+            const index = paragraph.segments.indexOf(first);
+            const delimiter = textNode.parentElement;
+            const isBefore = wrapper.previousSibling == delimiter;
+            const isAfter = wrapper.nextSibling == delimiter;
+
+            if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
+                const marker = createSelectionMarker(
+                    (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
+                );
+
+                paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
+
+                selectable = marker;
+            }
         }
 
         return selectable;
+    }
+
+    private reconcileDelimiterSelection(
+        node: IndexedEntityDelimiter,
+        defaultFormat?: ContentModelSegmentFormat
+    ) {
+        let marker: ContentModelSelectionMarker | undefined;
+
+        const { entity, parent } = node.__roosterjsContentModel;
+        const index = parent.blocks.indexOf(entity);
+        const delimiter = node.parentElement;
+        const wrapper = entity.wrapper;
+        const isBefore = wrapper.previousSibling == delimiter;
+        const isAfter = wrapper.nextSibling == delimiter;
+
+        if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
+            marker = createSelectionMarker(defaultFormat);
+
+            const para = createParagraph(
+                true /*isImplicit*/,
+                undefined /*blockFormat*/,
+                defaultFormat
+            );
+
+            para.segments.push(marker);
+            parent.blocks.splice(isBefore ? index : index + 1, 0, para);
+        }
+
+        return marker;
     }
 
     private reconcileAddedNode(node: Text, context: ReconcileChildListContext): boolean {

@@ -2,7 +2,6 @@ import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCache } from './updateCache';
-import { getSelectionRootNode } from 'roosterjs-content-model-dom';
 import type { Mutation } from './textMutationObserver';
 import type {
     CachePluginState,
@@ -200,18 +199,18 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 !this.state.domIndexer?.reconcileSelection(model, newSelection, cachedSelection)
             ) {
                 // There is cached model and selection, but we failed to reconcile the selection
-                const selectionRoot = getSelectionRootNode(newSelection);
+                // const selectionRoot = getSelectionRootNode(newSelection);
 
-                if (
-                    !selectionRoot ||
-                    !this.state.textMutationObserver?.shouldIgnoreNode(selectionRoot)
-                ) {
-                    // Invalidate cache if the selection is not under entity
-                    this.invalidateCache();
-                } else {
-                    // For the case when selection is under entity, we can ignore this selection change and just update cache directly
-                    updateCache(this.state, model, newSelection);
-                }
+                // if (
+                //     !selectionRoot ||
+                //     !this.state.textMutationObserver?.shouldIgnoreNode(selectionRoot)
+                // ) {
+                // Invalidate cache if the selection is not under entity
+                this.invalidateCache();
+                // } else {
+                //     // For the case when selection is under entity, we can ignore this selection change and just update cache directly
+                //     updateCache(this.state, model, newSelection);
+                // }
             } else {
                 // Successfully reconciled model selection, update the cache
                 updateCache(this.state, model, newSelection);

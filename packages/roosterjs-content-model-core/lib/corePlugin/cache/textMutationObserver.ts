@@ -39,13 +39,6 @@ class TextMutationObserverImpl implements TextMutationObserver {
         }
     }
 
-    shouldIgnoreNode(node: Node): boolean {
-        return !!(
-            findClosestEntityWrapper(node, this.domHelper) ||
-            findClosestBlockEntityContainer(node, this.domHelper)
-        );
-    }
-
     private onMutationInternal = (mutations: MutationRecord[]) => {
         let canHandle = true;
         let firstTarget: Node | null = null;
@@ -64,7 +57,10 @@ class TextMutationObserverImpl implements TextMutationObserver {
             if (ignoredNodes.has(target)) {
                 continue;
             } else if (!includedNodes.has(target)) {
-                if (this.shouldIgnoreNode(target)) {
+                if (
+                    findClosestEntityWrapper(target, this.domHelper) ||
+                    findClosestBlockEntityContainer(target, this.domHelper)
+                ) {
                     ignoredNodes.add(target);
 
                     continue;
