@@ -1,7 +1,7 @@
 import { checkEditInfoState } from './checkEditInfoState';
 import { generateDataURL } from './generateDataURL';
 import { getGeneratedImageSize } from './generateImageSize';
-import { getSelectedImageMetadata, updateImageEditInfo } from './updateImageEditInfo';
+import { updateImageEditInfo } from './updateImageEditInfo';
 import type {
     ContentModelImage,
     IEditor,
@@ -28,7 +28,8 @@ export function applyChange(
     editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
-    const initEditInfo = getSelectedImageMetadata(editor, editingImage ?? image) ?? undefined;
+    const imageEditing = editingImage ?? image;
+    const initEditInfo = updateImageEditInfo(contentModelImage, imageEditing) ?? undefined;
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {
@@ -64,11 +65,11 @@ export function applyChange(
     if (newSrc == editInfo.src) {
         // If newSrc is the same with original one, it means there is only size change, but no rotation, no cropping,
         // so we don't need to keep edit info, we can delete it
-        updateImageEditInfo(contentModelImage, null);
+        updateImageEditInfo(contentModelImage, imageEditing, null);
     } else {
         // Otherwise, save the new edit info to the image so that next time when we edit the same image, we know
         // the edit info
-        updateImageEditInfo(contentModelImage, editInfo);
+        updateImageEditInfo(contentModelImage, imageEditing, editInfo);
     }
 
     // Write back the change to image, and set its new size
@@ -82,11 +83,5 @@ export function applyChange(
     if (wasResizedOrCropped || state == 'FullyChanged') {
         contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
         contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
-
-        // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
-        image.style.removeProperty('width');
-        image.style.removeProperty('height');
-        image.style.removeProperty('max-width');
-        image.style.removeProperty('max-height');
     }
 }

@@ -314,7 +314,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -374,7 +374,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:red!important;',
+                'outline-style:solid!important; outline-color:red!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -441,7 +441,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:DarkColorMock-red!important;',
+                'outline-style:solid!important; outline-color:DarkColorMock-red!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -502,7 +502,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -563,7 +563,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
