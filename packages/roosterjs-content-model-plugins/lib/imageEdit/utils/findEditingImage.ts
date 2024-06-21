@@ -20,7 +20,6 @@ export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAn
             case 'Paragraph':
                 for (let j = 0; j < block.segments.length; j++) {
                     const segment = block.segments[j];
-
                     switch (segment.segmentType) {
                         case 'Image':
                             if (segment.dataset.isEditing) {

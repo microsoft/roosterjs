@@ -49,7 +49,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     onSelectState: ['resize', 'rotate'],
 };
 
-const LEFT_MOUSE_BUTTON = 0;
+//const LEFT_MOUSE_BUTTON = 0;
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -146,12 +146,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
         const selection = editor.getDOMSelection();
-        if (
-            (selection &&
-                selection.type == 'image' &&
-                event.rawEvent.button == LEFT_MOUSE_BUTTON) ||
-            this.isEditing
-        ) {
+        if ((selection && selection.type == 'image') || this.isEditing) {
             this.applyFormatWithContentModel(
                 editor,
                 selection,
@@ -215,12 +210,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 const editingImage = getSelectedImage(model);
 
                 let result = false;
-                if (previousSelectedImage?.image != editingImage?.image) {
+                if (
+                    shouldSelectImage ||
+                    previousSelectedImage?.image != editingImage?.image ||
+                    previousSelectedImage?.image.dataset.isEditing
+                ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
                     if (
                         this.isEditing &&
                         previousSelectedImage &&
-                        previousSelectedImage.image !== editingImage?.image &&
                         lastSrc &&
                         selectedImage &&
                         imageEditInfo &&
@@ -245,11 +243,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         );
                         this.cleanInfo();
+                        this.isEditing = false;
+                        this.isCropMode = false;
                         result = true;
                     }
-
-                    this.isEditing = false;
-                    this.isCropMode = false;
 
                     if (editingImage && selection?.type == 'image') {
                         this.isEditing = true;
@@ -269,6 +266,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             {
                 onNodeCreated: (model, node) => {
                     if (
+                        !shouldSelectImage &&
                         editingImageModel &&
                         editingImageModel == model &&
                         editingImageModel.dataset.isEditing &&
@@ -512,7 +510,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.editor,
                 selection,
                 true /* isCropMode */,
-                true /* shouldSelectImage */
+                false /* shouldSelectImage */
             );
         }
     }

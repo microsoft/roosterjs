@@ -1,5 +1,4 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { EditableImageFormat } from '../../lib/imageEdit/types/EditableImageFormat';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
@@ -57,9 +56,10 @@ describe('ImageEditPlugin', () => {
                                 textColor: 'rgb(0, 0, 0)',
                                 id: 'image_0',
                                 maxWidth: '1800px',
-                                isEditing: true,
-                            } as EditableImageFormat,
-                            dataset: {},
+                            },
+                            dataset: {
+                                isEditing: 'true',
+                            },
                             isSelectedAsImageSelection: true,
                             isSelected: true,
                         },

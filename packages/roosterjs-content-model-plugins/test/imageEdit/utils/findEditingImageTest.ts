@@ -1,5 +1,4 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { EditableImageFormat } from '../../../lib/imageEdit/types/EditableImageFormat';
 import { findEditingImage } from '../../../lib/imageEdit/utils/findEditingImage';
 
 describe('findEditingImage', () => {
@@ -43,9 +42,10 @@ describe('findEditingImage', () => {
                                 textColor: 'rgb(0, 0, 0)',
                                 id: 'image_0',
                                 maxWidth: '1800px',
-                                isEditing: true,
-                            } as EditableImageFormat,
-                            dataset: {},
+                            },
+                            dataset: {
+                                isEditing: 'true',
+                            },
                         },
                     ],
                     format: {},
@@ -74,9 +74,10 @@ describe('findEditingImage', () => {
                     textColor: 'rgb(0, 0, 0)',
                     id: 'image_0',
                     maxWidth: '1800px',
-                    isEditing: true,
-                } as EditableImageFormat,
-                dataset: {},
+                },
+                dataset: {
+                    isEditing: 'true',
+                },
             },
             paragraph: {
                 blockType: 'Paragraph',
@@ -90,9 +91,10 @@ describe('findEditingImage', () => {
                             textColor: 'rgb(0, 0, 0)',
                             id: 'image_0',
                             maxWidth: '1800px',
-                            isEditing: true,
-                        } as EditableImageFormat,
-                        dataset: {},
+                        },
+                        dataset: {
+                            isEditing: 'true',
+                        },
                     },
                 ],
                 format: {},
