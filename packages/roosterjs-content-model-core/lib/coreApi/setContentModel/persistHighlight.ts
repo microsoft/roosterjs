@@ -79,6 +79,12 @@ export function persistHighlight(
     }
 }
 
+/**
+ * @internal
+ * Check if Highlight API can be used.
+ * @param win current window that Highlight is being used.
+ * @returns boolean indicates if Highlight api is available
+ */
 export function canUseHighlight(win: Window): boolean {
     return isWindowWithHighlight(win);
 }
