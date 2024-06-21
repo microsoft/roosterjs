@@ -49,8 +49,6 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     onSelectState: ['resize', 'rotate'],
 };
 
-//const LEFT_MOUSE_BUTTON = 0;
-
 /**
  * ImageEdit plugin handles the following image editing features:
  * - Resize image
@@ -98,12 +96,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.disposer = editor.attachDomEvent({
             blur: {
                 beforeDispatch: () => {
-                    this.applyFormatWithContentModel(
-                        editor,
-                        editor.getDOMSelection(),
-                        this.isCropMode,
-                        true /* shouldSelectImage */
-                    );
+                    if (this.editor) {
+                        this.applyFormatWithContentModel(
+                            this.editor,
+                            this.isCropMode,
+                            true /* shouldSelectImage */
+                        );
+                    }
                 },
             },
         });
@@ -149,7 +148,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if ((selection && selection.type == 'image') || this.isEditing) {
             this.applyFormatWithContentModel(
                 editor,
-                selection,
                 this.isCropMode,
                 false /* shouldSelectImage */
             );
@@ -189,7 +187,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 }
                 this.applyFormatWithContentModel(
                     editor,
-                    selection,
                     this.isCropMode,
                     isModifierKey(event.rawEvent) && isImageSelection //if it's a modifier key over a image, the image should select the image
                 );
@@ -199,11 +196,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private applyFormatWithContentModel(
         editor: IEditor,
-        selection: DOMSelection | null,
         isCropMode: boolean,
         shouldSelectImage: boolean
     ) {
         let editingImageModel: ContentModelImage | undefined;
+        const selection = editor.getDOMSelection();
         editor.formatContentModel(
             model => {
                 const previousSelectedImage = findEditingImage(model);
@@ -502,12 +499,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.editor) {
             return;
         }
-        this.editor.focus();
+        if (!this.editor.getEnvironment().isSafari) {
+            this.editor.focus(); // Safari will keep the selection when click crop, then the focus() call should not be called
+        }
         const selection = this.editor.getDOMSelection();
         if (selection?.type == 'image') {
             this.applyFormatWithContentModel(
                 this.editor,
-                selection,
                 true /* isCropMode */,
                 false /* shouldSelectImage */
             );
@@ -539,12 +537,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.wrapper
         );
 
-        this.applyFormatWithContentModel(
-            editor,
-            selection,
-            false /* isCrop */,
-            true /* shouldSelect*/
-        );
+        this.applyFormatWithContentModel(editor, false /* isCrop */, true /* shouldSelect*/);
     }
 
     private cleanInfo() {
