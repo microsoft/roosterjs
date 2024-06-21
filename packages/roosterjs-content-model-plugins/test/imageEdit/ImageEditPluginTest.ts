@@ -96,7 +96,6 @@ describe('ImageEditPlugin', () => {
         });
         expect(plugin.isEditingImage).toBeFalsy();
         plugin.dispose();
-        editor.dispose();
     });
 
     it('mouseUp', () => {
@@ -148,7 +147,6 @@ describe('ImageEditPlugin', () => {
 
         expect(plugin.isEditingImage).toBeTruthy();
         plugin.dispose();
-        editor.dispose();
     });
 
     it('cropImage', () => {
@@ -158,7 +156,6 @@ describe('ImageEditPlugin', () => {
         plugin.cropImage();
         expect(plugin.isEditingImage).toBeTruthy();
         plugin.dispose();
-        editor.dispose();
     });
 
     it('flip', () => {
@@ -171,7 +168,6 @@ describe('ImageEditPlugin', () => {
         const dataset = getSelectedImageMetadata(editor, image);
         expect(dataset).toBeTruthy();
         plugin.dispose();
-        editor.dispose();
     });
 
     it('rotate', () => {
@@ -184,6 +180,5 @@ describe('ImageEditPlugin', () => {
         const dataset = getSelectedImageMetadata(editor, image);
         expect(dataset).toBeTruthy();
         plugin.dispose();
-        editor.dispose();
     });
 });

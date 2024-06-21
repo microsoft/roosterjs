@@ -248,7 +248,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         result = true;
                     }
 
-                    if (editingImage && selection?.type == 'image') {
+                    if (editingImage && selection?.type == 'image' && !shouldSelectImage) {
                         this.isEditing = true;
                         this.isCropMode = isCropMode;
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
@@ -266,7 +266,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             {
                 onNodeCreated: (model, node) => {
                     if (
-                        !shouldSelectImage &&
                         editingImageModel &&
                         editingImageModel == model &&
                         editingImageModel.dataset.isEditing &&
