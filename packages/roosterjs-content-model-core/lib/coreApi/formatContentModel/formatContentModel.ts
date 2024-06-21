@@ -63,12 +63,10 @@ export const formatContentModel: FormatContentModel = (
                 core.api.setContentModel(
                     core,
                     model,
-                    hasFocus || shouldMaintainSelection
-                        ? {
-                              ignoreSelection: hasFocus, // ..... (move the comment here)
-                              shouldMaintainSelection,
-                          }
-                        : undefined,
+                    {
+                        ignoreSelection: !hasFocus,
+                        shouldMaintainSelection,
+                    },
                     onNodeCreated
                 ) ?? undefined;
 
