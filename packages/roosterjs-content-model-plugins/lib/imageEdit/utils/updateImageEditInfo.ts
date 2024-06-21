@@ -1,5 +1,6 @@
-import { getSelectedContentModelImage } from './getSelectedContentModelImage';
-import { updateImageMetadata } from 'roosterjs-content-model-dom';
+import { getSelectedImage } from './getSelectedImage';
+import { mutateSegment, updateImageMetadata } from 'roosterjs-content-model-dom';
+
 import type {
     ContentModelImage,
     IEditor,
@@ -11,9 +12,10 @@ import type {
  */
 export function updateImageEditInfo(
     contentModelImage: ContentModelImage,
-    newImageMetadata?: ImageMetadataFormat | null
-) {
-    updateImageMetadata(
+    image: HTMLImageElement,
+    newImageMetadata?: ImageMetadataFormat | null | undefined
+): ImageMetadataFormat {
+    const contentModelMetadata = updateImageMetadata(
         contentModelImage,
         newImageMetadata !== undefined
             ? format => {
@@ -22,6 +24,7 @@ export function updateImageEditInfo(
               }
             : undefined
     );
+    return { ...getInitialEditInfo(image), ...contentModelMetadata };
 }
 
 function getInitialEditInfo(image: HTMLImageElement): ImageMetadataFormat {
@@ -49,9 +52,13 @@ export function getSelectedImageMetadata(
 ): ImageMetadataFormat {
     let imageMetadata: ImageMetadataFormat = getInitialEditInfo(image);
     editor.formatContentModel(model => {
-        const selectedImage = getSelectedContentModelImage(model);
-        if (selectedImage) {
-            imageMetadata = { ...imageMetadata, ...selectedImage.dataset };
+        const selectedImage = getSelectedImage(model);
+        if (selectedImage?.image) {
+            mutateSegment(selectedImage.paragraph, selectedImage?.image, modelImage => {
+                imageMetadata = updateImageEditInfo(modelImage, image);
+            });
+
+            return true;
         }
         return false;
     });
