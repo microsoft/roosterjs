@@ -1,5 +1,5 @@
 import { ContentModelParagraph, ContentModelText } from 'roosterjs-content-model-types';
-import { splitTextSegment } from '../../lib/pluginUtils/splitTextSegment';
+import { splitTextSegment } from 'roosterjs-content-model-api';
 
 describe('splitTextSegment', () => {
     function runTest(

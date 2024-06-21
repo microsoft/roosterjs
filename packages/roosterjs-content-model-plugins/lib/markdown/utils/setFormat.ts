@@ -1,5 +1,5 @@
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import { splitTextSegment } from 'roosterjs-content-model-api';
 
 import type {
     ContentModelCodeFormat,
