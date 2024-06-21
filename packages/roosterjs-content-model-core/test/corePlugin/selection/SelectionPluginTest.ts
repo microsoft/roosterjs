@@ -2456,6 +2456,9 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         getRangeAtSpy = jasmine.createSpy('getRangeAt');
         getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
+            focusNode: {
+                nodeName: 'SPAN',
+            },
             getRangeAt: getRangeAtSpy,
         });
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
@@ -2513,7 +2516,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: { startContainer: {} } as Range,
-            isReverted: false,
+            isReverted: true,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
