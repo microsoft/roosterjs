@@ -32,22 +32,22 @@ export function createImageWrapper(
     options: ImageEditOptions,
     editInfo: ImageMetadataFormat,
     htmlOptions: ImageHtmlOptions,
-    operation?: ImageEditOperation
+    operation: ImageEditOperation[]
 ): WrapperElements {
     const imageClone = cloneImage(image, editInfo);
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
-    if (!options.disableRotate && operation === 'rotate') {
+    if (!options.disableRotate && operation.indexOf('rotate') > -1) {
         rotators = createImageRotator(doc, htmlOptions);
     }
     let resizers: HTMLDivElement[] = [];
-    if (operation === 'resize') {
+    if (operation.indexOf('resize') > -1) {
         resizers = createImageResizer(doc);
     }
 
     let croppers: HTMLDivElement[] = [];
-    if (operation === 'crop') {
+    if (operation.indexOf('crop') > -1) {
         croppers = createImageCropper(doc);
     }
 
@@ -94,9 +94,7 @@ const createWrapper = (
     imageBox.appendChild(image);
     wrapper.setAttribute(
         'style',
-        `max-width: 100%; position: relative; display: inline-flex; font-size: 24px; margin: 0px; transform: rotate(${
-            editInfo.angleRad ?? 0
-        }rad); text-align: left;`
+        `font-size: 24px; margin: 0px; transform: rotate(${editInfo.angleRad ?? 0}rad);`
     );
     wrapper.style.display = editor.getEnvironment().isSafari
         ? '-webkit-inline-flex'
