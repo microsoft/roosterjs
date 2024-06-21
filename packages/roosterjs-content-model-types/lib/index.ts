@@ -357,7 +357,7 @@ export {
     Announce,
 } from './editor/EditorCore';
 export { EditorCorePlugins } from './editor/EditorCorePlugins';
-export { EditorPlugin, PluginContentModelConfig } from './editor/EditorPlugin';
+export { EditorPlugin } from './editor/EditorPlugin';
 export { PluginWithState } from './editor/PluginWithState';
 export { ContextMenuProvider } from './editor/ContextMenuProvider';
 
