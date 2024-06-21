@@ -32,7 +32,7 @@ export const formatContentModel: FormatContentModel = (
         rawEvent,
         selectionOverride,
         scrollCaretIntoView: scroll,
-        shouldMaintainSelection,
+        highlightSelection,
     } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
@@ -66,9 +66,9 @@ export const formatContentModel: FormatContentModel = (
                 modelToDomOptions = Object.assign({}, modelToDomOptions, { ignoreSelection: true });
             }
 
-            if (shouldMaintainSelection) {
+            if (highlightSelection) {
                 modelToDomOptions = Object.assign({}, modelToDomOptions, {
-                    shouldMaintainSelection: true,
+                    highlightSelection: true,
                 });
             }
 

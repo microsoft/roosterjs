@@ -1,5 +1,5 @@
 import { updateCache } from '../../corePlugin/cache/updateCache';
-import { isWindowWithHighlight, persistHighlight } from './persistHighlight';
+import { canUseHighlight, persistHighlight } from './persistHighlight';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -19,8 +19,8 @@ const SelectionSelector = '.' + SelectionClassName;
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
     const currentWindow = core.logicalRoot.ownerDocument.defaultView;
-    if (currentWindow && isWindowWithHighlight(currentWindow)) {
-        if (option?.shouldMaintainSelection) {
+    if (currentWindow && !canUseHighlight(currentWindow)) {
+        if (option?.highlightSelection) {
             editorContext.selectionClassName = SelectionClassName;
             core.api.setEditorStyle(core, SelectionClassName, 'background-color: #ddd!important', [
                 SelectionSelector,
@@ -51,7 +51,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         modelToDomContext
     );
 
-    persistHighlight(core, !!option?.shouldMaintainSelection, selection);
+    persistHighlight(core, !!option?.highlightSelection, selection);
 
     if (!core.lifecycle.shadowEditFragment) {
         // Clear pending mutations since we will use our latest model object to replace existing cache

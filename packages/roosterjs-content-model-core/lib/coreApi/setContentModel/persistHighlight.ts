@@ -2,7 +2,6 @@ import type { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 
 const SelectionClassName = '__persistedSelection';
 /**
- * @internal
  * Shim class to pass TS interpreter if the TS version does not have context of Highlight API
  */
 declare class Highlight {
@@ -10,7 +9,6 @@ declare class Highlight {
 }
 
 /**
- * @internal
  * Shim interface to pass TS interpreter if the TS version does not have context of Highlight API
  */
 interface WindowWithHighlight extends Window {
@@ -18,7 +16,6 @@ interface WindowWithHighlight extends Window {
 }
 
 /**
- * @internal
  * Shim class for HighlightRegistry to pass TS interpreter
  */
 interface HighlightRegistryWithMap extends HighlightRegistry {
@@ -35,7 +32,6 @@ interface CSSShim {
 declare const CSS: CSSShim;
 
 /**
- * @internal
  * @param win current window that Highlight is being used.
  * @returns boolean indicates if Highlight api is available
  */
@@ -46,11 +42,10 @@ function isHighlightRegistryWithMap(
 }
 
 /**
- * @internal
  * @param win current window that Highlight is being used.
  * @returns boolean indicates if Highlight api is available
  */
-export function isWindowWithHighlight(win: Window): win is WindowWithHighlight {
+function isWindowWithHighlight(win: Window): win is WindowWithHighlight {
     return !!(win as WindowWithHighlight).Highlight;
 }
 
@@ -58,12 +53,12 @@ export function isWindowWithHighlight(win: Window): win is WindowWithHighlight {
  * @internal
  * Persist highlight of a indicated selection object
  * @param core The editor core object
- * @param shouldMaintainSelection The flag indicate if the selection should be persisted
+ * @param highlightSelection The flag indicate if the selection should be persisted
  * @param selection The selection object that needs to be persisted.
  */
 export function persistHighlight(
     core: EditorCore,
-    shouldMaintainSelection: boolean,
+    highlightSelection: boolean,
     selection: DOMSelection | null
 ) {
     const currentWindow = core.logicalRoot.ownerDocument.defaultView;
@@ -73,7 +68,7 @@ export function persistHighlight(
         isWindowWithHighlight(currentWindow) &&
         isHighlightRegistryWithMap(CSS.highlights)
     ) {
-        if (shouldMaintainSelection) {
+        if (highlightSelection) {
             if (selection && selection.type == 'range') {
                 const highlight = new currentWindow.Highlight(selection.range);
                 CSS.highlights.set(SelectionClassName, highlight);
@@ -82,4 +77,8 @@ export function persistHighlight(
             CSS.highlights.delete(SelectionClassName);
         }
     }
+}
+
+export function canUseHighlight(win: Window): boolean {
+    return isWindowWithHighlight(win);
 }
