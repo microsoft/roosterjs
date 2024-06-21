@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-plugins/lib/edit/keyboardInput.ts</title>
+    <title>Code coverage report for roosterjs-content-model-plugins/lib/imageEdit/utils/findEditingImage.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/edit</a> keyboardInput.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/imageEdit/utils</a> findEditingImage.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">63.64% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>14/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>4/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>12/20</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -105,107 +105,101 @@
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { deleteSelection, isModifierKey, normalizeContentModel } from 'roosterjs-content-model-dom';
-import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 &nbsp;
 /**
  * @internal
  */
-export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
-    const selection = editor.getDOMSelection();
+export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAndParagraph | null {
+    for (let i = 0; i &lt; group.blocks.length; i++) {
+        const block = group.blocks[i];
 &nbsp;
-    if (shouldInputWithContentModel(selection, rawEvent)) {
-        editor.takeSnapshot();
+        switch (block.blockType) {
+<span class="branch-0 cbranch-no" title="branch not covered" >            case 'BlockGroup':</span>
+                const result = <span class="cstat-no" title="statement not covered" >findEditingImage(block);</span>
 &nbsp;
-        editor.formatContentModel(
-            (model, context) =&gt; {
-                const result = deleteSelection(model, [], context);
-&nbsp;
-                // Skip undo snapshot here and add undo snapshot before the operation so that we don't add another undo snapshot in middle of this replace operation
-                context.skipUndoSnapshot = true;
-&nbsp;
-                if (result.deleteResult == 'range') {
-                    // We have deleted something, next input should inherit the segment format from deleted content, so set pending format here
-                    context.newPendingFormat = result.insertPoint?.marker.format;
-&nbsp;
-                    normalizeContentModel(model);
-&nbsp;
-                    // Do not preventDefault since we still want browser to handle the final input for now
-                    return true;
-                } else {
-                    return false;
+<span class="cstat-no" title="statement not covered" >                if (result) {</span>
+<span class="cstat-no" title="statement not covered" >                    return result;</span>
                 }
-            },
-            {
-                scrollCaretIntoView: true,
-                rawEvent,
-            }
-        );
+<span class="cstat-no" title="statement not covered" >                break;</span>
 &nbsp;
-        return true;
-    }
-}
+            case 'Paragraph':
+                for (let j = 0; j &lt; block.segments.length; j++) {
+                    const segment = block.segments[j];
+                    switch (segment.segmentType) {
+                        case 'Image':
+                            if (segment.dataset.isEditing) {
+                                return {
+                                    paragraph: block,
+                                    image: segment,
+                                };
+                            }
+                            break;
 &nbsp;
-function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
-    if (!selection) {
-        return false; // Nothing to delete
-    } else if (!isModifierKey(rawEvent) &amp;&amp; (rawEvent.key == 'Space' || rawEvent.key.length == 1)) {
-        return selection.type != 'range' || !selection.range.collapsed;
-    } else {
-        return false;
+<span class="branch-1 cbranch-no" title="branch not covered" >                        case 'General':</span>
+                            const result = <span class="cstat-no" title="statement not covered" >findEditingImage(segment);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            if (result) {</span>
+<span class="cstat-no" title="statement not covered" >                                return result;</span>
+                            }
+<span class="cstat-no" title="statement not covered" >                            break;</span>
+                    }
+                }
+&nbsp;
+                break;
+        }
     }
+&nbsp;
+    return null;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -217,14 +211,14 @@ function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: K
                 at Fri Jun 21 2024 21:12:04 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     
