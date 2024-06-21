@@ -7,6 +7,7 @@ import type {
     FormatContentModel,
     FormatContentModelContext,
     EditorCore,
+    ModelToDomOption,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -59,16 +60,21 @@ export const formatContentModel: FormatContentModel = (
 
         try {
             handleImages(core, context);
+
+            let modelToDomOptions: ModelToDomOption | undefined;
+            if (!hasFocus) {
+                modelToDomOptions = Object.assign({}, modelToDomOptions, { ignoreSelection: true });
+            }
+
+            if (shouldMaintainSelection) {
+                modelToDomOptions = Object.assign({}, modelToDomOptions, {
+                    shouldMaintainSelection: true,
+                });
+            }
+
             selection =
-                core.api.setContentModel(
-                    core,
-                    model,
-                    {
-                        ignoreSelection: !hasFocus,
-                        shouldMaintainSelection,
-                    },
-                    onNodeCreated
-                ) ?? undefined;
+                core.api.setContentModel(core, model, modelToDomOptions, onNodeCreated) ??
+                undefined;
 
             handlePendingFormat(core, context, selection);
 
