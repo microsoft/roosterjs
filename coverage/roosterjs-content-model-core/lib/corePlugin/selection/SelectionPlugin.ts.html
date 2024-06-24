@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.79% </span>
+                <span class="strong">95.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>296/309</span>
+                <span class='fraction'>295/308</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.59% </span>
+                <span class="strong">83.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>331/396</span>
+                <span class='fraction'>329/394</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.61% </span>
+                <span class="strong">95.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>283/296</span>
+                <span class='fraction'>282/295</span>
             </div>
         
             
@@ -772,7 +772,10 @@
 <a name='L713'></a><a href='#L713'>713</a>
 <a name='L714'></a><a href='#L714'>714</a>
 <a name='L715'></a><a href='#L715'>715</a>
-<a name='L716'></a><a href='#L716'>716</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L716'></a><a href='#L716'>716</a>
+<a name='L717'></a><a href='#L717'>717</a>
+<a name='L718'></a><a href='#L718'>718</a>
+<a name='L719'></a><a href='#L719'>719</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -903,11 +906,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">312x</span>
+<span class="cline-any cline-yes">313x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">312x</span>
+<span class="cline-any cline-yes">313x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -1355,7 +1358,7 @@
 <span class="cline-any cline-yes">144x</span>
 <span class="cline-any cline-yes">58x</span>
 <span class="cline-any cline-yes">58x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">58x</span>
 <span class="cline-any cline-yes">58x</span>
@@ -1363,28 +1366,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">144x</span>
-<span class="cline-any cline-yes">2350x</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">2574x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2084,17 +2090,20 @@ class SelectionPlugin implements PluginWithState&lt;SelectionPluginState&gt; {
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
 &nbsp;
-            if (newSelection?.type == 'image' &amp;&amp; selection) {
-                if (selection &amp;&amp; !isSingleImageInSelection(selection)) {
-                    const range = selection.getRangeAt(0);
-                    this.editor.setDOMSelection({
-                        type: 'range',
-                        range,
-                        isReverted:
-                            selection.focusNode != range.endContainer ||
-                            selection.focusOffset != range.endOffset,
-                    });
-                }
+            if (
+                newSelection?.type == 'image' &amp;&amp;
+                selection &amp;&amp;
+                selection.focusNode &amp;&amp;
+                !isSingleImageInSelection(selection)
+            ) {
+                const range = selection.getRangeAt(0);
+                this.editor.setDOMSelection({
+                    type: 'range',
+                    range,
+                    isReverted:
+                        selection.focusNode != range.endContainer ||
+                        selection.focusOffset != range.endOffset,
+                });
             }
 &nbsp;
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
@@ -2209,7 +2218,7 @@ export function createSelectionPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 21 2024 22:04:30 GMT+0000 (Coordinated Universal Time)
+                at Mon Jun 24 2024 19:22:42 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
