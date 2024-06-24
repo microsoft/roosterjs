@@ -51,7 +51,7 @@ describe('updateImageEditInfo', () => {
     it('update image edit info', () => {
         const updateImageMetadataSpy = spyOn(updateImageMetadata, 'updateImageMetadata');
         const contentModelImage = createImage('test');
-        updateImageEditInfo(contentModelImage, {
+        updateImageEditInfo(contentModelImage, new Image(), {
             widthPx: 10,
             heightPx: 10,
         });
@@ -65,7 +65,7 @@ describe('getSelectedImageMetadata', () => {
         const image = new Image(10, 10);
         const metadata = getSelectedImageMetadata(editor, image);
         const expected = {
-            src: '',
+            src: 'test',
             widthPx: 0,
             heightPx: 0,
             naturalWidth: 0,
@@ -75,7 +75,6 @@ describe('getSelectedImageMetadata', () => {
             topPercent: 0,
             bottomPercent: 0,
             angleRad: 0,
-            editingInfo: '{"src":"test"}',
         };
         expect(metadata).toEqual(expected);
     });

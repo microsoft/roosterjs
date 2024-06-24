@@ -18,13 +18,13 @@ describe('createImageWrapper', () => {
         options: ImageEditOptions,
         editInfo: ImageMetadataFormat,
         htmlOptions: ImageHtmlOptions,
-        operation: ImageEditOperation | undefined,
+        operation: ImageEditOperation[],
         expectResult: WrapperElements
     ) {
         const result = createImageWrapper(
             editor,
             image,
-            imageSpan,
+
             options,
             editInfo,
             htmlOptions,
@@ -45,7 +45,7 @@ describe('createImageWrapper', () => {
             preserveRatio: true,
             disableRotate: false,
             disableSideResize: false,
-            onSelectState: 'resize',
+            onSelectState: ['resize'],
         };
         const editInfo = {
             src: 'test',
@@ -69,7 +69,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, 'resize', {
+        runTest(image, imageSpan, options, editInfo, htmlOptions, ['resize'], {
             wrapper,
             shadowSpan,
             imageClone,
@@ -92,7 +92,7 @@ describe('createImageWrapper', () => {
             preserveRatio: true,
             disableRotate: false,
             disableSideResize: false,
-            onSelectState: 'rotate',
+            onSelectState: ['rotate'],
         };
         const editInfo = {
             src: 'test',
@@ -116,7 +116,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, 'rotate', {
+        runTest(image, imageSpan, options, editInfo, htmlOptions, ['rotate'], {
             wrapper: wrapper,
             shadowSpan: shadowSpan,
             imageClone: imageClone,
@@ -139,7 +139,7 @@ describe('createImageWrapper', () => {
             preserveRatio: true,
             disableRotate: false,
             disableSideResize: false,
-            onSelectState: 'resize',
+            onSelectState: ['resize'],
         };
         const editInfo = {
             src: 'test',
@@ -171,7 +171,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, 'crop', {
+        runTest(image, imageSpan, options, editInfo, htmlOptions, ['crop'], {
             wrapper,
             shadowSpan,
             imageClone,

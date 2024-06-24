@@ -1,6 +1,5 @@
 import { addRangeToSelection } from './addRangeToSelection';
 import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
-import { ensureImageHasSpanParent } from './ensureImageHasSpanParent';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
@@ -20,6 +19,7 @@ const TABLE_ID = 'table';
 const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
+const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 
 /**
  * @internal
@@ -45,12 +45,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     try {
         switch (selection?.type) {
             case 'image':
-                const image = ensureImageHasSpanParent(selection.image);
+                const image = selection.image;
 
-                core.selection.selection = {
-                    type: 'image',
-                    image,
-                };
+                core.selection.selection = selection;
+
                 const imageSelectionColor = isDarkMode
                     ? core.selection.imageSelectionBorderColorDark
                     : core.selection.imageSelectionBorderColor;
@@ -58,10 +56,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:solid!important; outline-color:${imageSelectionColor}!important;display: ${
-                        core.environment.isSafari ? '-webkit-inline-flex' : 'inline-flex'
-                    };`,
-                    [`span:has(>img#${ensureUniqueId(image, IMAGE_ID)})`]
+                    `outline-style:solid!important; outline-color:${
+                        imageSelectionColor || DEFAULT_SELECTION_BORDER_COLOR
+                    }!important;`,
+                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
                 );
                 core.api.setEditorStyle(
                     core,
