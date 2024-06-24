@@ -419,6 +419,38 @@ describe('SelectionPlugin handle image selection', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
     });
 
+    it('Image selection, mouse down with right click to div', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        const node = document.createElement('div');
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                target: node,
+                button: 2,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
+    });
+
     it('Image selection, mouse down to div, no parent of image', () => {
         const mockedImage = {
             parentNode: { childNodes: [] },

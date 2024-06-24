@@ -149,6 +149,123 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('mouseUp - left click - remove selection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                id: 'image_0',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {
+                                isEditing: 'true',
+                            },
+                            isSelectedAsImageSelection: false,
+                            isSelected: false,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 0,
+            } as any,
+        });
+        expect(plugin.isEditingImage).toBeFalsy();
+        plugin.dispose();
+    });
+
+    it('mouseUp - right click - remove wrapper', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                id: 'image_0',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 0,
+                target: {
+                    tagName: 'IMG',
+                } as any,
+            } as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            isClicking: true,
+            rawEvent: {
+                button: 2,
+                target: {
+                    tagName: 'IMG',
+                    nodeType: 1,
+                } as any,
+            } as any,
+        });
+
+        expect(plugin.isEditingImage).toBeFalsy();
+        plugin.dispose();
+    });
+
     it('cropImage', () => {
         const plugin = new ImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], model);

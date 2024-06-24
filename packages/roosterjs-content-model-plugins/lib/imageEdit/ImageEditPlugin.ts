@@ -28,7 +28,6 @@ import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     ContentModelImage,
-    DOMSelection,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -48,6 +47,8 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     disableSideResize: false,
     onSelectState: ['resize', 'rotate'],
 };
+
+const MouseRightButton = 2;
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -143,14 +144,31 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
+    private isImageSelection(target: Node) {
+        if (isNodeOfType(target, 'ELEMENT_NODE')) {
+            if (isElementOfType(target, 'img')) {
+                return true;
+            }
+            if (
+                isElementOfType(target, 'span') &&
+                target.firstElementChild &&
+                isNodeOfType(target.firstElementChild, 'ELEMENT_NODE') &&
+                isElementOfType(target.firstElementChild, 'img')
+            ) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
         const selection = editor.getDOMSelection();
         if ((selection && selection.type == 'image') || this.isEditing) {
-            this.applyFormatWithContentModel(
-                editor,
-                this.isCropMode,
-                false /* shouldSelectImage */
-            );
+            const shouldSelectImage =
+                this.isImageSelection(event.rawEvent.target as Node) &&
+                event.rawEvent.button === MouseRightButton;
+            this.applyFormatWithContentModel(editor, this.isCropMode, shouldSelectImage);
         }
     }
 
@@ -240,10 +258,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         );
                         this.cleanInfo();
-                        this.isEditing = false;
-                        this.isCropMode = false;
                         result = true;
                     }
+
+                    this.isEditing = false;
+                    this.isCropMode = false;
 
                     if (editingImage && selection?.type == 'image' && !shouldSelectImage) {
                         this.isEditing = true;
@@ -516,7 +535,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         editor: IEditor,
         image: HTMLImageElement,
         apiOperation: ImageEditOperation[],
-        selection: DOMSelection | null,
         operation: (imageEditInfo: ImageMetadataFormat) => void
     ) {
         if (this.wrapper && this.selectedImage && this.shadowSpan) {
@@ -583,7 +601,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
         const image = selection.image;
         if (this.editor) {
-            this.editImage(this.editor, image, ['flip'], selection, imageEditInfo => {
+            this.editImage(this.editor, image, ['flip'], imageEditInfo => {
                 const angleRad = imageEditInfo.angleRad || 0;
                 const isInVerticalPostion =
                     (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
@@ -612,7 +630,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
         const image = selection.image;
         if (this.editor) {
-            this.editImage(this.editor, image, [], selection, imageEditInfo => {
+            this.editImage(this.editor, image, [], imageEditInfo => {
                 imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
             });
         }
