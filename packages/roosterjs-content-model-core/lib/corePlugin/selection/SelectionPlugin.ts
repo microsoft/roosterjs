@@ -555,7 +555,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
             return null;
         }
-        console.log('getContainedTargetImage', event);
+
         const target = event.target as Node;
         if (
             isNodeOfType(target, 'ELEMENT_NODE') &&
