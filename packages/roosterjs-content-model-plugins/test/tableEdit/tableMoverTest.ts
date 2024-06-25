@@ -365,6 +365,70 @@ describe('Table Mover Tests', () => {
         expect(parseFloat(divRect.style.left)).toBeGreaterThan(0);
     });
 
+    it('Do not dismiss the TableMover if only clicking the handler element', () => {
+        //Act
+        const table = document.createElement('table');
+        const div = document.createElement('div');
+        const onFinishDragging = jasmine.createSpy('onFinishDragging');
+        const onStart = jasmine.createSpy('onStart');
+        const onEnd = jasmine.createSpy('onEnd');
+
+        const context: TableMoverContext = {
+            table,
+            zoomScale: 1,
+            rect: null,
+            isRTL: true,
+            editor,
+            div,
+            onFinishDragging,
+            onStart,
+            onEnd,
+            disableMovement: false,
+        };
+
+        onDragEnd(
+            context,
+            <any>{
+                target: div,
+            },
+            undefined
+        );
+
+        expect(onEnd).toHaveBeenCalledWith(false);
+    });
+
+    it('Dismiss the TableMover if drag end did not end in the handler element', () => {
+        //Act
+        const table = document.createElement('table');
+        const div = document.createElement('div');
+        const onFinishDragging = jasmine.createSpy('onFinishDragging');
+        const onStart = jasmine.createSpy('onStart');
+        const onEnd = jasmine.createSpy('onEnd');
+
+        const context: TableMoverContext = {
+            table,
+            zoomScale: 1,
+            rect: null,
+            isRTL: true,
+            editor,
+            div,
+            onFinishDragging,
+            onStart,
+            onEnd,
+            disableMovement: false,
+        };
+
+        onDragEnd(
+            context,
+            <any>{
+                target: table,
+            },
+            undefined
+        );
+
+        expect(onEnd).toHaveBeenCalledWith(true);
+    });
+
     describe('Move - onDragEnd', () => {
         let target: HTMLTableElement;
         const nodeHeight = 300;
