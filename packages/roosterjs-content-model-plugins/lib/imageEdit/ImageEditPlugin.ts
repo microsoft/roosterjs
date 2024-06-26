@@ -98,11 +98,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             blur: {
                 beforeDispatch: () => {
                     if (this.editor) {
-                        // this.applyFormatWithContentModel(
-                        //     this.editor,
-                        //     this.isCropMode,
-                        //     true /* shouldSelectImage */
-                        // );
+                        this.applyFormatWithContentModel(
+                            this.editor,
+                            this.isCropMode,
+                            true /* shouldSelectImage */
+                        );
                     }
                 },
             },
