@@ -122,6 +122,25 @@ describe('EditPlugin', () => {
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
         });
+		
+		it('Tab, Tab handling not enabled', () => {
+            plugin = new EditPlugin({
+                handleTabKey: false,
+            });
+            const rawEvent = { key: 'Tab' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+        });
 
         it('Enter, normal enter not enabled', () => {
             plugin = new EditPlugin();
