@@ -379,8 +379,10 @@ export class TableEditor {
         this.editor.takeSnapshot();
     }
 
-    private onEndTableMove = () => {
-        this.disposeTableMover();
+    private onEndTableMove = (disposeHandler: boolean) => {
+        if (disposeHandler) {
+            this.disposeTableMover();
+        }
         return this.onFinishEditing();
     };
 

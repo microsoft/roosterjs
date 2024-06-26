@@ -25,6 +25,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
+const MouseRightButton = 2;
 const Up = 'ArrowUp';
 const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
@@ -163,12 +164,17 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-        if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
+        if (
+            selection?.type == 'image' &&
+            (rawEvent.button == MouseLeftButton ||
+                (rawEvent.button == MouseRightButton &&
+                    !this.getClickingImage(rawEvent) &&
+                    !this.getContainedTargetImage(rawEvent, selection)))
+        ) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
 
         if (
-            rawEvent.button === MouseLeftButton &&
             (image =
                 this.getClickingImage(rawEvent) ??
                 this.getContainedTargetImage(rawEvent, selection)) &&
