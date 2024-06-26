@@ -18,6 +18,7 @@ export { setTextColor } from './publicApi/segment/setTextColor';
 export { changeFontSize } from './publicApi/segment/changeFontSize';
 export { applySegmentFormat } from './publicApi/segment/applySegmentFormat';
 export { changeCapitalization } from './publicApi/segment/changeCapitalization';
+export { splitTextSegment } from './publicApi/segment/splitTextSegment';
 export { insertImage } from './publicApi/image/insertImage';
 export { setListStyle } from './publicApi/list/setListStyle';
 export { setListStartNumber } from './publicApi/list/setListStartNumber';
