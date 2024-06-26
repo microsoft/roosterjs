@@ -11,8 +11,25 @@ import type {
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Options to customize the keyboard handling behavior of Edit plugin
+ */
+export type EditOptions = {
+    /**
+     * Whether to handle Tab key in keyboard. @default true
+     */
+    handleTabKey?: boolean;
+}
+
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+
+/**
+ * @internal
+ */
+const DefaultOptions: Partial<EditOptions> = {
+    handleTabKey: true,
+};
 
 /**
  * Edit plugins helps editor to do editing operation on top of content model.
@@ -27,6 +44,12 @@ export class EditPlugin implements EditorPlugin {
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
     private handleNormalEnter = false;
+
+    /**
+     * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
+     * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
+     */
+    constructor(private options: EditOptions = DefaultOptions) {}
 
     /**
      * Get name of this plugin
@@ -98,6 +121,7 @@ export class EditPlugin implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent) {
         if (
             this.editor &&
+            this.options.handleTabKey &&
             event.eventType == 'keyDown' &&
             event.rawEvent.key == 'Tab' &&
             !event.rawEvent.shiftKey
@@ -148,7 +172,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Tab':
-                    keyboardTab(editor, rawEvent);
+                    if (this.options.handleTabKey) {
+                        keyboardTab(editor, rawEvent);
+                    }
                     break;
                 case 'Unidentified':
                     if (editor.getEnvironment().isAndroid) {
