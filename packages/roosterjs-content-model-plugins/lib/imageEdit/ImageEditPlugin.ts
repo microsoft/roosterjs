@@ -201,7 +201,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,
-                    isModifierKey(event.rawEvent) && isImageSelection //if it's a modifier key over a image, the image should select the image
+                    (isModifierKey(event.rawEvent) || event.rawEvent.shiftKey) && isImageSelection //if it's a modifier key over a image, the image should select the image
                 );
             }
         }
