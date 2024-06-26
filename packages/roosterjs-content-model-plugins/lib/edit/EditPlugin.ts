@@ -19,14 +19,11 @@ export type EditOptions = {
      * Whether to handle Tab key in keyboard. @default true
      */
     handleTabKey?: boolean;
-}
+};
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
 
-/**
- * @internal
- */
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
 };
