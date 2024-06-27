@@ -496,10 +496,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             autoFormatOptions,
             linkTitle,
             customReplacements,
+            editPluginOptions,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
-            pluginList.edit && new EditPlugin(),
+            pluginList.edit && new EditPlugin(editPluginOptions),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
