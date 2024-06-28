@@ -140,6 +140,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             markdownOptions: { ...this.state.markdownOptions },
             customReplacements: this.state.customReplacements,
             experimentalFeatures: this.state.experimentalFeatures,
+            editPluginOptions: { ...this.state.editPluginOptions },
         };
 
         if (callback) {

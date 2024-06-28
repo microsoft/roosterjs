@@ -338,6 +338,7 @@ describe('SelectionPlugin handle image selection', () => {
     let domHelperSpy: jasmine.Spy;
     let requestAnimationFrameSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
+    let findClosestElementAncestor: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -352,7 +353,10 @@ describe('SelectionPlugin handle image selection', () => {
                 requestAnimationFrame: requestAnimationFrameSpy,
             },
         });
-        domHelperSpy = jasmine.createSpy('domHelperSpy');
+        findClosestElementAncestor = jasmine.createSpy('findClosestElementAncestor');
+        domHelperSpy = jasmine.createSpy('domHelperSpy').and.returnValue({
+            findClosestElementAncestor: findClosestElementAncestor,
+        });
 
         editor = {
             getDOMHelper: domHelperSpy,
@@ -407,15 +411,44 @@ describe('SelectionPlugin handle image selection', () => {
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
+                button: 0,
             } as any,
         });
 
         expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'range',
-            range: mockedRange,
-            isReverted: false,
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('Image selection, mouse down with right click to div', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
         });
+
+        createRangeSpy.and.returnValue(mockedRange);
+
+        const node = document.createElement('div');
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                target: node,
+                button: 2,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
     });
 
     it('Image selection, mouse down to div, no parent of image', () => {
@@ -439,15 +472,46 @@ describe('SelectionPlugin handle image selection', () => {
             eventType: 'mouseDown',
             rawEvent: {
                 target: node,
+                button: 0,
             } as any,
         });
 
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('Image selection, mouse down to a image', () => {
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+            isContentEditable: true,
+            nodeType: 1,
+            tagName: 'IMG',
+            dispatchEvent: jasmine.createSpy('dispatchEvent'),
+        } as any;
+        getDOMSelectionSpy.and.returnValue(null);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                target: mockedImage,
+                button: 0,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image: mockedImage,
+        });
     });
 
     it('Image selection, mouse down to same image', () => {
         const mockedImage = {
             parentNode: { childNodes: [] },
+            isContentEditable: true,
+            nodeType: 1,
+            tagName: 'IMG',
+            dispatchEvent: jasmine.createSpy('dispatchEvent'),
         } as any;
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -458,127 +522,16 @@ describe('SelectionPlugin handle image selection', () => {
             eventType: 'mouseDown',
             rawEvent: {
                 target: mockedImage,
+                button: 0,
             } as any,
         });
 
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('Image selection, mouse down to same image right click', () => {
-        const parent = document.createElement('div');
-        const mockedImage = document.createElement('img');
-        parent.appendChild(mockedImage);
-        const range = document.createRange();
-        range.selectNode(mockedImage);
-
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-
-        mockedImage.contentEditable = 'true';
-
-        getDOMSelectionSpy.and.returnValue({
+        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(2);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(null);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'image',
             image: mockedImage,
         });
-
-        plugin.onPluginEvent!({
-            eventType: 'mouseDown',
-            rawEvent: (<Partial<Event>>{
-                target: mockedImage,
-                button: 2,
-                preventDefault: preventDefaultSpy,
-            }) as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
-        expect(preventDefaultSpy).toHaveBeenCalled();
-    });
-
-    it('Image selection, mouse down to image right click', () => {
-        const parent = document.createElement('div');
-        const mockedImage = document.createElement('img');
-        parent.appendChild(mockedImage);
-
-        mockedImage.contentEditable = 'true';
-        plugin.onPluginEvent!({
-            eventType: 'mouseDown',
-            rawEvent: {
-                target: mockedImage,
-                button: 2,
-            } as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('Image selection, mouse down to div right click', () => {
-        const node = document.createElement('div');
-
-        plugin.onPluginEvent!({
-            eventType: 'mouseDown',
-            rawEvent: {
-                target: node,
-                button: 2,
-            } as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('no selection, mouse up to image, is clicking, isEditable', () => {
-        const parent = document.createElement('div');
-        const mockedImage = document.createElement('img');
-        parent.appendChild(mockedImage);
-        const range = document.createRange();
-        range.selectNode(mockedImage);
-
-        mockedImage.contentEditable = 'true';
-
-        plugin.onPluginEvent!({
-            eventType: 'mouseUp',
-            isClicking: true,
-            rawEvent: {
-                target: mockedImage,
-            } as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'range',
-            range,
-            isReverted: false,
-        });
-    });
-
-    it('no selection, mouse up to image, is clicking, not isEditable', () => {
-        const mockedImage = document.createElement('img');
-
-        mockedImage.contentEditable = 'false';
-
-        plugin.onPluginEvent!({
-            eventType: 'mouseUp',
-            isClicking: true,
-            rawEvent: {
-                target: mockedImage,
-            } as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('no selection, mouse up to image, is not clicking, isEditable', () => {
-        const mockedImage = document.createElement('img');
-
-        mockedImage.contentEditable = 'true';
-
-        plugin.onPluginEvent!({
-            eventType: 'mouseUp',
-            isClicking: false,
-            rawEvent: {
-                target: mockedImage,
-            } as any,
-        });
-
-        expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
     });
 
     it('key down - ESCAPE, no selection', () => {
@@ -1436,11 +1389,11 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const setStartSpy = jasmine.createSpy('setStart');
+            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                setStart: setStartSpy,
+                selectNodeContents: selectNodeContentsSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1469,7 +1422,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td2, 0);
+            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td2);
+            expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(time).toBe(2);
@@ -1506,11 +1460,11 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const setStartSpy = jasmine.createSpy('setStart');
+            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                setStart: setStartSpy,
+                selectNodeContents: selectNodeContentsSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1540,7 +1494,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td1, 0);
+            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td1);
+            expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(time).toBe(2);
@@ -1577,11 +1532,11 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const setStartSpy = jasmine.createSpy('setStart');
+            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                setStart: setStartSpy,
+                selectNodeContents: selectNodeContentsSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1610,7 +1565,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td3, 0);
+            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td3);
+            expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(time).toBe(2);
@@ -2532,6 +2488,9 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         getRangeAtSpy = jasmine.createSpy('getRangeAt');
         getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
+            focusNode: {
+                nodeName: 'SPAN',
+            },
             getRangeAt: getRangeAtSpy,
         });
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
@@ -2589,7 +2548,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(setDOMSelectionSpy).toHaveBeenCalledWith({
             type: 'range',
             range: { startContainer: {} } as Range,
-            isReverted: false,
+            isReverted: true,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });

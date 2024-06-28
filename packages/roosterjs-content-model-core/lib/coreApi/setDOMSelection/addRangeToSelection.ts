@@ -1,3 +1,5 @@
+import { areSameRanges } from '../../corePlugin/cache/areSameSelections';
+
 /**
  * @internal
  */
@@ -6,13 +8,7 @@ export function addRangeToSelection(doc: Document, range: Range, isReverted: boo
 
     if (selection) {
         const currentRange = selection.rangeCount > 0 && selection.getRangeAt(0);
-        if (
-            currentRange &&
-            currentRange.startContainer == range.startContainer &&
-            currentRange.endContainer == range.endContainer &&
-            currentRange.startOffset == range.startOffset &&
-            currentRange.endOffset == range.endOffset
-        ) {
+        if (currentRange && areSameRanges(currentRange, range)) {
             return;
         }
         selection.removeAllRanges();

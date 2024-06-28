@@ -1,5 +1,3 @@
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
-
 /**
  * A wrapper of MutationObserver to observe text change from editor
  */
@@ -15,7 +13,9 @@ export interface TextMutationObserver {
     stopObserving(): void;
 
     /**
-     * Flush all pending mutations that have not be handled in order to ignore them
+     * Flush all pending mutations and update cached model if need
+     * @param ignoreMutations When pass true, all mutations will be ignored and do not update content model.
+     * This should only be used when we already have a up-to-date content model and will set it as latest cache
      */
-    flushMutations(newModel?: ContentModelDocument): void;
+    flushMutations(ignoreMutations?: boolean): void;
 }

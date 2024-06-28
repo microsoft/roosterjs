@@ -1,12 +1,19 @@
-import type { CachePluginState, DOMSelection } from 'roosterjs-content-model-types';
+import type {
+    CachePluginState,
+    ContentModelDocument,
+    DOMSelection,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function updateCachedSelection(
+export function updateCache(
     state: CachePluginState,
-    selection: DOMSelection | undefined
+    model: ContentModelDocument,
+    selection: DOMSelection | null | undefined
 ) {
+    state.cachedModel = model;
+
     if (selection?.type == 'range') {
         const {
             range: { startContainer, startOffset, endContainer, endOffset },
@@ -25,6 +32,6 @@ export function updateCachedSelection(
             },
         };
     } else {
-        state.cachedSelection = selection;
+        state.cachedSelection = selection ?? undefined;
     }
 }
