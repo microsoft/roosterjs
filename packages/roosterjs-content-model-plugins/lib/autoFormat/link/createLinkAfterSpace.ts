@@ -1,5 +1,4 @@
-import { matchLink } from 'roosterjs-content-model-api';
-import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import { matchLink, splitTextSegment } from 'roosterjs-content-model-api';
 import type {
     ContentModelText,
     FormatContentModelContext,

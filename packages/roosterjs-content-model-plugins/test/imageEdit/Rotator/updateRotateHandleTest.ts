@@ -57,15 +57,7 @@ xdescribe('updateRotateHandlePosition', () => {
             bottomPercent: 0,
             angleRad: 0,
         };
-        const { wrapper } = createImageWrapper(
-            editor,
-            image,
-            imageSpan,
-            {},
-            imageInfo,
-            options,
-            'rotate'
-        );
+        const { wrapper } = createImageWrapper(editor, image, {}, imageInfo, options, ['rotate']);
         const rotateCenter = wrapper.querySelector('.r_rotateC')! as HTMLElement;
         const rotateHandle = wrapper.querySelector('.r_rotateH')! as HTMLElement;
         spyOn(rotateHandle, 'getBoundingClientRect').and.returnValues(rotatePosition);

@@ -1,8 +1,8 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { getSelectedContentModelImage } from '../../../lib/imageEdit/utils/getSelectedContentModelImage';
+import { getSelectedImage } from '../../../lib/imageEdit/utils/getSelectedImage';
 
-describe('getSelectedContentModelImage', () => {
-    it('should return image model', () => {
+describe('getSelectedImage', () => {
+    it('get selected image', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -38,24 +38,52 @@ describe('getSelectedContentModelImage', () => {
                 textColor: '#000000',
             },
         };
-        const result = getSelectedContentModelImage(model);
-        expect(result).toEqual({
-            segmentType: 'Image',
-            src: 'test',
-            format: {
-                fontFamily: 'Calibri',
-                fontSize: '11pt',
-                textColor: 'rgb(0, 0, 0)',
-                id: 'image_0',
-                maxWidth: '1800px',
+
+        const selections = getSelectedImage(model);
+        expect(selections).toEqual({
+            image: {
+                segmentType: 'Image',
+                src: 'test',
+                format: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                    id: 'image_0',
+                    maxWidth: '1800px',
+                },
+                dataset: {},
+                isSelectedAsImageSelection: true,
+                isSelected: true,
             },
-            dataset: {},
-            isSelectedAsImageSelection: true,
-            isSelected: true,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'Image',
+                        src: 'test',
+                        format: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                            textColor: 'rgb(0, 0, 0)',
+                            id: 'image_0',
+                            maxWidth: '1800px',
+                        },
+                        dataset: {},
+                        isSelectedAsImageSelection: true,
+                        isSelected: true,
+                    },
+                ],
+                format: {},
+                segmentFormat: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                },
+            },
         });
     });
 
-    it('should not return image model', () => {
+    it('no image selected', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -63,18 +91,13 @@ describe('getSelectedContentModelImage', () => {
                     blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: 'Image',
-                            src: 'test',
-                            format: {
-                                fontFamily: 'Calibri',
-                                fontSize: '11pt',
-                                textColor: 'rgb(0, 0, 0)',
-                                id: 'image_0',
-                                maxWidth: '1800px',
-                            },
-                            dataset: {},
-                            isSelectedAsImageSelection: false,
-                            isSelected: false,
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
                         },
                     ],
                     format: {},
@@ -91,7 +114,8 @@ describe('getSelectedContentModelImage', () => {
                 textColor: '#000000',
             },
         };
-        const result = getSelectedContentModelImage(model);
-        expect(result).toEqual(null);
+
+        const selections = getSelectedImage(model);
+        expect(selections).toEqual(null);
     });
 });

@@ -109,7 +109,7 @@ export function updateWrapper(
         setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
         setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
 
-        if (angleRad) {
+        if (angleRad !== undefined) {
             updateHandleCursor(croppers, angleRad);
         }
     }
@@ -132,7 +132,7 @@ export function updateWrapper(
             })
             .filter(handle => !!handle) as HTMLDivElement[];
 
-        if (angleRad) {
+        if (angleRad !== undefined) {
             updateHandleCursor(resizeHandles, angleRad);
         }
 

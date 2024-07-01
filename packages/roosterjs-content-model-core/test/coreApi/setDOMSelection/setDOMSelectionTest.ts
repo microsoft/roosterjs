@@ -1,6 +1,7 @@
 import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
 import { DOMSelection, EditorCore } from 'roosterjs-content-model-types';
 import { setDOMSelection } from '../../../lib/coreApi/setDOMSelection/setDOMSelection';
+
 import {
     DEFAULT_SELECTION_BORDER_COLOR,
     DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
@@ -21,6 +22,7 @@ describe('setDOMSelection', () => {
     let mockedRange = 'RANGE' as any;
     let createElementSpy: jasmine.Spy;
     let appendChildSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         querySelectorAllSpy = jasmine.createSpy('querySelectorAll');
@@ -38,6 +40,7 @@ describe('setDOMSelection', () => {
         createElementSpy = jasmine.createSpy('createElement').and.returnValue({
             appendChild: appendChildSpy,
         });
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelectionSpy').and.returnValue(null);
 
         doc = {
             querySelectorAll: querySelectorAllSpy,
@@ -59,6 +62,7 @@ describe('setDOMSelection', () => {
             api: {
                 triggerEvent: triggerEventSpy,
                 setEditorStyle: setEditorStyleSpy,
+                getDOMSelection: getDOMSelectionSpy,
             },
             domHelper: {
                 hasFocus: hasFocusSpy,
@@ -310,8 +314,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:solid!important; outline-color:#DB626C!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -370,8 +374,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:red!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:solid!important; outline-color:red!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -437,8 +441,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:DarkColorMock-red!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:solid!important; outline-color:DarkColorMock-red!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
@@ -498,8 +502,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0)']
+                'outline-style:solid!important; outline-color:#DB626C!important;',
+                ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -559,8 +563,8 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:solid!important; outline-color:#DB626C!important;display: inline-flex;',
-                ['span:has(>img#image_0_0)']
+                'outline-style:solid!important; outline-color:#DB626C!important;',
+                ['#image_0_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -916,6 +920,128 @@ describe('setDOMSelection', () => {
                 ['#table_0', '#table_0 *'],
                 selectionColor,
                 selectionColorDark
+            );
+        });
+    });
+
+    describe('Same selection', () => {
+        beforeEach(() => {
+            querySelectorAllSpy.and.returnValue([]);
+        });
+
+        function runTest(
+            originalSelection: DOMSelection | null,
+            newSelection: DOMSelection | null,
+            expectedCalled: boolean
+        ) {
+            getDOMSelectionSpy.and.returnValue(originalSelection);
+
+            setDOMSelection(core, newSelection);
+
+            if (expectedCalled) {
+                expect(triggerEventSpy).toHaveBeenCalledWith(
+                    core,
+                    {
+                        eventType: 'selectionChanged',
+                        newSelection: null,
+                    },
+                    true
+                );
+                expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+                expect(setEditorStyleSpy).toHaveBeenCalledTimes(3);
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                    core,
+                    '_DOMSelectionHideCursor',
+                    null
+                );
+                expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                    core,
+                    '_DOMSelectionHideSelection',
+                    null
+                );
+            } else {
+                expect(triggerEventSpy).not.toHaveBeenCalled();
+                expect(addRangeToSelectionSpy).not.toHaveBeenCalled();
+                expect(setEditorStyleSpy).not.toHaveBeenCalled();
+            }
+        }
+
+        it('From null selection', () => {
+            runTest(null, null, true);
+        });
+
+        it('From range selection, same', () => {
+            runTest(
+                {
+                    type: 'range',
+                    range: {
+                        startContainer: 'C1',
+                        startOffset: 'O1',
+                        endContainer: 'C2',
+                        endOffset: 'O2',
+                    } as any,
+                    isReverted: false,
+                },
+                {
+                    type: 'range',
+                    range: {
+                        startContainer: 'C1',
+                        startOffset: 'O1',
+                        endContainer: 'C2',
+                        endOffset: 'O2',
+                    } as any,
+                    isReverted: false,
+                },
+                false
+            );
+        });
+
+        it('From image selection, same', () => {
+            let mockedImage: any;
+
+            mockedImage = {
+                parentElement: {
+                    ownerDocument: doc,
+                    firstElementChild: mockedImage,
+                    lastElementChild: mockedImage,
+                    appendChild: appendChildSpy,
+                },
+                ownerDocument: doc,
+            } as any;
+
+            runTest(
+                {
+                    type: 'image',
+                    image: mockedImage,
+                },
+                {
+                    type: 'image',
+                    image: mockedImage,
+                },
+                false
+            );
+        });
+
+        it('From table selection, same', () => {
+            runTest(
+                {
+                    type: 'table',
+                    table: 'T1' as any,
+                    firstColumn: 0,
+                    firstRow: 0,
+                    lastColumn: 1,
+                    lastRow: 1,
+                },
+                {
+                    type: 'table',
+                    table: 'T1' as any,
+                    firstColumn: 0,
+                    firstRow: 0,
+                    lastColumn: 1,
+                    lastRow: 1,
+                },
+                false
             );
         });
     });

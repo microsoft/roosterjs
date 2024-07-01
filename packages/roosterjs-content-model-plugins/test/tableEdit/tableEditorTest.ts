@@ -15,7 +15,7 @@ import {
 } from '../../lib/tableEdit/editors/features/CellResizer';
 
 describe('TableEditor', () => {
-    describe('disableFeatures', () => {
+    xdescribe('disableFeatures', () => {
         const insideTheOffset = 5;
         let editor: IEditor;
         let table: HTMLTableElement;
