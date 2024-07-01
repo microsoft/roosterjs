@@ -2,6 +2,7 @@ import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
+import { EmptySegmentFormat, getObjectKeys } from 'roosterjs-content-model-dom';
 import { mutateBlock } from '../common/mutate';
 import type {
     ContentModelSegmentFormat,
@@ -52,12 +53,17 @@ export function normalizeTable(
             const cell = mutateBlock(readonlyCell);
 
             if (cell.blocks.length == 0) {
-                const format = cell.format.textColor
-                    ? {
-                          ...defaultSegmentFormat,
-                          textColor: cell.format.textColor,
-                      }
-                    : defaultSegmentFormat;
+                const cellFormat = { ...cell.format };
+                // Remove all non-segment related properties from cell format
+                getObjectKeys(cellFormat).forEach(key => {
+                    if (!(key in EmptySegmentFormat)) {
+                        delete cellFormat[key];
+                    }
+                });
+                const format: ContentModelSegmentFormat = {
+                    ...defaultSegmentFormat,
+                    ...cellFormat,
+                };
                 addBlock(
                     cell,
                     createParagraph(undefined /*isImplicit*/, undefined /*blockFormat*/, format)
