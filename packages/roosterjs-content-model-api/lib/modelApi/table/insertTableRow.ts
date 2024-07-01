@@ -26,11 +26,17 @@ export function insertTableRow(
             table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, {
                 format: { ...sourceRow.format },
                 cells: sourceRow.cells.map(cell => {
+                    const cellFormat =
+                        cell.blocks.length > 0 &&
+                        cell.blocks[0].blockType == 'Paragraph' &&
+                        cell.blocks[0].segments.length > 0
+                            ? { ...cell.format, ...cell.blocks[0].segments[0].format }
+                            : cell.format;
                     const newCell = createTableCell(
                         cell.spanLeft,
                         cell.spanAbove,
                         cell.isHeader,
-                        cell.format,
+                        cellFormat,
                         cell.dataset
                     );
                     newCell.isSelected = true;
