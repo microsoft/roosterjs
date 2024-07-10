@@ -1,5 +1,5 @@
 import { getListTypeStyle } from './getListTypeStyle';
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-dom/lib';
+import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-dom';
 import {
     getListAnnounceData,
     setListType,
