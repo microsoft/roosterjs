@@ -1,4 +1,3 @@
-import * as ensureUniqueIdFile from '../../../lib/coreApi/setEditorStyle/ensureUniqueId';
 import { ensureUniqueId } from '../../../lib/coreApi/setEditorStyle/ensureUniqueId';
 
 describe('ensureUniqueId', () => {
