@@ -1,4 +1,6 @@
+import { BulletListType } from 'roosterjs-content-model-dom';
 import { setListType } from '../../modelApi/list/setListType';
+import { setModelListStyle } from 'roosterjs-content-model-api';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -15,7 +17,12 @@ export function toggleBullet(editor: IEditor, removeMargins: boolean = false) {
         (model, context) => {
             context.newPendingFormat = 'preserve';
 
-            return setListType(model, 'UL', removeMargins);
+            const result = setListType(model, 'UL', removeMargins);
+            setModelListStyle(model, {
+                unorderedStyleType: BulletListType.Disc,
+            });
+
+            return result;
         },
         {
             apiName: 'toggleBullet',

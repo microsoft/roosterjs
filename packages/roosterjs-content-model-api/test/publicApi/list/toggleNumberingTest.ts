@@ -1,6 +1,9 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
+import * as setModelListStyle from '../../../lib/modelApi/list/setModelListStyle';
 import { IEditor } from 'roosterjs-content-model-types';
+import { NumberingListType } from 'roosterjs-content-model-dom';
 import { toggleNumbering } from '../../../lib/publicApi/list/toggleNumbering';
+
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -38,6 +41,8 @@ describe('toggleNumbering', () => {
         } as any) as IEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
+
+        spyOn(setModelListStyle, 'setModelListStyle').and.returnValue(true);
     });
 
     it('toggleNumbering', () => {
@@ -49,6 +54,10 @@ describe('toggleNumbering', () => {
             'OL',
             false /** remove margins */
         );
+        expect(setModelListStyle.setModelListStyle).toHaveBeenCalledTimes(1);
+        expect(setModelListStyle.setModelListStyle).toHaveBeenCalledWith(mockedModel, {
+            orderedStyleType: NumberingListType.Decimal,
+        });
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],

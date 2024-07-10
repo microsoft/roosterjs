@@ -1,4 +1,6 @@
+import { NumberingListType } from 'roosterjs-content-model-dom';
 import { setListType } from '../../modelApi/list/setListType';
+import { setModelListStyle } from '../../modelApi/list/setModelListStyle';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -15,7 +17,12 @@ export function toggleNumbering(editor: IEditor, removeMargins: boolean = false)
         (model, context) => {
             context.newPendingFormat = 'preserve';
 
-            return setListType(model, 'OL', removeMargins);
+            const result = setListType(model, 'OL', removeMargins);
+            setModelListStyle(model, {
+                orderedStyleType: NumberingListType.Decimal,
+            });
+
+            return result;
         },
         {
             apiName: 'toggleNumbering',

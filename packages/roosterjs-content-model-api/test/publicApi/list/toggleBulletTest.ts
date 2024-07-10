@@ -1,4 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
+import * as setModelListStyle from '../../../lib/modelApi/list/setModelListStyle';
+import { BulletListType } from 'roosterjs-content-model-dom';
 import { IEditor } from 'roosterjs-content-model-types';
 import { toggleBullet } from '../../../lib/publicApi/list/toggleBullet';
 import {
@@ -39,6 +41,7 @@ describe('toggleBullet', () => {
         } as any) as IEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
+        spyOn(setModelListStyle, 'setModelListStyle').and.returnValue(true);
     });
 
     it('toggleBullet', () => {
@@ -50,6 +53,10 @@ describe('toggleBullet', () => {
             'UL',
             false /** remove margins */
         );
+        expect(setModelListStyle.setModelListStyle).toHaveBeenCalledTimes(1);
+        expect(setModelListStyle.setModelListStyle).toHaveBeenCalledWith(mockedModel, {
+            unorderedStyleType: BulletListType.Disc,
+        });
         expect(context).toEqual({
             newEntities: [],
             deletedEntities: [],
