@@ -529,7 +529,7 @@ describe('setDOMSelection', () => {
             createRangeSpy.and.returnValue(mockedRange);
 
             querySelectorAllSpy.and.callFake(selector => {
-                return selector == '#image_0' ? ['', ''] : [''];
+                return selector == '[id="image_0"]' ? ['', ''] : [''];
             });
             hasFocusSpy.and.returnValue(false);
 

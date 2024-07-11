@@ -1,10 +1,13 @@
 import { getListTypeStyle } from './getListTypeStyle';
+import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-dom';
 import {
+    getListAnnounceData,
     setListType,
     setModelListStartNumber,
     setModelListStyle,
 } from 'roosterjs-content-model-api';
 import type {
+    ContentModelListItem,
     FormatContentModelContext,
     ReadonlyContentModelDocument,
     ShallowMutableContentModelParagraph,
@@ -26,6 +29,7 @@ export function keyboardListTrigger(
         const { listType, styleType, index } = listStyleType;
         triggerList(model, listType, styleType, index);
         context.canUndoByBackspace = true;
+        setAnnounceData(model, context);
 
         return true;
     }
@@ -48,9 +52,23 @@ const triggerList = (
         isOrderedList
             ? {
                   orderedStyleType: styleType,
+                  applyListStyleFromLevel: false,
               }
             : {
                   unorderedStyleType: styleType,
+                  applyListStyleFromLevel: false,
               }
     );
 };
+function setAnnounceData(model: ReadonlyContentModelDocument, context: FormatContentModelContext) {
+    const [paragraphOrListItems] = getOperationalBlocks<ContentModelListItem>(
+        model,
+        ['ListItem'],
+        [] // Set stop types to be empty so we can find list items even cross the boundary of table, then we can always operation on the list item if any
+    );
+
+    if (paragraphOrListItems && isBlockGroupOfType(paragraphOrListItems.block, 'ListItem')) {
+        const { path, block } = paragraphOrListItems;
+        context.announceData = getListAnnounceData([block, ...path]);
+    }
+}
