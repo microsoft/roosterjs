@@ -297,6 +297,11 @@ describe('getSelectedImage', () => {
                 blockType: 'Paragraph',
                 segments: [
                     {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                    {
                         segmentType: 'SelectionMarker',
                         format: {},
                         isSelected: true,
@@ -319,6 +324,11 @@ describe('getSelectedImage', () => {
                         segmentType: 'SelectionMarker',
                         format: {},
                         isSelected: true,
+                    },
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
                     },
                 ],
                 format: {},
