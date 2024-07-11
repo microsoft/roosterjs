@@ -78,7 +78,7 @@ describe('indent', () => {
                                 marginTop: undefined,
                                 textAlign: undefined,
                             },
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                         },
                     ],
                     blocks: [para],
@@ -138,7 +138,9 @@ describe('indent', () => {
                                 marginTop: '0px',
                                 textAlign: undefined,
                             },
-                            dataset: {},
+                            dataset: {
+                                editingInfo: '{"applyListStyleFromLevel":true}',
+                            },
                         },
                     ],
                     blocks: [para],
@@ -364,7 +366,7 @@ describe('indent', () => {
                                         marginTop: undefined,
                                         textAlign: undefined,
                                     },
-                                    dataset: {},
+                                    dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                                 },
                             ],
                             blocks: [para3],
@@ -420,7 +422,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 startNumberOverride: 1,
                                 direction: 'rtl',
@@ -500,7 +502,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
@@ -529,7 +531,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 direction: undefined,
                                 marginBottom: undefined,
@@ -584,7 +586,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
@@ -641,7 +643,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 startNumberOverride: 1,
                                 direction: undefined,
@@ -669,7 +671,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 startNumberOverride: undefined,
                                 direction: undefined,
@@ -697,7 +699,7 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                             format: {
                                 direction: undefined,
                                 marginBottom: undefined,
@@ -779,7 +781,7 @@ describe('indent', () => {
                                 marginTop: undefined,
                                 textAlign: undefined,
                             },
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                         },
                     ],
                     formatHolder: {
@@ -809,7 +811,7 @@ describe('indent', () => {
                                 marginTop: undefined,
                                 textAlign: undefined,
                             },
-                            dataset: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                         },
                     ],
                     formatHolder: {
