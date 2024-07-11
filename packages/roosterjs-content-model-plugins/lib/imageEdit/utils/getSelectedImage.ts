@@ -11,6 +11,7 @@ import type { ImageAndParagraph } from '../types/ImageAndParagraph';
  */
 export function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndParagraph | null {
     const selections = getSelectedSegmentsAndParagraphs(model, false);
+    console.log(selections);
     if (selections.length == 1 && selections[0][0].segmentType == 'Image' && selections[0][1]) {
         return {
             image: selections[0][0],
@@ -19,11 +20,9 @@ export function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndP
     } else if (
         selections.length == 3 &&
         selections[1][1] &&
-        selections[1][1].segments.every(
-            seg =>
-                (seg.segmentType == 'Image' || seg.segmentType == 'SelectionMarker') &&
-                seg.isSelected
-        ) &&
+        selections[1][1].segments
+            .filter(seg => seg.isSelected)
+            .every(seg => seg.segmentType == 'Image' || seg.segmentType == 'SelectionMarker') &&
         selections[1][0].segmentType == 'Image' &&
         selections[1][0].isSelectedAsImageSelection == true
     ) {
