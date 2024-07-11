@@ -1,3 +1,4 @@
+import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
 import type { Announce } from 'roosterjs-content-model-types';
 
 /**
@@ -10,16 +11,16 @@ export const announce: Announce = (core, announceData) => {
     const { text, defaultStrings, formatStrings = [] } = announceData;
     const { announcerStringGetter } = core.lifecycle;
     const template = defaultStrings && announcerStringGetter?.(defaultStrings);
-    const textToAnnounce = formatString(template || text, formatStrings);
+    let textToAnnounce = formatString(template || text, formatStrings);
 
-    if (textToAnnounce) {
-        let announceContainer = core.lifecycle.announceContainer;
+    if (!core.lifecycle.announceContainer) {
+        core.lifecycle.announceContainer = createAriaLiveElement(core.physicalRoot.ownerDocument);
+    }
 
-        if (!announceContainer || textToAnnounce == announceContainer.textContent) {
-            announceContainer?.parentElement?.removeChild(announceContainer);
-            announceContainer = createAriaLiveElement(core.physicalRoot.ownerDocument);
-
-            core.lifecycle.announceContainer = announceContainer;
+    if (textToAnnounce && core.lifecycle.announceContainer) {
+        const { announceContainer } = core.lifecycle;
+        if (textToAnnounce == announceContainer.textContent) {
+            textToAnnounce += '.';
         }
 
         if (announceContainer) {
@@ -40,21 +41,4 @@ function formatString(text: string | undefined, formatStrings: string[]) {
     });
 
     return text;
-}
-
-function createAriaLiveElement(document: Document): HTMLDivElement {
-    const div = document.createElement('div');
-
-    div.style.clip = 'rect(0px, 0px, 0px, 0px)';
-    div.style.clipPath = 'inset(100%)';
-    div.style.height = '1px';
-    div.style.overflow = 'hidden';
-    div.style.position = 'absolute';
-    div.style.whiteSpace = 'nowrap';
-    div.style.width = '1px';
-    div.ariaLive = 'assertive';
-
-    document.body.appendChild(div);
-
-    return div;
 }
