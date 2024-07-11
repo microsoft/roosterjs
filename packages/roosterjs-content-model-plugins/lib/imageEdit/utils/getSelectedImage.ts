@@ -11,7 +11,6 @@ import type { ImageAndParagraph } from '../types/ImageAndParagraph';
  */
 export function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndParagraph | null {
     const selections = getSelectedSegmentsAndParagraphs(model, false);
-    console.log(selections);
     if (selections.length == 1 && selections[0][0].segmentType == 'Image' && selections[0][1]) {
         return {
             image: selections[0][0],
