@@ -24,7 +24,8 @@ export function getSelectedImage(model: ReadonlyContentModelDocument): ImageAndP
                 (seg.segmentType == 'Image' || seg.segmentType == 'SelectionMarker') &&
                 seg.isSelected
         ) &&
-        selections[1][0].segmentType == 'Image'
+        selections[1][0].segmentType == 'Image' &&
+        selections[1][0].isSelectedAsImageSelection == true
     ) {
         return {
             image: selections[1][0],
