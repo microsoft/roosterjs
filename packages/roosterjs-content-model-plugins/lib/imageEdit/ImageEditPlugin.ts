@@ -9,6 +9,7 @@ import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
 import { getSelectedImageMetadata, updateImageEditInfo } from './utils/updateImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
@@ -256,6 +257,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 image.isSelectedAsImageSelection = shouldSelectImage;
                             }
                         );
+                        if (shouldSelectImage) {
+                            normalizeImageSelection(previousSelectedImage);
+                        }
                         this.cleanInfo();
                         result = true;
                     }

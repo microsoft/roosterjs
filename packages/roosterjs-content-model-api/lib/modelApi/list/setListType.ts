@@ -6,6 +6,7 @@ import {
     mutateBlock,
     normalizeContentModel,
     setParagraphNotImplicit,
+    updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItem,
@@ -121,6 +122,17 @@ export function setListType(
 
                     mutateBlock(parent).blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
+
+                    const levelIndex = newListItem.levels.length - 1;
+                    const level = mutateBlock(newListItem).levels[levelIndex];
+
+                    if (level) {
+                        updateListMetadata(level, metadata =>
+                            Object.assign({}, metadata, {
+                                applyListStyleFromLevel: true,
+                            })
+                        );
+                    }
                 } else {
                     existingListItems.forEach(
                         x => (mutateBlock(x).levels[0].format.marginBottom = '0px')

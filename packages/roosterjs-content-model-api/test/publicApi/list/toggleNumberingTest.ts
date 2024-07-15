@@ -1,6 +1,7 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import { IEditor } from 'roosterjs-content-model-types';
 import { toggleNumbering } from '../../../lib/publicApi/list/toggleNumbering';
+
 import {
     ContentModelDocument,
     ContentModelFormatter,
