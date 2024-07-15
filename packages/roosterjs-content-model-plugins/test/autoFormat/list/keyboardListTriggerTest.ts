@@ -12,7 +12,8 @@ describe('keyboardListTrigger', () => {
         context: FormatContentModelContext,
         expectedResult: boolean,
         shouldSearchForBullet: boolean = true,
-        shouldSearchForNumbering: boolean = true
+        shouldSearchForNumbering: boolean = true,
+        expectedContext?: any
     ) {
         const result = keyboardListTrigger(
             model,
@@ -22,6 +23,9 @@ describe('keyboardListTrigger', () => {
             shouldSearchForNumbering
         );
         expect(result).toBe(expectedResult);
+        if (expectedContext) {
+            expect(context).toEqual(expectedContext);
+        }
     }
 
     it('trigger numbering list', () => {
@@ -49,7 +53,16 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            true
+            true /* expectedResult */,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: {
+                    defaultStrings: 'announceListItemNumbering',
+                    formatStrings: ['1'],
+                },
+            }
         );
     });
 
@@ -118,7 +131,13 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            true
+            true,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: { defaultStrings: 'announceListItemNumbering', formatStrings: ['2'] },
+            }
         );
     });
 
@@ -147,7 +166,10 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            false
+            false,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            { canUndoByBackspace: true }
         );
     });
 
@@ -176,7 +198,13 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            true
+            true,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: { defaultStrings: 'announceListItemBullet' },
+            }
         );
     });
 
@@ -205,7 +233,10 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             {} as any,
-            false
+            false,
+            undefined,
+            undefined,
+            {}
         );
     });
 
@@ -384,7 +415,16 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            true
+            true,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: {
+                    defaultStrings: 'announceListItemNumbering',
+                    formatStrings: ['3'],
+                },
+            }
         );
     });
 
@@ -493,7 +533,13 @@ describe('keyboardListTrigger', () => {
             },
             paragraph,
             { canUndoByBackspace: true } as any,
-            true
+            true,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: { defaultStrings: 'announceListItemNumbering', formatStrings: ['A'] },
+            }
         );
     });
 });
