@@ -1,4 +1,5 @@
 import { ChangeSource, getObjectKeys, setColor } from 'roosterjs-content-model-dom';
+import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
 import type {
     IEditor,
     LifecyclePluginState,
@@ -74,6 +75,9 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         // Let other plugins know that we are ready
         this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
+
+        // Initialize the Announce container.
+        this.state.announceContainer = createAriaLiveElement(editor.getDocument());
     }
 
     /**
