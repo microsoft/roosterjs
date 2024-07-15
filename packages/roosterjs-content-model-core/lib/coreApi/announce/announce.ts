@@ -1,6 +1,8 @@
 import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
 import type { Announce } from 'roosterjs-content-model-types';
 
+const DOT_STRING = '.';
+
 /**
  * @internal
  * Announce the given data
@@ -20,7 +22,7 @@ export const announce: Announce = (core, announceData) => {
     if (textToAnnounce && core.lifecycle.announceContainer) {
         const { announceContainer } = core.lifecycle;
         if (textToAnnounce == announceContainer.textContent) {
-            textToAnnounce += '.';
+            textToAnnounce += DOT_STRING;
         }
 
         if (announceContainer) {
