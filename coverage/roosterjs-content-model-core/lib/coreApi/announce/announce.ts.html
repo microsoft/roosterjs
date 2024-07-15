@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/33</span>
+                <span class='fraction'>24/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.63% </span>
+                <span class="strong">88.46% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/32</span>
+                <span class='fraction'>23/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -103,21 +103,10 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -132,13 +121,13 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -160,24 +149,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { Announce } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
+import type { Announce } from 'roosterjs-content-model-types';
+&nbsp;
+const DOT_STRING = '.';
 &nbsp;
 /**
  * @internal
@@ -189,16 +164,16 @@ export const announce: Announce = (core, announceData) =&gt; {
     const { text, defaultStrings, formatStrings = [] } = announceData;
     const { announcerStringGetter } = core.lifecycle;
     const template = defaultStrings &amp;&amp; announcerStringGetter<span class="branch-0 cbranch-no" title="branch not covered" >?.(d</span>efaultStrings);
-    const textToAnnounce = formatString(template || text, formatStrings);
+    let textToAnnounce = formatString(template || text, formatStrings);
 &nbsp;
-    if (textToAnnounce) {
-        let announceContainer = core.lifecycle.announceContainer;
+    if (!core.lifecycle.announceContainer) {
+        core.lifecycle.announceContainer = createAriaLiveElement(core.physicalRoot.ownerDocument);
+    }
 &nbsp;
-        if (!announceContainer || textToAnnounce == announceContainer.textContent) {
-            announceContainer?.parentElement?.removeChild(announceContainer);
-            announceContainer = createAriaLiveElement(core.physicalRoot.ownerDocument);
-&nbsp;
-            core.lifecycle.announceContainer = announceContainer;
+    if (textToAnnounce &amp;&amp; core.lifecycle.announceContainer) {
+        const { announceContainer } = core.lifecycle;
+        if (textToAnnounce == announceContainer.textContent) {
+            textToAnnounce += DOT_STRING;
         }
 &nbsp;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (announceContainer) {
@@ -220,23 +195,6 @@ function formatString(text: string | undefined, formatStrings: string[]) {
 &nbsp;
     return text;
 }
-&nbsp;
-function createAriaLiveElement(document: Document): HTMLDivElement {
-    const div = document.createElement('div');
-&nbsp;
-    div.style.clip = 'rect(0px, 0px, 0px, 0px)';
-    div.style.clipPath = 'inset(100%)';
-    div.style.height = '1px';
-    div.style.overflow = 'hidden';
-    div.style.position = 'absolute';
-    div.style.whiteSpace = 'nowrap';
-    div.style.width = '1px';
-    div.ariaLive = 'assertive';
-&nbsp;
-    document.body.appendChild(div);
-&nbsp;
-    return div;
-}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -244,7 +202,7 @@ function createAriaLiveElement(document: Document): HTMLDivElement {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jul 12 2024 00:29:51 GMT+0000 (Coordinated Universal Time)
+                at Mon Jul 15 2024 17:13:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
