@@ -27,12 +27,7 @@ const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
     const existingSelection = core.api.getDOMSelection(core);
 
-    if (
-        existingSelection?.type !== 'image' &&
-        existingSelection &&
-        selection &&
-        areSameSelections(existingSelection, selection)
-    ) {
+    if (existingSelection && selection && areSameSelections(existingSelection, selection)) {
         return;
     }
 

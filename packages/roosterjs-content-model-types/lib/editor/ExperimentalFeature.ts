@@ -9,3 +9,8 @@ export type ExperimentalFeature =
      * and use cached element when write back if it is not changed.
      */
     'PersistCache';
+
+/**
+ * Workaround for the Legacy Image Edit
+ */
+'PreserveImageSelection';
