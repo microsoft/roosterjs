@@ -1,5 +1,6 @@
-import type { DOMSelection, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { getPositionFromPath } from './getPositionFromPath';
+import { getSafeIdSelector } from 'roosterjs-content-model-dom';
+import type { DOMSelection, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -29,7 +30,7 @@ export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
                     break;
                 case 'table':
                     const table = physicalRoot.querySelector(
-                        '#' + snapshotSelection.tableId
+                        getSafeIdSelector(snapshotSelection.tableId)
                     ) as HTMLTableElement;
 
                     if (table) {
@@ -45,7 +46,7 @@ export function restoreSnapshotSelection(core: EditorCore, snapshot: Snapshot) {
                     break;
                 case 'image':
                     const image = physicalRoot.querySelector(
-                        '#' + snapshotSelection.imageId
+                        getSafeIdSelector(snapshotSelection.imageId)
                     ) as HTMLImageElement;
 
                     if (image) {
