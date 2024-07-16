@@ -165,7 +165,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // Image selection
         if (
-            editor.isExperimentalFeatureEnabled('PreserveImageSelection') &&
+            !editor.isExperimentalFeatureEnabled('PreserveImageSelection') &&
             selection?.type == 'image' &&
             (rawEvent.button == MouseLeftButton ||
                 (rawEvent.button == MouseRightButton &&
