@@ -181,7 +181,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 return;
             }
         } else {
-            if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
+            if (
+                selection?.type == 'image' &&
+                (rawEvent.button == MouseLeftButton ||
+                    (rawEvent.button == MouseRightButton &&
+                        !this.getClickingImage(rawEvent) &&
+                        !this.getContainedTargetImage(rawEvent, selection)))
+            ) {
                 this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
             }
 
@@ -199,16 +205,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     null
                 );
                 return;
-            }
-
-            if (
-                selection?.type == 'image' &&
-                (rawEvent.button == MouseLeftButton ||
-                    (rawEvent.button == MouseRightButton &&
-                        !this.getClickingImage(rawEvent) &&
-                        !this.getContainedTargetImage(rawEvent, selection)))
-            ) {
-                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
             }
         }
 
