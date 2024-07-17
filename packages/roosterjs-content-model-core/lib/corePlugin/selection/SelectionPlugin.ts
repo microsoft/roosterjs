@@ -181,6 +181,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 return;
             }
         } else {
+            if (selection?.type == 'image' && rawEvent.button == MouseLeftButton) {
+                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            }
+
             if (
                 (image =
                     this.getClickingImage(rawEvent) ??
@@ -196,16 +200,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 );
                 return;
             }
-        }
 
-        if (
-            selection?.type == 'image' &&
-            (rawEvent.button == MouseLeftButton ||
-                (rawEvent.button == MouseRightButton &&
-                    !this.getClickingImage(rawEvent) &&
-                    !this.getContainedTargetImage(rawEvent, selection)))
-        ) {
-            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            if (
+                selection?.type == 'image' &&
+                (rawEvent.button == MouseLeftButton ||
+                    (rawEvent.button == MouseRightButton &&
+                        !this.getClickingImage(rawEvent) &&
+                        !this.getContainedTargetImage(rawEvent, selection)))
+            ) {
+                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            }
         }
 
         // Table selection
