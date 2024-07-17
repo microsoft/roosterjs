@@ -12,5 +12,9 @@ export const numberedListButton: RibbonButton<NumberedListButtonStringKey> = {
     isChecked: formatState => !!formatState.isNumbering,
     onClick: editor => {
         toggleNumbering(editor);
+        editor.announce({
+            ariaLiveMode: 'polite',
+            defaultStrings: 'announceListItemNumbering',
+        });
     },
 };
