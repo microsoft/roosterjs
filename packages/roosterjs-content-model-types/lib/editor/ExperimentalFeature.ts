@@ -12,4 +12,4 @@ export type ExperimentalFeature =
     /**
      * Workaround for the Legacy Image Edit
      */
-    | 'PreserveImageSelection';
+    | 'LegacyImageSelection';
