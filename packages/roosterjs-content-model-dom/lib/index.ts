@@ -19,6 +19,7 @@ export { updateMetadata, getMetadata, hasMetadata } from './modelApi/metadata/up
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';
+export { getSafeIdSelector } from './domUtils/getSafeIdSelector';
 export { toArray } from './domUtils/toArray';
 export { moveChildNodes, wrapAllChildNodes } from './domUtils/moveChildNodes';
 export { wrap } from './domUtils/wrap';
