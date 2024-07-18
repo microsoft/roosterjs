@@ -10,7 +10,7 @@ const DOT_STRING = '.';
  * @param announceData Data to announce
  */
 export const announce: Announce = (core, announceData) => {
-    const { text, defaultStrings, formatStrings = [] } = announceData;
+    const { text, defaultStrings, formatStrings = [], ariaLiveMode = 'assertive' } = announceData;
     const { announcerStringGetter } = core.lifecycle;
     const template = defaultStrings && announcerStringGetter?.(defaultStrings);
     let textToAnnounce = formatString(template || text, formatStrings);
@@ -21,6 +21,10 @@ export const announce: Announce = (core, announceData) => {
 
     if (textToAnnounce && core.lifecycle.announceContainer) {
         const { announceContainer } = core.lifecycle;
+        if (announceContainer.ariaLive != ariaLiveMode) {
+            announceContainer.ariaLive = ariaLiveMode;
+        }
+
         if (textToAnnounce == announceContainer.textContent) {
             textToAnnounce += DOT_STRING;
         }
