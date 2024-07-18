@@ -370,6 +370,9 @@ describe('SelectionPlugin handle image selection', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
+            isExperimentalFeatureEnabled: () => {
+                return false;
+            },
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -765,6 +768,9 @@ describe('SelectionPlugin handle table selection', () => {
                 }
             },
             announce: announceSpy,
+            isExperimentalFeatureEnabled: () => {
+                return false;
+            },
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -2246,6 +2252,9 @@ describe('SelectionPlugin on Safari', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
+            isExperimentalFeatureEnabled: () => {
+                return false;
+            },
         } as any) as IEditor;
     });
 

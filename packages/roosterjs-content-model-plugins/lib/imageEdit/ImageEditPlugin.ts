@@ -14,8 +14,8 @@ import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
-
 import {
+    getSafeIdSelector,
     isElementOfType,
     isModifierKey,
     isNodeOfType,
@@ -347,7 +347,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
         editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
-            `span:has(>img#${this.selectedImage.id})`,
+            `span:has(>img${getSafeIdSelector(this.selectedImage.id)})`,
         ]);
     }
 
