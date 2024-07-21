@@ -62,4 +62,9 @@ export interface EditorContext {
      * Enabled experimental features
      */
     experimentalFeatures?: ReadonlyArray<string>;
+
+    /**
+     * Optional parameter that indicate the customized classes to be applied on selection block.
+     */
+    selectionClassName?: string;
 }
