@@ -29,7 +29,7 @@ export {
     findClosestEntityWrapper,
     getAllEntityWrappers,
     parseEntityFormat,
-    generateEntityClassNames,
+    generateEntityClassList,
     addDelimiters,
     isEntityDelimiter,
     isBlockEntityContainer,

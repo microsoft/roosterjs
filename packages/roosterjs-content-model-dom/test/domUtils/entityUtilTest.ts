@@ -4,7 +4,7 @@ import {
     addDelimiters,
     findClosestBlockEntityContainer,
     findClosestEntityWrapper,
-    generateEntityClassNames,
+    generateEntityClassList,
     getAllEntityWrappers,
     isBlockEntityContainer,
     isEntityDelimiter,
@@ -106,13 +106,13 @@ describe('parseEntityFormat', () => {
     });
 });
 
-describe('generateEntityClassNames', () => {
+describe('generateEntityClassList', () => {
     it('Empty format', () => {
         const format: ContentModelEntityFormat = {};
 
-        const className = generateEntityClassNames(format);
+        const className = generateEntityClassList(format);
 
-        expect(className).toBe('_Entity _EType_ _EReadonly_0');
+        expect(className).toBe(['_Entity _EType_ _EReadonly_0']);
     });
 
     it('Format with type', () => {
@@ -120,9 +120,9 @@ describe('generateEntityClassNames', () => {
             entityType: 'A',
         };
 
-        const className = generateEntityClassNames(format);
+        const className = generateEntityClassList(format);
 
-        expect(className).toBe('_Entity _EType_A _EReadonly_0');
+        expect(className).toBe(['_Entity _EType_A _EReadonly_0']);
     });
 
     it('Format with type and id and readonly', () => {
@@ -132,9 +132,9 @@ describe('generateEntityClassNames', () => {
             isReadonly: true,
         };
 
-        const className = generateEntityClassNames(format);
+        const className = generateEntityClassList(format);
 
-        expect(className).toBe('_Entity _EType_A _EId_B _EReadonly_1');
+        expect(className).toBe(['_Entity _EType_A _EId_B _EReadonly_1']);
     });
 
     it('Fake entity format with type and id and readonly', () => {
@@ -145,9 +145,9 @@ describe('generateEntityClassNames', () => {
             isFakeEntity: true,
         };
 
-        const className = generateEntityClassNames(format);
+        const className = generateEntityClassList(format);
 
-        expect(className).toBe('');
+        expect(className).toBe([]);
     });
 });
 
