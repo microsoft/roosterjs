@@ -1,4 +1,4 @@
-import type { PasteType } from '../enum/PasteType';
+import type { PasteTypeOrGetter } from '../parameter/PasteTypeOrGetter';
 
 /**
  * The state object for CopyPastePlugin
@@ -18,5 +18,5 @@ export interface CopyPastePluginState {
     /**
      * Default paste type. By default will use the normal (as-is) paste type.
      */
-    defaultPasteType?: PasteType;
+    defaultPasteType?: PasteTypeOrGetter;
 }
