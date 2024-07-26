@@ -1,6 +1,6 @@
+import type { PasteTypeOrGetter } from '../parameter/PasteTypeOrGetter';
 import type { ExperimentalFeature } from './ExperimentalFeature';
 import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
-import type { PasteType } from '../enum/PasteType';
 import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler';
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
@@ -100,9 +100,9 @@ export interface PasteOptions {
     allowedCustomPasteType?: string[];
 
     /**
-     * Default paste type. By default will use the normal (as-is) paste type.
+     * Default paste type or function that returns the paste type. By default will use the normal (as-is) paste type.
      */
-    defaultPasteType?: PasteType;
+    defaultPasteType?: PasteTypeOrGetter;
 }
 
 /**
