@@ -4,7 +4,7 @@ import { createPasteFragment } from './createPasteFragment';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
 import type {
-    PasteType,
+    PasteTypeOrGetter,
     ClipboardData,
     TrustedHTMLHandler,
     IEditor,
@@ -14,12 +14,12 @@ import type {
  * Paste into editor using a clipboardData object
  * @param editor The Editor object.
  * @param clipboardData Clipboard data retrieved from clipboard
- * @param pasteType Type of content to paste. @default normal
+ * @param pasteTypeOrGetter Type of content to paste or function that returns the Paste Type to use based on the document and the clipboard Data. @default normal
  */
 export function paste(
     editor: IEditor,
     clipboardData: ClipboardData,
-    pasteType: PasteType = 'normal'
+    pasteTypeOrGetter: PasteTypeOrGetter = 'normal'
 ) {
     editor.focus();
 
@@ -35,6 +35,10 @@ export function paste(
 
     // 1. Prepare variables
     const doc = createDOMFromHtml(clipboardData.rawHtml, trustedHTMLHandler);
+    const pasteType =
+        typeof pasteTypeOrGetter == 'function'
+            ? pasteTypeOrGetter(doc, clipboardData)
+            : pasteTypeOrGetter;
 
     // 2. Handle HTML from clipboard
     const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
