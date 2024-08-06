@@ -20,6 +20,7 @@ import {
     CopyPastePluginState,
     PluginWithState,
     DarkColorHandler,
+    PasteTypeOrGetter,
 } from 'roosterjs-content-model-types';
 import {
     adjustSelectionForCopyCut,
@@ -746,6 +747,37 @@ describe('CopyPastePlugin |', () => {
             domEvents.paste.beforeDispatch?.(clipboardEvent);
 
             expect(pasteSpy).not.toHaveBeenCalled();
+            expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
+                Array.from(clipboardEvent.clipboardData!.items),
+                allowedCustomPasteType
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Handle with defaultPasteType as callback', () => {
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            const cb: PasteTypeOrGetter = () => 'normal';
+            plugin.getState().defaultPasteType = cb;
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            spyOn(extractClipboardItemsFile, 'extractClipboardItems').and.returnValue(<
+                Promise<ClipboardData>
+            >{
+                then: (cb: (value: ClipboardData) => void | PromiseLike<void>) => {
+                    cb(clipboardData);
+                },
+            });
+            isDisposed.and.returnValue(false);
+
+            domEvents.paste.beforeDispatch?.(clipboardEvent);
+
+            expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, cb);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 allowedCustomPasteType

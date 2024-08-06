@@ -20,7 +20,7 @@ describe('createDomToModelSettings', () => {
     });
 
     it('No options', () => {
-        const settings = createDomToModelSettings({}, []);
+        const settings = createDomToModelSettings({});
 
         expect(settings).toEqual({
             builtIn: {
@@ -43,12 +43,9 @@ describe('createDomToModelSettings', () => {
 
     it('Has options', () => {
         const defaultDomToModelOptions = 'MockedOptions' as any;
-        const settings = createDomToModelSettings(
-            {
-                defaultDomToModelOptions: defaultDomToModelOptions,
-            },
-            []
-        );
+        const settings = createDomToModelSettings({
+            defaultDomToModelOptions: defaultDomToModelOptions,
+        });
 
         expect(settings).toEqual({
             builtIn: {
@@ -80,7 +77,7 @@ describe('createModelToDomSettings', () => {
     });
 
     it('No options', () => {
-        const settings = createModelToDomSettings({}, []);
+        const settings = createModelToDomSettings({});
 
         expect(settings).toEqual({
             builtIn: {
@@ -105,12 +102,9 @@ describe('createModelToDomSettings', () => {
 
     it('Has options', () => {
         const defaultModelToDomOptions = 'MockedOptions' as any;
-        const settings = createModelToDomSettings(
-            {
-                defaultModelToDomOptions: defaultModelToDomOptions,
-            },
-            []
-        );
+        const settings = createModelToDomSettings({
+            defaultModelToDomOptions: defaultModelToDomOptions,
+        });
 
         expect(settings).toEqual({
             builtIn: {

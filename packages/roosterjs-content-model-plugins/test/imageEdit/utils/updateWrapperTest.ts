@@ -12,7 +12,7 @@ describe('updateWrapper', () => {
         preserveRatio: true,
         disableRotate: false,
         disableSideResize: false,
-        onSelectState: 'resize',
+        onSelectState: ['resize'],
     };
     const editInfo = {
         src: 'test',
@@ -41,7 +41,7 @@ describe('updateWrapper', () => {
             options,
             editInfo,
             htmlOptions,
-            'resize'
+            ['resize']
         );
         editInfo.heightPx = 12;
         updateWrapper(editInfo, options, image, imageClone, wrapper, resizers);

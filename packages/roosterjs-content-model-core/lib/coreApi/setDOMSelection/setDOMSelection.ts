@@ -3,7 +3,12 @@ import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
-import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
+import {
+    getSafeIdSelector,
+    isNodeOfType,
+    parseTableCells,
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,
@@ -56,10 +61,10 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:auto!important; outline-color:${
+                    `outline-style:solid!important; outline-color:${
                         imageSelectionColor || DEFAULT_SELECTION_BORDER_COLOR
                     }!important;`,
-                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                    [getSafeIdSelector(ensureUniqueId(image, IMAGE_ID))]
                 );
                 core.api.setEditorStyle(
                     core,
@@ -105,13 +110,21 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 };
 
                 const tableId = ensureUniqueId(table, TABLE_ID);
+                const tableSelector = getSafeIdSelector(tableId);
+
                 const tableSelectors =
                     firstCell.row == 0 &&
                     firstCell.col == 0 &&
                     lastCell.row == parsedTable.length - 1 &&
                     lastCell.col == (parsedTable[lastCell.row]?.length ?? 0) - 1
-                        ? [`#${tableId}`, `#${tableId} *`]
-                        : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
+                        ? [tableSelector, `${tableSelector} *`]
+                        : handleTableSelected(
+                              parsedTable,
+                              tableSelector,
+                              table,
+                              firstCell,
+                              lastCell
+                          );
 
                 core.selection.selection = selection;
 
@@ -163,7 +176,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
 function handleTableSelected(
     parsedTable: ParsedTable,
-    tableId: string,
+    tableSelector: string,
     table: HTMLTableElement,
     firstCell: TableCellCoordinate,
     lastCell: TableCellCoordinate
@@ -214,7 +227,7 @@ function handleTableSelected(
                     cellIndex >= firstCell.col &&
                     cellIndex <= lastCell.col
                 ) {
-                    const selector = `#${tableId}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
+                    const selector = `${tableSelector}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
 
                     selectors.push(selector, selector + ' *');
                 }

@@ -314,7 +314,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -374,7 +374,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:red!important;',
+                'outline-style:solid!important; outline-color:red!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -441,7 +441,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 coreValue,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:DarkColorMock-red!important;',
+                'outline-style:solid!important; outline-color:DarkColorMock-red!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -502,7 +502,7 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -563,8 +563,129 @@ describe('setDOMSelection', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
                 '_DOMSelection',
-                'outline-style:auto!important; outline-color:#DB626C!important;',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
                 ['#image_0_0']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
+            );
+        });
+
+        it('image selection with duplicated and unsupported id', () => {
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            mockedImage.id = '0_image_0';
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.callFake(selector => {
+                return selector == '[id="0_image_0"]' ? ['', ''] : [''];
+            });
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
+                ['[id="0_image_0_0"]']
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
+            );
+        });
+
+        it('image selection with unsupported id', () => {
+            mockedImage.id = '0';
+            const mockedSelection = {
+                type: 'image',
+                image: mockedImage,
+            } as any;
+            const selectNodeSpy = jasmine.createSpy('selectNode');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                selectNode: selectNodeSpy,
+                collapse: collapseSpy,
+            };
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            querySelectorAllSpy.and.returnValue([]);
+            hasFocusSpy.and.returnValue(false);
+
+            setDOMSelection(core, mockedSelection);
+
+            expect(core.selection).toEqual({
+                skipReselectOnFocus: undefined,
+                selection: mockedSelection,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            } as any);
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'selectionChanged',
+                    newSelection: mockedSelection,
+                },
+                true
+            );
+            expect(selectNodeSpy).toHaveBeenCalledWith(mockedImage);
+            expect(collapseSpy).not.toHaveBeenCalledWith();
+            expect(addRangeToSelectionSpy).toHaveBeenCalledWith(doc, mockedRange, undefined);
+            expect(mockedImage.id).toBe('0');
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                null
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelection',
+                'outline-style:solid!important; outline-color:#DB626C!important;',
+                ['[id="0"]']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 core,
@@ -634,7 +755,8 @@ describe('setDOMSelection', () => {
             lastRow: number,
             result: string[],
             selectionColor?: string,
-            expectedDarkSelectionColor?: string
+            expectedDarkSelectionColor?: string,
+            expectedId?: string
         ) {
             const mockedSelection = {
                 type: 'table',
@@ -676,7 +798,7 @@ describe('setDOMSelection', () => {
                 },
                 true
             );
-            expect(mockedTable.id).toBe('table_0');
+            expect(mockedTable.id).toBe(expectedId || 'table_0');
             expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
@@ -709,6 +831,27 @@ describe('setDOMSelection', () => {
                 '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2)',
                 '#table_0>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
             ]);
+        });
+
+        it('Select Table Cells TR under Table Tag with unsupportedId', () => {
+            const table = buildTable(true);
+            table.id = '0';
+            runTest(
+                table,
+                1,
+                0,
+                1,
+                1,
+                [
+                    '[id="0"]>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                    '[id="0"]>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+                    '[id="0"]>TBODY> tr:nth-child(2)>TD:nth-child(2)',
+                    '[id="0"]>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
+                ],
+                undefined /* selectionColor */,
+                undefined /* expectedDarkSelectionColor */,
+                '0'
+            );
         });
 
         it('Select Table Cells TBODY', () => {
@@ -889,6 +1032,22 @@ describe('setDOMSelection', () => {
                 '#table_0',
                 '#table_0 *',
             ]);
+        });
+
+        it('Select All with unsupported Id', () => {
+            const table = buildTable(true /* tbody */, false, false);
+            table.id = '0';
+            runTest(
+                table,
+                0,
+                0,
+                1,
+                1,
+                ['[id="0"]', '[id="0"] *'],
+                undefined /* selectionColor */,
+                undefined /* expectedDarkSelectionColor */,
+                '0'
+            );
         });
 
         it('Select All with custom selection color', () => {

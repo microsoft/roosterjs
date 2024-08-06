@@ -44,4 +44,59 @@ describe('ensureUniqueId', () => {
 
         expect(result).toBe('dup_0');
     });
+
+    it('Has duplicated and unsupported id', () => {
+        const element = {
+            ownerDocument: doc,
+            id: '0dup',
+        } as any;
+        querySelectorAllSpy.and.callFake((selector: string) =>
+            selector == '[id="0dup"]' ? [{}, {}] : []
+        );
+        const result = ensureUniqueId(element, 'prefix');
+
+        expect(result).toBe('0dup_0');
+    });
+
+    it('Should not throw when element id starts with number', () => {
+        const element = {
+            ownerDocument: doc,
+            id: '0',
+        } as any;
+
+        let isFirst = true;
+        querySelectorAllSpy.and.callFake((_selector: string) => {
+            if (isFirst) {
+                isFirst = false;
+                return [{}, {}];
+            }
+            return [{}];
+        });
+
+        ensureUniqueId(element, 'prefix');
+
+        expect(querySelectorAllSpy).toHaveBeenCalledWith('[id="0"]');
+        expect(element.id).toEqual('0_0');
+    });
+
+    it('Should not throw when element id starts with hyphen', () => {
+        const element = {
+            ownerDocument: doc,
+            id: '-',
+        } as any;
+
+        let isFirst = true;
+        querySelectorAllSpy.and.callFake((_selector: string) => {
+            if (isFirst) {
+                isFirst = false;
+                return [{}, {}];
+            }
+            return [{}];
+        });
+
+        ensureUniqueId(element, 'prefix');
+
+        expect(querySelectorAllSpy).toHaveBeenCalledWith('[id="-"]');
+        expect(element.id).toEqual('-_0');
+    });
 });

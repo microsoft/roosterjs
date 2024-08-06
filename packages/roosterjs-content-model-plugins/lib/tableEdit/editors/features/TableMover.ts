@@ -44,7 +44,7 @@ export function createTableMover(
     isRTL: boolean,
     onFinishDragging: (table: HTMLTableElement) => void,
     onStart: () => void,
-    onEnd: () => void,
+    onEnd: (disposeHandler: boolean) => void,
     contentDiv?: EventTarget | null,
     anchorContainer?: HTMLElement,
     onTableEditorCreated?: OnTableEditorCreatedCallback,
@@ -118,7 +118,7 @@ export interface TableMoverContext {
     div: HTMLElement;
     onFinishDragging: (table: HTMLTableElement) => void;
     onStart: () => void;
-    onEnd: () => void;
+    onEnd: (disposeHandler: boolean) => void;
     disableMovement?: boolean;
 }
 
@@ -298,9 +298,9 @@ export function onDragEnd(
     setTableMoverCursor(editor, false);
 
     if (element == context.div) {
-        // Table mover was only clicked, select whole table
+        // Table mover was only clicked, select whole table and do not dismiss the handler element.
         selectWholeTable(table);
-        context.onEnd();
+        context.onEnd(false /* disposeHandler */);
         return true;
     } else {
         // Check if table was dragged on itself, element is not in editor, or movement is disabled
@@ -310,7 +310,7 @@ export function onDragEnd(
             disableMovement
         ) {
             editor.setDOMSelection(initValue?.initialSelection ?? null);
-            context.onEnd();
+            context.onEnd(true /* disposeHandler */);
             return false;
         }
 
@@ -376,7 +376,7 @@ export function onDragEnd(
             // No movement, restore initial selection
             editor.setDOMSelection(initValue?.initialSelection ?? null);
         }
-        context.onEnd();
+        context.onEnd(true /* disposeHandler */);
         return insertionSuccess;
     }
 }

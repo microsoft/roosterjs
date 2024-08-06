@@ -61,5 +61,5 @@ export interface ImageEditOptions {
      * Which operations will be executed when image is selected
      * @default resizeAndRotate
      */
-    onSelectState?: ImageEditOperation;
+    onSelectState?: ImageEditOperation[];
 }

@@ -1,4 +1,5 @@
 import { ensureUniqueId } from './ensureUniqueId';
+import { getSafeIdSelector } from 'roosterjs-content-model-dom';
 import type { SetEditorStyle } from 'roosterjs-content-model-types';
 
 const MAX_RULE_SELECTOR_LENGTH = 9000;
@@ -34,7 +35,9 @@ export const setEditorStyle: SetEditorStyle = (
         }
 
         if (cssRule) {
-            const rootSelector = '#' + ensureUniqueId(core.physicalRoot, CONTENT_DIV_ID);
+            const rootSelector = getSafeIdSelector(
+                ensureUniqueId(core.physicalRoot, CONTENT_DIV_ID)
+            );
             const selectors = !subSelectors
                 ? [rootSelector]
                 : typeof subSelectors === 'string'
