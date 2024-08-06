@@ -23,11 +23,18 @@ export function insertTableColumn(
             table.rows.forEach(row => {
                 const cell = row.cells[insertLeft ? sel.firstColumn : sel.lastColumn];
 
+                const cellFormat =
+                    cell.blocks.length > 0 &&
+                    cell.blocks[0].blockType == 'Paragraph' &&
+                    cell.blocks[0].segments.length > 0
+                        ? { ...cell.format, ...cell.blocks[0].segments[0].format }
+                        : cell.format;
+
                 const newCell = createTableCell(
                     cell.spanLeft,
                     cell.spanAbove,
                     cell.isHeader,
-                    cell.format,
+                    cellFormat,
                     cell.dataset
                 );
                 newCell.isSelected = true;
