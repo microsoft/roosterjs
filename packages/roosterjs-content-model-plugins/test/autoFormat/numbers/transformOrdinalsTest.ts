@@ -127,4 +127,60 @@ describe('transformOrdinals', () => {
         };
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
+
+    it('word and th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '12-month',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('word and rd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '13-rd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('word and nd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '14-second',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('large number', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '145th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
 });

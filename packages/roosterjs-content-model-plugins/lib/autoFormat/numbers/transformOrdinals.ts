@@ -16,8 +16,7 @@ const getOrdinal = (value: number) => {
 
 /**
  * @internal
- */
-export function transformOrdinals(
+ */ export function transformOrdinals(
     previousSegment: ContentModelText,
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
@@ -25,7 +24,7 @@ export function transformOrdinals(
     const value = previousSegment.text.split(' ').pop()?.trim();
     if (value) {
         const ordinal = value.substring(value.length - 2);
-        const ordinalValue = parseInt(value);
+        const ordinalValue = getValue(value);
         if (ordinalValue && getOrdinal(ordinalValue) === ordinal) {
             const ordinalSegment = splitTextSegment(
                 previousSegment,
@@ -40,4 +39,13 @@ export function transformOrdinals(
         }
     }
     return false;
+}
+
+function getValue(text: string) {
+    const number = text.substring(0, text.length - 2);
+    const isNumber = /^-?\d+$/.test(number);
+    if (isNumber) {
+        return parseInt(text);
+    }
+    return null;
 }
