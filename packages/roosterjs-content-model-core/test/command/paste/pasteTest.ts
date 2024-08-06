@@ -1,6 +1,8 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
+import * as createPasteFragmentFile from '../../../lib/command/paste/createPasteFragment';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
+import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
@@ -18,6 +20,7 @@ import {
     IEditor,
     BeforePasteEvent,
     PluginEvent,
+    PasteTypeOrGetter,
 } from 'roosterjs-content-model-types';
 
 let clipboardData: ClipboardData;
@@ -97,6 +100,34 @@ describe('Paste ', () => {
         paste(editor, clipboardData, 'asPlainText');
 
         expect(mockedModel).toEqual(mockedMergeModel);
+    });
+
+    it('Execute | With callback to return paste type', () => {
+        spyOn(createPasteFragmentFile, 'createPasteFragment').and.callThrough();
+        spyOn(
+            generatePasteOptionFromPluginsFile,
+            'generatePasteOptionFromPlugins'
+        ).and.callThrough();
+
+        const cb: PasteTypeOrGetter = () => 'normal';
+        paste(editor, clipboardData, cb);
+
+        expect(mockedModel).toEqual(mockedMergeModel);
+        expect(createPasteFragmentFile.createPasteFragment).toHaveBeenCalledWith(
+            jasmine.anything(),
+            jasmine.anything(),
+            'normal',
+            jasmine.anything()
+        );
+        expect(
+            generatePasteOptionFromPluginsFile.generatePasteOptionFromPlugins
+        ).toHaveBeenCalledWith(
+            jasmine.anything(),
+            jasmine.anything(),
+            jasmine.anything(),
+            jasmine.anything(),
+            'normal'
+        );
     });
 });
 

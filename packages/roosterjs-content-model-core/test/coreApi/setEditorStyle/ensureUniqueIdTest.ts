@@ -38,11 +38,24 @@ describe('ensureUniqueId', () => {
             id: 'dup',
         } as any;
         querySelectorAllSpy.and.callFake((selector: string) =>
-            selector == '[id="dup"]' ? [{}, {}] : []
+            selector == '#dup' ? [{}, {}] : []
         );
         const result = ensureUniqueId(element, 'prefix');
 
         expect(result).toBe('dup_0');
+    });
+
+    it('Has duplicated and unsupported id', () => {
+        const element = {
+            ownerDocument: doc,
+            id: '0dup',
+        } as any;
+        querySelectorAllSpy.and.callFake((selector: string) =>
+            selector == '[id="0dup"]' ? [{}, {}] : []
+        );
+        const result = ensureUniqueId(element, 'prefix');
+
+        expect(result).toBe('0dup_0');
     });
 
     it('Should not throw when element id starts with number', () => {
