@@ -1,4 +1,4 @@
-import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
