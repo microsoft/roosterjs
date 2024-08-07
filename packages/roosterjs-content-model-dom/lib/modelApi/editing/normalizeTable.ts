@@ -2,7 +2,8 @@ import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
-import { EmptySegmentFormat, getObjectKeys } from 'roosterjs-content-model-dom';
+import { EmptySegmentFormat } from '../../constants/EmptySegmentFormat';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { mutateBlock } from '../common/mutate';
 import type {
     ContentModelSegmentFormat,
