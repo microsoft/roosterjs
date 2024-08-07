@@ -21,6 +21,8 @@ import type {
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
+// For some Android IME, KeyDown event will have "Unidentified" as key
+const UnidentifiedKey = 'Unidentified';
 const DefaultStyleKeyMap: Record<
     keyof (FontFamilyFormat & FontSizeFormat & TextColorFormat & BackgroundColorFormat),
     keyof CSSStyleDeclaration
@@ -108,7 +110,6 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         switch (event.eventType) {
             case 'input':
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
-
                 break;
 
             case 'compositionEnd':
@@ -116,12 +117,17 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                 break;
 
             case 'keyDown':
+                // Some Android IME can't provide correct keycode in keyDown event, so skip the check
+                const isAndroidIME =
+                    this.editor.getEnvironment().isAndroid && event.rawEvent.key == UnidentifiedKey;
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
                     this.lastCheckedNode = null;
                 } else if (
                     this.defaultFormatKeys.size > 0 &&
-                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                    (isAndroidIME ||
+                        isCharacterValue(event.rawEvent) ||
+                        event.rawEvent.key == ProcessKey) &&
                     this.shouldApplyDefaultFormat(this.editor)
                 ) {
                     applyDefaultFormat(this.editor, this.state.defaultFormat);
