@@ -37,9 +37,27 @@ function setSelectionToBlockGroup(
             setIsSelected(mutateBlock(group), isInSelection);
         }
 
-        group.blocks.forEach(block => {
+        const blocksToDelete: number[] = [];
+
+        group.blocks.forEach((block, i) => {
             isInSelection = setSelectionToBlock(block, isInSelection, start, end);
+
+            if (block.blockType == 'Paragraph' && block.segments.length == 0 && block.isImplicit) {
+                blocksToDelete.push(i);
+            }
         });
+
+        let index: number | undefined;
+
+        if (blocksToDelete.length > 0) {
+            const mutableGroup = mutateBlock(group);
+
+            while ((index = blocksToDelete.pop()) !== undefined) {
+                if (index >= 0) {
+                    mutableGroup.blocks.splice(index, 1);
+                }
+            }
+        }
 
         return isInSelection;
     });
@@ -97,11 +115,15 @@ function setSelectionToBlock(
                 );
             });
 
-            let index: number | undefined;
+            if (segmentsToDelete.length > 0) {
+                const mutablePara = mutateBlock(block);
 
-            while ((index = segmentsToDelete.pop()) !== undefined) {
-                if (index >= 0) {
-                    mutateBlock(block).segments.splice(index, 1);
+                let index: number | undefined;
+
+                while ((index = segmentsToDelete.pop()) !== undefined) {
+                    if (index >= 0) {
+                        mutablePara.segments.splice(index, 1);
+                    }
                 }
             }
 

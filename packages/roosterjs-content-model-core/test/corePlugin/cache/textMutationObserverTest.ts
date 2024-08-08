@@ -266,6 +266,73 @@ describe('TextMutationObserverImpl', () => {
         });
     });
 
+    it('flush mutation under entity', async () => {
+        const div = document.createElement('div');
+        const onMutation = jasmine.createSpy('onMutation');
+
+        const entity = document.createElement('div');
+        entity.className = '_Entity';
+
+        div.appendChild(entity);
+
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+        observer.startObserving();
+
+        const shouldIgnoreNodeSpy = spyOn(observer, 'shouldIgnoreNode').and.callThrough();
+
+        entity.textContent = 'test';
+
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
+        expect(shouldIgnoreNodeSpy).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledTimes(0);
+    });
+
+    it('flush mutation partially under entity', async () => {
+        const div = document.createElement('div');
+        const onMutation = jasmine.createSpy('onMutation');
+
+        const entity = document.createElement('div');
+        entity.className = '_Entity';
+
+        div.appendChild(entity);
+
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+        observer.startObserving();
+
+        const shouldIgnoreNodeSpy = spyOn(observer, 'shouldIgnoreNode').and.callThrough();
+
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+        const span3 = document.createElement('span');
+        const span4 = document.createElement('span');
+        const span5 = document.createElement('span');
+
+        entity.appendChild(span1);
+        entity.appendChild(span2);
+        div.appendChild(span3);
+        div.appendChild(span4);
+        div.appendChild(span5);
+
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
+        expect(shouldIgnoreNodeSpy).toHaveBeenCalledTimes(2);
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [span3, span4, span5],
+            removedNodes: [],
+        });
+    });
+
     it('mutation happens in different root', async () => {
         const div = document.createElement('div');
         const div1 = document.createElement('div');
@@ -316,5 +383,35 @@ describe('TextMutationObserverImpl', () => {
 
         expect(onMutation).toHaveBeenCalledTimes(1);
         expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
+    });
+
+    it('shouldIgnoreNode', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+
+        const entity = document.createElement('div');
+        const spanUnderEntity = document.createElement('span');
+
+        const entityContainer = document.createElement('div');
+        const spanUnderEntityContainer = document.createElement('span');
+
+        entity.className = '_Entity';
+        entity.appendChild(spanUnderEntity);
+
+        entityContainer.className = '_E_EBlockEntityContainer';
+        entityContainer.appendChild(spanUnderEntityContainer);
+
+        div.appendChild(span);
+        div.appendChild(entity);
+        div.appendChild(entityContainer);
+
+        const observer = textMutationObserver.createTextMutationObserver(div, null!);
+
+        expect(observer.shouldIgnoreNode(div)).toBeFalse();
+        expect(observer.shouldIgnoreNode(span)).toBeFalse();
+        expect(observer.shouldIgnoreNode(entity)).toBeTrue();
+        expect(observer.shouldIgnoreNode(spanUnderEntity)).toBeTrue();
+        expect(observer.shouldIgnoreNode(entityContainer)).toBeTrue();
+        expect(observer.shouldIgnoreNode(spanUnderEntityContainer)).toBeTrue();
     });
 });
