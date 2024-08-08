@@ -536,12 +536,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         selectAll?: boolean
     ) {
         const range = editor.getDocument().createRange();
-        if (selectAll) {
-            range.selectNodeContents(cell);
-        } else {
-            // Get deepest editable position in the cell
-            const { node, offset } = normalizePos(cell, nodeOffset);
+        // Get deepest editable position in the cell
+        const { node, offset } = normalizePos(cell, nodeOffset);
 
+        if (selectAll) {
+            range.selectNodeContents(node);
+        } else {
             range.setStart(node, offset);
             range.collapse(true /* toStart */);
         }
