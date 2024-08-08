@@ -28,9 +28,16 @@ describe('announce', () => {
     });
 
     it('announce empty string', () => {
+        const mockedDiv = {
+            style: {},
+        } as any;
+        createElementSpy.and.returnValue(mockedDiv);
+
         announce(core, {});
-        expect(createElementSpy).not.toHaveBeenCalled();
-        expect(appendChildSpy).not.toHaveBeenCalled();
+
+        expect(createElementSpy).toHaveBeenCalled();
+        expect(appendChildSpy).toHaveBeenCalled();
+        expect(mockedDiv.textContent).toBeUndefined();
     });
 
     it('announce a given string', () => {
@@ -176,43 +183,78 @@ describe('announce', () => {
             parentElement: {
                 removeChild: removeChildSpy,
             },
+            ariaLive: 'assertive',
         });
     });
 
-    it('already has div with same text', () => {
-        const removeChildSpy = jasmine.createSpy('removeChild');
+    it('already has div with same text 2', () => {
         const mockedDiv = {
             textContent: 'test',
-            parentElement: {
-                removeChild: removeChildSpy,
-            },
-        } as any;
-        const mockedDiv2 = {
-            style: {},
         } as any;
 
         core.lifecycle.announceContainer = mockedDiv;
-        createElementSpy.and.returnValue(mockedDiv2);
 
         announce(core, {
             text: 'test',
         });
 
-        expect(removeChildSpy).toHaveBeenCalledWith(mockedDiv);
-        expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedDiv2);
-        expect(mockedDiv2).toEqual({
-            style: {
-                clip: 'rect(0px, 0px, 0px, 0px)',
-                clipPath: 'inset(100%)',
-                height: '1px',
-                overflow: 'hidden',
-                position: 'absolute',
-                whiteSpace: 'nowrap',
-                width: '1px',
-            },
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
             ariaLive: 'assertive',
+        });
+    });
+
+    it('Set AriaLive polite', () => {
+        const mockedDiv = {
             textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'polite',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'polite',
+        });
+    });
+
+    it('Set AriaLive off', () => {
+        const mockedDiv = {
+            textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'off',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'off',
+        });
+    });
+
+    it('Set AriaLive off', () => {
+        const mockedDiv = {
+            textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'assertive',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'assertive',
         });
     });
 });

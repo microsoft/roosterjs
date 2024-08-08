@@ -52,6 +52,9 @@ const initialState: OptionState = {
         strikethrough: true,
         codeFormat: {},
     },
+    editPluginOptions: {
+        handleTabKey: true,
+    },
     customReplacements: emojiReplacements,
     experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache']),
 };

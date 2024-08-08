@@ -1,4 +1,4 @@
-import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import { splitTextSegment } from 'roosterjs-content-model-api';
 import type {
     ContentModelText,
     FormatContentModelContext,
@@ -15,18 +15,22 @@ const getOrdinal = (value: number) => {
 };
 
 /**
- * @internal
+ * The two last characters of ordinal number (st, nd, rd, th)
  */
-export function transformOrdinals(
+const ORDINAL_LENGTH = 2;
+
+/**
+ * @internal
+ */ export function transformOrdinals(
     previousSegment: ContentModelText,
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ): boolean {
     const value = previousSegment.text.split(' ').pop()?.trim();
     if (value) {
-        const ordinal = value.substring(value.length - 2);
-        const ordinalValue = parseInt(value);
-        if (ordinalValue && getOrdinal(ordinalValue) === ordinal) {
+        const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
+        const numericValue = getNumericValue(value); //This is the numeric part. Ex: 10th, numeric value = 10
+        if (numericValue && getOrdinal(numericValue) === ordinal) {
             const ordinalSegment = splitTextSegment(
                 previousSegment,
                 paragraph,
@@ -40,4 +44,13 @@ export function transformOrdinals(
         }
     }
     return false;
+}
+
+function getNumericValue(text: string) {
+    const number = text.substring(0, text.length - ORDINAL_LENGTH);
+    const isNumber = /^-?\d+$/.test(number);
+    if (isNumber) {
+        return parseInt(text);
+    }
+    return null;
 }

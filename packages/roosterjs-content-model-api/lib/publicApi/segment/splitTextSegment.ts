@@ -5,7 +5,12 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Split given text segments from the given range
+ * @param textSegment segment to split
+ * @param parent parent paragraph the text segment exist in
+ * @param start starting point of the split
+ * @param end ending point of the split
+ * @returns text segment from the indicated split.
  */
 export function splitTextSegment(
     textSegment: ContentModelText,

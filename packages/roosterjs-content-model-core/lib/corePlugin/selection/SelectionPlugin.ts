@@ -18,11 +18,11 @@ import type {
     SelectionPluginState,
     EditorOptions,
     DOMHelper,
-    MouseUpEvent,
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
     RangeSelection,
+    MouseUpEvent,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
@@ -142,7 +142,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'mouseUp':
-                this.onMouseUp(event);
+                this.onMouseUp(this.editor, event);
                 break;
 
             case 'keyDown':
@@ -166,18 +166,46 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-        if (
-            rawEvent.button === MouseRightButton &&
-            (image =
-                this.getClickingImage(rawEvent) ??
-                this.getContainedTargetImage(rawEvent, selection)) &&
-            image.isContentEditable
-        ) {
-            this.selectImageWithRange(image, rawEvent);
-            return;
-        } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeOrAfterElement(editor, selection.image);
-            return;
+        if (editor.isExperimentalFeatureEnabled('LegacyImageSelection')) {
+            if (
+                rawEvent.button === MouseRightButton &&
+                (image =
+                    this.getClickingImage(rawEvent) ??
+                    this.getContainedTargetImage(rawEvent, selection)) &&
+                image.isContentEditable
+            ) {
+                this.selectImageWithRange(image, rawEvent);
+                return;
+            } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
+                this.selectBeforeOrAfterElement(editor, selection.image);
+                return;
+            }
+        } else {
+            if (
+                selection?.type == 'image' &&
+                (rawEvent.button == MouseLeftButton ||
+                    (rawEvent.button == MouseRightButton &&
+                        !this.getClickingImage(rawEvent) &&
+                        !this.getContainedTargetImage(rawEvent, selection)))
+            ) {
+                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            }
+
+            if (
+                (image =
+                    this.getClickingImage(rawEvent) ??
+                    this.getContainedTargetImage(rawEvent, selection)) &&
+                image.isContentEditable
+            ) {
+                this.setDOMSelection(
+                    {
+                        type: 'image',
+                        image: image,
+                    },
+                    null
+                );
+                return;
+            }
         }
 
         // Table selection
@@ -215,6 +243,25 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     beforeDispatch: this.onMouseMove,
                 },
             });
+        }
+    }
+
+    private selectImageWithRange(image: HTMLImageElement, event: Event) {
+        const range = image.ownerDocument.createRange();
+        range.selectNode(image);
+
+        const domSelection = this.editor?.getDOMSelection();
+        if (domSelection?.type == 'image' && image == domSelection.image) {
+            event.preventDefault();
+        } else {
+            this.setDOMSelection(
+                {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+                null
+            );
         }
     }
 
@@ -278,29 +325,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private selectImageWithRange(image: HTMLImageElement, event: Event) {
-        const range = image.ownerDocument.createRange();
-        range.selectNode(image);
-
-        const domSelection = this.editor?.getDOMSelection();
-        if (domSelection?.type == 'image' && image == domSelection.image) {
-            event.preventDefault();
-        } else {
-            this.setDOMSelection(
-                {
-                    type: 'range',
-                    isReverted: false,
-                    range,
-                },
-                null
-            );
-        }
-    }
-
-    private onMouseUp(event: MouseUpEvent) {
+    private onMouseUp(editor: IEditor, event: MouseUpEvent) {
         let image: HTMLImageElement | null;
 
         if (
+            editor.isExperimentalFeatureEnabled('LegacyImageSelection') &&
             (image = this.getClickingImage(event.rawEvent)) &&
             image.isContentEditable &&
             event.rawEvent.button != MouseMiddleButton &&
@@ -411,6 +440,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             }
 
             let lastCo = findCoordinate(tableSel?.parsedTable, end, domHelper);
+            let tabMove = false;
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
             if (lastCo && tableSel.table == table) {
@@ -465,7 +495,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         const cell = parsedTable[row][col];
 
                         if (typeof cell != 'string') {
-                            this.setRangeSelectionInTable(cell, 0, this.editor);
+                            tabMove = true;
+                            this.setRangeSelectionInTable(
+                                cell,
+                                0,
+                                this.editor,
+                                true /* selectAll */
+                            );
                             lastCo.row = row;
                             lastCo.col = col;
                             break;
@@ -486,20 +522,29 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
-            if (!collapsed && lastCo) {
+            if (!collapsed && lastCo && !tabMove) {
                 this.state.tableSelection = tableSel;
                 this.updateTableSelection(lastCo);
             }
         }
     }
 
-    private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
-        // Get deepest editable position in the cell
-        const { node, offset } = normalizePos(cell, nodeOffset);
-
+    private setRangeSelectionInTable(
+        cell: Node,
+        nodeOffset: number,
+        editor: IEditor,
+        selectAll?: boolean
+    ) {
         const range = editor.getDocument().createRange();
-        range.setStart(node, offset);
-        range.collapse(true /*toStart*/);
+        if (selectAll) {
+            range.selectNodeContents(cell);
+        } else {
+            // Get deepest editable position in the cell
+            const { node, offset } = normalizePos(cell, nodeOffset);
+
+            range.setStart(node, offset);
+            range.collapse(true /* toStart */);
+        }
 
         this.setDOMSelection(
             {
@@ -607,17 +652,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
 
-            if (newSelection?.type == 'image' && selection) {
-                if (selection && !isSingleImageInSelection(selection)) {
-                    const range = selection.getRangeAt(0);
-                    this.editor.setDOMSelection({
-                        type: 'range',
-                        range,
-                        isReverted:
-                            selection.focusNode != range.endContainer ||
-                            selection.focusOffset != range.endOffset,
-                    });
-                }
+            if (
+                newSelection?.type == 'image' &&
+                selection &&
+                selection.focusNode &&
+                !isSingleImageInSelection(selection)
+            ) {
+                const range = selection.getRangeAt(0);
+                this.editor.setDOMSelection({
+                    type: 'range',
+                    range,
+                    isReverted:
+                        selection.focusNode != range.endContainer ||
+                        selection.focusOffset != range.endOffset,
+                });
             }
 
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
