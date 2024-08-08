@@ -68,7 +68,7 @@ export function setFormat(
 }
 
 /**
- * The markdown should not be trigger inside a word, so whe check if exist a space before the trigger character
+ * The markdown should not be trigger inside a word, then check if exist a space before the trigger character
  * Should trigger markdown example: _one two_
  * Should not trigger markdown example: one_two_
  */
