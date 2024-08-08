@@ -21,19 +21,25 @@ export function setFormat(
         editor,
         (_model, previousSegment, paragraph, markerFormat, context) => {
             if (previousSegment.text[previousSegment.text.length - 1] == character) {
-                const textBeforeMarker = previousSegment.text.slice(0, -1);
+                const textSegment = previousSegment.text;
+                const textBeforeMarker = textSegment.slice(0, -1);
                 context.newPendingFormat = {
                     ...markerFormat,
                     strikethrough: !!markerFormat.strikethrough,
                     italic: !!markerFormat.italic,
                     fontWeight: markerFormat?.fontWeight ? 'bold' : undefined,
                 };
+                console.log(textBeforeMarker);
                 if (textBeforeMarker.indexOf(character) > -1) {
-                    const lastCharIndex = previousSegment.text.length;
-                    const firstCharIndex = previousSegment.text
+                    const lastCharIndex = textSegment.length;
+                    const firstCharIndex = textSegment
                         .substring(0, lastCharIndex - 1)
                         .lastIndexOf(character);
-                    if (lastCharIndex - firstCharIndex > 2) {
+
+                    if (
+                        hasSpaceBeforeFirstCharacter(textSegment, firstCharIndex) &&
+                        lastCharIndex - firstCharIndex > 2
+                    ) {
                         const formattedText = splitTextSegment(
                             previousSegment,
                             paragraph,
@@ -60,4 +66,13 @@ export function setFormat(
             return false;
         }
     );
+}
+
+/**
+ * The markdown should not be trigger inside a word, so whe check if exist a space before the trigger character
+ * Should trigger markdown example: _one two_
+ * Should not trigger markdown example: one_two_
+ */
+function hasSpaceBeforeFirstCharacter(text: string, index: number) {
+    return !text[index - 1] || text[index - 1].trim().length == 0;
 }

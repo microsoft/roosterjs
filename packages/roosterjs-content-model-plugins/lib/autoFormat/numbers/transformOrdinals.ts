@@ -21,7 +21,8 @@ const ORDINAL_LENGTH = 2;
 
 /**
  * @internal
- */ export function transformOrdinals(
+ */
+export function transformOrdinals(
     previousSegment: ContentModelText,
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext

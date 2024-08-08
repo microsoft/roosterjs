@@ -492,4 +492,31 @@ describe('setFormat', () => {
 
         runTest(input, '*', { fontWeight: 'bold' }, input, false);
     });
+
+    it('should not set italic - one_two_', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'one_two_',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        runTest(input, '_', { italic: true }, input, false);
+    });
 });
