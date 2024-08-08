@@ -29,7 +29,6 @@ export function setFormat(
                     italic: !!markerFormat.italic,
                     fontWeight: markerFormat?.fontWeight ? 'bold' : undefined,
                 };
-                console.log(textBeforeMarker);
                 if (textBeforeMarker.indexOf(character) > -1) {
                     const lastCharIndex = textSegment.length;
                     const firstCharIndex = textSegment
