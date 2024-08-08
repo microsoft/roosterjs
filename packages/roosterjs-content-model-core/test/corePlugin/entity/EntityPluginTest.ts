@@ -548,11 +548,11 @@ describe('EntityPlugin', () => {
             const entity = createEntity(wrapper, true, undefined, entityType, id);
             const doc = createContentModelDocument();
 
-            wrapper.className = entityUtils.generateEntityClassNames({
+            wrapper.classList.add(...entityUtils.generateEntityClassList({
                 entityType,
                 id: id,
                 isReadonly: true,
-            });
+            }));
             doc.blocks.push(entity);
             mockedModel = doc;
 
