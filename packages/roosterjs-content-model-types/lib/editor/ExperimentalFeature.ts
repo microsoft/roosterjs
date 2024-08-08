@@ -8,4 +8,8 @@ export type ExperimentalFeature =
      * When this feature is enabled, we will persist a content model in memory as long as we can,
      * and use cached element when write back if it is not changed.
      */
-    'PersistCache';
+    | 'PersistCache'
+    /**
+     * Workaround for the Legacy Image Edit
+     */
+    | 'LegacyImageSelection';

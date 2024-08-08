@@ -183,10 +183,11 @@ describe('announce', () => {
             parentElement: {
                 removeChild: removeChildSpy,
             },
+            ariaLive: 'assertive',
         });
     });
 
-    it('already has div with same text', () => {
+    it('already has div with same text 2', () => {
         const mockedDiv = {
             textContent: 'test',
         } as any;
@@ -199,6 +200,61 @@ describe('announce', () => {
 
         expect(mockedDiv).toEqual({
             textContent: 'test.',
+            ariaLive: 'assertive',
+        });
+    });
+
+    it('Set AriaLive polite', () => {
+        const mockedDiv = {
+            textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'polite',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'polite',
+        });
+    });
+
+    it('Set AriaLive off', () => {
+        const mockedDiv = {
+            textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'off',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'off',
+        });
+    });
+
+    it('Set AriaLive off', () => {
+        const mockedDiv = {
+            textContent: 'test',
+        } as any;
+
+        core.lifecycle.announceContainer = mockedDiv;
+
+        announce(core, {
+            text: 'test',
+            ariaLiveMode: 'assertive',
+        });
+
+        expect(mockedDiv).toEqual({
+            textContent: 'test.',
+            ariaLive: 'assertive',
         });
     });
 });
