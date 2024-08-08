@@ -29,7 +29,7 @@ const ORDINAL_LENGTH = 2;
     const value = previousSegment.text.split(' ').pop()?.trim();
     if (value) {
         const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
-        const numericValue = getNumericValue(value, ordinal); //This is the numeric part. Ex: 10th, numeric value = 10
+        const numericValue = getNumericValue(value); //This is the numeric part. Ex: 10th, numeric value = 10
         if (numericValue && getOrdinal(numericValue) === ordinal) {
             const ordinalSegment = splitTextSegment(
                 previousSegment,
@@ -46,8 +46,8 @@ const ORDINAL_LENGTH = 2;
     return false;
 }
 
-function getNumericValue(text: string, ordinal: string) {
-    const number = text.replace(ordinal, '');
+function getNumericValue(text: string) {
+    const number = text.substring(0, text.length - ORDINAL_LENGTH);
     const isNumber = /^-?\d+$/.test(number);
     if (isNumber) {
         return parseInt(text);
