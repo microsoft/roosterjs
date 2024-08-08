@@ -15,6 +15,11 @@ const getOrdinal = (value: number) => {
 };
 
 /**
+ * The two last characters of ordinal number (st, nd, rd, th)
+ */
+const ORDINAL_LENGTH = 2;
+
+/**
  * @internal
  */ export function transformOrdinals(
     previousSegment: ContentModelText,
@@ -23,9 +28,9 @@ const getOrdinal = (value: number) => {
 ): boolean {
     const value = previousSegment.text.split(' ').pop()?.trim();
     if (value) {
-        const ordinal = value.substring(value.length - 2);
-        const ordinalValue = getValue(value);
-        if (ordinalValue && getOrdinal(ordinalValue) === ordinal) {
+        const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
+        const numericValue = getNumericValue(value, ordinal); //This is the numeric part. Ex: 10th, numeric value = 10
+        if (numericValue && getOrdinal(numericValue) === ordinal) {
             const ordinalSegment = splitTextSegment(
                 previousSegment,
                 paragraph,
@@ -41,8 +46,8 @@ const getOrdinal = (value: number) => {
     return false;
 }
 
-function getValue(text: string) {
-    const number = text.substring(0, text.length - 2);
+function getNumericValue(text: string, ordinal: string) {
+    const number = text.replace(ordinal, '');
     const isNumber = /^-?\d+$/.test(number);
     if (isNumber) {
         return parseInt(text);
