@@ -18,6 +18,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            getEnvironment: () => ({}),
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
@@ -101,6 +102,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
+            getEnvironment: () => ({}),
         } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
@@ -243,6 +245,7 @@ describe('FormatPlugin for default format', () => {
             cacheContentModel: cacheContentModelSpy,
             takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
+            getEnvironment: () => ({}),
         } as any) as IEditor;
     });
 
