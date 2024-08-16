@@ -362,7 +362,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
                 }
 
-                if ((isModifierKey(rawEvent) || rawEvent.shiftKey) && selection.image) {
+                if (
+                    (isModifierKey(rawEvent) || rawEvent.shiftKey) &&
+                    selection.image &&
+                    !this.isSafari
+                ) {
                     const range = selection.image.ownerDocument.createRange();
                     range.selectNode(selection.image);
                     this.setDOMSelection(
