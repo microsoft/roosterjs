@@ -263,18 +263,18 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             },
             {
                 onNodeCreated: (model, node) => {
-                    if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
-                        if (
-                            !isApiOperation &&
-                            editingImageModel &&
-                            editingImageModel == model &&
-                            editingImageModel.dataset.isEditing
-                        ) {
-                            if (isCropMode) {
-                                this.startCropMode(editor, node);
-                            } else {
-                                this.startRotateAndResize(editor, node);
-                            }
+                    if (
+                        !isApiOperation &&
+                        editingImageModel &&
+                        editingImageModel == model &&
+                        editingImageModel.dataset.isEditing &&
+                        isNodeOfType(node, 'ELEMENT_NODE') &&
+                        isElementOfType(node, 'img')
+                    ) {
+                        if (isCropMode) {
+                            this.startCropMode(editor, node);
+                        } else {
+                            this.startRotateAndResize(editor, node);
                         }
                     }
                 },
