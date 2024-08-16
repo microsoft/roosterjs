@@ -55,6 +55,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     table: tableProcessor,
     u: knownElementProcessor,
     ul: listProcessor,
+    del: knownElementProcessor,
 
     '*': generalProcessor,
     '#text': textProcessor,
