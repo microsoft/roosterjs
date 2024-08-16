@@ -483,6 +483,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             key == Up ? td.childNodes.length : 0,
                             this.editor
                         );
+                    } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
+                        this.selectBeforeOrAfterElement(
+                            this.editor,
+                            table,
+                            change == 1 /* after */,
+                            change != 1 /* setSelectionInNextSiblingElement */
+                        );
                     }
                 } else if (key == 'TabLeft' || key == 'TabRight') {
                     const reverse = key == 'TabLeft';
@@ -584,15 +591,30 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
+    private selectBeforeOrAfterElement(
+        editor: IEditor,
+        element: HTMLElement,
+        after?: boolean,
+        setSelectionInNextSiblingElement?: boolean
+    ) {
         const doc = editor.getDocument();
         const parent = element.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(element);
+        let sibling: Element | undefined | null;
 
         if (parent && index !== null && index >= 0) {
             const range = doc.createRange();
-            range.setStart(parent, index + (after ? 1 : 0));
-            range.collapse();
+            if (
+                setSelectionInNextSiblingElement &&
+                (sibling = after ? element.nextElementSibling : element.previousElementSibling) &&
+                isNodeOfType(sibling, 'ELEMENT_NODE')
+            ) {
+                range.selectNodeContents(sibling);
+                range.collapse(false /* toStart */);
+            } else {
+                range.setStart(parent, index + (after ? 1 : 0));
+                range.collapse();
+            }
 
             this.setDOMSelection(
                 {

@@ -1796,6 +1796,205 @@ describe('SelectionPlugin handle table selection', () => {
             });
         });
 
+        it('From Range, Press Down in the last row and move focus outside of table.', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td3,
+                    startOffset: 0,
+                    endContainer: td3,
+                    endOffset: 0,
+                    commonAncestorContainer: tr2,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td4,
+                        startOffset: 0,
+                        endContainer: td4,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+            expect(setStartSpy).toHaveBeenCalledWith(table.parentElement, 1);
+        });
+
+        it('From Range, Press Up in the first row and move focus outside of table, select before table as there are no elements before table.', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2,
+                    startOffset: 0,
+                    endContainer: td2,
+                    endOffset: 0,
+                    commonAncestorContainer: tr1,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+            expect(setStartSpy).toHaveBeenCalledWith(table.parentElement, 0);
+        });
+
+        it('From Range, Press Up in the first row and move focus outside of table, select before table as there are no elements before table.', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2,
+                    startOffset: 0,
+                    endContainer: td2,
+                    endOffset: 0,
+                    commonAncestorContainer: tr1,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
+
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+                selectNodeContents: selectNodeContentsSpy,
+            } as any;
+
+            const div = document.createElement('div');
+            table.parentElement?.insertBefore(div, table);
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: null,
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+            expect(setStartSpy).not.toHaveBeenCalledWith(table.parentElement, 0);
+            expect(selectNodeContentsSpy).toHaveBeenCalledWith(div);
+            expect(collapseSpy).toHaveBeenCalledWith(false);
+        });
+
         it('From Range, Press Shift+Up', () => {
             getDOMSelectionSpy.and.returnValue({
                 type: 'range',
