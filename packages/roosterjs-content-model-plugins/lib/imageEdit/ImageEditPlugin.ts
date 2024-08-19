@@ -17,10 +17,8 @@ import { updateWrapper } from './utils/updateWrapper';
 import {
     getSafeIdSelector,
     isElementOfType,
-    isModifierKey,
     isNodeOfType,
     mutateSegment,
-    toArray,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -168,41 +166,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    //Sometimes the cursor can be inside the editing image and inside shadow dom, then the cursor need to moved out of shadow dom
-    private selectBeforeEditingImage(editor: IEditor, element: HTMLElement) {
-        let parent = element.parentNode;
-        if (parent && isNodeOfType(parent, 'ELEMENT_NODE') && parent.shadowRoot) {
-            element = parent;
-            parent = parent.parentNode;
-        }
-        const index = parent && toArray(parent.childNodes).indexOf(element);
-        if (index !== null && index >= 0 && parent) {
-            const doc = editor.getDocument();
-            const range = doc.createRange();
-            range.setStart(parent, index);
-            range.collapse();
-            editor.setDOMSelection({
-                type: 'range',
-                range,
-                isReverted: false,
-            });
-        }
-    }
-
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
             if (event.rawEvent.key === 'Escape') {
                 this.removeImageWrapper();
             } else {
-                const selection = editor.getDOMSelection();
-                const isImageSelection = selection?.type == 'image';
-                if (isImageSelection) {
-                    this.selectBeforeEditingImage(editor, selection.image);
-                }
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,
-                    (isModifierKey(event.rawEvent) || event.rawEvent.shiftKey) && isImageSelection //if it's a modifier key over a image, the image should select the image
+                    true /** should selectImage */,
+                    false /* isApiOperation */
                 );
             }
         }
@@ -260,6 +233,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         if (shouldSelectImage) {
                             normalizeImageSelection(previousSelectedImage);
                         }
+
                         this.cleanInfo();
                         result = true;
                     }

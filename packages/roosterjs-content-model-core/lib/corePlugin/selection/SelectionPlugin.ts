@@ -21,7 +21,6 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
-    RangeSelection,
     MouseUpEvent,
 } from 'roosterjs-content-model-types';
 
@@ -362,6 +361,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 }
+
+                if (
+                    (isModifierKey(rawEvent) || rawEvent.shiftKey) &&
+                    selection.image &&
+                    !this.isSafari
+                ) {
+                    const range = selection.image.ownerDocument.createRange();
+                    range.selectNode(selection.image);
+                    this.setDOMSelection(
+                        {
+                            type: 'range',
+                            range,
+                            isReverted: false,
+                        },
+                        null /* tableSelection */
+                    );
+                }
                 break;
 
             case 'range':
@@ -696,7 +712,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 if (this.isSafari) {
                     this.state.selection = newSelection;
                 }
-                this.trySelectSingleImage(newSelection);
             }
         }
     };
@@ -766,21 +781,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (this.state.mouseDisposer) {
             this.state.mouseDisposer();
             this.state.mouseDisposer = undefined;
-        }
-    }
-
-    private trySelectSingleImage(selection: RangeSelection) {
-        if (!selection.range.collapsed) {
-            const image = isSingleImageInSelection(selection.range);
-            if (image) {
-                this.setDOMSelection(
-                    {
-                        type: 'image',
-                        image: image,
-                    },
-                    null /*tableSelection*/
-                );
-            }
         }
     }
 }
