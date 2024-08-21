@@ -14,11 +14,14 @@ import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
+
 import {
+    ChangeSource,
     getSafeIdSelector,
     isElementOfType,
     isModifierKey,
     isNodeOfType,
+    mutateBlock,
     mutateSegment,
     toArray,
     unwrap,
@@ -35,6 +38,7 @@ import type {
     ImageEditor,
     ImageMetadataFormat,
     KeyDownEvent,
+    MouseDownEvent,
     MouseUpEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -50,6 +54,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
 };
 
 const MouseRightButton = 2;
+const DRAG_ID = '_dragging';
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -75,7 +80,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
-    //EXPOSED FOR TEST ONLY
     protected isEditing = false;
 
     constructor(protected options: ImageEditOptions = DefaultOptions) {}
@@ -104,6 +108,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             this.isCropMode,
                             true /* shouldSelectImage */
                         );
+                    }
+                },
+            },
+            dragstart: {
+                beforeDispatch: ev => {
+                    if (this.editor) {
+                        const target = ev.target as Node;
+                        if (this.isImageSelection(target)) {
+                            target.id = target.id + DRAG_ID;
+                        }
                     }
                 },
             },
@@ -136,16 +150,24 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             return;
         }
         switch (event.eventType) {
+            case 'mouseDown':
+                this.mouseDownHandler(this.editor, event);
+                break;
             case 'mouseUp':
                 this.mouseUpHandler(this.editor, event);
                 break;
             case 'keyDown':
                 this.keyDownHandler(this.editor, event);
                 break;
+            case 'contentChanged':
+                if (event.source == ChangeSource.Drop) {
+                    this.onDropHandler(this.editor);
+                }
+                break;
         }
     }
 
-    private isImageSelection(target: Node) {
+    private isImageSelection(target: Node): target is HTMLElement {
         return (
             isNodeOfType(target, 'ELEMENT_NODE') &&
             (isElementOfType(target, 'img') ||
@@ -165,6 +187,44 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.isImageSelection(event.rawEvent.target as Node) &&
                 event.rawEvent.button === MouseRightButton;
             this.applyFormatWithContentModel(editor, this.isCropMode, shouldSelectImage);
+        }
+    }
+
+    private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
+        if (
+            this.isEditing &&
+            this.isImageSelection(event.rawEvent.target as Node) &&
+            event.rawEvent.button !== MouseRightButton
+        ) {
+            this.applyFormatWithContentModel(editor, this.isCropMode, true);
+        }
+    }
+
+    private onDropHandler(editor: IEditor) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'image') {
+            editor.formatContentModel(model => {
+                const imageDragged = findEditingImage(model, selection.image.id);
+                const imageDropped = findEditingImage(
+                    model,
+                    selection.image.id.replace(DRAG_ID, '')
+                );
+                if (imageDragged && imageDropped) {
+                    const draggedIndex = imageDragged.paragraph.segments.indexOf(
+                        imageDragged.image
+                    );
+                    mutateBlock(imageDragged.paragraph).segments.splice(draggedIndex, 1);
+                    const segment = imageDropped.image;
+                    const paragraph = imageDropped.paragraph;
+                    mutateSegment(paragraph, segment, image => {
+                        image.isSelected = true;
+                        image.isSelectedAsImageSelection = true;
+                    });
+
+                    return true;
+                }
+                return false;
+            });
         }
     }
 
@@ -222,7 +282,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 const previousSelectedImage = isApiOperation
                     ? editingImage
                     : findEditingImage(model);
-
                 let result = false;
                 if (
                     shouldSelectImage ||
@@ -252,21 +311,22 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wasImageResized || this.isCropMode,
                                     clonedImage
                                 );
-                                delete image.dataset.isEditing;
+
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
                             }
                         );
+
                         if (shouldSelectImage) {
                             normalizeImageSelection(previousSelectedImage);
                         }
+
                         this.cleanInfo();
                         result = true;
                     }
 
                     this.isEditing = false;
                     this.isCropMode = false;
-
                     if (
                         editingImage &&
                         selection?.type == 'image' &&
@@ -644,10 +704,5 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 imageEditInfo.angleRad = (imageEditInfo.angleRad || 0) + angleRad;
             });
         }
-    }
-
-    //EXPOSED FOR TEST ONLY
-    public get isEditingImage() {
-        return this.isEditing;
     }
 }

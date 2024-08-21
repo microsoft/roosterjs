@@ -4,13 +4,16 @@ import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 /**
  * @internal
  */
-export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAndParagraph | null {
+export function findEditingImage(
+    group: ReadonlyContentModelBlockGroup,
+    imageId?: string
+): ImageAndParagraph | null {
     for (let i = 0; i < group.blocks.length; i++) {
         const block = group.blocks[i];
 
         switch (block.blockType) {
             case 'BlockGroup':
-                const result = findEditingImage(block);
+                const result = findEditingImage(block, imageId);
 
                 if (result) {
                     return result;
@@ -22,7 +25,7 @@ export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAn
                     const segment = block.segments[j];
                     switch (segment.segmentType) {
                         case 'Image':
-                            if (segment.dataset.isEditing) {
+                            if (segment.dataset.isEditing || segment.format.id == imageId) {
                                 return {
                                     paragraph: block,
                                     image: segment,
@@ -31,7 +34,7 @@ export function findEditingImage(group: ReadonlyContentModelBlockGroup): ImageAn
                             break;
 
                         case 'General':
-                            const result = findEditingImage(segment);
+                            const result = findEditingImage(segment, imageId);
 
                             if (result) {
                                 return result;
