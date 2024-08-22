@@ -29,6 +29,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     blockquote: knownElementProcessor,
     br: brProcessor,
     code: codeProcessor,
+    del: knownElementProcessor,
     div: knownElementProcessor,
     em: knownElementProcessor,
     font: fontProcessor,
@@ -55,7 +56,6 @@ export const defaultProcessorMap: ElementProcessorMap = {
     table: tableProcessor,
     u: knownElementProcessor,
     ul: listProcessor,
-    del: knownElementProcessor,
 
     '*': generalProcessor,
     '#text': textProcessor,
