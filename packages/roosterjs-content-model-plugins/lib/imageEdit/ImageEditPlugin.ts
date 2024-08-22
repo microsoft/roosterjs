@@ -142,7 +142,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.keyDownHandler(this.editor, event);
                 break;
             case 'contentChanged':
-                if (event.source === ChangeSource.Format && event.formatApiName == 'insertImage') {
+                if (
+                    (event.source === ChangeSource.Format &&
+                        event.formatApiName == 'insertImage') ||
+                    event.source == ChangeSource.InsertImage
+                ) {
                     this.applyFormatWithContentModel(this.editor, false, false);
                 }
                 break;
