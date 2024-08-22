@@ -215,7 +215,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     const segment = imageDropped.image;
                     const paragraph = imageDropped.paragraph;
                     mutateSegment(paragraph, segment, image => {
-                        console.log(image.format.id);
                         image.isSelected = true;
                         image.isSelectedAsImageSelection = true;
                     });
