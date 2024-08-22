@@ -15,6 +15,7 @@ import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
+    ChangeSource,
     getSafeIdSelector,
     isElementOfType,
     isNodeOfType,
@@ -140,6 +141,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'keyDown':
                 this.keyDownHandler(this.editor, event);
                 break;
+            case 'contentChanged':
+                if (event.source === ChangeSource.Format && event.formatApiName == 'insertImage') {
+                    this.applyFormatWithContentModel(this.editor, false, false);
+                }
+                break;
         }
     }
 
@@ -251,7 +257,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         this.isCropMode = isCropMode;
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
-                            this.imageEditInfo = updateImageEditInfo(image, selection.image);
                             image.dataset.isEditing = 'true';
                         });
 
@@ -271,11 +276,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         isNodeOfType(node, 'ELEMENT_NODE') &&
                         isElementOfType(node, 'img')
                     ) {
-                        if (isCropMode) {
-                            this.startCropMode(editor, node);
-                        } else {
-                            this.startRotateAndResize(editor, node);
-                        }
+                        node.onload = () => {
+                            this.imageEditInfo = editingImageModel
+                                ? updateImageEditInfo(editingImageModel, node)
+                                : null;
+                            if (isCropMode) {
+                                this.startCropMode(editor, node);
+                            } else {
+                                this.startRotateAndResize(editor, node);
+                            }
+                        };
                     }
                 },
             },
