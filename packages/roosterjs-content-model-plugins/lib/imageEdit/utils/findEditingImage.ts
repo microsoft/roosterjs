@@ -25,7 +25,10 @@ export function findEditingImage(
                     const segment = block.segments[j];
                     switch (segment.segmentType) {
                         case 'Image':
-                            if (segment.dataset.isEditing || segment.format.id == imageId) {
+                            if (
+                                (segment.dataset.isEditing && !imageId) ||
+                                segment.format.id == imageId
+                            ) {
                                 return {
                                     paragraph: block,
                                     image: segment,

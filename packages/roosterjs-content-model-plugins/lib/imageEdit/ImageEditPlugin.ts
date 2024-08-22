@@ -205,7 +205,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 const imageDragged = findEditingImage(model, selection.image.id);
                 const imageDropped = findEditingImage(
                     model,
-                    selection.image.id.replace(DRAG_ID, '')
+                    selection.image.id.replace(DRAG_ID, '').trim()
                 );
                 if (imageDragged && imageDropped) {
                     const draggedIndex = imageDragged.paragraph.segments.indexOf(
@@ -215,6 +215,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     const segment = imageDropped.image;
                     const paragraph = imageDropped.paragraph;
                     mutateSegment(paragraph, segment, image => {
+                        console.log(image.format.id);
                         image.isSelected = true;
                         image.isSelectedAsImageSelection = true;
                     });
