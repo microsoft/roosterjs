@@ -46,6 +46,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     disableRotate: false,
     disableSideResize: false,
     onSelectState: ['resize', 'rotate'],
+    insertImageApiName: ['insertImage'],
 };
 
 const MouseRightButton = 2;
@@ -143,9 +144,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 break;
             case 'contentChanged':
                 if (
-                    (event.source === ChangeSource.Format &&
-                        event.formatApiName == 'insertImage') ||
-                    event.source == ChangeSource.InsertImage
+                    event.source === ChangeSource.Format &&
+                    event.formatApiName &&
+                    this.options.insertImageApiName &&
+                    this.options.insertImageApiName.indexOf(event.formatApiName) > -1
                 ) {
                     this.applyFormatWithContentModel(this.editor, false, false);
                 }

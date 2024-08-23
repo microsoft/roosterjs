@@ -61,9 +61,4 @@ export const ChangeSource = {
      * Content changed by auto format
      */
     AutoFormat: 'AutoFormat',
-
-    /**
-     * Insert a new image into the editor.
-     */
-    InsertImage: 'InsertImage',
 };
