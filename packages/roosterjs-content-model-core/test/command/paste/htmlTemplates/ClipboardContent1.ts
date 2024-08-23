@@ -154,6 +154,13 @@ export const template: Readonly<string> = `
             <span style="font-size: 28pt; line-height: 115%;">Unformatted line<o:p></o:p></span>
         </p>
 
+        <p class="MsoNormal">
+            <u
+                ><a href="https://github.com/microsoft/roosterjs" style="font-size: 28pt; line-height: 115%;"
+                    >Text underlink<o:p></o:p></a
+            ></u>
+        </p>
+
         <!--EndFragment-->
     </body>
 </html>

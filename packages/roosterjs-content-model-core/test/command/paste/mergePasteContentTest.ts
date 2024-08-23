@@ -614,6 +614,35 @@ describe('mergePasteContent', () => {
                             format: {},
                         },
                     },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Text underlink',
+                                format: {
+                                    fontSize: '28pt',
+                                    textColor: 'rgb(0,0,0)',
+                                    underline: true,
+                                    lineHeight: '115%',
+                                },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'https://github.com/microsoft/roosterjs',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
+                                format: { fontSize: 'Calibri', textColor: 'rgb(0,0,0)' },
+                            },
+                        ],
+                        format: { marginTop: '1em', marginBottom: '1em' },
+                        decorator: { tagName: 'p', format: {} },
+                    },
                 ],
             },
             {
@@ -756,14 +785,6 @@ describe('mergePasteContent', () => {
                                 textColor: 'rgb(0,0,0)',
                             },
                         },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                fontSize: 'Calibri',
-                                textColor: 'white',
-                            },
-                        },
                     ],
                     format: {
                         marginTop: '1em',
@@ -773,6 +794,40 @@ describe('mergePasteContent', () => {
                         tagName: 'p',
                         format: {},
                     },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text underlink',
+                            format: {
+                                fontSize: '28pt',
+                                textColor: 'rgb(0,0,0)',
+                                underline: true,
+                                lineHeight: '115%',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://github.com/microsoft/roosterjs',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
+                            format: { fontSize: 'Calibri', textColor: 'rgb(0,0,0)' },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontSize: 'Calibri', textColor: 'white' },
+                        },
+                    ],
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
                 },
             ],
         });
@@ -785,14 +840,14 @@ describe('mergePasteContent', () => {
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
         spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         });
         sourceModel = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
         marker.format = {
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         };
         para.segments.push(marker);
@@ -820,7 +875,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red bold',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                     fontWeight: 'bold',
                                 },
@@ -829,7 +884,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -846,7 +901,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red italic',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                     italic: true,
                                 },
@@ -855,7 +910,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -872,7 +927,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red underline',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                     underline: true,
                                 },
@@ -881,7 +936,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -898,7 +953,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Unformatted line',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -906,7 +961,40 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
+                                    textColor: 'white',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Text underlink',
+                                format: {
+                                    fontSize: '14px',
+                                    textColor: 'white',
+                                    underline: true,
+                                },
+                                link: {
+                                    format: {
+                                        href: 'https://github.com/microsoft/roosterjs',
+                                        underline: true,
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
+                                format: {
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -925,7 +1013,7 @@ describe('mergePasteContent', () => {
                 newPendingFormat: {
                     backgroundColor: '',
                     fontFamily: '',
-                    fontSize: 'Calibri',
+                    fontSize: '14px',
                     fontWeight: '',
                     italic: false,
                     letterSpacing: '',
@@ -952,7 +1040,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red bold',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                                 fontWeight: 'bold',
                             },
@@ -961,7 +1049,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -971,7 +1059,7 @@ describe('mergePasteContent', () => {
                         marginBottom: '1em',
                     },
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -982,7 +1070,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red italic',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                                 italic: true,
                             },
@@ -991,7 +1079,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -1001,7 +1089,7 @@ describe('mergePasteContent', () => {
                         marginBottom: '1em',
                     },
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1012,7 +1100,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red underline',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                                 underline: true,
                             },
@@ -1021,7 +1109,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -1031,7 +1119,7 @@ describe('mergePasteContent', () => {
                         marginBottom: '1em',
                     },
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1042,7 +1130,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Unformatted line',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -1050,15 +1138,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
-                                textColor: 'white',
-                            },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -1068,7 +1148,52 @@ describe('mergePasteContent', () => {
                         marginBottom: '1em',
                     },
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
+                        textColor: 'white',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text underlink',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'white',
+                                underline: true,
+                            },
+                            link: {
+                                format: {
+                                    href: 'https://github.com/microsoft/roosterjs',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    },
+                    segmentFormat: {
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1086,14 +1211,14 @@ describe('mergePasteContent', () => {
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
         spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         });
         sourceModel = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
         marker.format = {
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         };
         para.segments.push(marker);
@@ -1121,7 +1246,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red bold',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
@@ -1129,7 +1254,7 @@ describe('mergePasteContent', () => {
                         format: {},
                         isImplicit: true,
                         segmentFormat: {
-                            fontSize: 'Calibri',
+                            fontSize: '14px',
                             textColor: 'white',
                         },
                     },
@@ -1140,14 +1265,14 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red italic',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
                         ],
                         format: {},
                         segmentFormat: {
-                            fontSize: 'Calibri',
+                            fontSize: '14px',
                             textColor: 'white',
                         },
                     },
@@ -1158,14 +1283,14 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Red underline',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
                         ],
                         format: {},
                         segmentFormat: {
-                            fontSize: 'Calibri',
+                            fontSize: '14px',
                             textColor: 'white',
                         },
                     },
@@ -1176,14 +1301,14 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: 'Unformatted line',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'white',
                                 },
                             },
                         ],
                         format: {},
                         segmentFormat: {
-                            fontSize: 'Calibri',
+                            fontSize: '14px',
                             textColor: 'white',
                         },
                     },
@@ -1196,7 +1321,7 @@ describe('mergePasteContent', () => {
                 newPendingFormat: {
                     backgroundColor: '',
                     fontFamily: '',
-                    fontSize: 'Calibri',
+                    fontSize: '14px',
                     fontWeight: '',
                     italic: false,
                     letterSpacing: '',
@@ -1223,14 +1348,14 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red bold',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
                     ],
                     format: {},
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1241,14 +1366,14 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red italic',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
                     ],
                     format: {},
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1259,14 +1384,14 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Red underline',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
                     ],
                     format: {},
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
@@ -1277,7 +1402,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: 'Unformatted line',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
@@ -1285,14 +1410,14 @@ describe('mergePasteContent', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'white',
                             },
                         },
                     ],
                     format: {},
                     segmentFormat: {
-                        fontSize: 'Calibri',
+                        fontSize: '14px',
                         textColor: 'white',
                     },
                 },
