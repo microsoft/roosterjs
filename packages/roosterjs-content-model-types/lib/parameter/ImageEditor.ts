@@ -56,4 +56,9 @@ export interface ImageEditor {
      * Start to crop selected image
      */
     cropImage(): void;
+
+    /**
+     * Start resize or rotate the selected image
+     */
+    startEditingImage(): void;
 }

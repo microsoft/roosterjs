@@ -68,8 +68,25 @@ function createImageFlipButton(handler: ImageEditor): RibbonButton<'buttonNameFl
     };
 }
 
+/**
+ * @internal
+ * "Start editing Image" button on the format ribbon
+ */
+const createStartEditingImageButton = (
+    handler: ImageEditor
+): RibbonButton<'buttonNameStartEditingnsertImage'> => ({
+    key: 'buttonNameStartEditingnsertImage',
+    unlocalizedText: 'Start editing image',
+    iconName: 'ImageCrosshair',
+    isDisabled: formatState => !formatState.canAddImageAltText,
+    onClick: _editor => {
+        handler.startEditingImage();
+    },
+});
+
 export const createImageEditButtons = (handler: ImageEditor) => {
     return [
+        createStartEditingImageButton(handler),
         createImageCropButton(handler),
         createImageRotateButton(handler),
         createImageFlipButton(handler),

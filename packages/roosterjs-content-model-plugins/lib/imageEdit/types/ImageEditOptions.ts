@@ -62,10 +62,4 @@ export interface ImageEditOptions {
      * @default resizeAndRotate
      */
     onSelectState?: ImageEditOperation[];
-
-    /**
-     * The api names that inserted the image into the editor
-     * @default ['insertImage']
-     */
-    insertImageApiName?: string[];
 }

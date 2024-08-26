@@ -15,7 +15,6 @@ import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
-    ChangeSource,
     getSafeIdSelector,
     isElementOfType,
     isNodeOfType,
@@ -46,7 +45,6 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     disableRotate: false,
     disableSideResize: false,
     onSelectState: ['resize', 'rotate'],
-    insertImageApiName: ['insertImage'],
 };
 
 const MouseRightButton = 2;
@@ -142,16 +140,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'keyDown':
                 this.keyDownHandler(this.editor, event);
                 break;
-            case 'contentChanged':
-                if (
-                    event.source === ChangeSource.Format &&
-                    event.formatApiName &&
-                    this.options.insertImageApiName &&
-                    this.options.insertImageApiName.indexOf(event.formatApiName) > -1
-                ) {
-                    this.applyFormatWithContentModel(this.editor, false, false);
-                }
-                break;
         }
     }
 
@@ -190,6 +178,20 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     false /* isApiOperation */
                 );
             }
+        }
+    }
+
+    public startEditingImage() {
+        if (!this.editor) {
+            return;
+        }
+        const selection = this.editor?.getDOMSelection();
+        if (selection?.type == 'image') {
+            this.applyFormatWithContentModel(
+                this.editor,
+                false /* isCropMode*/,
+                false /*shouldSelectImage*/
+            );
         }
     }
 
