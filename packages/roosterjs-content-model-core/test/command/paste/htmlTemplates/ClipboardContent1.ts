@@ -165,3 +165,9 @@ export const template: Readonly<string> = `
     </body>
 </html>
 `;
+
+export const inlineTemplate: Readonly<string> = `
+<html>
+    <body>
+        <span>Inline text</span></body>
+</html>`;

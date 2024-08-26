@@ -62,4 +62,9 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
     customizedMerge?: MergePastedContentFunc;
+
+    /**
+     * Whether the current clipboard contains at least a block element.
+     */
+    readonly containsBlockElements: boolean;
 }

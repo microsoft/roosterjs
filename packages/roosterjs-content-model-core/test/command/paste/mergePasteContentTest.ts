@@ -3,13 +3,14 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as getSegmentTextFormatFile from 'roosterjs-content-model-dom/lib/modelApi/editing/getSegmentTextFormat';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
 import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
+import { inlineTemplate, template } from './htmlTemplates/ClipboardContent1';
 import { mergePasteContent } from '../../../lib/command/paste/mergePasteContent';
-import { template } from './htmlTemplates/ClipboardContent1';
 import {
     addBlock,
     createContentModelDocument,
     createParagraph,
     createSelectionMarker,
+    createText,
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
 import {
@@ -162,15 +163,17 @@ describe('mergePasteContent', () => {
         const eventResult = {
             pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
+            clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(sourceModel, pasteModel, context, {
             mergeFormat: 'none',
             mergeTable: true,
+            addParagraphAfterMergedContent: undefined,
         });
         expect(context).toEqual({
             newEntities: [],
@@ -267,9 +270,10 @@ describe('mergePasteContent', () => {
             pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
             customizedMerge,
+            clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -288,9 +292,10 @@ describe('mergePasteContent', () => {
         const eventResult = {
             pasteType: 'mergeFormat',
             domToModelOption: { additionalAllowedTags: [] },
+            clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -301,6 +306,7 @@ describe('mergePasteContent', () => {
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,
+                addParagraphAfterMergedContent: undefined,
             }
         );
     });
@@ -370,14 +376,11 @@ describe('mergePasteContent', () => {
             },
         });
 
-        mergePasteContent(
-            editor,
-            {
-                fragment: mockedFragment,
-                domToModelOption: mockedDefaultDomToModelOptions,
-            } as any,
-            mockedClipboard
-        );
+        mergePasteContent(editor, {
+            fragment: mockedFragment,
+            domToModelOption: mockedDefaultDomToModelOptions,
+            clipboardData: mockedClipboard,
+        } as any);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -403,6 +406,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelSpy).toHaveBeenCalledWith(sourceModel, pasteModel, context, {
             mergeFormat: 'none',
             mergeTable: false,
+            addParagraphAfterMergedContent: undefined,
         });
         expect(createDomToModelContextSpy).toHaveBeenCalledWith(
             document,
@@ -430,9 +434,11 @@ describe('mergePasteContent', () => {
         const eventResult = {
             pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
+            clipboardData: mockedClipboard,
+            containsBlockElements: true,
         } as any;
 
-        mergePasteContent(editor, eventResult, mockedClipboard);
+        mergePasteContent(editor, eventResult);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -463,28 +469,26 @@ describe('mergePasteContent', () => {
 
         spyOn(mergeModelFile, 'mergeModel').and.callThrough();
         spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         });
         sourceModel = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
         marker.format = {
-            fontSize: 'Calibri',
+            fontSize: '14px',
             textColor: 'white',
         };
         para.segments.push(marker);
         addBlock(sourceModel, para);
 
-        mergePasteContent(
-            editor,
-            <any>{
-                fragment,
-                domToModelOption: <any>{},
-                pasteType: 'normal',
-            },
-            mockedClipboard
-        );
+        mergePasteContent(editor, <any>{
+            fragment,
+            containsBlockElements: true,
+            domToModelOption: <any>{},
+            pasteType: 'normal',
+            clipboardData: mockedClipboard,
+        });
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -508,7 +512,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'rgb(0,0,0)',
                                 },
                             },
@@ -539,7 +543,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'rgb(0,0,0)',
                                 },
                             },
@@ -570,7 +574,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'rgb(0,0,0)',
                                 },
                             },
@@ -600,7 +604,7 @@ describe('mergePasteContent', () => {
                                 segmentType: 'Text',
                                 text: '\n',
                                 format: {
-                                    fontSize: 'Calibri',
+                                    fontSize: '14px',
                                     textColor: 'rgb(0,0,0)',
                                 },
                             },
@@ -637,11 +641,17 @@ describe('mergePasteContent', () => {
                             {
                                 segmentType: 'Text',
                                 text: '\n',
-                                format: { fontSize: 'Calibri', textColor: 'rgb(0,0,0)' },
+                                format: { fontSize: '14px', textColor: 'rgb(0,0,0)' },
                             },
                         ],
                         format: { marginTop: '1em', marginBottom: '1em' },
                         decorator: { tagName: 'p', format: {} },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                        segmentFormat: { fontSize: '14px', textColor: 'white' },
                     },
                 ],
             },
@@ -652,7 +662,7 @@ describe('mergePasteContent', () => {
                 newPendingFormat: {
                     backgroundColor: '',
                     fontFamily: '',
-                    fontSize: 'Calibri',
+                    fontSize: '14px',
                     fontWeight: '',
                     italic: false,
                     letterSpacing: '',
@@ -666,6 +676,7 @@ describe('mergePasteContent', () => {
             {
                 mergeFormat: 'none',
                 mergeTable: false,
+                addParagraphAfterMergedContent: true,
             }
         );
 
@@ -689,7 +700,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'rgb(0,0,0)',
                             },
                         },
@@ -720,7 +731,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'rgb(0,0,0)',
                             },
                         },
@@ -751,7 +762,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'rgb(0,0,0)',
                             },
                         },
@@ -781,7 +792,7 @@ describe('mergePasteContent', () => {
                             segmentType: 'Text',
                             text: '\n',
                             format: {
-                                fontSize: 'Calibri',
+                                fontSize: '14px',
                                 textColor: 'rgb(0,0,0)',
                             },
                         },
@@ -818,16 +829,27 @@ describe('mergePasteContent', () => {
                         {
                             segmentType: 'Text',
                             text: '\n',
-                            format: { fontSize: 'Calibri', textColor: 'rgb(0,0,0)' },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: { fontSize: 'Calibri', textColor: 'white' },
+                            format: { fontSize: '14px', textColor: 'rgb(0,0,0)' },
                         },
                     ],
                     format: { marginTop: '1em', marginBottom: '1em' },
                     decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontSize: '14px', textColor: 'white' },
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: { fontSize: '14px', textColor: 'white' },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: { fontSize: '14px', textColor: 'white' },
                 },
             ],
         });
@@ -853,15 +875,12 @@ describe('mergePasteContent', () => {
         para.segments.push(marker);
         sourceModel.blocks.push(para);
 
-        mergePasteContent(
-            editor,
-            {
-                fragment,
-                domToModelOption: <any>{},
-                pasteType: 'mergeFormat',
-            } as any,
-            mockedClipboard
-        );
+        mergePasteContent(editor, {
+            fragment,
+            domToModelOption: <any>{},
+            pasteType: 'mergeFormat',
+            clipboardData: mockedClipboard,
+        } as any);
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1027,6 +1046,7 @@ describe('mergePasteContent', () => {
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,
+                addParagraphAfterMergedContent: undefined,
             }
         );
 
@@ -1224,15 +1244,12 @@ describe('mergePasteContent', () => {
         para.segments.push(marker);
         sourceModel.blocks.push(para);
 
-        mergePasteContent(
-            editor,
-            {
-                fragment,
-                domToModelOption: <any>{},
-                pasteType: 'asPlainText',
-            } as any,
-            mockedClipboard
-        );
+        mergePasteContent(editor, {
+            fragment,
+            domToModelOption: <any>{},
+            pasteType: 'asPlainText',
+            clipboardData: mockedClipboard,
+        } as any);
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1335,6 +1352,7 @@ describe('mergePasteContent', () => {
             {
                 mergeFormat: 'none',
                 mergeTable: false,
+                addParagraphAfterMergedContent: undefined,
             }
         );
 
@@ -1422,6 +1440,405 @@ describe('mergePasteContent', () => {
                     },
                 },
             ],
+        });
+    });
+
+    it('Merge paste content | Paste Type = normal | Paste content inline', () => {
+        const html = new DOMParser().parseFromString(inlineTemplate, 'text/html');
+        const fragment = document.createDocumentFragment();
+        moveChildNodes(fragment, html.body);
+
+        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
+            fontSize: '14px',
+            textColor: 'white',
+        });
+        sourceModel = createContentModelDocument({
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const para = createParagraph(undefined, undefined, {
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const marker = createSelectionMarker();
+        marker.format = {
+            fontSize: '14px',
+            textColor: 'white',
+        };
+        para.segments.push(createText('Text in source'), marker);
+        addBlock(sourceModel, para);
+
+        mergePasteContent(editor, <any>{
+            fragment,
+            containsBlockElements: false,
+            domToModelOption: <any>{},
+            pasteType: 'normal',
+            clipboardData: mockedClipboard,
+        });
+
+        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
+            sourceModel,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Inline text',
+                                format: {
+                                    fontSize: '14px',
+                                    textColor: 'rgb(0,0,0)',
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
+                                format: {
+                                    fontSize: '14px',
+                                    textColor: 'rgb(0,0,0)',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                        segmentFormat: {
+                            fontSize: '14px',
+                            textColor: 'rgb(0,0,0)',
+                        },
+                    },
+                ],
+            },
+            {
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+                newPendingFormat: {
+                    backgroundColor: '',
+                    fontFamily: 'Aptos',
+                    fontSize: '14px',
+                    fontWeight: '',
+                    italic: false,
+                    letterSpacing: '',
+                    lineHeight: '',
+                    strikethrough: false,
+                    superOrSubScriptSequence: '',
+                    textColor: 'rgb(0,0,0)',
+                    underline: false,
+                },
+            },
+            {
+                mergeFormat: 'none',
+                mergeTable: false,
+                addParagraphAfterMergedContent: false,
+            }
+        );
+
+        expect(sourceModel).toEqual({
+            blockGroupType: 'Document',
+            format: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text in source',
+                            format: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Inline text',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'rgb(0,0,0)',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'rgb(0,0,0)',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'white',
+                                fontFamily: 'Aptos',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Merge paste content | Paste Type = mergeFormat | Paste content inline', () => {
+        const html = new DOMParser().parseFromString(inlineTemplate, 'text/html');
+        const fragment = document.createDocumentFragment();
+        moveChildNodes(fragment, html.body);
+
+        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
+            fontSize: '14px',
+            textColor: 'white',
+        });
+        sourceModel = createContentModelDocument({
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const para = createParagraph(undefined, undefined, {
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const marker = createSelectionMarker();
+        marker.format = {
+            fontSize: '14px',
+            textColor: 'white',
+        };
+        para.segments.push(createText('Text in source'), marker);
+        addBlock(sourceModel, para);
+
+        mergePasteContent(editor, <any>{
+            fragment,
+            containsBlockElements: false,
+            domToModelOption: <any>{},
+            pasteType: 'mergeFormat',
+            clipboardData: mockedClipboard,
+        });
+
+        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
+            sourceModel,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Inline text',
+                                format: {
+                                    fontFamily: 'Aptos',
+                                    fontSize: '14px',
+                                    textColor: 'white',
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
+                                format: {
+                                    fontFamily: 'Aptos',
+                                    fontSize: '14px',
+                                    textColor: 'white',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                        segmentFormat: { fontSize: '14px', textColor: 'white' },
+                    },
+                ],
+            },
+            {
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+                newPendingFormat: {
+                    backgroundColor: '',
+                    fontFamily: 'Aptos',
+                    fontSize: '14px',
+                    fontWeight: '',
+                    italic: false,
+                    letterSpacing: '',
+                    lineHeight: '',
+                    strikethrough: false,
+                    superOrSubScriptSequence: '',
+                    textColor: 'white',
+                    underline: false,
+                },
+            },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+                mergeTable: false,
+                addParagraphAfterMergedContent: false,
+            }
+        );
+
+        expect(sourceModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'Text in source', format: {} },
+                        {
+                            segmentType: 'Text',
+                            text: 'Inline text',
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontSize: '14px', textColor: 'white' },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
+                },
+            ],
+            format: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
+        });
+    });
+
+    it('Merge paste content | Paste Type = mergeFormat | Paste content inline', () => {
+        const fragment = createPasteFragment(
+            document,
+            { text: 'Inline text\r\n' } as any,
+            'asPlainText',
+            document.body
+        );
+
+        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        spyOn(getSegmentTextFormatFile, 'getSegmentTextFormat').and.returnValue({
+            fontSize: '14px',
+            textColor: 'white',
+        });
+        sourceModel = createContentModelDocument({
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const para = createParagraph(undefined, undefined, {
+            fontFamily: 'Aptos',
+            fontSize: '10pt',
+            textColor: 'blue',
+        });
+        const marker = createSelectionMarker();
+        marker.format = {
+            fontSize: '14px',
+            textColor: 'white',
+        };
+        para.segments.push(createText('Text in source'), marker);
+        addBlock(sourceModel, para);
+
+        mergePasteContent(editor, <any>{
+            fragment,
+            containsBlockElements: false,
+            domToModelOption: <any>{},
+            pasteType: 'asPlainText',
+            clipboardData: mockedClipboard,
+        });
+
+        expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
+            sourceModel,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Inline text',
+                                format: { fontSize: '14px', textColor: 'white' },
+                            },
+                            { segmentType: 'Br', format: { fontSize: '14px', textColor: 'white' } },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                        segmentFormat: { fontSize: '14px', textColor: 'white' },
+                    },
+                ],
+            },
+            {
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+                newPendingFormat: {
+                    backgroundColor: '',
+                    fontFamily: 'Aptos',
+                    fontSize: '14px',
+                    fontWeight: '',
+                    italic: false,
+                    letterSpacing: '',
+                    lineHeight: '',
+                    strikethrough: false,
+                    superOrSubScriptSequence: '',
+                    textColor: 'white',
+                    underline: false,
+                },
+            },
+            { mergeFormat: 'none', mergeTable: false, addParagraphAfterMergedContent: false }
+        );
+
+        expect(sourceModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text in source',
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '10pt',
+                                textColor: 'blue',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Inline text',
+                            format: { fontSize: '14px', textColor: 'white' },
+                        },
+                        { segmentType: 'Br', format: { fontSize: '14px', textColor: 'white' } },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
         });
     });
 });
