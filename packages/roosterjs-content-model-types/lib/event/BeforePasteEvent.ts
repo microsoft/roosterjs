@@ -66,5 +66,5 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
     /**
      * Whether the current clipboard contains at least a block element.
      */
-    readonly containsBlockElements: boolean;
+    readonly containsBlockElements?: boolean;
 }
