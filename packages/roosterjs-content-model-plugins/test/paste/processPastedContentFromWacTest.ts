@@ -21,7 +21,12 @@ let div: HTMLElement;
 let fragment: DocumentFragment;
 
 describe('processPastedContentFromWacTest', () => {
-    function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
+    function runTest(
+        source?: string,
+        expected?: string,
+        expectedModel?: ContentModelDocument,
+        removeUndefined?: boolean
+    ) {
         //Act
         if (source) {
             div = document.createElement('div');
@@ -37,7 +42,11 @@ describe('processPastedContentFromWacTest', () => {
             createDomToModelContext(undefined, event.domToModelOption)
         );
         if (expectedModel) {
-            expect(model).toEqual(expectedModel);
+            if (removeUndefined) {
+                expectEqual(model, expectedModel);
+            } else {
+                expect(model).toEqual(expectedModel);
+            }
         }
 
         contentModelToDom(
@@ -57,19 +66,37 @@ describe('processPastedContentFromWacTest', () => {
             )
         );
 
+        const innerHTML = div.innerHTML;
         //Assert
         if (expected) {
-            expect(div.innerHTML).toBe(expected);
+            expect(innerHTML).toBe(expected);
         }
         div.parentElement?.removeChild(div);
+
+        return [innerHTML, model];
     }
 
     it('Single text node', () => {
-        runTest('test', 'test');
+        runTest(
+            'test',
+            'test',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            true
+        );
     });
 
     it('Empty DIV', () => {
-        runTest('<div></div>', '');
+        runTest('<div></div>', '', { blockGroupType: 'Document', blocks: [] }, true);
     });
 
     it('Single DIV', () => {
@@ -101,38 +128,271 @@ describe('processPastedContentFromWacTest', () => {
     it('Single DIV with child LI', () => {
         runTest(
             '<div class="ListContainerWrapper"><ul><li>1</li><li>2</li></ul></div>',
-            '<ul><li>1</li><li>2</li></ul>'
+            '<ul><li>1</li><li>2</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '2', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
         );
     });
 
     it('Single DIV with deeper child LI', () => {
         runTest(
             '<div><div class="ListContainerWrapper"><ul><li>1</li></ul><ul><li>2</li></ul></div></div>',
-            '<ul><li>1</li><li>2</li></ul>'
+            '<ul><li>1</li><li>2</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '2', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
         );
     });
 
     it('Single DIV with text and LI', () => {
         runTest(
             '<div class="ListContainerWrapper">test<ul><li>1</li></ul></div>',
-            'test<ul><li>1</li></ul>'
+            'test<ul><li>1</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        format: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
         );
     });
 
     it('Single LI', () => {
-        runTest('<ul><li>1</li></ul>', '<ul><li>1</li></ul>');
+        runTest(
+            '<ul><li>1</li></ul>',
+            '<ul><li>1</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
     });
 
     it('Single LI and text', () => {
-        runTest('<ul><li>1</li></ul>test', '<ul><li>1</li></ul>test');
+        runTest(
+            '<ul><li>1</li></ul>test',
+            '<ul><li>1</li></ul>test',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            true
+        );
     });
 
     it('Multiple LI', () => {
-        runTest('<ul><li>1</li><li>2</li></ul>', '<ul><li>1</li><li>2</li></ul>');
+        runTest(
+            '<ul><li>1</li><li>2</li></ul>',
+            '<ul><li>1</li><li>2</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '1', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: '2', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
     });
 });
 
 describe('wordOnlineHandler', () => {
+    function runTest2(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
+        const asd = runTest(source, expected, expectedModel, true);
+
+        navigator.clipboard.writeText(JSON.stringify(asd));
+    }
     function runTest(
         source?: string,
         expected?: string,
@@ -186,11 +446,14 @@ describe('wordOnlineHandler', () => {
             )
         );
 
+        const innerHTML = div.innerHTML;
         //Assert
         if (expected) {
-            expect(div.innerHTML).toBe(expected);
+            expect(innerHTML).toBe(expected);
         }
         div.parentElement?.removeChild(div);
+
+        return [innerHTML, model];
     }
     describe('HTML with fragment from Word Online', () => {
         describe('fragments only contain list items', () => {
@@ -207,27 +470,12 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'A',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
                                     isSelected: false,
@@ -241,27 +489,12 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'B',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
                                     isSelected: false,
@@ -275,34 +508,14 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'C',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -312,7 +525,8 @@ describe('wordOnlineHandler', () => {
                                 format: {},
                             },
                         ],
-                    }
+                    },
+                    true
                 );
             });
 
@@ -333,26 +547,33 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'A',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -367,84 +588,15 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'B',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
-                                formatHolder: {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: false,
-                                    format: {},
-                                },
-                                format: {},
-                            },
-                            {
-                                blockType: 'BlockGroup',
-                                blockGroupType: 'ListItem',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'C',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -454,7 +606,8 @@ describe('wordOnlineHandler', () => {
                                 format: {},
                             },
                         ],
-                    }
+                    },
+                    true
                 );
             });
 
@@ -468,7 +621,7 @@ describe('wordOnlineHandler', () => {
             it('List items on different level but have different branch in each level', () => {
                 runTest(
                     '<div class="ListContainerWrapper SCXW81557186 BCX0"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul></div>',
-                    '<ul><li>A</li><ul><li>B</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>',
+                    '<ul><li>A</li><ul><li>B</li><ul style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">E</li></ul></ul></ul>',
                     {
                         blockGroupType: 'Document',
                         blocks: [
@@ -478,26 +631,33 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'A',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -512,34 +672,41 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'B',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                     {
                                         listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
+                                        format: { marginTop: '0px', marginBottom: '0px' },
                                         dataset: {},
                                     },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
                                     {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
                                     },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -554,43 +721,17 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'C',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'E', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                     {
                                         listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                            marginTop: '0px',
-                                            marginRight: '0px',
-                                            marginBottom: '0px',
-                                        },
+                                        format: { marginTop: '0px', marginBottom: '0px' },
                                         dataset: {},
                                     },
                                 ],
@@ -599,115 +740,11 @@ describe('wordOnlineHandler', () => {
                                     isSelected: false,
                                     format: {},
                                 },
-                                format: {
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '120px',
-                                },
-                            },
-                            {
-                                blockType: 'BlockGroup',
-                                blockGroupType: 'ListItem',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'D',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
-                                formatHolder: {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: false,
-                                    format: {},
-                                },
-                                format: {},
-                            },
-                            {
-                                blockType: 'BlockGroup',
-                                blockGroupType: 'ListItem',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'E',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                            marginTop: '0px',
-                                            marginRight: '0px',
-                                            marginBottom: '0px',
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
-                                formatHolder: {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: false,
-                                    format: {},
-                                },
-                                format: {
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '120px',
-                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
                             },
                         ],
-                    }
+                    },
+                    true
                 );
             });
 
@@ -722,7 +759,7 @@ describe('wordOnlineHandler', () => {
             it('List items on different level with different branch with a combination of order and unordered list items', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW221836524"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol start="2"><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524"> D </li></ul></div>',
-                    '<ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C1</li><li style="margin: 0px 0px 0px 120px;">C2</li></ol><li>D</li></ul></ul>',
+                    '<ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C1</li><li style="margin-top: 0px; margin-bottom: 0px;">C2</li></ol><li>D</li></ul></ul>',
                     {
                         blockGroupType: 'Document',
                         blocks: [
@@ -732,26 +769,33 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'A',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -766,85 +810,17 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'B',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'C1', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                ],
-                                formatHolder: {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: false,
-                                    format: {},
-                                },
-                                format: {},
-                            },
-                            {
-                                blockType: 'BlockGroup',
-                                blockGroupType: 'ListItem',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'C1',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                     {
                                         listType: 'OL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                            marginTop: '0px',
-                                            marginRight: '0px',
-                                            marginBottom: '0px',
-                                        },
+                                        format: { marginTop: '0px', marginBottom: '0px' },
                                         dataset: {},
                                     },
                                 ],
@@ -853,12 +829,7 @@ describe('wordOnlineHandler', () => {
                                     isSelected: false,
                                     format: {},
                                 },
-                                format: {
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '120px',
-                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
                             },
                             {
                                 blockType: 'BlockGroup',
@@ -866,43 +837,17 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'C2',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'C2', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                     {
                                         listType: 'OL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                            marginTop: '0px',
-                                            marginRight: '0px',
-                                            marginBottom: '0px',
-                                        },
+                                        format: { marginTop: '0px', marginBottom: '0px' },
                                         dataset: {},
                                     },
                                 ],
@@ -911,12 +856,7 @@ describe('wordOnlineHandler', () => {
                                     isSelected: false,
                                     format: {},
                                 },
-                                format: {
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '120px',
-                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
                             },
                             {
                                 blockType: 'BlockGroup',
@@ -924,34 +864,14 @@ describe('wordOnlineHandler', () => {
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'D',
-                                                format: {},
-                                            },
-                                        ],
+                                        segments: [{ segmentType: 'Text', text: 'D', format: {} }],
                                         format: {},
                                         isImplicit: true,
                                     },
                                 ],
                                 levels: [
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
-                                    {
-                                        listType: 'UL',
-                                        format: {
-                                            paddingLeft: undefined,
-                                            marginLeft: undefined,
-                                        },
-                                        dataset: {},
-                                    },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
                                 ],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
@@ -961,7 +881,8 @@ describe('wordOnlineHandler', () => {
                                 format: {},
                             },
                         ],
-                    }
+                    },
+                    true
                 );
             });
         });
@@ -978,7 +899,142 @@ describe('wordOnlineHandler', () => {
             it('only has text and list', () => {
                 runTest(
                     '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol start="2"><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div>',
-                    '<p>asdfasdf</p><ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C1</li><li style="margin: 0px 0px 0px 120px;">C2</li></ol><li>D</li></ul></ul><p>asdfasdf</p>'
+                    '<p>asdfasdf</p><ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C1</li><li style="margin-top: 0px; margin-bottom: 0px;">C2</li></ol><li>D</li></ul></ul><p>asdfasdf</p>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'asdfasdf', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C1', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    {
+                                        listType: 'OL',
+                                        format: { marginTop: '0px', marginBottom: '0px' },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C2', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    {
+                                        listType: 'OL',
+                                        format: { marginTop: '0px', marginBottom: '0px' },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'asdfasdf', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1001,7 +1057,325 @@ describe('wordOnlineHandler', () => {
             it('fragments contains text, list and table that consist of list 2', () => {
                 runTest(
                     '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><div class="ListContainerWrapper SCXW244795937 BCX0"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> D </li></ul></div></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>',
-                    '<p>asdfasdf</p><ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C1</li></ol><ol start="1" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C2</li></ol><li>D</li></ul></ul><p>asdfasdf</p><table><tbody><tr><td><p>asdfasdf</p></td></tr><tr><td><ul><li>A</li><li>B</li><li>C</li><li>D</li></ul></td></tr></tbody></table>'
+                    '<p>asdfasdf</p><ul><li>A</li><ul><li>B</li><ol start="1" style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C1</li></ol><ol start="1" style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C2</li></ol><li>D</li></ul></ul><p>asdfasdf</p><table><tbody><tr><td><p>asdfasdf</p></td></tr><tr><td><ul><li>A</li><li>B</li><li>C</li><li>D</li></ul></td></tr></tbody></table>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'asdfasdf', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C1', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    {
+                                        listType: 'OL',
+                                        format: { marginTop: '0px', marginBottom: '0px' },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C2', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    {
+                                        listType: 'OL',
+                                        format: {
+                                            marginTop: '0px',
+                                            marginBottom: '0px',
+                                            startNumberOverride: 1,
+                                        },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: { marginTop: '0px', marginBottom: '0px' },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'asdfasdf', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                            {
+                                blockType: 'Table',
+                                rows: [
+                                    {
+                                        height: 0,
+                                        format: {},
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'asdfasdf',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: '1em',
+                                                        },
+                                                        decorator: { tagName: 'p', format: {} },
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        height: 0,
+                                        format: {},
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'A',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'B',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'C',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'D',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
+                                ],
+                                format: {},
+                                widths: [],
+                                dataset: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
             // e.g.
@@ -1013,7 +1387,165 @@ describe('wordOnlineHandler', () => {
             it('fragments contains text, list and table that consist of list', () => {
                 runTest(
                     '<div class="OutlineElement"><div class="TableContainer"><table><tbody><tr><td><div><div class="OutlineElement"><p>asdfasdf</p></div></div></td><td><div><div class="OutlineElement"><p>asdfasdf222</p></div></div></td></tr><tr><td><div><div class="ListContainerWrapper"><ul><li role="listitem" data-aria-level="1" class="OutlineElement">A</li></ul></div></div></td><td><div><div class="ListContainerWrapper"><ul><li role="listitem" data-aria-level="1" class="OutlineElement">A</li></ul></div></div></td></tr></tbody></table></div></div>',
-                    '<table><tbody><tr><td><p>asdfasdf</p></td><td><p>asdfasdf222</p></td></tr><tr><td><ul><li>A</li></ul></td><td><ul><li>A</li></ul></td></tr></tbody></table>'
+                    '<table><tbody><tr><td><p>asdfasdf</p></td><td><p>asdfasdf222</p></td></tr><tr><td><ul><li>A</li></ul></td><td><ul><li>A</li></ul></td></tr></tbody></table>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'Table',
+                                rows: [
+                                    {
+                                        height: 0,
+                                        format: {},
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'asdfasdf',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: '1em',
+                                                        },
+                                                        decorator: { tagName: 'p', format: {} },
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'asdfasdf222',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: '1em',
+                                                        },
+                                                        decorator: { tagName: 'p', format: {} },
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        height: 0,
+                                        format: {},
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'A',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'BlockGroup',
+                                                        blockGroupType: 'ListItem',
+                                                        blocks: [
+                                                            {
+                                                                blockType: 'Paragraph',
+                                                                segments: [
+                                                                    {
+                                                                        segmentType: 'Text',
+                                                                        text: 'A',
+                                                                        format: {},
+                                                                    },
+                                                                ],
+                                                                format: {},
+                                                                isImplicit: true,
+                                                            },
+                                                        ],
+                                                        levels: [
+                                                            {
+                                                                listType: 'UL',
+                                                                format: {},
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                        formatHolder: {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: false,
+                                                            format: {},
+                                                        },
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
+                                ],
+                                format: {},
+                                widths: [],
+                                dataset: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
         });
@@ -1021,21 +1553,7 @@ describe('wordOnlineHandler', () => {
         it('does not have list container', () => {
             runTest(
                 '<ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul>',
-                '<ul><li>A</li><ul><li>B</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px;"><li style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>'
-            );
-        });
-
-        it('does not have BulletListStyle or NumberListStyle but has ListContainerWrapper', () => {
-            runTest(
-                '<div class="ListContainerWrapper BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
-                '<ul><li>A</li><ul><li>B</li><ul><li>C</li></ul></ul></ul>'
-            );
-        });
-
-        it('does not have BulletListStyle or NumberListStyle but has no ListContainerWrapper', () => {
-            runTest(
-                '<div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
-                undefined,
+                '<ul><li>A</li><ul><li>B</li><ul style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">C</li></ul><li>D</li><ul style="margin-top: 0px; margin-bottom: 0px;"><li style="margin-top: 0px; margin-bottom: 0px;">E</li></ul></ul></ul>',
                 {
                     blockGroupType: 'Document',
                     blocks: [
@@ -1045,26 +1563,33 @@ describe('wordOnlineHandler', () => {
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'A',
-                                            format: {},
-                                        },
-                                    ],
+                                    segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'B', format: {} }],
                                     format: {},
                                     isImplicit: true,
                                 },
                             ],
                             levels: [
-                                {
-                                    listType: 'UL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        paddingLeft: undefined,
-                                    },
-                                    dataset: {},
-                                },
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
                             ],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
@@ -1079,34 +1604,41 @@ describe('wordOnlineHandler', () => {
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'B',
-                                            format: {},
-                                        },
-                                    ],
+                                    segments: [{ segmentType: 'Text', text: 'C', format: {} }],
                                     format: {},
                                     isImplicit: true,
                                 },
                             ],
                             levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
                                 {
                                     listType: 'UL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        paddingLeft: undefined,
-                                    },
+                                    format: { marginTop: '0px', marginBottom: '0px' },
                                     dataset: {},
                                 },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: { marginTop: '0px', marginBottom: '0px' },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
                                 {
-                                    listType: 'UL',
-                                    format: {
-                                        marginLeft: undefined,
-                                        paddingLeft: undefined,
-                                    },
-                                    dataset: {},
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
                                 },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
                             ],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
@@ -1121,33 +1653,96 @@ describe('wordOnlineHandler', () => {
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'C',
-                                            format: {},
-                                        },
-                                    ],
+                                    segments: [{ segmentType: 'Text', text: 'E', format: {} }],
                                     format: {},
                                     isImplicit: true,
                                 },
                             ],
                             levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
                                 {
                                     listType: 'UL',
-                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    format: { marginTop: '0px', marginBottom: '0px' },
                                     dataset: {},
                                 },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: { marginTop: '0px', marginBottom: '0px' },
+                        },
+                    ],
+                },
+                true
+            );
+        });
+
+        it('does not have BulletListStyle or NumberListStyle but has ListContainerWrapper', () => {
+            runTest(
+                '<div class="ListContainerWrapper BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
+                '<ul><li>A</li><ul><li>B</li><ul><li>C</li></ul></ul></ul>',
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
                                 {
-                                    listType: 'UL',
-                                    format: { marginLeft: undefined, paddingLeft: undefined },
-                                    dataset: {},
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
                                 },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
                                 {
-                                    listType: 'UL',
-                                    format: { marginLeft: undefined, paddingLeft: undefined },
-                                    dataset: {},
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
                                 },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
                             ],
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
@@ -1157,7 +1752,85 @@ describe('wordOnlineHandler', () => {
                             format: {},
                         },
                     ],
-                }
+                },
+                true
+            );
+        });
+
+        it('does not have BulletListStyle or NumberListStyle but has no ListContainerWrapper', () => {
+            runTest(
+                '<div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
+                '<ul><li>A</li><ul><li>B</li><ul><li>C</li></ul></ul></ul>',
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'UL', format: {}, dataset: {} },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                    ],
+                },
+                true
             );
         });
 
@@ -1174,7 +1847,70 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains two UL', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ul></div>',
-                    '<ul><li>A</li><li>B</li><li>C</li></ul>'
+                    '<ul><li>A</li><li>B</li><li>C</li></ul>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1192,7 +1928,61 @@ describe('wordOnlineHandler', () => {
             it('shuold process html properly, when list items are not in side ul tag', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ul class="BulletListStyle1" role="list"></ul><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
-                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>'
+                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1216,7 +2006,122 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains list that is already well formatted', () => {
                 runTest(
                     '<div class="ListContainerWrapper SCXW81557186 BCX0"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186">E</li></ul></ul></ul></div>',
-                    '<ul><li>A</li><ul><li>B</li><ul><li>C</li></ul><li>D</li><ul><li>E</li></ul></ul></ul>'
+                    '<ul><li>A</li><ul><li>B</li><ul><li>C</li></ul><li>D</li><ul><li>E</li></ul></ul></ul>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'E', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                    { listType: 'UL', format: {}, dataset: {} },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1234,7 +2139,76 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if there are multiple list item in ol (word online has one list item in each ol for ordered list)', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li><li class="OutlineElement" role="listitem" data-aria-level="1">B</li></ol></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol></div></body></html>',
-                    '<ol start="1"><li>A</li><li>B</li></ol><ol start="1"><li>C</li></ol>'
+                    '<ol start="1"><li>A</li><li>B</li></ol><ol start="1"><li>C</li></ol>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    {
+                                        listType: 'OL',
+                                        format: { startNumberOverride: 1 },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1250,7 +2224,61 @@ describe('wordOnlineHandler', () => {
             it('shuold process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ol class="NumberListStyle1" role="list"></ol><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
-                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>'
+                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'General',
+                                element: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            { segmentType: 'Text', text: 'test', format: {} },
+                                        ],
+                                        format: { marginTop: '1em', marginBottom: '1em' },
+                                        decorator: { tagName: 'p', format: {} },
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
         });
@@ -1267,7 +2295,51 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains well formated UL and non formated ol', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">B</li></ol></div>',
-                    '<ul><li>A</li></ul><ol start="1"><li>B</li></ol>'
+                    '<ul><li>A</li></ul><ol start="1"><li>B</li></ol>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1286,7 +2358,70 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains two OL', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">B</li></ol><ol start="2"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol></div>',
-                    '<ul><li>A</li></ul><ol start="1"><li>B</li><li>C</li></ol>'
+                    '<ul><li>A</li></ul><ol start="1"><li>B</li><li>C</li></ol>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1303,7 +2438,76 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains two OL and one UL', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">B</li></ol><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol></div>',
-                    '<ul><li>A</li></ul><ol start="1"><li>B</li></ol><ol start="1"><li>C</li></ol>'
+                    '<ul><li>A</li></ul><ol start="1"><li>B</li></ol><ol start="1"><li>C</li></ol>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [
+                                    {
+                                        listType: 'OL',
+                                        format: { startNumberOverride: 1 },
+                                        dataset: {},
+                                    },
+                                ],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1318,7 +2522,51 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if there are list not in the ListContainerWrapper', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class=OutlineElement role="listitem" data-aria-level="1">C</li></ol></div><ul class="NumberListStyle1"><li class=OutlineElement role="listitem" data-aria-level="1">A</li></ul>',
-                    '<ol start="1"><li>C</li></ol><ul><li>A</li></ul>'
+                    '<ol start="1"><li>C</li></ol><ul><li>A</li></ul>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1337,7 +2585,89 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if ListContainerWrapper contains two UL', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol></div><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul><ul class="BulletListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">A</li></ul>',
-                    '<ol start="1"><li>C</li></ol><ul><li>A</li><li>A</li><li>A</li></ul>'
+                    '<ol start="1"><li>C</li></ol><ul><li>A</li><li>A</li><li>A</li></ul>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1349,7 +2679,38 @@ describe('wordOnlineHandler', () => {
             it('should retain all text, if ListContainerWrapper contains Elements before li and ul', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><p>paragraph</p><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol></div>',
-                    '<p>paragraph</p><ol start="1"><li>C</li></ol>'
+                    '<p>paragraph</p><ol start="1"><li>C</li></ol>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'paragraph', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                        ],
+                    },
+                    true
                 );
             });
 
@@ -1361,7 +2722,38 @@ describe('wordOnlineHandler', () => {
             it('should retain all text, if ListContainerWrapper contains Elements after li and ul', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li class="OutlineElement" role="listitem" data-aria-level="1">C</li></ol><p>paragraph</p></div>',
-                    '<ol start="1"><li>C</li></ol><p>paragraph</p>'
+                    '<ol start="1"><li>C</li></ol><p>paragraph</p>',
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'ListItem',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
+                                format: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'paragraph', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                    },
+                    true
                 );
             });
         });
@@ -1419,7 +2811,38 @@ describe('wordOnlineHandler', () => {
     it('List directly under fragment', () => {
         runTest(
             '<div class="ListContainerWrapper"><ul class="BulletListStyle1"><li data-listid="6" class="OutlineElement"><p class="Paragraph" paraid="1126911352"><span data-contrast="auto" class="TextRun"><span class="NormalTextRun">A</span></span></p></li></ul></div><div class="OutlineElement"><p class="Paragraph" paraid="1628213048"><span data-contrast="none" class="TextRun"><span class="NormalTextRun">B</span></span></p></div>',
-            '<ul><li><p>A</p></li></ul><p>B</p>'
+            '<ul><li><p>A</p></li></ul><p>B</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                        format: { marginTop: '1em', marginBottom: '1em' },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                ],
+            },
+            true
         );
     });
 
@@ -1432,7 +2855,92 @@ describe('wordOnlineHandler', () => {
         it('should remove the display and margin styles from the element', () => {
             runTest(
                 '<ul class="BulletListStyle3 BCX0 SCXO236767657" role="list"><li class="OutlineElement"><p>A</p></li><li class="OutlineElement"><p>B</p></li><li class="OutlineElement"><p>C</p><ol class="NumberListStyle3 BCX0 SCXO236767657" role="list"><li data-aria-level="2" class="OutlineElement"><p>D</p></li></ol></li></ul>',
-                '<ul><li><p>A</p></li><li><p>B</p></li><li><p>C</p></li><ol start="1"><li><p>D</p></li></ol></ul>'
+                '<ul><li><p>A</p></li><li><p>B</p></li><li><p>C</p></li><ol start="1"><li><p>D</p></li></ol></ul>',
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'A', format: {} }],
+                                    format: { marginTop: '1em', marginBottom: '1em' },
+                                    decorator: { tagName: 'p', format: {} },
+                                },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'B', format: {} }],
+                                    format: { marginTop: '1em', marginBottom: '1em' },
+                                    decorator: { tagName: 'p', format: {} },
+                                },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'C', format: {} }],
+                                    format: { marginTop: '1em', marginBottom: '1em' },
+                                    decorator: { tagName: 'p', format: {} },
+                                },
+                            ],
+                            levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [{ segmentType: 'Text', text: 'D', format: {} }],
+                                    format: { marginTop: '1em', marginBottom: '1em' },
+                                    decorator: { tagName: 'p', format: {} },
+                                },
+                            ],
+                            levels: [
+                                { listType: 'UL', format: {}, dataset: {} },
+                                { listType: 'OL', format: {}, dataset: {} },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                    ],
+                },
+                true
             );
         });
     });
@@ -1537,27 +3045,12 @@ describe('wordOnlineHandler', () => {
                         blocks: [
                             {
                                 blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'List1',
-                                        format: {},
-                                    },
-                                ],
+                                segments: [{ segmentType: 'Text', text: 'List1', format: {} }],
                                 format: {},
                                 isImplicit: true,
                             },
                         ],
-                        levels: [
-                            {
-                                listType: 'UL',
-                                format: {
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
@@ -1577,27 +3070,12 @@ describe('wordOnlineHandler', () => {
                         blocks: [
                             {
                                 blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: 'List2',
-                                        format: {},
-                                    },
-                                ],
+                                segments: [{ segmentType: 'Text', text: 'List2', format: {} }],
                                 format: {},
                                 isImplicit: true,
                             },
                         ],
-                        levels: [
-                            {
-                                listType: 'UL',
-                                format: {
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
@@ -1606,7 +3084,8 @@ describe('wordOnlineHandler', () => {
                         format: {},
                     },
                 ],
-            }
+            },
+            true
         );
     });
 
@@ -1623,7 +3102,81 @@ describe('wordOnlineHandler', () => {
     it('Remove temp marker from Word Online', () => {
         runTest(
             '<div class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1448465497" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{224}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">it went:&nbsp;</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="1"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1079168982" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{230}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8"><span class="NormalTextRun SCXW152957598 BCX8">Test</span></span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"><span class="ListMarker BCX8 SCXW152957598"></span></span></li></ol></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="2"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="500697608" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{239}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">Test.</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"></span></li><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><div><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}"><br></span></div></li></ol></div>',
-            '<p>it went: &nbsp;</p><ol start="1"><li><p>Test</p></li><li><p>Test.&nbsp;</p></li><li><div><br></div></li></ol>'
+            '<p>it went: &nbsp;</p><ol start="1"><li><p>Test</p></li><li><p>Test.&nbsp;</p></li><li><div><br></div></li></ol>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'it went: ', format: {} },
+                            { segmentType: 'Text', text: ' ', format: {} },
+                        ],
+                        format: { marginTop: '1em', marginBottom: '1em' },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'Test', format: {} }],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    { segmentType: 'Text', text: 'Test.', format: {} },
+                                    { segmentType: 'Text', text: ' ', format: {} },
+                                ],
+                                format: { marginTop: '1em', marginBottom: '1em' },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Br', format: {} }],
+                                format: {},
+                            },
+                        ],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            },
+            true
         );
     });
 
@@ -2856,39 +4409,20 @@ describe('wordOnlineHandler', () => {
     it('Test with multiple list items', () => {
         runTest(
             '<div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1372804505" paraeid="{eda76604-e671-4d57-b201-b51196189a19}{123}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="2030008708" paraeid="{6992e937-522a-4d72-bd0e-df82a2072fe7}{172}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1014254816" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{21}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1091958214" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{120}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle3 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-roman; overflow: visible;"><li data-leveltext="%3." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:2,&quot;335559684&quot;:-1,&quot;335559685&quot;:2160,&quot;335559991&quot;:180,&quot;469769242&quot;:[65533,2,46],&quot;469777803&quot;:&quot;right&quot;,&quot;469777804&quot;:&quot;%3.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="3" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 132px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="839056829" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{215}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:2160,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:180}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle3 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-roman; overflow: visible;"><li data-leveltext="%3." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:2,&quot;335559684&quot;:-1,&quot;335559685&quot;:2160,&quot;335559991&quot;:180,&quot;469769242&quot;:[65533,2,46],&quot;469777803&quot;:&quot;right&quot;,&quot;469777804&quot;:&quot;%3.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="3" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 132px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1810158270" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{44}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:2160,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:180}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="3" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="3" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="139753695" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{124}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="4" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="4" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="407695755" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{209}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="3" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="3" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="620995694" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{34}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="4" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="4" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="406328277" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{119}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="502077388" paraeid="{2147c5de-cb36-425c-ad05-d9081387dfe2}{97}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="338729307" paraeid="{6992e937-522a-4d72-bd0e-df82a2072fe7}{209}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1060692795" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{212}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1868174151" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{1}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="4" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="963440506" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{1}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="955920880" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{129}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="4" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1825308776" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{173}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="326656423" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{107}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="99360513" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{11}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="96460220" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{157}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="5" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="927907704" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{55}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="5" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1760568901" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{169}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="660136120" paraeid="{0bd5b816-7be0-4589-b756-3f1f2a595131}{30}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="934524283" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{7}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="6" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1629030307" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{51}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="6" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1045937546" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{165}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div>',
-            undefined,
+            '<ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><ol start="2" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol>',
             {
                 blockGroupType: 'Document',
                 blocks: [
                     {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -2899,8 +4433,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -2911,12 +4445,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -2926,42 +4454,41 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
-                            isSelected: false,
                             segmentType: 'SelectionMarker',
+                            isSelected: false,
                             format: {
                                 fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                 fontSize: '12pt',
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -2972,8 +4499,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -2984,12 +4511,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -2999,49 +4520,41 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
-                            isSelected: false,
                             segmentType: 'SelectionMarker',
+                            isSelected: false,
                             format: {
                                 fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                 fontSize: '12pt',
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3052,8 +4565,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3064,12 +4577,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3079,49 +4586,51 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3132,8 +4641,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3144,12 +4653,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3159,56 +4662,51 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3219,8 +4717,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3231,12 +4729,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3246,27 +4738,22 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
@@ -3274,28 +4761,38 @@ describe('wordOnlineHandler', () => {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3306,8 +4803,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3318,12 +4815,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3333,27 +4824,22 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
@@ -3361,21 +4847,38 @@ describe('wordOnlineHandler', () => {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3386,8 +4889,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3398,12 +4901,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3413,49 +4910,51 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3466,8 +4965,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3478,12 +4977,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3493,42 +4986,51 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
                                 },
                                 dataset: {},
                             },
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3539,8 +5041,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3551,12 +5053,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3566,42 +5062,41 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
-                            isSelected: false,
                             segmentType: 'SelectionMarker',
+                            isSelected: false,
                             format: {
                                 fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                 fontSize: '12pt',
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3612,8 +5107,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3624,12 +5119,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -3639,33 +5128,42 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                     },
                     {
-                        tagName: 'div',
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
                         blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3676,12 +5174,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
@@ -3692,16 +5184,14 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
@@ -3712,13 +5202,18 @@ describe('wordOnlineHandler', () => {
                             marginBottom: '0px',
                             marginLeft: '0px',
                         },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3729,12 +5224,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
@@ -3745,16 +5234,14 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
@@ -3765,13 +5252,18 @@ describe('wordOnlineHandler', () => {
                             marginBottom: '0px',
                             marginLeft: '0px',
                         },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
+                                        segmentType: 'Text',
                                         text: '_',
-                                        segmentType: 'Text',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3782,8 +5274,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3794,12 +5286,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
@@ -3810,16 +5296,14 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
                         format: {
                             direction: 'ltr',
                             textAlign: 'start',
@@ -3830,13 +5314,18 @@ describe('wordOnlineHandler', () => {
                             marginBottom: '0px',
                             marginLeft: '0px',
                         },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3847,12 +5336,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
@@ -3863,107 +5346,107 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
                     },
                     {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
                             },
-                        },
+                        ],
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
                             },
-                        ],
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                     },
                     {
-                        tagName: 'div',
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
                         blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3974,8 +5457,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -3986,12 +5469,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     direction: 'ltr',
                                     textAlign: 'start',
@@ -4002,42 +5479,263 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '10.6667px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
                     },
                     {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
                             },
-                        },
+                        ],
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
                         format: {
                             direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
                         },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4048,8 +5746,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4060,12 +5758,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -4075,214 +5767,46 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
                                 segmentFormat: {
                                     italic: false,
                                     fontWeight: 'normal',
                                     textColor: 'rgb(0, 0, 0)',
                                 },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
                         },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4293,8 +5817,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4305,12 +5829,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -4320,42 +5838,153 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
                         format: {
                             direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
                         },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '10.6667px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        format: {
+                            direction: 'ltr',
+                            textAlign: 'start',
+                            textIndent: '0px',
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4366,8 +5995,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4378,12 +6007,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -4393,234 +6016,46 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
                                 segmentFormat: {
                                     italic: false,
                                     fontWeight: 'normal',
                                     textColor: 'rgb(0, 0, 0)',
                                 },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
-                    },
-                    {
-                        tagName: 'div',
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                            textAlign: 'start',
-                            textIndent: '0px',
-                            backgroundColor: 'rgb(255, 255, 255)',
-                            marginTop: '0px',
-                            marginRight: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                        },
-                        blockGroupType: 'FormatContainer',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            textColor: 'rgb(0, 0, 0)',
-                                            fontWeight: 'normal',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '10.6667px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
                         levels: [
                             {
                                 listType: 'OL',
                                 format: {
                                     direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
                             },
                         ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                segments: [
-                                    {
-                                        text: '_',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        text: ' ',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
-                                },
-                            },
-                        ],
-                    },
-                    {
                         formatHolder: {
-                            isSelected: false,
                             segmentType: 'SelectionMarker',
+                            isSelected: false,
                             format: {
                                 fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                 fontSize: '12pt',
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                },
-                                dataset: {},
-                            },
-                        ],
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
                         blockType: 'BlockGroup',
-                        format: {
-                            direction: 'ltr',
-                        },
                         blockGroupType: 'ListItem',
                         blocks: [
                             {
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        text: '_',
                                         segmentType: 'Text',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4631,8 +6066,8 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                     {
-                                        text: ' ',
                                         segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4643,12 +6078,6 @@ describe('wordOnlineHandler', () => {
                                         },
                                     },
                                 ],
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
                                 format: {
                                     textAlign: 'start',
                                     textIndent: '0px',
@@ -4658,12 +6087,30 @@ describe('wordOnlineHandler', () => {
                                     marginBottom: '0px',
                                     marginLeft: '0px',
                                 },
-                                decorator: {
-                                    tagName: 'p',
-                                    format: {},
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
                                 },
+                                decorator: { tagName: 'p', format: {} },
                             },
                         ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                     },
                 ],
             },

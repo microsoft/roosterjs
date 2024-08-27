@@ -52,9 +52,15 @@ export const TEMP_ELEMENTS_CLASSES: string[] = [
     ...WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES,
     'ListMarkerWrappingSpan',
 ];
+
+/**
+ * @internal
+ */
+export const REMOVE_MARGIN_ELEMENTS: string =
+    `span.${IMAGE_CONTAINER},span.${IMAGE_BORDER},.${COMMENT_HIGHLIGHT_CLASS},.${COMMENT_HIGHLIGHT_CLICKED_CLASS},` +
+    WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES.map(c => `table div[class^="${c}"]`).join(',');
+
 /**
  * @internal
  **/
-export const WAC_IDENTIFY_SELECTOR: string =
-    `ul[class^="${BULLET_LIST_STYLE}"]>.${OUTLINE_ELEMENT},ol[class^="${NUMBER_LIST_STYLE}"]>.${OUTLINE_ELEMENT},span.${IMAGE_CONTAINER},span.${IMAGE_BORDER},.${COMMENT_HIGHLIGHT_CLASS},.${COMMENT_HIGHLIGHT_CLICKED_CLASS},` +
-    WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES.map(c => `table div[class^="${c}"]`).join(',');
+export const WAC_IDENTIFY_SELECTOR: string = `ul[class^="${BULLET_LIST_STYLE}"]>.${OUTLINE_ELEMENT},ol[class^="${NUMBER_LIST_STYLE}"]>.${OUTLINE_ELEMENT},${REMOVE_MARGIN_ELEMENTS}`;
