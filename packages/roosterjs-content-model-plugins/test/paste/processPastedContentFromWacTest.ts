@@ -1930,7 +1930,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -1946,7 +1946,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -1962,7 +1962,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2226,7 +2226,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2242,7 +2242,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2258,7 +2258,7 @@ describe('wordOnlineHandler', () => {
                             {
                                 blockType: 'BlockGroup',
                                 blockGroupType: 'General',
-                                element: {},
+                                element: jasmine.anything() as any,
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
