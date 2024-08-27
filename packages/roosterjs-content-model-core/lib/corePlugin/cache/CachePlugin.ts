@@ -183,37 +183,23 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
-        const newSelection = editor.getDOMSelection() || undefined;
+        const newRangeEx = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
             forceUpdate ||
             !cachedSelection ||
-            !newSelection ||
-            !areSameSelections(newSelection, cachedSelection);
+            !newRangeEx ||
+            !areSameSelections(newRangeEx, cachedSelection);
 
         if (isSelectionChanged) {
-            if (!model || !newSelection) {
-                // No model or selection, we can't update cache, so invalidate it
-                this.invalidateCache();
-            } else if (
-                !this.state.domIndexer?.reconcileSelection(model, newSelection, cachedSelection)
+            if (
+                !model ||
+                !newRangeEx ||
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
-                // There is cached model and selection, but we failed to reconcile the selection
-                // const selectionRoot = getSelectionRootNode(newSelection);
-
-                // if (
-                //     !selectionRoot ||
-                //     !this.state.textMutationObserver?.shouldIgnoreNode(selectionRoot)
-                // ) {
-                // Invalidate cache if the selection is not under entity
                 this.invalidateCache();
-                // } else {
-                //     // For the case when selection is under entity, we can ignore this selection change and just update cache directly
-                //     updateCache(this.state, model, newSelection);
-                // }
             } else {
-                // Successfully reconciled model selection, update the cache
-                updateCache(this.state, model, newSelection);
+                updateCache(this.state, model, newRangeEx);
             }
         } else {
             this.state.cachedSelection = cachedSelection;

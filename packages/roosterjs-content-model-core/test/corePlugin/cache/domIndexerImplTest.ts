@@ -185,7 +185,7 @@ describe('domIndexerImpl.onTable', () => {
         domIndexerImpl.onTable(node, table);
 
         expect(node).toEqual({
-            __roosterjsContentModel: { tableRows: rows },
+            __roosterjsContentModel: { table },
         });
     });
 });
@@ -517,7 +517,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
         expect(node1.__roosterjsContentModel).toEqual({
             paragraph,
             segments: [oldSegment1],
@@ -527,7 +527,14 @@ describe('domIndexerImpl.reconcileSelection', () => {
             format: {},
             segments: [oldSegment1],
         });
-        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(setSelectionSpy).toHaveBeenCalledWith(model, {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+            isSelected: true,
+            isSelectedAsImageSelection: true,
+        });
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [paragraph],
@@ -537,6 +544,8 @@ describe('domIndexerImpl.reconcileSelection', () => {
             src: 'test',
             format: {},
             dataset: {},
+            isSelected: true,
+            isSelectedAsImageSelection: true,
         });
         expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
@@ -574,11 +583,11 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
         expect(node1.__roosterjsContentModel).toEqual({
-            tableRows: tableModel.rows,
+            table: tableModel,
         });
-        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(setSelectionSpy).toHaveBeenCalledWith(model, cell10, cell21);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [tableModel],
