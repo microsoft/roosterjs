@@ -388,11 +388,6 @@ describe('processPastedContentFromWacTest', () => {
 });
 
 describe('wordOnlineHandler', () => {
-    function runTest2(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
-        const asd = runTest(source, expected, expectedModel, true);
-
-        navigator.clipboard.writeText(JSON.stringify(asd));
-    }
     function runTest(
         source?: string,
         expected?: string,
