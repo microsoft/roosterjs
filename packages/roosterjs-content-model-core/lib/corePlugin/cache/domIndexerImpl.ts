@@ -66,7 +66,7 @@ export interface IndexedTableElement extends HTMLTableElement {
 /**
  * @internal Export for test only
  */
-export interface IndexedEntityDelimiter extends HTMLElement {
+export interface IndexedEntityDelimiter extends Text {
     __roosterjsContentModel: BlockEntityDelimiterItem;
 }
 
@@ -193,18 +193,6 @@ export class DomIndexerImpl implements DomIndexer {
     onBlockEntity(entity: ContentModelEntity, group: ContentModelBlockGroup) {
         this.onBlockEntityDelimiter(entity.wrapper.previousSibling, entity, group);
         this.onBlockEntityDelimiter(entity.wrapper.nextSibling, entity, group);
-    }
-
-    private onBlockEntityDelimiter(
-        node: Node | null,
-        entity: ContentModelEntity,
-        parent: ContentModelBlockGroup
-    ) {
-        if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityDelimiter(node) && node.firstChild) {
-            const indexedDelimiter = node.firstChild as IndexedEntityDelimiter;
-
-            indexedDelimiter.__roosterjsContentModel = { entity, parent };
-        }
     }
 
     reconcileSelection(
@@ -369,6 +357,18 @@ export class DomIndexerImpl implements DomIndexer {
             }
         } else {
             return false;
+        }
+    }
+
+    private onBlockEntityDelimiter(
+        node: Node | null,
+        entity: ContentModelEntity,
+        parent: ContentModelBlockGroup
+    ) {
+        if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityDelimiter(node) && node.firstChild) {
+            const indexedDelimiter = node.firstChild as IndexedEntityDelimiter;
+
+            indexedDelimiter.__roosterjsContentModel = { entity, parent };
         }
     }
 

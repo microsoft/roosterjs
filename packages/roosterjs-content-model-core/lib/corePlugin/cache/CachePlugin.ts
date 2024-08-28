@@ -2,7 +2,7 @@ import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCache } from './updateCache';
-import type { Mutation } from './textMutationObserver';
+import type { Mutation } from './MutationType';
 import type {
     CachePluginState,
     IEditor,

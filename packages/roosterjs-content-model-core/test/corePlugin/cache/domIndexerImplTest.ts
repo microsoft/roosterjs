@@ -1,6 +1,14 @@
 import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { DomIndexerImpl, IndexedSegmentNode } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import {
+    BlockEntityDelimiterItem,
+    DomIndexerImpl,
+    IndexedEntityDelimiter,
+    IndexedSegmentNode,
+    IndexedTableElement,
+    SegmentItem,
+    TableItem,
+} from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
     CacheSelection,
     ContentModelDocument,
@@ -10,6 +18,7 @@ import {
 import {
     createBr,
     createContentModelDocument,
+    createEntity,
     createImage,
     createParagraph,
     createSelectionMarker,
@@ -17,6 +26,8 @@ import {
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
+
+const ZERO_WIDTH_SPACE = '\u200B';
 
 describe('domIndexerImpl.onSegment', () => {
     it('onSegment', () => {
@@ -186,6 +197,54 @@ describe('domIndexerImpl.onTable', () => {
 
         expect(node).toEqual({
             __roosterjsContentModel: { table },
+        });
+    });
+});
+
+describe('domIndexerImpl.onBlockEntity', () => {
+    it('no delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+
+        root.appendChild(wrapper);
+
+        const group = createContentModelDocument();
+        const entity = createEntity(wrapper);
+
+        new DomIndexerImpl().onBlockEntity(entity, group);
+
+        expect(root.innerHTML).toEqual('<span></span>');
+    });
+
+    it('has delimiters', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter1.appendChild(text1);
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter2.appendChild(text2);
+
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const group = createContentModelDocument();
+        const entity = createEntity(wrapper);
+
+        new DomIndexerImpl().onBlockEntity(entity, group);
+
+        expect((text1 as IndexedEntityDelimiter).__roosterjsContentModel).toEqual({
+            entity,
+            parent: group,
+        });
+        expect((text2 as IndexedEntityDelimiter).__roosterjsContentModel).toEqual({
+            entity,
+            parent: group,
         });
     });
 });
@@ -745,6 +804,136 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(setSelectionSpy).toHaveBeenCalled();
         expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
+
+    it('block entity: selection in first delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter1.appendChild(text1);
+        delimiter2.appendChild(text2);
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const entity = createEntity(wrapper);
+        const group = createContentModelDocument();
+
+        group.blocks.push(entity);
+
+        const index1: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+        const index2: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+
+        (text1 as IndexedEntityDelimiter).__roosterjsContentModel = index1;
+        (text2 as IndexedEntityDelimiter).__roosterjsContentModel = index2;
+
+        const range = document.createRange();
+        range.setStart(text1, 0);
+
+        const indexer = new DomIndexerImpl();
+
+        const result = indexer.reconcileSelection(group, {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        });
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'SelectionMarker', isSelected: true, format: {} }],
+                    format: {},
+                    isImplicit: true,
+                },
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { isReadonly: true, id: undefined, entityType: undefined },
+                    wrapper: wrapper,
+                },
+            ],
+        });
+    });
+
+    it('block entity: selection in last delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter1.appendChild(text1);
+        delimiter2.appendChild(text2);
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const entity = createEntity(wrapper);
+        const group = createContentModelDocument();
+
+        group.blocks.push(entity);
+
+        const index1: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+        const index2: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+
+        (text1 as IndexedEntityDelimiter).__roosterjsContentModel = index1;
+        (text2 as IndexedEntityDelimiter).__roosterjsContentModel = index2;
+
+        const range = document.createRange();
+        range.setStart(text2, 1);
+
+        const indexer = new DomIndexerImpl();
+
+        const result = indexer.reconcileSelection(group, {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        });
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { isReadonly: true, id: undefined, entityType: undefined },
+                    wrapper: wrapper,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'SelectionMarker', isSelected: true, format: {} }],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });
 
 describe('domIndexerImpl.reconcileChildList', () => {
@@ -921,6 +1110,93 @@ describe('domIndexerImpl.reconcileChildList', () => {
             blockType: 'Paragraph',
             format: {},
             segments: [segment],
+        });
+    });
+});
+
+describe('domIndexerImpl.reconcileElementId', () => {
+    it('unindexed image id', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+        const para = createParagraph();
+
+        para.segments.push(image);
+
+        img.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(img);
+
+        expect(result).toBe(false);
+        expect(image).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('indexed image id', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+        const para = createParagraph();
+        const segIndex: SegmentItem = {
+            paragraph: para,
+            segments: [image],
+        };
+
+        para.segments.push(image);
+
+        ((img as Node) as IndexedSegmentNode).__roosterjsContentModel = segIndex;
+
+        img.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(img);
+
+        expect(result).toBe(true);
+        expect(image).toEqual({
+            segmentType: 'Image',
+            format: { id: 'testId' },
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('unindexed table id', () => {
+        const tb = document.createElement('table');
+
+        tb.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(tb);
+
+        expect(result).toBe(false);
+    });
+
+    it('indexed table id', () => {
+        const tb = document.createElement('table');
+        const table = createTable(1);
+        const tbIndex: TableItem = {
+            table: table,
+        };
+
+        (tb as IndexedTableElement).__roosterjsContentModel = tbIndex;
+
+        tb.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(tb);
+
+        expect(result).toBe(true);
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: { id: 'testId' },
+            widths: [],
+            dataset: {},
+            rows: [
+                {
+                    height: 0,
+                    format: {},
+                    cells: [],
+                },
+            ],
         });
     });
 });
