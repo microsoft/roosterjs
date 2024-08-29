@@ -2,7 +2,7 @@ import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCache } from './updateCache';
-import type { Mutation } from './textMutationObserver';
+import type { Mutation } from './MutationType';
 import type {
     CachePluginState,
     IEditor,
@@ -90,6 +90,19 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
 
         switch (event.eventType) {
+            case 'logicalRootChanged':
+                this.invalidateCache();
+
+                if (this.state.textMutationObserver) {
+                    this.state.textMutationObserver.stopObserving();
+                    this.state.textMutationObserver = createTextMutationObserver(
+                        event.logicalRoot,
+                        this.onMutation
+                    );
+                    this.state.textMutationObserver.startObserving();
+                }
+                break;
+
             case 'keyDown':
             case 'input':
                 if (!this.state.textMutationObserver) {
@@ -131,6 +144,15 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                 case 'text':
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
+                    break;
+
+                case 'elementId':
+                    const element = mutation.element;
+
+                    if (!this.state.domIndexer?.reconcileElementId(element)) {
+                        this.invalidateCache();
+                    }
+
                     break;
 
                 case 'unknown':

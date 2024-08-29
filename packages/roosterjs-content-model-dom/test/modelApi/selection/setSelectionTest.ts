@@ -1,3 +1,4 @@
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setSelection } from '../../../lib/modelApi/selection/setSelection';
 import {
     createBr,
@@ -935,6 +936,72 @@ describe('setSelection', () => {
                     format: {},
                 },
             ],
+        });
+    });
+
+    it('delete empty segment after setSelection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        setSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('delete empty paragraph after setSelection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        };
+
+        setSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
         });
     });
 });

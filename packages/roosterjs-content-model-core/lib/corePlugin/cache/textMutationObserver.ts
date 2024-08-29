@@ -1,13 +1,22 @@
-import type { TextMutationObserver } from 'roosterjs-content-model-types';
+import { createDOMHelper } from '../../editor/core/DOMHelperImpl';
+import {
+    findClosestBlockEntityContainer,
+    findClosestEntityWrapper,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
+import type { DOMHelper, TextMutationObserver } from 'roosterjs-content-model-types';
+import type { Mutation } from './MutationType';
 
 class TextMutationObserverImpl implements TextMutationObserver {
     private observer: MutationObserver;
+    private domHelper: DOMHelper;
 
     constructor(
         private contentDiv: HTMLDivElement,
         private onMutation: (mutation: Mutation) => void
     ) {
         this.observer = new MutationObserver(this.onMutationInternal);
+        this.domHelper = createDOMHelper(contentDiv);
     }
 
     startObserving() {
@@ -39,14 +48,40 @@ class TextMutationObserverImpl implements TextMutationObserver {
         let removedNodes: Node[] = [];
         let reconcileText = false;
 
+        const ignoredNodes = new Set<Node>();
+        const includedNodes = new Set<Node>();
+
         for (let i = 0; i < mutations.length && canHandle; i++) {
             const mutation = mutations[i];
+            const target = mutation.target;
+
+            if (ignoredNodes.has(target)) {
+                continue;
+            } else if (!includedNodes.has(target)) {
+                if (
+                    findClosestEntityWrapper(target, this.domHelper) ||
+                    findClosestBlockEntityContainer(target, this.domHelper)
+                ) {
+                    ignoredNodes.add(target);
+
+                    continue;
+                } else {
+                    includedNodes.add(target);
+                }
+            }
 
             switch (mutation.type) {
                 case 'attributes':
-                    if (mutation.target != this.contentDiv) {
-                        // We cannot handle attributes changes on editor content for now
-                        canHandle = false;
+                    if (this.domHelper.isNodeInEditor(target, true /*excludingSelf*/)) {
+                        if (
+                            mutation.attributeName == 'id' &&
+                            isNodeOfType(target, 'ELEMENT_NODE')
+                        ) {
+                            this.onMutation({ type: 'elementId', element: target });
+                        } else {
+                            // We cannot handle attributes changes on editor content for now
+                            canHandle = false;
+                        }
                     }
                     break;
 
@@ -93,53 +128,6 @@ class TextMutationObserverImpl implements TextMutationObserver {
         }
     };
 }
-
-/**
- * @internal Type of mutations
- */
-export type MutationType =
-    /**
-     * We found some change happened but we cannot handle it, so set mutation type as "unknown"
-     */
-    | 'unknown'
-    /**
-     * Only text is changed
-     */
-    | 'text'
-    /**
-     * Child list is changed
-     */
-    | 'childList';
-
-/**
- * @internal
- */
-export interface MutationBase<T extends MutationType> {
-    type: T;
-}
-
-/**
- * @internal
- */
-export interface UnknownMutation extends MutationBase<'unknown'> {}
-
-/**
- * @internal
- */
-export interface TextMutation extends MutationBase<'text'> {}
-
-/**
- * @internal
- */
-export interface ChildListMutation extends MutationBase<'childList'> {
-    addedNodes: Node[];
-    removedNodes: Node[];
-}
-
-/**
- * @internal
- */
-export type Mutation = UnknownMutation | TextMutation | ChildListMutation;
 
 /**
  * @internal
