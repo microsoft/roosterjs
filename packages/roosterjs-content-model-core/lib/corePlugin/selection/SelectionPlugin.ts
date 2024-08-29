@@ -536,7 +536,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         selectAll?: boolean
     ) {
         const range = editor.getDocument().createRange();
-        if (selectAll) {
+        const emptyCell =
+            cell.childNodes.length == 1 &&
+            cell.firstChild?.childNodes.length == 1 &&
+            cell.firstChild.firstChild?.nodeName == 'BR';
+        if (selectAll && !emptyCell) {
             range.selectNodeContents(cell);
         } else {
             // Get deepest editable position in the cell
