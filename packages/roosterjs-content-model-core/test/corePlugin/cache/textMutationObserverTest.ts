@@ -1,3 +1,4 @@
+import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUtils';
 import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
 import { TextMutationObserver } from 'roosterjs-content-model-types';
 
@@ -295,7 +296,7 @@ describe('TextMutationObserverImpl', () => {
         expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
     });
 
-    it('attribute change', async () => {
+    it('id change', async () => {
         const div = document.createElement('div');
         const div1 = document.createElement('div');
 
@@ -313,6 +314,72 @@ describe('TextMutationObserverImpl', () => {
         await new Promise<void>(resolve => {
             window.setTimeout(resolve, 10);
         });
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({ type: 'elementId', element: div1 });
+    });
+
+    it('unknown attribute change', async () => {
+        const div = document.createElement('div');
+        const div1 = document.createElement('div');
+
+        div.appendChild(div1);
+
+        const onMutation = jasmine.createSpy('onMutation');
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+
+        observer.startObserving();
+
+        div1.setAttribute('attr', 'value');
+
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
+    });
+
+    it('Ignore changes under entity', () => {
+        const div = document.createElement('div');
+        const wrapper = document.createElement('div');
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+
+        wrapper.appendChild(span1);
+        wrapper.className = '_Entity';
+
+        div.appendChild(wrapper);
+        div.appendChild(span2);
+
+        const findClosestEntityWrapperSpy = spyOn(
+            entityUtils,
+            'findClosestEntityWrapper'
+        ).and.callThrough();
+        const findClosestBlockEntityContainer = spyOn(
+            entityUtils,
+            'findClosestBlockEntityContainer'
+        ).and.callThrough();
+
+        const onMutation = jasmine.createSpy('onMutation');
+
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+        observer.startObserving();
+
+        span1.setAttribute('attr1', 'value1');
+        span1.setAttribute('attr2', 'value2');
+        span2.setAttribute('attr3', 'value3');
+        span2.setAttribute('attr4', 'value4');
+
+        observer.flushMutations();
+
+        expect(findClosestEntityWrapperSpy).toHaveBeenCalledTimes(2);
+        expect(findClosestEntityWrapperSpy).toHaveBeenCalledWith(span1, jasmine.anything());
+        expect(findClosestEntityWrapperSpy).toHaveBeenCalledWith(span2, jasmine.anything());
+        expect(findClosestBlockEntityContainer).toHaveBeenCalledTimes(1);
+        expect(findClosestBlockEntityContainer).toHaveBeenCalledWith(span2, jasmine.anything());
 
         expect(onMutation).toHaveBeenCalledTimes(1);
         expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });

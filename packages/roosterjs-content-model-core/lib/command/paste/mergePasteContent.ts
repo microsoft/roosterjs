@@ -13,10 +13,15 @@ import type {
     ClipboardData,
     CloneModelOptions,
     ContentModelDocument,
+    ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
+    PasteType,
     ReadonlyContentModelDocument,
+    ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
+
+const BlackColor = 'rgb(0,0,0)';
 
 const CloneOption: CloneModelOptions = {
     includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
@@ -46,7 +51,6 @@ export function mergePasteContent(
                 model.blocks = clonedModel.blocks;
             }
 
-            const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const domToModelContext = createDomToModelContextForSanitizing(
                 editor.getDocument(),
                 undefined /*defaultFormat*/,
@@ -54,9 +58,7 @@ export function mergePasteContent(
                 domToModelOption
             );
 
-            domToModelContext.segmentFormat = selectedSegment
-                ? getSegmentTextFormat(selectedSegment)
-                : {};
+            domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);
 
             const pasteModel = domToContentModel(fragment, domToModelContext);
             const mergeOption: MergeModelOption = {
@@ -85,6 +87,27 @@ export function mergePasteContent(
             apiName: 'paste',
         }
     );
+}
+
+function getSegmentFormatForPaste(
+    model: ShallowMutableContentModelDocument,
+    pasteType: PasteType
+): ContentModelSegmentFormat {
+    const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
+
+    if (selectedSegment) {
+        const result = getSegmentTextFormat(selectedSegment);
+        if (pasteType == 'normal') {
+            // When using normal paste (Keep source formatting) set the default text color to black when creating the
+            // Model from the clipboard content, so the elements that do not contain any text color in their style
+            // Are set to black. Otherwise, These segments would get the selected segments format or the default text set in the content.
+            result.textColor = BlackColor;
+        }
+
+        return result;
+    }
+
+    return {};
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
