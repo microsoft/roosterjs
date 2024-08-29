@@ -29,6 +29,10 @@ import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
+import {
+    defaultDomToModelOptions,
+    defaultModelToDomOptions,
+} from '../options/defaultContentModelOptions';
 import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import {
     createContextMenuPlugin,
@@ -373,6 +377,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             experimentalFeatures={Array.from(
                                 this.state.initState.experimentalFeatures
                             )}
+                            defaultDomToModelOptions={defaultDomToModelOptions}
+                            defaultModelToDomOptions={defaultModelToDomOptions}
                         />
                     )}
                 </div>
@@ -496,11 +502,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             autoFormatOptions,
             linkTitle,
             customReplacements,
-            editPluginOptions,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
-            pluginList.edit && new EditPlugin(editPluginOptions),
+            pluginList.edit &&
+                new EditPlugin({
+                    handleTabKey: false,
+                }),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),

@@ -1,3 +1,4 @@
+import { defaultModelToDomOptions } from '../options/defaultContentModelOptions';
 import { exportContent } from 'roosterjs-content-model-core';
 import { ModelToTextCallbacks } from 'roosterjs-content-model-types';
 import type { RibbonButton } from 'roosterjs-react';
@@ -33,7 +34,7 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
         let html = '';
 
         if (key == 'menuNameExportHTML') {
-            html = exportContent(editor);
+            html = exportContent(editor, 'HTML', defaultModelToDomOptions);
         } else if (key == 'menuNameExportText') {
             html = `<pre>${exportContent(editor, 'PlainText', callbacks)}</pre>`;
         }
