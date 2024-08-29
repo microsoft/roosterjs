@@ -1,20 +1,24 @@
 import {
     EmptySegmentFormat,
+    createParagraph,
     createSelectionMarker,
     createText,
     getObjectKeys,
+    isElementOfType,
+    isEntityDelimiter,
     isNodeOfType,
     setSelection,
 } from 'roosterjs-content-model-dom';
 import type {
     CacheSelection,
+    ContentModelBlockGroup,
     ContentModelDocument,
+    ContentModelEntity,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
     ContentModelSelectionMarker,
     ContentModelTable,
-    ContentModelTableRow,
     ContentModelText,
     DomIndexer,
     DOMSelection,
@@ -34,7 +38,15 @@ export interface SegmentItem {
  * @internal Export for test only
  */
 export interface TableItem {
-    tableRows: ContentModelTableRow[];
+    table: ContentModelTable;
+}
+
+/**
+ * @internal Export for test only
+ */
+export interface BlockEntityDelimiterItem {
+    entity: ContentModelEntity;
+    parent: ContentModelBlockGroup;
 }
 
 /**
@@ -49,6 +61,13 @@ export interface IndexedSegmentNode extends Node {
  */
 export interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
+}
+
+/**
+ * @internal Export for test only
+ */
+export interface IndexedEntityDelimiter extends Text {
+    __roosterjsContentModel: BlockEntityDelimiterItem;
 }
 
 /**
@@ -92,8 +111,36 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     );
 }
 
+function isIndexedDelimiter(node: Node): node is IndexedEntityDelimiter {
+    const { entity, parent } = (node as IndexedEntityDelimiter).__roosterjsContentModel ?? {};
+
+    return (
+        entity?.blockType == 'Entity' &&
+        entity.wrapper &&
+        parent?.blockGroupType &&
+        Array.isArray(parent.blocks)
+    );
+}
+
 function getIndexedSegmentItem(node: Node | null): SegmentItem | null {
     return node && isIndexedSegment(node) ? node.__roosterjsContentModel : null;
+}
+
+function getIndexedTableItem(element: HTMLTableElement): TableItem | null {
+    const index = (element as IndexedTableElement).__roosterjsContentModel;
+    const table = index?.table;
+
+    if (
+        table?.blockType == 'Table' &&
+        Array.isArray(table.rows) &&
+        table.rows.every(
+            x => Array.isArray(x?.cells) && x.cells.every(y => y?.blockGroupType == 'TableCell')
+        )
+    ) {
+        return index;
+    } else {
+        return null;
+    }
 }
 
 /**
@@ -140,7 +187,12 @@ export class DomIndexerImpl implements DomIndexer {
 
     onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
         const indexedTable = tableElement as IndexedTableElement;
-        indexedTable.__roosterjsContentModel = { tableRows: table.rows };
+        indexedTable.__roosterjsContentModel = { table };
+    }
+
+    onBlockEntity(entity: ContentModelEntity, group: ContentModelBlockGroup) {
+        this.onBlockEntityDelimiter(entity.wrapper.previousSibling, entity, group);
+        this.onBlockEntityDelimiter(entity.wrapper.nextSibling, entity, group);
     }
 
     reconcileSelection(
@@ -152,11 +204,10 @@ export class DomIndexerImpl implements DomIndexer {
             if (
                 oldSelection.type == 'range' &&
                 this.isCollapsed(oldSelection) &&
-                isNodeOfType(oldSelection.start.node, 'TEXT_NODE')
+                isNodeOfType(oldSelection.start.node, 'TEXT_NODE') &&
+                isIndexedSegment(oldSelection.start.node)
             ) {
-                if (isIndexedSegment(oldSelection.start.node)) {
-                    this.reconcileTextSelection(oldSelection.start.node);
-                }
+                this.reconcileTextSelection(oldSelection.start.node);
             } else {
                 setSelection(model);
             }
@@ -164,8 +215,38 @@ export class DomIndexerImpl implements DomIndexer {
 
         switch (newSelection.type) {
             case 'image':
+                const indexedImage = getIndexedSegmentItem(newSelection.image);
+                const image = indexedImage?.segments[0];
+
+                if (image) {
+                    image.isSelected = true;
+                    setSelection(model, image);
+
+                    return true;
+                } else {
+                    return false;
+                }
+
             case 'table':
-                // For image and table selection, we just clear the cached model since during selecting the element id might be changed
+                const indexedTable = getIndexedTableItem(newSelection.table);
+
+                if (indexedTable) {
+                    const firstCell =
+                        indexedTable.table.rows[newSelection.firstRow]?.cells[
+                            newSelection.firstColumn
+                        ];
+                    const lastCell =
+                        indexedTable.table.rows[newSelection.lastRow]?.cells[
+                            newSelection.lastColumn
+                        ];
+
+                    if (firstCell && lastCell) {
+                        setSelection(model, firstCell, lastCell);
+
+                        return true;
+                    }
+                }
+
                 return false;
 
             case 'range':
@@ -182,7 +263,11 @@ export class DomIndexerImpl implements DomIndexer {
                     delete model.hasRevertedRangeSelection;
 
                     if (collapsed) {
-                        return !!this.reconcileNodeSelection(startContainer, startOffset);
+                        return !!this.reconcileNodeSelection(
+                            startContainer,
+                            startOffset,
+                            model.format
+                        );
                     } else if (
                         startContainer == endContainer &&
                         isNodeOfType(startContainer, 'TEXT_NODE')
@@ -249,15 +334,63 @@ export class DomIndexerImpl implements DomIndexer {
         return canHandle && !context.pendingTextNode;
     }
 
+    reconcileElementId(element: HTMLElement) {
+        if (isElementOfType(element, 'img')) {
+            const indexedImg = getIndexedSegmentItem(element);
+
+            if (indexedImg?.segments[0]?.segmentType == 'Image') {
+                indexedImg.segments[0].format.id = element.id;
+
+                return true;
+            } else {
+                return false;
+            }
+        } else if (isElementOfType(element, 'table')) {
+            const indexedTable = getIndexedTableItem(element);
+
+            if (indexedTable) {
+                indexedTable.table.format.id = element.id;
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private onBlockEntityDelimiter(
+        node: Node | null,
+        entity: ContentModelEntity,
+        parent: ContentModelBlockGroup
+    ) {
+        if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityDelimiter(node) && node.firstChild) {
+            const indexedDelimiter = node.firstChild as IndexedEntityDelimiter;
+
+            indexedDelimiter.__roosterjsContentModel = { entity, parent };
+        }
+    }
+
     private isCollapsed(selection: RangeSelectionForCache): boolean {
         const { start, end } = selection;
 
         return start.node == end.node && start.offset == end.offset;
     }
 
-    private reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
+    private reconcileNodeSelection(
+        node: Node,
+        offset: number,
+        defaultFormat?: ContentModelSegmentFormat
+    ): Selectable | undefined {
         if (isNodeOfType(node, 'TEXT_NODE')) {
-            return isIndexedSegment(node) ? this.reconcileTextSelection(node, offset) : undefined;
+            if (isIndexedSegment(node)) {
+                return this.reconcileTextSelection(node, offset);
+            } else if (isIndexedDelimiter(node)) {
+                return this.reconcileDelimiterSelection(node, defaultFormat);
+            } else {
+                return undefined;
+            }
         } else if (offset >= node.childNodes.length) {
             return this.insertMarker(node.lastChild, true /*isAfter*/);
         } else {
@@ -369,9 +502,54 @@ export class DomIndexerImpl implements DomIndexer {
             if (!this.persistCache) {
                 delete paragraph.cachedElement;
             }
+        } else if (first?.segmentType == 'Entity' && first == last) {
+            const wrapper = first.wrapper;
+            const index = paragraph.segments.indexOf(first);
+            const delimiter = textNode.parentElement;
+            const isBefore = wrapper.previousSibling == delimiter;
+            const isAfter = wrapper.nextSibling == delimiter;
+
+            if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
+                const marker = createSelectionMarker(
+                    (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
+                );
+
+                paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
+
+                selectable = marker;
+            }
         }
 
         return selectable;
+    }
+
+    private reconcileDelimiterSelection(
+        node: IndexedEntityDelimiter,
+        defaultFormat?: ContentModelSegmentFormat
+    ) {
+        let marker: ContentModelSelectionMarker | undefined;
+
+        const { entity, parent } = node.__roosterjsContentModel;
+        const index = parent.blocks.indexOf(entity);
+        const delimiter = node.parentElement;
+        const wrapper = entity.wrapper;
+        const isBefore = wrapper.previousSibling == delimiter;
+        const isAfter = wrapper.nextSibling == delimiter;
+
+        if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
+            marker = createSelectionMarker(defaultFormat);
+
+            const para = createParagraph(
+                true /*isImplicit*/,
+                undefined /*blockFormat*/,
+                defaultFormat
+            );
+
+            para.segments.push(marker);
+            parent.blocks.splice(isBefore ? index : index + 1, 0, para);
+        }
+
+        return marker;
     }
 
     private reconcileAddedNode(node: Text, context: ReconcileChildListContext): boolean {

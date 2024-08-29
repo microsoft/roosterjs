@@ -1,9 +1,11 @@
+import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 import type { CacheSelection } from '../pluginState/CachePluginState';
 import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { ContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
 import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
 import type { ContentModelTable } from '../contentModel/block/ContentModelTable';
 import type { DOMSelection } from '../selection/DOMSelection';
+import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
 
 /**
  * Represents an indexer object which provides methods to help build backward relationship
@@ -35,6 +37,13 @@ export interface DomIndexer {
     onTable: (tableElement: HTMLTableElement, tableModel: ContentModelTable) => void;
 
     /**
+     * Invoke when new block entity is created in DOM tree
+     * @param entity The related entity
+     * @param parent Parent of entity. For block element, this should be the parent block group. For inline entity, this should be the parent paragraph
+     */
+    onBlockEntity: (entity: ContentModelEntity, group: ContentModelBlockGroup) => void;
+
+    /**
      * When document content or selection is changed by user, we need to use this function to update the content model
      * to reflect the latest document. This process can fail since the selected node may not have a related model data structure.
      * @param model Current cached content model
@@ -47,6 +56,13 @@ export interface DomIndexer {
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
     ) => boolean;
+
+    /**
+     * When id is changed from DOM element, update the new ID to related content model if possible
+     * @param element The element that has id changed
+     * @returns True if successfully updated, otherwise false
+     */
+    reconcileElementId: (element: HTMLElement) => boolean;
 
     /**
      * When child list of editor content is changed, we can use this method to do sync the change from editor into content model.

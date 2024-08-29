@@ -75,6 +75,8 @@ describe('brProcessor', () => {
             onTable: null!,
             reconcileSelection: null!,
             reconcileChildList: null!,
+            onBlockEntity: null!,
+            reconcileElementId: null!,
         };
 
         context.domIndexer = domIndexer;

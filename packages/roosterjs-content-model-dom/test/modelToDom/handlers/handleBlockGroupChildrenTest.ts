@@ -1,4 +1,5 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createEntity } from '../../../lib';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -378,5 +379,33 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.innerHTML).toBe(
             '<div><br></div><span class="_Entity _EType_MyEntity _EReadonly_0"></span>'
         );
+    });
+
+    it('child contains entity', () => {
+        const group = createContentModelDocument();
+        const paragraph = createParagraph();
+        const wrapper = document.createElement('div');
+        const entity = createEntity(wrapper);
+
+        group.blocks.push(paragraph, entity);
+
+        const onBlockEntity = jasmine.createSpy('onBlockEntity');
+        const onParagraph = jasmine.createSpy('onParagraph');
+
+        context.domIndexer = {
+            onBlockEntity,
+            onParagraph,
+        } as any;
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.outerHTML).toBe(
+            '<div><div></div><div class="_Entity _EType_ _EReadonly_1" contenteditable="false"></div></div>'
+        );
+        expect(handleBlock).toHaveBeenCalledTimes(2);
+        expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph, context, null);
+        expect(handleBlock).toHaveBeenCalledWith(document, parent, entity, context, null);
+        expect(onBlockEntity).toHaveBeenCalledTimes(1);
+        expect(onBlockEntity).toHaveBeenCalledWith(entity, group);
     });
 });

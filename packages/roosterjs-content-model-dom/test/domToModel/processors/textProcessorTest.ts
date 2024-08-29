@@ -578,6 +578,8 @@ describe('textProcessor', () => {
             onTable: null!,
             reconcileSelection: null!,
             reconcileChildList: null!,
+            onBlockEntity: null!,
+            reconcileElementId: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -613,6 +615,8 @@ describe('textProcessor', () => {
             onTable: null!,
             reconcileSelection: null!,
             reconcileChildList: null!,
+            onBlockEntity: null!,
+            reconcileElementId: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -659,6 +663,8 @@ describe('textProcessor', () => {
             onTable: null!,
             reconcileSelection: null!,
             reconcileChildList: null!,
+            onBlockEntity: null!,
+            reconcileElementId: null!,
         };
 
         context.domIndexer = domIndexer;
