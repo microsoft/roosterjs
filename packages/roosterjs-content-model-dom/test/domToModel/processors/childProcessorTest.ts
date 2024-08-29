@@ -453,7 +453,15 @@ describe('childProcessor', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                            },
+                            dataset: {},
+                        },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     blocks: [
                         {
