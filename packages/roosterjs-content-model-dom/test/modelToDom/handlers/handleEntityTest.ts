@@ -329,10 +329,12 @@ describe('handleEntity', () => {
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
         );
         expect(entityUtils.addDelimiters).toHaveBeenCalledTimes(1);
-        expect(newSegments.length).toBe(3);
+        expect(newSegments.length).toBe(5);
         expect(newSegments[0]).toBe(span);
         expect(newSegments[1]).toBe(span.nextSibling!);
         expect(newSegments[2]).toBe(span.previousSibling!);
+        expect(newSegments[3]).toBe(span.nextSibling!.firstChild!);
+        expect(newSegments[4]).toBe(span.previousSibling!.firstChild!);
     });
 
     it('Inline entity with newSegments but no delimiter', () => {

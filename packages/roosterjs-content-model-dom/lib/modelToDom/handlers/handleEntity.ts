@@ -75,7 +75,18 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {
         const [after, before] = addDelimiters(doc, wrapper, getSegmentFormat(context), context);
 
-        newSegments?.push(after, before);
+        if (newSegments) {
+            newSegments.push(after, before);
+
+            if (after.firstChild) {
+                newSegments.push(after.firstChild);
+            }
+
+            if (before.firstChild) {
+                newSegments.push(before.firstChild);
+            }
+        }
+
         context.regularSelection.current.segment = after;
     } else {
         context.regularSelection.current.segment = wrapper;

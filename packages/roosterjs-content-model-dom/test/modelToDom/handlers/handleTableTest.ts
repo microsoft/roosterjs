@@ -602,6 +602,8 @@ describe('handleTable', () => {
             onTable: onTableSpy,
             reconcileSelection: null!,
             reconcileChildList: null!,
+            onBlockEntity: null!,
+            reconcileElementId: null!,
         };
 
         context.domIndexer = domIndexer;
