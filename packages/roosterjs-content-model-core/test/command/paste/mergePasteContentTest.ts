@@ -5,14 +5,7 @@ import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editin
 import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
 import { inlineTemplate, template } from './htmlTemplates/ClipboardContent1';
 import { mergePasteContent } from '../../../lib/command/paste/mergePasteContent';
-import { template } from './htmlTemplates/ClipboardContent1';
-import {
-    addBlock,
-    createContentModelDocument,
-    createParagraph,
-    createSelectionMarker,
-    moveChildNodes,
-} from 'roosterjs-content-model-dom';
+
 import {
     addBlock,
     createContentModelDocument,
