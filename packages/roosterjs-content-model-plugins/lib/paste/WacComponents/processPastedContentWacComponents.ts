@@ -5,8 +5,8 @@ import {
     COMMENT_HIGHLIGHT_CLASS,
     COMMENT_HIGHLIGHT_CLICKED_CLASS,
     LIST_CONTAINER_ELEMENT_CLASS_NAME,
+    REMOVE_MARGIN_ELEMENTS,
     TEMP_ELEMENTS_CLASSES,
-    WAC_IDENTIFY_SELECTOR,
 } from './constants';
 import type {
     BeforePasteEvent,
@@ -67,7 +67,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
 ): void => {
     const elementTag = element.tagName;
 
-    if (element.matches(WAC_IDENTIFY_SELECTOR)) {
+    if (element.matches(REMOVE_MARGIN_ELEMENTS)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
     }
@@ -155,6 +155,7 @@ const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
     }
 
     format.marginLeft = undefined;
+    format.marginRight = undefined;
 };
 
 /**
@@ -218,6 +219,7 @@ const wacCommentParser: FormatParser<ContentModelSegmentFormat> = (
 export function processPastedContentWacComponents(ev: BeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
+    addParser(ev.domToModelOption, 'listItemElement', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacContainerParser);
     addParser(ev.domToModelOption, 'table', wacContainerParser);
