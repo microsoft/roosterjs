@@ -1,4 +1,7 @@
-import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelTable,
+} from 'roosterjs-content-model-types';
 import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 
 /**
@@ -45,10 +48,28 @@ export function findEditingImage(
                             break;
                     }
                 }
+                break;
+            case 'Table':
+                const imageInTable = findEditingImageOnTable(block, imageId);
 
+                if (imageInTable) {
+                    return imageInTable;
+                }
                 break;
         }
     }
 
     return null;
 }
+
+const findEditingImageOnTable = (table: ReadonlyContentModelTable, imageId?: string) => {
+    for (const row of table.rows) {
+        for (const cell of row.cells) {
+            const result = findEditingImage(cell, imageId);
+            if (result) {
+                return result;
+            }
+        }
+    }
+    return null;
+};
