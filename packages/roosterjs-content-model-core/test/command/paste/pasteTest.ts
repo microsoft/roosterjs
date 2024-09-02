@@ -178,7 +178,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
@@ -398,7 +398,13 @@ describe('Paste with clipboardData', () => {
             blocks: [
                 {
                     segments: [
-                        { text: 'Link', segmentType: 'Text', format: {} },
+                        {
+                            text: 'Link',
+                            segmentType: 'Text',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
@@ -418,6 +424,7 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     blockType: 'Paragraph',
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
                     format: {},
                 },
             ],
@@ -441,7 +448,7 @@ describe('Paste with clipboardData', () => {
                         {
                             text: 'Link',
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'rgb(0, 0, 0)' },
                             link: {
                                 format: {
                                     underline: true,
@@ -476,6 +483,7 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     blockType: 'Paragraph',
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
                     format: {},
                 },
             ],
