@@ -41,6 +41,8 @@ const UNIDENTIFIED_KEY = 'Unidentified';
 // the char code for Android keyboard events on Webview below 51.
 const UNIDENTIFIED_CODE = [0, 229];
 
+const ALLOWED_CHAR_BEFORE_TRIGGER = ['(', '+'];
+
 /**
  * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
  * - Show picker when special trigger key is pressed
@@ -347,7 +349,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                         wordBeforeCursor != null &&
                         wordBeforeCursor.split(' ').length <= 4 &&
                         (wordBeforeCursor[0] == this.pickerOptions.triggerCharacter ||
-                            (wordBeforeCursor[0] == '(' &&
+                            (ALLOWED_CHAR_BEFORE_TRIGGER.indexOf(wordBeforeCursor[0]) >= 0 &&
                                 wordBeforeCursor[1] == this.pickerOptions.triggerCharacter))
                     ) {
                         this.setIsSuggesting(true);
@@ -565,7 +567,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         // so wordFromCache is what we want to return.
         if (
             wordFromRange == this.pickerOptions.triggerCharacter &&
-            wordFromRange != wordFromCache
+            wordFromRange != wordFromCache &&
+            wordFromCache?.[wordFromCache?.length - 1] != wordFromRange
         ) {
             return wordFromCache;
         }
