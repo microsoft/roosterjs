@@ -28,7 +28,11 @@ export function retrieveCssRules(doc: Document): CssRule[] {
     const result: CssRule[] = [];
 
     styles.forEach(styleNode => {
-        const sheet = styleNode.sheet as CSSStyleSheet;
+        const sheet = styleNode.sheet;
+
+        if (!sheet) {
+            return;
+        }
 
         for (let ruleIndex = 0; ruleIndex < sheet.cssRules.length; ruleIndex++) {
             const rule = sheet.cssRules[ruleIndex] as CSSStyleRule;
