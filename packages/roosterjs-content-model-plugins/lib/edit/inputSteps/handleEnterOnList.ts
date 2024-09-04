@@ -60,7 +60,11 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                     nextListItem.levels[0]
                 ) {
                     nextListItem.levels.forEach(level => {
-                        level.format.startNumberOverride = undefined;
+                        // Remove startNumberOverride so that next list item can join current list, unless it is 1.
+                        // List start with 1 means it should be an explicit new list and should never join another list before it
+                        if (level.format.startNumberOverride !== 1) {
+                            level.format.startNumberOverride = undefined;
+                        }
                     });
                 }
             }
