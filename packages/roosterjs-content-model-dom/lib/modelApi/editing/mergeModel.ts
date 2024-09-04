@@ -1,3 +1,4 @@
+import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
 import { createListItem } from '../creators/createListItem';
@@ -48,6 +49,12 @@ export function mergeModel(
 ): InsertPoint | null {
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
+
+    if (options?.addParagraphAfterMergedContent) {
+        const { paragraph, marker } = insertPosition || {};
+        const newPara = createParagraph(false /* isImplicit */, paragraph?.format, marker?.format);
+        addBlock(source, newPara);
+    }
 
     if (insertPosition) {
         if (options?.mergeFormat && options.mergeFormat != 'none') {

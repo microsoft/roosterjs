@@ -27,4 +27,9 @@ export interface MergeModelOption {
      * @default undefined
      */
     mergeFormat?: 'mergeAll' | 'keepSourceEmphasisFormat' | 'none';
+
+    /**
+     * Whether to add a paragraph after the merged content.
+     */
+    addParagraphAfterMergedContent?: boolean;
 }

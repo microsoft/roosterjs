@@ -36,6 +36,7 @@ export function generatePasteOptionFromPlugins(
         htmlAttributes: htmlFromClipboard.metadata,
         pasteType: pasteType,
         domToModelOption,
+        containsBlockElements: !!htmlFromClipboard.containsBlockElements,
     };
 
     return pasteType == 'asPlainText'
