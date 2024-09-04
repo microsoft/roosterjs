@@ -10,7 +10,6 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
-    ClipboardData,
     CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -37,12 +36,15 @@ export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
 /**
  * @internal
  */
-export function mergePasteContent(
-    editor: IEditor,
-    eventResult: BeforePasteEvent,
-    clipboardData: ClipboardData
-) {
-    const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
+export function mergePasteContent(editor: IEditor, eventResult: BeforePasteEvent) {
+    const {
+        fragment,
+        domToModelOption,
+        customizedMerge,
+        pasteType,
+        clipboardData,
+        containsBlockElements,
+    } = eventResult;
 
     editor.formatContentModel(
         (model, context) => {
@@ -64,6 +66,7 @@ export function mergePasteContent(
             const mergeOption: MergeModelOption = {
                 mergeFormat: pasteType == 'mergeFormat' ? 'keepSourceEmphasisFormat' : 'none',
                 mergeTable: shouldMergeTable(pasteModel),
+                addParagraphAfterMergedContent: containsBlockElements,
             };
 
             const insertPoint = customizedMerge
@@ -74,7 +77,9 @@ export function mergePasteContent(
                 context.newPendingFormat = {
                     ...EmptySegmentFormat,
                     ...model.format,
-                    ...insertPoint.marker.format,
+                    ...(pasteType == 'normal' && !containsBlockElements
+                        ? getLastSegmentFormat(pasteModel)
+                        : insertPoint.marker.format),
                 };
             }
 
@@ -123,4 +128,20 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
     }
     // Only merge table when the document contain a single table.
     return pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table';
+}
+
+function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSegmentFormat {
+    if (pasteModel.blocks.length == 1) {
+        const [firstBlock] = pasteModel.blocks;
+
+        if (firstBlock.blockType == 'Paragraph') {
+            const segment = firstBlock.segments[firstBlock.segments.length - 1];
+
+            return {
+                ...segment.format,
+            };
+        }
+    }
+
+    return {};
 }
