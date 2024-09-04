@@ -28,16 +28,18 @@ export function retrieveCssRules(doc: Document): CssRule[] {
     const result: CssRule[] = [];
 
     styles.forEach(styleNode => {
-        const sheet = styleNode.sheet as CSSStyleSheet;
+        const sheet = styleNode.sheet;
 
-        for (let ruleIndex = 0; ruleIndex < sheet.cssRules.length; ruleIndex++) {
-            const rule = sheet.cssRules[ruleIndex] as CSSStyleRule;
+        if (sheet) {
+            for (let ruleIndex = 0; ruleIndex < sheet.cssRules.length; ruleIndex++) {
+                const rule = sheet.cssRules[ruleIndex] as CSSStyleRule;
 
-            if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
-                result.push({
-                    selectors: splitSelectors(rule.selectorText),
-                    text: rule.style.cssText,
-                });
+                if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
+                    result.push({
+                        selectors: splitSelectors(rule.selectorText),
+                        text: rule.style.cssText,
+                    });
+                }
             }
         }
 
