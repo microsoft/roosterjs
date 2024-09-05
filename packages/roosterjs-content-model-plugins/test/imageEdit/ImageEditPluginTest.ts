@@ -430,4 +430,20 @@ describe('ImageEditPlugin', () => {
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         plugin.dispose();
     });
+
+    it('insertImageEditingWrapper', () => {
+        const mockedImage = {
+            id: 'image_0',
+            getAttribute: getAttributeSpy,
+        } as any;
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.insertImageEditingWrapper();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        plugin.dispose();
+    });
 });

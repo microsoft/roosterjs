@@ -335,11 +335,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         isNodeOfType(node, 'ELEMENT_NODE') &&
                         isElementOfType(node, 'img')
                     ) {
-                        if (isCropMode) {
-                            this.startCropMode(editor, node);
-                        } else {
-                            this.startRotateAndResize(editor, node);
-                        }
+                        node.onload = () => {
+                            if (isCropMode) {
+                                this.startCropMode(editor, node);
+                            } else {
+                                this.startRotateAndResize(editor, node);
+                            }
+                        };
                     }
                 },
             },
@@ -347,6 +349,26 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 tryGetFromCache: true,
             }
         );
+    }
+
+    /**
+     * Insert the image editing wrapper in the selected image
+     */
+    public insertImageEditingWrapper() {
+        if (this.editor) {
+            const selection = this.editor.getDOMSelection();
+            if (!this.editor.getEnvironment().isSafari) {
+                this.editor.focus(); // Safari will keep the selection when click crop, then the focus() call should not be called
+            }
+            if (this.editor && selection?.type == 'image') {
+                this.applyFormatWithContentModel(
+                    this.editor,
+                    false /* isCropMode */,
+                    false /** should selectImage */,
+                    false /* isApiOperation */
+                );
+            }
+        }
     }
 
     private startEditing(
