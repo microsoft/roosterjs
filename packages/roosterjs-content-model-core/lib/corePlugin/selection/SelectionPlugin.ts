@@ -559,9 +559,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         selectAll?: boolean
     ) {
         const range = editor.getDocument().createRange();
-        if (selectAll && cell.firstChild) {
+        if (selectAll && cell.firstChild && cell.lastChild) {
             const cellStart = cell.firstChild;
-            const cellEnd = cell.lastChild || cell.firstChild;
+            const cellEnd = cell.lastChild;
             // Get first deepest editable position in the cell
             const posStart = normalizePos(cellStart, 0);
             // Get last deepest editable position in the cell
