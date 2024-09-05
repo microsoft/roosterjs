@@ -1,4 +1,4 @@
-import { isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { isBlockElement, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { retrieveCssRules } from '../createModelFromHtml/convertInlineCss';
 import type { ClipboardData } from 'roosterjs-content-model-types';
 import type { CssRule } from '../createModelFromHtml/convertInlineCss';
@@ -14,6 +14,7 @@ export interface HtmlFromClipboard {
     globalCssRules: CssRule[];
     htmlBefore?: string;
     htmlAfter?: string;
+    containsBlockElements?: boolean;
 }
 
 /**
@@ -33,6 +34,7 @@ export function retrieveHtmlInfo(
             ...retrieveHtmlStrings(clipboardData),
             globalCssRules: retrieveCssRules(doc),
             metadata: retrieveMetadata(doc),
+            containsBlockElements: checkBlockElements(doc),
         };
 
         clipboardData.htmlFirstLevelChildTags = retrieveTopLevelTags(doc);
@@ -95,4 +97,10 @@ function retrieveHtmlStrings(
     }
 
     return { htmlBefore, htmlAfter };
+}
+
+function checkBlockElements(doc: Document): boolean {
+    const elements = toArray(doc.body.querySelectorAll('*'));
+
+    return elements.some(el => isNodeOfType(el, 'ELEMENT_NODE') && isBlockElement(el));
 }

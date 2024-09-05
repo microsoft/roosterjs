@@ -194,7 +194,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.isImageSelection(event.rawEvent.target as Node) &&
             event.rawEvent.button !== MouseRightButton
         ) {
-            this.applyFormatWithContentModel(editor, this.isCropMode, true);
+            this.applyFormatWithContentModel(
+                editor,
+                this.isCropMode,
+                this.shadowSpan === event.rawEvent.target
+            );
         }
     }
 
@@ -287,6 +291,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
+                                delete image.dataset.isEditing;
                             }
                         );
 
