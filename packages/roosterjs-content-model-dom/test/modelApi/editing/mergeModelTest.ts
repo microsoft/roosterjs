@@ -3835,4 +3835,39 @@ describe('mergeModel', () => {
             verticalAlign: 'top',
         });
     });
+
+    it('Merge model with addParagraphAfterMergedContent', () => {
+        const source = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createText('Merge'));
+        source.blocks.push(para);
+
+        const target = createContentModelDocument();
+        const paraTarget = createParagraph();
+        paraTarget.segments.push(createSelectionMarker());
+        target.blocks.push(paraTarget);
+
+        mergeModel(target, source, undefined, {
+            addParagraphAfterMergedContent: true,
+        });
+
+        expect(target).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'Merge', format: {} }],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });
