@@ -44,6 +44,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: false,
             },
             {
                 htmlFirstLevelChildTags: [],
@@ -61,6 +62,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: false,
             },
             {
                 htmlFirstLevelChildTags: [''],
@@ -78,6 +80,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
@@ -95,6 +98,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['', 'DIV', 'SPAN', ''],
@@ -112,6 +116,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
@@ -129,6 +134,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
@@ -146,6 +152,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '</div>',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
@@ -163,6 +170,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: { a: 'b', 'c:d': 'e', f: 'g', h: 'i' },
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
@@ -181,6 +189,7 @@ describe('retrieveHtmlInfo', () => {
                 htmlAfter: '',
                 globalCssRules: [],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],

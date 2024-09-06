@@ -67,7 +67,7 @@ export function paste(
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
     // 6. Merge pasted content into main Content Model
-    mergePasteContent(editor, eventResult, clipboardData);
+    mergePasteContent(editor, eventResult);
 }
 
 function createDOMFromHtml(

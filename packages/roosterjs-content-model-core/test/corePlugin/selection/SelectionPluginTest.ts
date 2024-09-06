@@ -649,10 +649,18 @@ describe('SelectionPlugin handle image selection', () => {
             key: 'A',
             stopPropagation: stopPropagationSpy,
             ctrlKey: true,
+            shiftKey: false,
         } as any;
 
         const mockedImage = {
             parentNode: { childNodes: [] },
+            ownerDocument: {
+                createRange: () => {
+                    return {
+                        selectNode: (node: any) => {},
+                    };
+                },
+            },
         } as any;
 
         mockedImage.parentNode.childNodes.push(mockedImage);
@@ -674,7 +682,7 @@ describe('SelectionPlugin handle image selection', () => {
         });
 
         expect(stopPropagationSpy).not.toHaveBeenCalled();
-        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalled();
     });
 
     it('key down - other key, image has no parent', () => {
@@ -1264,6 +1272,10 @@ describe('SelectionPlugin handle table selection', () => {
         let td4: HTMLTableCellElement;
         let tr1: HTMLElement;
         let tr2: HTMLElement;
+        let td1_text: Node;
+        let td2_text: Node;
+        let td3_text: Node;
+        let td4_text: Node;
         let table: HTMLTableElement;
         let div: HTMLElement;
 
@@ -1282,6 +1294,18 @@ describe('SelectionPlugin handle table selection', () => {
             td2.id = 'td2';
             td3.id = 'td3';
             td4.id = 'td4';
+
+            // Craete text nodes
+            td1_text = document.createTextNode('1');
+            td2_text = document.createTextNode('2');
+            td3_text = document.createTextNode('3');
+            td4_text = document.createTextNode('4');
+
+            // Add Text to each cell
+            td1.appendChild(td1_text);
+            td2.appendChild(td2_text);
+            td3.appendChild(td3_text);
+            td4.appendChild(td4_text);
 
             tr1.appendChild(td1);
             tr1.appendChild(td2);
@@ -1395,11 +1419,13 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                selectNodeContents: selectNodeContentsSpy,
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1428,7 +1454,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td2);
+            expect(setStartSpy).toHaveBeenCalledWith(td2_text, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td2_text, 0);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1466,11 +1493,13 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                selectNodeContents: selectNodeContentsSpy,
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1500,7 +1529,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td1);
+            expect(setStartSpy).toHaveBeenCalledWith(td1_text, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td1_text, 0);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1538,11 +1568,13 @@ describe('SelectionPlugin handle table selection', () => {
                       };
             });
 
-            const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
             const mockedRange = {
-                selectNodeContents: selectNodeContentsSpy,
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
             } as any;
 
@@ -1571,7 +1603,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(selectNodeContentsSpy).toHaveBeenCalledWith(td3);
+            expect(setStartSpy).toHaveBeenCalledWith(td3_text, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td3_text, 0);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1584,6 +1617,7 @@ describe('SelectionPlugin handle table selection', () => {
             getDOMSelectionSpy.and.callFake(() => {
                 time++;
 
+                td1.appendChild(document.createTextNode('1'));
                 return time == 1
                     ? {
                           type: 'range',
@@ -1782,7 +1816,7 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td4, 0);
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
             expect(announceSpy).toHaveBeenCalledWith({
                 defaultStrings: 'announceOnFocusLastCell',
             });
@@ -2821,42 +2855,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         onSelectionChange();
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
-        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('onSelectionChange on image | 4', () => {
-        const image = document.createElement('img');
-        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
-
-        const plugin = createSelectionPlugin({});
-        const state = plugin.getState();
-        const mockedOldSelection = {
-            type: 'image',
-            image: {} as any,
-        } as DOMSelection;
-
-        state.selection = mockedOldSelection;
-
-        plugin.initialize(editor);
-
-        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
-        const mockedNewSelection = {
-            type: 'range',
-            range: {} as any,
-        } as any;
-
-        hasFocusSpy.and.returnValue(true);
-        isInShadowEditSpy.and.returnValue(false);
-        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
-        getRangeAtSpy.and.returnValue({ startContainer: {} });
-
-        onSelectionChange();
-
-        expect(setDOMSelectionSpy).toHaveBeenCalled();
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
-            type: 'image',
-            image,
-        });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });

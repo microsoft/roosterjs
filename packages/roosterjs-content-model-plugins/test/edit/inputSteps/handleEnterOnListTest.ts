@@ -2439,6 +2439,118 @@ describe('handleEnterOnList - keyboardEnter', () => {
         runTest(input, true, expected, false, 1);
     });
 
+    it('Two separate lists, Enter on first one', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [{ listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} }],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'Text', text: 'test', format: {} },
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: { segmentType: 'SelectionMarker', format: {} },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [{ listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} }],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [{ segmentType: 'Br', format: {} }],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                },
+            ],
+        };
+
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [{ listType: 'OL', format: { startNumberOverride: 1 }, dataset: {} }],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: { segmentType: 'SelectionMarker', format: {} },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                                displayForDummyItem: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: false },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Br', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: { segmentType: 'SelectionMarker', format: {} },
+                    format: {},
+                },
+            ],
+        };
+
+        runTest(model, false, expectedModel, false, 1);
+    });
+
     it('List item contains multiple blocks', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
