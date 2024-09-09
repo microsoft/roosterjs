@@ -363,9 +363,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
 
                 if (
-                    (isModifierKey(rawEvent) || rawEvent.shiftKey) &&
-                    selection.image &&
-                    !this.isSafari
+                    ((isModifierKey(rawEvent) || rawEvent.shiftKey) &&
+                        selection.image &&
+                        !this.isSafari) ||
+                    (rawEvent.metaKey && rawEvent.key !== 'Meta')
                 ) {
                     const range = selection.image.ownerDocument.createRange();
                     range.selectNode(selection.image);

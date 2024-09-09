@@ -339,6 +339,7 @@ describe('SelectionPlugin handle image selection', () => {
     let requestAnimationFrameSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let findClosestElementAncestor: jasmine.Spy;
+    let getEnvironmentSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -357,13 +358,16 @@ describe('SelectionPlugin handle image selection', () => {
         domHelperSpy = jasmine.createSpy('domHelperSpy').and.returnValue({
             findClosestElementAncestor: findClosestElementAncestor,
         });
+        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
+            isSafari: false,
+        });
 
         editor = {
             getDOMHelper: domHelperSpy,
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
             getDocument: getDocumentSpy,
-            getEnvironment: () => ({}),
+            getEnvironment: getEnvironmentSpy,
             attachDomEvent: (map: Record<string, any>) => {
                 return jasmine.createSpy('disposer');
             },
@@ -715,6 +719,50 @@ describe('SelectionPlugin handle image selection', () => {
 
         expect(stopPropagationSpy).not.toHaveBeenCalled();
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('key down - other key with modifier ( meta key) key', () => {
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const rawEvent = {
+            key: 'A',
+            stopPropagation: stopPropagationSpy,
+            metaKey: true,
+        } as any;
+
+        const mockedImage = {
+            parentNode: { childNodes: [] },
+            ownerDocument: {
+                createRange: () => {
+                    return {
+                        selectNode: (node: any) => {},
+                    };
+                },
+            },
+        } as any;
+
+        mockedImage.parentNode.childNodes.push(mockedImage);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+
+        const mockedRange = {
+            setStart: jasmine.createSpy('setStart'),
+            collapse: jasmine.createSpy('collapse'),
+        };
+
+        getEnvironmentSpy.and.returnValue({
+            isSafari: true,
+        });
+        createRangeSpy.and.returnValue(mockedRange);
+
+        plugin.onPluginEvent!({
+            eventType: 'keyDown',
+            rawEvent,
+        });
+
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).toHaveBeenCalled();
     });
 });
 
@@ -2703,8 +2751,6 @@ describe('SelectionPlugin on Safari', () => {
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(0);
     });
-
-    it('', () => {});
 });
 
 describe('SelectionPlugin selectionChange on image selected', () => {
