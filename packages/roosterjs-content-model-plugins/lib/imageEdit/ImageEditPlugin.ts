@@ -389,87 +389,89 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         ]);
     }
 
-    public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
-        if (this.imageEditInfo) {
-            this.startEditing(editor, image, ['resize', 'rotate']);
-            if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
-                this.dndHelpers = [
-                    ...getDropAndDragHelpers(
-                        this.wrapper,
-                        this.imageEditInfo,
-                        this.options,
-                        ImageEditElementClass.ResizeHandle,
-                        Resizer,
-                        () => {
-                            if (
-                                this.imageEditInfo &&
-                                this.selectedImage &&
-                                this.wrapper &&
-                                this.clonedImage
-                            ) {
-                                updateWrapper(
-                                    this.imageEditInfo,
-                                    this.options,
-                                    this.selectedImage,
-                                    this.clonedImage,
-                                    this.wrapper,
-                                    this.resizers
-                                );
-                                this.wasImageResized = true;
-                            }
-                        },
-                        this.zoomScale
-                    ),
-                    ...getDropAndDragHelpers(
-                        this.wrapper,
-                        this.imageEditInfo,
-                        this.options,
-                        ImageEditElementClass.RotateHandle,
-                        Rotator,
-                        () => {
-                            if (
-                                this.imageEditInfo &&
-                                this.selectedImage &&
-                                this.wrapper &&
-                                this.clonedImage
-                            ) {
-                                updateWrapper(
-                                    this.imageEditInfo,
-                                    this.options,
-                                    this.selectedImage,
-                                    this.clonedImage,
-                                    this.wrapper
-                                );
-                                this.updateRotateHandleState(
-                                    editor,
-                                    this.selectedImage,
-                                    this.wrapper,
-                                    this.rotators,
-                                    this.imageEditInfo?.angleRad
-                                );
-                            }
-                        },
-                        this.zoomScale
-                    ),
-                ];
-
-                updateWrapper(
+    public startRotateAndResize(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation: ImageEditOperation[] = ['resize', 'rotate']
+    ) {
+        this.startEditing(editor, image, apiOperation);
+        if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
+            this.dndHelpers = [
+                ...getDropAndDragHelpers(
+                    this.wrapper,
                     this.imageEditInfo,
                     this.options,
-                    this.selectedImage,
-                    this.clonedImage,
+                    ImageEditElementClass.ResizeHandle,
+                    Resizer,
+                    () => {
+                        if (
+                            this.imageEditInfo &&
+                            this.selectedImage &&
+                            this.wrapper &&
+                            this.clonedImage
+                        ) {
+                            updateWrapper(
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                this.clonedImage,
+                                this.wrapper,
+                                this.resizers
+                            );
+                            this.wasImageResized = true;
+                        }
+                    },
+                    this.zoomScale
+                ),
+                ...getDropAndDragHelpers(
                     this.wrapper,
-                    this.resizers
-                );
+                    this.imageEditInfo,
+                    this.options,
+                    ImageEditElementClass.RotateHandle,
+                    Rotator,
+                    () => {
+                        if (
+                            this.imageEditInfo &&
+                            this.selectedImage &&
+                            this.wrapper &&
+                            this.clonedImage
+                        ) {
+                            updateWrapper(
+                                this.imageEditInfo,
+                                this.options,
+                                this.selectedImage,
+                                this.clonedImage,
+                                this.wrapper
+                            );
+                            this.updateRotateHandleState(
+                                editor,
+                                this.selectedImage,
+                                this.wrapper,
+                                this.rotators,
+                                this.imageEditInfo?.angleRad
+                            );
+                        }
+                    },
+                    this.zoomScale
+                ),
+            ];
 
-                this.updateRotateHandleState(
-                    editor,
-                    this.selectedImage,
-                    this.wrapper,
-                    this.rotators,
-                    this.imageEditInfo?.angleRad
-                );
-            }
+            updateWrapper(
+                this.imageEditInfo,
+                this.options,
+                this.selectedImage,
+                this.clonedImage,
+                this.wrapper,
+                this.resizers
+            );
+
+            this.updateRotateHandleState(
+                editor,
+                this.selectedImage,
+                this.wrapper,
+                this.rotators,
+                this.imageEditInfo?.angleRad
+            );
         }
     }
 
