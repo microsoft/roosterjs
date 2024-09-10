@@ -14,6 +14,8 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         const maxHeight = element.style.maxHeight;
         const minWidth = element.style.minWidth;
         const minHeight = element.style.minHeight;
+        const widthAttr = parseInt(element.getAttribute('width') || '') || element.clientWidth;
+        const heightAttr = parseInt(element.getAttribute('height') || '') || element.clientHeight;
 
         if (width) {
             format.width = width;
@@ -32,6 +34,14 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         }
         if (minHeight) {
             format.minHeight = minHeight;
+        }
+
+        if (widthAttr) {
+            format.widthAttr = widthAttr;
+        }
+
+        if (heightAttr) {
+            format.heightAttr = heightAttr;
         }
     },
     apply: (format, element) => {

@@ -41,11 +41,11 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
         }
 
         if (element.width || element.clientWidth) {
-            image.format.width = (element.width || element.clientWidth) + 'px';
+            image.format.widthAttr = element.width || element.clientWidth;
         }
 
         if (element.height || element.clientHeight) {
-            image.format.height = (element.height || element.clientHeight) + 'px';
+            image.format.heightAttr = element.height || element.clientHeight;
         }
 
         const paragraph = addSegment(group, image);

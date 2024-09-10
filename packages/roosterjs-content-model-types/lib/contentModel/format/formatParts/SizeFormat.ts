@@ -13,6 +13,16 @@ export type SizeFormat = {
     height?: string;
 
     /**
+     * Width attribute of the element
+     */
+    widthAttr?: number;
+
+    /**
+     * Heigh attribute of the element
+     */
+    heightAttr?: number;
+
+    /**
      * Maximum width of the element
      */
     maxWidth?: string;

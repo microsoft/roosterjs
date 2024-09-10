@@ -32,9 +32,9 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
     applyFormat(img, context.formatAppliers.image, imageModel.format, context);
     applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
 
-    const { width, height } = imageModel.format;
-    const widthNum = width ? parseValueWithUnit(width) : 0;
-    const heightNum = height ? parseValueWithUnit(height) : 0;
+    const { width, height, widthAttr, heightAttr } = imageModel.format;
+    const widthNum = width ? parseValueWithUnit(width) : widthAttr || 0;
+    const heightNum = height ? parseValueWithUnit(height) : heightAttr || 0;
 
     if (widthNum > 0) {
         img.width = widthNum;
