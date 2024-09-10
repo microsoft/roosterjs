@@ -41,12 +41,14 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
         img.style.height = height;
     }
 
-    if (widthAttr) {
-        img.width = parseInt(widthAttr);
+    const widthNum = widthAttr ? parseInt(widthAttr) : 0;
+    if (widthNum > 0) {
+        img.width = widthNum;
     }
 
-    if (heightAttr) {
-        img.height = parseInt(heightAttr);
+    const heightNum = heightAttr ? parseInt(heightAttr) : 0;
+    if (heightNum > 0) {
+        img.height = heightNum;
     }
 
     if (imageModel.isSelectedAsImageSelection) {

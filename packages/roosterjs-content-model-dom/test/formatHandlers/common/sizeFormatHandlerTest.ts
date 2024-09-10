@@ -31,6 +31,17 @@ describe('sizeFormatHandler.parse', () => {
         expect(format).toEqual({ width: '10px', height: '20px' });
     });
 
+    it('Image with width and height in style', () => {
+        const element = document.createElement('img');
+
+        element.style.width = '10px';
+        element.style.height = '20px';
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({ width: '10px', height: '20px' });
+    });
+
     it('Element with width and height in attribute', () => {
         const element = document.createElement('div');
 
@@ -39,7 +50,26 @@ describe('sizeFormatHandler.parse', () => {
 
         sizeFormatHandler.parse(format, element, context, {});
 
-        expect(format).toEqual({ width: '10px', height: '20px' });
+        expect(format).toEqual({
+            width: '10px',
+            height: '20px',
+        });
+    });
+
+    it('Image with width and height in attribute', () => {
+        const element = document.createElement('img');
+
+        element.setAttribute('width', '10');
+        element.setAttribute('height', '20');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({
+            width: '10px',
+            height: '20px',
+            widthAttr: '10',
+            heightAttr: '20',
+        });
     });
 
     it('Element with width and height in both style and attribute', () => {
@@ -53,11 +83,44 @@ describe('sizeFormatHandler.parse', () => {
 
         sizeFormatHandler.parse(format, element, context, {});
 
-        expect(format).toEqual({ width: '10px', height: '20px' });
+        expect(format).toEqual({
+            width: '10px',
+            height: '20px',
+        });
+    });
+
+    it('Image with width and height in both style and attribute', () => {
+        const element = document.createElement('img');
+
+        element.style.width = '10px';
+        element.style.height = '20px';
+
+        element.setAttribute('width', '30');
+        element.setAttribute('height', '40');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({
+            width: '10px',
+            height: '20px',
+            widthAttr: '30',
+            heightAttr: '40',
+        });
     });
 
     it('Element with width and height attributes equal to 0', () => {
         const element = document.createElement('div');
+
+        element.setAttribute('width', '0');
+        element.setAttribute('height', '0');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({});
+    });
+
+    it('image with width and height attributes equal to 0', () => {
+        const element = document.createElement('img');
 
         element.setAttribute('width', '0');
         element.setAttribute('height', '0');
@@ -99,11 +162,13 @@ describe('sizeFormatHandler.parse', () => {
 
 describe('sizeFormatHandler.apply', () => {
     let div: HTMLElement;
+    let img: HTMLImageElement;
     let format: SizeFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
+        img = document.createElement('img');
         format = {};
         context = createModelToDomContext();
     });
@@ -140,6 +205,17 @@ describe('sizeFormatHandler.apply', () => {
         sizeFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe(
             '<div style="max-width: 20px; max-height: 40px; min-width: 10px; min-height: 30px;"></div>'
+        );
+    });
+
+    it('Image has both width and height attribute', () => {
+        format.width = '10px';
+        format.height = '20px';
+        format.widthAttr = '30';
+        format.heightAttr = '40';
+        sizeFormatHandler.apply(format, img, context);
+        expect(img.outerHTML).toBe(
+            '<img width="30" height="40" style="width: 10px; height: 20px;">'
         );
     });
 });

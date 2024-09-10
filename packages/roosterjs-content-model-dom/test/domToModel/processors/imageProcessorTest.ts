@@ -351,4 +351,37 @@ describe('imageProcessor', () => {
         });
         expect(onSegmentSpy).toHaveBeenCalledWith(img, paragraph, [segment]);
     });
+
+    it('Image with size', () => {
+        const doc = createContentModelDocument();
+        const img = document.createElement('img');
+        img.height = 50;
+        img.width = 100;
+
+        imageProcessor(doc, img, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            format: {
+                                widthAttr: '100',
+                                heightAttr: '50',
+                                width: '100px',
+                                height: '50px',
+                            },
+                            src: '',
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

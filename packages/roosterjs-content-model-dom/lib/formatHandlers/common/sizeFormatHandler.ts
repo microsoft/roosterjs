@@ -15,8 +15,14 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         const maxHeight = element.style.maxHeight;
         const minWidth = element.style.minWidth;
         const minHeight = element.style.minHeight;
-        const widthAttr = element.getAttribute('width') || element.clientWidth.toString();
-        const heightAttr = element.getAttribute('height') || element.clientHeight.toString();
+        const widthAttr = isElementOfType(element, 'img')
+            ? tryParseSize(element, 'width', false /* addPixels */) ||
+              tryParseSize(element, 'clientWidth', false /* addPixels */)
+            : undefined;
+        const heightAttr = isElementOfType(element, 'img')
+            ? tryParseSize(element, 'height', false /* addPixels */) ||
+              tryParseSize(element, 'clientHeight', false /* addPixels */)
+            : undefined;
 
         if (width) {
             format.width = width;
@@ -62,16 +68,22 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         if (format.minHeight) {
             element.style.minHeight = format.minHeight;
         }
-        if (format.widthAttr && isElementOfType(element, 'img')) {
-            element.width = parseInt(format.widthAttr);
+        const widthAttr = format.widthAttr ? parseInt(format.widthAttr) : 0;
+        if (widthAttr > 0 && isElementOfType(element, 'img')) {
+            element.width = widthAttr;
         }
-        if (format.heightAttr && isElementOfType(element, 'img')) {
-            element.height = parseInt(format.heightAttr);
+        const heightAttr = format.heightAttr ? parseInt(format.heightAttr) : 0;
+        if (heightAttr > 0 && isElementOfType(element, 'img')) {
+            element.height = heightAttr;
         }
     },
 };
 
-function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): string | undefined {
+function tryParseSize(
+    element: HTMLElement,
+    attrName: 'width' | 'height' | 'clientWidth' | 'clientHeight',
+    addPixels: boolean = true
+): string | undefined {
     const attrValue = element.getAttribute(attrName);
     const value = parseInt(attrValue || '');
 
@@ -79,5 +91,5 @@ function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): strin
         ? attrValue
         : Number.isNaN(value) || value == 0
         ? undefined
-        : value + 'px';
+        : value + (addPixels ? 'px' : '');
 }

@@ -100,8 +100,46 @@ describe('handleSegment', () => {
         runTest(
             segment,
             [
-                '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a></span>',
-                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="100" height="200"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;"></a></span>',
+            ],
+            0
+        );
+    });
+
+    it('image segment with size attributes', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { width: '100px', height: '200px', widthAttr: '50', heightAttr: '150' },
+            link: { format: { href: '/test', underline: true }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(
+            segment,
+            [
+                '<span><a href="/test"><img src="http://test.com/test" width="50" height="150" style="width: 100px; height: 200px;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="50" height="150 ></a></span>',
+            ],
+            0
+        );
+    });
+
+    it('image segment with size attributes only', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { widthAttr: '50', heightAttr: '150' },
+            link: { format: { href: '/test', underline: true }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(
+            segment,
+            [
+                '<span><a href="/test"><img src="http://test.com/test" width="50" height="150"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" width="50" height="150 ></a></span>',
             ],
             0
         );

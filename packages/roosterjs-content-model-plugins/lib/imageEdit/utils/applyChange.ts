@@ -83,5 +83,7 @@ export function applyChange(
     if (wasResizedOrCropped || state == 'FullyChanged') {
         contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
         contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
+        contentModelImage.format.widthAttr = undefined;
+        contentModelImage.format.heightAttr = undefined;
     }
 }
