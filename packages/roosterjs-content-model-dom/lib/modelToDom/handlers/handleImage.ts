@@ -1,6 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import type { ContentModelImage, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 
 /**
@@ -33,15 +32,21 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
     applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
 
     const { width, height, widthAttr, heightAttr } = imageModel.format;
-    const widthNum = width ? parseValueWithUnit(width) : widthAttr || 0;
-    const heightNum = height ? parseValueWithUnit(height) : heightAttr || 0;
 
-    if (widthNum > 0) {
-        img.width = widthNum;
+    if (width) {
+        img.style.width = width;
     }
 
-    if (heightNum > 0) {
-        img.height = heightNum;
+    if (height) {
+        img.style.height = height;
+    }
+
+    if (widthAttr) {
+        img.width = parseInt(widthAttr);
+    }
+
+    if (heightAttr) {
+        img.height = parseInt(heightAttr);
     }
 
     if (imageModel.isSelectedAsImageSelection) {
