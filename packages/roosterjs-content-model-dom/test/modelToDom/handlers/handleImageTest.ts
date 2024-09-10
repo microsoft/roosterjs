@@ -120,7 +120,7 @@ describe('handleSegment', () => {
             segment,
             [
                 '<span><a href="/test"><img src="http://test.com/test" width="50" height="150" style="width: 100px; height: 200px;"></a></span>',
-                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="50" height="150 ></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="50" height="150"></a></span>',
             ],
             0
         );

@@ -1,6 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext, ModelToDomContext, SizeFormat } from 'roosterjs-content-model-types';
+import { itChromeOnly, itFirefoxOnly } from '../../testUtils';
 import { sizeFormatHandler } from '../../../lib/formatHandlers/common/sizeFormatHandler';
 
 describe('sizeFormatHandler.parse', () => {
@@ -208,7 +209,7 @@ describe('sizeFormatHandler.apply', () => {
         );
     });
 
-    it('Image has both width and height attribute', () => {
+    itChromeOnly('Image has both width and height attribute', () => {
         format.width = '10px';
         format.height = '20px';
         format.widthAttr = '30';
@@ -216,6 +217,17 @@ describe('sizeFormatHandler.apply', () => {
         sizeFormatHandler.apply(format, img, context);
         expect(img.outerHTML).toBe(
             '<img width="30" height="40" style="width: 10px; height: 20px;">'
+        );
+    });
+
+    itFirefoxOnly('Image has both width and height attribute', () => {
+        format.width = '10px';
+        format.height = '20px';
+        format.widthAttr = '30';
+        format.heightAttr = '40';
+        sizeFormatHandler.apply(format, img, context);
+        expect(img.outerHTML).toBe(
+            '<img style="width: 10px; height: 20px;" width="30" height="40">'
         );
     });
 });

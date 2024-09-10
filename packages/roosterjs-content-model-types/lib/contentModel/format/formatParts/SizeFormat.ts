@@ -18,7 +18,7 @@ export type SizeFormat = {
     widthAttr?: string;
 
     /**
-     * Heigh attribute of the element
+     * Height attribute of the element
      */
     heightAttr?: string;
 
