@@ -41,7 +41,6 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         if (format.height) {
             element.style.height = format.height;
         }
-
         if (format.maxWidth) {
             element.style.maxWidth = format.maxWidth;
         }
