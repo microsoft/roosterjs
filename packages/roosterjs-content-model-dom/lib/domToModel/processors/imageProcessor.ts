@@ -40,6 +40,9 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             image.isSelected = true;
         }
 
+        image.format.width = (element.width || element.clientWidth) + 'px';
+        image.format.height = (element.height || element.clientHeight) + 'px';
+
         const paragraph = addSegment(group, image);
         context.domIndexer?.onSegment(element, paragraph, [image]);
     });
