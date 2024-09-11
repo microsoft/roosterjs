@@ -1,9 +1,10 @@
 import { findListItemsInSameThread } from 'roosterjs-content-model-api';
 import { getNumberingListStyle } from './getNumberingListStyle';
 import type {
-    ContentModelDocument,
     ContentModelListItem,
-    ContentModelParagraph,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
+    ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 import {
     BulletListType,
@@ -26,7 +27,7 @@ interface ListTypeStyle {
  * @internal
  */
 export function getListTypeStyle(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     shouldSearchForBullet: boolean = true,
     shouldSearchForNumbering: boolean = true
 ): ListTypeStyle | undefined {
@@ -45,7 +46,7 @@ export function getListTypeStyle(
         listMarkerSegment.segmentType == 'Text'
     ) {
         const listMarker = listMarkerSegment.text.trim();
-        const bulletType = bulletListType[listMarker];
+        const bulletType = bulletListType.get(listMarker);
 
         if (bulletType && shouldSearchForBullet) {
             return { listType: 'UL', styleType: bulletType };
@@ -77,13 +78,16 @@ export function getListTypeStyle(
 }
 
 const getPreviousListIndex = (
-    model: ContentModelDocument,
-    previousListItem?: ContentModelListItem
+    model: ReadonlyContentModelDocument,
+    previousListItem?: ReadonlyContentModelListItem
 ) => {
     return previousListItem ? findListItemsInSameThread(model, previousListItem).length : undefined;
 };
 
-const getPreviousListLevel = (model: ContentModelDocument, paragraph: ContentModelParagraph) => {
+const getPreviousListLevel = (
+    model: ReadonlyContentModelDocument,
+    paragraph: ReadonlyContentModelParagraph
+) => {
     const blocks = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],
@@ -113,16 +117,16 @@ const getPreviousListStyle = (list?: ContentModelListItem) => {
     }
 };
 
-const bulletListType: Record<string, number> = {
-    '*': BulletListType.Disc,
-    '-': BulletListType.Dash,
-    '--': BulletListType.Square,
-    '->': BulletListType.LongArrow,
-    '-->': BulletListType.DoubleLongArrow,
-    '=>': BulletListType.UnfilledArrow,
-    '>': BulletListType.ShortArrow,
-    '—': BulletListType.Hyphen,
-};
+const bulletListType: Map<string, number> = new Map<string, number>([
+    ['*', BulletListType.Disc],
+    ['-', BulletListType.Dash],
+    ['--', BulletListType.Square],
+    ['->', BulletListType.LongArrow],
+    ['-->', BulletListType.DoubleLongArrow],
+    ['=>', BulletListType.UnfilledArrow],
+    ['>', BulletListType.ShortArrow],
+    ['—', BulletListType.Hyphen],
+]);
 
 const isNewList = (listMarker: string) => {
     const marker = listMarker.replace(/[^\w\s]/g, '');

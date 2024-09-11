@@ -1,7 +1,6 @@
-import { CancelButtonStringKey, OkButtonStringKey } from '../roosterjsReact/common';
-import { RibbonButton } from '../roosterjsReact/ribbon';
+import { CancelButtonStringKey, OkButtonStringKey, showInputDialog } from 'roosterjs-react';
 import { setListStartNumber } from 'roosterjs-content-model-api';
-import { showInputDialog } from '../roosterjsReact/inputDialog';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal

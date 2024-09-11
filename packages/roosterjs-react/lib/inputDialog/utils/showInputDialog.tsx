@@ -1,7 +1,7 @@
 import * as React from 'react';
-import InputDialog from '../component/InputDialog';
+import { InputDialog } from '../component/InputDialog';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
-import type DialogItem from '../type/DialogItem';
+import type { DialogItem } from '../type/DialogItem';
 import type {
     CancelButtonStringKey,
     LocalizedStrings,
@@ -18,7 +18,7 @@ import type {
  * @param strings Localized strings
  * @param onChange An optional callback that will be invoked when input item value is changed
  */
-export default function showInputDialog<Strings extends string, ItemNames extends string>(
+export function showInputDialog<Strings extends string, ItemNames extends string>(
     uiUtilities: UIUtilities,
     dialogTitleKey: Strings,
     unlocalizedTitle: string,
@@ -28,7 +28,8 @@ export default function showInputDialog<Strings extends string, ItemNames extend
         changedItemName: ItemNames,
         newValue: string,
         currentValues: Record<ItemNames, string>
-    ) => Record<ItemNames, string> | null
+    ) => Record<ItemNames, string> | null,
+    rows?: number
 ): Promise<Record<ItemNames, string> | null> {
     return new Promise<Record<ItemNames, string> | null>(resolve => {
         let disposer: null | (() => void) = null;
@@ -49,6 +50,7 @@ export default function showInputDialog<Strings extends string, ItemNames extend
                 onOk={onOk}
                 onCancel={onCancel}
                 onChange={onChange}
+                rows={rows}
             />
         );
 

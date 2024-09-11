@@ -1,7 +1,8 @@
-import { areSameSelection } from './areSameSelection';
+import { areSameSelections } from './areSameSelections';
 import { createTextMutationObserver } from './textMutationObserver';
-import { domIndexerImpl } from './domIndexerImpl';
-import { updateCachedSelection } from './updateCachedSelection';
+import { DomIndexerImpl } from './domIndexerImpl';
+import { updateCache } from './updateCache';
+import type { Mutation } from './MutationType';
 import type {
     CachePluginState,
     IEditor,
@@ -26,7 +27,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.state = option.disableCache
             ? {}
             : {
-                  domIndexer: domIndexerImpl,
+                  domIndexer: new DomIndexerImpl(
+                      option.experimentalFeatures &&
+                          option.experimentalFeatures.indexOf('PersistCache') >= 0
+                  ),
                   textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
               };
     }
@@ -86,6 +90,19 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
 
         switch (event.eventType) {
+            case 'logicalRootChanged':
+                this.invalidateCache();
+
+                if (this.state.textMutationObserver) {
+                    this.state.textMutationObserver.stopObserving();
+                    this.state.textMutationObserver = createTextMutationObserver(
+                        event.logicalRoot,
+                        this.onMutation
+                    );
+                    this.state.textMutationObserver.startObserving();
+                }
+                break;
+
             case 'keyDown':
             case 'input':
                 if (!this.state.textMutationObserver) {
@@ -102,8 +119,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 const { contentModel, selection } = event;
 
                 if (contentModel && this.state.domIndexer) {
-                    this.state.cachedModel = contentModel;
-                    updateCachedSelection(this.state, selection);
+                    updateCache(this.state, contentModel, selection);
                 } else {
                     this.invalidateCache();
                 }
@@ -112,12 +128,36 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
     }
 
-    private onMutation = (isTextChangeOnly: boolean) => {
+    private onMutation = (mutation: Mutation) => {
         if (this.editor) {
-            if (isTextChangeOnly) {
-                this.updateCachedModel(this.editor, true /*forceUpdate*/);
-            } else {
-                this.invalidateCache();
+            switch (mutation.type) {
+                case 'childList':
+                    if (
+                        !this.state.domIndexer?.reconcileChildList(
+                            mutation.addedNodes,
+                            mutation.removedNodes
+                        )
+                    ) {
+                        this.invalidateCache();
+                    }
+                    break;
+
+                case 'text':
+                    this.updateCachedModel(this.editor, true /*forceUpdate*/);
+                    break;
+
+                case 'elementId':
+                    const element = mutation.element;
+
+                    if (!this.state.domIndexer?.reconcileElementId(element)) {
+                        this.invalidateCache();
+                    }
+
+                    break;
+
+                case 'unknown':
+                    this.invalidateCache();
+                    break;
             }
         }
     };
@@ -136,6 +176,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
     }
 
     private updateCachedModel(editor: IEditor, forceUpdate?: boolean) {
+        if (editor.isInShadowEdit()) {
+            return;
+        }
+
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
@@ -145,7 +189,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             forceUpdate ||
             !cachedSelection ||
             !newRangeEx ||
-            !areSameSelection(newRangeEx, cachedSelection);
+            !areSameSelections(newRangeEx, cachedSelection);
 
         if (isSelectionChanged) {
             if (
@@ -155,7 +199,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             ) {
                 this.invalidateCache();
             } else {
-                updateCachedSelection(this.state, newRangeEx);
+                updateCache(this.state, model, newRangeEx);
             }
         } else {
             this.state.cachedSelection = cachedSelection;

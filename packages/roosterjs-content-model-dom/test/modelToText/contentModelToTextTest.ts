@@ -3,6 +3,7 @@ import { createBr } from '../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../lib/modelApi/creators/createEntity';
+import { createGeneralSegment } from '../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../lib/modelApi/creators/createListLevel';
@@ -188,5 +189,45 @@ describe('modelToText', () => {
         const text = contentModelToText(model);
 
         expect(text).toBe('text1test entitytext2');
+    });
+
+    it('With callbacks', () => {
+        const onDivider = jasmine.createSpy('onDivider').and.returnValue('divider');
+        const onEntitySegment = jasmine
+            .createSpy('onEntitySegment')
+            .and.returnValue('entity segment');
+        const onEntityBlock = jasmine.createSpy('onEntityBlock').and.returnValue('entity block');
+        const onGeneralSegment = jasmine.createSpy('onGeneralSegment').and.returnValue('general');
+        const onImage = jasmine.createSpy('onImage').and.returnValue('image');
+        const onText = jasmine.createSpy('onText').and.returnValue('text');
+
+        const doc = createContentModelDocument();
+        const para = createParagraph();
+        const entitySegment = createEntity(null!);
+        const entityBlock = createEntity(null!);
+        const generalSegment = createGeneralSegment(null!);
+        const divider = createDivider('div');
+        const image = createImage('src');
+        const text = createText('test');
+
+        para.segments.push(entitySegment, generalSegment, image, text);
+        doc.blocks.push(para, entityBlock, divider);
+
+        const result = contentModelToText(doc, '/', {
+            onDivider,
+            onEntityBlock,
+            onEntitySegment,
+            onGeneralSegment,
+            onImage,
+            onText,
+        });
+
+        expect(result).toBe('entity segmentgeneralimagetext/entity block/divider');
+        expect(onDivider).toHaveBeenCalledWith(divider);
+        expect(onEntityBlock).toHaveBeenCalledWith(entityBlock);
+        expect(onEntitySegment).toHaveBeenCalledWith(entitySegment);
+        expect(onGeneralSegment).toHaveBeenCalledWith(generalSegment);
+        expect(onImage).toHaveBeenCalledWith(image);
+        expect(onText).toHaveBeenCalledWith(text);
     });
 });

@@ -1,4 +1,5 @@
 import { ChangeSource, getObjectKeys, setColor } from 'roosterjs-content-model-dom';
+import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
 import type {
     IEditor,
     LifecyclePluginState,
@@ -48,6 +49,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             isDarkMode: !!options.inDarkMode,
             shadowEditFragment: null,
             styleElements: {},
+            announcerStringGetter: options.announcerStringGetter,
         };
     }
 
@@ -73,6 +75,9 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         // Let other plugins know that we are ready
         this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
+
+        // Initialize the Announce container.
+        this.state.announceContainer = createAriaLiveElement(editor.getDocument());
     }
 
     /**
@@ -87,6 +92,13 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
             element.parentElement?.removeChild(element);
             delete this.state.styleElements[key];
         });
+
+        const announceContainer = this.state.announceContainer;
+
+        if (announceContainer) {
+            announceContainer.parentElement?.removeChild(announceContainer);
+            delete this.state.announceContainer;
+        }
 
         if (this.disposer) {
             this.disposer();

@@ -1,9 +1,9 @@
-import createContextMenuProvider from '../utils/createContextMenuProvider';
-import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
-import { setOrderedListNumbering } from 'roosterjs-editor-api';
-import type ContextMenuItem from '../types/ContextMenuItem';
-import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import { createContextMenuProvider } from '../utils/createContextMenuProvider';
+import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import { setListStartNumber } from 'roosterjs-content-model-api';
+import { showInputDialog } from '../../inputDialog/utils/showInputDialog';
+import type { EditorPlugin, IEditor } from 'roosterjs-content-model-types';
+import type { ContextMenuItem } from '../types/ContextMenuItem';
 import type { ListNumberMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
 
@@ -11,8 +11,7 @@ const ListNumberResetMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
     key: 'menuNameListNumberReset',
     unlocalizedText: 'Restart at 1',
     onClick: (_, editor, node) => {
-        const li = editor.getElementAtCursor('LI', node) as HTMLLIElement;
-        setOrderedListNumbering(editor, li, 1);
+        setListStartNumber(editor, 1);
     },
 };
 
@@ -29,7 +28,7 @@ const ListNumberEditMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
             for (let child = list.firstChild; child; child = child.nextSibling) {
                 if (child === li) {
                     break;
-                } else if (safeInstanceOf(child, 'HTMLLIElement')) {
+                } else if (isNodeOfType(child, 'ELEMENT_NODE') && isElementOfType(child, 'li')) {
                     startNumber += 1;
                 }
             }
@@ -53,7 +52,7 @@ const ListNumberEditMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
                     const result = parseInt(values.value);
 
                     if (result > 0 && result != startNumber) {
-                        setOrderedListNumbering(editor, li, Math.floor(result));
+                        setListStartNumber(editor, Math.floor(result));
                     }
                 }
             });
@@ -62,8 +61,9 @@ const ListNumberEditMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
 };
 
 function getEditingList(editor: IEditor, node: Node) {
-    const li = editor.getElementAtCursor('LI', node) as HTMLLIElement;
-    const list = li && (editor.getElementAtCursor('ol', li) as HTMLOListElement);
+    const domHelper = editor.getDOMHelper();
+    const li = domHelper.findClosestElementAncestor(node, 'LI');
+    const list = li && (domHelper.findClosestElementAncestor(li, 'ol') as HTMLOListElement | null);
 
     return list?.isContentEditable ? { list, li } : null;
 }
@@ -72,7 +72,7 @@ function getEditingList(editor: IEditor, node: Node) {
  * Create a new instance of ContextMenuProvider to support list number editing functionalities in context menu
  * @returns A new ContextMenuProvider
  */
-export default function createListEditMenuProvider(
+export function createListEditMenuProvider(
     strings?: LocalizedStrings<ListNumberMenuItemStringKey>
 ): EditorPlugin {
     return createContextMenuProvider(

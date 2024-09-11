@@ -1,19 +1,19 @@
 import * as React from 'react';
-import getLocalizedString from '../../common/utils/getLocalizedString';
 import { CommandBar } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getLocalizedString } from '../../common/utils/getLocalizedString';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
-import { moreCommands } from './buttons/moreCommands';
-import type RibbonButton from '../type/RibbonButton';
-import type RibbonProps from '../type/RibbonProps';
-import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
-import type { FormatState } from 'roosterjs-editor-types';
+import { moreCommands } from '../buttons/moreCommands';
 import type {
     IContextualMenuItem,
     IContextualMenuItemProps,
 } from '@fluentui/react/lib/ContextualMenu';
 import type { IRenderFunction } from '@fluentui/react/lib/Utilities';
+import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
+import type { RibbonButton } from '../type/RibbonButton';
+import type { ContentModelFormatState } from 'roosterjs-content-model-types';
+import type { RibbonProps } from '../type/RibbonProps';
 
 const ribbonClassName = mergeStyles({
     '& .ms-CommandBar': {
@@ -30,9 +30,9 @@ const rtlIcon = mergeStyles({
  * @param props Properties of format ribbon component
  * @returns The format ribbon component
  */
-export default function Ribbon<T extends string>(props: RibbonProps<T>) {
+export function Ribbon<T extends string>(props: RibbonProps<T>) {
     const { plugin, buttons, strings, dir } = props;
-    const [formatState, setFormatState] = React.useState<FormatState | null>(null);
+    const [formatState, setFormatState] = React.useState<ContentModelFormatState | null>(null);
     const isRtl = dir == 'rtl';
 
     const onClick = React.useCallback(

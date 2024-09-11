@@ -1,10 +1,11 @@
 import * as React from 'react';
-import InputDialogItem from './InputDialogItem';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
 import { getLocalizedString } from '../../common/index';
-import { getObjectKeys } from 'roosterjs-editor-dom';
-import type DialogItem from '../type/DialogItem';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { InputDialogItem } from './InputDialogItem';
+import type { IDialogContentProps } from '@fluentui/react/lib/Dialog';
+import type { DialogItem } from '../type/DialogItem';
 import type {
     CancelButtonStringKey,
     LocalizedStrings,
@@ -26,19 +27,34 @@ export interface InputDialogProps<Strings extends string, ItemNames extends stri
     ) => Record<ItemNames, string> | null;
     onOk: (values: Record<ItemNames, string>) => void;
     onCancel: () => void;
+    rows?: number;
 }
 
 /**
  * @internal
  */
-export default function InputDialog<Strings extends string, ItemNames extends string>(
+export function InputDialog<Strings extends string, ItemNames extends string>(
     props: InputDialogProps<Strings, ItemNames>
 ) {
-    const { items, strings, dialogTitleKey, unlocalizedTitle, onOk, onCancel, onChange } = props;
-    const dialogContentProps = React.useMemo(
+    const {
+        items,
+        strings,
+        dialogTitleKey,
+        unlocalizedTitle,
+        onOk,
+        onCancel,
+        onChange,
+        rows,
+    } = props;
+    const dialogContentProps: IDialogContentProps = React.useMemo(
         () => ({
             type: DialogType.normal,
             title: getLocalizedString(strings, dialogTitleKey, unlocalizedTitle),
+            styles: {
+                innerContent: {
+                    height: rows ? '200px' : undefined,
+                },
+            },
         }),
         [strings, dialogTitleKey, unlocalizedTitle]
     );
@@ -80,6 +96,7 @@ export default function InputDialog<Strings extends string, ItemNames extends st
                         currentValues={currentValues}
                         onEnterKey={onSubmit}
                         onChanged={onItemChanged}
+                        rows={rows}
                     />
                 ))}
             </div>

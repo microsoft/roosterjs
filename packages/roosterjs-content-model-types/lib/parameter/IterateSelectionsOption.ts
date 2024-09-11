@@ -1,7 +1,19 @@
-import type { ContentModelBlock } from '../block/ContentModelBlock';
-import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import type { ContentModelSegment } from '../segment/ContentModelSegment';
-import type { TableSelectionContext } from '../selection/TableSelectionContext';
+import type {
+    ContentModelBlock,
+    ReadonlyContentModelBlock,
+} from '../contentModel/block/ContentModelBlock';
+import type {
+    ContentModelBlockGroup,
+    ReadonlyContentModelBlockGroup,
+} from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type {
+    ContentModelSegment,
+    ReadonlyContentModelSegment,
+} from '../contentModel/segment/ContentModelSegment';
+import type {
+    ReadonlyTableSelectionContext,
+    TableSelectionContext,
+} from '../selection/TableSelectionContext';
 
 /**
  * Options for iterateSelections API
@@ -50,4 +62,19 @@ export type IterateSelectionsCallback = (
     tableContext?: TableSelectionContext,
     block?: ContentModelBlock,
     segments?: ContentModelSegment[]
+) => void | boolean;
+
+/**
+ * The callback function type for iterateSelections (Readonly)
+ * @param path The block group path of current selection
+ * @param tableContext Table context of current selection
+ * @param block Block of current selection
+ * @param segments Segments of current selection
+ * @returns True to stop iterating, otherwise keep going
+ */
+export type ReadonlyIterateSelectionsCallback = (
+    path: ReadonlyContentModelBlockGroup[],
+    tableContext?: ReadonlyTableSelectionContext,
+    block?: ReadonlyContentModelBlock,
+    segments?: ReadonlyContentModelSegment[]
 ) => void | boolean;

@@ -3,13 +3,17 @@ import {
     createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    mutateBlock,
     normalizeContentModel,
     setParagraphNotImplicit,
+    updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelDocument,
     ContentModelListItem,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -19,7 +23,7 @@ import type {
  * @param removeMargins true to remove margins, false to keep margins @default false
  */
 export function setListType(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     listType: 'OL' | 'UL',
     removeMargins: boolean = false
 ) {
@@ -33,7 +37,7 @@ export function setListType(
             ? block.levels[block.levels.length - 1]?.listType == listType
             : shouldIgnoreBlock(block)
     );
-    let existingListItems: ContentModelListItem[] = [];
+    let existingListItems: ReadonlyContentModelListItem[] = [];
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
@@ -70,7 +74,7 @@ export function setListType(
                     const prevBlock = parent.blocks[index - 1];
                     const segmentFormat =
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
-                    const newListItem = createListItem(
+                    const newListItem: ShallowMutableContentModelListItem = createListItem(
                         [
                             createListLevel(listType, {
                                 startNumberOverride:
@@ -98,26 +102,41 @@ export function setListType(
                         setParagraphNotImplicit(block);
                     }
 
-                    newListItem.blocks.push(block);
+                    const mutableBlock = mutateBlock(block);
 
-                    if (block.format.marginRight) {
-                        newListItem.format.marginRight = block.format.marginRight;
-                        block.format.marginRight = undefined;
+                    newListItem.blocks.push(mutableBlock);
+
+                    if (mutableBlock.format.marginRight) {
+                        newListItem.format.marginRight = mutableBlock.format.marginRight;
+                        mutableBlock.format.marginRight = undefined;
                     }
 
-                    if (block.format.marginLeft) {
-                        newListItem.format.marginLeft = block.format.marginLeft;
-                        block.format.marginLeft = undefined;
+                    if (mutableBlock.format.marginLeft) {
+                        newListItem.format.marginLeft = mutableBlock.format.marginLeft;
+                        mutableBlock.format.marginLeft = undefined;
                     }
 
-                    if (block.format.textAlign) {
-                        newListItem.format.textAlign = block.format.textAlign;
+                    if (mutableBlock.format.textAlign) {
+                        newListItem.format.textAlign = mutableBlock.format.textAlign;
                     }
 
-                    parent.blocks.splice(index, 1, newListItem);
+                    mutateBlock(parent).blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
+
+                    const levelIndex = newListItem.levels.length - 1;
+                    const level = mutateBlock(newListItem).levels[levelIndex];
+
+                    if (level) {
+                        updateListMetadata(level, metadata =>
+                            Object.assign({}, metadata, {
+                                applyListStyleFromLevel: true,
+                            })
+                        );
+                    }
                 } else {
-                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0px'));
+                    existingListItems.forEach(
+                        x => (mutateBlock(x).levels[0].format.marginBottom = '0px')
+                    );
                     existingListItems = [];
                 }
             }
@@ -129,7 +148,7 @@ export function setListType(
     return paragraphOrListItems.length > 0;
 }
 
-function shouldIgnoreBlock(block: ContentModelBlock) {
+function shouldIgnoreBlock(block: ReadonlyContentModelBlock) {
     switch (block.blockType) {
         case 'Table':
             return false;

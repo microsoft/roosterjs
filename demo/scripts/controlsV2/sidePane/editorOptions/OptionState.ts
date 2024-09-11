@@ -1,14 +1,13 @@
-import { AutoFormatOptions, MarkdownOptions } from 'roosterjs-content-model-plugins';
+import {
+    AutoFormatOptions,
+    CustomReplace,
+    EditOptions,
+    MarkdownOptions,
+} from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
-import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
 
-export interface LegacyPluginList {
-    imageEdit: boolean;
-    customReplace: boolean;
-    announce: boolean;
-}
-
-export interface NewPluginList {
+export interface BuildInPluginList {
     autoFormat: boolean;
     edit: boolean;
     paste: boolean;
@@ -21,9 +20,9 @@ export interface NewPluginList {
     sampleEntity: boolean;
     markdown: boolean;
     hyperlink: boolean;
+    imageEditPlugin: boolean;
+    customReplace: boolean;
 }
-
-export interface BuildInPluginList extends LegacyPluginList, NewPluginList {}
 
 export interface OptionState {
     pluginList: BuildInPluginList;
@@ -36,6 +35,8 @@ export interface OptionState {
     watermarkText: string;
     autoFormatOptions: AutoFormatOptions;
     markdownOptions: MarkdownOptions;
+    customReplacements: CustomReplace[];
+    editPluginOptions: EditOptions;
 
     // Legacy plugin options
     defaultFormat: ContentModelSegmentFormat;
@@ -46,7 +47,7 @@ export interface OptionState {
     // Editor options
     isRtl: boolean;
     disableCache: boolean;
-    applyChangesOnMouseUp: boolean;
+    experimentalFeatures: Set<ExperimentalFeature>;
 }
 
 export interface OptionPaneProps extends OptionState, SidePaneElementProps {}

@@ -1,8 +1,16 @@
-import { createTableMover } from '../../lib/tableEdit/editors/features/TableMover';
+import { ContentModelTable, EditorOptions, IEditor } from 'roosterjs-content-model-types';
 import { Editor } from 'roosterjs-content-model-core';
-import { EditorOptions, IEditor } from 'roosterjs-content-model-types';
+import { OnTableEditorCreatedCallback } from '../../lib/tableEdit/OnTableEditorCreatedCallback';
 import { TableEditor } from '../../lib/tableEdit/editors/TableEditor';
 import { TableEditPlugin } from '../../lib/tableEdit/TableEditPlugin';
+import {
+    TableMoverInitValue,
+    TableMoverContext,
+    createTableMover,
+    onDragEnd,
+    onDragStart,
+    onDragging,
+} from '../../lib/tableEdit/editors/features/TableMover';
 
 describe('Table Mover Tests', () => {
     let editor: IEditor;
@@ -10,6 +18,122 @@ describe('Table Mover Tests', () => {
     let targetId = 'tableSelectionTestId';
     let tableEdit: TableEditPlugin;
     let node: HTMLDivElement;
+
+    function createCmTable(): ContentModelTable {
+        return {
+            blockType: 'Table',
+            rows: [
+                {
+                    height: 20,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'a1',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'z1',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    height: 20,
+                    format: {},
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'a2',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'z2',
+                                            format: {},
+                                        },
+                                        {
+                                            segmentType: 'SelectionMarker',
+                                            isSelected: true,
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {
+                id: `${targetId}`,
+            },
+            widths: [10, 10],
+            dataset: {},
+        };
+    }
 
     beforeEach(() => {
         document.body.innerHTML = '';
@@ -22,121 +146,7 @@ describe('Table Mover Tests', () => {
             plugins: [tableEdit],
             initialModel: {
                 blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Table',
-                        rows: [
-                            {
-                                height: 20,
-                                format: {},
-                                cells: [
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'a1',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'z1',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                ],
-                            },
-                            {
-                                height: 20,
-                                format: {},
-                                cells: [
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'a2',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'z2',
-                                                        format: {},
-                                                    },
-                                                    {
-                                                        segmentType: 'SelectionMarker',
-                                                        isSelected: true,
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                ],
-                            },
-                        ],
-                        format: {
-                            id: `${targetId}`,
-                        },
-                        widths: [10, 10],
-                        dataset: {},
-                    },
-                ],
+                blocks: [createCmTable()],
                 format: {},
             },
         };
@@ -181,6 +191,52 @@ describe('Table Mover Tests', () => {
         runTest(0, true);
     });
 
+    it('Customize component with callback', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        scrollContainer.innerHTML = '<div style="height: 300px"></div>';
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('disposer');
+        const mover = runTest(0, true, (editorType, element) => {
+            if (element && editorType == 'TableMover') {
+                changeCb();
+            }
+            return () => disposer();
+        });
+
+        mover?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).toHaveBeenCalled();
+    });
+
+    it('Dont customize component with callback, editor type not in callback', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        scrollContainer.innerHTML = '<div style="height: 300px"></div>';
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+
+        const disposer = jasmine.createSpy('disposer');
+        const changeCb = jasmine.createSpy('disposer');
+        const mover = runTest(0, true, (editorType, element) => {
+            if (element && editorType == 'TableResizer') {
+                changeCb();
+            }
+            return () => disposer();
+        });
+
+        mover?.featureHandler?.dispose();
+
+        expect(disposer).toHaveBeenCalled();
+        expect(changeCb).not.toHaveBeenCalled();
+    });
+
     it('On click event', () => {
         const table = document.getElementById(targetId) as HTMLTableElement;
 
@@ -202,7 +258,586 @@ describe('Table Mover Tests', () => {
         }
     });
 
-    function runTest(scrollTop: number, isNotNull: boolean | null) {
+    it('Move - onDragStart', () => {
+        //Arrange
+        node.style.height = '10px';
+        node.style.overflowX = 'auto';
+        node.scrollTop = 0;
+        const target = document.getElementById(targetId);
+        editor.focus();
+
+        const divParent = document.createElement('div');
+        const divChild = document.createElement('div');
+        divParent.appendChild(divChild);
+        const parentSpy = spyOn(divParent, 'appendChild');
+
+        const onStartSpy = jasmine.createSpy('onStart');
+        const context: TableMoverContext = {
+            table: target as HTMLTableElement,
+            zoomScale: 0,
+            rect: null,
+            isRTL: false,
+            editor: editor,
+            div: divChild,
+            onFinishDragging: () => {},
+            onStart: onStartSpy,
+            onEnd: () => {},
+        };
+        const initialSelection = editor.getDOMSelection();
+
+        //Act
+        const initvalue = onDragStart(context);
+
+        //Assert
+        expect(parentSpy).toHaveBeenCalled();
+        expect(onStartSpy).toHaveBeenCalled();
+
+        expect(initvalue.cmTable).toBeDefined();
+        expect(initvalue.initialSelection).toEqual(initialSelection);
+        expect(initvalue.tableRect).toBeDefined();
+    });
+
+    it('Move - onDragging', () => {
+        //Arrange
+        const nodeHeight = 100;
+        const nodeWidth = 100;
+        node.style.height = `${nodeHeight}px`;
+        node.style.width = `${nodeWidth}px`;
+        node.style.overflowX = 'auto';
+        node.scrollTop = 0;
+        const target = document.getElementById(targetId);
+        editor.focus();
+
+        const div = document.createElement('div');
+
+        const context: TableMoverContext = {
+            table: target as HTMLTableElement,
+            zoomScale: 0,
+            rect: null,
+            isRTL: false,
+            editor: editor,
+            div: div,
+            onFinishDragging: () => {},
+            onStart: () => {},
+            onEnd: () => {},
+        };
+        const outsiderDiv = document.createElement('div');
+        outsiderDiv.style.height = `${nodeHeight}px`;
+        outsiderDiv.style.width = `${nodeWidth}px`;
+        node.parentElement?.appendChild(outsiderDiv);
+
+        const divRect = document.createElement('div');
+        divRect.style.position = 'fixed';
+        divRect.style.top = '0px';
+        divRect.style.left = '0px';
+
+        const initValue: TableMoverInitValue = {
+            cmTable: undefined,
+            initialSelection: null,
+            tableRect: divRect,
+        };
+
+        //Act
+        const outsideDivRect = outsiderDiv.getBoundingClientRect();
+        const draggingOutsideEditor = onDragging(
+            context,
+            {
+                clientX: outsideDivRect.right - 10,
+                clientY: outsideDivRect.bottom - 10,
+            } as MouseEvent,
+            initValue
+        );
+        const targetRect = target?.getBoundingClientRect();
+        const draggingInsideEditor = onDragging(
+            context,
+            {
+                clientX: targetRect?.height ?? 0 / 2,
+                clientY: targetRect?.width ?? 0 / 2,
+            } as MouseEvent,
+            initValue
+        );
+        node.parentElement?.removeChild(outsiderDiv);
+
+        //Assert
+        expect(draggingOutsideEditor).toBe(false);
+        expect(draggingInsideEditor).toBe(true);
+        expect(parseFloat(divRect.style.top)).toBeGreaterThan(0);
+        expect(parseFloat(divRect.style.left)).toBeGreaterThan(0);
+    });
+
+    it('Do not dismiss the TableMover if only clicking the handler element', () => {
+        //Act
+        const table = document.createElement('table');
+        const div = document.createElement('div');
+        const onFinishDragging = jasmine.createSpy('onFinishDragging');
+        const onStart = jasmine.createSpy('onStart');
+        const onEnd = jasmine.createSpy('onEnd');
+
+        const context: TableMoverContext = {
+            table,
+            zoomScale: 1,
+            rect: null,
+            isRTL: true,
+            editor,
+            div,
+            onFinishDragging,
+            onStart,
+            onEnd,
+            disableMovement: false,
+        };
+
+        onDragEnd(
+            context,
+            <any>{
+                target: div,
+            },
+            undefined
+        );
+
+        expect(onEnd).toHaveBeenCalledWith(false);
+    });
+
+    it('Dismiss the TableMover if drag end did not end in the handler element', () => {
+        //Act
+        const table = document.createElement('table');
+        const div = document.createElement('div');
+        const onFinishDragging = jasmine.createSpy('onFinishDragging');
+        const onStart = jasmine.createSpy('onStart');
+        const onEnd = jasmine.createSpy('onEnd');
+
+        const context: TableMoverContext = {
+            table,
+            zoomScale: 1,
+            rect: null,
+            isRTL: true,
+            editor,
+            div,
+            onFinishDragging,
+            onStart,
+            onEnd,
+            disableMovement: false,
+        };
+
+        onDragEnd(
+            context,
+            <any>{
+                target: table,
+            },
+            undefined
+        );
+
+        expect(onEnd).toHaveBeenCalledWith(true);
+    });
+
+    describe('Move - onDragEnd', () => {
+        let target: HTMLTableElement;
+        const nodeHeight = 300;
+
+        beforeEach(() => {
+            //Arrange
+            node.style.height = `${nodeHeight}px`;
+            node.style.overflowX = 'auto';
+            node.scrollTop = 0;
+            target = document.getElementById(targetId) as HTMLTableElement;
+            editor.focus();
+        });
+
+        it('remove tableRect', () => {
+            const div = document.createElement('div');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: () => {},
+                onStart: () => {},
+                onEnd: () => {},
+            };
+            const divRect = document.createElement('div');
+            divRect.id = 'testRect';
+            document.body.appendChild(divRect);
+
+            const initValue: TableMoverInitValue = {
+                cmTable: undefined,
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            //Act
+            onDragEnd(context, { clientX: 10, clientY: 10 } as MouseEvent, initValue);
+
+            //Assert
+            expect(document.getElementById('testRect')).toBeNull();
+        });
+
+        it('onFinishDragging', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+            const initValue: TableMoverInitValue = {
+                cmTable: undefined,
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            const event = new MouseEvent('mouseup', { clientX: 10, clientY: 10, bubbles: false });
+            spyOnProperty(event, 'target').and.returnValue(div);
+
+            //Act
+            onDragEnd(context, event, initValue);
+
+            //Assert
+            expect(onFinishDraggingSpy).toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
+        it('Drop table on itself', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: undefined,
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            const firstTableChild = target.rows[0].cells[0].firstChild;
+            const event = new MouseEvent('mouseup', { clientX: 10, clientY: 10, bubbles: false });
+            spyOnProperty(event, 'target').and.returnValue(firstTableChild);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            expect(dropResult).toBe(false);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
+        it('Drop table outside editor', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: undefined,
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            const outsideDiv = document.createElement('div');
+            document.body.appendChild(outsideDiv);
+            const event = new MouseEvent('mouseup', { clientX: 10, clientY: 10, bubbles: false });
+            spyOnProperty(event, 'target').and.returnValue(outsideDiv);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            expect(dropResult).toBe(false);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
+        it('Drop table inside editor between two texts', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: createCmTable(),
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            editor.formatContentModel(model => {
+                model.blocks.push(
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT-A',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT-B',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    }
+                );
+
+                return true;
+            });
+
+            const divs = Array.from(node.getElementsByTagName('div'));
+            let textB: HTMLElement | null = null;
+            for (const div of divs) {
+                if (div.textContent == 'TEXT-B') {
+                    textB = div;
+                    break;
+                }
+            }
+
+            if (textB == null) {
+                fail('no text found');
+                return false;
+            }
+
+            const textBRect = textB.getBoundingClientRect();
+            const event = new MouseEvent('mouseup', {
+                clientX: textBRect.left,
+                clientY: textBRect.top + 2,
+                bubbles: false,
+            });
+            spyOnProperty(event, 'target').and.returnValue(textB);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            const finalModel = editor.getContentModelCopy('disconnected');
+
+            expect(finalModel.blocks[0]?.blockType).toEqual('Paragraph');
+            expect(finalModel.blocks[1]?.blockType).toEqual('Table');
+            expect(finalModel.blocks[2]?.blockType).toEqual('Paragraph');
+            expect(dropResult).toBe(true);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
+        it('Drop table inside editor last br', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: createCmTable(),
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            editor.formatContentModel(model => {
+                model.blocks.push(
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    }
+                );
+
+                return true;
+            });
+
+            const brElement = node.getElementsByTagName('br')[0];
+            if (brElement == null) {
+                fail('no br element');
+                return false;
+            }
+            const brElementRect = brElement.getBoundingClientRect();
+
+            const event = new MouseEvent('mouseup', {
+                clientX: brElementRect.left + 1,
+                clientY: brElementRect.top + 1,
+                bubbles: false,
+            });
+            spyOnProperty(event, 'target').and.returnValue(brElement);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            const finalModel = editor.getContentModelCopy('disconnected');
+            expect(finalModel.blocks[0]?.blockType).toEqual('Paragraph');
+            expect(finalModel.blocks[1]?.blockType).toEqual('Table');
+            finalModel.blocks[2].blockType == 'Paragraph'
+                ? expect(finalModel.blocks[2]?.segments[0]?.segmentType).toEqual('Br')
+                : fail('Last block is not paragraph');
+            expect(dropResult).toBe(true);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+
+        it('Drop table inside editor below last br', () => {
+            const div = document.createElement('div');
+            const onEndSpy = jasmine.createSpy('onEnd');
+            const onFinishDraggingSpy = jasmine.createSpy('onFinishDragging');
+            const context: TableMoverContext = {
+                table: target,
+                zoomScale: 0,
+                rect: null,
+                isRTL: false,
+                editor: editor,
+                div: div,
+                onFinishDragging: onFinishDraggingSpy,
+                onStart: () => {},
+                onEnd: onEndSpy,
+            };
+            const divRect = document.createElement('div');
+
+            const initValue: TableMoverInitValue = {
+                cmTable: createCmTable(),
+                initialSelection: null,
+                tableRect: divRect,
+            };
+
+            editor.formatContentModel(model => {
+                model.blocks.push(
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'TEXT',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {},
+                    }
+                );
+
+                return true;
+            });
+
+            const brElement = node.getElementsByTagName('br')[0];
+            if (brElement == null) {
+                fail('no br element');
+                return false;
+            }
+            const brElementRect = brElement.getBoundingClientRect();
+
+            const event = new MouseEvent('mouseup', {
+                clientX: brElementRect.left + 1,
+                clientY: brElementRect.bottom + 5,
+                bubbles: false,
+            });
+            spyOnProperty(event, 'target').and.returnValue(node);
+
+            //Act
+            const dropResult = onDragEnd(context, event, initValue);
+
+            //Assert
+            const finalModel = editor.getContentModelCopy('disconnected');
+            expect(finalModel.blocks[0]?.blockType).toEqual('Paragraph');
+            expect(finalModel.blocks[1]?.blockType).toEqual('Table');
+            finalModel.blocks[2].blockType == 'Paragraph'
+                ? expect(finalModel.blocks[2]?.segments[0]?.segmentType).toEqual('Br')
+                : fail('Last block is not paragraph');
+            expect(dropResult).toBe(true);
+            expect(onFinishDraggingSpy).not.toHaveBeenCalled();
+            expect(onEndSpy).toHaveBeenCalled();
+        });
+    });
+
+    function runTest(
+        scrollTop: number,
+        isNotNull: boolean | null,
+        onTableEditorCreatedCallback?: OnTableEditorCreatedCallback
+    ) {
         //Arrange
         node.style.height = '10px';
         node.style.overflowX = 'auto';
@@ -216,8 +851,11 @@ describe('Table Mover Tests', () => {
             editor,
             false,
             () => {},
-            () => () => {},
-            node
+            () => {},
+            () => false,
+            node,
+            undefined,
+            onTableEditorCreatedCallback
         );
 
         //Assert
@@ -226,5 +864,7 @@ describe('Table Mover Tests', () => {
         } else {
             expect(result).toBeDefined();
         }
+
+        return result;
     }
 });

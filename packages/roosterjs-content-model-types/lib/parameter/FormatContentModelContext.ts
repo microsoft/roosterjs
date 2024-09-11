@@ -1,6 +1,7 @@
-import type { ContentModelEntity } from '../entity/ContentModelEntity';
-import type { ContentModelImage } from '../segment/ContentModelImage';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { AnnounceData } from './AnnounceData';
+import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
+import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 
 /**
@@ -97,4 +98,9 @@ export interface FormatContentModelContext {
      * @optional Set to true if this action can be undone when user press Backspace key (aka Auto Complete).
      */
     canUndoByBackspace?: boolean;
+
+    /**
+     * @optional Set this value to tell AnnouncePlugin to announce the given information
+     */
+    announceData?: AnnounceData | null;
 }

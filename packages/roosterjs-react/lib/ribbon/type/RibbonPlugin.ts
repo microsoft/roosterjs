@@ -1,15 +1,17 @@
-import type RibbonButton from './RibbonButton';
-import type { FormatState } from 'roosterjs-editor-types';
+import type { ContentModelFormatState } from 'roosterjs-content-model-types';
 import type { LocalizedStrings, ReactEditorPlugin } from '../../common/index';
+import type { RibbonButton } from './RibbonButton';
 
 /**
  * Represents a plugin to connect format ribbon component and the editor
  */
-export default interface RibbonPlugin extends ReactEditorPlugin {
+export interface RibbonPlugin extends ReactEditorPlugin {
     /**
      * Register a callback to be invoked when format state of editor is changed, returns a disposer function.
      */
-    registerFormatChangedCallback: (callback: (formatState: FormatState) => void) => () => void;
+    registerFormatChangedCallback: (
+        callback: (formatState: ContentModelFormatState) => void
+    ) => () => void;
 
     /**
      * When user clicks on a button, call this method to let the plugin to handle this click event

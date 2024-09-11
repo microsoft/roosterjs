@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { UrlPlaceholder } from './OptionState';
-import type {
-    BuildInPluginList,
-    LegacyPluginList,
-    NewPluginList,
-    OptionState,
-} from './OptionState';
+import type { BuildInPluginList, OptionState } from './OptionState';
 
 const styles = require('./OptionsPane.scss');
 
@@ -101,33 +96,9 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
     };
 }
 
-export class LegacyPlugins extends PluginsBase<keyof LegacyPluginList> {
-    private forcePreserveRatio = React.createRef<HTMLInputElement>();
-
-    render() {
-        return (
-            <table>
-                <tbody>
-                    {this.renderPluginItem(
-                        'imageEdit',
-                        'Image Edit Plugin',
-                        this.renderCheckBox(
-                            'Force preserve ratio',
-                            this.forcePreserveRatio,
-                            this.props.state.forcePreserveRatio,
-                            (state, value) => (state.forcePreserveRatio = value)
-                        )
-                    )}
-                    {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
-                    {this.renderPluginItem('announce', 'Announce')}
-                </tbody>
-            </table>
-        );
-    }
-}
-
-export class Plugins extends PluginsBase<keyof NewPluginList> {
+export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
+    private handleTabKey = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
@@ -137,6 +108,8 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
     private autoLink = React.createRef<HTMLInputElement>();
     private autoUnlink = React.createRef<HTMLInputElement>();
     private autoHyphen = React.createRef<HTMLInputElement>();
+    private autoFraction = React.createRef<HTMLInputElement>();
+    private autoOrdinals = React.createRef<HTMLInputElement>();
     private markdownBold = React.createRef<HTMLInputElement>();
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
@@ -181,9 +154,30 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                                 this.props.state.autoFormatOptions.autoHyphen,
                                 (state, value) => (state.autoFormatOptions.autoHyphen = value)
                             )}
+                            {this.renderCheckBox(
+                                'Fraction',
+                                this.autoFraction,
+                                this.props.state.autoFormatOptions.autoFraction,
+                                (state, value) => (state.autoFormatOptions.autoFraction = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Ordinals',
+                                this.autoOrdinals,
+                                this.props.state.autoFormatOptions.autoOrdinals,
+                                (state, value) => (state.autoFormatOptions.autoOrdinals = value)
+                            )}
                         </>
                     )}
-                    {this.renderPluginItem('edit', 'Edit')}
+                    {this.renderPluginItem(
+                        'edit',
+                        'Edit',
+                        this.renderCheckBox(
+                            'Handle Tab Key',
+                            this.handleTabKey,
+                            this.props.state.editPluginOptions.handleTabKey,
+                            (state, value) => (state.editPluginOptions.handleTabKey = value)
+                        )
+                    )}
                     {this.renderPluginItem(
                         'paste',
                         'Paste',
@@ -279,6 +273,8 @@ export class Plugins extends PluginsBase<keyof NewPluginList> {
                             (state, value) => (state.linkTitle = value)
                         )
                     )}
+                    {this.renderPluginItem('customReplace', 'Custom Replace')}
+                    {this.renderPluginItem('imageEditPlugin', 'ImageEditPlugin')}
                 </tbody>
             </table>
         );

@@ -6,16 +6,12 @@ describe('createEditorContext', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
-        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         const domIndexer = 'DOMINDEXER' as any;
+        const isRtlSpy = jasmine.createSpy('isRtl');
 
         const div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
 
         const core = ({
@@ -33,6 +29,7 @@ describe('createEditorContext', () => {
             },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: isRtlSpy,
             },
         } as any) as EditorCore;
 
@@ -48,6 +45,7 @@ describe('createEditorContext', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -55,16 +53,12 @@ describe('createEditorContext', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
-        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+        const isRtlSpy = jasmine.createSpy('isRtl');
         const domIndexer = 'DOMINDEXER' as any;
 
         const div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
 
         const core = ({
@@ -82,6 +76,7 @@ describe('createEditorContext', () => {
             },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: isRtlSpy,
             },
         } as any) as EditorCore;
 
@@ -97,6 +92,7 @@ describe('createEditorContext', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -105,15 +101,10 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const mockedPendingFormat = 'PENDINGFORMAT' as any;
-        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
 
         const div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
 
         const core = ({
@@ -130,6 +121,7 @@ describe('createEditorContext', () => {
             cache: {},
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: jasmine.createSpy('isRtl'),
             },
         } as any) as EditorCore;
 
@@ -145,6 +137,7 @@ describe('createEditorContext', () => {
             pendingFormat: mockedPendingFormat,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
@@ -153,15 +146,11 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const mockedPendingFormat = 'PENDINGFORMAT' as any;
-        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+        const isRtlSpy = jasmine.createSpy('isRtl');
 
         const div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
 
         const core = ({
@@ -179,6 +168,7 @@ describe('createEditorContext', () => {
             cache: {},
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: isRtlSpy,
             },
         } as any) as EditorCore;
 
@@ -194,6 +184,7 @@ describe('createEditorContext', () => {
             pendingFormat: mockedPendingFormat,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });
@@ -201,22 +192,18 @@ describe('createEditorContext', () => {
 describe('createEditorContext - checkZoomScale', () => {
     let core: EditorCore;
     let div: any;
-    let getComputedStyleSpy: jasmine.Spy;
     let calculateZoomScaleSpy: jasmine.Spy;
+    let isRtlSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
-        getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale');
+        isRtlSpy = jasmine.createSpy('isRtl');
 
         div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
         core = ({
             physicalRoot: div,
@@ -231,6 +218,7 @@ describe('createEditorContext - checkZoomScale', () => {
             cache: {},
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: isRtlSpy,
             },
         } as any) as EditorCore;
     });
@@ -250,6 +238,7 @@ describe('createEditorContext - checkZoomScale', () => {
             domIndexer: undefined,
             pendingFormat: undefined,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });
@@ -257,21 +246,17 @@ describe('createEditorContext - checkZoomScale', () => {
 describe('createEditorContext - checkRootDir', () => {
     let core: EditorCore;
     let div: any;
-    let getComputedStyleSpy: jasmine.Spy;
     let calculateZoomScaleSpy: jasmine.Spy;
+    let isRtlSpy: jasmine.Spy;
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
 
     beforeEach(() => {
-        getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+        isRtlSpy = jasmine.createSpy('isRtl');
         div = {
-            ownerDocument: {
-                defaultView: {
-                    getComputedStyle: getComputedStyleSpy,
-                },
-            },
+            ownerDocument: {},
         };
         core = ({
             physicalRoot: div,
@@ -286,15 +271,13 @@ describe('createEditorContext - checkRootDir', () => {
             cache: {},
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
+                isRightToLeft: isRtlSpy,
             },
         } as any) as EditorCore;
     });
 
     it('LTR CSS', () => {
-        getComputedStyleSpy.and.returnValue({
-            direction: 'ltr',
-        });
-
+        isRtlSpy.and.returnValue(false);
         const context = createEditorContext(core, false);
 
         expect(context).toEqual({
@@ -307,14 +290,12 @@ describe('createEditorContext - checkRootDir', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 
     it('RTL', () => {
-        getComputedStyleSpy.and.returnValue({
-            direction: 'rtl',
-        });
-
+        isRtlSpy.and.returnValue(true);
         const context = createEditorContext(core, false);
 
         expect(context).toEqual({
@@ -328,6 +309,7 @@ describe('createEditorContext - checkRootDir', () => {
             pendingFormat: undefined,
             zoomScale: 1,
             rootFontSize: 16,
+            experimentalFeatures: [],
         });
     });
 });

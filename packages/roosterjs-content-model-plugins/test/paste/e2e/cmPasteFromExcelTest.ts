@@ -44,7 +44,8 @@ describe(ID, () => {
 
         paste(editor, clipboardData, 'asImage');
 
-        const model = editor.getContentModelCopy('connected');
+        const model = editor.getContentModelCopy('disconnected');
+        const width = editor.getDOMHelper().getClientWidth();
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -56,10 +57,23 @@ describe(ID, () => {
                             segmentType: 'Image',
                             src: 'https://github.com/microsoft/roosterjs',
                             format: {
-                                maxWidth: '100px',
+                                maxWidth: `${width}px`,
                             },
                             dataset: {},
+                            alt: undefined,
+                            title: undefined,
+                            isSelectedAsImageSelection: undefined,
+                            isSelected: undefined,
                         },
+                    ],
+                    format: {},
+                    cachedElement: undefined,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -77,8 +91,12 @@ describe(ID, () => {
                                 underline: false,
                             },
                         },
+                        { segmentType: 'Br', isSelected: undefined, format: {} },
                     ],
                     format: {},
+                    cachedElement: undefined,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
                 },
             ],
             format: {},

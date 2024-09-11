@@ -1,10 +1,10 @@
+import type { Colors } from 'roosterjs-content-model-types';
 import type { BackgroundColorKeys } from '../types/stringKeys';
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
-const BackgroundColors: Record<BackgroundColorKeys, ModeIndependentColor> = {
+const BackgroundColors: Record<BackgroundColorKeys, Colors> = {
     backgroundColorCyan: { lightModeColor: '#00ffff', darkModeColor: '#005357' },
     backgroundColorGreen: { lightModeColor: '#00ff00', darkModeColor: '#005e00' },
     backgroundColorYellow: { lightModeColor: '#ffff00', darkModeColor: '#383e00' },
@@ -55,7 +55,7 @@ const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
  * @param key The key to get color from
  * @returns A model independent color value of the given key
  */
-function getBackgroundColorValue(key: BackgroundColorKeys): ModeIndependentColor {
+function getBackgroundColorValue(key: BackgroundColorKeys): Colors {
     return BackgroundColors[key];
 }
 

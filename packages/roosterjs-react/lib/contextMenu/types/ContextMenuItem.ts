@@ -1,12 +1,12 @@
 import type { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
 import type { IIconProps } from '@fluentui/react/lib/Icon';
-import type { IEditor } from 'roosterjs-editor-types';
 import type { LocalizedStrings, UIUtilities } from '../../common/index';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Represent a context menu item
  */
-export default interface ContextMenuItem<TString extends string, TContext = never> {
+export interface ContextMenuItem<TString extends string, TContext = never> {
     /**
      * key of this button, needs to be unique
      */

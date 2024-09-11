@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { getComputedStyles } from 'roosterjs-editor-dom';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import type UIUtilities from '../type/UIUtilities';
+import type { UIUtilities } from '../type/UIUtilities';
 import type { PartialTheme } from '@fluentui/react/lib/Theme';
 
 /**
@@ -12,10 +11,7 @@ import type { PartialTheme } from '@fluentui/react/lib/Theme';
  * @param theme Current theme used by editor
  * @returns A UIUtilities object
  */
-export default function createUIUtilities(
-    container: HTMLDivElement,
-    theme: PartialTheme
-): UIUtilities {
+export function createUIUtilities(container: HTMLDivElement, theme: PartialTheme): UIUtilities {
     return {
         renderComponent: element => {
             const doc = container.ownerDocument;
@@ -35,7 +31,9 @@ export default function createUIUtilities(
             };
         },
         isRightToLeft: () => {
-            const dir = container && getComputedStyles(container, 'direction')[0];
+            const dir =
+                container &&
+                container.ownerDocument.defaultView?.getComputedStyle(container).direction;
 
             return dir == 'rtl';
         },

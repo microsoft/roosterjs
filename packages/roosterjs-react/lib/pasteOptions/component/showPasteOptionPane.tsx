@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
+import { getDOMInsertPointRect, getObjectKeys } from 'roosterjs-content-model-dom';
 import { getLocalizedString } from '../../common/index';
-import { getObjectKeys, getPositionRect } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
 import { useTheme } from '@fluentui/react/lib/Theme';
+import { useWindow } from '@fluentui/react/lib/WindowProvider';
 import type { LocalizedStrings, UIUtilities } from '../../common/index';
 import type { Theme } from '@fluentui/react/lib/Theme';
 import type { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
-import type { NodePosition } from 'roosterjs-editor-types';
 
 const getPasteOptionClassNames = memoizeFunction((theme: Theme) => {
     const palette = theme.palette;
@@ -81,7 +81,8 @@ function PasteOptionButton(props: PasteOptionButtonProps) {
 
 interface PasteOptionProps {
     strings?: LocalizedStrings<PasteOptionStringKeys>;
-    position: NodePosition;
+    container: Node;
+    offset: number;
     isRtl: boolean;
     paste: (key: PasteOptionButtonKeys) => void;
     dismiss: () => void;
@@ -100,12 +101,15 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
     props: PasteOptionProps,
     ref: React.Ref<PasteOptionPane>
 ) {
-    const { strings, position, paste, dismiss, isRtl } = props;
+    const { strings, container, offset, paste, dismiss, isRtl } = props;
     const theme = useTheme();
     const classNames = getPasteOptionClassNames(theme);
     const [selectedKey, setSelectedKey] = React.useState<PasteOptionButtonKeys | null>(null);
 
-    const rect = position && getPositionRect(position);
+    const rect = getDOMInsertPointRect((useWindow() ?? window).document, {
+        node: container,
+        offset,
+    });
     const target = rect && { x: props.isRtl ? rect.left : rect.right, y: rect.bottom };
 
     React.useImperativeHandle(
@@ -191,9 +195,10 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
  * @param onPaste A callback to be called when user click on a paste button
  * @param ref Reference object for this component
  */
-export default function showPasteOptionPane(
+export function showPasteOptionPane(
     uiUtilities: UIUtilities,
-    position: NodePosition,
+    container: Node,
+    offset: number,
     onPaste: (key: PasteOptionButtonKeys) => void,
     ref: React.RefObject<PasteOptionPane>,
     strings?: LocalizedStrings<PasteOptionStringKeys>
@@ -208,7 +213,8 @@ export default function showPasteOptionPane(
         uiUtilities,
         <PasteOptionComponent
             ref={ref}
-            position={position}
+            container={container}
+            offset={offset}
             strings={strings}
             isRtl={uiUtilities.isRightToLeft()}
             dismiss={onDismiss}

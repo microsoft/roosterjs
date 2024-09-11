@@ -1,15 +1,32 @@
 import { keyboardDelete } from './keyboardDelete';
+import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
+import { parseTableCells } from 'roosterjs-content-model-dom';
 import type {
+    DOMSelection,
     EditorPlugin,
     IEditor,
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Options to customize the keyboard handling behavior of Edit plugin
+ */
+export type EditOptions = {
+    /**
+     * Whether to handle Tab key in keyboard. @default true
+     */
+    handleTabKey?: boolean;
+};
+
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+
+const DefaultOptions: Partial<EditOptions> = {
+    handleTabKey: true,
+};
 
 /**
  * Edit plugins helps editor to do editing operation on top of content model.
@@ -22,6 +39,14 @@ export class EditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
+    private selectionAfterDelete: DOMSelection | null = null;
+    private handleNormalEnter = false;
+
+    /**
+     * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
+     * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
+     */
+    constructor(private options: EditOptions = DefaultOptions) {}
 
     /**
      * Get name of this plugin
@@ -38,6 +63,8 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('PersistCache');
+
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
                 beforeinput: {
@@ -70,8 +97,55 @@ export class EditPlugin implements EditorPlugin {
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
                     break;
+                case 'keyUp':
+                    if (this.selectionAfterDelete) {
+                        this.editor.setDOMSelection(this.selectionAfterDelete);
+                        this.selectionAfterDelete = null;
+                    }
+                    break;
             }
         }
+    }
+
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check:
+     */
+    willHandleEventExclusively(event: PluginEvent) {
+        if (
+            this.editor &&
+            this.options.handleTabKey &&
+            event.eventType == 'keyDown' &&
+            event.rawEvent.key == 'Tab' &&
+            !event.rawEvent.shiftKey
+        ) {
+            const selection = this.editor.getDOMSelection();
+            const startContainer =
+                selection?.type == 'range' && selection.range.collapsed
+                    ? selection.range.startContainer
+                    : null;
+            const table = startContainer
+                ? this.editor.getDOMHelper().findClosestElementAncestor(startContainer, 'table')
+                : null;
+            const parsedTable = table && parseTableCells(table);
+
+            if (parsedTable) {
+                const lastRow = parsedTable[parsedTable.length - 1];
+                const lastCell = lastRow && lastRow[lastRow.length - 1];
+
+                if (typeof lastCell == 'object' && lastCell.contains(startContainer)) {
+                    // When TAB in the last cell of a table, we will generate new table row, so prevent other plugins handling this event
+                    // e.g. SelectionPlugin will move the focus out of table, which is conflict with this behavior
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
@@ -80,14 +154,24 @@ export class EditPlugin implements EditorPlugin {
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
                 case 'Backspace':
-                case 'Delete':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
                     break;
 
+                case 'Delete':
+                    // Use our API to handle BACKSPACE/DELETE key.
+                    // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
+                    // And leave it to browser when shift key is pressed so that browser will trigger cut event
+                    if (!event.rawEvent.shiftKey) {
+                        keyboardDelete(editor, rawEvent);
+                    }
+                    break;
+
                 case 'Tab':
-                    keyboardTab(editor, rawEvent);
+                    if (this.options.handleTabKey) {
+                        keyboardTab(editor, rawEvent);
+                    }
                     break;
                 case 'Unidentified':
                     if (editor.getEnvironment().isAndroid) {
@@ -96,6 +180,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
+                    keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                    break;
+
                 default:
                     keyboardInput(editor, rawEvent);
                     break;
@@ -141,6 +228,10 @@ export class EditPlugin implements EditorPlugin {
 
         if (handled) {
             rawEvent.preventDefault();
+
+            // Restore the selection on keyup event to avoid the cursor jump issue
+            // See: https://issues.chromium.org/issues/330596261
+            this.selectionAfterDelete = editor.getDOMSelection();
         }
     }
 }

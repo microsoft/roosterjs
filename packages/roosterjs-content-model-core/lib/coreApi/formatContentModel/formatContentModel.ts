@@ -1,4 +1,5 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
+import { scrollCaretIntoView } from './scrollCaretIntoView';
 import type {
     ChangedEntity,
     ContentChangedEvent,
@@ -24,8 +25,13 @@ export const formatContentModel: FormatContentModel = (
     options,
     domToModelOptions
 ) => {
-    const { apiName, onNodeCreated, getChangeData, changeSource, rawEvent, selectionOverride } =
-        options || {};
+    const {
+        onNodeCreated,
+        getChangeData,
+        rawEvent,
+        selectionOverride,
+        scrollCaretIntoView: scroll,
+    } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
         newEntities: [],
@@ -63,13 +69,17 @@ export const formatContentModel: FormatContentModel = (
 
             handlePendingFormat(core, context, selection);
 
+            if (scroll && (selection?.type == 'range' || selection?.type == 'image')) {
+                scrollCaretIntoView(core, selection);
+            }
+
             const eventData: ContentChangedEvent = {
                 eventType: 'contentChanged',
                 contentModel: clearModelCache ? undefined : model,
                 selection: clearModelCache ? undefined : selection,
-                source: changeSource || ChangeSource.Format,
+                source: options?.changeSource || ChangeSource.Format,
                 data: getChangeData?.(),
-                formatApiName: apiName,
+                formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
             };
 
@@ -100,20 +110,20 @@ export const formatContentModel: FormatContentModel = (
 
         handlePendingFormat(core, context, core.api.getDOMSelection(core));
     }
+
+    if (context.announceData) {
+        core.api.announce(core, context.announceData);
+    }
 };
 
 function handleImages(core: EditorCore, context: FormatContentModelContext) {
     if (context.newImages.length > 0) {
-        const viewport = core.api.getVisibleViewport(core);
-
-        if (viewport) {
-            const { left, right } = viewport;
-            const minMaxImageSize = 10;
-            const maxWidth = Math.max(right - left, minMaxImageSize);
-            context.newImages.forEach(image => {
-                image.format.maxWidth = `${maxWidth}px`;
-            });
-        }
+        const width = core.domHelper.getClientWidth();
+        const minMaxImageSize = 10;
+        const maxWidth = Math.max(width, minMaxImageSize);
+        context.newImages.forEach(image => {
+            image.format.maxWidth = `${maxWidth}px`;
+        });
     }
 }
 

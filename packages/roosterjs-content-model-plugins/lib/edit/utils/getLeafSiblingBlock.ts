@@ -1,9 +1,9 @@
 import { isGeneralSegment } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
     ContentModelParagraph,
-    ContentModelSegment,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -13,28 +13,64 @@ export type BlockAndPath = {
     /**
      * The sibling block
      */
-    block: ContentModelBlock;
+    block: ReadonlyContentModelBlock;
 
     /**
      * Path of this sibling block
      */
-    path: ContentModelBlockGroup[];
+    path: ReadonlyContentModelBlockGroup[];
 
     /**
      * If the input block is under a general segment, it is possible there are sibling segments under the same paragraph.
      * Use this property to return the sibling sibling under the same paragraph
      */
-    siblingSegment?: ContentModelSegment;
+    siblingSegment?: ReadonlyContentModelSegment;
+};
+
+/**
+ * @internal
+ */
+export type ReadonlyBlockAndPath = {
+    /**
+     * The sibling block
+     */
+    block: ReadonlyContentModelBlock;
+
+    /**
+     * Path of this sibling block
+     */
+    path: ReadonlyContentModelBlockGroup[];
+
+    /**
+     * If the input block is under a general segment, it is possible there are sibling segments under the same paragraph.
+     * Use this property to return the sibling sibling under the same paragraph
+     */
+    siblingSegment?: ReadonlyContentModelSegment;
 };
 
 /**
  * @internal
  */
 export function getLeafSiblingBlock(
-    path: ContentModelBlockGroup[],
-    block: ContentModelBlock,
+    path: ReadonlyContentModelBlockGroup[],
+    block: ReadonlyContentModelBlock,
     isNext: boolean
-): BlockAndPath | null {
+): BlockAndPath | null;
+
+/**
+ * @internal (Readonly)
+ */
+export function getLeafSiblingBlock(
+    path: ReadonlyContentModelBlockGroup[],
+    block: ReadonlyContentModelBlock,
+    isNext: boolean
+): ReadonlyBlockAndPath | null;
+
+export function getLeafSiblingBlock(
+    path: ReadonlyContentModelBlockGroup[],
+    block: ReadonlyContentModelBlock,
+    isNext: boolean
+): ReadonlyBlockAndPath | null {
     const newPath = [...path];
 
     while (newPath.length > 0) {

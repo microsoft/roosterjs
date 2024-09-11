@@ -1,6 +1,7 @@
 import * as textMutationObserver from '../../../lib/corePlugin/cache/textMutationObserver';
 import { createCachePlugin } from '../../../lib/corePlugin/cache/CachePlugin';
-import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { DomIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import { Mutation } from '../../../lib/corePlugin/cache/MutationType';
 import {
     CachePluginState,
     DomIndexer,
@@ -75,10 +76,56 @@ describe('CachePlugin', () => {
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
-                domIndexer: domIndexerImpl,
+                domIndexer: new DomIndexerImpl(),
                 textMutationObserver: mockedObserver,
             });
             expect(startObservingSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('logicalRootChanged event', () => {
+        it('Change to a new node', () => {
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+            const mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+            const mockedNode = 'NODE' as any;
+
+            const textMutationObserverSpy = spyOn(
+                textMutationObserver,
+                'createTextMutationObserver'
+            ).and.returnValue(mockedObserver);
+
+            init({});
+
+            const state = plugin.getState();
+
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+
+            expect(stopObservingSpy).toHaveBeenCalledTimes(0);
+            expect(startObservingSpy).toHaveBeenCalledTimes(1);
+            expect(textMutationObserverSpy).toHaveBeenCalledTimes(1);
+
+            plugin.onPluginEvent({
+                eventType: 'logicalRootChanged',
+                logicalRoot: mockedNode,
+            });
+
+            expect(state).toEqual({
+                cachedModel: undefined,
+                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+            });
+            expect(stopObservingSpy).toHaveBeenCalledTimes(1);
+            expect(startObservingSpy).toHaveBeenCalledTimes(2);
+            expect(textMutationObserverSpy).toHaveBeenCalledTimes(2);
+            expect(textMutationObserverSpy.calls.argsFor(1)[0]).toBe(mockedNode);
+
+            plugin.dispose();
         });
     });
 
@@ -371,6 +418,217 @@ describe('CachePlugin', () => {
                 domIndexer,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('onMutation', () => {
+        let onMutation: (mutation: Mutation) => void;
+        let startObservingSpy: jasmine.Spy;
+        let stopObservingSpy: jasmine.Spy;
+        let mockedObserver: any;
+        let reconcileChildListSpy: jasmine.Spy;
+        let reconcileElementIdSpy: jasmine.Spy;
+        let mockedIndexer: DomIndexer;
+
+        beforeEach(() => {
+            reconcileChildListSpy = jasmine.createSpy('reconcileChildList');
+            reconcileElementIdSpy = jasmine.createSpy('reconcileElementId');
+            startObservingSpy = jasmine.createSpy('startObserving');
+            stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.callFake(
+                (_: any, _onMutation: any) => {
+                    onMutation = _onMutation;
+                    return mockedObserver;
+                }
+            );
+
+            init({});
+
+            mockedIndexer = {
+                reconcileSelection: reconcileSelectionSpy,
+                reconcileChildList: reconcileChildListSpy,
+                reconcileElementId: reconcileElementIdSpy,
+            } as any;
+        });
+
+        it('unknown', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            onMutation({ type: 'unknown' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
+
+        it('text, can reconcile', () => {
+            reconcileSelectionSpy.and.returnValue(true);
+
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: 'MODEL' as any,
+                cachedSelection: mockedSelection,
+            });
+        });
+
+        it('text, cannot reconcile', () => {
+            reconcileSelectionSpy.and.returnValue(false);
+
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+
+            onMutation({ type: 'text' });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
+
+        it('childList, cannot reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+
+            reconcileChildListSpy.and.returnValue(false);
+
+            onMutation({
+                type: 'childList',
+                addedNodes: 'ADDED' as any,
+                removedNodes: 'REMOVED' as any,
+            });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledWith('ADDED', 'REMOVED');
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
+        });
+
+        it('childList, can reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedSelection = 'NEWSELECTION' as any;
+
+            getDOMSelectionSpy.and.returnValue(mockedSelection);
+
+            reconcileChildListSpy.and.returnValue(true);
+
+            onMutation({
+                type: 'childList',
+                addedNodes: 'ADDED' as any,
+                removedNodes: 'REMOVED' as any,
+            });
+
+            expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
+            expect(reconcileChildListSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileChildListSpy).toHaveBeenCalledWith('ADDED', 'REMOVED');
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: 'MODEL' as any,
+                cachedSelection: 'SELECTION' as any,
+            });
+        });
+
+        it('elementId, can reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedElement = 'ELEMENT' as any;
+
+            reconcileElementIdSpy.and.returnValue(true);
+
+            onMutation({
+                type: 'elementId',
+                element: mockedElement,
+            });
+
+            expect(reconcileElementIdSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileElementIdSpy).toHaveBeenCalledWith(mockedElement);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: 'MODEL' as any,
+                cachedSelection: 'SELECTION' as any,
+            });
+        });
+
+        it('elementId, cannot reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedElement = 'ELEMENT' as any;
+
+            reconcileElementIdSpy.and.returnValue(false);
+
+            onMutation({
+                type: 'elementId',
+                element: mockedElement,
+            });
+
+            expect(reconcileElementIdSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileElementIdSpy).toHaveBeenCalledWith(mockedElement);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+            });
         });
     });
 });

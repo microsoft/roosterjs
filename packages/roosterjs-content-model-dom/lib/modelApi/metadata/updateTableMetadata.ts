@@ -1,12 +1,16 @@
+import { getMetadata, updateMetadata } from './updateMetadata';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
-import { updateMetadata } from './updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
 } from './definitionCreators';
-import type { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ReadonlyContentModelTable,
+    ShallowMutableContentModelTable,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 const NullStringDefinition = createStringDefinition(
     false /** isOptional */,
@@ -41,12 +45,20 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
 );
 
 /**
+ * Get table metadata
+ * @param table The table Content Model
+ */
+export function getTableMetadata(table: ReadonlyContentModelTable): TableMetadataFormat | null {
+    return getMetadata(table, TableFormatDefinition);
+}
+
+/**
  * Update table metadata with a callback
  * @param table The table Content Model
  * @param callback The callback function used for updating metadata
  */
 export function updateTableMetadata(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     callback?: (format: TableMetadataFormat | null) => TableMetadataFormat | null
 ): TableMetadataFormat | null {
     return updateMetadata(table, callback, TableFormatDefinition);

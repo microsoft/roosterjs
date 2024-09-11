@@ -20,7 +20,7 @@ const NO_SUGGESTIONS = 'emjDNoSuggetions';
  * @internal
  * Emoji status bar component
  */
-export default function EmojiStatusBar(props: EmojiStatusBarProps) {
+export function EmojiStatusBar(props: EmojiStatusBarProps) {
     const { emoji, strings, hasResult, classNames } = props;
 
     if (!hasResult) {

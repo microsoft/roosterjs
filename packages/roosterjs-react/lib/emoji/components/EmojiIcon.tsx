@@ -22,7 +22,7 @@ export interface EmojiIconProps {
  * @internal
  * Emoji icon component
  */
-export default function EmojiIcon(props: EmojiIconProps) {
+export function EmojiIcon(props: EmojiIconProps) {
     const { emoji, onClick, isSelected, onMouseOver, onFocus, strings, id, classNames } = props;
     const content = emoji.description && strings[emoji.description];
 

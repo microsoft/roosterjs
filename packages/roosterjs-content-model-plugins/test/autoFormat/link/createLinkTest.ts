@@ -1,3 +1,4 @@
+import { ChangeSource } from '../../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createLink } from '../../../lib/autoFormat/link/createLink';
 
@@ -16,6 +17,7 @@ describe('createLink', () => {
                     newImages: [],
                 });
                 expect(result).toBe(expectedResult);
+                expect(options.changeSource).toBe(ChangeSource.AutoLink);
             });
 
         createLink({
@@ -161,6 +163,6 @@ describe('createLink', () => {
             format: {},
         };
 
-        runTest(input, input, false);
+        runTest(input, input, true);
     });
 });

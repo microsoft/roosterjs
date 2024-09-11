@@ -1,7 +1,7 @@
-import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import type { ContentModelParagraph } from '../block/ContentModelParagraph';
-import type { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
-import type { TableSelectionContext } from './TableSelectionContext';
+import type { ReadonlyContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
+import type { ShallowMutableContentModelParagraph } from '../contentModel/block/ContentModelParagraph';
+import type { ContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
+import type { ReadonlyTableSelectionContext } from './TableSelectionContext';
 
 /**
  * Represent all related information of an insert point
@@ -15,15 +15,15 @@ export interface InsertPoint {
     /**
      * The paragraph that contains this insert point
      */
-    paragraph: ContentModelParagraph;
+    paragraph: ShallowMutableContentModelParagraph;
 
     /**
      * Block group path of this insert point, from direct parent group to the root group
      */
-    path: ContentModelBlockGroup[];
+    path: ReadonlyContentModelBlockGroup[];
 
     /**
      * Table context of this insert point
      */
-    tableContext?: TableSelectionContext;
+    tableContext?: ReadonlyTableSelectionContext;
 }

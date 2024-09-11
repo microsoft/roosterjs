@@ -1,11 +1,11 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelSegment,
     ContentModelSegmentFormat,
     IEditor,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -23,34 +23,37 @@ export function formatSegmentWithContentModel(
     toggleStyleCallback: (
         format: ContentModelSegmentFormat,
         isTuringOn: boolean,
-        segment: ContentModelSegment | null,
-        paragraph: ContentModelParagraph | null
+        segment: ShallowMutableContentModelSegment | null,
+        paragraph: ShallowMutableContentModelParagraph | null
     ) => void,
     segmentHasStyleCallback?: (
         format: ContentModelSegmentFormat,
-        segment: ContentModelSegment | null,
-        paragraph: ContentModelParagraph | null
+        segment: ShallowMutableContentModelSegment | null,
+        paragraph: ShallowMutableContentModelParagraph | null
     ) => boolean,
     includingFormatHolder?: boolean,
-    afterFormatCallback?: (model: ContentModelDocument) => void
+    afterFormatCallback?: (model: ReadonlyContentModelDocument) => void
 ) {
     editor.formatContentModel(
         (model, context) => {
             let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
                 model,
-                !!includingFormatHolder
+                !!includingFormatHolder,
+                false /*includingEntity*/,
+                true /*mutate*/
             );
             let isCollapsedSelection =
-                segmentAndParagraphs.length == 1 &&
-                segmentAndParagraphs[0][0].segmentType == 'SelectionMarker';
+                segmentAndParagraphs.length >= 1 &&
+                segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
 
             if (isCollapsedSelection) {
                 const para = segmentAndParagraphs[0][1];
+                const path = segmentAndParagraphs[0][2];
 
                 segmentAndParagraphs = adjustWordSelection(
                     model,
                     segmentAndParagraphs[0][0]
-                ).map(x => [x, para]);
+                ).map(x => [x, para, path]);
 
                 if (segmentAndParagraphs.length > 1) {
                     isCollapsedSelection = false;
@@ -59,8 +62,8 @@ export function formatSegmentWithContentModel(
 
             const formatsAndSegments: [
                 ContentModelSegmentFormat,
-                ContentModelSegment | null,
-                ContentModelParagraph | null
+                ShallowMutableContentModelSegment | null,
+                ShallowMutableContentModelParagraph | null
             ][] = segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
             const isTurningOff = segmentHasStyleCallback

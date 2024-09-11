@@ -13,6 +13,7 @@ import { createParagraphDecorator } from '../../../lib/modelApi/creators/createP
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createTableRow } from '../../../lib/modelApi/creators/createTableRow';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import {
     ContentModelCode,
@@ -229,6 +230,26 @@ describe('Creators', () => {
 
         expect(code).toEqual({
             format: { fontFamily: 'test' },
+        });
+    });
+
+    it('createTableRow', () => {
+        const row = createTableRow();
+
+        expect(row).toEqual({
+            height: 0,
+            format: {},
+            cells: [],
+        });
+    });
+
+    it('createTableRow with format', () => {
+        const row = createTableRow({ direction: 'ltr' }, 100);
+
+        expect(row).toEqual({
+            height: 100,
+            format: { direction: 'ltr' },
+            cells: [],
         });
     });
 

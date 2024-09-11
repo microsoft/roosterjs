@@ -18,7 +18,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
 ) => {
     let element = context.allowCacheElement ? divider.cachedElement : undefined;
 
-    if (element) {
+    if (element && !divider.isSelected) {
         refNode = reuseCachedElement(parent, element, refNode);
     } else {
         element = doc.createElement(divider.tagName);

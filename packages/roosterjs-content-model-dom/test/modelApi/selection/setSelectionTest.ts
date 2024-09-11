@@ -1,3 +1,4 @@
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setSelection } from '../../../lib/modelApi/selection/setSelection';
 import {
     createBr,
@@ -599,7 +600,6 @@ describe('setSelection', () => {
                             src: '',
                             dataset: {},
                             isSelected: true,
-                            isSelectedAsImageSelection: false,
                         },
                         {
                             segmentType: 'Text',
@@ -838,5 +838,170 @@ describe('setSelection', () => {
 
         expect(cell.isSelected).toBeFalsy();
         expect(segment.isSelected).toBeTrue();
+    });
+
+    it('Table inside range selection', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const para0 = createParagraph();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const segment0 = createBr();
+        const segment1 = createBr();
+        const segment2 = createBr();
+        const segment3 = createBr();
+        const segment4 = createBr();
+
+        para0.segments.push(segment0);
+        para1.segments.push(segment1);
+        para2.segments.push(segment2);
+        para3.segments.push(segment3, segment4);
+
+        cell1.blocks.push(para1);
+        cell2.blocks.push(para2);
+
+        table.rows[0].cells.push(cell1, cell2);
+
+        model.blocks.push(para0, table, para3);
+
+        setSelection(model, segment0, segment3);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {}, isSelected: true }],
+                    format: {},
+                },
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                { segmentType: 'Br', format: {}, isSelected: true },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                { segmentType: 'Br', format: {}, isSelected: true },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Br', format: {}, isSelected: true },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('delete empty segment after setSelection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        setSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('delete empty paragraph after setSelection', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        };
+
+        setSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+        });
     });
 });

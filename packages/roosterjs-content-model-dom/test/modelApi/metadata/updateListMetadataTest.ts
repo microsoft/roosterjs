@@ -1,5 +1,48 @@
 import { ContentModelWithDataset, ListMetadataFormat } from 'roosterjs-content-model-types';
-import { updateListMetadata } from '../../../lib/modelApi/metadata/updateListMetadata';
+import {
+    getListMetadata,
+    updateListMetadata,
+} from '../../../lib/modelApi/metadata/updateListMetadata';
+
+describe('getListMetadata', () => {
+    it('No value', () => {
+        const list: ContentModelWithDataset<ListMetadataFormat> = {
+            dataset: {},
+        };
+        const result = getListMetadata(list);
+
+        expect(result).toBeNull();
+    });
+
+    it('Empty value', () => {
+        const list: ContentModelWithDataset<ListMetadataFormat> = {
+            dataset: {
+                editingInfo: '',
+            },
+        };
+        const result = getListMetadata(list);
+
+        expect(result).toBeNull();
+    });
+
+    it('Full valid value, return original value', () => {
+        const listFormat: ListMetadataFormat = {
+            orderedStyleType: 2,
+            unorderedStyleType: 3,
+        };
+        const list: ContentModelWithDataset<ListMetadataFormat> = {
+            dataset: {
+                editingInfo: JSON.stringify(listFormat),
+            },
+        };
+        const result = getListMetadata(list);
+
+        expect(result).toEqual({
+            orderedStyleType: 2,
+            unorderedStyleType: 3,
+        });
+    });
+});
 
 describe('updateListMetadata', () => {
     it('No value', () => {

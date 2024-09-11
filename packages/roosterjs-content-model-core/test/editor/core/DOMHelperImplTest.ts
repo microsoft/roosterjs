@@ -17,6 +17,37 @@ describe('DOMHelperImpl', () => {
             expect(result).toBe(mockedResult);
             expect(containsSpy).toHaveBeenCalledWith(mockedNode);
         });
+
+        it('isNodeInEditor, check root node, excludeRoot=false', () => {
+            const div = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+
+            const result = domHelper.isNodeInEditor(div);
+
+            expect(result).toBeTrue();
+        });
+
+        it('isNodeInEditor, check root node, excludeRoot=true', () => {
+            const div = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+
+            const result = domHelper.isNodeInEditor(div, true);
+
+            expect(result).toBeFalse();
+        });
+
+        it('isNodeInEditor, check root node, excludeRoot=true, do not call contains', () => {
+            const containsSpy = jasmine.createSpy('contains');
+            const mockedDiv = {
+                contains: containsSpy,
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.isNodeInEditor(mockedDiv, true);
+
+            expect(result).toBeFalse();
+            expect(containsSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('queryElements', () => {
@@ -237,6 +268,86 @@ describe('DOMHelperImpl', () => {
             let result = domHelper.hasFocus();
 
             expect(result).toBe(false);
+        });
+    });
+
+    describe('isRightToLeft', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+            } as any;
+        });
+
+        it('LTR', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'ltr',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeFalse();
+        });
+
+        it('RTL', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                direction: 'rtl',
+            });
+
+            const result = domHelper.isRightToLeft();
+
+            expect(getComputedStyleSpy).toHaveBeenCalledWith(div);
+            expect(result).toBeTrue();
+        });
+    });
+
+    describe('getClientWidth', () => {
+        let div: HTMLDivElement;
+        let getComputedStyleSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
+
+            div = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: getComputedStyleSpy,
+                    },
+                },
+                clientWidth: 1000,
+            } as any;
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({
+                paddingLeft: '10px',
+                paddingRight: '10px',
+            });
+
+            expect(domHelper.getClientWidth()).toBe(980);
+        });
+
+        it('getClientWidth', () => {
+            const domHelper = createDOMHelper(div);
+
+            getComputedStyleSpy.and.returnValue({});
+
+            expect(domHelper.getClientWidth()).toBe(1000);
         });
     });
 });

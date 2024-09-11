@@ -18,6 +18,7 @@ export { setTextColor } from './publicApi/segment/setTextColor';
 export { changeFontSize } from './publicApi/segment/changeFontSize';
 export { applySegmentFormat } from './publicApi/segment/applySegmentFormat';
 export { changeCapitalization } from './publicApi/segment/changeCapitalization';
+export { splitTextSegment } from './publicApi/segment/splitTextSegment';
 export { insertImage } from './publicApi/image/insertImage';
 export { setListStyle } from './publicApi/list/setListStyle';
 export { setListStartNumber } from './publicApi/list/setListStartNumber';
@@ -49,6 +50,7 @@ export { formatImageWithContentModel } from './publicApi/utils/formatImageWithCo
 export { formatParagraphWithContentModel } from './publicApi/utils/formatParagraphWithContentModel';
 export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
 export { formatTextSegmentBeforeSelectionMarker } from './publicApi/utils/formatTextSegmentBeforeSelectionMarker';
+export { formatInsertPointWithContentModel } from './publicApi/utils/formatInsertPointWithContentModel';
 
 export { setListType } from './modelApi/list/setListType';
 export { setModelListStyle } from './modelApi/list/setModelListStyle';
@@ -56,3 +58,4 @@ export { setModelListStartNumber } from './modelApi/list/setModelListStartNumber
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
 export { matchLink } from './modelApi/link/matchLink';
+export { getListAnnounceData } from './modelApi/list/getListAnnounceData';

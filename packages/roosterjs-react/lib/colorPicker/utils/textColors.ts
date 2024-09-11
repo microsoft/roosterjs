@@ -1,10 +1,10 @@
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
+import type { Colors } from 'roosterjs-content-model-types';
 import type { TextColorKeys } from '../types/stringKeys';
 
 /**
  * @internal
  */
-const TextColors: Record<TextColorKeys, ModeIndependentColor> = {
+const TextColors: Record<TextColorKeys, Colors> = {
     textColorLightBlue: { lightModeColor: '#51a7f9', darkModeColor: '#0075c2' },
     textColorLightGreen: { lightModeColor: '#6fc040', darkModeColor: '#207a00' },
     textColorLightYellow: { lightModeColor: '#f5d427', darkModeColor: '#5d4d00' },
@@ -78,7 +78,7 @@ const TextColorDropDownItems: Record<TextColorKeys, string> = {
  * @param key The key to get color from
  * @returns A model independent color value of the given key
  */
-function getTextColorValue(key: TextColorKeys): ModeIndependentColor {
+function getTextColorValue(key: TextColorKeys): Colors {
     return TextColors[key];
 }
 

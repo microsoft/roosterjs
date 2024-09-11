@@ -1,18 +1,22 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
+import { getListAnnounceData } from '../list/getListAnnounceData';
 import {
     createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    mutateBlock,
     parseValueWithUnit,
     updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelListItem,
     ContentModelListLevel,
+    FormatContentModelContext,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
 
 const IndentStepInPixel = 40;
@@ -24,9 +28,10 @@ const IndentStepInPixel = 40;
  * Set indentation for selected list items or paragraphs
  */
 export function setModelIndentation(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     indentation: 'indent' | 'outdent',
-    length: number = IndentStepInPixel
+    length: number = IndentStepInPixel,
+    context?: FormatContentModelContext
 ) {
     const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(
         model,
@@ -34,7 +39,7 @@ export function setModelIndentation(
         ['TableCell']
     );
     const isIndent = indentation == 'indent';
-    const modifiedBlocks: ContentModelBlock[] = [];
+    const modifiedBlocks: ReadonlyContentModelBlock[] = [];
 
     paragraphOrListItem.forEach(({ block, parent, path }) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
@@ -80,14 +85,18 @@ export function setModelIndentation(
                 } else {
                     block.levels.pop();
                 }
+
+                if (block.levels.length > 0 && context) {
+                    context.announceData = getListAnnounceData([block, ...path]);
+                }
             }
         } else if (block) {
-            let currentBlock: ContentModelBlock = block;
-            let currentParent: ContentModelBlockGroup = parent;
+            let currentBlock: ReadonlyContentModelBlock = block;
+            let currentParent: ReadonlyContentModelBlockGroup = parent;
 
             while (currentParent && modifiedBlocks.indexOf(currentBlock) < 0) {
                 const index = path.indexOf(currentParent);
-                const { format } = currentBlock;
+                const { format } = mutateBlock(currentBlock);
                 const newValue = calculateMarginValue(format, isIndent, length);
 
                 if (newValue !== null) {
@@ -103,7 +112,7 @@ export function setModelIndentation(
 
                     break;
                 } else if (currentParent.blockGroupType == 'FormatContainer' && index >= 0) {
-                    delete currentParent.cachedElement;
+                    mutateBlock(currentParent);
 
                     currentBlock = currentParent;
                     currentParent = path[index + 1];
@@ -117,7 +126,7 @@ export function setModelIndentation(
     return paragraphOrListItem.length > 0;
 }
 
-function isSelected(listItem: ContentModelListItem) {
+function isSelected(listItem: ReadonlyContentModelListItem) {
     return listItem.blocks.some(block => {
         if (block.blockType == 'Paragraph') {
             return block.segments.some(segment => segment.isSelected);
@@ -130,9 +139,9 @@ function isSelected(listItem: ContentModelListItem) {
  * Otherwise, the margin of the first item will be changed, and the sub list will be created, creating a unintentional margin difference between the list items.
  */
 function isMultilevelSelection(
-    model: ContentModelDocument,
-    listItem: ContentModelListItem,
-    parent: ContentModelBlockGroup
+    model: ReadonlyContentModelDocument,
+    listItem: ReadonlyContentModelListItem,
+    parent: ReadonlyContentModelBlockGroup
 ) {
     const listIndex = parent.blocks.indexOf(listItem);
     for (let i = listIndex - 1; i >= 0; i--) {
@@ -154,7 +163,7 @@ function isMultilevelSelection(
 }
 
 function calculateMarginValue(
-    format: ContentModelBlockFormat,
+    format: Readonly<ContentModelBlockFormat>,
     isIndent: boolean,
     length: number = IndentStepInPixel
 ): number | null {

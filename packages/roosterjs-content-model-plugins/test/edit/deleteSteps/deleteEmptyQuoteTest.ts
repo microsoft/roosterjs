@@ -1,8 +1,6 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteEmptyQuote } from '../../../lib/edit/deleteSteps/deleteEmptyQuote';
 import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { editingTestCommon } from '../editingTestCommon';
-import { keyboardInput } from '../../../lib/edit/keyboardInput';
 
 describe('deleteEmptyQuote', () => {
     function runTest(
@@ -128,49 +126,73 @@ describe('deleteEmptyQuote', () => {
             ],
             format: {},
         };
-        runTest(model, model, 'notDeleted');
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
+            ],
+            format: {},
+        };
+        runTest(model, expectedModel, 'notDeleted');
     });
 });
 
-describe('deleteEmptyQuote - keyboardInput', () => {
-    function runTest(
-        input: ContentModelDocument,
-        key: string,
-        expectedResult: ContentModelDocument,
-        doNotCallDefaultFormat: boolean = false,
-        calledTimes: number = 1
-    ) {
-        const preventDefault = jasmine.createSpy('preventDefault');
-        const mockedEvent = ({
-            key: key,
-            shiftKey: false,
-            preventDefault,
-        } as any) as KeyboardEvent;
+describe('delete with Enter', () => {
+    it('Enter in empty paragraph in middle of quote', () => {
+        function runTest(
+            model: ContentModelDocument,
+            expectedModel: ContentModelDocument,
+            deleteResult: string
+        ) {
+            const result = deleteSelection(model, [deleteEmptyQuote], {
+                rawEvent: {
+                    key: 'Enter',
+                    preventDefault: () => {},
+                } as any,
+                newEntities: [],
+                deletedEntities: [],
+                newImages: [],
+            });
+            normalizeContentModel(model);
+            expect(result.deleteResult).toEqual(deleteResult);
+            expect(model).toEqual(expectedModel);
+        }
 
-        let editor: any;
-
-        editingTestCommon(
-            undefined,
-            newEditor => {
-                editor = newEditor;
-
-                editor.getDOMSelection = () => ({
-                    type: 'range',
-                    range: {
-                        collapsed: true,
-                    },
-                });
-
-                keyboardInput(editor, mockedEvent);
-            },
-            input,
-            expectedResult,
-            calledTimes,
-            doNotCallDefaultFormat
-        );
-    }
-
-    it('should delete empty quote when press Enter', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -183,14 +205,34 @@ describe('deleteEmptyQuote - keyboardInput', () => {
                             blockType: 'Paragraph',
                             segments: [
                                 {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
                                     segmentType: 'SelectionMarker',
                                     isSelected: true,
                                     format: {
                                         textColor: 'rgb(102, 102, 102)',
                                     },
                                 },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
                                 {
-                                    segmentType: 'Br',
+                                    segmentType: 'Text',
+                                    text: 'test',
                                     format: {
                                         textColor: 'rgb(102, 102, 102)',
                                     },
@@ -211,9 +253,39 @@ describe('deleteEmptyQuote - keyboardInput', () => {
             ],
             format: {},
         };
-        const expectedTestModel: ContentModelDocument = {
+
+        const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        textColor: 'rgb(102, 102, 102)',
+                                    },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        paddingLeft: '10px',
+                        borderLeft: '3px solid rgb(200, 200, 200)',
+                    },
+                },
                 {
                     blockType: 'Paragraph',
                     segments: [
@@ -231,20 +303,9 @@ describe('deleteEmptyQuote - keyboardInput', () => {
                             },
                         },
                     ],
+                    format: {},
                     segmentFormat: { textColor: 'rgb(102, 102, 102)' },
-                    format: {},
                 },
-            ],
-            format: {},
-        };
-
-        runTest(model, 'Enter', expectedTestModel);
-    });
-
-    it('should exit quote when press Enter', () => {
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'FormatContainer',
@@ -262,31 +323,7 @@ describe('deleteEmptyQuote - keyboardInput', () => {
                                 },
                             ],
                             format: {},
-                            segmentFormat: {
-                                textColor: 'rgb(102, 102, 102)',
-                            },
-                        },
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {
-                                        textColor: 'rgb(102, 102, 102)',
-                                    },
-                                },
-                                {
-                                    segmentType: 'Br',
-                                    format: {
-                                        textColor: 'rgb(102, 102, 102)',
-                                    },
-                                },
-                            ],
-                            format: {},
-                            segmentFormat: {
-                                textColor: 'rgb(102, 102, 102)',
-                            },
+                            segmentFormat: { textColor: 'rgb(102, 102, 102)' },
                         },
                     ],
                     format: {
@@ -301,108 +338,6 @@ describe('deleteEmptyQuote - keyboardInput', () => {
             ],
             format: {},
         };
-        const expectedTestModel: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test',
-                                    format: {
-                                        textColor: 'rgb(102, 102, 102)',
-                                    },
-                                },
-                            ],
-                            format: {},
-                            segmentFormat: {
-                                textColor: 'rgb(102, 102, 102)',
-                            },
-                        },
-                    ],
-                    format: {
-                        marginTop: '1em',
-                        marginRight: '40px',
-                        marginBottom: '1em',
-                        marginLeft: '40px',
-                        paddingLeft: '10px',
-                        borderLeft: '3px solid rgb(200, 200, 200)',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        runTest(model, 'Enter', expectedTestModel);
-    });
-
-    it('should not exit quote when press Enter', () => {
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test',
-                                    format: {
-                                        textColor: 'rgb(102, 102, 102)',
-                                    },
-                                },
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    isSelected: true,
-                                    format: {
-                                        textColor: 'rgb(102, 102, 102)',
-                                    },
-                                },
-                            ],
-                            format: {},
-                            segmentFormat: {
-                                textColor: 'rgb(102, 102, 102)',
-                            },
-                        },
-                    ],
-                    format: {
-                        marginTop: '1em',
-                        marginRight: '40px',
-                        marginBottom: '1em',
-                        marginLeft: '40px',
-                        paddingLeft: '10px',
-                        borderLeft: '3px solid rgb(200, 200, 200)',
-                    },
-                },
-            ],
-            format: {},
-        };
-
-        runTest(model, 'Enter', model, false, 0);
+        runTest(model, expectedModel, 'range');
     });
 });

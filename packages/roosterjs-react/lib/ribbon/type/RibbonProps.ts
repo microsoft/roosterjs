@@ -1,12 +1,12 @@
-import type RibbonButton from './RibbonButton';
-import type RibbonPlugin from './RibbonPlugin';
 import type { ICommandBarProps } from '@fluentui/react/lib/CommandBar';
 import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import type { RibbonPlugin } from './RibbonPlugin';
+import type { RibbonButton } from './RibbonButton';
 
 /**
  * Properties of Ribbon component
  */
-export default interface RibbonProps<T extends string> extends Partial<ICommandBarProps> {
+export interface RibbonProps<T extends string> extends Partial<ICommandBarProps> {
     /**
      * The ribbon plugin used for connect editor and the ribbon
      */

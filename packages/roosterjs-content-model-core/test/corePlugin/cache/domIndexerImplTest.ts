@@ -1,6 +1,14 @@
 import * as setSelection from 'roosterjs-content-model-dom/lib/modelApi/selection/setSelection';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { domIndexerImpl } from '../../../lib/corePlugin/cache/domIndexerImpl';
+import {
+    BlockEntityDelimiterItem,
+    DomIndexerImpl,
+    IndexedEntityDelimiter,
+    IndexedSegmentNode,
+    IndexedTableElement,
+    SegmentItem,
+    TableItem,
+} from '../../../lib/corePlugin/cache/domIndexerImpl';
 import {
     CacheSelection,
     ContentModelDocument,
@@ -10,6 +18,7 @@ import {
 import {
     createBr,
     createContentModelDocument,
+    createEntity,
     createImage,
     createParagraph,
     createSelectionMarker,
@@ -18,13 +27,15 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
+const ZERO_WIDTH_SPACE = '\u200B';
+
 describe('domIndexerImpl.onSegment', () => {
     it('onSegment', () => {
         const node = {} as any;
         const paragraph = 'Paragraph' as any;
         const segment = 'Segment' as any;
 
-        domIndexerImpl.onSegment(node, paragraph, [segment]);
+        new DomIndexerImpl().onSegment(node, paragraph, [segment]);
 
         expect(node).toEqual({
             __roosterjsContentModel: { paragraph: 'Paragraph', segments: ['Segment'] },
@@ -33,6 +44,12 @@ describe('domIndexerImpl.onSegment', () => {
 });
 
 describe('domIndexerImpl.onParagraph', () => {
+    let domIndexerImpl: DomIndexerImpl;
+
+    beforeEach(() => {
+        domIndexerImpl = new DomIndexerImpl();
+    });
+
     it('Paragraph, no child', () => {
         const node = document.createElement('div');
 
@@ -163,6 +180,12 @@ describe('domIndexerImpl.onParagraph', () => {
 });
 
 describe('domIndexerImpl.onTable', () => {
+    let domIndexerImpl: DomIndexerImpl;
+
+    beforeEach(() => {
+        domIndexerImpl = new DomIndexerImpl();
+    });
+
     it('onTable', () => {
         const node = {} as any;
         const rows = 'ROWS' as any;
@@ -173,7 +196,55 @@ describe('domIndexerImpl.onTable', () => {
         domIndexerImpl.onTable(node, table);
 
         expect(node).toEqual({
-            __roosterjsContentModel: { tableRows: rows },
+            __roosterjsContentModel: { table },
+        });
+    });
+});
+
+describe('domIndexerImpl.onBlockEntity', () => {
+    it('no delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+
+        root.appendChild(wrapper);
+
+        const group = createContentModelDocument();
+        const entity = createEntity(wrapper);
+
+        new DomIndexerImpl().onBlockEntity(entity, group);
+
+        expect(root.innerHTML).toEqual('<span></span>');
+    });
+
+    it('has delimiters', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter1.appendChild(text1);
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter2.appendChild(text2);
+
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const group = createContentModelDocument();
+        const entity = createEntity(wrapper);
+
+        new DomIndexerImpl().onBlockEntity(entity, group);
+
+        expect((text1 as IndexedEntityDelimiter).__roosterjsContentModel).toEqual({
+            entity,
+            parent: group,
+        });
+        expect((text2 as IndexedEntityDelimiter).__roosterjsContentModel).toEqual({
+            entity,
+            parent: group,
         });
     });
 });
@@ -181,10 +252,12 @@ describe('domIndexerImpl.onTable', () => {
 describe('domIndexerImpl.reconcileSelection', () => {
     let setSelectionSpy: jasmine.Spy;
     let model: ContentModelDocument;
+    let domIndexerImpl: DomIndexerImpl;
 
     beforeEach(() => {
         model = createContentModelDocument();
         setSelectionSpy = spyOn(setSelection, 'setSelection').and.callThrough();
+        domIndexerImpl = new DomIndexerImpl();
     });
 
     it('no old range, fake range', () => {
@@ -194,6 +267,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on non-indexed text, collapsed', () => {
@@ -208,6 +282,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, collapsed', () => {
@@ -255,6 +330,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             ],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, expanded on same node', () => {
@@ -300,6 +376,53 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
+    it('no old range, normal range on indexed text, expanded on same node, reverted', () => {
+        const node = document.createTextNode('test') as any;
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 1, node, 3),
+            isReverted: true,
+        };
+        const paragraph = createParagraph();
+        const segment = createText('');
+
+        paragraph.segments.push(segment);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
+
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'es',
+            format: {},
+            isSelected: true,
+        };
+        const segment3: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1, segment2, segment3],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment2, segment3],
+        });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeTrue();
     });
 
     it('no old range, normal range on indexed text, expanded on different node', () => {
@@ -370,6 +493,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [paragraph],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, normal range on indexed text, expanded on other type of node', () => {
@@ -430,6 +554,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [paragraph],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, image range on indexed text', () => {
@@ -451,7 +576,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
         expect(node1.__roosterjsContentModel).toEqual({
             paragraph,
             segments: [oldSegment1],
@@ -461,7 +586,14 @@ describe('domIndexerImpl.reconcileSelection', () => {
             format: {},
             segments: [oldSegment1],
         });
-        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(setSelectionSpy).toHaveBeenCalledWith(model, {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+            isSelected: true,
+            isSelectedAsImageSelection: true,
+        });
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [paragraph],
@@ -471,7 +603,10 @@ describe('domIndexerImpl.reconcileSelection', () => {
             src: 'test',
             format: {},
             dataset: {},
+            isSelected: true,
+            isSelectedAsImageSelection: true,
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, table range on indexed text', () => {
@@ -507,15 +642,16 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
         expect(node1.__roosterjsContentModel).toEqual({
-            tableRows: tableModel.rows,
+            table: tableModel,
         });
-        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(setSelectionSpy).toHaveBeenCalledWith(model, cell10, cell21);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [tableModel],
         });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('no old range, collapsed range after last node', () => {
@@ -548,6 +684,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment, createSelectionMarker({ fontFamily: 'Arial' })],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('has old range - collapsed, expanded new range', () => {
@@ -606,6 +743,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
     it('has old range - expanded, expanded new range', () => {
@@ -664,5 +802,401 @@ describe('domIndexerImpl.reconcileSelection', () => {
             segments: [segment1, createSelectionMarker(), segment2],
         });
         expect(setSelectionSpy).toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
+    it('block entity: selection in first delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter1.appendChild(text1);
+        delimiter2.appendChild(text2);
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const entity = createEntity(wrapper);
+        const group = createContentModelDocument();
+
+        group.blocks.push(entity);
+
+        const index1: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+        const index2: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+
+        (text1 as IndexedEntityDelimiter).__roosterjsContentModel = index1;
+        (text2 as IndexedEntityDelimiter).__roosterjsContentModel = index2;
+
+        const range = document.createRange();
+        range.setStart(text1, 0);
+
+        const indexer = new DomIndexerImpl();
+
+        const result = indexer.reconcileSelection(group, {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        });
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'SelectionMarker', isSelected: true, format: {} }],
+                    format: {},
+                    isImplicit: true,
+                },
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { isReadonly: true, id: undefined, entityType: undefined },
+                    wrapper: wrapper,
+                },
+            ],
+        });
+    });
+
+    it('block entity: selection in last delimiter', () => {
+        const root = document.createElement('div');
+        const wrapper = document.createElement('span');
+        const delimiter1 = document.createElement('span');
+        const delimiter2 = document.createElement('span');
+        const text1 = document.createTextNode(ZERO_WIDTH_SPACE);
+        const text2 = document.createTextNode(ZERO_WIDTH_SPACE);
+
+        delimiter1.className = 'entityDelimiterBefore';
+        delimiter2.className = 'entityDelimiterAfter';
+        delimiter1.appendChild(text1);
+        delimiter2.appendChild(text2);
+        root.appendChild(delimiter1);
+        root.appendChild(wrapper);
+        root.appendChild(delimiter2);
+
+        const entity = createEntity(wrapper);
+        const group = createContentModelDocument();
+
+        group.blocks.push(entity);
+
+        const index1: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+        const index2: BlockEntityDelimiterItem = {
+            entity: entity,
+            parent: group,
+        };
+
+        (text1 as IndexedEntityDelimiter).__roosterjsContentModel = index1;
+        (text2 as IndexedEntityDelimiter).__roosterjsContentModel = index2;
+
+        const range = document.createRange();
+        range.setStart(text2, 1);
+
+        const indexer = new DomIndexerImpl();
+
+        const result = indexer.reconcileSelection(group, {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        });
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { isReadonly: true, id: undefined, entityType: undefined },
+                    wrapper: wrapper,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'SelectionMarker', isSelected: true, format: {} }],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+});
+
+describe('domIndexerImpl.reconcileChildList', () => {
+    it('Empty array', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const result = domIndexer.reconcileChildList([], []);
+
+        expect(result).toBeTrue();
+    });
+
+    it('Removed BR, not indexed', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br = document.createElement('br');
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Removed BR, indexed, segment is not under paragraph', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment = createBr();
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [],
+        });
+    });
+
+    it('Removed BR, indexed, segment is under paragraph', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment1 = createText('test1');
+        const segment2 = createBr();
+        const segment3 = createText('test3');
+
+        paragraph.segments.push(segment1, segment2, segment3);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment2],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeTrue();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment3],
+        });
+    });
+
+    it('Removed two BR, indexed', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br1: Node = document.createElement('br');
+        const br2: Node = document.createElement('br');
+
+        const paragraph = createParagraph();
+        const segment1 = createBr();
+        const segment2 = createBr();
+        const segment3 = createText('test3');
+
+        paragraph.segments.push(segment1, segment2, segment3);
+
+        (br1 as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment1],
+        };
+
+        (br2 as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment2],
+        };
+
+        const result = domIndexer.reconcileChildList([], [br1, br2]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment2, segment3],
+        });
+    });
+
+    it('Added BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+
+        const result = domIndexer.reconcileChildList([br], []);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Added Text', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Text = document.createTextNode('test');
+
+        const result = domIndexer.reconcileChildList([], [br]);
+
+        expect(result).toBeFalse();
+    });
+
+    it('Added Text, remove BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+        const text: Text = document.createTextNode('test');
+
+        const paragraph = createParagraph();
+        const segment = createBr({
+            fontSize: '10pt',
+        });
+
+        paragraph.segments.push(segment);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([text], [br]);
+
+        expect(result).toBeTrue();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontSize: '10pt',
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Added two Texts, remove BR', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const br: Node = document.createElement('br');
+        const text1: Text = document.createTextNode('test1');
+        const text2: Text = document.createTextNode('test2');
+
+        const paragraph = createParagraph();
+        const segment = createBr({
+            fontSize: '10pt',
+        });
+
+        paragraph.segments.push(segment);
+
+        (br as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segment],
+        };
+
+        const result = domIndexer.reconcileChildList([text1, text2], [br]);
+
+        expect(result).toBeFalse();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment],
+        });
+    });
+});
+
+describe('domIndexerImpl.reconcileElementId', () => {
+    it('unindexed image id', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+        const para = createParagraph();
+
+        para.segments.push(image);
+
+        img.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(img);
+
+        expect(result).toBe(false);
+        expect(image).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('indexed image id', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+        const para = createParagraph();
+        const segIndex: SegmentItem = {
+            paragraph: para,
+            segments: [image],
+        };
+
+        para.segments.push(image);
+
+        ((img as Node) as IndexedSegmentNode).__roosterjsContentModel = segIndex;
+
+        img.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(img);
+
+        expect(result).toBe(true);
+        expect(image).toEqual({
+            segmentType: 'Image',
+            format: { id: 'testId' },
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('unindexed table id', () => {
+        const tb = document.createElement('table');
+
+        tb.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(tb);
+
+        expect(result).toBe(false);
+    });
+
+    it('indexed table id', () => {
+        const tb = document.createElement('table');
+        const table = createTable(1);
+        const tbIndex: TableItem = {
+            table: table,
+        };
+
+        (tb as IndexedTableElement).__roosterjsContentModel = tbIndex;
+
+        tb.id = 'testId';
+
+        const result = new DomIndexerImpl().reconcileElementId(tb);
+
+        expect(result).toBe(true);
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: { id: 'testId' },
+            widths: [],
+            dataset: {},
+            rows: [
+                {
+                    height: 0,
+                    format: {},
+                    cells: [],
+                },
+            ],
+        });
     });
 });

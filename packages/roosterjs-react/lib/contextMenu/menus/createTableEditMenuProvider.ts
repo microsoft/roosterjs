@@ -1,9 +1,8 @@
-import createContextMenuProvider from '../utils/createContextMenuProvider';
-import { applyCellShading, editTable } from 'roosterjs-editor-api';
+import { createContextMenuProvider } from '../utils/createContextMenuProvider';
+import { editTable, setTableCellShade } from 'roosterjs-content-model-api';
 import { renderColorPicker } from '../../colorPicker/component/renderColorPicker';
-import { TableOperation } from 'roosterjs-editor-types';
-import type ContextMenuItem from '../types/ContextMenuItem';
-import type { EditorPlugin, IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
+import type { Colors, EditorPlugin, IEditor, TableOperation } from 'roosterjs-content-model-types';
+import type { ContextMenuItem } from '../types/ContextMenuItem';
 import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import {
     getColorPickerContainerClassName,
@@ -25,41 +24,41 @@ import {
 } from '../../colorPicker/utils/backgroundColors';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
-    menuNameTableInsertAbove: TableOperation.InsertAbove,
-    menuNameTableInsertBelow: TableOperation.InsertBelow,
-    menuNameTableInsertLeft: TableOperation.InsertLeft,
-    menuNameTableInsertRight: TableOperation.InsertRight,
-    menuNameTableDeleteTable: TableOperation.DeleteTable,
-    menuNameTableDeleteColumn: TableOperation.DeleteColumn,
-    menuNameTableDeleteRow: TableOperation.DeleteRow,
-    menuNameTableMergeAbove: TableOperation.MergeAbove,
-    menuNameTableMergeBelow: TableOperation.MergeBelow,
-    menuNameTableMergeLeft: TableOperation.MergeLeft,
-    menuNameTableMergeRight: TableOperation.MergeRight,
-    menuNameTableMergeCells: TableOperation.MergeCells,
-    menuNameTableSplitHorizontally: TableOperation.SplitHorizontally,
-    menuNameTableSplitVertically: TableOperation.SplitVertically,
-    menuNameTableAlignLeft: TableOperation.AlignCellLeft,
-    menuNameTableAlignCenter: TableOperation.AlignCellCenter,
-    menuNameTableAlignRight: TableOperation.AlignCellRight,
-    menuNameTableAlignTop: TableOperation.AlignCellTop,
-    menuNameTableAlignMiddle: TableOperation.AlignCellMiddle,
-    menuNameTableAlignBottom: TableOperation.AlignCellBottom,
-    menuNameTableAlignTableLeft: TableOperation.AlignLeft,
-    menuNameTableAlignTableCenter: TableOperation.AlignCenter,
-    menuNameTableAlignTableRight: TableOperation.AlignRight,
+    menuNameTableInsertAbove: 'insertAbove',
+    menuNameTableInsertBelow: 'insertBelow',
+    menuNameTableInsertLeft: 'insertLeft',
+    menuNameTableInsertRight: 'insertRight',
+    menuNameTableDeleteTable: 'deleteTable',
+    menuNameTableDeleteColumn: 'deleteColumn',
+    menuNameTableDeleteRow: 'deleteRow',
+    menuNameTableMergeAbove: 'mergeAbove',
+    menuNameTableMergeBelow: 'mergeBelow',
+    menuNameTableMergeLeft: 'mergeLeft',
+    menuNameTableMergeRight: 'mergeRight',
+    menuNameTableMergeCells: 'mergeCells',
+    menuNameTableSplitHorizontally: 'splitHorizontally',
+    menuNameTableSplitVertically: 'splitVertically',
+    menuNameTableAlignLeft: 'alignCellLeft',
+    menuNameTableAlignCenter: 'alignCellCenter',
+    menuNameTableAlignRight: 'alignCellRight',
+    menuNameTableAlignTop: 'alignCellTop',
+    menuNameTableAlignMiddle: 'alignCellMiddle',
+    menuNameTableAlignBottom: 'alignCellBottom',
+    menuNameTableAlignTableLeft: 'alignLeft',
+    menuNameTableAlignTableCenter: 'alignCenter',
+    menuNameTableAlignTableRight: 'alignRight',
 };
 
 const ColorValues = {
     ...BackgroundColors,
     // Add this value to satisfy compiler
-    menuNameTableCellShade: <ModeIndependentColor>(<unknown>null),
+    menuNameTableCellShade: <Colors>(<unknown>null),
 };
 
 function onClick(key: TableEditMenuItemStringKey, editor: IEditor) {
-    editor.focus();
     const operation = TableEditOperationMap[key];
-    if (typeof operation === 'number') {
+
+    if (operation) {
         editTable(editor, operation);
     }
 }
@@ -142,7 +141,7 @@ const TableEditCellShadeMenuItem: ContextMenuItem<TableEditShadeMenuItemStringKe
     unlocalizedText: 'Shading',
     subItems: BackgroundColorDropDownItems,
     onClick: (key, editor) => {
-        applyCellShading(editor, ColorValues[key]);
+        setTableCellShade(editor, ColorValues[key].lightModeColor);
     },
     itemRender: (item, click) => renderColorPicker(item, ColorValues, click),
     itemClassName: getColorPickerItemClassName(),
@@ -152,8 +151,9 @@ const TableEditCellShadeMenuItem: ContextMenuItem<TableEditShadeMenuItemStringKe
 };
 
 function getEditingTable(editor: IEditor, node: Node) {
-    const td = editor.getElementAtCursor('TD,TH', node) as HTMLTableCellElement;
-    const table = td && (editor.getElementAtCursor('table', td) as HTMLTableElement);
+    const domHelper = editor.getDOMHelper();
+    const td = domHelper.findClosestElementAncestor(node, 'TD,TH');
+    const table = td && domHelper.findClosestElementAncestor(td, 'table');
 
     return table?.isContentEditable ? { table, td } : null;
 }
@@ -162,7 +162,7 @@ function getEditingTable(editor: IEditor, node: Node) {
  * Create a new instance of ContextMenuProvider to support table editing functionalities in context menu
  * @returns A new ContextMenuProvider
  */
-export default function createTableEditMenuProvider(
+export function createTableEditMenuProvider(
     strings?: LocalizedStrings<TableEditMenuItemStringKey>
 ): EditorPlugin {
     return createContextMenuProvider(

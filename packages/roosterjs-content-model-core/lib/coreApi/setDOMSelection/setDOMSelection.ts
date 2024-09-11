@@ -1,8 +1,14 @@
 import { addRangeToSelection } from './addRangeToSelection';
+import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
-import { isNodeOfType, parseTableCells, toArray } from 'roosterjs-content-model-dom';
+import {
+    getSafeIdSelector,
+    isNodeOfType,
+    parseTableCells,
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type {
     ParsedTable,
     SelectionChangedEvent,
@@ -15,22 +21,27 @@ const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
-const TABLE_CSS_RULE = 'background-color:#C6C6C6!important;';
 const CARET_CSS_RULE = 'caret-color: transparent';
-const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important';
+const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
+const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
 
 /**
  * @internal
  */
 export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionChangedEvent) => {
+    const existingSelection = core.api.getDOMSelection(core);
+
+    if (existingSelection && selection && areSameSelections(existingSelection, selection)) {
+        return;
+    }
+
     // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
     const doc = core.physicalRoot.ownerDocument;
-
+    const isDarkMode = core.lifecycle.isDarkMode;
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
@@ -42,13 +53,18 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 const image = selection.image;
 
                 core.selection.selection = selection;
+
+                const imageSelectionColor = isDarkMode
+                    ? core.selection.imageSelectionBorderColorDark
+                    : core.selection.imageSelectionBorderColor;
+
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    `outline-style:auto!important; outline-color:${
-                        core.selection.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR
+                    `outline-style:solid!important; outline-color:${
+                        imageSelectionColor || DEFAULT_SELECTION_BORDER_COLOR
                     }!important;`,
-                    [`#${ensureUniqueId(image, IMAGE_ID)}`]
+                    [getSafeIdSelector(ensureUniqueId(image, IMAGE_ID))]
                 );
                 core.api.setEditorStyle(
                     core,
@@ -94,19 +110,31 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                 };
 
                 const tableId = ensureUniqueId(table, TABLE_ID);
+                const tableSelector = getSafeIdSelector(tableId);
+
                 const tableSelectors =
                     firstCell.row == 0 &&
                     firstCell.col == 0 &&
                     lastCell.row == parsedTable.length - 1 &&
                     lastCell.col == (parsedTable[lastCell.row]?.length ?? 0) - 1
-                        ? [`#${tableId}`, `#${tableId} *`]
-                        : handleTableSelected(parsedTable, tableId, table, firstCell, lastCell);
+                        ? [tableSelector, `${tableSelector} *`]
+                        : handleTableSelected(
+                              parsedTable,
+                              tableSelector,
+                              table,
+                              firstCell,
+                              lastCell
+                          );
 
                 core.selection.selection = selection;
+
+                const tableSelectionColor = isDarkMode
+                    ? core.selection.tableCellSelectionBackgroundColorDark
+                    : core.selection.tableCellSelectionBackgroundColor;
                 core.api.setEditorStyle(
                     core,
                     DOM_SELECTION_CSS_KEY,
-                    TABLE_CSS_RULE,
+                    `background-color:${tableSelectionColor}!important;`,
                     tableSelectors
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
@@ -148,7 +176,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
 function handleTableSelected(
     parsedTable: ParsedTable,
-    tableId: string,
+    tableSelector: string,
     table: HTMLTableElement,
     firstCell: TableCellCoordinate,
     lastCell: TableCellCoordinate
@@ -199,7 +227,7 @@ function handleTableSelected(
                     cellIndex >= firstCell.col &&
                     cellIndex <= lastCell.col
                 ) {
-                    const selector = `#${tableId}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
+                    const selector = `${tableSelector}${middleElSelector} tr:nth-child(${currentRow})>${cell.tagName}:nth-child(${tdCount})`;
 
                     selectors.push(selector, selector + ' *');
                 }

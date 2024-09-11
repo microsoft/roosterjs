@@ -1,11 +1,25 @@
 import type {
     ContentModelBlockGroup,
     ContentModelBlockWithCache,
-    ContentModelSegment,
+    ContentModelDocument,
     IterateSelectionsCallback,
     IterateSelectionsOption,
-    TableSelectionContext,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelSegment,
+    ReadonlyIterateSelectionsCallback,
+    ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ * This is a temporary type to pass the information of whether element cache should be persisted when possible
+ */
+export interface ContentModelDocumentWithPersistedCache extends ContentModelDocument {
+    /**
+     * When set to
+     */
+    persistCache?: boolean;
+}
 
 /**
  * Iterate all selected elements in a given model
@@ -17,23 +31,52 @@ export function iterateSelections(
     group: ContentModelBlockGroup,
     callback: IterateSelectionsCallback,
     option?: IterateSelectionsOption
-): void {
-    const internalCallback: IterateSelectionsCallback = (path, tableContext, block, segments) => {
-        if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
-            delete (block as ContentModelBlockWithCache).cachedElement;
-        }
+): void;
 
-        return callback(path, tableContext, block, segments);
-    };
+/**
+ * Iterate all selected elements in a given model (Readonly)
+ * @param group The given Content Model to iterate selection from
+ * @param callback The callback function to access the selected element
+ * @param option Option to determine how to iterate
+ */
+export function iterateSelections(
+    group: ReadonlyContentModelBlockGroup,
+    callback: ReadonlyIterateSelectionsCallback,
+    option?: IterateSelectionsOption
+): void;
+
+export function iterateSelections(
+    group: ReadonlyContentModelBlockGroup,
+    callback: ReadonlyIterateSelectionsCallback | IterateSelectionsCallback,
+    option?: IterateSelectionsOption
+): void {
+    const persistCache =
+        group.blockGroupType == 'Document'
+            ? (group as ContentModelDocumentWithPersistedCache).persistCache
+            : false;
+    const internalCallback: ReadonlyIterateSelectionsCallback = persistCache
+        ? (callback as ReadonlyIterateSelectionsCallback)
+        : (path, tableContext, block, segments) => {
+              if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
+                  delete (block as ContentModelBlockWithCache).cachedElement;
+              }
+
+              return (callback as ReadonlyIterateSelectionsCallback)(
+                  path,
+                  tableContext,
+                  block,
+                  segments
+              );
+          };
 
     internalIterateSelections([group], internalCallback, option);
 }
 
 function internalIterateSelections(
-    path: ContentModelBlockGroup[],
-    callback: IterateSelectionsCallback,
+    path: ReadonlyContentModelBlockGroup[],
+    callback: ReadonlyIterateSelectionsCallback,
     option?: IterateSelectionsOption,
-    table?: TableSelectionContext,
+    table?: ReadonlyTableSelectionContext,
     treatAllAsSelect?: boolean
 ): boolean {
     const parent = path[0];
@@ -104,7 +147,7 @@ function internalIterateSelections(
                                 continue;
                             }
 
-                            const newTable: TableSelectionContext = {
+                            const newTable: ReadonlyTableSelectionContext = {
                                 table: block,
                                 rowIndex,
                                 colIndex,
@@ -141,7 +184,7 @@ function internalIterateSelections(
                 break;
 
             case 'Paragraph':
-                const segments: ContentModelSegment[] = [];
+                const segments: ReadonlyContentModelSegment[] = [];
 
                 for (let i = 0; i < block.segments.length; i++) {
                     const segment = block.segments[i];

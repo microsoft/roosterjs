@@ -1,4 +1,4 @@
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ShallowMutableContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { OnNodeCreated } from '../context/ModelToDomSettings';
@@ -38,6 +38,11 @@ export interface FormatContentModelOptions {
      * When specified, use this selection range to override current selection inside editor
      */
     selectionOverride?: DOMSelection;
+
+    /**
+     * When pass to true, scroll the editing caret into view after write DOM tree if need
+     */
+    scrollCaretIntoView?: boolean;
 }
 
 /**
@@ -47,6 +52,6 @@ export interface FormatContentModelOptions {
  * @returns True means the model is changed and need to write back to editor, otherwise false
  */
 export type ContentModelFormatter = (
-    model: ContentModelDocument,
+    model: ShallowMutableContentModelDocument,
     context: FormatContentModelContext
 ) => boolean;

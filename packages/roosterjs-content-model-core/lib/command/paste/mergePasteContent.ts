@@ -1,6 +1,7 @@
 import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing';
 import {
     ChangeSource,
+    EmptySegmentFormat,
     cloneModel,
     domToContentModel,
     getSegmentTextFormat,
@@ -9,27 +10,17 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
-    ClipboardData,
     CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
+    PasteType,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
-const EmptySegmentFormat: Required<ContentModelSegmentFormat> = {
-    backgroundColor: '',
-    fontFamily: '',
-    fontSize: '',
-    fontWeight: '',
-    italic: false,
-    letterSpacing: '',
-    lineHeight: '',
-    strikethrough: false,
-    superOrSubScriptSequence: '',
-    textColor: '',
-    underline: false,
-};
+const BlackColor = 'rgb(0,0,0)';
 
 const CloneOption: CloneModelOptions = {
     includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
@@ -38,19 +29,22 @@ const CloneOption: CloneModelOptions = {
 /**
  * @internal
  */
-export function cloneModelForPaste(model: ContentModelDocument) {
+export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
     return cloneModel(model, CloneOption);
 }
 
 /**
  * @internal
  */
-export function mergePasteContent(
-    editor: IEditor,
-    eventResult: BeforePasteEvent,
-    clipboardData: ClipboardData
-) {
-    const { fragment, domToModelOption, customizedMerge, pasteType } = eventResult;
+export function mergePasteContent(editor: IEditor, eventResult: BeforePasteEvent) {
+    const {
+        fragment,
+        domToModelOption,
+        customizedMerge,
+        pasteType,
+        clipboardData,
+        containsBlockElements,
+    } = eventResult;
 
     editor.formatContentModel(
         (model, context) => {
@@ -59,7 +53,6 @@ export function mergePasteContent(
                 model.blocks = clonedModel.blocks;
             }
 
-            const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
             const domToModelContext = createDomToModelContextForSanitizing(
                 editor.getDocument(),
                 undefined /*defaultFormat*/,
@@ -67,14 +60,13 @@ export function mergePasteContent(
                 domToModelOption
             );
 
-            domToModelContext.segmentFormat = selectedSegment
-                ? getSegmentTextFormat(selectedSegment)
-                : {};
+            domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);
 
             const pasteModel = domToContentModel(fragment, domToModelContext);
             const mergeOption: MergeModelOption = {
                 mergeFormat: pasteType == 'mergeFormat' ? 'keepSourceEmphasisFormat' : 'none',
                 mergeTable: shouldMergeTable(pasteModel),
+                addParagraphAfterMergedContent: containsBlockElements,
             };
 
             const insertPoint = customizedMerge
@@ -85,7 +77,9 @@ export function mergePasteContent(
                 context.newPendingFormat = {
                     ...EmptySegmentFormat,
                     ...model.format,
-                    ...insertPoint.marker.format,
+                    ...(pasteType == 'normal' && !containsBlockElements
+                        ? getLastSegmentFormat(pasteModel)
+                        : insertPoint.marker.format),
                 };
             }
 
@@ -94,9 +88,31 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
+            scrollCaretIntoView: true,
             apiName: 'paste',
         }
     );
+}
+
+function getSegmentFormatForPaste(
+    model: ShallowMutableContentModelDocument,
+    pasteType: PasteType
+): ContentModelSegmentFormat {
+    const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
+
+    if (selectedSegment) {
+        const result = getSegmentTextFormat(selectedSegment);
+        if (pasteType == 'normal') {
+            // When using normal paste (Keep source formatting) set the default text color to black when creating the
+            // Model from the clipboard content, so the elements that do not contain any text color in their style
+            // Are set to black. Otherwise, These segments would get the selected segments format or the default text set in the content.
+            result.textColor = BlackColor;
+        }
+
+        return result;
+    }
+
+    return {};
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
@@ -112,4 +128,20 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
     }
     // Only merge table when the document contain a single table.
     return pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table';
+}
+
+function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSegmentFormat {
+    if (pasteModel.blocks.length == 1) {
+        const [firstBlock] = pasteModel.blocks;
+
+        if (firstBlock.blockType == 'Paragraph') {
+            const segment = firstBlock.segments[firstBlock.segments.length - 1];
+
+            return {
+                ...segment.format,
+            };
+        }
+    }
+
+    return {};
 }

@@ -1,6 +1,6 @@
-import FormatStatePane, { FormatStatePaneProps, FormatStatePaneState } from './FormatStatePane';
+import { FormatStatePane, FormatStatePaneProps, FormatStatePaneState } from './FormatStatePane';
+import { getDOMInsertPointRect } from 'roosterjs-content-model-dom';
 import { getFormatState } from 'roosterjs-content-model-api';
-import { getPositionRect } from '../../roosterjsReact/pasteOptions/utils/getPositionRect';
 import { PluginEvent } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
@@ -50,7 +50,7 @@ export class FormatStatePlugin extends SidePanePluginImpl<FormatStatePane, Forma
             const offset = selection.isReverted
                 ? selection.range.startOffset
                 : selection.range.endOffset;
-            const rect = getPositionRect(node, offset);
+            const rect = getDOMInsertPointRect(this.editor.getDocument(), { node, offset });
 
             if (rect) {
                 x = rect.left;

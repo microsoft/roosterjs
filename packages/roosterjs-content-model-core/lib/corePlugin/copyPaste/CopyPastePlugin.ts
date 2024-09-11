@@ -29,8 +29,8 @@ import type {
     PluginWithState,
     ContentModelDocument,
     ContentModelParagraph,
-    TableSelectionContext,
     ContentModelSegment,
+    ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -160,8 +160,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     }
 
                     cleanUpAndRestoreSelection(tempDiv);
-                    this.editor.focus();
                     this.editor.setDOMSelection(selection);
+                    this.editor.focus();
 
                     if (isCut) {
                         this.editor.formatContentModel(
@@ -246,7 +246,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
     let selectionMarker: ContentModelSegment | undefined;
     let firstBlock: ContentModelParagraph | undefined;
-    let tableContext: TableSelectionContext | undefined;
+    let tableContext: ReadonlyTableSelectionContext | undefined;
 
     iterateSelections(pasteModel, (_, tableCtxt, block, segments) => {
         if (selectionMarker) {

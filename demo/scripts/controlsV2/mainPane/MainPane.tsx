@@ -2,18 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
-import { Border, ContentModelDocument, EditorOptions } from 'roosterjs-content-model-types';
-import { Colors, EditorPlugin, IEditor, Snapshots } from 'roosterjs-content-model-types';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
-import { createEmojiPlugin } from '../roosterjsReact/emoji';
-import { createImageEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createImageEditMenuProvider';
-import { createLegacyPlugins } from '../plugins/createLegacyPlugins';
-import { createListEditMenuProvider } from '../roosterjsReact/contextMenu/menus/createListEditMenuProvider';
-import { createPasteOptionPlugin } from '../roosterjsReact/pasteOptions';
-import { createRibbonPlugin, Ribbon, RibbonButton, RibbonPlugin } from '../roosterjsReact/ribbon';
 import { darkModeButton } from '../demoButtons/darkModeButton';
 import { Editor } from 'roosterjs-content-model-core';
-import { EditorAdapter } from 'roosterjs-editor-adapter';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { exportContentButton } from '../demoButtons/exportContentButton';
@@ -27,27 +18,47 @@ import { getTheme } from '../theme/themes';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
-import { redoButton } from '../roosterjsReact/ribbon/buttons/redoButton';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
-import { Rooster } from '../roosterjsReact/rooster';
+import { SamplePickerPlugin } from '../plugins/SamplePickerPlugin';
 import { SidePane } from '../sidePane/SidePane';
 import { SidePanePlugin } from '../sidePane/SidePanePlugin';
 import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
-import { undoButton } from '../roosterjsReact/ribbon/buttons/undoButton';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import {
     createContextMenuPlugin,
+    createEmojiPlugin,
+    createImageEditMenuProvider,
+    createListEditMenuProvider,
+    createPasteOptionPlugin,
+    createRibbonPlugin,
     createTableEditMenuProvider,
-} from '../roosterjsReact/contextMenu';
+    redoButton,
+    Rooster,
+    undoButton,
+    Ribbon,
+} from 'roosterjs-react';
+import {
+    Border,
+    Colors,
+    ContentModelDocument,
+    EditorOptions,
+    EditorPlugin,
+    IEditor,
+    KnownAnnounceStrings,
+    Snapshots,
+} from 'roosterjs-content-model-types';
 import {
     AutoFormatPlugin,
+    CustomReplacePlugin,
     EditPlugin,
     HyperlinkPlugin,
+    ImageEditPlugin,
     MarkdownPlugin,
     PastePlugin,
     ShortcutPlugin,
@@ -88,7 +99,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private ribbonPlugin: RibbonPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
+    private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
+    private imageEditPlugin: ImageEditPlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -125,6 +138,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.presetPlugin = new PresetPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
+        this.samplePickerPlugin = new SamplePickerPlugin();
+        this.imageEditPlugin = new ImageEditPlugin();
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -276,7 +291,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private renderRibbon() {
         return (
             <Ribbon
-                buttons={getButtons(this.state.activeTab, this.formatPainterPlugin)}
+                buttons={getButtons(
+                    this.state.activeTab,
+                    this.formatPainterPlugin,
+                    this.imageEditPlugin
+                )}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
@@ -298,14 +317,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private resetEditor() {
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
-                const legacyPluginList = createLegacyPlugins(this.state.initState);
-
-                return legacyPluginList.length > 0
-                    ? new EditorAdapter(div, {
-                          ...options,
-                          legacyPlugins: legacyPluginList,
-                      })
-                    : new Editor(div, options);
+                return new Editor(div, options);
             },
         });
     }
@@ -327,6 +339,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         const plugins: EditorPlugin[] = [
             this.ribbonPlugin,
             this.formatPainterPlugin,
+            this.samplePickerPlugin,
             ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
@@ -356,6 +369,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                             knownColors={this.knownColors}
                             disableCache={this.state.initState.disableCache}
+                            announcerStringGetter={getAnnouncingString}
+                            experimentalFeatures={Array.from(
+                                this.state.initState.experimentalFeatures
+                            )}
                         />
                     )}
                 </div>
@@ -478,30 +495,46 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             markdownOptions,
             autoFormatOptions,
             linkTitle,
+            customReplacements,
+            editPluginOptions,
         } = this.state.initState;
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
-            pluginList.edit && new EditPlugin(),
+            pluginList.edit && new EditPlugin(editPluginOptions),
             pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
+            pluginList.imageEditPlugin && this.imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),
             pluginList.contextMenu && createContextMenuPlugin(),
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
-            pluginList.contextMenu && imageMenu && createImageEditMenuProvider(),
+            pluginList.contextMenu &&
+                imageMenu &&
+                createImageEditMenuProvider(this.imageEditPlugin),
             pluginList.hyperlink &&
                 new HyperlinkPlugin(
                     linkTitle?.indexOf(UrlPlaceholder) >= 0
                         ? url => linkTitle.replace(UrlPlaceholder, url)
                         : linkTitle
                 ),
+            pluginList.customReplace && new CustomReplacePlugin(customReplacements),
         ].filter(x => !!x);
     }
+}
+
+const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
+    announceListItemBullet: 'Auto corrected Bullet',
+    announceListItemNumbering: 'Auto corrected {0}',
+    announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
+};
+
+function getAnnouncingString(key: KnownAnnounceStrings) {
+    return AnnounceStringMap[key];
 }
 
 export function mount(parent: HTMLElement) {

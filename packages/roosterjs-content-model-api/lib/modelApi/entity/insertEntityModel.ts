@@ -6,23 +6,25 @@ import {
     deleteSelection,
     getClosestAncestorBlockGroupIndex,
     setSelection,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ContentModelEntity,
-    ContentModelParagraph,
     FormatContentModelContext,
     InsertEntityPosition,
     InsertPoint,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelBlock,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function insertEntityModel(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     entityModel: ContentModelEntity,
     position: InsertEntityPosition,
     isBlock: boolean,
@@ -30,7 +32,7 @@ export function insertEntityModel(
     context?: FormatContentModelContext,
     insertPointOverride?: InsertPoint
 ) {
-    let blockParent: ContentModelBlockGroup | undefined;
+    let blockParent: ReadonlyContentModelBlockGroup | undefined;
     let blockIndex = -1;
     let insertPoint: InsertPoint | null;
 
@@ -57,9 +59,10 @@ export function insertEntityModel(
                 position == 'root'
                     ? getClosestAncestorBlockGroupIndex(path, ['TableCell', 'Document'])
                     : 0;
-            blockParent = path[pathIndex];
+            blockParent = mutateBlock(path[pathIndex]);
+
             const child = path[pathIndex - 1];
-            const directChild: ContentModelBlock =
+            const directChild: ReadonlyContentModelBlock =
                 child?.blockGroupType == 'FormatContainer' ||
                 child?.blockGroupType == 'General' ||
                 child?.blockGroupType == 'ListItem'
@@ -71,8 +74,8 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
-        const blocksToInsert: ContentModelBlock[] = [];
-        let nextParagraph: ContentModelParagraph | undefined;
+        const blocksToInsert: ShallowMutableContentModelBlock[] = [];
+        let nextParagraph: ShallowMutableContentModelParagraph | undefined;
 
         if (isBlock) {
             const nextBlock = blockParent.blocks[blockIndex];
@@ -80,7 +83,7 @@ export function insertEntityModel(
             blocksToInsert.push(entityModel);
 
             if (nextBlock?.blockType == 'Paragraph') {
-                nextParagraph = nextBlock;
+                nextParagraph = mutateBlock(nextBlock);
             } else if (!nextBlock || nextBlock.blockType == 'Entity' || focusAfterEntity) {
                 nextParagraph = createParagraph(false /*isImplicit*/, {}, model.format);
                 nextParagraph.segments.push(createBr(model.format));
@@ -97,7 +100,7 @@ export function insertEntityModel(
             blocksToInsert.push(nextParagraph);
         }
 
-        blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
+        mutateBlock(blockParent).blocks.splice(blockIndex, 0, ...blocksToInsert);
 
         if (focusAfterEntity && nextParagraph) {
             const marker = createSelectionMarker(nextParagraph.segments[0]?.format || model.format);
@@ -110,12 +113,30 @@ export function insertEntityModel(
 }
 
 function getInsertPoint(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     insertPointOverride?: InsertPoint,
     context?: FormatContentModelContext
 ): InsertPoint | null {
     if (insertPointOverride) {
-        return insertPointOverride;
+        const { paragraph, marker, tableContext, path } = insertPointOverride;
+        const index = paragraph.segments.indexOf(marker);
+        const previousSegment = index > 0 ? paragraph.segments[index - 1] : null;
+
+        // It is possible that the real selection is right before the override selection marker.
+        // This happens when:
+        // [Override marker][Entity node to wrap][Real marker]
+        // Then we will move the entity node into entity wrapper, causes the override marker and real marker are at the same place
+        // And recreating content model causes real marker to appear before override marker.
+        // Once that happens, we need to use the real marker instead so that after insert entity, real marker can be placed
+        // after new entity (if insertPointOverride==true)
+        return previousSegment?.segmentType == 'SelectionMarker' && previousSegment.isSelected
+            ? {
+                  marker: previousSegment,
+                  paragraph,
+                  tableContext,
+                  path,
+              }
+            : insertPointOverride;
     } else {
         const deleteResult = deleteSelection(model, [], context);
         const insertPoint = deleteResult.insertPoint;

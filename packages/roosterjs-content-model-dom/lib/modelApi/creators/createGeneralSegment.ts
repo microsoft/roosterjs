@@ -10,13 +10,13 @@ import type {
  */
 export function createGeneralSegment(
     element: HTMLElement,
-    format?: ContentModelSegmentFormat
+    format?: Readonly<ContentModelSegmentFormat>
 ): ContentModelGeneralSegment {
     return {
         blockType: 'BlockGroup',
         blockGroupType: 'General',
         segmentType: 'General',
-        format: format ? { ...format } : {},
+        format: { ...format },
         blocks: [],
         element: element,
     };

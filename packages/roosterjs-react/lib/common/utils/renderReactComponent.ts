@@ -1,4 +1,4 @@
-import type UIUtilities from '../type/UIUtilities';
+import type { UIUtilities } from '../type/UIUtilities';
 
 /**
  * @internal

@@ -86,7 +86,7 @@ export interface EmojiICallout {
  * @internal
  * Enable emoji callout
  */
-export default function showEmojiCallout(
+export function showEmojiCallout(
     uiUtilities: UIUtilities,
     cursorRect: DOMRect,
     strings: Record<string, string>,

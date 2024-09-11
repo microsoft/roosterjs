@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { createUIUtilities } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
-import { Editor } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-content-model-core';
 import { useTheme } from '@fluentui/react/lib/Theme';
-import type RoosterProps from '../type/RoosterProps';
+import type { RoosterProps } from '../type/RoosterProps';
 import type { ReactEditorPlugin } from '../../common/index';
-import type { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, EditorOptions } from 'roosterjs-content-model-types';
 
 /**
  * Main component of react wrapper for roosterjs
  * @param props Properties of this component
  * @returns The react component
  */
-export default function Rooster(props: RoosterProps) {
+export function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
     const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();
 
-    const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins } = props;
+    const { focusOnInit, editorCreator, inDarkMode, plugins } = props;
 
     React.useEffect(() => {
         if (plugins && editorDiv.current) {
@@ -52,14 +52,15 @@ export default function Rooster(props: RoosterProps) {
         editor.current?.setDarkModeState(!!inDarkMode);
     }, [inDarkMode]);
 
-    React.useEffect(() => {
-        if (zoomScale) {
-            editor.current?.setZoomScale(zoomScale);
-        }
-    }, [zoomScale]);
-
     const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
-    return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
+    return (
+        <div
+            ref={editorDiv}
+            tabIndex={0}
+            role="textbox"
+            aria-multiline="true"
+            {...(divProps || {})}></div>
+    );
 }
 
 function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {

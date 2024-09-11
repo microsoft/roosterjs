@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContextMenu } from 'roosterjs-editor-plugins';
+import { ContextMenuPluginBase } from 'roosterjs-content-model-plugins';
 import { ContextualMenu } from '@fluentui/react/lib/ContextualMenu';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
 import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
@@ -16,22 +16,23 @@ function normalizeItems(items: (IContextualMenuItem | null)[]) {
     );
 }
 
-class ContextMenuPlugin extends ContextMenu<IContextualMenuItem> implements ReactEditorPlugin {
+class ContextMenuPlugin extends ContextMenuPluginBase<IContextualMenuItem>
+    implements ReactEditorPlugin {
     private uiUtilities: UIUtilities | null = null;
     private disposer: (() => void) | null = null;
 
     constructor() {
         super({
             render: (container, items, onDismiss) => {
-                const normalizedITems = normalizeItems(items);
+                const normalizedItems = normalizeItems(items);
 
-                if (normalizedITems.length > 0) {
+                if (normalizedItems.length > 0) {
                     this.disposer = renderReactComponent(
                         this.uiUtilities,
                         <ContextualMenu
                             target={container}
                             onDismiss={onDismiss}
-                            items={normalizedITems}
+                            items={normalizedItems}
                         />
                     );
                 }
@@ -51,6 +52,6 @@ class ContextMenuPlugin extends ContextMenu<IContextualMenuItem> implements Reac
 /**
  * Create a new instance of ContextMenu plugin with context menu implementation based on FluentUI.
  */
-export default function createContextMenuPlugin(): ContextMenu<IContextualMenuItem> {
+export function createContextMenuPlugin(): ContextMenuPluginBase<IContextualMenuItem> {
     return new ContextMenuPlugin();
 }

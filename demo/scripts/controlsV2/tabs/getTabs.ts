@@ -1,5 +1,5 @@
 import { MainPane } from '../mainPane/MainPane';
-import { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const styles = require('../mainPane/MainPane.scss');
 

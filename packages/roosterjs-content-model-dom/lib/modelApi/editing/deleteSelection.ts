@@ -1,11 +1,12 @@
 import { deleteExpandedSelection } from './deleteExpandedSelection';
+import { mutateBlock } from '../common/mutate';
+import { runEditSteps } from './runEditSteps';
 import type {
-    ContentModelDocument,
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
     FormatContentModelContext,
-    ValidDeleteSelectionContext,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -16,26 +17,19 @@ import type {
  * @returns A DeleteSelectionResult object to specify the deletion result
  */
 export function deleteSelection(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     additionalSteps: (DeleteSelectionStep | null)[] = [],
     formatContext?: FormatContentModelContext
 ): DeleteSelectionResult {
     const context = deleteExpandedSelection(model, formatContext);
+    const steps = additionalSteps.filter(
+        (x: DeleteSelectionStep | null): x is DeleteSelectionStep => !!x
+    );
 
-    additionalSteps.forEach(step => {
-        if (step && isValidDeleteSelectionContext(context)) {
-            step(context);
-        }
-    });
+    runEditSteps(steps, context);
 
     mergeParagraphAfterDelete(context);
     return context;
-}
-
-function isValidDeleteSelectionContext(
-    context: DeleteSelectionContext
-): context is ValidDeleteSelectionContext {
-    return !!context.insertPoint;
 }
 
 // If we end up with multiple paragraphs impacted, we need to merge them
@@ -50,7 +44,9 @@ function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
         lastParagraph != insertPoint.paragraph &&
         lastTableContext == insertPoint.tableContext
     ) {
-        insertPoint.paragraph.segments.push(...lastParagraph.segments);
-        lastParagraph.segments = [];
+        const mutableLastParagraph = mutateBlock(lastParagraph);
+
+        mutateBlock(insertPoint.paragraph).segments.push(...mutableLastParagraph.segments);
+        mutableLastParagraph.segments = [];
     }
 }

@@ -1,5 +1,5 @@
 import { MainPane } from '../mainPane/MainPane';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * Key of localized strings of Dark mode button

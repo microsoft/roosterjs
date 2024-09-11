@@ -1,6 +1,6 @@
 import { BulletListType } from 'roosterjs-content-model-dom';
 import { setListStyle } from 'roosterjs-content-model-api';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 const dropDownMenuItems = {
     [BulletListType.Disc]: 'Disc',
@@ -10,7 +10,6 @@ const dropDownMenuItems = {
     [BulletListType.LongArrow]: 'LongArrow',
     [BulletListType.UnfilledArrow]: 'UnfilledArrow',
     [BulletListType.Hyphen]: 'Hyphen',
-    [BulletListType.DoubleLongArrow]: 'DoubleLongArrow',
     [BulletListType.Circle]: 'Circle',
 };
 

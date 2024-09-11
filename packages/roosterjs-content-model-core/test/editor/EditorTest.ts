@@ -135,13 +135,8 @@ describe('Editor', () => {
 
         const editor = new Editor(div);
 
-        const model1 = editor.getContentModelCopy('connected');
-
-        expect(model1).toBe(mockedModel);
-        expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, { tryGetFromCache: true });
-
         editor.dispose();
-        expect(() => editor.getContentModelCopy('connected')).toThrow();
+        expect(() => editor.getContentModelCopy('disconnected')).toThrow();
         expect(resetSpy).toHaveBeenCalledWith();
     });
 
@@ -283,7 +278,9 @@ describe('Editor', () => {
             mockedModel
         );
 
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         const model = editor.getContentModelCopy('clean');
         expect(model).toBe(mockedModel);
@@ -1086,6 +1083,69 @@ describe('Editor', () => {
 
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();
-        expect(() => editor.getVisibleViewport()).toThrow();
+        expect(() => editor.setEditorStyle('key', 'rule', ['rule1', 'rule2'])).toThrow();
+    });
+
+    it('announce', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const announceSpy = jasmine.createSpy('announce');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                announce: announceSpy,
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const mockedData = 'ANNOUNCE' as any;
+
+        editor.announce(mockedData);
+
+        expect(announceSpy).toHaveBeenCalledWith(mockedCore, mockedData);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.announce(mockedData)).toThrow();
+    });
+
+    it('isExperimentalFeatureEnabled', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+            },
+            experimentalFeatures: ['Feature1', 'Feature2'],
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const result1 = editor.isExperimentalFeatureEnabled('Feature1');
+        const result2 = editor.isExperimentalFeatureEnabled('Feature2');
+        const result3 = editor.isExperimentalFeatureEnabled('Feature3');
+
+        expect(result1).toBeTrue();
+        expect(result2).toBeTrue();
+        expect(result3).toBeFalse();
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.isExperimentalFeatureEnabled('Feature4')).toThrow();
     });
 });

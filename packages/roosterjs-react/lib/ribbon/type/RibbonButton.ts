@@ -1,12 +1,13 @@
-import type RibbonButtonDropDown from './RibbonButtonDropDown';
-import type { FormatState, IEditor } from 'roosterjs-editor-types';
+import type { RibbonButtonDropDown } from './RibbonButtonDropDown';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import type { UIUtilities } from '../../common/type/UIUtilities';
+import type { ContentModelFormatState, IEditor } from 'roosterjs-content-model-types';
 import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
-import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * Represents a button on format ribbon
  */
-export default interface RibbonButton<T extends string> {
+export interface RibbonButton<T extends string> {
     /**
      * key of this button, needs to be unique
      */
@@ -47,7 +48,7 @@ export default interface RibbonButton<T extends string> {
      * @returns True to show the button in a checked state, otherwise false
      * @default False When not specified, it is treated as always returning false
      */
-    isChecked?: (formatState: FormatState) => boolean;
+    isChecked?: (formatState: ContentModelFormatState) => boolean;
 
     /**
      * Get if the current button should be disabled
@@ -55,7 +56,7 @@ export default interface RibbonButton<T extends string> {
      * @returns True to show the button in a disabled state, otherwise false
      * @default False When not specified, it is treated as always returning false
      */
-    isDisabled?: (formatState: FormatState) => boolean;
+    isDisabled?: (formatState: ContentModelFormatState) => boolean;
 
     /**
      * A drop down menu of this button. When set this value, the button will has a "v" icon to let user

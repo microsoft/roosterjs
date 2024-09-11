@@ -1,11 +1,17 @@
 import { canMergeCells } from './canMergeCells';
-import { getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable, TableVerticalMergeOperation } from 'roosterjs-content-model-types';
+import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import type {
+    ShallowMutableContentModelTable,
+    TableVerticalMergeOperation,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function mergeTableRow(table: ContentModelTable, operation: TableVerticalMergeOperation) {
+export function mergeTableRow(
+    table: ShallowMutableContentModelTable,
+    operation: TableVerticalMergeOperation
+) {
     const sel = getSelectedCells(table);
     const mergeAbove = operation == 'mergeAbove';
 
@@ -26,24 +32,20 @@ export function mergeTableRow(table: ContentModelTable, operation: TableVertical
                         colIndex
                     )
                 ) {
-                    cell.spanAbove = true;
+                    mutateBlock(cell).spanAbove = true;
 
                     let newSelectedRow = mergingRowIndex;
 
                     while (table.rows[newSelectedRow]?.cells[colIndex]?.spanAbove) {
-                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
-                        delete table.rows[newSelectedRow].cachedElement;
+                        mutateBlock(table.rows[newSelectedRow].cells[colIndex]);
                         newSelectedRow--;
                     }
 
-                    if (table.rows[newSelectedRow]?.cells[colIndex]) {
-                        table.rows[newSelectedRow].cells[colIndex].isSelected = true;
+                    const newCell = table.rows[newSelectedRow]?.cells[colIndex];
 
-                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
-                        delete table.rows[newSelectedRow].cachedElement;
+                    if (newCell) {
+                        mutateBlock(newCell).isSelected = true;
                     }
-
-                    delete cell.cachedElement;
                 }
             }
         }

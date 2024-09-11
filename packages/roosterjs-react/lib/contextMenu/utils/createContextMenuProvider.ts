@@ -1,9 +1,9 @@
-import getLocalizedString from '../../common/utils/getLocalizedString';
-import { getObjectKeys } from 'roosterjs-editor-dom';
-import type ContextMenuItem from '../types/ContextMenuItem';
-import type { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import { getLocalizedString } from '../../common/utils/getLocalizedString';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import type { ContextMenuItem } from '../types/ContextMenuItem';
 import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import type { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import type { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * A plugin of editor to provide context menu items
@@ -52,13 +52,13 @@ class ContextMenuProviderImpl<TString extends string, TContext>
     }
 
     getContextMenuItems(node: Node) {
+        const editor = this.editor;
+
         this.targetNode = node;
 
-        return this.editor && this.shouldAddMenuItems?.(this.editor, node)
+        return editor && this.shouldAddMenuItems?.(editor, node)
             ? this.items
-                  .filter(
-                      item => !item.shouldShow || item.shouldShow(this.editor!, node, this.context)
-                  )
+                  .filter(item => !item.shouldShow || item.shouldShow(editor, node, this.context))
                   .map(item => this.convertMenuItems(item, node))
             : [];
     }
@@ -71,7 +71,8 @@ class ContextMenuProviderImpl<TString extends string, TContext>
         item: ContextMenuItem<TString, TContext>,
         node: Node
     ): IContextualMenuItem {
-        const selectedId = item.getSelectedId?.(this.editor!, node);
+        const selectedId = this.editor && item.getSelectedId?.(this.editor, node);
+
         return {
             key: item.key,
             data: item,
@@ -124,7 +125,7 @@ class ContextMenuProviderImpl<TString extends string, TContext>
  * @param strings Localized strings of these menu items
  * @param shouldAddMenuItems A general checker to decide if we should add this group of menu items
  */
-export default function createContextMenuProvider<TString extends string, TContext>(
+export function createContextMenuProvider<TString extends string, TContext>(
     menuName: string,
     items: ContextMenuItem<TString, TContext>[],
     strings?: LocalizedStrings<TString>,

@@ -2,7 +2,10 @@ import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption'
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
-import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type {
+    ContentModelDocument,
+    ShallowMutableContentModelDocument,
+} from '../contentModel/blockGroup/ContentModelDocument';
 import type { InsertPoint } from '../selection/InsertPoint';
 
 /**
@@ -12,7 +15,7 @@ import type { InsertPoint } from '../selection/InsertPoint';
  * @returns Insert point after merge
  */
 export type MergePastedContentFunc = (
-    target: ContentModelDocument,
+    target: ShallowMutableContentModelDocument,
     source: ContentModelDocument
 ) => InsertPoint | null;
 
@@ -59,4 +62,9 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
     customizedMerge?: MergePastedContentFunc;
+
+    /**
+     * Whether the current clipboard contains at least a block element.
+     */
+    readonly containsBlockElements?: boolean;
 }

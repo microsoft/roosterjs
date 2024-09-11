@@ -1,10 +1,9 @@
-import { matchLink } from 'roosterjs-content-model-api';
-import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import { matchLink, splitTextSegment } from 'roosterjs-content-model-api';
 import type {
-    ContentModelParagraph,
     ContentModelText,
     FormatContentModelContext,
     LinkData,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -12,7 +11,7 @@ import type {
  */
 export function createLinkAfterSpace(
     previousSegment: ContentModelText,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ) {
     const link = previousSegment.text.split(' ').pop();

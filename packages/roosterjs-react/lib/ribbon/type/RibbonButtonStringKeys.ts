@@ -1,4 +1,4 @@
-import type { BackgroundColorKeys, TextColorKeys } from '../../colorPicker/index';
+import type { BackgroundColorKeys, TextColorKeys } from '../../colorPicker/types/stringKeys';
 import type {
     CancelButtonStringKey,
     MenuItemSplitterKey0,
@@ -19,6 +19,11 @@ export type AlignLeftButtonStringKey = 'buttonNameAlignLeft';
  * Key of localized strings of Align right button
  */
 export type AlignRightButtonStringKey = 'buttonNameAlignRight';
+
+/**
+ * Key of localized strings of Align justify button
+ */
+export type AlignJustifyButtonStringKey = 'buttonNameAlignJustify';
 
 /**
  * Key of localized strings of Background color button
@@ -207,6 +212,7 @@ export type AllButtonStringKeys =
     | AlignLeftButtonStringKey
     | AlignCenterButtonStringKey
     | AlignRightButtonStringKey
+    | AlignJustifyButtonStringKey
     | BackgroundColorButtonStringKey
     | BoldButtonStringKey
     | BulletedListButtonStringKey

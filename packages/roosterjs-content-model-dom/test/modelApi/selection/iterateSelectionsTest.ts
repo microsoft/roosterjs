@@ -1,7 +1,6 @@
 import { iterateSelections } from '../../../lib/modelApi/selection/iterateSelections';
 import { IterateSelectionsCallback } from 'roosterjs-content-model-types';
 import {
-    addSegment,
     createContentModelDocument,
     createDivider,
     createEntity,
@@ -1206,71 +1205,5 @@ describe('iterateSelections', () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
-    });
-
-    it('Check cachedElement is cleared', () => {
-        const quote1 = createFormatContainer('blockquote');
-        const para1 = createParagraph();
-        const divider1 = createDivider('hr');
-        const quote2 = createFormatContainer('blockquote');
-        const para2 = createParagraph();
-        const divider2 = createDivider('hr');
-        const marker1 = createSelectionMarker();
-        const marker2 = createSelectionMarker();
-        const cache = 'CACHE' as any;
-
-        quote1.cachedElement = cache;
-        para1.cachedElement = cache;
-        divider1.cachedElement = cache;
-        quote2.cachedElement = cache;
-        para2.cachedElement = cache;
-        divider2.cachedElement = cache;
-
-        addSegment(quote1, marker1);
-        para1.segments.push(marker2);
-        divider1.isSelected = true;
-
-        const doc = createContentModelDocument();
-
-        doc.blocks.push(quote1, quote2, para1, para2, divider1, divider2);
-
-        iterateSelections(doc, callback);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [marker1],
-                            format: {},
-                            isImplicit: true,
-                        },
-                    ],
-                    format: {},
-                    cachedElement: cache,
-                },
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [],
-                    format: {},
-                    cachedElement: cache,
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [marker2],
-                    format: {},
-                },
-                { blockType: 'Paragraph', segments: [], format: {}, cachedElement: cache },
-                { blockType: 'Divider', tagName: 'hr', format: {}, isSelected: true },
-                { blockType: 'Divider', tagName: 'hr', format: {}, cachedElement: cache },
-            ],
-        });
     });
 });

@@ -1,6 +1,7 @@
+import { mutateBlock } from '../common/mutate';
 import { parseColor } from '../../formatHandlers/utils/color';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
-import type { ContentModelTableCell } from 'roosterjs-content-model-types';
+import type { ShallowMutableContentModelTableCell } from 'roosterjs-content-model-types';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
 // If the value of the lightness is less than 20, the color is dark.
@@ -18,7 +19,7 @@ const Black = '#000000';
  * @param applyToSegments @optional When pass true, we will also apply text color from table cell to its child blocks and segments
  */
 export function setTableCellBackgroundColor(
-    cell: ContentModelTableCell,
+    cell: ShallowMutableContentModelTableCell,
     color: string | null | undefined,
     isColorOverride?: boolean,
     applyToSegments?: boolean
@@ -54,13 +55,13 @@ export function setTableCellBackgroundColor(
             removeAdaptiveCellColor(cell);
         }
     }
-
-    delete cell.cachedElement;
 }
 
-function removeAdaptiveCellColor(cell: ContentModelTableCell) {
-    cell.blocks.forEach(block => {
-        if (block.blockType == 'Paragraph') {
+function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
+    cell.blocks.forEach(readonlyBlock => {
+        if (readonlyBlock.blockType == 'Paragraph') {
+            const block = mutateBlock(readonlyBlock);
+
             if (
                 block.segmentFormat?.textColor &&
                 shouldRemoveColor(block.segmentFormat?.textColor, cell.format.backgroundColor || '')
@@ -79,10 +80,12 @@ function removeAdaptiveCellColor(cell: ContentModelTableCell) {
     });
 }
 
-function setAdaptiveCellColor(cell: ContentModelTableCell) {
+function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
     if (cell.format.textColor) {
-        cell.blocks.forEach(block => {
-            if (block.blockType == 'Paragraph') {
+        cell.blocks.forEach(readonlyBlock => {
+            if (readonlyBlock.blockType == 'Paragraph') {
+                const block = mutateBlock(readonlyBlock);
+
                 if (!block.segmentFormat?.textColor) {
                     block.segmentFormat = {
                         ...block.segmentFormat,

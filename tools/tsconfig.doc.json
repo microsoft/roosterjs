@@ -20,12 +20,6 @@
     ],
     "typedocOptions": {
         "entryPoints": [
-            "../packages/roosterjs-editor-types/lib/index.ts",
-            "../packages/roosterjs-editor-types-compatible/lib/index.ts",
-            "../packages/roosterjs-editor-dom/lib/index.ts",
-            "../packages/roosterjs-editor-core/lib/index.ts",
-            "../packages/roosterjs-editor-api/lib/index.ts",
-            "../packages/roosterjs-editor-plugins/lib/index.ts",
             "../packages/roosterjs-color-utils/lib/index.ts",
             "../packages/roosterjs-react/lib/index.ts",
             "../packages/roosterjs-content-model-types/lib/index.ts",

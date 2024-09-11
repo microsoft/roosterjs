@@ -1,7 +1,7 @@
 import { clearSelectedCells } from './clearSelectedCells';
 import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelTable,
+    ShallowMutableContentModelTable,
     TableHorizontalInsertOperation,
 } from 'roosterjs-content-model-types';
 
@@ -11,7 +11,7 @@ import type {
  * @param operation The operation to be performed
  */
 export function insertTableColumn(
-    table: ContentModelTable,
+    table: ShallowMutableContentModelTable,
     operation: TableHorizontalInsertOperation
 ) {
     const sel = getSelectedCells(table);

@@ -18,11 +18,10 @@ import type {
     SelectionPluginState,
     EditorOptions,
     DOMHelper,
-    MouseUpEvent,
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
-    RangeSelection,
+    MouseUpEvent,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
@@ -33,6 +32,15 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+
+/**
+ * @internal
+ */
+export const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
+/**
+ * @internal
+ */
+export const DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR = '#C6C6C6';
 
 class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IEditor | null = null;
@@ -46,7 +54,17 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.state = {
             selection: null,
             tableSelection: null,
-            imageSelectionBorderColor: options.imageSelectionBorderColor,
+            imageSelectionBorderColor:
+                options.imageSelectionBorderColor ?? DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: options.imageSelectionBorderColor
+                ? undefined
+                : DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor:
+                options.tableCellSelectionBackgroundColor ??
+                DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: options.tableCellSelectionBackgroundColor
+                ? undefined
+                : DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         };
     }
 
@@ -56,6 +74,25 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        if (!this.state.imageSelectionBorderColorDark && this.state.imageSelectionBorderColor) {
+            this.state.imageSelectionBorderColorDark = editor
+                .getColorManager()
+                .getDarkColor(this.state.imageSelectionBorderColor, undefined, 'border');
+        }
+
+        if (
+            !this.state.tableCellSelectionBackgroundColorDark &&
+            this.state.tableCellSelectionBackgroundColor
+        ) {
+            this.state.tableCellSelectionBackgroundColorDark = editor
+                .getColorManager()
+                .getDarkColor(
+                    this.state.tableCellSelectionBackgroundColor,
+                    undefined,
+                    'background'
+                );
+        }
 
         const env = this.editor.getEnvironment();
         const document = this.editor.getDocument();
@@ -104,7 +141,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'mouseUp':
-                this.onMouseUp(event);
+                this.onMouseUp(this.editor, event);
                 break;
 
             case 'keyDown':
@@ -128,18 +165,46 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-        if (
-            rawEvent.button === MouseRightButton &&
-            (image =
-                this.getClickingImage(rawEvent) ??
-                this.getContainedTargetImage(rawEvent, selection)) &&
-            image.isContentEditable
-        ) {
-            this.selectImageWithRange(image, rawEvent);
-            return;
-        } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-            this.selectBeforeOrAfterElement(editor, selection.image);
-            return;
+        if (editor.isExperimentalFeatureEnabled('LegacyImageSelection')) {
+            if (
+                rawEvent.button === MouseRightButton &&
+                (image =
+                    this.getClickingImage(rawEvent) ??
+                    this.getContainedTargetImage(rawEvent, selection)) &&
+                image.isContentEditable
+            ) {
+                this.selectImageWithRange(image, rawEvent);
+                return;
+            } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
+                this.selectBeforeOrAfterElement(editor, selection.image);
+                return;
+            }
+        } else {
+            if (
+                selection?.type == 'image' &&
+                (rawEvent.button == MouseLeftButton ||
+                    (rawEvent.button == MouseRightButton &&
+                        !this.getClickingImage(rawEvent) &&
+                        !this.getContainedTargetImage(rawEvent, selection)))
+            ) {
+                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            }
+
+            if (
+                (image =
+                    this.getClickingImage(rawEvent) ??
+                    this.getContainedTargetImage(rawEvent, selection)) &&
+                image.isContentEditable
+            ) {
+                this.setDOMSelection(
+                    {
+                        type: 'image',
+                        image: image,
+                    },
+                    null
+                );
+                return;
+            }
         }
 
         // Table selection
@@ -177,6 +242,25 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     beforeDispatch: this.onMouseMove,
                 },
             });
+        }
+    }
+
+    private selectImageWithRange(image: HTMLImageElement, event: Event) {
+        const range = image.ownerDocument.createRange();
+        range.selectNode(image);
+
+        const domSelection = this.editor?.getDOMSelection();
+        if (domSelection?.type == 'image' && image == domSelection.image) {
+            event.preventDefault();
+        } else {
+            this.setDOMSelection(
+                {
+                    type: 'range',
+                    isReverted: false,
+                    range,
+                },
+                null
+            );
         }
     }
 
@@ -240,29 +324,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private selectImageWithRange(image: HTMLImageElement, event: Event) {
-        const range = image.ownerDocument.createRange();
-        range.selectNode(image);
-
-        const domSelection = this.editor?.getDOMSelection();
-        if (domSelection?.type == 'image' && image == domSelection.image) {
-            event.preventDefault();
-        } else {
-            this.setDOMSelection(
-                {
-                    type: 'range',
-                    isReverted: false,
-                    range,
-                },
-                null
-            );
-        }
-    }
-
-    private onMouseUp(event: MouseUpEvent) {
+    private onMouseUp(editor: IEditor, event: MouseUpEvent) {
         let image: HTMLImageElement | null;
 
         if (
+            editor.isExperimentalFeatureEnabled('LegacyImageSelection') &&
             (image = this.getClickingImage(event.rawEvent)) &&
             image.isContentEditable &&
             event.rawEvent.button != MouseMiddleButton &&
@@ -295,6 +361,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         this.selectBeforeOrAfterElement(editor, selection.image);
                     }
                 }
+
+                if (
+                    (isModifierKey(rawEvent) || rawEvent.shiftKey) &&
+                    selection.image &&
+                    !this.isSafari
+                ) {
+                    const range = selection.image.ownerDocument.createRange();
+                    range.selectNode(selection.image);
+                    this.setDOMSelection(
+                        {
+                            type: 'range',
+                            range,
+                            isReverted: false,
+                        },
+                        null /* tableSelection */
+                    );
+                }
                 break;
 
             case 'range':
@@ -306,10 +389,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         editor.getDOMHelper()
                     );
 
-                    const rangeKey = key == Tab ? this.getTabKey(rawEvent) : key;
-
-                    if (this.state.tableSelection) {
-                        win?.requestAnimationFrame(() => this.handleSelectionInTable(rangeKey));
+                    if (this.state.tableSelection && !rawEvent.defaultPrevented) {
+                        if (key == Tab) {
+                            this.handleSelectionInTable(this.getTabKey(rawEvent));
+                            rawEvent.preventDefault();
+                        } else {
+                            win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                        }
                     }
                 }
                 break;
@@ -370,6 +456,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             }
 
             let lastCo = findCoordinate(tableSel?.parsedTable, end, domHelper);
+            let tabMove = false;
             const { parsedTable, firstCo: oldCo, table } = this.state.tableSelection;
 
             if (lastCo && tableSel.table == table) {
@@ -395,6 +482,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             td,
                             key == Up ? td.childNodes.length : 0,
                             this.editor
+                        );
+                    } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
+                        this.selectBeforeOrAfterElement(
+                            this.editor,
+                            table,
+                            change == 1 /* after */,
+                            change != 1 /* setSelectionInNextSiblingElement */
                         );
                     }
                 } else if (key == 'TabLeft' || key == 'TabRight') {
@@ -422,30 +516,66 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             col = reverse ? parsedTable[row].length - 1 : 0;
                         }
                         const cell = parsedTable[row][col];
+
                         if (typeof cell != 'string') {
-                            this.setRangeSelectionInTable(cell, 0, this.editor);
+                            tabMove = true;
+                            this.setRangeSelectionInTable(
+                                cell,
+                                0,
+                                this.editor,
+                                true /* selectAll */
+                            );
+                            lastCo.row = row;
+                            lastCo.col = col;
                             break;
                         }
                     }
                 } else {
                     this.state.tableSelection = null;
                 }
+
+                if (
+                    collapsed &&
+                    (lastCo.col != oldCo.col || lastCo.row != oldCo.row) &&
+                    lastCo.row >= 0 &&
+                    lastCo.row == parsedTable.length - 1 &&
+                    lastCo.col == parsedTable[lastCo.row]?.length - 1
+                ) {
+                    this.editor?.announce({ defaultStrings: 'announceOnFocusLastCell' });
+                }
             }
 
-            if (!collapsed && lastCo) {
+            if (!collapsed && lastCo && !tabMove) {
                 this.state.tableSelection = tableSel;
                 this.updateTableSelection(lastCo);
             }
         }
     }
 
-    private setRangeSelectionInTable(cell: Node, nodeOffset: number, editor: IEditor) {
-        // Get deepest editable position in the cell
-        const { node, offset } = normalizePos(cell, nodeOffset);
-
+    private setRangeSelectionInTable(
+        cell: Node,
+        nodeOffset: number,
+        editor: IEditor,
+        selectAll?: boolean
+    ) {
         const range = editor.getDocument().createRange();
-        range.setStart(node, offset);
-        range.collapse(true /*toStart*/);
+        if (selectAll && cell.firstChild && cell.lastChild) {
+            const cellStart = cell.firstChild;
+            const cellEnd = cell.lastChild;
+            // Get first deepest editable position in the cell
+            const posStart = normalizePos(cellStart, 0);
+            // Get last deepest editable position in the cell
+            const posEnd = normalizePos(cellEnd, cellEnd.childNodes.length);
+
+            range.setStart(posStart.node, posStart.offset);
+            range.setEnd(posEnd.node, posEnd.offset);
+        } else {
+            // Get deepest editable position in the cell
+            const { node, offset } = normalizePos(cell, nodeOffset);
+
+            range.setStart(node, offset);
+            range.collapse(true /* toStart */);
+        }
 
         this.setDOMSelection(
             {
@@ -469,15 +599,30 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
-    private selectBeforeOrAfterElement(editor: IEditor, element: HTMLElement, after?: boolean) {
+    private selectBeforeOrAfterElement(
+        editor: IEditor,
+        element: HTMLElement,
+        after?: boolean,
+        setSelectionInNextSiblingElement?: boolean
+    ) {
         const doc = editor.getDocument();
         const parent = element.parentNode;
         const index = parent && toArray(parent.childNodes).indexOf(element);
+        let sibling: Element | undefined | null;
 
         if (parent && index !== null && index >= 0) {
             const range = doc.createRange();
-            range.setStart(parent, index + (after ? 1 : 0));
-            range.collapse();
+            if (
+                setSelectionInNextSiblingElement &&
+                (sibling = after ? element.nextElementSibling : element.previousElementSibling) &&
+                isNodeOfType(sibling, 'ELEMENT_NODE')
+            ) {
+                range.selectNodeContents(sibling);
+                range.collapse(false /* toStart */);
+            } else {
+                range.setStart(parent, index + (after ? 1 : 0));
+                range.collapse();
+            }
 
             this.setDOMSelection(
                 {
@@ -553,17 +698,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
 
-            if (newSelection?.type == 'image' && selection) {
-                if (selection && !isSingleImageInSelection(selection)) {
-                    const range = selection.getRangeAt(0);
-                    this.editor.setDOMSelection({
-                        type: 'range',
-                        range,
-                        isReverted:
-                            selection.focusNode != range.endContainer ||
-                            selection.focusOffset != range.endOffset,
-                    });
-                }
+            if (
+                newSelection?.type == 'image' &&
+                selection &&
+                selection.focusNode &&
+                !isSingleImageInSelection(selection)
+            ) {
+                const range = selection.getRangeAt(0);
+                this.editor.setDOMSelection({
+                    type: 'range',
+                    range,
+                    isReverted:
+                        selection.focusNode != range.endContainer ||
+                        selection.focusOffset != range.endOffset,
+                });
             }
 
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
@@ -572,7 +720,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 if (this.isSafari) {
                     this.state.selection = newSelection;
                 }
-                this.trySelectSingleImage(newSelection);
             }
         }
     };
@@ -588,6 +735,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         if (
             (table = domHelper.findClosestElementAncestor(tableStart, 'table')) &&
+            table.isContentEditable &&
             (parsedTable = parseTableCells(table)) &&
             (firstCo = findCoordinate(parsedTable, tdStart, domHelper))
         ) {
@@ -641,21 +789,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (this.state.mouseDisposer) {
             this.state.mouseDisposer();
             this.state.mouseDisposer = undefined;
-        }
-    }
-
-    private trySelectSingleImage(selection: RangeSelection) {
-        if (!selection.range.collapsed) {
-            const image = isSingleImageInSelection(selection.range);
-            if (image) {
-                this.setDOMSelection(
-                    {
-                        type: 'image',
-                        image: image,
-                    },
-                    null /*tableSelection*/
-                );
-            }
         }
     }
 }

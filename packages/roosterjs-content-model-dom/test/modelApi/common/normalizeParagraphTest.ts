@@ -6,6 +6,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
 import { normalizeParagraph } from '../../../lib/modelApi/common/normalizeParagraph';
+import { ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 
 describe('Normalize text that contains space', () => {
     function runTest(texts: string[], expected: string[], whiteSpace?: string) {
@@ -360,7 +361,7 @@ describe('Normalize paragraph with segmentFormat', () => {
     it('Empty paragraph', () => {
         const paragraph = createParagraph();
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -377,7 +378,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -405,7 +406,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -443,7 +444,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -482,7 +483,7 @@ describe('Normalize paragraph with segmentFormat', () => {
 
         paragraph.segments.push(text1, marker, text2);
 
-        normalizeParagraph(paragraph);
+        normalizeParagraph(paragraph as ReadonlyContentModelParagraph);
 
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
@@ -505,6 +506,307 @@ describe('Normalize paragraph with segmentFormat', () => {
             ],
             format: {},
             segmentFormat: { fontSize: '10px' },
+        });
+    });
+});
+
+describe('Move up format', () => {
+    const mockedCache = {} as any;
+
+    it('No format', () => {
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {},
+                },
+            ],
+            format: {},
+            cachedElement: mockedCache,
+        });
+    });
+
+    it('All segments have the same format', () => {
+        const para = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: true,
+        });
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: true,
+                    },
+                },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Calibri',
+                fontSize: '10pt',
+                textColor: 'red',
+            },
+        });
+    });
+
+    it('All segments have the same format, paragraph has different format', () => {
+        const para = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '12pt',
+            textColor: 'green',
+        });
+        const text1 = createText('test1', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: true,
+        });
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: true,
+                    },
+                },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Calibri',
+                fontSize: '10pt',
+                textColor: 'red',
+            },
+        });
+    });
+
+    it('Some format are different', () => {
+        const para = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Calibri',
+            fontSize: '12pt',
+            textColor: 'red',
+            italic: true,
+        });
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '12pt',
+                        textColor: 'red',
+                        italic: true,
+                    },
+                },
+            ],
+            format: {},
+            segmentFormat: { fontFamily: 'Calibri', textColor: 'red' },
+        });
+    });
+
+    it('All formats are different', () => {
+        const para = createParagraph();
+        const text1 = createText('test1', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Arial',
+            fontSize: '12pt',
+            textColor: 'green',
+            italic: true,
+        });
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {
+                        fontFamily: 'Arial',
+                        fontSize: '12pt',
+                        textColor: 'green',
+                        italic: true,
+                    },
+                },
+            ],
+            format: {},
+            cachedElement: mockedCache,
+        });
+    });
+
+    it('Already has same format in paragraph', () => {
+        const para = createParagraph(false, undefined, {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text1 = createText('test1', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: false,
+        });
+        const text2 = createText('test2', {
+            fontFamily: 'Calibri',
+            fontSize: '10pt',
+            textColor: 'red',
+            italic: true,
+        });
+
+        para.segments.push(text1, text2);
+        para.cachedElement = mockedCache;
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '10pt',
+                        textColor: 'red',
+                        italic: true,
+                    },
+                },
+            ],
+            format: {},
+            segmentFormat: {
+                fontFamily: 'Calibri',
+                fontSize: '10pt',
+                textColor: 'red',
+                italic: false,
+            },
+            cachedElement: mockedCache,
         });
     });
 });

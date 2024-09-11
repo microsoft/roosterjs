@@ -1,9 +1,10 @@
 import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import * as updateCachedSelection from '../../../lib/corePlugin/cache/updateCachedSelection';
+import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
 import { createContentModel } from '../../../lib/coreApi/createContentModel/createContentModel';
 import {
+    ContentModelDocument,
     DomToModelContext,
     DomToModelOptionForCreateModel,
     EditorCore,
@@ -311,7 +312,7 @@ describe('createContentModel with selection', () => {
 /*
 | Scenarios                         | can use cache | can write cache | comment                                                                                                        |
 |-----------------------------------|---------------|-----------------|----------------------------------------------------------------------------------------------------------------|
-| getContentModelCopy: connected    | true          | false           | Mostly used by demo site, we can use existing model but this should not impact cache                           |
+| getContentModelCopy: connected    | false         | false           | This is now deprecated                                                                                         |
 | getContentModelCopy: disconnected | false         | false           | Used by plugins and test code to read current model. We will return a cloned model, and do not impact cache    |
 | getContentModelCopy: clean        | false         | false           | Used by export HTML, do not use cache to make sure the model is up to date                                     |
 | formatInsertPointWithContentModel | false         | false           | Used by insertEntity (recent change), do not use cache since we need to add shadow insert point                |
@@ -325,7 +326,7 @@ describe('createContentModel and cache management', () => {
     let cloneModelSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let createEditorContextSpy: jasmine.Spy;
-    let updateCachedSelectionSpy: jasmine.Spy;
+    let updateCacheSpy: jasmine.Spy;
 
     const mockedSelection = 'SELECTION' as any;
     const mockedFragment = 'FRAGMENT' as any;
@@ -344,7 +345,7 @@ describe('createContentModel and cache management', () => {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
-        updateCachedSelectionSpy = spyOn(updateCachedSelection, 'updateCachedSelection');
+        updateCacheSpy = spyOn(updateCache, 'updateCache');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
 
@@ -362,7 +363,9 @@ describe('createContentModel and cache management', () => {
             },
         } as any;
 
-        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(x => x);
+        cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callFake(
+            x => x as ContentModelDocument
+        );
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedNewModel);
 
@@ -382,14 +385,17 @@ describe('createContentModel and cache management', () => {
         }
 
         if (allowIndex && !useCache) {
-            expect(core.cache.cachedModel).toBe(mockedNewModel);
-            expect(updateCachedSelectionSpy).toHaveBeenCalled();
+            expect(updateCacheSpy).toHaveBeenCalledWith(
+                core.cache,
+                mockedNewModel,
+                mockedSelection
+            );
         } else if (hasCache) {
             expect(core.cache.cachedModel).toBe(mockedModel);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         } else {
             expect(core.cache.cachedModel).toBe(null!);
-            expect(updateCachedSelectionSpy).not.toHaveBeenCalled();
+            expect(updateCacheSpy).not.toHaveBeenCalled();
         }
     }
 

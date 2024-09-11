@@ -1,5 +1,5 @@
 import { formatImageWithContentModel } from '../utils/formatImageWithContentModel';
-import { readFile, updateImageMetadata } from 'roosterjs-content-model-dom';
+import { getImageMetadata, readFile } from 'roosterjs-content-model-dom';
 import type { ContentModelImage, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -14,7 +14,7 @@ export function changeImage(editor: IEditor, file: File) {
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed() && selection?.type === 'image') {
             formatImageWithContentModel(editor, 'changeImage', (image: ContentModelImage) => {
-                const originalSrc = updateImageMetadata(image)?.src ?? '';
+                const originalSrc = getImageMetadata(image)?.src ?? '';
                 const previousSrc = image.src;
 
                 image.src = dataUrl;

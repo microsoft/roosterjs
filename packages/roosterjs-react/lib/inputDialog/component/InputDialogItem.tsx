@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { getLocalizedString } from '../../common/index';
-import { Keys } from 'roosterjs-editor-types';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { TextField } from '@fluentui/react/lib/TextField';
-import type DialogItem from '../type/DialogItem';
+import type { DialogItem } from '../type/DialogItem';
 import type { LocalizedStrings } from '../../common/index';
 
 /**
@@ -16,6 +15,7 @@ export interface InputDialogItemProps<Strings extends string, ItemNames extends 
     currentValues: Record<ItemNames, string>;
     onEnterKey: () => void;
     onChanged: (itemName: ItemNames, newValue: string) => void;
+    rows?: number;
 }
 
 const classNames = mergeStyleSets({
@@ -31,10 +31,10 @@ const classNames = mergeStyleSets({
 /**
  * @internal
  */
-export default function InputDialogItem<Strings extends string, ItemNames extends string>(
+export function InputDialogItem<Strings extends string, ItemNames extends string>(
     props: InputDialogItemProps<Strings, ItemNames>
 ) {
-    const { itemName, strings, items, currentValues, onChanged, onEnterKey } = props;
+    const { itemName, strings, items, currentValues, onChanged, onEnterKey, rows } = props;
     const { labelKey, unlocalizedLabel, autoFocus } = items[itemName];
     const value = currentValues[itemName];
     const onValueChange = React.useCallback(
@@ -46,7 +46,7 @@ export default function InputDialogItem<Strings extends string, ItemNames extend
 
     const onKeyPress = React.useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.which == Keys.ENTER) {
+            if (e.key == 'Enter') {
                 onEnterKey();
             }
         },
@@ -65,6 +65,8 @@ export default function InputDialogItem<Strings extends string, ItemNames extend
                     onChange={onValueChange}
                     onKeyPress={onKeyPress}
                     autoFocus={autoFocus}
+                    rows={rows}
+                    multiline={!!rows}
                 />
             </div>
         </div>

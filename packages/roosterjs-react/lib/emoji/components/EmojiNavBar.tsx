@@ -2,7 +2,7 @@ import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
 import { EmojiFabricIconCharacterMap, EmojiList } from '../utils/emojiList';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import type { EmojiFamilyKeys } from '../utils/emojiList';
@@ -24,7 +24,7 @@ export interface EmojiNavBarProps {
 /**
  * @internal
  */
-export default function EmojiNavBar(props: EmojiNavBarProps) {
+export function EmojiNavBar(props: EmojiNavBarProps) {
     const { currentSelected, getTabId, strings = {}, classNames } = props;
     const keys = getObjectKeys(EmojiList);
     const onFamilyClick = (key: string) => {

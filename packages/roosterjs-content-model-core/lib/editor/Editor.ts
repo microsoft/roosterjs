@@ -31,6 +31,8 @@ import type {
     EntityState,
     CachedElementHandler,
     DomToModelOptionForCreateModel,
+    AnnounceData,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -86,9 +88,6 @@ export class Editor implements IEditor {
     /**
      * Create Content Model from DOM tree in this editor
      * @param mode What kind of Content Model we want. Currently we support the following values:
-     * - connected: Returns a connect Content Model object. "Connected" means if there is any entity inside editor, the returned Content Model will
-     * contain the same wrapper element for entity. This option should only be used in some special cases. In most cases we should use "disconnected"
-     * to get a fully disconnected Content Model so that any change to the model will not impact editor content.
      * - disconnected: Returns a disconnected clone of Content Model from editor which you can do any change on it and it won't impact the editor content.
      * If there is any entity in editor, the returned object will contain cloned copy of entity wrapper element.
      * If editor is in dark mode, the cloned entity will be converted back to light mode.
@@ -99,11 +98,7 @@ export class Editor implements IEditor {
         const core = this.getCore();
 
         switch (mode) {
-            case 'connected':
-                return core.api.createContentModel(core, {
-                    tryGetFromCache: true, // Pass an option here to force disable save index
-                });
-
+            case 'connected': // Get a connected model is deprecated. Now we will always return disconnected model
             case 'disconnected':
                 return cloneModel(
                     core.api.createContentModel(core, {
@@ -400,6 +395,24 @@ export class Editor implements IEditor {
         const core = this.getCore();
 
         core.api.setEditorStyle(core, key, cssRule, subSelectors);
+    }
+
+    /**
+     * Announce the given data
+     * @param announceData Data to announce
+     */
+    announce(announceData: AnnounceData): void {
+        const core = this.getCore();
+
+        core.api.announce(core, announceData);
+    }
+
+    /**
+     * Check if a given feature is enabled
+     * @param featureName The name of feature to check
+     */
+    isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean {
+        return this.getCore().experimentalFeatures.indexOf(featureName) >= 0;
     }
 
     /**

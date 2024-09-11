@@ -1,20 +1,18 @@
+import { getListAnnounceData } from 'roosterjs-content-model-api';
+import { splitParagraph } from '../utils/splitParagraph';
 import {
-    createBr,
     createListItem,
     createListLevel,
-    createParagraph,
-    createSelectionMarker,
-    normalizeContentModel,
-    normalizeParagraph,
-    setParagraphNotImplicit,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
+    mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockGroup,
     ContentModelListItem,
     DeleteSelectionStep,
-    InsertPoint,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelListItem,
+    ShallowMutableContentModelListItem,
     ValidDeleteSelectionContext,
 } from 'roosterjs-content-model-types';
 
@@ -22,66 +20,61 @@ import type {
  * @internal
  */
 export const handleEnterOnList: DeleteSelectionStep = context => {
-    const { deleteResult } = context;
-    if (
-        deleteResult == 'nothingToDelete' ||
-        deleteResult == 'notDeleted' ||
-        deleteResult == 'range'
-    ) {
-        const { insertPoint, formatContext } = context;
-        const { path } = insertPoint;
-        const rawEvent = formatContext?.rawEvent;
-        const index = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
+    const { deleteResult, insertPoint } = context;
 
-        const listItem = path[index];
+    if (deleteResult == 'notDeleted' || deleteResult == 'nothingToDelete') {
+        const { path } = insertPoint;
+        const index = getClosestAncestorBlockGroupIndex(
+            path,
+            ['ListItem'],
+            ['TableCell', 'FormatContainer']
+        );
+
+        const readonlyListItem = path[index];
         const listParent = path[index + 1];
 
-        if (listItem && listItem.blockGroupType === 'ListItem' && listParent) {
+        if (readonlyListItem?.blockGroupType === 'ListItem' && listParent) {
+            let listItem = mutateBlock(readonlyListItem);
+
+            if (isEmptyListItem(listItem)) {
+                listItem.levels.pop();
+            } else {
+                listItem = createNewListItem(context, listItem, listParent);
+
+                if (context.formatContext) {
+                    context.formatContext.announceData = getListAnnounceData([
+                        listItem,
+                        ...path.slice(index + 1),
+                    ]);
+                }
+            }
+
             const listIndex = listParent.blocks.indexOf(listItem);
             const nextBlock = listParent.blocks[listIndex + 1];
-            if (deleteResult == 'range' && nextBlock) {
-                normalizeContentModel(listParent);
+
+            if (nextBlock) {
                 const nextListItem = listParent.blocks[listIndex + 1];
+
                 if (
                     isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
                     nextListItem.levels[0]
                 ) {
-                    nextListItem.levels.forEach((level, index) => {
-                        level.format.startNumberOverride = undefined;
-                        level.dataset = listItem.levels[index]
-                            ? listItem.levels[index].dataset
-                            : {};
+                    nextListItem.levels.forEach(level => {
+                        // Remove startNumberOverride so that next list item can join current list, unless it is 1.
+                        // List start with 1 means it should be an explicit new list and should never join another list before it
+                        if (level.format.startNumberOverride !== 1) {
+                            level.format.startNumberOverride = undefined;
+                        }
                     });
-                    const lastParagraph = listItem.blocks[listItem.blocks.length - 1];
-                    const nextParagraph = nextListItem.blocks[0];
-                    if (
-                        nextParagraph.blockType === 'Paragraph' &&
-                        lastParagraph.blockType === 'Paragraph' &&
-                        lastParagraph.segments[lastParagraph.segments.length - 1].segmentType ===
-                            'SelectionMarker'
-                    ) {
-                        lastParagraph.segments.pop();
-
-                        nextParagraph.segments.unshift(
-                            createSelectionMarker(insertPoint.marker.format)
-                        );
-                    }
-                    context.lastParagraph = undefined;
-                }
-            } else if (deleteResult !== 'range') {
-                if (isEmptyListItem(listItem)) {
-                    listItem.levels.pop();
-                } else {
-                    createNewListItem(context, listItem, listParent);
                 }
             }
-            rawEvent?.preventDefault();
+
             context.deleteResult = 'range';
         }
     }
 };
 
-const isEmptyListItem = (listItem: ContentModelListItem) => {
+const isEmptyListItem = (listItem: ReadonlyContentModelListItem) => {
     return (
         listItem.blocks.length === 1 &&
         listItem.blocks[0].blockType === 'Paragraph' &&
@@ -93,22 +86,42 @@ const isEmptyListItem = (listItem: ContentModelListItem) => {
 
 const createNewListItem = (
     context: ValidDeleteSelectionContext,
-    listItem: ContentModelListItem,
-    listParent: ContentModelBlockGroup
+    listItem: ReadonlyContentModelListItem,
+    listParent: ReadonlyContentModelBlockGroup
 ) => {
     const { insertPoint } = context;
     const listIndex = listParent.blocks.indexOf(listItem);
-    const newParagraph = createNewParagraph(insertPoint);
+    const currentPara = insertPoint.paragraph;
+    const paraIndex = listItem.blocks.indexOf(currentPara);
+    const newParagraph = splitParagraph(insertPoint);
 
     const levels = createNewListLevel(listItem);
-    const newListItem = createListItem(levels, insertPoint.marker.format);
+    const newListItem: ShallowMutableContentModelListItem = createListItem(
+        levels,
+        insertPoint.marker.format
+    );
+
     newListItem.blocks.push(newParagraph);
+
+    const remainingBlockCount = listItem.blocks.length - paraIndex - 1;
+
+    if (paraIndex >= 0 && remainingBlockCount > 0) {
+        newListItem.blocks.push(
+            ...mutateBlock(listItem).blocks.splice(paraIndex + 1, remainingBlockCount)
+        );
+    }
+
     insertPoint.paragraph = newParagraph;
-    context.lastParagraph = newParagraph;
-    listParent.blocks.splice(listIndex + 1, 0, newListItem);
+    mutateBlock(listParent).blocks.splice(listIndex + 1, 0, newListItem);
+
+    if (context.lastParagraph == currentPara) {
+        context.lastParagraph = newParagraph;
+    }
+
+    return newListItem;
 };
 
-const createNewListLevel = (listItem: ContentModelListItem) => {
+const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
     return listItem.levels.map(level => {
         return createListLevel(
             level.listType,
@@ -120,31 +133,4 @@ const createNewListLevel = (listItem: ContentModelListItem) => {
             level.dataset
         );
     });
-};
-
-const createNewParagraph = (insertPoint: InsertPoint) => {
-    const { paragraph, marker } = insertPoint;
-    const newParagraph = createParagraph(
-        false /*isImplicit*/,
-        paragraph.format,
-        paragraph.segmentFormat
-    );
-
-    const markerIndex = paragraph.segments.indexOf(marker);
-    const segments = paragraph.segments.splice(
-        markerIndex,
-        paragraph.segments.length - markerIndex
-    );
-
-    newParagraph.segments.push(...segments);
-
-    setParagraphNotImplicit(paragraph);
-
-    if (paragraph.segments.every(x => x.segmentType == 'SelectionMarker')) {
-        paragraph.segments.push(createBr(marker.format));
-    }
-
-    normalizeParagraph(newParagraph);
-
-    return newParagraph;
 };

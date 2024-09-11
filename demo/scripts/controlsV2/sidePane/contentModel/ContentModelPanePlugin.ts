@@ -1,19 +1,24 @@
+import { cloneModel } from 'roosterjs-content-model-dom';
 import { ContentModelPane, ContentModelPaneProps } from './ContentModelPane';
-import { createRibbonPlugin, RibbonPlugin } from '../../roosterjsReact/ribbon';
+import { createRibbonPlugin } from 'roosterjs-react';
+import { getRefreshButton } from './buttons/refreshButton';
 import { IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 
 export class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
     private contentModelRibbon: RibbonPlugin;
+    private refreshButton: RibbonButton<string>;
 
     constructor() {
         super(ContentModelPane, 'contentModel', 'Content Model');
         this.contentModelRibbon = createRibbonPlugin();
+        this.refreshButton = getRefreshButton(this);
     }
 
     initialize(editor: IEditor): void {
@@ -33,13 +38,7 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (e.eventType == 'contentChanged' && e.source == 'RefreshModel') {
-            this.getComponent(component => {
-                const model = this.editor.getContentModelCopy('connected');
-                component.setContentModel(model);
-                setCurrentContentModel(model);
-            });
-        } else if (
+        if (
             e.eventType == 'input' ||
             e.eventType == 'selectionChanged' ||
             e.eventType == 'editorReady'
@@ -59,6 +58,7 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
             ...baseProps,
             model: null,
             ribbonPlugin: this.contentModelRibbon,
+            refreshButton: this.refreshButton,
         };
     }
 
@@ -68,11 +68,21 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
         }
     };
 
-    private onModelChange = () => {
+    onModelChange = (force?: boolean) => {
         this.getComponent(component => {
-            const model = this.editor.getContentModelCopy('connected');
-            component.setContentModel(model);
-            setCurrentContentModel(model);
+            this.editor.formatContentModel(
+                model => {
+                    const clonedModel = cloneModel(model);
+                    component.setContentModel(clonedModel);
+                    setCurrentContentModel(clonedModel);
+
+                    return false;
+                },
+                undefined,
+                {
+                    tryGetFromCache: !force,
+                }
+            );
         });
     };
 }

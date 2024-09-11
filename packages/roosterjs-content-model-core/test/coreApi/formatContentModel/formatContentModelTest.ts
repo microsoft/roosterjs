@@ -1,3 +1,4 @@
+import * as scrollCaretIntoView from '../../../lib/coreApi/formatContentModel/scrollCaretIntoView';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { ChangeSource, createImage } from 'roosterjs-content-model-dom';
 import { formatContentModel } from '../../../lib/coreApi/formatContentModel/formatContentModel';
@@ -19,6 +20,8 @@ describe('formatContentModel', () => {
     let triggerEvent: jasmine.Spy;
     let getDOMSelection: jasmine.Spy;
     let hasFocus: jasmine.Spy;
+    let getClientWidth: jasmine.Spy;
+    let announce: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedContainer = 'C' as any;
@@ -38,6 +41,8 @@ describe('formatContentModel', () => {
         triggerEvent = jasmine.createSpy('triggerEvent');
         getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
         hasFocus = jasmine.createSpy('hasFocus');
+        getClientWidth = jasmine.createSpy('getClientWidth');
+        announce = jasmine.createSpy('announce');
 
         core = ({
             api: {
@@ -48,6 +53,7 @@ describe('formatContentModel', () => {
                 getFocusedPosition,
                 triggerEvent,
                 getDOMSelection,
+                announce,
             },
             lifecycle: {},
             cache: {},
@@ -56,6 +62,7 @@ describe('formatContentModel', () => {
             },
             domHelper: {
                 hasFocus,
+                getClientWidth,
             },
         } as any) as EditorCore;
     });
@@ -80,6 +87,7 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Callback return true', () => {
@@ -112,6 +120,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Skip undo snapshot', () => {
@@ -147,6 +156,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Customize change source', () => {
@@ -178,6 +188,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Customize change source, getChangeData and skip undo snapshot', () => {
@@ -218,6 +229,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has onNodeCreated', () => {
@@ -255,6 +267,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has entity got deleted', () => {
@@ -317,6 +330,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has new entity in dark mode', () => {
@@ -378,6 +392,7 @@ describe('formatContentModel', () => {
                 true
             );
             expect(transformColorSpy).not.toHaveBeenCalled();
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('With selectionOverride', () => {
@@ -406,6 +421,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('With domToModelOptions', () => {
@@ -438,15 +454,12 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has image', () => {
             const image = createImage('test');
             const rawEvent = 'RawEvent' as any;
-            const getVisibleViewportSpy = jasmine
-                .createSpy('getVisibleViewport')
-                .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
-            core.api.getVisibleViewport = getVisibleViewportSpy;
 
             formatContentModel(
                 core,
@@ -460,7 +473,7 @@ describe('formatContentModel', () => {
                 }
             );
 
-            expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
+            expect(getClientWidth).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
@@ -478,6 +491,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has shouldClearCachedModel', () => {
@@ -509,6 +523,7 @@ describe('formatContentModel', () => {
                 },
                 true
             );
+            expect(announce).not.toHaveBeenCalled();
         });
 
         it('Has shouldClearCachedModel, and callback return false', () => {
@@ -532,6 +547,34 @@ describe('formatContentModel', () => {
             expect(core.cache).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
+            });
+            expect(announce).not.toHaveBeenCalled();
+        });
+
+        it('Has scrollCaretIntoView, and callback return true', () => {
+            const scrollCaretIntoViewSpy = spyOn(scrollCaretIntoView, 'scrollCaretIntoView');
+            const mockedImage = 'IMAGE' as any;
+
+            setContentModel.and.returnValue({
+                type: 'image',
+                image: mockedImage,
+            });
+
+            formatContentModel(
+                core,
+                (model, context) => {
+                    context.clearModelCache = true;
+                    return true;
+                },
+                {
+                    scrollCaretIntoView: true,
+                    apiName,
+                }
+            );
+
+            expect(scrollCaretIntoViewSpy).toHaveBeenCalledWith(core, {
+                type: 'image',
+                image: mockedImage,
             });
         });
     });
@@ -889,6 +932,42 @@ describe('formatContentModel', () => {
                     hasNewContent: true,
                 },
             } as any);
+        });
+    });
+
+    describe('Has announce data', () => {
+        it('callback returns false', () => {
+            const mockedData = 'ANNOUNCE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.announceData = mockedData;
+                    return false;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(addUndoSnapshot).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(triggerEvent).not.toHaveBeenCalled();
+            expect(announce).toHaveBeenCalledWith(core, mockedData);
+        });
+
+        it('callback returns true', () => {
+            const mockedData = 'ANNOUNCE' as any;
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: ContentModelDocument, context: FormatContentModelContext) => {
+                    context.announceData = mockedData;
+                    return true;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalled();
+            expect(triggerEvent).toHaveBeenCalled();
+            expect(announce).toHaveBeenCalledWith(core, mockedData);
         });
     });
 });

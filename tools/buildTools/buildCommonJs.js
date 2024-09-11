@@ -28,7 +28,14 @@ function buildCommonJs() {
             const target = path.join(distPath, packageName, fileName);
             fs.copyFileSync(source, target);
         };
-        copy('README.md');
+
+        const sourceReadme = path.join(packagesPath, packageName, 'README.md');
+        if (fs.existsSync(sourceReadme)) {
+            fs.copyFileSync(sourceReadme, path.join(distPath, packageName, 'README.md'));
+        } else {
+            copy('README.md');
+        }
+
         copy('LICENSE');
     });
 }

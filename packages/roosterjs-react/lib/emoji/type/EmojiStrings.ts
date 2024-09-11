@@ -4,7 +4,7 @@
  */
 export const EmojiDescriptionStrings = {
     emjDMore: 'More',
-    emjDNoSuggetions: 'No suggestions found',
+    emjDNoSuggestions: 'No suggestions found',
     emjD0270a: 'Raised fist',
     emjD0270b: 'Raised hand',
     emjD0270c: 'Victory hand',

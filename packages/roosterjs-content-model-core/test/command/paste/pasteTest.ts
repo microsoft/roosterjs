@@ -1,6 +1,8 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
+import * as createPasteFragmentFile from '../../../lib/command/paste/createPasteFragment';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
+import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
@@ -18,6 +20,7 @@ import {
     IEditor,
     BeforePasteEvent,
     PluginEvent,
+    PasteTypeOrGetter,
 } from 'roosterjs-content-model-types';
 
 let clipboardData: ClipboardData;
@@ -98,6 +101,34 @@ describe('Paste ', () => {
 
         expect(mockedModel).toEqual(mockedMergeModel);
     });
+
+    it('Execute | With callback to return paste type', () => {
+        spyOn(createPasteFragmentFile, 'createPasteFragment').and.callThrough();
+        spyOn(
+            generatePasteOptionFromPluginsFile,
+            'generatePasteOptionFromPlugins'
+        ).and.callThrough();
+
+        const cb: PasteTypeOrGetter = () => 'normal';
+        paste(editor, clipboardData, cb);
+
+        expect(mockedModel).toEqual(mockedMergeModel);
+        expect(createPasteFragmentFile.createPasteFragment).toHaveBeenCalledWith(
+            jasmine.anything(),
+            jasmine.anything(),
+            'normal',
+            jasmine.anything()
+        );
+        expect(
+            generatePasteOptionFromPluginsFile.generatePasteOptionFromPlugins
+        ).toHaveBeenCalledWith(
+            jasmine.anything(),
+            jasmine.anything(),
+            jasmine.anything(),
+            jasmine.anything(),
+            'normal'
+        );
+    });
 });
 
 describe('paste with content model & paste plugin', () => {
@@ -136,7 +167,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -147,7 +178,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
@@ -322,23 +353,6 @@ describe('Paste with clipboardData', () => {
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {
-                                textColor: '',
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptSequence: '',
-                                underline: false,
-                            },
-                        },
                     ],
                     format: {
                         marginTop: '1em',
@@ -348,6 +362,30 @@ describe('Paste with clipboardData', () => {
                         tagName: 'p',
                         format: {},
                     },
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
+                        },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    blockType: 'Paragraph',
+                    format: {},
                 },
             ],
             format: {},
@@ -367,7 +405,13 @@ describe('Paste with clipboardData', () => {
             blocks: [
                 {
                     segments: [
-                        { text: 'Link', segmentType: 'Text', format: {} },
+                        {
+                            text: 'Link',
+                            segmentType: 'Text',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
@@ -381,12 +425,13 @@ describe('Paste with clipboardData', () => {
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptSequence: '',
-                                textColor: '',
+                                textColor: 'rgb(0,0,0)',
                                 underline: false,
                             },
                         },
                     ],
                     blockType: 'Paragraph',
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
                     format: {},
                 },
             ],
@@ -410,7 +455,7 @@ describe('Paste with clipboardData', () => {
                         {
                             text: 'Link',
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'rgb(0, 0, 0)' },
                             link: {
                                 format: {
                                     underline: true,
@@ -432,7 +477,7 @@ describe('Paste with clipboardData', () => {
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptSequence: '',
-                                textColor: '',
+                                textColor: 'rgb(0,0,0)',
                                 underline: false,
                             },
                             link: {
@@ -445,6 +490,7 @@ describe('Paste with clipboardData', () => {
                         },
                     ],
                     blockType: 'Paragraph',
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
                     format: {},
                 },
             ],

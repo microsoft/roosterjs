@@ -43,6 +43,11 @@ describe('Content Model Paste Plugin Test', () => {
                 domToModelOption: {
                     additionalAllowedTags: [],
                     additionalDisallowedTags: [],
+                    additionalFormatParsers: {},
+                    formatParserOverride: {},
+                    processorOverride: {},
+                    styleSanitizers: {},
+                    attributeSanitizers: {},
                 } as any,
             };
         });
@@ -53,7 +58,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -146,7 +151,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
-            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
@@ -158,6 +163,53 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(0);
+            expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
+            expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
+            expect(Object.keys(event.domToModelOption.styleSanitizers).length).toEqual(4);
+        });
+
+        it('Default with customized Sanitizing option', () => {
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('default');
+
+            plugin = new PastePlugin(undefined, {
+                additionalAllowedTags: ['', '', ''],
+                additionalDisallowedTags: ['', '', ''],
+                attributeSanitizers: {
+                    '1': true,
+                    '2': true,
+                },
+                styleSanitizers: {
+                    '1': true,
+                    '2': true,
+                },
+            });
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(3);
+            expect(event.domToModelOption.additionalAllowedTags.length).toEqual(3);
+            expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(2);
+            expect(Object.keys(event.domToModelOption.styleSanitizers).length).toEqual(2);
+        });
+
+        it('Value set to undefined.', () => {
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('default');
+
+            plugin = new PastePlugin(undefined, undefined);
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(0);
+            expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
+            expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
+            expect(Object.keys(event.domToModelOption.styleSanitizers).length).toEqual(4);
         });
 
         it('Google Sheets', () => {

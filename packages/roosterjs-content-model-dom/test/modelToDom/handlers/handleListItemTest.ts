@@ -1,9 +1,11 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
+import * as handleBlockGroupChildren from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
+import * as handleList from '../../../lib/modelToDom/handlers/handleList';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { handleList as originalHandleList } from '../../../lib/modelToDom/handlers/handleList';
+import { createText } from '../../../lib';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
 import {
     ContentModelBlockGroup,
@@ -18,22 +20,22 @@ import {
 
 describe('handleListItem without format handler', () => {
     let context: ModelToDomContext;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
-    let handleList: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
+    let handleBlockGroupChildrenSpy: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleListSpy: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
     let listItemMetadataApplier: jasmine.Spy<ApplyMetadata<
         ListMetadataFormat,
         ContentModelListItemFormat
     >>;
 
     beforeEach(() => {
-        handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
-        handleList = jasmine.createSpy('handleList').and.callFake(originalHandleList);
+        handleBlockGroupChildrenSpy = spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
+        handleListSpy = spyOn(handleList, 'handleList').and.callThrough();
         listItemMetadataApplier = jasmine.createSpy('listItemMetadataApplier');
 
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
-                blockGroupChildren: handleBlockGroupChildren,
-                list: handleList,
+                blockGroupChildren: handleBlockGroupChildrenSpy,
+                list: handleListSpy,
             },
             formatApplierOverride: {
                 listItemThread: null,
@@ -64,11 +66,11 @@ describe('handleListItem without format handler', () => {
                 },
             ],
         });
-        expect(handleList).toHaveBeenCalledTimes(1);
-        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
         expect(applyFormat.applyFormat).not.toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
             document,
             document.createElement('li'),
             listItem,
@@ -109,8 +111,8 @@ describe('handleListItem without format handler', () => {
                 },
             ],
         });
-        expect(handleList).toHaveBeenCalledTimes(1);
-        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -131,8 +133,8 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
-        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
@@ -172,8 +174,8 @@ describe('handleListItem without format handler', () => {
                 },
             ],
         });
-        expect(handleList).toHaveBeenCalledTimes(1);
-        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -194,8 +196,8 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
-        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
@@ -213,17 +215,91 @@ describe('handleListItem without format handler', () => {
         const result = handleListItem(document, parent, listItem, context, br);
 
         expect(parent.outerHTML).toBe('<div><ul><li></li></ul><br></div>');
-        expect(handleList).toHaveBeenCalledTimes(1);
-        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, br);
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, br);
         expect(applyFormat.applyFormat).toHaveBeenCalled();
-        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
             document,
             parent.firstChild!.firstChild as HTMLElement,
             listItem,
             context
         );
         expect(result).toBe(br);
+    });
+
+    it('UL with same format on list and segment', () => {
+        const listItem = createListItem([createListLevel('UL')], {
+            fontFamily: 'Arial',
+            fontSize: '10pt',
+            textColor: 'red',
+        });
+        const para = createParagraph();
+        const text = createText('test', {
+            fontFamily: 'Arial',
+            fontSize: '10pt',
+            textColor: 'red',
+        });
+
+        para.segments.push(text);
+        listItem.blocks.push(para);
+
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        const parent = document.createElement('div');
+        const result = handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div>test</div></li></ul></div>'
+        );
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
+            document,
+            parent.firstChild!.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(result).toBe(null);
+    });
+
+    it('UL with different format on list and segment', () => {
+        const listItem = createListItem([createListLevel('UL')], {
+            fontFamily: 'Arial',
+            fontSize: '10pt',
+            textColor: 'red',
+        });
+        const para = createParagraph();
+        const text = createText('test', {
+            fontFamily: 'Arial',
+            fontSize: '12pt',
+            textColor: 'green',
+        });
+
+        para.segments.push(text);
+        listItem.blocks.push(para);
+
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        const parent = document.createElement('div');
+        const result = handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div><span style="font-size: 12pt; color: green;">test</span></div></li></ul></div>'
+        );
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
+            document,
+            parent.firstChild!.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(result).toBe(null);
     });
 
     it('With onNodeCreated', () => {

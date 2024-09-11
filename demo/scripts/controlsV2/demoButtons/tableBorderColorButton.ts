@@ -1,30 +1,13 @@
+import { getColorPickerDropDown, getTextColorValue } from 'roosterjs-react';
 import { MainPane } from '../mainPane/MainPane';
-import { renderColorPicker } from '../roosterjsReact/colorPicker/component/renderColorPicker';
-import {
-    getColorPickerContainerClassName,
-    getColorPickerItemClassName,
-} from '../roosterjsReact/colorPicker/utils/getClassNamesForColorPicker';
-import {
-    getTextColorValue,
-    TextColorDropDownItems,
-    TextColors,
-} from '../roosterjsReact/colorPicker/utils/textColors';
-import type { RibbonButton } from '../roosterjsReact/ribbon';
+import type { RibbonButton } from 'roosterjs-react';
 
 /**
  * @internal
  * "Table Border Color" button on the format ribbon
  */
 export const tableBorderColorButton: RibbonButton<'buttonNameTableBorderColor'> = {
-    dropDownMenu: {
-        items: TextColorDropDownItems,
-        itemClassName: getColorPickerItemClassName(),
-        allowLivePreview: true,
-        itemRender: (item, onClick) => renderColorPicker(item, TextColors, onClick),
-        commandBarSubMenuProperties: {
-            className: getColorPickerContainerClassName(),
-        },
-    },
+    dropDownMenu: getColorPickerDropDown('text'),
     key: 'buttonNameTableBorderColor',
     unlocalizedText: 'Table Border Color',
     iconName: 'ColorSolid',

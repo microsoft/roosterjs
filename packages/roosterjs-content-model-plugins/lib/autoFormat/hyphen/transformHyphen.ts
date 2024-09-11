@@ -1,8 +1,8 @@
-import { splitTextSegment } from '../../pluginUtils/splitTextSegment';
+import { splitTextSegment } from 'roosterjs-content-model-api';
 import type {
-    ContentModelParagraph,
     ContentModelText,
     FormatContentModelContext,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -10,7 +10,7 @@ import type {
  */
 export function transformHyphen(
     previousSegment: ContentModelText,
-    paragraph: ContentModelParagraph,
+    paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ): boolean {
     const segments = previousSegment.text.split(' ');

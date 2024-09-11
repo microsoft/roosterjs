@@ -6,7 +6,7 @@ import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 import { formatTableWithContentModel } from '../../../lib/publicApi/utils/formatTableWithContentModel';
 import {
     createContentModelDocument,
-    createTable,
+    createTable as originalCreateTable,
     createTableCell,
 } from 'roosterjs-content-model-dom';
 
@@ -15,6 +15,14 @@ describe('formatTableWithContentModel', () => {
     let formatContentModelSpy: jasmine.Spy;
     let model: ContentModelDocument;
     let formatResult: boolean | undefined;
+
+    function createTable(rowCount: number) {
+        const table = originalCreateTable(rowCount);
+
+        table.cachedElement = {} as any;
+
+        return table;
+    }
 
     beforeEach(() => {
         formatResult = undefined;
@@ -60,6 +68,7 @@ describe('formatTableWithContentModel', () => {
             selectionOverride: undefined,
         });
         expect(formatResult).toBeFalse();
+        expect(table.cachedElement).toBeDefined();
     });
 
     it('Model with selected table, has selection in block, no metadata', () => {
@@ -92,6 +101,7 @@ describe('formatTableWithContentModel', () => {
         expect(normalizeTable.normalizeTable).toHaveBeenCalledWith(table, undefined);
         expect(applyTableFormat.applyTableFormat).not.toHaveBeenCalled();
         expect(formatResult).toBeTrue();
+        expect(table.cachedElement).toBeUndefined();
     });
 
     it('Model with selected table, no selection in block, no metadata', () => {
@@ -152,6 +162,7 @@ describe('formatTableWithContentModel', () => {
             isHeader: false,
             dataset: {},
         });
+        expect(table.cachedElement).toBeUndefined();
     });
 
     it('Model with selected table, no selection in block, has metadata', () => {
@@ -213,6 +224,7 @@ describe('formatTableWithContentModel', () => {
             isHeader: false,
             dataset: {},
         });
+        expect(table.cachedElement).toBeUndefined();
     });
 
     it('With default format and additional parameters', () => {
@@ -280,5 +292,6 @@ describe('formatTableWithContentModel', () => {
             isHeader: false,
             dataset: {},
         });
+        expect(table.cachedElement).toBeUndefined();
     });
 });

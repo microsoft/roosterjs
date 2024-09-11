@@ -1,3 +1,4 @@
+import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
 import { createListItem } from '../creators/createListItem';
@@ -5,15 +6,17 @@ import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from './deleteSelection';
+import { EmptySegmentFormat } from '../../constants/EmptySegmentFormat';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from '../..//domUtils/getObjectKeys';
+import { mutateBlock } from '../common/mutate';
 import { normalizeContentModel } from '../common/normalizeContentModel';
 import { normalizeTable } from './normalizeTable';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelDocument,
+    ContentModelHyperLinkFormat,
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelSegmentFormat,
@@ -21,9 +24,14 @@ import type {
     FormatContentModelContext,
     InsertPoint,
     MergeModelOption,
+    ReadonlyContentModelBlock,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+const KeysOfSegmentFormat = getObjectKeys(EmptySegmentFormat);
 
 /**
  * Merge source model into target mode
@@ -34,13 +42,19 @@ const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
  * @returns Insert point after merge, or null if there is no insert point
  */
 export function mergeModel(
-    target: ContentModelDocument,
+    target: ReadonlyContentModelDocument,
     source: ContentModelDocument,
     context?: FormatContentModelContext,
     options?: MergeModelOption
 ): InsertPoint | null {
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
+
+    if (options?.addParagraphAfterMergedContent) {
+        const { paragraph, marker } = insertPosition || {};
+        const newPara = createParagraph(false /* isImplicit */, paragraph?.format, marker?.format);
+        addBlock(source, newPara);
+    }
 
     if (insertPosition) {
         if (options?.mergeFormat && options.mergeFormat != 'none') {
@@ -170,7 +184,9 @@ function mergeTable(
     const { tableContext, marker } = markerPosition;
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
-        const { table, colIndex, rowIndex } = tableContext;
+        const { table: readonlyTable, colIndex, rowIndex } = tableContext;
+        const table = mutateBlock(readonlyTable);
+
         for (let i = 0; i < newTable.rows.length; i++) {
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
@@ -242,7 +258,7 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     const blockIndex = listParent.blocks.indexOf(listItem || paragraph);
 
     if (blockIndex >= 0) {
-        listParent.blocks.splice(blockIndex, 0, newList);
+        mutateBlock(listParent).blocks.splice(blockIndex, 0, newList);
     }
 
     if (listItem) {
@@ -256,7 +272,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
-    const newParagraph = createParagraph(
+    const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         { ...paragraph.format, ...newParaFormat },
         paragraph.segmentFormat
@@ -267,7 +283,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     }
 
     if (paraIndex >= 0) {
-        path[0].blocks.splice(paraIndex + 1, 0, newParagraph);
+        mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newParagraph);
     }
 
     const listItemIndex = getClosestAncestorBlockGroupIndex(
@@ -289,7 +305,7 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
             }
 
             if (blockIndex >= 0) {
-                listParent.blocks.splice(blockIndex + 1, 0, newListItem);
+                mutateBlock(listParent).blocks.splice(blockIndex + 1, 0, newListItem);
             }
 
             path[listItemIndex] = newListItem;
@@ -308,21 +324,22 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
-        path[0].blocks.splice(blockIndex, 0, block);
+        mutateBlock(path[0]).blocks.splice(blockIndex, 0, block);
     }
 }
 
 function applyDefaultFormat(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
+
         switch (block.blockType) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem') {
-                    block.formatHolder.format = mergeSegmentFormat(
+                    mutateBlock(block).formatHolder.format = mergeSegmentFormat(
                         applyDefaultFormatOption,
                         format,
                         block.formatHolder.format
@@ -341,7 +358,9 @@ function applyDefaultFormat(
 
             case 'Paragraph':
                 const paragraphFormat = block.decorator?.format || {};
-                block.segments.forEach(segment => {
+                const paragraph = mutateBlock(block);
+
+                paragraph.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
@@ -350,31 +369,80 @@ function applyDefaultFormat(
                         ...paragraphFormat,
                         ...segment.format,
                     });
+
+                    if (segment.link) {
+                        segment.link.format = mergeLinkFormat(
+                            applyDefaultFormatOption,
+                            format,
+                            segment.link.format
+                        );
+                    }
                 });
 
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
-                    delete block.decorator;
+                    delete paragraph.decorator;
                 }
                 break;
         }
     });
 }
 
-function mergeBlockFormat(applyDefaultFormatOption: string, block: ContentModelBlock) {
+function mergeBlockFormat(applyDefaultFormatOption: string, block: ReadonlyContentModelBlock) {
     if (applyDefaultFormatOption == 'keepSourceEmphasisFormat' && block.format.backgroundColor) {
-        delete block.format.backgroundColor;
+        delete mutateBlock(block).format.backgroundColor;
     }
+}
+
+/**
+ * Hyperlink format type definition only contains backgroundColor and underline.
+ * So create a minimum object with the styles supported in Hyperlink to be used in merge.
+ */
+function getSegmentFormatInLinkFormat(
+    targetFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const result: ContentModelHyperLinkFormat = {};
+    if (targetFormat.backgroundColor) {
+        result.backgroundColor = targetFormat.backgroundColor;
+    }
+    if (targetFormat.underline) {
+        result.underline = targetFormat.underline;
+    }
+
+    return result;
+}
+
+function mergeLinkFormat(
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    targetFormat: ContentModelSegmentFormat,
+    sourceFormat: ContentModelHyperLinkFormat
+) {
+    return applyDefaultFormatOption == 'mergeAll'
+        ? { ...getSegmentFormatInLinkFormat(targetFormat), ...sourceFormat }
+        : {
+              // Hyperlink segment format contains other attributes such as LinkFormat
+              // so we have to retain them
+              ...getFormatWithoutSegmentFormat(sourceFormat),
+              // Link format only have Text color, background color, Underline, but only
+              // text color + background color should be merged from the target
+              ...getSegmentFormatInLinkFormat(targetFormat),
+              // Get the semantic format of the source
+              ...getSemanticFormat(sourceFormat),
+              // The text color of the hyperlink should not be merged and
+              // we should always retain the source text color
+              ...getHyperlinkTextColor(sourceFormat),
+          };
 }
 
 function mergeSegmentFormat(
     applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
-    targetformat: ContentModelSegmentFormat,
+    targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
     return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetformat, ...sourceFormat }
+        ? { ...targetFormat, ...sourceFormat }
         : {
-              ...targetformat,
+              ...getFormatWithoutSegmentFormat(sourceFormat),
+              ...targetFormat,
               ...getSemanticFormat(sourceFormat),
           };
 }
@@ -392,6 +460,28 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
     if (underline) {
         result.underline = underline;
+    }
+
+    return result;
+}
+
+/**
+ * Segment format can also contain other type of metadata, for example in Images/Hyperlink,
+ * we want to preserve these properties when merging format
+ */
+function getFormatWithoutSegmentFormat(
+    sourceFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const resultFormat = {
+        ...sourceFormat,
+    };
+    KeysOfSegmentFormat.forEach(key => delete resultFormat[key]);
+    return resultFormat;
+}
+function getHyperlinkTextColor(sourceFormat: ContentModelHyperLinkFormat) {
+    const result: ContentModelHyperLinkFormat = {};
+    if (sourceFormat.textColor) {
+        result.textColor = sourceFormat.textColor;
     }
 
     return result;

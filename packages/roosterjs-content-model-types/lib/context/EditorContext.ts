@@ -1,6 +1,6 @@
 import type { DarkColorHandler } from './DarkColorHandler';
 import type { DomIndexer } from './DomIndexer';
-import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { PendingFormat } from '../pluginState/FormatPluginState';
 
 /**
@@ -57,4 +57,9 @@ export interface EditorContext {
      * Root Font size in Px.
      */
     rootFontSize?: number;
+
+    /**
+     * Enabled experimental features
+     */
+    experimentalFeatures?: ReadonlyArray<string>;
 }
