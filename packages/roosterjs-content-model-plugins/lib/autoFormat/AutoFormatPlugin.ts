@@ -37,7 +37,7 @@ export type AutoFormatOptions = {
     autoUnlink?: boolean;
 
     /**
-     * When paste content, create hyperlink for the pasted link
+     * When paste or type content with a link, create hyperlink for the link
      */
     autoLink?: boolean;
 
@@ -55,6 +55,16 @@ export type AutoFormatOptions = {
      * Transform ordinal numbers into superscript
      */
     autoOrdinals?: boolean;
+
+    /**
+     * When paste content or type content with telephone, create hyperlink for the telephone number
+     */
+    autoTel?: boolean;
+
+    /**
+     * When paste or type a content with mailto, create hyperlink for the content
+     */
+    autoMailto?: boolean;
 };
 
 /**
@@ -161,6 +171,8 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 autoHyphen,
                                 autoFraction,
                                 autoOrdinals,
+                                autoMailto,
+                                autoTel,
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
@@ -178,11 +190,14 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 );
                             }
 
-                            if (autoLink) {
+                            if (autoLink || autoTel || autoMailto) {
                                 shouldLink = createLinkAfterSpace(
                                     previousSegment,
                                     paragraph,
-                                    context
+                                    context,
+                                    autoLink,
+                                    autoTel,
+                                    autoMailto
                                 );
                             }
 
@@ -243,9 +258,9 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
-        const { autoLink } = this.options;
-        if (event.source == 'Paste' && autoLink) {
-            createLink(editor);
+        const { autoLink, autoTel, autoMailto } = this.options;
+        if (event.source == 'Paste' && (autoLink || autoTel || autoMailto)) {
+            createLink(editor, autoLink, autoTel, autoMailto);
         }
     }
 }
