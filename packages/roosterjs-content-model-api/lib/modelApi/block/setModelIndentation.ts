@@ -66,10 +66,19 @@ export function setModelIndentation(
                 //if block has only one level, there is not need to check if it is multilevel selection
             } else if (block.levels.length == 1 || !isMultilevelSelection(model, block, parent)) {
                 if (isIndent) {
-                    const lastLevel = block.levels[block.levels.length - 1];
+                    const threadIdx = thread.indexOf(block);
+                    const previousItem = thread[threadIdx - 1];
+                    const nextItem = thread[threadIdx + 1];
+                    const levelLength = block.levels.length;
+                    const lastLevel = block.levels[levelLength - 1];
                     const newLevel: ContentModelListLevel = createListLevel(
                         lastLevel?.listType || 'UL',
-                        lastLevel?.format
+                        lastLevel?.format,
+                        previousItem && previousItem.levels.length > levelLength
+                            ? previousItem.levels[levelLength].dataset
+                            : nextItem && nextItem.levels.length > levelLength
+                            ? nextItem.levels[levelLength].dataset
+                            : undefined
                     );
 
                     updateListMetadata(newLevel, metadata => {

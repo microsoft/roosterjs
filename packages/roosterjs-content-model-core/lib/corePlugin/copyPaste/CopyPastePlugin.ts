@@ -1,8 +1,8 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
-import { deleteEmptyList } from './deleteEmptyList';
+import { adjustImageSelectionOnSafari } from './utils/adjustImageSelectionOnSafari';
+import { deleteEmptyList } from './utils/deleteEmptyList';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
 import { paste } from '../../command/paste/paste';
-
 import {
     ChangeSource,
     contentModelToDom,
@@ -109,6 +109,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
         const doc = this.editor.getDocument();
         const selection = this.editor.getDOMSelection();
+
+        adjustImageSelectionOnSafari(this.editor, selection);
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const pasteModel = this.editor.getContentModelCopy('disconnected');
