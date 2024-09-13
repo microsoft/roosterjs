@@ -14,7 +14,7 @@ describe('createLinkAfterSpace', () => {
         context: FormatContentModelContext,
         expectedResult: boolean
     ) {
-        const result = createLinkAfterSpace(previousSegment, paragraph, context);
+        const result = createLinkAfterSpace(previousSegment, paragraph, context, true, true, true);
         expect(result).toBe(expectedResult);
     }
 
@@ -85,7 +85,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                 formatContentModel: formatWithContentModelSpy,
             } as any,
             (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return createLinkAfterSpace(previousSegment, paragraph, context);
+                return createLinkAfterSpace(previousSegment, paragraph, context, true, true, true);
             }
         );
 
@@ -422,6 +422,62 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                             link: {
                                 format: {
                                     href: 'tel:9999-9999',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                            isSelected: undefined,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, expected, true);
+    });
+
+    it('telephone link with +', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tel:+9999-9999',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tel:+9999-9999',
+                            format: {},
+                            link: {
+                                format: {
+                                    href: 'tel:+9999-9999',
                                     underline: true,
                                 },
                                 dataset: {},

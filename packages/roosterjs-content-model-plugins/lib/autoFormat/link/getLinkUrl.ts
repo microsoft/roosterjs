@@ -1,6 +1,6 @@
 import { matchLink } from 'roosterjs-content-model-api';
 
-const COMMON_REGEX = `[\s]*[a-zA-Z0-9][\s]*`;
+const COMMON_REGEX = `[\s]*[a-zA-Z0-9+][\s]*`;
 const TELEPHONE_REGEX = `(T|t)el:${COMMON_REGEX}`;
 const MAILTO_REGEX = `(M|m)ailto:${COMMON_REGEX}`;
 
@@ -9,17 +9,15 @@ const MAILTO_REGEX = `(M|m)ailto:${COMMON_REGEX}`;
  */
 export function getLinkUrl(
     text: string,
-    shouldLink?: boolean,
-    shouldMatchTel?: boolean,
-    shouldMatchMailto?: boolean
+    shouldLink: boolean,
+    shouldMatchTel: boolean,
+    shouldMatchMailto: boolean
 ): string | undefined {
-    return shouldLink
-        ? matchLink(text)?.normalizedUrl
-        : undefined || shouldMatchTel
-        ? matchTel(text)
-        : undefined || shouldMatchMailto
-        ? matchMailTo(text)
-        : undefined;
+    const linkMatch = shouldLink ? matchLink(text)?.normalizedUrl : undefined;
+    const telMatch = shouldMatchTel ? matchTel(text) : undefined;
+    const mailtoMatch = shouldMatchMailto ? matchMailTo(text) : undefined;
+
+    return linkMatch || telMatch || mailtoMatch;
 }
 
 function matchTel(text: string) {

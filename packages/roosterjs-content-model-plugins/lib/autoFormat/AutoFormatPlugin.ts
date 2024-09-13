@@ -90,11 +90,13 @@ export class AutoFormatPlugin implements EditorPlugin {
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
      *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
-     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink url address creation when pasting or typing content. Defaults to false.
      *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
      *  - autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.
      *  - autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.
+     *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
+     *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -195,9 +197,9 @@ export class AutoFormatPlugin implements EditorPlugin {
                                     previousSegment,
                                     paragraph,
                                     context,
-                                    autoLink,
-                                    autoTel,
-                                    autoMailto
+                                    !!autoLink,
+                                    !!autoTel,
+                                    !!autoMailto
                                 );
                             }
 
@@ -260,7 +262,7 @@ export class AutoFormatPlugin implements EditorPlugin {
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
         const { autoLink, autoTel, autoMailto } = this.options;
         if (event.source == 'Paste' && (autoLink || autoTel || autoMailto)) {
-            createLink(editor, autoLink, autoTel, autoMailto);
+            createLink(editor, !!autoLink, !!autoTel, !!autoMailto);
         }
     }
 }

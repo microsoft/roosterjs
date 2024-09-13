@@ -13,9 +13,9 @@ export function createLinkAfterSpace(
     previousSegment: ContentModelText,
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext,
-    autoLink?: boolean,
-    autoTel?: boolean,
-    autoMailto?: boolean
+    autoLink: boolean,
+    autoTel: boolean,
+    autoMailto: boolean
 ) {
     const link = previousSegment.text.split(' ').pop();
     const url = link?.trim();

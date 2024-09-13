@@ -8,9 +8,9 @@ import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
  */
 export function createLink(
     editor: IEditor,
-    autoLink?: boolean,
-    autoTel?: boolean,
-    autoMailto?: boolean
+    autoLink: boolean,
+    autoTel: boolean,
+    autoMailto: boolean
 ) {
     let anchorNode: Node | null = null;
     const links: ContentModelLink[] = [];

@@ -176,17 +176,16 @@ describe('Content Model Auto Format Plugin Test', () => {
         function runTest(
             event: ContentChangedEvent,
             shouldCallTrigger: boolean,
-            options?: {
-                autoLink: boolean;
-            }
+            options: AutoFormatOptions
         ) {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
 
             plugin.onPluginEvent(event);
+            const { autoLink, autoTel, autoMailto } = options;
 
             if (shouldCallTrigger) {
-                expect(createLinkSpy).toHaveBeenCalledWith(editor);
+                expect(createLinkSpy).toHaveBeenCalledWith(editor, autoLink, autoTel, autoMailto);
             } else {
                 expect(createLinkSpy).not.toHaveBeenCalled();
             }
@@ -199,6 +198,8 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(event, true, {
                 autoLink: true,
+                autoMailto: true,
+                autoTel: true,
             });
         });
 
@@ -207,7 +208,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'contentChanged',
                 source: 'Paste',
             };
-            runTest(event, false, { autoLink: false });
+            runTest(event, false, { autoLink: false, autoMailto: false, autoTel: false });
         });
 
         it('should not  call createLink - not paste', () => {
@@ -217,6 +218,8 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(event, false, {
                 autoLink: true,
+                autoMailto: true,
+                autoTel: true,
             });
         });
     });
@@ -304,10 +307,17 @@ describe('Content Model Auto Format Plugin Test', () => {
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
+                        const { autoLink, autoMailto, autoTel } = options;
                         const result =
                             options &&
-                            options.autoLink &&
-                            createLinkAfterSpace(segment, paragraph, context);
+                            createLinkAfterSpace(
+                                segment,
+                                paragraph,
+                                context,
+                                !!autoLink,
+                                !!autoTel,
+                                !!autoMailto
+                            );
 
                         expect(result).toBe(expectResult);
 
@@ -325,6 +335,26 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(event, true, {
                 autoLink: true,
+            });
+        });
+
+        it('should call createLinkAfterSpace | autoTel', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, true, {
+                autoTel: true,
+            });
+        });
+
+        it('should call createLinkAfterSpace | autoMailto', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            runTest(event, true, {
+                autoMailto: true,
             });
         });
 
