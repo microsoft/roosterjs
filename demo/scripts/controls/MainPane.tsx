@@ -160,6 +160,7 @@ class MainPane extends MainPaneBase<MainPaneState> {
                 buttons={isPopout ? this.popoutWindowButtons : this.mainWindowButtons}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                initIcon={true}
             />
         );
     }

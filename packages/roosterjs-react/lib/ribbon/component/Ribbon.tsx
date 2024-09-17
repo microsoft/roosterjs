@@ -3,6 +3,7 @@ import getLocalizedString from '../../common/utils/getLocalizedString';
 import { CommandBar } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { moreCommands } from './buttons/moreCommands';
 import type RibbonButton from '../type/RibbonButton';
@@ -31,9 +32,10 @@ const rtlIcon = mergeStyles({
  * @returns The format ribbon component
  */
 export default function Ribbon<T extends string>(props: RibbonProps<T>) {
-    const { plugin, buttons, strings, dir } = props;
+    const { plugin, buttons, strings, dir, initIcon } = props;
     const [formatState, setFormatState] = React.useState<FormatState | null>(null);
     const isRtl = dir == 'rtl';
+    const isIconInitialized = React.useRef<boolean>(false);
 
     const onClick = React.useCallback(
         (_, item?: IContextualMenuItem) => {
@@ -145,6 +147,11 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
     }, [plugin]);
 
     const moreCommandsBtn = moreCommands as RibbonButton<string>;
+
+    if (initIcon && !isIconInitialized.current) {
+        initializeIcons();
+        isIconInitialized.current = true;
+    }
 
     return (
         <CommandBar
