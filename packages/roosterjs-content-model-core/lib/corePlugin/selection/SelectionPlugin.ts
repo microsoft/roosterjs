@@ -331,10 +331,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             editor.isExperimentalFeatureEnabled('LegacyImageSelection') &&
             (image = this.getClickingImage(event.rawEvent)) &&
             image.isContentEditable &&
-            event.rawEvent.button != MouseMiddleButton &&
-            (event.rawEvent.button ==
-                MouseRightButton /* it's not possible to drag using right click */ ||
-                event.isClicking)
+            event.rawEvent.button != MouseMiddleButton
         ) {
             this.selectImageWithRange(image, event.rawEvent);
         }
