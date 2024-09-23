@@ -307,7 +307,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                         paragraph: ContentModelParagraph,
                         context: FormatContentModelContext
                     ) => {
-                        const { autoLink, autoMailto, autoTel } = options;
                         const result =
                             options && createLinkAfterSpace(segment, paragraph, context, options);
 
