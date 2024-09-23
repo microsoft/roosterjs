@@ -1,7 +1,12 @@
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
-import { deleteSelection, normalizeContentModel, runEditSteps } from 'roosterjs-content-model-dom';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { handleEnterOnParagraph } from './inputSteps/handleEnterOnParagraph';
+import {
+    ChangeSource,
+    deleteSelection,
+    normalizeContentModel,
+    runEditSteps,
+} from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -49,6 +54,7 @@ export function keyboardEnter(
         {
             rawEvent,
             scrollCaretIntoView: true,
+            changeSource: ChangeSource.Keyboard,
         }
     );
 }
