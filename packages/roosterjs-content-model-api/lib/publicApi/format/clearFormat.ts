@@ -8,6 +8,8 @@ import type {
     ContentModelTable,
 } from 'roosterjs-content-model-types';
 
+const MAX_TRY = 3;
+
 /**
  * Clear format of selection
  * @param editor The editor to clear format from
@@ -17,17 +19,27 @@ export function clearFormat(editor: IEditor) {
 
     editor.formatContentModel(
         model => {
-            const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
-            const segmentsToClear: ContentModelSegment[] = [];
-            const tablesToClear: [ContentModelTable, boolean][] = [];
+            let changed = false;
+            let needtoRun = true;
+            let triedTimes = 0;
 
-            clearModelFormat(model, blocksToClear, segmentsToClear, tablesToClear);
+            while (needtoRun && triedTimes++ < MAX_TRY) {
+                const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
+                const segmentsToClear: ContentModelSegment[] = [];
+                const tablesToClear: [ContentModelTable, boolean][] = [];
 
-            normalizeContentModel(model);
+                needtoRun = clearModelFormat(model, blocksToClear, segmentsToClear, tablesToClear);
 
-            return (
-                blocksToClear.length > 0 || segmentsToClear.length > 0 || tablesToClear.length > 0
-            );
+                normalizeContentModel(model);
+
+                changed =
+                    changed ||
+                    blocksToClear.length > 0 ||
+                    segmentsToClear.length > 0 ||
+                    tablesToClear.length > 0;
+            }
+
+            return changed;
         },
         {
             apiName: 'clearFormat',
