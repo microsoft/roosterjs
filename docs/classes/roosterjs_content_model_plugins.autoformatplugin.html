@@ -116,29 +116,31 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Auto<wbr>Format<wbr>Plugin<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-signature-type" data-tsd-kind="Type alias">AutoFormatOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.autoformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">AutoFormatPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Auto<wbr>Format<wbr>Plugin<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_plugins.autoformatoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">AutoFormatOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.autoformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">AutoFormatPlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5d08bab/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L78">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e3bc1f3/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L39">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <a href="../modules/roosterjs_content_model_plugins.html#autoformatoptions" class="tsd-signature-type" data-tsd-kind="Type alias">AutoFormatOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>options: <a href="../interfaces/roosterjs_content_model_plugins.autoformatoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">AutoFormatOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:</p>
 										<ul>
 											<li>autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.</li>
 											<li>autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.</li>
-											<li>autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.</li>
-											<li>autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.</li>
 											<li>autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.</li>
 											<li>autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.</li>
 											<li>autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.</li>
+											<li>autoLink: A boolean that enables or disables automatic hyperlink url address creation when pasting or typing content. Defaults to false.</li>
+											<li>autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.</li>
+											<li>autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.</li>
+											<li>autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.</li>
 										</ul>
 									</div>
 								</li>
@@ -161,7 +163,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5d08bab/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L113">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e3bc1f3/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L76">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,7 +188,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5d08bab/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L94">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e3bc1f3/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L57">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,7 +211,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5d08bab/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L104">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e3bc1f3/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L67">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:67</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -243,7 +245,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5d08bab/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L123">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e3bc1f3/packages/roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts#L86">roosterjs-content-model-plugins/lib/autoFormat/AutoFormatPlugin.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
