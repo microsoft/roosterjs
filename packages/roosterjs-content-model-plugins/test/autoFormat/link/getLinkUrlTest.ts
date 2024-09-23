@@ -1,58 +1,53 @@
+import { AutoLinkOptions } from '../../../lib/autoFormat/interface/AutoLinkOptions';
 import { getLinkUrl } from '../../../lib/autoFormat/link/getLinkUrl';
 
 describe('getLinkUrl', () => {
-    function runTest(
-        text: string,
-        shouldLink: boolean,
-        shouldMatchTel: boolean,
-        shouldMatchMailto: boolean,
-        expectedResult: string | undefined
-    ) {
-        const link = getLinkUrl(text, shouldLink, shouldMatchTel, shouldMatchMailto);
+    function runTest(text: string, options: AutoLinkOptions, expectedResult: string | undefined) {
+        const link = getLinkUrl(text, options);
         expect(link).toBe(expectedResult);
     }
 
     it('link', () => {
-        runTest('http://www.bing.com', true, false, false, 'http://www.bing.com');
+        runTest('http://www.bing.com', { autoLink: true }, 'http://www.bing.com');
     });
 
     it('do not return link', () => {
-        runTest('wwww.test.com', false, true, true, undefined);
+        runTest('wwww.test.com', { autoLink: false }, undefined);
     });
 
     it('invalid link', () => {
-        runTest('www3w.test.com', true, false, false, undefined);
+        runTest('www3w.test.com', { autoLink: true }, undefined);
     });
 
     it('telephone', () => {
-        runTest('tel:999999', false, true, false, 'tel:999999');
+        runTest('tel:999999', { autoTel: true }, 'tel:999999');
     });
 
     it('telephone with T', () => {
-        runTest('Tel:999999', false, true, false, 'tel:999999');
+        runTest('Tel:999999', { autoTel: true }, 'tel:999999');
     });
 
     it('do not return telephone', () => {
-        runTest('tel:999999', true, false, true, undefined);
+        runTest('tel:999999', { autoTel: false }, undefined);
     });
 
     it('invalid telephone', () => {
-        runTest('tels:999999', false, true, false, undefined);
+        runTest('tels:999999', { autoTel: true }, undefined);
     });
 
     it('mailto', () => {
-        runTest('mailto:test', false, false, true, 'mailto:test');
+        runTest('mailto:test', { autoMailto: true }, 'mailto:test');
     });
 
     it('mailto with M', () => {
-        runTest('Mailto:test', false, false, true, 'mailto:test');
+        runTest('Mailto:test', { autoMailto: true }, 'mailto:test');
     });
 
     it('do not return mailto', () => {
-        runTest('mailto:test', true, true, false, undefined);
+        runTest('mailto:test', { autoMailto: false }, undefined);
     });
 
     it('invalid mailto', () => {
-        runTest('mailtos:test', false, false, true, undefined);
+        runTest('mailtos:test', { autoMailto: true }, undefined);
     });
 });

@@ -25,9 +25,7 @@ describe('createLink', () => {
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            true,
-            true,
-            true
+            { autoLink: true, autoMailto: true, autoTel: true }
         );
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();

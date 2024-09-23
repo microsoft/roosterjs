@@ -1,7 +1,8 @@
 import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 import * as unlink from '../../lib/autoFormat/link/unlink';
-import { AutoFormatOptions, AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
+import { AutoFormatOptions } from '../../lib/autoFormat/interface/AutoFormatOptions';
+import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
 import { ChangeSource } from '../../../roosterjs-content-model-dom/lib/constants/ChangeSource';
 import { createLinkAfterSpace } from '../../lib/autoFormat/link/createLinkAfterSpace';
 import { keyboardListTrigger } from '../../lib/autoFormat/list/keyboardListTrigger';
@@ -182,10 +183,9 @@ describe('Content Model Auto Format Plugin Test', () => {
             plugin.initialize(editor);
 
             plugin.onPluginEvent(event);
-            const { autoLink, autoTel, autoMailto } = options;
 
             if (shouldCallTrigger) {
-                expect(createLinkSpy).toHaveBeenCalledWith(editor, autoLink, autoTel, autoMailto);
+                expect(createLinkSpy).toHaveBeenCalledWith(editor, options);
             } else {
                 expect(createLinkSpy).not.toHaveBeenCalled();
             }
@@ -309,15 +309,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     ) => {
                         const { autoLink, autoMailto, autoTel } = options;
                         const result =
-                            options &&
-                            createLinkAfterSpace(
-                                segment,
-                                paragraph,
-                                context,
-                                !!autoLink,
-                                !!autoTel,
-                                !!autoMailto
-                            );
+                            options && createLinkAfterSpace(segment, paragraph, context, options);
 
                         expect(result).toBe(expectResult);
 

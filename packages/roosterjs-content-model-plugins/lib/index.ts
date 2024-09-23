@@ -4,7 +4,9 @@ export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeat
 export { PastePlugin } from './paste/PastePlugin';
 export { DefaultSanitizers } from './paste/DefaultSanitizers';
 export { EditPlugin, EditOptions } from './edit/EditPlugin';
-export { AutoFormatPlugin, AutoFormatOptions } from './autoFormat/AutoFormatPlugin';
+export { AutoFormatPlugin } from './autoFormat/AutoFormatPlugin';
+export { AutoFormatOptions } from './autoFormat/interface/AutoFormatOptions';
+export { AutoLinkOptions } from './autoFormat/interface/AutoLinkOptions';
 
 export {
     ShortcutBold,

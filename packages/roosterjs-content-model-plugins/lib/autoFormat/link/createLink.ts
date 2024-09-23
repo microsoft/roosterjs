@@ -1,17 +1,13 @@
 import { addLink, ChangeSource } from 'roosterjs-content-model-dom';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import { getLinkUrl } from './getLinkUrl';
+import type { AutoLinkOptions } from '../interface/AutoLinkOptions';
 import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createLink(
-    editor: IEditor,
-    autoLink: boolean,
-    autoTel: boolean,
-    autoMailto: boolean
-) {
+export function createLink(editor: IEditor, autoLinkOptions: AutoLinkOptions) {
     let anchorNode: Node | null = null;
     const links: ContentModelLink[] = [];
     formatTextSegmentBeforeSelectionMarker(
@@ -22,10 +18,7 @@ export function createLink(
                 return true;
             }
             let linkUrl: string | undefined = undefined;
-            if (
-                !linkSegment.link &&
-                (linkUrl = getLinkUrl(linkSegment.text, autoLink, autoTel, autoMailto))
-            ) {
+            if (!linkSegment.link && (linkUrl = getLinkUrl(linkSegment.text, autoLinkOptions))) {
                 addLink(linkSegment, {
                     format: {
                         href: linkUrl,

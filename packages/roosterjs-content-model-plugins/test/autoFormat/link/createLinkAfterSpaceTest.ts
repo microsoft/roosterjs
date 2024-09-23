@@ -14,7 +14,11 @@ describe('createLinkAfterSpace', () => {
         context: FormatContentModelContext,
         expectedResult: boolean
     ) {
-        const result = createLinkAfterSpace(previousSegment, paragraph, context, true, true, true);
+        const result = createLinkAfterSpace(previousSegment, paragraph, context, {
+            autoLink: true,
+            autoMailto: true,
+            autoTel: true,
+        });
         expect(result).toBe(expectedResult);
     }
 
@@ -85,7 +89,11 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                 formatContentModel: formatWithContentModelSpy,
             } as any,
             (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return createLinkAfterSpace(previousSegment, paragraph, context, true, true, true);
+                return createLinkAfterSpace(previousSegment, paragraph, context, {
+                    autoLink: true,
+                    autoMailto: true,
+                    autoTel: true,
+                });
             }
         );
 
