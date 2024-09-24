@@ -580,7 +580,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             range.collapse(true /* toStart */);
         }
 
-        debugger;
         this.setDOMSelection(
             {
                 type: 'range',
