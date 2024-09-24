@@ -1272,10 +1272,12 @@ describe('SelectionPlugin handle table selection', () => {
         let td4: HTMLTableCellElement;
         let tr1: HTMLElement;
         let tr2: HTMLElement;
-        let td1_text: Node;
-        let td2_text: Node;
-        let td3_text: Node;
-        let td4_text: Node;
+        let td1_content: Text;
+        let td2_content: Node;
+        let td3_content: Text;
+        let td4_content: Text;
+        let empty_paragraph: Node;
+        let final_text: Node;
         let table: HTMLTableElement;
         let div: HTMLElement;
 
@@ -1295,17 +1297,20 @@ describe('SelectionPlugin handle table selection', () => {
             td3.id = 'td3';
             td4.id = 'td4';
 
-            // Craete text nodes
-            td1_text = document.createTextNode('1');
-            td2_text = document.createTextNode('2');
-            td3_text = document.createTextNode('3');
-            td4_text = document.createTextNode('4');
+            empty_paragraph = document.createElement('br');
+
+            // Add content to cells
+            td1_content = document.createTextNode('1');
+            td2_content = document.createElement('div');
+            td2_content.appendChild(empty_paragraph);
+            td3_content = document.createTextNode('Three');
+            td4_content = document.createTextNode('4');
 
             // Add Text to each cell
-            td1.appendChild(td1_text);
-            td2.appendChild(td2_text);
-            td3.appendChild(td3_text);
-            td4.appendChild(td4_text);
+            td1.appendChild(td1_content);
+            td2.appendChild(td2_content);
+            td3.appendChild(td3_content);
+            td4.appendChild(td4_content);
 
             tr1.appendChild(td1);
             tr1.appendChild(td2);
@@ -1315,6 +1320,9 @@ describe('SelectionPlugin handle table selection', () => {
             table.appendChild(tr2);
             contentDiv.appendChild(table);
             contentDiv.appendChild(div);
+
+            final_text = document.createTextNode('Text');
+            contentDiv.appendChild(final_text);
         });
 
         it('From Range, Press A', () => {
@@ -1454,8 +1462,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td2_text, 0);
-            expect(setEndSpy).toHaveBeenCalledWith(td2_text, 0);
+            expect(setStartSpy).toHaveBeenCalledWith(td2_content, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td2_content, td2_content.childNodes.length);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1529,8 +1537,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td1_text, 0);
-            expect(setEndSpy).toHaveBeenCalledWith(td1_text, 0);
+            expect(setStartSpy).toHaveBeenCalledWith(td1_content, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td1_content, td1_content.length);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1603,8 +1611,8 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td3_text, 0);
-            expect(setEndSpy).toHaveBeenCalledWith(td3_text, 0);
+            expect(setStartSpy).toHaveBeenCalledWith(td3_content, 0);
+            expect(setEndSpy).toHaveBeenCalledWith(td3_content, td3_content.length);
             expect(collapseSpy).not.toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -1816,7 +1824,7 @@ describe('SelectionPlugin handle table selection', () => {
                 range: mockedRange,
                 isReverted: false,
             });
-            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
+            expect(setStartSpy).toHaveBeenCalledWith(td4_content, 0);
             expect(announceSpy).toHaveBeenCalledWith({
                 defaultStrings: 'announceOnFocusLastCell',
             });

@@ -565,7 +565,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             // Get first deepest editable position in the cell
             const posStart = normalizePos(cellStart, 0);
             // Get last deepest editable position in the cell
-            const posEnd = normalizePos(cellEnd, cellEnd.childNodes.length);
+            const posEnd = normalizePos(cellEnd, 0);
+            posEnd.offset = isNodeOfType(posEnd.node, 'TEXT_NODE')
+                ? posEnd.node.length
+                : posEnd.node.childNodes.length;
 
             range.setStart(posStart.node, posStart.offset);
             range.setEnd(posEnd.node, posEnd.offset);
@@ -577,6 +580,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             range.collapse(true /* toStart */);
         }
 
+        debugger;
         this.setDOMSelection(
             {
                 type: 'range',
