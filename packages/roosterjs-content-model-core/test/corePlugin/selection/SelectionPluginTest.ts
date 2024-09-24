@@ -1277,7 +1277,6 @@ describe('SelectionPlugin handle table selection', () => {
         let td3_content: Text;
         let td4_content: Text;
         let empty_paragraph: Node;
-        let final_text: Node;
         let table: HTMLTableElement;
         let div: HTMLElement;
 
@@ -1320,9 +1319,6 @@ describe('SelectionPlugin handle table selection', () => {
             table.appendChild(tr2);
             contentDiv.appendChild(table);
             contentDiv.appendChild(div);
-
-            final_text = document.createTextNode('Text');
-            contentDiv.appendChild(final_text);
         });
 
         it('From Range, Press A', () => {
