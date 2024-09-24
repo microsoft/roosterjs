@@ -1,9 +1,13 @@
-import { getOperationalBlocks, isBlockGroupOfType } from 'roosterjs-content-model-dom';
 import { handleTabOnList } from './tabUtils/handleTabOnList';
 import { handleTabOnParagraph } from './tabUtils/handleTabOnParagraph';
 import { handleTabOnTable } from './tabUtils/handleTabOnTable';
 import { handleTabOnTableCell } from './tabUtils/handleTabOnTableCell';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import {
+    ChangeSource,
+    getOperationalBlocks,
+    isBlockGroupOfType,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelListItem,
     ContentModelTableCell,
@@ -37,6 +41,7 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
                 },
                 {
                     apiName: 'handleTabKey',
+                    changeSource: ChangeSource.Keyboard,
                 }
             );
             return true;

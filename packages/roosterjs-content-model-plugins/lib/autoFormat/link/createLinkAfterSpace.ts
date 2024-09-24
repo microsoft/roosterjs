@@ -1,8 +1,9 @@
-import { matchLink, splitTextSegment } from 'roosterjs-content-model-api';
+import { getLinkUrl } from './getLinkUrl';
+import { splitTextSegment } from 'roosterjs-content-model-api';
+import type { AutoLinkOptions } from '../interface/AutoLinkOptions';
 import type {
     ContentModelText,
     FormatContentModelContext,
-    LinkData,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
@@ -12,12 +13,13 @@ import type {
 export function createLinkAfterSpace(
     previousSegment: ContentModelText,
     paragraph: ShallowMutableContentModelParagraph,
-    context: FormatContentModelContext
+    context: FormatContentModelContext,
+    autoLinkOptions: AutoLinkOptions
 ) {
     const link = previousSegment.text.split(' ').pop();
     const url = link?.trim();
-    let linkData: LinkData | null = null;
-    if (url && link && (linkData = matchLink(url))) {
+    let linkUrl: string | undefined = undefined;
+    if (url && link && (linkUrl = getLinkUrl(url, autoLinkOptions))) {
         const linkSegment = splitTextSegment(
             previousSegment,
             paragraph,
@@ -26,7 +28,7 @@ export function createLinkAfterSpace(
         );
         linkSegment.link = {
             format: {
-                href: linkData.normalizedUrl,
+                href: linkUrl,
                 underline: true,
             },
             dataset: {},

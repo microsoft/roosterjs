@@ -449,4 +449,281 @@ describe('findEditingImage', () => {
             },
         });
     });
+
+    it('editing image - no id - no editing image | by Id', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+
+        const image = findEditingImage(model);
+        expect(image).toEqual(null);
+    });
+
+    it('editing image - no id - editing image', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'second line',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'second-Image',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {
+                                isEditing: 'true',
+                            },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+
+        const image = findEditingImage(model);
+        expect(image).toEqual({
+            image: {
+                segmentType: 'Image',
+                src: 'second-Image',
+                format: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                    maxWidth: '1800px',
+                },
+                dataset: {
+                    isEditing: 'true',
+                },
+            },
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'Image',
+                        src: 'second-Image',
+                        format: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                            textColor: 'rgb(0, 0, 0)',
+                            maxWidth: '1800px',
+                        },
+                        dataset: {
+                            isEditing: 'true',
+                        },
+                    },
+                ],
+                format: {},
+                segmentFormat: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                },
+            },
+        });
+    });
+
+    it('editing image - with id - editing image', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                maxWidth: '1800px',
+                                id: 'testId',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'second line',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'second-Image',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {
+                                isEditing: 'true',
+                            },
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+
+        const image = findEditingImage(model, 'testId');
+        expect(image).toEqual({
+            image: {
+                segmentType: 'Image',
+                src: 'test',
+                format: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                    maxWidth: '1800px',
+                    id: 'testId',
+                },
+                dataset: {},
+            },
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'Image',
+                        src: 'test',
+                        format: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                            textColor: 'rgb(0, 0, 0)',
+                            maxWidth: '1800px',
+                            id: 'testId',
+                        },
+                        dataset: {},
+                    },
+                ],
+                format: {},
+                segmentFormat: {
+                    fontFamily: 'Calibri',
+                    fontSize: '11pt',
+                    textColor: 'rgb(0, 0, 0)',
+                },
+            },
+        });
+    });
 });
