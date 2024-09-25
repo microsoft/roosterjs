@@ -2,7 +2,7 @@ import { directionFormatHandler } from './directionFormatHandler';
 import type { FormatHandler } from '../FormatHandler';
 import type { DirectionFormat, PaddingFormat } from 'roosterjs-content-model-types';
 
-const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
+export const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
     'paddingTop',
     'paddingRight',
     'paddingBottom',

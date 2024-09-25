@@ -178,6 +178,11 @@ export interface FormatHandlerTypeMap {
     tableSpacing: SpacingFormat;
 
     /**
+     * Table padding
+     */
+    tableCellPadding: SpacingFormat;
+
+    /**
      * Format for TextAlignFormat
      */
     textAlign: TextAlignFormat;

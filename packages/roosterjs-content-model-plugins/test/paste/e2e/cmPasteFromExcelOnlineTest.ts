@@ -1285,6 +1285,7 @@ describe(ID, () => {
                         width: '157pt' as any,
                         useBorderBox: true,
                         borderCollapse: true,
+                        cellPadding: '0',
                     } as any,
                     dataset: {},
                 },

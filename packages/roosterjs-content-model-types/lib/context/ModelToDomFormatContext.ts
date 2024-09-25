@@ -28,6 +28,18 @@ export interface ModelToDomListContext {
 }
 
 /**
+ * Represents context for list handling
+ */
+export interface ModelToDomTableFormatContext {
+    /**
+     * This property holds the cellpadding attribute set in the table.
+     * And then it is used to set the padding property in each of the table cells.
+     * We do this as the cellpadding attribute in the table is deprecated.
+     */
+    cellPadding?: string;
+}
+
+/**
  * Represents format context used by Content Model to DOM conversion
  */
 export interface ModelToDomFormatContext {
@@ -40,4 +52,9 @@ export interface ModelToDomFormatContext {
      * Existing format implicitly applied from parent element
      */
     implicitFormat: ContentModelSegmentFormat & ContentModelBlockFormat;
+
+    /**
+     * Context for table handling
+     */
+    tableFormat?: ModelToDomTableFormatContext;
 }

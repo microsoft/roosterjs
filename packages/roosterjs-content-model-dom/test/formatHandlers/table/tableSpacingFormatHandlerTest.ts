@@ -28,7 +28,7 @@ describe('tableSpacingFormatHandler.parse', () => {
     it('Non-collapsed border', () => {
         div.style.borderCollapse = 'separate';
         tableSpacingFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({ borderSeparate: true });
+        expect(format).toEqual({ borderSeparate: true, cellPadding: '0' });
     });
 
     it('Set border collapsed if element contains cellpadding attribute', () => {
