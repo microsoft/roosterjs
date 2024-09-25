@@ -287,6 +287,7 @@ export {
     DomToModelDecoratorContext,
     DomToModelListFormat,
 } from './context/DomToModelFormatContext';
+export { ModelToDomTextContext, ModelToDomTextContextItem } from './context/ModelToDomTextContext';
 export { ModelToDomContext } from './context/ModelToDomContext';
 export {
     ModelToDomBlockAndSegmentNode,

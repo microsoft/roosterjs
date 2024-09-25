@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
+import { handleSegments } from './handleSegments';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
@@ -7,7 +8,6 @@ import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 const DefaultParagraphTag = 'div';
@@ -16,16 +16,19 @@ const DefaultParagraphTag = 'div';
  * @internal
  */
 export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = (
-    doc: Document,
-    parent: Node,
-    paragraph: ContentModelParagraph,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    paragraph,
+    context,
+    refNode
 ) => {
-    let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
+    let cachedElement = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
-    if (container && paragraph.segments.every(x => x.segmentType != 'General' && !x.isSelected)) {
-        refNode = reuseCachedElement(parent, container, refNode);
+    if (
+        cachedElement &&
+        paragraph.segments.every(x => x.segmentType != 'General' && !x.isSelected)
+    ) {
+        refNode = reuseCachedElement(parent, cachedElement, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
             const needParagraphWrapper =
@@ -39,8 +42,9 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                       ...paragraph.segmentFormat,
                   }
                 : {};
-
-            container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+            const container = doc.createElement(
+                paragraph.decorator?.tagName || DefaultParagraphTag
+            );
 
             parent.insertBefore(container, refNode);
 
@@ -49,42 +53,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 segment: null,
             };
 
-            const handleSegments = () => {
-                const parent = container;
-
-                if (parent) {
-                    const firstSegment = paragraph.segments[0];
-
-                    if (firstSegment?.segmentType == 'SelectionMarker') {
-                        // Make sure there is a segment created before selection marker.
-                        // If selection marker is the first selected segment in a paragraph, create a dummy text node,
-                        // so after rewrite, the regularSelection object can have a valid segment object set to the text node.
-                        context.modelHandlers.text(
-                            doc,
-                            parent,
-                            {
-                                ...firstSegment,
-                                segmentType: 'Text',
-                                text: '',
-                            },
-                            context,
-                            []
-                        );
-                    }
-
-                    paragraph.segments.forEach(segment => {
-                        const newSegments: Node[] = [];
-                        context.modelHandlers.segment(doc, parent, segment, context, newSegments);
-
-                        newSegments.forEach(node => {
-                            context.domIndexer?.onSegment(node, paragraph, [segment]);
-                        });
-                    });
-                }
-            };
-
             if (needParagraphWrapper) {
-                stackFormat(context, formatOnWrapper, handleSegments);
+                stackFormat(context, formatOnWrapper, () => {
+                    handleSegments(doc, container, paragraph, context);
+                });
 
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
                 applyFormat(container, context.formatAppliers.container, paragraph.format, context);
@@ -95,10 +67,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     context
                 );
             } else {
-                handleSegments();
+                handleSegments(doc, container, paragraph, context);
             }
 
-            optimize(container);
+            // optimize(container);
 
             // It is possible the next sibling node is changed during processing child segments
             // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment
@@ -119,7 +91,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 }
             } else {
                 unwrap(container);
-                container = undefined;
             }
         });
     }
