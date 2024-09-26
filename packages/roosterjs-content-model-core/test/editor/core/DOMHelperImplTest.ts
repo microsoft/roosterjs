@@ -350,4 +350,20 @@ describe('DOMHelperImpl', () => {
             expect(domHelper.getClientWidth()).toBe(1000);
         });
     });
+
+    describe('getClonedRoot', () => {
+        it('getClonedRoot', () => {
+            const mockedClone = 'CLONE' as any;
+            const cloneSpy = jasmine.createSpy('cloneSpy').and.returnValue(mockedClone);
+            const mockedDiv: HTMLElement = {
+                cloneNode: cloneSpy,
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.getClonedRoot();
+
+            expect(result).toBe(mockedClone);
+            expect(cloneSpy).toHaveBeenCalledWith(true);
+        });
+    });
 });

@@ -81,6 +81,13 @@ class DOMHelperImpl implements DOMHelper {
         const paddingRight = parseValueWithUnit(style?.paddingRight);
         return this.contentDiv.clientWidth - (paddingLeft + paddingRight);
     }
+
+    /**
+     * Get a deep cloned root element
+     */
+    getClonedRoot(): HTMLElement {
+        return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+    }
 }
 
 /**
