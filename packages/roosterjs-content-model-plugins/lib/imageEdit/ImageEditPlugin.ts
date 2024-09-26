@@ -53,6 +53,8 @@ const DefaultOptions: Partial<ImageEditOptions> = {
 
 const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
+const IMAGE_EDIT_CLASS = 'imageEdit';
+const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -384,9 +386,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
-        editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
-            `span:has(>img${getSafeIdSelector(this.selectedImage.id)})`,
-        ]);
+        editor.setEditorStyle(
+            IMAGE_EDIT_CLASS,
+            `outline-style:none!important;caret-color: transparent;`,
+            [`span:has(>img${getSafeIdSelector(this.selectedImage.id)})`]
+        );
+
+        editor.setEditorStyle(IMAGE_EDIT_CLASS_CARET, `caret-color: transparent;`);
     }
 
     public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
@@ -607,7 +613,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private cleanInfo() {
-        this.editor?.setEditorStyle('imageEdit', null);
+        this.editor?.setEditorStyle(IMAGE_EDIT_CLASS, null);
+        this.editor?.setEditorStyle(IMAGE_EDIT_CLASS_CARET, null);
         this.selectedImage = null;
         this.shadowSpan = null;
         this.wrapper = null;
