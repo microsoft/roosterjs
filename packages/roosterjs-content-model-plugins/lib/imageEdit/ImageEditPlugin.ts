@@ -386,11 +386,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
-        editor.setEditorStyle(
-            IMAGE_EDIT_CLASS,
-            `outline-style:none!important;caret-color: transparent;`,
-            [`span:has(>img${getSafeIdSelector(this.selectedImage.id)})`]
-        );
+        editor.setEditorStyle(IMAGE_EDIT_CLASS, `outline-style:none!important;`, [
+            `span:has(>img${getSafeIdSelector(this.selectedImage.id)})`,
+        ]);
 
         editor.setEditorStyle(IMAGE_EDIT_CLASS_CARET, `caret-color: transparent;`);
     }
