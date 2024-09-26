@@ -1507,6 +1507,157 @@ describe('mergeModel', () => {
         });
     });
 
+    it('table to table, merge table 4, mergeTable and addParagraphAfterMergedContent should be noop', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const cell31 = createTableCell(false, false, false, { backgroundColor: '31' });
+        const cell32 = createTableCell(false, false, false, { backgroundColor: '32' });
+        const table1 = createTable(4);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02] },
+            { format: {}, height: 0, cells: [cell11, cell12] },
+            { format: {}, height: 0, cells: [cell21, cell22] },
+            { format: {}, height: 0, cells: [cell31, cell32] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell12.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+                addParagraphAfterMergedContent: true,
+            }
+        );
+
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+            isImplicit: true,
+        };
+        const tableCell: ContentModelTableCell = {
+            blockGroupType: 'TableCell',
+            blocks: [paragraph],
+            format: {
+                backgroundColor: 'n11',
+            },
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        cell01,
+                        cell02,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '02',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cell11, tableCell, newCell12],
+                },
+                { format: {}, height: 0, cells: [cell21, newCell21, newCell22] },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        cell31,
+                        cell32,
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {
+                                backgroundColor: '32',
+                            },
+                            spanLeft: false,
+                            spanAbove: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [table],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [tableCell, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 1,
+                colIndex: 1,
+                isWholeTableSelected: false,
+            },
+        });
+    });
+
     it('Use customized insert position', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
@@ -3864,6 +4015,37 @@ describe('mergeModel', () => {
                     segments: [
                         { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                         { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Merge model with addParagraphAfterMergedContent and mergeTable, addParagraphAfterMergedContent should be noop', () => {
+        const source = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createText('Merge'));
+        source.blocks.push(para);
+
+        const target = createContentModelDocument();
+        const paraTarget = createParagraph();
+        paraTarget.segments.push(createSelectionMarker());
+        target.blocks.push(paraTarget);
+
+        mergeModel(target, source, undefined, {
+            addParagraphAfterMergedContent: true,
+            mergeTable: true,
+        });
+
+        expect(target).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'Merge', format: {} },
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     ],
                     format: {},
                 },

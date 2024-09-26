@@ -45,6 +45,8 @@ const initialState: OptionState = {
         autoHyphen: true,
         autoFraction: true,
         autoOrdinals: true,
+        autoMailto: true,
+        autoTel: true,
     },
     markdownOptions: {
         bold: true,
