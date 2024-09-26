@@ -50,20 +50,22 @@ export function mergeModel(
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
-    if (options?.addParagraphAfterMergedContent) {
+    const { addParagraphAfterMergedContent, mergeFormat, mergeTable } = options || {};
+
+    if (addParagraphAfterMergedContent && !mergeTable) {
         const { paragraph, marker } = insertPosition || {};
         const newPara = createParagraph(false /* isImplicit */, paragraph?.format, marker?.format);
         addBlock(source, newPara);
     }
 
     if (insertPosition) {
-        if (options?.mergeFormat && options.mergeFormat != 'none') {
+        if (mergeFormat && mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat, options?.mergeFormat);
+            applyDefaultFormat(source, newFormat, mergeFormat);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -84,8 +86,8 @@ export function mergeModel(
                     break;
 
                 case 'Table':
-                    if (source.blocks.length == 1 && options?.mergeTable) {
-                        mergeTable(insertPosition, block, source);
+                    if (source.blocks.length == 1 && mergeTable) {
+                        mergeTables(insertPosition, block, source);
                     } else {
                         insertBlock(insertPosition, block);
                     }
@@ -176,7 +178,7 @@ function mergeParagraph(
     }
 }
 
-function mergeTable(
+function mergeTables(
     markerPosition: InsertPoint,
     newTable: ContentModelTable,
     source: ContentModelDocument
