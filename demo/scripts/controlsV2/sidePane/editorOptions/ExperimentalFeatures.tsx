@@ -9,7 +9,13 @@ export interface DefaultFormatProps {
 
 export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}> {
     render() {
-        return this.renderFeature('PersistCache');
+        return (
+            <>
+                {this.renderFeature('PersistCache')}
+                {this.renderFeature('HandleEnterKey')}
+                {this.renderFeature('LegacyImageSelection')}
+            </>
+        );
     }
 
     private renderFeature(featureName: ExperimentalFeature): JSX.Element {
