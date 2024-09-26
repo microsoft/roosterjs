@@ -100,4 +100,74 @@ describe('brProcessor', () => {
         });
         expect(onSegmentSpy).toHaveBeenCalledWith(br, paragraphModel, [brModel]);
     });
+
+    it('Selection starts in BR', () => {
+        const doc = createContentModelDocument();
+        const div = document.createElement('div');
+        const br = document.createElement('br');
+        const range = document.createRange();
+
+        div.appendChild(br);
+        range.setStart(br, 0);
+        range.setEnd(div, 1);
+        context.selection = {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        };
+
+        brProcessor(doc, br, context);
+
+        const brModel: ContentModelBr = {
+            segmentType: 'Br',
+            format: {},
+            isSelected: true,
+        };
+        const paragraphModel: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [brModel],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraphModel],
+        });
+        expect(context.isInSelection).toBeTrue();
+    });
+
+    it('Selection ends in BR', () => {
+        const doc = createContentModelDocument();
+        const br = document.createElement('br');
+        const range = document.createRange();
+
+        range.setEnd(br, 0);
+        context.selection = {
+            type: 'range',
+            range: range,
+            isReverted: false,
+        };
+        context.isInSelection = true;
+
+        brProcessor(doc, br, context);
+
+        const brModel: ContentModelBr = {
+            segmentType: 'Br',
+            format: {},
+            isSelected: true,
+        };
+        const paragraphModel: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [brModel],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraphModel],
+        });
+        expect(context.isInSelection).toBeFalse();
+    });
 });
