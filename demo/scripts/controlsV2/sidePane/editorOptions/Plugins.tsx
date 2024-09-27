@@ -110,6 +110,8 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private autoHyphen = React.createRef<HTMLInputElement>();
     private autoFraction = React.createRef<HTMLInputElement>();
     private autoOrdinals = React.createRef<HTMLInputElement>();
+    private autoTel = React.createRef<HTMLInputElement>();
+    private autoMailto = React.createRef<HTMLInputElement>();
     private markdownBold = React.createRef<HTMLInputElement>();
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
@@ -165,6 +167,18 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                 this.autoOrdinals,
                                 this.props.state.autoFormatOptions.autoOrdinals,
                                 (state, value) => (state.autoFormatOptions.autoOrdinals = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Telephone',
+                                this.autoTel,
+                                this.props.state.autoFormatOptions.autoTel,
+                                (state, value) => (state.autoFormatOptions.autoTel = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Email',
+                                this.autoMailto,
+                                this.props.state.autoFormatOptions.autoMailto,
+                                (state, value) => (state.autoFormatOptions.autoMailto = value)
                             )}
                         </>
                     )}

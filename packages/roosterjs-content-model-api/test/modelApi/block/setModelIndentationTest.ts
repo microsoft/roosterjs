@@ -1,5 +1,5 @@
 import * as getListAnnounceData from '../../../lib/modelApi/list/getListAnnounceData';
-import { FormatContentModelContext } from 'roosterjs-content-model-types';
+import { ContentModelDocument, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
 import {
     createContentModelDocument,
@@ -898,6 +898,303 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+    });
+
+    it('Indent and follow previous item style', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        { format: {}, dataset: { a: 'c' }, listType: 'OL' },
+                    ],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+            ],
+        };
+
+        setModelIndentation(model, 'indent');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        { format: {}, dataset: { a: 'c' }, listType: 'OL' },
+                    ],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        {
+                            format: {},
+                            dataset: { a: 'c', editingInfo: '{"applyListStyleFromLevel":true}' },
+                            listType: 'OL',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Indent and follow next item style', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        { format: {}, dataset: { a: 'c' }, listType: 'OL' },
+                    ],
+                },
+            ],
+        };
+
+        setModelIndentation(model, 'indent');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        {
+                            format: {},
+                            dataset: { a: 'c', editingInfo: '{"applyListStyleFromLevel":true}' },
+                            listType: 'OL',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        { format: {}, dataset: { a: 'c' }, listType: 'OL' },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Indent, no style to follow', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+            ],
+        };
+
+        setModelIndentation(model, 'indent');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [{ format: {}, dataset: { a: 'b' }, listType: 'OL' }],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    levels: [
+                        { format: {}, dataset: { a: 'b' }, listType: 'OL' },
+                        {
+                            format: {},
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                            listType: 'OL',
+                        },
+                    ],
+                },
+            ],
+        });
     });
 });
 

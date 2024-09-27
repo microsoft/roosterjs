@@ -45,6 +45,8 @@ const initialState: OptionState = {
         autoHyphen: true,
         autoFraction: true,
         autoOrdinals: true,
+        autoMailto: true,
+        autoTel: true,
     },
     markdownOptions: {
         bold: true,
@@ -56,7 +58,7 @@ const initialState: OptionState = {
         handleTabKey: true,
     },
     customReplacements: emojiReplacements,
-    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache']),
+    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache', 'HandleEnterKey']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

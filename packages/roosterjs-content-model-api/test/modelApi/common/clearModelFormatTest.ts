@@ -102,12 +102,13 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, [], [], []);
+        const result = clearModelFormat(model, [], [], []);
 
         expect(model).toEqual({ blockGroupType: 'Document', blocks: [] });
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model without selection', () => {
@@ -122,7 +123,7 @@ describe('clearModelFormat', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -144,6 +145,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with text selection', () => {
@@ -161,7 +163,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -188,6 +190,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], para]]);
         expect(segments).toEqual([text2]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with link', () => {
@@ -211,7 +214,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -239,6 +242,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], para]]);
         expect(segments).toEqual([text1]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with code', () => {
@@ -260,7 +264,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -282,6 +286,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], para]]);
         expect(segments).toEqual([text1]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with text selection in whole paragraph', () => {
@@ -300,7 +305,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -328,6 +333,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], para]]);
         expect(segments).toEqual([text1, text2]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with collapsed selection', () => {
@@ -344,7 +350,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -375,6 +381,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], para]]);
         expect(segments).toEqual([marker]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with collapsed selection inside word', () => {
@@ -392,7 +399,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -447,6 +454,7 @@ describe('clearModelFormat', () => {
             text3,
         ]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with collapsed selection under list', () => {
@@ -463,7 +471,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -499,6 +507,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[list, model], para]]);
         expect(segments).toEqual([marker]);
         expect(tables).toEqual([]);
+        expect(result).toBeTrue();
     });
 
     it('Model with divider selection', () => {
@@ -516,7 +525,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -540,6 +549,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[model], divider]]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with selection under list', () => {
@@ -558,7 +568,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -600,6 +610,7 @@ describe('clearModelFormat', () => {
             },
         ]);
         expect(tables).toEqual([]);
+        expect(result).toBeTrue();
     });
 
     it('Model with selection under list, has defaultSegmentFormat', () => {
@@ -620,7 +631,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -662,6 +673,7 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([[[list, model], para]]);
         expect(segments).toEqual([text]);
         expect(tables).toEqual([]);
+        expect(result).toBeTrue();
     });
 
     it('Model with selection under quote', () => {
@@ -688,7 +700,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -774,6 +786,7 @@ describe('clearModelFormat', () => {
         ]);
         expect(segments).toEqual([text3, text4]);
         expect(tables).toEqual([]);
+        expect(result).toBeFalse();
     });
 
     it('Model with selection under table', () => {
@@ -796,7 +809,7 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables);
+        const result = clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -855,5 +868,6 @@ describe('clearModelFormat', () => {
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
     });
 });

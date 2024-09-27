@@ -33,7 +33,9 @@ export function clearModelFormat(
     blocksToClear: [ReadonlyContentModelBlockGroup[], ShallowMutableContentModelBlock][],
     segmentsToClear: ShallowMutableContentModelSegment[],
     tablesToClear: [ContentModelTable, boolean][]
-) {
+): boolean {
+    let pendingStructureChange = false;
+
     iterateSelections(
         model,
         (path, tableContext, block, segments) => {
@@ -75,14 +77,14 @@ export function clearModelFormat(
         blocksToClear.length == 1
     ) {
         segmentsToClear.splice(0, segmentsToClear.length, ...adjustWordSelection(model, marker));
-        clearListFormat(blocksToClear[0][0]);
+        pendingStructureChange = clearListFormat(blocksToClear[0][0]) || pendingStructureChange;
     } else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
         // 2. If a full block or multiple blocks are selected, clear block format
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
             clearBlockFormat(path, block);
-            clearListFormat(path);
+            pendingStructureChange = clearListFormat(path) || pendingStructureChange;
             clearContainerFormat(path, block);
         }
     }
@@ -92,6 +94,8 @@ export function clearModelFormat(
 
     // 4. Clear format for table if any
     createTablesFormat(tablesToClear);
+
+    return pendingStructureChange;
 }
 
 function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
@@ -191,6 +195,10 @@ function clearListFormat(path: ReadonlyContentModelBlockGroup[]) {
 
     if (listItem) {
         mutateBlock(listItem).levels = [];
+
+        return true;
+    } else {
+        return false;
     }
 }
 

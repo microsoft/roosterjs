@@ -7,6 +7,7 @@ import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
+import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
     EditorInputEvent,
@@ -16,46 +17,6 @@ import type {
     KeyDownEvent,
     PluginEvent,
 } from 'roosterjs-content-model-types';
-
-/**
- * Options to customize the Content Model Auto Format Plugin
- */
-export type AutoFormatOptions = {
-    /**
-     * When true, after type *, ->, -, --, => , —, > and space key a type of bullet list will be triggered. @default true
-     */
-    autoBullet?: boolean;
-
-    /**
-     * When true, after type 1, A, a, i, I followed by ., ), - or between () and space key a type of numbering list will be triggered. @default true
-     */
-    autoNumbering?: boolean;
-
-    /**
-     * When press backspace before a link, remove the hyperlink
-     */
-    autoUnlink?: boolean;
-
-    /**
-     * When paste content, create hyperlink for the pasted link
-     */
-    autoLink?: boolean;
-
-    /**
-     * Transform -- into hyphen, if typed between two words
-     */
-    autoHyphen?: boolean;
-
-    /**
-     * Transform 1/2, 1/4, 3/4 into fraction character
-     */
-    autoFraction?: boolean;
-
-    /**
-     * Transform ordinal numbers into superscript
-     */
-    autoOrdinals?: boolean;
-};
 
 /**
  * @internal
@@ -80,11 +41,13 @@ export class AutoFormatPlugin implements EditorPlugin {
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
      *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
-     *  - autoLink: A boolean that enables or disables automatic hyperlink creation when pasting or typing content. Defaults to false.
-     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
      *  - autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.
      *  - autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.
+     *  - autoLink: A boolean that enables or disables automatic hyperlink url address creation when pasting or typing content. Defaults to false.
+     *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
+     *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
+     *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -161,6 +124,8 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 autoHyphen,
                                 autoFraction,
                                 autoOrdinals,
+                                autoMailto,
+                                autoTel,
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
@@ -178,11 +143,16 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 );
                             }
 
-                            if (autoLink) {
+                            if (autoLink || autoTel || autoMailto) {
                                 shouldLink = createLinkAfterSpace(
                                     previousSegment,
                                     paragraph,
-                                    context
+                                    context,
+                                    {
+                                        autoLink,
+                                        autoTel,
+                                        autoMailto,
+                                    }
                                 );
                             }
 
@@ -243,9 +213,13 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 
     private handleContentChangedEvent(editor: IEditor, event: ContentChangedEvent) {
-        const { autoLink } = this.options;
-        if (event.source == 'Paste' && autoLink) {
-            createLink(editor);
+        const { autoLink, autoTel, autoMailto } = this.options;
+        if (event.source == 'Paste' && (autoLink || autoTel || autoMailto)) {
+            createLink(editor, {
+                autoLink,
+                autoTel,
+                autoMailto,
+            });
         }
     }
 }

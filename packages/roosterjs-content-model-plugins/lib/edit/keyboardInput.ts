@@ -1,4 +1,9 @@
-import { deleteSelection, isModifierKey, normalizeContentModel } from 'roosterjs-content-model-dom';
+import {
+    ChangeSource,
+    deleteSelection,
+    isModifierKey,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
 import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -32,6 +37,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
             {
                 scrollCaretIntoView: true,
                 rawEvent,
+                changeSource: ChangeSource.Keyboard,
             }
         );
 

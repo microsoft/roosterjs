@@ -10,7 +10,6 @@ const dropDownMenuItems = {
     [BulletListType.LongArrow]: 'LongArrow',
     [BulletListType.UnfilledArrow]: 'UnfilledArrow',
     [BulletListType.Hyphen]: 'Hyphen',
-    [BulletListType.DoubleLongArrow]: 'DoubleLongArrow',
     [BulletListType.Circle]: 'Circle',
 };
 
