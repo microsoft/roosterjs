@@ -63,7 +63,7 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('PersistCache');
+        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('HandleEnterKey');
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
