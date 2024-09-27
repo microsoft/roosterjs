@@ -12,4 +12,8 @@ export type ExperimentalFeature =
     /**
      * Workaround for the Legacy Image Edit
      */
-    | 'LegacyImageSelection';
+    | 'LegacyImageSelection'
+    /**
+     * Use Content Model handle ENTER key
+     */
+    | 'HandleEnterKey';
