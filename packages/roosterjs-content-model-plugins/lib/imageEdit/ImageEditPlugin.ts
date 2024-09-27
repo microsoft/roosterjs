@@ -68,7 +68,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
-    private imageEditInfo: ImageMetadataFormat | null = null;
+    protected imageEditInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
     private clonedImage: HTMLImageElement | null = null;
