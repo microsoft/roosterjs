@@ -430,4 +430,61 @@ describe('ImageEditPlugin', () => {
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         plugin.dispose();
     });
+
+    it('flip setEditorStyle', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                id: 'image_0',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        spyOn(editor, 'setEditorStyle').and.callThrough();
+
+        plugin.initialize(editor);
+        plugin.flipImage('horizontal');
+        plugin.dispose();
+
+        expect(editor.setEditorStyle).toHaveBeenCalledWith(
+            'imageEdit',
+            'outline-style:none!important;',
+            ['span:has(>img#image_0)']
+        );
+        expect(editor.setEditorStyle).toHaveBeenCalledWith(
+            'imageEditCaretColor',
+            'caret-color: transparent;'
+        );
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEdit', null);
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
+    });
 });
