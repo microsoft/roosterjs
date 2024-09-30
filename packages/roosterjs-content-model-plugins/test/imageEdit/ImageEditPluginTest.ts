@@ -1,6 +1,7 @@
 import * as findImage from '../../lib/imageEdit/utils/findEditingImage';
 import * as getSelectedImage from '../../lib/imageEdit/utils/getSelectedImage';
 import { ChangeSource, createImage, createParagraph } from 'roosterjs-content-model-dom';
+import { contains } from 'roosterjs-editor-dom';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
@@ -387,6 +388,96 @@ describe('ImageEditPlugin', () => {
         });
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
+        plugin.dispose();
+    });
+
+    it('mouseDown on non edit image', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: new Image(),
+            } as any,
+        });
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('mouseDown on text', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 0,
+                target: new Image(),
+            } as any,
+        });
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {} as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: new Text(),
+            } as any,
+        });
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
+        plugin.dispose();
+    });
+
+    it('mouseDown  on same line', () => {
+        const target = {
+            contains: () => true,
+        };
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 0,
+                target: new Image(),
+            } as any,
+        });
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {} as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: target,
+            } as any,
+        });
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         plugin.dispose();
     });
 
