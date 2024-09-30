@@ -195,7 +195,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.isEditing &&
             event.rawEvent.button !== MouseRightButton &&
-            !(target.contains(this.shadowSpan) || target.contains(this.wrapper))
+            !(
+                this.shadowSpan !== event.rawEvent.target &&
+                (target.contains(this.shadowSpan) || target.contains(this.wrapper))
+            )
         ) {
             this.applyFormatWithContentModel(
                 editor,
