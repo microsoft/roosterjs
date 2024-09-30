@@ -33,6 +33,8 @@ import type {
     ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
 
+const TEMP_DIV_ID = 'roosterJS_copyCutTempDiv';
+
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
  */
@@ -235,6 +237,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         div.childNodes.forEach(node => div.removeChild(node));
 
         div.style.display = '';
+        div.id = TEMP_DIV_ID;
         div.focus();
 
         return div;
