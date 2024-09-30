@@ -1,7 +1,6 @@
 import * as findImage from '../../lib/imageEdit/utils/findEditingImage';
 import * as getSelectedImage from '../../lib/imageEdit/utils/getSelectedImage';
 import { ChangeSource, createImage, createParagraph } from 'roosterjs-content-model-dom';
-import { contains } from 'roosterjs-editor-dom';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
