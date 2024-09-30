@@ -251,6 +251,7 @@ describe(ID, () => {
                                         useBorderBox: true,
                                         borderCollapse: true,
                                         textIndent: '0px',
+                                        cellSpacing: '0px',
                                     },
                                     dataset: {
                                         tablestyle: 'MsoTableGrid',

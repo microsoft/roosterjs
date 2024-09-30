@@ -24,7 +24,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         // Empty table, do not create TABLE element and just return
         return refNode;
     }
-    let previousTableContext = context.tableFormat;
+    const previousTableContext = context.tableFormat;
+    context.tableFormat = {};
 
     let tableNode = context.allowCacheElement ? table.cachedElement : undefined;
 
@@ -45,9 +46,6 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);
         applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
-        context.tableFormat = {
-            cellPadding: table.format.cellPadding,
-        };
     }
 
     context.onNodeCreated?.(table, tableNode);

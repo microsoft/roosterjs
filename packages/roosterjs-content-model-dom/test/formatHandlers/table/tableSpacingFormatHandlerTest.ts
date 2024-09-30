@@ -28,13 +28,13 @@ describe('tableSpacingFormatHandler.parse', () => {
     it('Non-collapsed border', () => {
         div.style.borderCollapse = 'separate';
         tableSpacingFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({ borderSeparate: true, cellPadding: '0' });
+        expect(format).toEqual({ borderSeparate: true });
     });
 
     it('Set border collapsed if element contains cellpadding attribute', () => {
         div.setAttribute('cellPadding', '0');
         tableSpacingFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({ borderCollapse: true });
+        expect(format).toEqual({ cellPadding: '0' });
     });
 });
 
