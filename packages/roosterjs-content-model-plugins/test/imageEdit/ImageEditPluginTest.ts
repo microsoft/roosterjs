@@ -180,6 +180,40 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('keyDown - DELETE', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        const image = createImage('');
+        const paragraph = createParagraph();
+        paragraph.segments.push(image);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 0,
+                target: mockedImage,
+            } as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'Delete',
+                target: mockedImage,
+            } as any,
+        });
+        expect(cleanInfoSpy).toHaveBeenCalled();
+        expect(cleanInfoSpy).toHaveBeenCalledTimes(1);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
     it('mouseUp', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
