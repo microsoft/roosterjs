@@ -30,6 +30,7 @@ import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     ContentModelImage,
+    DOMInsertPoint,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -191,19 +192,23 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        const target = event.rawEvent.target as Node;
-        if (
-            this.isEditing &&
-            event.rawEvent.button !== MouseRightButton &&
-            !(
-                this.shadowSpan !== event.rawEvent.target &&
-                (target.contains(this.shadowSpan) || target.contains(this.wrapper))
-            )
-        ) {
+        if (this.isEditing && event.rawEvent.button !== MouseRightButton) {
+            const target = event.rawEvent.target as Node;
+            const isClickOnImage = this.shadowSpan === target;
+            let insertPoint: DOMInsertPoint | undefined = undefined;
+            if (
+                target.contains(this.shadowSpan) &&
+                !isClickOnImage &&
+                isNodeOfType(target, 'ELEMENT_NODE')
+            ) {
+                console.log('isClickOnImage', target.offsetLeft);
+            }
             this.applyFormatWithContentModel(
                 editor,
                 this.isCropMode,
-                this.shadowSpan === event.rawEvent.target
+                isClickOnImage,
+                false /* isApiOperation */,
+                insertPoint
             );
         }
     }
@@ -255,7 +260,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         editor: IEditor,
         isCropMode: boolean,
         shouldSelectImage: boolean,
-        isApiOperation?: boolean
+        isApiOperation?: boolean,
+        newInsertPoint?: DOMInsertPoint
     ) {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
