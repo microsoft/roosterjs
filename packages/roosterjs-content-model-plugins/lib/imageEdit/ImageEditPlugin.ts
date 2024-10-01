@@ -17,6 +17,7 @@ import { updateWrapper } from './utils/updateWrapper';
 import {
     ChangeSource,
     getSafeIdSelector,
+    getSelectedParagraphs,
     isElementOfType,
     isNodeOfType,
     mutateBlock,
@@ -190,12 +191,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        const target = event.rawEvent.relatedTarget as Node;
+        const target = event.rawEvent.target as Node;
         const isClickOnImage = this.shadowSpan === target;
         if (
             this.isEditing &&
             event.rawEvent.button !== MouseRightButton &&
-            target?.contains(this.shadowSpan) &&
+            !target?.contains(this.shadowSpan) &&
             !isClickOnImage
         ) {
             this.applyFormatWithContentModel(
@@ -297,6 +298,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
                                 delete image.dataset.isEditing;
+
+                                if (selection?.type == 'range' && !selection.range.collapsed) {
+                                    const selectedParagraphs = getSelectedParagraphs(model, true);
+                                    const isImageInRange = selectedParagraphs.some(paragraph =>
+                                        paragraph.segments.includes(image)
+                                    );
+                                    if (isImageInRange) {
+                                        image.isSelected = true;
+                                    }
+                                }
                             }
                         );
 
