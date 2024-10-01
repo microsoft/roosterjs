@@ -219,4 +219,88 @@ describe('paddingFormatHandler.apply', () => {
 
         expect(ol.outerHTML).toBe('<ol></ol>');
     });
+
+    it('Table Cell handle padding', () => {
+        const tableCell = document.createElement('td');
+
+        format.paddingBottom = '10px';
+        format.paddingTop = '10px';
+        format.paddingLeft = '10px';
+        format.paddingRight = '10px';
+
+        const contextToUse: ModelToDomContext = Object.assign({}, context, <
+            Partial<ModelToDomContext>
+        >{
+            tableFormat: {
+                alreadyWroteCellPadding: false,
+            },
+        });
+
+        paddingFormatHandler.apply(format, tableCell, contextToUse);
+
+        expect(tableCell.outerHTML).toBe('<td style="padding: 10px;"></td>');
+    });
+
+    it('Table Header handle padding', () => {
+        const tableCell = document.createElement('th');
+
+        format.paddingBottom = '10px';
+        format.paddingTop = '10px';
+        format.paddingLeft = '10px';
+        format.paddingRight = '10px';
+
+        const contextToUse: ModelToDomContext = Object.assign({}, context, <
+            Partial<ModelToDomContext>
+        >{
+            tableFormat: {
+                alreadyWroteCellPadding: false,
+            },
+        });
+
+        paddingFormatHandler.apply(format, tableCell, contextToUse);
+
+        expect(tableCell.outerHTML).toBe('<th style="padding: 10px;"></th>');
+    });
+
+    it('Table Cell handle padding, padding was already applied in table', () => {
+        const tableCell = document.createElement('td');
+
+        format.paddingBottom = '10px';
+        format.paddingTop = '10px';
+        format.paddingLeft = '10px';
+        format.paddingRight = '10px';
+
+        const contextToUse: ModelToDomContext = Object.assign({}, context, <
+            Partial<ModelToDomContext>
+        >{
+            tableFormat: {
+                alreadyWroteCellPadding: true,
+            },
+        });
+
+        paddingFormatHandler.apply(format, tableCell, contextToUse);
+
+        expect(tableCell.outerHTML).toBe('<td></td>');
+    });
+
+    it('Table Header handle padding, padding was already applied in table', () => {
+        const tableCell = document.createElement('th');
+
+        format.paddingBottom = '10px';
+        format.paddingTop = '10px';
+        format.paddingLeft = '10px';
+        format.paddingRight = '10px';
+
+        const contextToUse: ModelToDomContext = Object.assign({}, context, <
+            Partial<ModelToDomContext>
+        >{
+            tableFormat: {
+                alreadyWroteCellPadding: true,
+            },
+        });
+
+        paddingFormatHandler.apply(format, tableCell, contextToUse);
+
+        expect(tableCell.outerHTML).toBe('<th></th>');
+    });
 });

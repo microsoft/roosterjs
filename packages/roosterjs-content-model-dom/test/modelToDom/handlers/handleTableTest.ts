@@ -8,6 +8,7 @@ import {
     ContentModelTable,
     ContentModelTableRow,
     ModelToDomContext,
+    PaddingFormat,
 } from 'roosterjs-content-model-types';
 
 describe('handleTable', () => {
@@ -614,5 +615,81 @@ describe('handleTable', () => {
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
         expect(onTableSpy).toHaveBeenCalledWith(div.firstChild, tableModel);
+    });
+
+    it('Regular 2 * 2 table + Cellpadding', () => {
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
+        const tdModel4 = createTableCell(1, 1, false);
+        runTest(
+            {
+                blockType: 'Table',
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
+                ],
+                format: {
+                    cellPadding: '10',
+                },
+                widths: [],
+                dataset: {},
+            },
+            '<table cellpadding="10"><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Regular 2 * 2 table all cells contains same padding, so change to use cellpadding', () => {
+        const padding: PaddingFormat = {
+            paddingBottom: '10px',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            paddingTop: '10px',
+        };
+
+        const tdModel1 = createTableCell(1, 1, false, padding);
+        const tdModel2 = createTableCell(1, 1, false, padding);
+        const tdModel3 = createTableCell(1, 1, false, padding);
+        const tdModel4 = createTableCell(1, 1, false, padding);
+        runTest(
+            {
+                blockType: 'Table',
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
+                ],
+                format: {},
+                widths: [],
+                dataset: {},
+            },
+            '<table cellpadding="10"><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Regular 2 * 2 table all cells do not contain same padding, do not use cell padding', () => {
+        const padding: PaddingFormat = {
+            paddingBottom: '10px',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            paddingTop: '10px',
+        };
+
+        const tdModel1 = createTableCell(1, 1, false, padding);
+        const tdModel2 = createTableCell(1, 1, false, padding);
+        const tdModel3 = createTableCell(1, 1, false, padding);
+        const tdModel4 = createTableCell(1, 1, false, { ...padding, paddingBottom: '11px' });
+        runTest(
+            {
+                blockType: 'Table',
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
+                ],
+                format: {},
+                widths: [],
+                dataset: {},
+            },
+            '<table><tbody><tr><td style="padding: 10px;"></td><td style="padding: 10px;"></td></tr><tr><td style="padding: 10px;"></td><td style="padding: 10px 10px 11px;"></td></tr></tbody></table>'
+        );
     });
 });

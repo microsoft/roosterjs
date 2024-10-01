@@ -63,7 +63,7 @@ export const paddingFormatHandler: FormatHandler<PaddingFormat & DirectionFormat
         }
 
         PaddingKeys.forEach(key => {
-            let value = format[key];
+            const value = format[key];
             let defaultValue: string | undefined = undefined;
 
             if (isList) {

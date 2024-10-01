@@ -31,10 +31,16 @@ describe('tableSpacingFormatHandler.parse', () => {
         expect(format).toEqual({ borderSeparate: true });
     });
 
-    it('Set border collapsed if element contains cellpadding attribute', () => {
+    it('Set cellpadding attribute', () => {
         div.setAttribute('cellPadding', '0');
         tableSpacingFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({ cellPadding: '0' });
+    });
+
+    it('Set cellspacing attribute', () => {
+        div.setAttribute('cellSpacing', '0');
+        tableSpacingFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({ cellSpacing: '0' });
     });
 });
 
@@ -68,5 +74,17 @@ describe('tableSpacingFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual(
             '<div style="border-collapse: separate; border-spacing: 0px; box-sizing: border-box;"></div>'
         );
+    });
+
+    it('Set cellpadding attribute', () => {
+        format.cellPadding = '5';
+        tableSpacingFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toEqual('<div cellpadding="5"></div>');
+    });
+
+    it('Set cellspacing attribute', () => {
+        format.cellSpacing = '5';
+        tableSpacingFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toEqual('<div style="border-spacing: 5px;"></div>');
     });
 });
