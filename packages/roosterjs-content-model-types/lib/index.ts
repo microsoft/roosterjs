@@ -296,6 +296,7 @@ export {
 export {
     ModelToDomListStackItem,
     ModelToDomListContext,
+    ModelToDomTableFormatContext,
     ModelToDomFormatContext,
 } from './context/ModelToDomFormatContext';
 export {
