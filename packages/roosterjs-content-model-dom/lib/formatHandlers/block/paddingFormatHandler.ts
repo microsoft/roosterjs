@@ -2,7 +2,7 @@ import { directionFormatHandler } from './directionFormatHandler';
 import type { FormatHandler } from '../FormatHandler';
 import type { DirectionFormat, PaddingFormat } from 'roosterjs-content-model-types';
 
-export const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
+const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
     'paddingTop',
     'paddingRight',
     'paddingBottom',
@@ -54,11 +54,19 @@ export const paddingFormatHandler: FormatHandler<PaddingFormat & DirectionFormat
         });
     },
     apply: (format, element, context) => {
+        const tagName = element.tagName;
+        const isTableCell = tagName == 'TD' || tagName == 'TH';
+        const isList = tagName == 'OL' || tagName == 'UL';
+
+        if (context.tableFormat?.alreadyWroteCellPadding && isTableCell) {
+            return;
+        }
+
         PaddingKeys.forEach(key => {
-            const value = format[key];
+            let value = format[key];
             let defaultValue: string | undefined = undefined;
 
-            if (element.tagName == 'OL' || element.tagName == 'UL') {
+            if (isList) {
                 if (
                     (format.direction == 'rtl' && key == 'paddingRight') ||
                     (format.direction != 'rtl' && key == 'paddingLeft')

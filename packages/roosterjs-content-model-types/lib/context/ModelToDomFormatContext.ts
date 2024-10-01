@@ -32,11 +32,10 @@ export interface ModelToDomListContext {
  */
 export interface ModelToDomTableFormatContext {
     /**
-     * This property holds the cellpadding attribute set in the table.
-     * And then it is used to set the padding property in each of the table cells.
-     * We do this as the cellpadding attribute in the table is deprecated.
+     * When true, it means that the padding of the inner cells of the table should not be set.
+     * As the value of all the inner cells padding is the same. So the cellpadding attribute was set in the table
      */
-    cellPadding?: string;
+    alreadyWroteCellPadding?: boolean;
 }
 
 /**

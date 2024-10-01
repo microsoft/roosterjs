@@ -46,6 +46,14 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);
         applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+
+        if (!tableNode.cellPadding) {
+            const cellPadding = getSameCellPadding(table);
+            if (cellPadding) {
+                tableNode.cellPadding = cellPadding;
+                context.tableFormat.alreadyWroteCellPadding = true;
+            }
+        }
     }
 
     context.onNodeCreated?.(table, tableNode);
@@ -156,3 +164,35 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
     return refNode;
 };
+
+function getSameCellPadding(table: ContentModelTable) {
+    let cellPadding: string | undefined;
+
+    const firstCell = table.rows[0]?.cells[0];
+    const { paddingBottom, paddingLeft, paddingRight, paddingTop } = firstCell.format;
+
+    if (
+        paddingBottom == paddingLeft &&
+        paddingBottom == paddingRight &&
+        paddingBottom == paddingTop
+    ) {
+        cellPadding = paddingBottom;
+    }
+
+    if (
+        cellPadding &&
+        table.rows.every(row =>
+            row.cells.every(
+                cell =>
+                    cell.format.paddingBottom == cellPadding &&
+                    cell.format.paddingLeft == cellPadding &&
+                    cell.format.paddingRight == cellPadding &&
+                    cell.format.paddingTop == cellPadding
+            )
+        )
+    ) {
+        return cellPadding.match(/\d+/)?.[0];
+    }
+
+    return undefined;
+}

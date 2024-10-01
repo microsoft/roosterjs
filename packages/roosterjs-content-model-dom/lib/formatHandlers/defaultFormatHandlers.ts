@@ -25,7 +25,6 @@ import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
-import { tableCellPaddingFormatHandler } from './table/tableCellPaddingFormatHandler';
 import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
@@ -80,7 +79,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     superOrSubScript: superOrSubScriptFormatHandler,
     tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
-    tableCellPadding: tableCellPaddingFormatHandler,
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
@@ -154,7 +152,6 @@ export const defaultFormatKeysPerCategory: {
     tableCell: [
         'border',
         'backgroundColor',
-        'tableCellPadding',
         'padding',
         'verticalAlign',
         'wordBreak',

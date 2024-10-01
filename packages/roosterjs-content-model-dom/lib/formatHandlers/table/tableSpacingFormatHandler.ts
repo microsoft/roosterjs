@@ -1,3 +1,4 @@
+import { isElementOfType } from '../../domUtils/isElementOfType';
 import type { FormatHandler } from '../FormatHandler';
 import type { SpacingFormat } from 'roosterjs-content-model-types';
 
@@ -47,9 +48,8 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
             element.style.borderSpacing = cellSpacing;
         }
 
-        if (!context.tableFormat) {
-            context.tableFormat = {};
+        if (format.cellPadding && isElementOfType(element, 'table')) {
+            element.cellPadding = format.cellPadding;
         }
-        context.tableFormat.cellPadding = format.cellPadding;
     },
 };
