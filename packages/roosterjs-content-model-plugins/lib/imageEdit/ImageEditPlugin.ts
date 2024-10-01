@@ -238,8 +238,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
-            if (event.rawEvent.key === 'Escape') {
-                this.removeImageWrapper();
+            if (
+                event.rawEvent.key === 'Escape' ||
+                event.rawEvent.key === 'Delete' ||
+                event.rawEvent.key === 'Backspace'
+            ) {
+                if (event.rawEvent.key === 'Escape') {
+                    this.removeImageWrapper();
+                }
+                this.cleanInfo();
             } else {
                 this.applyFormatWithContentModel(
                     editor,
@@ -624,7 +631,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         );
     }
 
-    private cleanInfo() {
+    /**
+     * Exported for testing purpose only
+     */
+    public cleanInfo() {
         this.editor?.setEditorStyle(IMAGE_EDIT_CLASS, null);
         this.editor?.setEditorStyle(IMAGE_EDIT_CLASS_CARET, null);
         this.selectedImage = null;
