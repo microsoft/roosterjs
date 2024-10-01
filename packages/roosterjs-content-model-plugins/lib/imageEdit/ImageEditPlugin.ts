@@ -14,7 +14,6 @@ import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
-
 import {
     ChangeSource,
     getSafeIdSelector,
@@ -30,7 +29,6 @@ import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
     ContentModelImage,
-    DOMInsertPoint,
     EditorPlugin,
     IEditor,
     ImageEditOperation,
@@ -192,23 +190,19 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        if (this.isEditing && event.rawEvent.button !== MouseRightButton) {
-            const target = event.rawEvent.target as Node;
-            const isClickOnImage = this.shadowSpan === target;
-            let insertPoint: DOMInsertPoint | undefined = undefined;
-            if (
-                target.contains(this.shadowSpan) &&
-                !isClickOnImage &&
-                isNodeOfType(target, 'ELEMENT_NODE')
-            ) {
-                console.log('isClickOnImage', target.offsetLeft);
-            }
+        const target = event.rawEvent.relatedTarget as Node;
+        const isClickOnImage = this.shadowSpan === target;
+        if (
+            this.isEditing &&
+            event.rawEvent.button !== MouseRightButton &&
+            target?.contains(this.shadowSpan) &&
+            !isClickOnImage
+        ) {
             this.applyFormatWithContentModel(
                 editor,
                 this.isCropMode,
                 isClickOnImage,
-                false /* isApiOperation */,
-                insertPoint
+                false /* isApiOperation */
             );
         }
     }
@@ -260,8 +254,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         editor: IEditor,
         isCropMode: boolean,
         shouldSelectImage: boolean,
-        isApiOperation?: boolean,
-        newInsertPoint?: DOMInsertPoint
+        isApiOperation?: boolean
     ) {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
