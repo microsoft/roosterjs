@@ -28,7 +28,7 @@ export interface ModelToDomListContext {
 }
 
 /**
- * Represents context for list handling
+ * Represents context for table handling
  */
 export interface ModelToDomTableFormatContext {
     /**
