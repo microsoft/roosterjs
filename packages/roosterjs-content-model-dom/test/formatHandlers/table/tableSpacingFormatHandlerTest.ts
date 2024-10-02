@@ -85,6 +85,6 @@ describe('tableSpacingFormatHandler.apply', () => {
     it('Set cellspacing attribute', () => {
         format.cellSpacing = '5';
         tableSpacingFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toEqual('<div style="border-spacing: 5px;"></div>');
+        expect(div.outerHTML).toEqual('<div cellspacing="5"></div>');
     });
 });

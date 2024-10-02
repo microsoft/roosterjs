@@ -147,7 +147,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                                 if (needCalcHeight) {
                                     rowPositions[rowEnd] =
-                                        rowPositions[row] + rect.height / zoomScale;
+                                        rowPositions[row] +
+                                        (rect.height - getPaddingInCell(td)) / zoomScale;
                                 }
                             }
                         }
@@ -339,4 +340,18 @@ function processColGroup(
     }
 
     return hasColGroup;
+}
+
+function getPaddingInCell(td: HTMLTableCellElement) {
+    let result = 0;
+
+    if (!td.style.paddingTop?.endsWith('%')) {
+        result += parseInt(td.style.paddingTop) || 0;
+    }
+
+    if (!td.style.paddingBottom?.endsWith('%')) {
+        result += parseInt(td.style.paddingBottom) || 0;
+    }
+
+    return result;
 }

@@ -41,10 +41,12 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
         }
 
         if (format.cellSpacing) {
-            const cellSpacing = format.cellSpacing.concat(
-                format.cellSpacing.endsWith('%') ? '' : 'px'
-            );
-            element.style.borderSpacing = cellSpacing;
+            element.setAttribute(CellSpacing, format.cellSpacing);
+
+            // const cellSpacing = format.cellSpacing.concat(
+            //     format.cellSpacing.endsWith('%') ? '' : 'px'
+            // );
+            // element.style.borderSpacing = cellSpacing;
         }
 
         if (format.cellPadding) {
