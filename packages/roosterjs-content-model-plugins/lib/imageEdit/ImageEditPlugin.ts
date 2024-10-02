@@ -53,6 +53,8 @@ const DefaultOptions: Partial<ImageEditOptions> = {
 
 const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
+const IMAGE_EDIT_CLASS = 'imageEdit';
+const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -66,7 +68,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
-    private imageEditInfo: ImageMetadataFormat | null = null;
+    protected imageEditInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
     private clonedImage: HTMLImageElement | null = null;
@@ -232,8 +234,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
-            if (event.rawEvent.key === 'Escape') {
-                this.removeImageWrapper();
+            if (
+                event.rawEvent.key === 'Escape' ||
+                event.rawEvent.key === 'Delete' ||
+                event.rawEvent.key === 'Backspace'
+            ) {
+                if (event.rawEvent.key === 'Escape') {
+                    this.removeImageWrapper();
+                }
+                this.cleanInfo();
             } else {
                 this.applyFormatWithContentModel(
                     editor,
@@ -384,9 +393,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
-        editor.setEditorStyle('imageEdit', `outline-style:none!important;`, [
+        editor.setEditorStyle(IMAGE_EDIT_CLASS, `outline-style:none!important;`, [
             `span:has(>img${getSafeIdSelector(this.selectedImage.id)})`,
         ]);
+
+        editor.setEditorStyle(IMAGE_EDIT_CLASS_CARET, `caret-color: transparent;`);
     }
 
     public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
@@ -606,8 +617,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         );
     }
 
-    private cleanInfo() {
-        this.editor?.setEditorStyle('imageEdit', null);
+    /**
+     * Exported for testing purpose only
+     */
+    public cleanInfo() {
+        this.editor?.setEditorStyle(IMAGE_EDIT_CLASS, null);
+        this.editor?.setEditorStyle(IMAGE_EDIT_CLASS_CARET, null);
         this.selectedImage = null;
         this.shadowSpan = null;
         this.wrapper = null;

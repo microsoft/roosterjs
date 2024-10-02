@@ -180,6 +180,40 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('keyDown - DELETE', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        const image = createImage('');
+        const paragraph = createParagraph();
+        paragraph.segments.push(image);
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 0,
+                target: mockedImage,
+            } as any,
+        });
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'Delete',
+                target: mockedImage,
+            } as any,
+        });
+        expect(cleanInfoSpy).toHaveBeenCalled();
+        expect(cleanInfoSpy).toHaveBeenCalledTimes(1);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
     it('mouseUp', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
@@ -429,5 +463,62 @@ describe('ImageEditPlugin', () => {
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
         plugin.dispose();
+    });
+
+    it('flip setEditorStyle', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
+                                id: 'image_0',
+                                maxWidth: '1800px',
+                            },
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
+                    },
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        spyOn(editor, 'setEditorStyle').and.callThrough();
+
+        plugin.initialize(editor);
+        plugin.flipImage('horizontal');
+        plugin.dispose();
+
+        expect(editor.setEditorStyle).toHaveBeenCalledWith(
+            'imageEdit',
+            'outline-style:none!important;',
+            ['span:has(>img#image_0)']
+        );
+        expect(editor.setEditorStyle).toHaveBeenCalledWith(
+            'imageEditCaretColor',
+            'caret-color: transparent;'
+        );
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEdit', null);
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
     });
 });
