@@ -29,7 +29,7 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
             format.borderSeparate = true;
         }
     },
-    apply: (format, element, context) => {
+    apply: (format, element) => {
         if (format.borderCollapse) {
             element.style.borderCollapse = BorderCollapsed;
             element.style.borderSpacing = '0';
@@ -42,11 +42,6 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
 
         if (format.cellSpacing) {
             element.setAttribute(CellSpacing, format.cellSpacing);
-
-            // const cellSpacing = format.cellSpacing.concat(
-            //     format.cellSpacing.endsWith('%') ? '' : 'px'
-            // );
-            // element.style.borderSpacing = cellSpacing;
         }
 
         if (format.cellPadding) {
