@@ -39,14 +39,7 @@ export function normalizeParagraph(paragraph: ReadonlyContentModelParagraph) {
             }
         }
 
-        if (
-            paragraph.format.whiteSpace &&
-            paragraph.segments.every(
-                seg => seg.segmentType == 'Br' || seg.segmentType == 'SelectionMarker'
-            )
-        ) {
-            delete mutateBlock(paragraph).format.whiteSpace;
-        }
+        normalizeParagraphStyle(paragraph);
     }
 
     if (!isWhiteSpacePreserved(paragraph.format.whiteSpace)) {
@@ -58,6 +51,18 @@ export function normalizeParagraph(paragraph: ReadonlyContentModelParagraph) {
     removeEmptySegments(paragraph);
 
     moveUpSegmentFormat(paragraph);
+}
+
+function normalizeParagraphStyle(paragraph: ReadonlyContentModelParagraph) {
+    // New paragraph should not have white-space style
+    if (
+        paragraph.format.whiteSpace &&
+        paragraph.segments.every(
+            seg => seg.segmentType == 'Br' || seg.segmentType == 'SelectionMarker'
+        )
+    ) {
+        delete mutateBlock(paragraph).format.whiteSpace;
+    }
 }
 
 function removeEmptySegments(block: ReadonlyContentModelParagraph) {
