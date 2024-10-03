@@ -99,4 +99,127 @@ describe('handleEnterOnParagraph', () => {
             path: [doc],
         });
     });
+
+    it('Paragraph has whiteSpace style, remove it when it is empty', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph(false, { whiteSpace: 'pre-wrap' });
+        const text1 = createText('test1');
+        const marker = createSelectionMarker();
+
+        para.segments.push(text1, marker);
+        doc.blocks.push(para);
+
+        const context: ValidDeleteSelectionContext = {
+            deleteResult: 'notDeleted',
+            insertPoint: {
+                paragraph: para,
+                marker: marker,
+                path: [doc],
+            },
+        };
+
+        handleEnterOnParagraph(context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1],
+                    format: {
+                        whiteSpace: 'pre-wrap',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(context.insertPoint).toEqual({
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                ],
+                format: {},
+            },
+            marker: marker,
+            path: [doc],
+        });
+    });
+
+    it('Paragraph has whiteSpace style, do not remove it when it is not empty', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph(false, { whiteSpace: 'pre-wrap' });
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const marker = createSelectionMarker();
+
+        para.segments.push(text1, marker, text2);
+        doc.blocks.push(para);
+
+        const context: ValidDeleteSelectionContext = {
+            deleteResult: 'notDeleted',
+            insertPoint: {
+                paragraph: para,
+                marker: marker,
+                path: [doc],
+            },
+        };
+
+        handleEnterOnParagraph(context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1],
+                    format: { whiteSpace: 'pre-wrap' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        text2,
+                    ],
+                    format: { whiteSpace: 'pre-wrap' },
+                },
+            ],
+        });
+
+        expect(context.insertPoint).toEqual({
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    text2,
+                ],
+                format: { whiteSpace: 'pre-wrap' },
+            },
+            marker: marker,
+            path: [doc],
+        });
+    });
 });

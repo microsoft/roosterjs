@@ -38,6 +38,15 @@ export function normalizeParagraph(paragraph: ReadonlyContentModelParagraph) {
                 mutateBlock(paragraph).segments.pop();
             }
         }
+
+        if (
+            paragraph.format.whiteSpace &&
+            paragraph.segments.every(
+                seg => seg.segmentType == 'Br' || seg.segmentType == 'SelectionMarker'
+            )
+        ) {
+            delete mutateBlock(paragraph).format.whiteSpace;
+        }
     }
 
     if (!isWhiteSpacePreserved(paragraph.format.whiteSpace)) {
