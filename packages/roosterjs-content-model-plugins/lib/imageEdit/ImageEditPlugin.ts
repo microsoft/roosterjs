@@ -191,19 +191,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        const target = event.rawEvent.target as Node;
-        const isClickOnImage = this.shadowSpan === target;
         if (
             this.isEditing &&
-            event.rawEvent.button !== MouseRightButton &&
-            !target?.contains(this.shadowSpan) &&
-            !isClickOnImage
+            this.isImageSelection(event.rawEvent.target as Node) &&
+            event.rawEvent.button !== MouseRightButton
         ) {
             this.applyFormatWithContentModel(
                 editor,
                 this.isCropMode,
-                isClickOnImage,
-                false /* isApiOperation */
+                this.shadowSpan === event.rawEvent.target
             );
         }
     }

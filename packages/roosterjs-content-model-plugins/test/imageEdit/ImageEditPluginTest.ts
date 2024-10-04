@@ -475,7 +475,7 @@ describe('ImageEditPlugin', () => {
             } as any,
         });
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         plugin.dispose();
     });
 
