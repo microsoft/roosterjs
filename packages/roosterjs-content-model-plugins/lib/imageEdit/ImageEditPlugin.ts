@@ -258,7 +258,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    private applyFormatWithContentModel(
+    /**
+     * EXPOSED FOR TESTING PURPOSE ONLY
+     */
+    protected applyFormatWithContentModel(
         editor: IEditor,
         isCropMode: boolean,
         shouldSelectImage: boolean,
@@ -266,6 +269,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     ) {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
+
         editor.formatContentModel(
             model => {
                 const editingImage = getSelectedImage(model);
@@ -273,6 +277,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     ? editingImage
                     : findEditingImage(model);
                 let result = false;
+
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
@@ -328,6 +333,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                     this.isEditing = false;
                     this.isCropMode = false;
+
                     if (
                         editingImage &&
                         selection?.type == 'image' &&
