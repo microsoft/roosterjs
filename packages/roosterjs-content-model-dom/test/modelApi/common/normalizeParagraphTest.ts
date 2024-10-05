@@ -809,4 +809,34 @@ describe('Move up format', () => {
             cachedElement: mockedCache,
         });
     });
+
+    it('Empty paragraph has white-space style', () => {
+        const para = createParagraph(false, { whiteSpace: 'pre-wrap' });
+        const br = createBr();
+
+        para.segments.push(br);
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [br],
+            format: {},
+        });
+    });
+
+    it('Paragraph has content and white-space style', () => {
+        const para = createParagraph(false, { whiteSpace: 'pre-wrap' });
+        const text = createText('test');
+
+        para.segments.push(text);
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [text],
+            format: { whiteSpace: 'pre-wrap' },
+        });
+    });
 });
