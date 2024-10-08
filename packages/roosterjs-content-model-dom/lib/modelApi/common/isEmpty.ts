@@ -56,9 +56,6 @@ export function isSegmentEmpty(segment: ReadonlyContentModelSegment): boolean {
         case 'Text':
             return !segment.text;
 
-        case 'Image':
-            return !segment.src;
-
         default:
             return false;
     }
