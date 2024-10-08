@@ -16,7 +16,8 @@ export function getDropAndDragHelpers(
     elementClass: ImageEditElementClass,
     helper: DragAndDropHandler<DragAndDropContext, any>,
     updateWrapper: (context: DragAndDropContext, _handle: HTMLElement) => void,
-    zoomScale: number
+    zoomScale: number,
+    useTouch: boolean
 ): DragAndDropHelper<DragAndDropContext, any>[] {
     return getEditElements(wrapper, elementClass).map(
         element =>
@@ -31,7 +32,8 @@ export function getDropAndDragHelpers(
                 },
                 updateWrapper,
                 helper,
-                zoomScale
+                zoomScale,
+                useTouch
             )
     );
 }

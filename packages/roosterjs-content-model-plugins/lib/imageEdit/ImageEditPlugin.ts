@@ -420,6 +420,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
+                const isMobileOrTable = !!editor.getEnvironment().isMobileOrTablet;
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -445,7 +446,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 this.wasImageResized = true;
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -476,7 +478,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 );
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                 ];
 
@@ -571,7 +574,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 this.isCropMode = true;
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        !!editor.getEnvironment().isMobileOrTablet
                     ),
                 ];
                 updateWrapper(

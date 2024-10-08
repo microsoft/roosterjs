@@ -54,7 +54,8 @@ describe('getDropAndDragHelpers', () => {
             elementClass,
             helper,
             () => {},
-            1
+            1,
+            false
         );
         expect(JSON.stringify(result)).toEqual(JSON.stringify(expectResult));
     }
