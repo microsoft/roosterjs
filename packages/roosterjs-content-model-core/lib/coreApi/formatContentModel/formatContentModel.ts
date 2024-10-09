@@ -7,6 +7,7 @@ import type {
     FormatContentModel,
     FormatContentModelContext,
     EditorCore,
+    ModelToDomOption,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -31,6 +32,7 @@ export const formatContentModel: FormatContentModel = (
         rawEvent,
         selectionOverride,
         scrollCaretIntoView: scroll,
+        highlightSelection,
     } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
@@ -59,13 +61,20 @@ export const formatContentModel: FormatContentModel = (
         try {
             handleImages(core, context);
 
+            let modelToDomOptions: ModelToDomOption | undefined;
+            if (!hasFocus) {
+                modelToDomOptions = Object.assign({}, modelToDomOptions, { ignoreSelection: true });
+            }
+
+            if (highlightSelection) {
+                modelToDomOptions = Object.assign({}, modelToDomOptions, {
+                    highlightSelection: true,
+                });
+            }
+
             selection =
-                core.api.setContentModel(
-                    core,
-                    model,
-                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
-                    onNodeCreated
-                ) ?? undefined;
+                core.api.setContentModel(core, model, modelToDomOptions, onNodeCreated) ??
+                undefined;
 
             handlePendingFormat(core, context, selection);
 
