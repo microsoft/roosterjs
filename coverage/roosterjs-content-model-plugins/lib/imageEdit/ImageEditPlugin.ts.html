@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.01% </span>
+                <span class="strong">82.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>228/278</span>
+                <span class='fraction'>229/279</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.65% </span>
+                <span class="strong">81.72% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>218/267</span>
+                <span class='fraction'>219/268</span>
             </div>
         
             
@@ -774,7 +774,11 @@
 <a name='L715'></a><a href='#L715'>715</a>
 <a name='L716'></a><a href='#L716'>716</a>
 <a name='L717'></a><a href='#L717'>717</a>
-<a name='L718'></a><a href='#L718'>718</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L718'></a><a href='#L718'>718</a>
+<a name='L719'></a><a href='#L719'>719</a>
+<a name='L720'></a><a href='#L720'>720</a>
+<a name='L721'></a><a href='#L721'>721</a>
+<a name='L722'></a><a href='#L722'>722</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1197,6 +1201,7 @@
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1230,11 +1235,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1242,8 +1242,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1345,6 +1352,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1913,6 +1921,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
             <span class="missing-if-branch" title="else path not taken" >E</span>if (this.selectedImage &amp;&amp; this.imageEditInfo &amp;&amp; this.wrapper &amp;&amp; this.clonedImage) {
+                const isMobileOrTable = !!editor.getEnvironment().isMobileOrTablet;
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -1938,7 +1947,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 <span class="cstat-no" title="statement not covered" >                                this.wasImageResized = true;</span>
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -1969,7 +1979,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 );
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                 ];
 &nbsp;
@@ -2064,7 +2075,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 <span class="cstat-no" title="statement not covered" >                                this.isCropMode = true;</span>
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        !!editor.getEnvironment().isMobileOrTablet
                     ),
                 ];
 <span class="cstat-no" title="statement not covered" >                updateWrapper(</span>
@@ -2215,7 +2227,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 08 2024 20:43:51 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 11 2024 14:48:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
