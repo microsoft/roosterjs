@@ -12,6 +12,7 @@ import {
 import {
     CacheSelection,
     ContentModelDocument,
+    ContentModelLink,
     ContentModelSegment,
     DOMSelection,
 } from 'roosterjs-content-model-types';
@@ -933,6 +934,63 @@ describe('domIndexerImpl.reconcileSelection', () => {
                 },
             ],
         });
+    });
+
+    it('Existing text has link', () => {
+        const node = document.createTextNode('test') as any;
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
+            isReverted: false,
+        };
+        const link: ContentModelLink = {
+            dataset: {},
+            format: {
+                href: 'test',
+            },
+        };
+        const paragraph = createParagraph();
+        const segment = createText('', {}, link);
+
+        paragraph.segments.push(segment);
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
+
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'te',
+            format: {},
+            link,
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'st',
+            format: {},
+            link,
+        };
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1, segment2],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [
+                segment1,
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                    isSelected: true,
+                    link,
+                },
+                segment2,
+            ],
+        });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 });
 

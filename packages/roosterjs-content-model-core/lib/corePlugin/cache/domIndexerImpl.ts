@@ -1,5 +1,7 @@
 import {
     EmptySegmentFormat,
+    addCode,
+    addLink,
     createParagraph,
     createSelectionMarker,
     createText,
@@ -447,6 +449,16 @@ export class DomIndexerImpl implements DomIndexer {
                 if (endOffset === undefined) {
                     const marker = createSelectionMarker(first.format);
                     newSegments.push(marker);
+
+                    if (startOffset < (textNode.nodeValue ?? '').length) {
+                        if (first.link) {
+                            addLink(marker, first.link);
+                        }
+
+                        if (first.code) {
+                            addCode(marker, first.code);
+                        }
+                    }
 
                     selectable = marker;
                     endOffset = startOffset;

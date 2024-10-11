@@ -14,10 +14,10 @@ import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
-
 import {
     ChangeSource,
     getSafeIdSelector,
+    getSelectedParagraphs,
     isElementOfType,
     isNodeOfType,
     mutateBlock,
@@ -254,7 +254,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    private applyFormatWithContentModel(
+    /**
+     * EXPOSED FOR TESTING PURPOSE ONLY
+     */
+    protected applyFormatWithContentModel(
         editor: IEditor,
         isCropMode: boolean,
         shouldSelectImage: boolean,
@@ -262,6 +265,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     ) {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
+
         editor.formatContentModel(
             model => {
                 const editingImage = getSelectedImage(model);
@@ -269,6 +273,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     ? editingImage
                     : findEditingImage(model);
                 let result = false;
+
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
@@ -301,6 +306,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
                                 delete image.dataset.isEditing;
+
+                                if (selection?.type == 'range' && !selection.range.collapsed) {
+                                    const selectedParagraphs = getSelectedParagraphs(model, true);
+                                    const isImageInRange = selectedParagraphs.some(paragraph =>
+                                        paragraph.segments.includes(image)
+                                    );
+                                    if (isImageInRange) {
+                                        image.isSelected = true;
+                                    }
+                                }
                             }
                         );
 
@@ -314,6 +329,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                     this.isEditing = false;
                     this.isCropMode = false;
+
                     if (
                         editingImage &&
                         selection?.type == 'image' &&
@@ -404,6 +420,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
+                const isMobileOrTable = !!editor.getEnvironment().isMobileOrTablet;
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -429,7 +446,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 this.wasImageResized = true;
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -460,7 +478,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 );
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        isMobileOrTable
                     ),
                 ];
 
@@ -555,7 +574,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 this.isCropMode = true;
                             }
                         },
-                        this.zoomScale
+                        this.zoomScale,
+                        !!editor.getEnvironment().isMobileOrTablet
                     ),
                 ];
                 updateWrapper(
