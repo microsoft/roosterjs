@@ -60,7 +60,6 @@ const triggerList = (
               }
     );
 };
-
 function setAnnounceData(model: ReadonlyContentModelDocument, context: FormatContentModelContext) {
     const [paragraphOrListItems] = getOperationalBlocks<ContentModelListItem>(
         model,
