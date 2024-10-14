@@ -167,6 +167,166 @@ describe('Content Model Auto Format Plugin Test', () => {
         });
     });
 
+    describe('onPluginEvent - [TAB] - keyboardListTrigger', () => {
+        function runTest(
+            event: KeyDownEvent,
+            testBullet: boolean,
+            expectResult: boolean,
+            options?: AutoFormatOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent(event);
+
+            const formatOptions = {
+                apiName: '',
+            };
+
+            const inputModel = (bullet: boolean): ContentModelDocument => ({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: bullet ? '*' : '1)',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            });
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                expect(callback).toBe(
+                    editor,
+                    (
+                        _model: ContentModelDocument,
+                        _previousSegment: ContentModelText,
+                        paragraph: ContentModelParagraph,
+                        context: FormatContentModelContext
+                    ) => {
+                        const result = keyboardListTrigger(
+                            inputModel(testBullet),
+                            paragraph,
+                            context,
+                            options!.autoBullet,
+                            options!.autoNumbering
+                        );
+                        expect(result).toBe(expectResult);
+                        const preventDefaultSpy = spyOn(event.rawEvent, 'preventDefault');
+                        if (result) {
+                            expect(context.canUndoByBackspace).toBe(true);
+                            expect(preventDefaultSpy).toHaveBeenCalled();
+                        } else {
+                            expect(context.canUndoByBackspace).toBe(false);
+                            expect(preventDefaultSpy).not.toHaveBeenCalled();
+                        }
+                        formatOptions.apiName = result ? 'autoToggleList' : '';
+                        return result;
+                    }
+                );
+                expect(options).toEqual({
+                    changeSource: 'AutoFormat',
+                    apiName: formatOptions.apiName,
+                });
+            });
+        }
+
+        it('[TAB] should trigger keyboardListTrigger bullet ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, true, true, { autoBullet: true, autoNumbering: false });
+        });
+
+        it('[TAB] should trigger keyboardListTrigger numbering ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, false, true, { autoBullet: true, autoNumbering: true });
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger numbering ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, false, false, { autoBullet: true, autoNumbering: false });
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger bullet ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, true, false, { autoBullet: false, autoNumbering: false });
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger - not tab ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Ctrl',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, true, false, { autoBullet: true, autoNumbering: true });
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger - default prevented ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: true,
+                    handledByEditFeature: false,
+                } as any,
+            };
+            runTest(event, true, false, { autoBullet: true, autoNumbering: true });
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger - handledByEditFeature', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: true,
+                } as any,
+            };
+            runTest(event, true, false, { autoBullet: true, autoNumbering: true });
+        });
+    });
+
     describe('onPluginEvent - createLink', () => {
         let createLinkSpy: jasmine.Spy;
 
