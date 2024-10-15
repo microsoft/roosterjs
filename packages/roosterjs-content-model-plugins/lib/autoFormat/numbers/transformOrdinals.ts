@@ -68,7 +68,7 @@ const ORDINAL_LENGTH = 2;
     return shouldAddSuperScript;
 }
 
-function getNumericValue(text: string, checkFullText = false): number | null {
+function getNumericValue(text: string, checkFullText: boolean = false): number | null {
     const number = checkFullText ? text : text.substring(0, text.length - ORDINAL_LENGTH);
     const isNumber = /^-?\d+$/.test(number);
     if (isNumber) {
