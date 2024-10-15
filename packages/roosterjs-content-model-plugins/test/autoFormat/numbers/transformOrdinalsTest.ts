@@ -183,4 +183,178 @@ describe('transformOrdinals', () => {
         };
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
     });
+
+    it('link - 1st', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '1',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'st',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('link - 2nd', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '2',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'nd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('link - 3rd', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '3',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'rd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('link - 4th', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '4',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('link - 123th', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '123',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('link - 3th', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '3',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+    it('link - 24e5th', () => {
+        const link: ContentModelText = {
+            segmentType: 'Text',
+            text: '24e5',
+            link: {
+                dataset: {},
+                format: {
+                    href: 'http://www.bing.com',
+                },
+            },
+            format: {},
+        };
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [link, segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
 });
