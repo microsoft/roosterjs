@@ -208,6 +208,31 @@ export class AutoFormatPlugin implements EditorPlugin {
                         unlink(editor, rawEvent);
                     }
                     break;
+                case 'Tab':
+                    formatTextSegmentBeforeSelectionMarker(
+                        editor,
+                        (model, _previousSegment, paragraph, _markerFormat, context) => {
+                            const { autoBullet, autoNumbering } = this.options;
+                            let shouldList = false;
+                            if (autoBullet || autoNumbering) {
+                                shouldList = keyboardListTrigger(
+                                    model,
+                                    paragraph,
+                                    context,
+                                    autoBullet,
+                                    autoNumbering
+                                );
+                                context.canUndoByBackspace = shouldList;
+                                event.rawEvent.preventDefault();
+                            }
+
+                            return shouldList;
+                        },
+                        {
+                            changeSource: ChangeSource.AutoFormat,
+                            apiName: 'autoToggleList',
+                        }
+                    );
             }
         }
     }
