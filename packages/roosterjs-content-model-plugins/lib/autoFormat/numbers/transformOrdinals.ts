@@ -1,4 +1,5 @@
 import { splitTextSegment } from 'roosterjs-content-model-api';
+
 import type {
     ContentModelText,
     FormatContentModelContext,
@@ -14,6 +15,8 @@ const getOrdinal = (value: number) => {
     return ORDINALS[value] || 'th';
 };
 
+const ORDINALS = ['st', 'nd', 'rd', 'th'];
+
 /**
  * The two last characters of ordinal number (st, nd, rd, th)
  */
@@ -27,10 +30,30 @@ const ORDINAL_LENGTH = 2;
     context: FormatContentModelContext
 ): boolean {
     const value = previousSegment.text.split(' ').pop()?.trim();
+    let shouldAddSuperScript = false;
     if (value) {
-        const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
-        const numericValue = getNumericValue(value); //This is the numeric part. Ex: 10th, numeric value = 10
-        if (numericValue && getOrdinal(numericValue) === ordinal) {
+        const isOrdinal = ORDINALS.indexOf(value) > -1;
+        if (isOrdinal) {
+            const index = paragraph.segments.indexOf(previousSegment);
+            const numberSegment = paragraph.segments[index - 1];
+            let numericValue: number | null = null;
+            if (
+                numberSegment &&
+                numberSegment.segmentType == 'Text' &&
+                (numericValue = getNumericValue(numberSegment.text, true /* checkFullText */)) &&
+                getOrdinal(numericValue) === value
+            ) {
+                shouldAddSuperScript = true;
+            }
+        } else {
+            const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
+            const numericValue = getNumericValue(value); //This is the numeric part. Ex: 10th, numeric value =
+            if (numericValue && getOrdinal(numericValue) === ordinal) {
+                shouldAddSuperScript = true;
+            }
+        }
+
+        if (shouldAddSuperScript) {
             const ordinalSegment = splitTextSegment(
                 previousSegment,
                 paragraph,
@@ -40,14 +63,13 @@ const ORDINAL_LENGTH = 2;
 
             ordinalSegment.format.superOrSubScriptSequence = 'super';
             context.canUndoByBackspace = true;
-            return true;
         }
     }
-    return false;
+    return shouldAddSuperScript;
 }
 
-function getNumericValue(text: string) {
-    const number = text.substring(0, text.length - ORDINAL_LENGTH);
+function getNumericValue(text: string, checkFullText: boolean = false): number | null {
+    const number = checkFullText ? text : text.substring(0, text.length - ORDINAL_LENGTH);
     const isNumber = /^-?\d+$/.test(number);
     if (isNumber) {
         return parseInt(text);
