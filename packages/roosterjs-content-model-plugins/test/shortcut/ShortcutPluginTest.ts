@@ -448,6 +448,26 @@ describe('ShortcutPlugin', () => {
             expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
         });
 
+        it('clear format', () => {
+            const apiSpy = spyOn(clearFormat, 'clearFormat');
+            const plugin = new ShortcutPlugin();
+            const event: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.SPACE, false, false, false, true),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            const exclusively = plugin.willHandleEventExclusively(event);
+
+            expect(exclusively).toBeTrue();
+            expect(event.eventDataCache!.__ShortcutCommandCache).toBeDefined();
+
+            plugin.onPluginEvent(event);
+
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+        });
+
         it('undo 1', () => {
             const apiSpy = spyOn(undo, 'undo');
             const plugin = new ShortcutPlugin();
