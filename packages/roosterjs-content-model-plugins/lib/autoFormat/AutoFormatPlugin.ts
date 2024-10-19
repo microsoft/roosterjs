@@ -1,7 +1,6 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
-import { createLinkAfterSpace } from './link/createLinkAfterSpace';
-import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
+import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
@@ -144,16 +143,15 @@ export class AutoFormatPlugin implements EditorPlugin {
                             }
 
                             if (autoLink || autoTel || autoMailto) {
-                                shouldLink = createLinkAfterSpace(
-                                    previousSegment,
-                                    paragraph,
-                                    context,
-                                    {
-                                        autoLink,
-                                        autoTel,
-                                        autoMailto,
-                                    }
-                                );
+                                shouldLink = !!promoteLink(previousSegment, paragraph, {
+                                    autoLink,
+                                    autoTel,
+                                    autoMailto,
+                                });
+
+                                if (shouldLink) {
+                                    context.canUndoByBackspace = true;
+                                }
                             }
 
                             if (autoHyphen) {
