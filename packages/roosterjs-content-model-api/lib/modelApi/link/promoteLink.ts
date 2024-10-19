@@ -1,5 +1,5 @@
 import { getLinkUrl } from './getLinkUrl';
-import { splitTextSegment } from 'roosterjs-content-model-api';
+import { splitTextSegment } from '../../publicApi/segment/splitTextSegment';
 import type {
     AutoLinkOptions,
     ContentModelText,

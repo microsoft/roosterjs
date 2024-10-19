@@ -1,4 +1,4 @@
-import { promoteLink } from 'roosterjs-content-model-api/lib';
+import { promoteLink } from 'roosterjs-content-model-api';
 import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 
 /**
