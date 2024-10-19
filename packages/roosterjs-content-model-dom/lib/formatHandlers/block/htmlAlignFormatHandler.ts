@@ -16,12 +16,15 @@ export const htmlAlignFormatHandler: FormatHandler<
     parse: (format, element, context, defaultStyle) => {
         directionFormatHandler.parse(format, element, context, defaultStyle);
 
-        const htmlAlign = element.getAttribute('align');
+        // When there is text-align in CSS style on the same element, we should ignore HTML align
+        if (!element.style.textAlign) {
+            const htmlAlign = element.getAttribute('align');
 
-        if (htmlAlign) {
-            format.htmlAlign = calcAlign(htmlAlign, format.direction);
-            delete format.textAlign;
-            delete context.blockFormat.textAlign;
+            if (htmlAlign) {
+                format.htmlAlign = calcAlign(htmlAlign, format.direction);
+                delete format.textAlign;
+                delete context.blockFormat.textAlign;
+            }
         }
     },
     apply: (format, element) => {
