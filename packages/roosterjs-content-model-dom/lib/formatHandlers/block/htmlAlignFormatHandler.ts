@@ -14,10 +14,10 @@ export const htmlAlignFormatHandler: FormatHandler<
     DirectionFormat & HtmlAlignFormat & TextAlignFormat
 > = {
     parse: (format, element, context, defaultStyle) => {
-        directionFormatHandler.parse(format, element, context, defaultStyle);
-
         // When there is text-align in CSS style on the same element, we should ignore HTML align
         if (!element.style.textAlign) {
+            directionFormatHandler.parse(format, element, context, defaultStyle);
+
             const htmlAlign = element.getAttribute('align');
 
             if (htmlAlign) {
