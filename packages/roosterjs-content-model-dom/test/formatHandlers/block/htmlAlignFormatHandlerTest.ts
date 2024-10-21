@@ -82,6 +82,15 @@ describe('htmlAlignFormatHandler.parse', () => {
             htmlAlign: 'start',
         });
     });
+
+    it('Ignore HTML align when there is CSS text-align', () => {
+        div.setAttribute('align', 'left');
+        div.style.textAlign = 'center';
+
+        htmlAlignFormatHandler.parse(format, div, context, {});
+
+        expect(format.htmlAlign).toBeUndefined();
+    });
 });
 
 describe('htmlAlignFormatHandler.apply', () => {
