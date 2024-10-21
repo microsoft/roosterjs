@@ -1,8 +1,11 @@
-import { addLink, ChangeSource } from 'roosterjs-content-model-dom';
-import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { getLinkUrl } from './getLinkUrl';
-import type { AutoLinkOptions } from '../interface/AutoLinkOptions';
-import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
+import { ChangeSource } from 'roosterjs-content-model-dom';
+import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
+import type {
+    ContentModelLink,
+    IEditor,
+    ContentModelText,
+    AutoLinkOptions,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -10,29 +13,26 @@ import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
 export function createLink(editor: IEditor, autoLinkOptions: AutoLinkOptions) {
     let anchorNode: Node | null = null;
     const links: ContentModelLink[] = [];
+
     formatTextSegmentBeforeSelectionMarker(
         editor,
-        (_model, linkSegment, _paragraph) => {
-            if (linkSegment.link) {
-                links.push(linkSegment.link);
-                return true;
-            }
-            let linkUrl: string | undefined = undefined;
-            if (!linkSegment.link && (linkUrl = getLinkUrl(linkSegment.text, autoLinkOptions))) {
-                addLink(linkSegment, {
-                    format: {
-                        href: linkUrl,
-                        underline: true,
-                    },
-                    dataset: {},
-                });
-                if (linkSegment.link) {
-                    links.push(linkSegment.link);
-                }
-                return true;
-            }
+        (_model, segment, paragraph) => {
+            let promotedSegment: ContentModelText | null = null;
 
-            return false;
+            if (segment.link) {
+                links.push(segment.link);
+
+                return true;
+            } else if (
+                (promotedSegment = promoteLink(segment, paragraph, autoLinkOptions)) &&
+                promotedSegment.link
+            ) {
+                links.push(promotedSegment.link);
+
+                return true;
+            } else {
+                return false;
+            }
         },
         {
             changeSource: ChangeSource.AutoLink,

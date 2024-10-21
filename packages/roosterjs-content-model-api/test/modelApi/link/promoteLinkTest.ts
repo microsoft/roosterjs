@@ -1,25 +1,23 @@
-import { createLinkAfterSpace } from '../../../lib/autoFormat/link/createLinkAfterSpace';
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
+import { promoteLink } from '../../../lib/modelApi/link/promoteLink';
 import {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelText,
-    FormatContentModelContext,
 } from 'roosterjs-content-model-types';
 
-describe('createLinkAfterSpace', () => {
+describe('promoteLink', () => {
     function runTest(
         previousSegment: ContentModelText,
         paragraph: ContentModelParagraph,
-        context: FormatContentModelContext,
-        expectedResult: boolean
+        expectedResult: ContentModelText | null
     ) {
-        const result = createLinkAfterSpace(previousSegment, paragraph, context, {
+        const result = promoteLink(previousSegment, paragraph, {
             autoLink: true,
             autoMailto: true,
             autoTel: true,
         });
-        expect(result).toBe(expectedResult);
+        expect(result).toEqual(expectedResult);
     }
 
     it('with link', () => {
@@ -33,7 +31,19 @@ describe('createLinkAfterSpace', () => {
             segments: [segment],
             format: {},
         };
-        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+        runTest(segment, paragraph, {
+            segmentType: 'Text',
+            text: 'http://bing.com',
+            isSelected: undefined,
+            format: {},
+            link: {
+                format: {
+                    href: 'http://bing.com',
+                    underline: true,
+                },
+                dataset: {},
+            },
+        });
     });
 
     it('No link', () => {
@@ -47,7 +57,7 @@ describe('createLinkAfterSpace', () => {
             segments: [segment],
             format: {},
         };
-        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+        runTest(segment, paragraph, null);
     });
 
     it('with  text after link ', () => {
@@ -61,7 +71,7 @@ describe('createLinkAfterSpace', () => {
             segments: [segment],
             format: {},
         };
-        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+        runTest(segment, paragraph, null);
     });
 });
 
@@ -88,8 +98,8 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
                 focus: () => {},
                 formatContentModel: formatWithContentModelSpy,
             } as any,
-            (_model, previousSegment, paragraph, _markerFormat, context) => {
-                return createLinkAfterSpace(previousSegment, paragraph, context, {
+            (_model, previousSegment, paragraph, _markerFormat) => {
+                return !!promoteLink(previousSegment, paragraph, {
                     autoLink: true,
                     autoMailto: true,
                     autoTel: true,

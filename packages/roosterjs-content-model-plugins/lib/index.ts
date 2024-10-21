@@ -6,7 +6,6 @@ export { DefaultSanitizers } from './paste/DefaultSanitizers';
 export { EditPlugin, EditOptions } from './edit/EditPlugin';
 export { AutoFormatPlugin } from './autoFormat/AutoFormatPlugin';
 export { AutoFormatOptions } from './autoFormat/interface/AutoFormatOptions';
-export { AutoLinkOptions } from './autoFormat/interface/AutoLinkOptions';
 
 export {
     ShortcutBold,

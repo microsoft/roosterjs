@@ -1,4 +1,4 @@
-import type { AutoLinkOptions } from './AutoLinkOptions';
+import type { AutoLinkOptions } from 'roosterjs-content-model-types';
 
 /**
  * Options to customize the Content Model Auto Format Plugin

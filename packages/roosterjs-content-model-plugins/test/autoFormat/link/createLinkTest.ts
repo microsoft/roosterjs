@@ -120,6 +120,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -209,6 +210,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -264,6 +266,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -319,6 +322,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -374,6 +378,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
@@ -429,6 +434,7 @@ describe('createLink', () => {
                                 },
                                 dataset: {},
                             },
+                            isSelected: undefined,
                         },
                         {
                             segmentType: 'SelectionMarker',
