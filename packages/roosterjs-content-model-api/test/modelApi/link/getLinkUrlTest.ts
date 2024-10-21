@@ -1,5 +1,5 @@
-import { AutoLinkOptions } from '../../../lib/autoFormat/interface/AutoLinkOptions';
-import { getLinkUrl } from '../../../lib/autoFormat/link/getLinkUrl';
+import { AutoLinkOptions } from 'roosterjs-content-model-types';
+import { getLinkUrl } from '../../../lib/modelApi/link/getLinkUrl';
 
 describe('getLinkUrl', () => {
     function runTest(text: string, options: AutoLinkOptions, expectedResult: string | undefined) {

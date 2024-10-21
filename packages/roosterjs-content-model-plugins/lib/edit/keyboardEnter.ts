@@ -1,4 +1,5 @@
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
+import { handleAutoLink } from './inputSteps/handleAutoLink';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
 import { handleEnterOnParagraph } from './inputSteps/handleEnterOnParagraph';
 import {
@@ -30,7 +31,9 @@ export function keyboardEnter(
                 // so further delete steps can keep working
                 result.deleteResult = 'notDeleted';
 
-                const steps = rawEvent.shiftKey ? [] : [handleEnterOnList, deleteEmptyQuote];
+                const steps = rawEvent.shiftKey
+                    ? []
+                    : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 
                 if (handleNormalEnter) {
                     steps.push(handleEnterOnParagraph);
