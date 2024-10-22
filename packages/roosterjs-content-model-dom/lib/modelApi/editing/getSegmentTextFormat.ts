@@ -6,21 +6,24 @@ import type {
 /**
  * Get the text format of a segment, this function will return only format that is applicable to text
  * @param segment The segment to get format from
+ * @param includingBIU When pass true, also get Bold/Italic/Underline format
  * @returns
  */
 export function getSegmentTextFormat(
-    segment: ReadonlyContentModelSegment
+    segment: ReadonlyContentModelSegment,
+    includingBIU?: boolean
 ): ContentModelSegmentFormat {
-    const { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight } =
-        segment?.format ?? {};
-
+    const format = segment.format ?? {};
     const textFormat: ContentModelSegmentFormat = {
-        fontFamily,
-        fontSize,
-        textColor,
-        backgroundColor,
-        letterSpacing,
-        lineHeight,
+        fontFamily: format.fontFamily,
+        fontSize: format.fontSize,
+        textColor: format.textColor,
+        backgroundColor: format.backgroundColor,
+        letterSpacing: format.letterSpacing,
+        lineHeight: format.lineHeight,
+        fontWeight: includingBIU ? format.fontWeight : undefined,
+        italic: includingBIU ? format.italic : undefined,
+        underline: includingBIU ? format.underline : undefined,
     };
 
     return removeUndefinedValues(textFormat);
