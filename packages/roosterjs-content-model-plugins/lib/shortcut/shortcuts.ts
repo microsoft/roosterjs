@@ -71,7 +71,7 @@ export const ShortcutUnderline: ShortcutCommand = {
 /**
  * Shortcut command for Clear Format
  * Windows: Ctrl + Space
- * MacOS: N/A
+ * MacOS: Meta + Space, this shortcut is the same as the default global spotlight shortcut, so it is invalid if the user keeps spotlight‘s.
  */
 export const ShortcutClearFormat: ShortcutCommand = {
     shortcutKey: {
@@ -80,7 +80,6 @@ export const ShortcutClearFormat: ShortcutCommand = {
         which: Keys.SPACE,
     },
     onClick: editor => clearFormat(editor),
-    environment: 'nonMac',
 };
 
 /**
