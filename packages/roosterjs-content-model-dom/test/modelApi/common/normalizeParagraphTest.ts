@@ -69,9 +69,9 @@ describe('Normalize text that contains space', () => {
     });
 
     it('Text ends with &nbsp;', () => {
-        runTest(['a\u00A0', 'b'], ['a ', 'b']);
-        runTest(['a\u00A0\u00A0', 'b'], ['a\u00A0 ', 'b']);
-        runTest(['a \u00A0', 'b'], ['a \u00A0', 'b']);
+        runTest(['a\u00A0', 'b'], ['a b']);
+        runTest(['a\u00A0\u00A0', 'b'], ['a\u00A0 b']);
+        runTest(['a \u00A0', 'b'], ['a \u00A0b']);
     });
 
     it('with other type of segment', () => {
@@ -166,12 +166,7 @@ describe('Normalize text that contains space', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'a ',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '\u00A0b',
+                            text: 'a \u00A0b',
                             format: {},
                         },
                     ],
@@ -528,17 +523,11 @@ describe('Move up format', () => {
             segments: [
                 {
                     segmentType: 'Text',
-                    text: 'test1',
-                    format: {},
-                },
-                {
-                    segmentType: 'Text',
-                    text: 'test2',
+                    text: 'test1test2',
                     format: {},
                 },
             ],
             format: {},
-            cachedElement: mockedCache,
         });
     });
 
