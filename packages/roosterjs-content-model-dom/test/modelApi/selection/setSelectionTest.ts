@@ -1017,11 +1017,12 @@ describe('setSelection', () => {
         const text4 = createText('test4');
         const text5 = createText('test5');
         const text6 = createText('text6');
+        const text7 = createText('text7');
 
         para1.segments.push(text1, text2);
         para2.segments.push(text3);
         para3.segments.push(text4, text5);
-        para4.segments.push(text6);
+        para4.segments.push(text6, text7);
 
         model.blocks.push(para1, para2, para4);
 
