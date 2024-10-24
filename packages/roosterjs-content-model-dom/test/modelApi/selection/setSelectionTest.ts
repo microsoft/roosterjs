@@ -1004,4 +1004,32 @@ describe('setSelection', () => {
             blocks: [],
         });
     });
+
+    it('Selects whole blocks within a block group', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const para4 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+        const text4 = createText('test4');
+        const text5 = createText('test5');
+        const text6 = createText('text6');
+
+        para1.segments.push(text1, text2);
+        para2.segments.push(text3);
+        para3.segments.push(text4, text5);
+        para4.segments.push(text6);
+
+        model.blocks.push(para1, para2, para4);
+
+        setSelection(model, para2, para3);
+
+        expect(text2.isSelected).toBeFalsy();
+        expect(text3.isSelected).toBeTrue();
+        expect(text5.isSelected).toBeTrue();
+        expect(text6.isSelected).toBeFalsy();
+    });
 });
