@@ -1093,17 +1093,13 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      */
     setZoomScale(scale: number): void {
         if (scale > 0 && scale <= 10) {
-            const oldValue = this.getZoomScale();
-
-            if (oldValue != scale) {
-                this.triggerEvent(
-                    'zoomChanged',
-                    {
-                        newZoomScale: scale,
-                    },
-                    true /*broadcast*/
-                );
-            }
+            this.triggerEvent(
+                'zoomChanged',
+                {
+                    newZoomScale: scale,
+                },
+                true /*broadcast*/
+            );
         }
     }
 
