@@ -1024,7 +1024,7 @@ describe('setSelection', () => {
         para3.segments.push(text4, text5);
         para4.segments.push(text6, text7);
 
-        model.blocks.push(para1, para2, para4);
+        model.blocks.push(para1, para2, para3, para4);
 
         setSelection(model, para2, para3);
 
