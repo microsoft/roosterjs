@@ -33,6 +33,8 @@ import type {
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const KeysOfSegmentFormat = getObjectKeys(EmptySegmentFormat);
 
+type MergeFormatTypes = 'mergeAll' | 'keepSourceEmphasisFormat' | 'preferSource' | 'preferTarget';
+
 /**
  * Merge source model into target mode
  * @param target Target Content Model that will merge content into
@@ -333,7 +335,7 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
 function applyDefaultFormat(
     group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
-    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
+    applyDefaultFormatOption: MergeFormatTypes
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
@@ -414,39 +416,51 @@ function getSegmentFormatInLinkFormat(
 }
 
 function mergeLinkFormat(
-    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    applyDefaultFormatOption: MergeFormatTypes,
     targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelHyperLinkFormat
 ) {
-    return applyDefaultFormatOption == 'mergeAll'
-        ? { ...getSegmentFormatInLinkFormat(targetFormat), ...sourceFormat }
-        : {
-              // Hyperlink segment format contains other attributes such as LinkFormat
-              // so we have to retain them
-              ...getFormatWithoutSegmentFormat(sourceFormat),
-              // Link format only have Text color, background color, Underline, but only
-              // text color + background color should be merged from the target
-              ...getSegmentFormatInLinkFormat(targetFormat),
-              // Get the semantic format of the source
-              ...getSemanticFormat(sourceFormat),
-              // The text color of the hyperlink should not be merged and
-              // we should always retain the source text color
-              ...getHyperlinkTextColor(sourceFormat),
-          };
+    switch (applyDefaultFormatOption) {
+        case 'mergeAll':
+        case 'preferSource':
+            return { ...getSegmentFormatInLinkFormat(targetFormat), ...sourceFormat };
+        case 'keepSourceEmphasisFormat':
+            return {
+                // Hyperlink segment format contains other attributes such as LinkFormat
+                // so we have to retain them
+                ...getFormatWithoutSegmentFormat(sourceFormat),
+                // Link format only have Text color, background color, Underline, but only
+                // text color + background color should be merged from the target
+                ...getSegmentFormatInLinkFormat(targetFormat),
+                // Get the semantic format of the source
+                ...getSemanticFormat(sourceFormat),
+                // The text color of the hyperlink should not be merged and
+                // we should always retain the source text color
+                ...getHyperlinkTextColor(sourceFormat),
+            };
+        case 'preferTarget':
+            return { ...sourceFormat, ...getSegmentFormatInLinkFormat(targetFormat) };
+    }
 }
 
 function mergeSegmentFormat(
-    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    applyDefaultFormatOption: MergeFormatTypes,
     targetFormat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {
-    return applyDefaultFormatOption == 'mergeAll'
-        ? { ...targetFormat, ...sourceFormat }
-        : {
-              ...getFormatWithoutSegmentFormat(sourceFormat),
-              ...targetFormat,
-              ...getSemanticFormat(sourceFormat),
-          };
+    switch (applyDefaultFormatOption) {
+        case 'mergeAll':
+        case 'preferSource':
+            return { ...targetFormat, ...sourceFormat };
+        case 'preferTarget':
+            return { ...sourceFormat, ...targetFormat };
+        case 'keepSourceEmphasisFormat':
+            return {
+                ...getFormatWithoutSegmentFormat(sourceFormat),
+                ...targetFormat,
+                ...getSemanticFormat(sourceFormat),
+            };
+    }
 }
 
 function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
