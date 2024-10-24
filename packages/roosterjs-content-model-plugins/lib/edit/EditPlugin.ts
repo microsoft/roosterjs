@@ -150,6 +150,7 @@ export class EditPlugin implements EditorPlugin {
 
     private handleKeyDownEvent(editor: IEditor, event: KeyDownEvent) {
         const rawEvent = event.rawEvent;
+        const hasCtrlOrMetaKey = rawEvent.ctrlKey || rawEvent.metaKey;
 
         if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             switch (rawEvent.key) {
@@ -169,7 +170,7 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Tab':
-                    if (this.options.handleTabKey) {
+                    if (this.options.handleTabKey && !hasCtrlOrMetaKey) {
                         keyboardTab(editor, rawEvent);
                     }
                     break;
@@ -180,7 +181,9 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
-                    keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                    if (!hasCtrlOrMetaKey) {
+                        keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                    }
                     break;
 
                 default:
