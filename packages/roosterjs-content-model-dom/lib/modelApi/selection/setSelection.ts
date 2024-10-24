@@ -40,9 +40,9 @@ function setSelectionToBlockGroup(
         const blocksToDelete: number[] = [];
 
         group.blocks.forEach((block, i) => {
-            isInSelection = handleSelection(isInSelection, block, start, end, isInSelection =>
-                setSelectionToBlock(block, isInSelection, start, end)
-            );
+            isInSelection = handleSelection(isInSelection, block, start, end, isInSelection => {
+                return setSelectionToBlock(block, isInSelection, start, end);
+            });
 
             if (block.blockType == 'Paragraph' && block.segments.length == 0 && block.isImplicit) {
                 blocksToDelete.push(i);
