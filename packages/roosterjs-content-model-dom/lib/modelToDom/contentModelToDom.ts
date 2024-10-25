@@ -36,6 +36,8 @@ export function contentModelToDom(
         (model as ContentModelDocumentWithPersistedCache).persistCache = true;
     }
 
+    root.normalize();
+
     return range;
 }
 

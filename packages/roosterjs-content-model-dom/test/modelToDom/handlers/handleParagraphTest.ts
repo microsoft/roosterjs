@@ -431,7 +431,7 @@ describe('handleParagraph', () => {
         expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
         expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
 
-        optimize(parent);
+        optimize(parent, context);
 
         expect(parent.innerHTML).toBe(
             '<div style="white-space: pre;">test1</div><div style="white-space: pre;">test2</div><br>'
@@ -584,6 +584,7 @@ describe('handleParagraph', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            onMergeText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -630,6 +631,7 @@ describe('handleParagraph', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            onMergeText: null!,
         };
 
         context.domIndexer = domIndexer;
