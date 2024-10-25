@@ -62,7 +62,7 @@ export function deleteExpandedSelection(
                     // so we can put cursor here after delete
                     paragraph = block;
                     insertMarkerIndex = indexes[0];
-                    markerFormat = getSegmentTextFormat(segments[0]);
+                    markerFormat = getSegmentTextFormat(segments[0], true /*includingBIU*/);
 
                     context.lastParagraph = paragraph;
                     context.lastTableContext = tableContext;

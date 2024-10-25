@@ -19,14 +19,21 @@ export interface MergeModelOption {
 
     /**
      * Use this to decide whether to change the source model format when doing the merge.
-     * 'mergeAll': segment format of the insert position will be merged into the content that is merged into current model.
+     * 'mergeAll': (deprecated) Use PreferSource Instead, segment format of the insert position will be merged into the content that is merged into current model.
      * If the source model already has some format, it will not be overwritten.
      * 'keepSourceEmphasisFormat': format of the insert position will be set into the content that is merged into current model.
      * If the source model already has emphasis format, such as, fontWeight, Italic or underline different than the default style, it will not be overwritten.
      * 'none' the source segment format will not be modified.
+     * 'preferSource' Will merge both formatting, but source will overwrite target
+     * 'preferTarget' Will merge both formatting, but target will overwrite source
      * @default undefined
      */
-    mergeFormat?: 'mergeAll' | 'keepSourceEmphasisFormat' | 'none';
+    mergeFormat?:
+        | 'mergeAll'
+        | 'keepSourceEmphasisFormat'
+        | 'none'
+        | 'preferSource'
+        | 'preferTarget';
 
     /**
      * Whether to add a paragraph after the merged content.

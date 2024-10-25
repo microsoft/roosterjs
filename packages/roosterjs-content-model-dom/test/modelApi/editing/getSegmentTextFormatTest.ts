@@ -11,6 +11,7 @@ describe('getSegmentTextFormat', () => {
             backgroundColor: 'blue',
             letterSpacing: '1px',
             lineHeight: '1.5',
+            fontWeight: 'bold',
         });
         expect(getSegmentTextFormat(segment)).toEqual({
             fontFamily: 'Arial',
@@ -47,6 +48,31 @@ describe('getSegmentTextFormat', () => {
             fontFamily: 'Arial',
             backgroundColor: 'blue',
             letterSpacing: '1px',
+        });
+    });
+
+    it('get format including B/I/U', () => {
+        const segment = createText('test', {
+            fontFamily: 'Arial',
+            fontSize: '12px',
+            textColor: 'red',
+            backgroundColor: 'blue',
+            letterSpacing: '1px',
+            lineHeight: '1.5',
+            fontWeight: 'bold',
+            italic: true,
+            underline: false,
+        });
+        expect(getSegmentTextFormat(segment, true)).toEqual({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+            textColor: 'red',
+            backgroundColor: 'blue',
+            letterSpacing: '1px',
+            lineHeight: '1.5',
+            fontWeight: 'bold',
+            italic: true,
+            underline: false,
         });
     });
 });
