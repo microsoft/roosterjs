@@ -145,6 +145,10 @@ function getIndexedTableItem(element: HTMLTableElement): TableItem | null {
     }
 }
 
+function unindex(node: Node) {
+    delete (node as any).__roosterjsContentModel;
+}
+
 /**
  * @internal
  * Implementation of DomIndexer
@@ -195,6 +199,18 @@ export class DomIndexerImpl implements DomIndexer {
     onBlockEntity(entity: ContentModelEntity, group: ContentModelBlockGroup) {
         this.onBlockEntityDelimiter(entity.wrapper.previousSibling, entity, group);
         this.onBlockEntityDelimiter(entity.wrapper.nextSibling, entity, group);
+    }
+
+    onMergeText(targetText: Text, sourceText: Text) {
+        if (isIndexedSegment(targetText) && isIndexedSegment(sourceText)) {
+            targetText.__roosterjsContentModel.segments.push(
+                ...sourceText.__roosterjsContentModel.segments
+            );
+        } else {
+            unindex(targetText);
+        }
+
+        unindex(sourceText);
     }
 
     reconcileSelection(
