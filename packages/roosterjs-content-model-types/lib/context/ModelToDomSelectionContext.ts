@@ -14,6 +14,11 @@ export interface ModelToDomBlockAndSegmentNode {
      * Segment node of this position. When provided, it represents the position right after this node
      */
     segment: Node | null;
+
+    /**
+     * Offset number of this position. It is only used for Text node, default value is 0
+     */
+    offset?: number;
 }
 
 /**
