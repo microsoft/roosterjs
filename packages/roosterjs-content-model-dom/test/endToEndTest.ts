@@ -2199,4 +2199,31 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<div style="font-family: Calibri; font-size: 11pt; color: rgb(245, 212, 39);"><a href="http://www.bing.com" style="color: rgb(245, 212, 39);">www.bing.com</a></div>'
         );
     });
+
+    it('HTML align together with CSS text-align', () => {
+        runTest(
+            '<div align="left" style="text-align:center">test</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            textAlign: 'center',
+                        },
+                        isImplicit: false,
+                    },
+                ],
+            },
+            'test',
+            '<div style="text-align: center;">test</div>'
+        );
+    });
 });

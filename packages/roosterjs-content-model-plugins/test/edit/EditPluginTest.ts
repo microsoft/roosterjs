@@ -183,6 +183,26 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
+        it('Ctrl+Enter, nothing happens', () => {
+            plugin = new EditPlugin();
+            const rawEvent = { which: 13, key: 'Enter', ctrlKey: true } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.takeSnapshot = addUndoSnapshotSpy;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
         it('Other key', () => {
             plugin = new EditPlugin();
             const rawEvent = { which: 41, key: 'A' } as any;
