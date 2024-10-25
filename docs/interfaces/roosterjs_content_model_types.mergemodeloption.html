@@ -105,7 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">add<wbr>Paragraph<wbr>After<wbr>Merged<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/09531d8/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L34">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eaf810b/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L41">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -120,7 +120,7 @@
 					<div class="tsd-signature tsd-kind-icon">insert<wbr>Position<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.insertpoint.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertPoint</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/09531d8/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L18">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eaf810b/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L18">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -137,20 +137,22 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="mergeformat" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> merge<wbr>Format</h3>
-					<div class="tsd-signature tsd-kind-icon">merge<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;mergeAll&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;keepSourceEmphasisFormat&quot;</span></div>
+					<div class="tsd-signature tsd-kind-icon">merge<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;mergeAll&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;keepSourceEmphasisFormat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preferSource&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preferTarget&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/09531d8/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L29">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eaf810b/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L31">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Use this to decide whether to change the source model format when doing the merge.
-								&#39;mergeAll&#39;: segment format of the insert position will be merged into the content that is merged into current model.
+								&#39;mergeAll&#39;: (deprecated) Use PreferSource Instead, segment format of the insert position will be merged into the content that is merged into current model.
 								If the source model already has some format, it will not be overwritten.
 								&#39;keepSourceEmphasisFormat&#39;: format of the insert position will be set into the content that is merged into current model.
 								If the source model already has emphasis format, such as, fontWeight, Italic or underline different than the default style, it will not be overwritten.
-							&#39;none&#39; the source segment format will not be modified.</p>
+								&#39;none&#39; the source segment format will not be modified.
+								&#39;preferSource&#39; Will merge both formatting, but source will overwrite target
+							&#39;preferTarget&#39; Will merge both formatting, but target will overwrite source</p>
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>default</dt>
@@ -165,7 +167,7 @@
 					<div class="tsd-signature tsd-kind-icon">merge<wbr>Table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/09531d8/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L12">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eaf810b/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L12">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
