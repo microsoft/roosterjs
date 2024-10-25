@@ -44,5 +44,11 @@ describe('createImageCropper', () => {
         ] as HTMLDivElement[];
 
         expect(JSON.stringify(croppers)).toEqual(JSON.stringify(expectedCropper));
+
+        cropCenterDiv.remove();
+        cropOverlayTopLeftDiv.remove();
+        cropOverlayTopRightDiv.remove();
+        cropOverlayBottomLeftDiv.remove();
+        cropOverlayBottomRightDiv.remove();
     });
 });
