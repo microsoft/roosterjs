@@ -145,8 +145,9 @@ function getIndexedTableItem(element: HTMLTableElement): TableItem | null {
     }
 }
 
-function unindex(node: Node) {
-    delete (node as any).__roosterjsContentModel;
+// Make a node not indexed. Do not export this function since we should not let code outside here know this detail
+function unindex(node: Partial<IndexedSegmentNode>) {
+    delete node.__roosterjsContentModel;
 }
 
 /**
@@ -203,14 +204,17 @@ export class DomIndexerImpl implements DomIndexer {
 
     onMergeText(targetText: Text, sourceText: Text) {
         if (isIndexedSegment(targetText) && isIndexedSegment(sourceText)) {
-            targetText.__roosterjsContentModel.segments.push(
-                ...sourceText.__roosterjsContentModel.segments
-            );
+            if (targetText.nextSibling == sourceText) {
+                targetText.__roosterjsContentModel.segments.push(
+                    ...sourceText.__roosterjsContentModel.segments
+                );
+
+                unindex(sourceText);
+            }
         } else {
+            unindex(sourceText);
             unindex(targetText);
         }
-
-        unindex(sourceText);
     }
 
     reconcileSelection(

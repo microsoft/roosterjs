@@ -48,8 +48,8 @@ function normalizeTextNode(root: Node, context: ModelToDomContext) {
         } else {
             const originalLength = lastText.nodeValue?.length ?? 0;
 
-            lastText.nodeValue += child.nodeValue ?? '';
             context.domIndexer?.onMergeText(lastText, child);
+            lastText.nodeValue += child.nodeValue ?? '';
 
             if (selection) {
                 updateSelection(selection.start, lastText, child, originalLength);
