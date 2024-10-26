@@ -4035,4 +4035,1759 @@ describe('mergeModel', () => {
             ],
         });
     });
+
+    // #region preferTarget
+
+    it('Use customized insert position', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker({ fontSize: '10pt' });
+        const marker3 = createSelectionMarker();
+
+        para1.segments.push(marker1, text1, marker2, text2, marker3);
+        majorModel.blocks.push(para1);
+
+        const newPara = createParagraph();
+        const newText = createText('new text');
+
+        newPara.segments.push(newText);
+        sourceModel.blocks.push(newPara);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker: marker2,
+                    paragraph: para1,
+                    path: [majorModel],
+                },
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
+                    format: {},
+                },
+                marker2,
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {},
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(result).toEqual({
+            marker: marker2,
+            paragraph,
+            path: [majorModel],
+        });
+    });
+
+    it('Merge with default format paragraph and paragraph with decorator, preferTarget', () => {
+        const MockedFormat = {
+            fontFamily: 'Target',
+            fontWeight: 'Target',
+            italic: 'Target',
+            underline: 'Target',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontFamily: 'sourceFontFamily',
+                                italic: true,
+                                underline: true,
+                                fontSize: 'sourcefontSize',
+                            },
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontWeight: 'sourceDecoratorFontWeight',
+                            fontSize: 'sourceDecoratorFontSize',
+                            fontFamily: 'sourceDecoratorFontName',
+                        },
+                    },
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeFormat: 'preferTarget',
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontFamily: 'Target',
+                        fontWeight: 'Target',
+                        italic: 'Target' as any,
+                        underline: 'Target' as any,
+                        fontSize: 'sourcefontSize',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+            decorator: {
+                tagName: 'h1',
+                format: {
+                    fontWeight: 'sourceDecoratorFontWeight',
+                    fontSize: 'sourceDecoratorFontSize',
+                    fontFamily: 'sourceDecoratorFontName',
+                },
+            },
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+            format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Table + Paragraph', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeFormat: 'preferTarget',
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'Test',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'black',
+                        fontWeight: 'bold',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+            segmentFormat: { fontFamily: 'Calibri', fontSize: '11pt', textColor: 'black' },
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                paragraph,
+            ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newImages: [],
+            newEntities: [],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferTarget',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge two Images', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const newImage1: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage, newImage1],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newImages: [],
+            newEntities: [],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferTarget',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
+                newImage1,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [newImage, newImage1],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge into a paragraph with image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const marker = createSelectionMarker();
+
+        para1.segments.push(image, marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [image],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferTarget',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                image,
+                newImage,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [image, newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Link Format with preferTarget option', () => {
+        const newTarget: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const mergeLinkSourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+        mergeModel(newTarget, mergeLinkSourceModel, undefined, {
+            mergeFormat: 'preferTarget',
+        });
+
+        const para = newTarget.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                backgroundColor: 'rgb(32, 31, 30)',
+                underline: true,
+            },
+            dataset: {},
+        });
+    });
+
+    it('Merge Link Format with preferTarget option 2', () => {
+        const targetModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+
+        mergeModel(targetModel, sourceModel, undefined, {
+            mergeFormat: 'preferTarget',
+        });
+
+        const para = targetModel.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                underline: true,
+                backgroundColor: 'rgb(32, 31, 30)',
+            },
+            dataset: {},
+        });
+    });
+    // #endregion
+
+    // #region preferSource
+
+    it('Use customized insert position', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker({ fontSize: '10pt' });
+        const marker3 = createSelectionMarker();
+
+        para1.segments.push(marker1, text1, marker2, text2, marker3);
+        majorModel.blocks.push(para1);
+
+        const newPara = createParagraph();
+        const newText = createText('new text');
+
+        newPara.segments.push(newText);
+        sourceModel.blocks.push(newPara);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker: marker2,
+                    paragraph: para1,
+                    path: [majorModel],
+                },
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
+                    format: {},
+                },
+                marker2,
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    format: {},
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(result).toEqual({
+            marker: marker2,
+            paragraph,
+            path: [majorModel],
+        });
+    });
+
+    it('Merge with default format paragraph and paragraph with decorator, preferSource', () => {
+        const MockedFormat = {
+            fontFamily: 'mocked',
+            fontWeight: 'ToBeRemoved',
+            italic: 'ToBeRemoved',
+            underline: 'ToBeRemoved',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontFamily: 'sourceFontFamily',
+                                italic: true,
+                                underline: true,
+                                fontSize: 'sourcefontSize',
+                            },
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontWeight: 'sourceDecoratorFontWeight',
+                            fontSize: 'sourceDecoratorFontSize',
+                            fontFamily: 'sourceDecoratorFontName',
+                        },
+                    },
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeFormat: 'preferSource',
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontWeight: 'sourceDecoratorFontWeight',
+                        italic: true,
+                        underline: true,
+                        fontFamily: 'sourceFontFamily',
+                        fontSize: 'sourcefontSize',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+            decorator: {
+                tagName: 'h1',
+                format: {
+                    fontWeight: 'sourceDecoratorFontWeight',
+                    fontSize: 'sourceDecoratorFontSize',
+                    fontFamily: 'sourceDecoratorFontName',
+                },
+            },
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+            format: MockedFormat,
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Table + Paragraph', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeFormat: 'preferSource',
+            }
+        );
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'Test',
+                    format: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'black',
+                        fontWeight: 'bold',
+                    },
+                },
+                marker,
+            ],
+            format: {},
+            segmentFormat: { fontFamily: 'Calibri', fontSize: '11pt', textColor: 'black' },
+        };
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                paragraph,
+            ],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newImages: [],
+            newEntities: [],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferSource',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge two Images', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const newImage1: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage, newImage1],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newImages: [],
+            newEntities: [],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferSource',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                newImage,
+                newImage1,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [newImage, newImage1],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge into a paragraph with image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const marker = createSelectionMarker();
+
+        para1.segments.push(image, marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [image],
+        };
+
+        const result = mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'preferSource',
+        });
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                image,
+                newImage,
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [image, newImage],
+        });
+        expect(result).toEqual({
+            marker,
+            paragraph,
+            path: [majorModel],
+            tableContext: undefined,
+        });
+    });
+
+    it('Merge Link Format with preferSource option', () => {
+        const newTarget: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const mergeLinkSourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+        mergeModel(newTarget, mergeLinkSourceModel, undefined, {
+            mergeFormat: 'preferSource',
+        });
+
+        const para = newTarget.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                backgroundColor: 'rgb(32, 31, 30)',
+                underline: true,
+            },
+            dataset: {},
+        });
+    });
+
+    it('Merge Link Format with preferSource option 2', () => {
+        const targetModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                            },
+                        },
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: '#000000',
+                    },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '11pt',
+                textColor: '#000000',
+            },
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Work Item 222824',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                underline: true,
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://www.bing.com',
+                                    anchorClass: 'bolt-link',
+                                    textColor:
+                                        'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                                    backgroundColor: 'rgb(32, 31, 30)',
+                                    borderRadius: '2px',
+                                    textAlign: 'start',
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily:
+                                    '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                                fontSize: '14px',
+                                textColor: 'rgb(255, 255, 255)',
+                                italic: false,
+                                backgroundColor: 'rgb(32, 31, 30)',
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                    segmentFormat: {
+                        fontFamily:
+                            '"Segoe UI VSS (Regular)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+                        fontSize: '14px',
+                    },
+                },
+            ],
+        };
+
+        mergeModel(targetModel, sourceModel, undefined, {
+            mergeFormat: 'preferSource',
+        });
+
+        const para = targetModel.blocks[0] as ContentModelParagraph;
+        expect(para.segments[0].link).toEqual({
+            format: {
+                href: 'https://www.bing.com',
+                anchorClass: 'bolt-link',
+                borderRadius: '2px',
+                textAlign: 'start',
+                textColor: 'var(--communication-foreground,rgba(0, 90, 158, 1))',
+                underline: true,
+                backgroundColor: 'rgb(32, 31, 30)',
+            },
+            dataset: {},
+        });
+    });
+
+    // #endregion
 });
