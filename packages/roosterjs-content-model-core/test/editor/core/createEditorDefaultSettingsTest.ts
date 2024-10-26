@@ -1,6 +1,5 @@
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import { tablePreProcessor } from '../../../lib/override/tablePreProcessor';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
@@ -23,22 +22,11 @@ describe('createDomToModelSettings', () => {
         const settings = createDomToModelSettings({});
 
         expect(settings).toEqual({
-            builtIn: {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
+            builtIn: {},
             customized: {},
             calculated: mockedCalculatedConfig,
         });
-        expect(createDomToModelContext.createDomToModelConfig).toHaveBeenCalledWith([
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            {},
-        ]);
+        expect(createDomToModelContext.createDomToModelConfig).toHaveBeenCalledWith([{}, {}]);
     });
 
     it('Has options', () => {
@@ -48,20 +36,12 @@ describe('createDomToModelSettings', () => {
         });
 
         expect(settings).toEqual({
-            builtIn: {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
+            builtIn: {},
             customized: defaultDomToModelOptions,
             calculated: mockedCalculatedConfig,
         });
         expect(createDomToModelContext.createDomToModelConfig).toHaveBeenCalledWith([
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
+            {},
             defaultDomToModelOptions,
         ]);
     });

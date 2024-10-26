@@ -4,9 +4,9 @@ import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
-import { ChangeSource, tableProcessor } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
 import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import {
     CachedElementHandler,
     ContentModelDocument,
@@ -198,9 +198,6 @@ describe('Editor', () => {
 
         expect(model).toBe(mockedClonedModel);
         expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor,
-            },
             tryGetFromCache: false,
         });
         expect(transformColorSpy).not.toHaveBeenCalled();
@@ -212,9 +209,6 @@ describe('Editor', () => {
 
         expect(model).toBe(mockedClonedModel);
         expect(createContentModelSpy).toHaveBeenCalledWith(mockedCore, {
-            processorOverride: {
-                table: tableProcessor,
-            },
             tryGetFromCache: false,
         });
         expect(transformColorSpy).toHaveBeenCalledWith(
