@@ -4080,12 +4080,7 @@ describe('mergeModel', () => {
                 },
                 {
                     segmentType: 'Text',
-                    text: 'test1',
-                    format: {},
-                },
-                {
-                    segmentType: 'Text',
-                    text: 'new text',
+                    text: 'test1new text',
                     format: {},
                 },
                 marker2,
@@ -4957,12 +4952,7 @@ describe('mergeModel', () => {
                 },
                 {
                     segmentType: 'Text',
-                    text: 'test1',
-                    format: {},
-                },
-                {
-                    segmentType: 'Text',
-                    text: 'new text',
+                    text: 'test1new text',
                     format: {},
                 },
                 marker2,
