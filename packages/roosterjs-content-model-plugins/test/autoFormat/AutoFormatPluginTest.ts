@@ -1044,12 +1044,17 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             const segment: ContentModelText = {
                 segmentType: 'Text',
-                text: 'test--test',
+                text: 'test--test ',
                 format: {},
+            };
+            const selectionMarker: ContentModelSelectionMarker = {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
             };
             const paragraph: ContentModelParagraph = {
                 blockType: 'Paragraph',
-                segments: [segment],
+                segments: [segment, selectionMarker],
                 format: {},
             };
             const model: ContentModelDocument = {
@@ -1092,15 +1097,20 @@ describe('Content Model Auto Format Plugin Test', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test—tes',
+                                    text: 'test—test',
                                     format: {},
                                     isSelected: undefined,
                                 },
                                 {
                                     segmentType: 'Text',
-                                    text: 't',
+                                    text: ' ',
                                     format: {},
                                     isSelected: undefined,
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
@@ -1129,8 +1139,13 @@ describe('Content Model Auto Format Plugin Test', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test--test',
+                                    text: 'test--test ',
                                     format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
@@ -1163,8 +1178,13 @@ describe('Content Model Auto Format Plugin Test', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test--test',
+                                    text: 'test--test ',
                                     format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
