@@ -12,6 +12,10 @@ describe('createImageResizer', () => {
         const result = createImageResizer(document);
         const resizers = [...createCorners(), ...createSides()].filter(element => !!element);
         expect(result).toEqual(resizers);
+
+        result.forEach((resizer, index) => {
+            resizer.remove();
+        });
     });
 });
 

@@ -148,6 +148,10 @@ describe('ImageEditPlugin', () => {
         } as any;
     });
 
+    afterEach(() => {
+        editor = null!;
+    });
+
     it('keyDown', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
@@ -719,6 +723,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
         plugin.dispose();
         editor.dispose();
         editor = null;
+        mockedImage.remove();
     }
 
     it('image to text', () => {

@@ -77,7 +77,7 @@ describe('createImageWrapper', () => {
             rotators: [],
             croppers: [],
         });
-        document.body.removeChild(imageSpan);
+        imageSpan.remove();
     });
 
     it('rotate', () => {
@@ -124,7 +124,7 @@ describe('createImageWrapper', () => {
             rotators: rotator,
             croppers: [],
         });
-        document.body.removeChild(imageSpan);
+        imageSpan.remove();
     });
 
     it('crop', () => {
@@ -179,7 +179,7 @@ describe('createImageWrapper', () => {
             rotators: [],
             croppers: cropper,
         });
-        document.body.removeChild(imageSpan);
+        imageSpan.remove();
     });
 });
 

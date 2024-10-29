@@ -15,6 +15,6 @@ describe('createImageRotator', () => {
         const expectedRotator = div.firstElementChild! as HTMLDivElement;
 
         expect(result).toEqual([expectedRotator]);
-        document.body.removeChild(div);
+        div.remove();
     });
 });
