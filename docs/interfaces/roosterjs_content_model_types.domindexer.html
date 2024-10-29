@@ -90,6 +90,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domindexer.html#onblockentity" class="tsd-kind-icon">on<wbr>Block<wbr>Entity</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domindexer.html#onmergetext" class="tsd-kind-icon">on<wbr>Merge<wbr>Text</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domindexer.html#onparagraph" class="tsd-kind-icon">on<wbr>Paragraph</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domindexer.html#onsegment" class="tsd-kind-icon">on<wbr>Segment</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domindexer.html#ontable" class="tsd-kind-icon">on<wbr>Table</a></li>
@@ -109,7 +110,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Block<wbr>Entity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.contentmodelentity.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEntity</a>, group<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#contentmodelblockgroup" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelBlockGroup</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L44">roosterjs-content-model-types/lib/context/DomIndexer.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L44">roosterjs-content-model-types/lib/context/DomIndexer.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -148,12 +149,61 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="onmergetext" class="tsd-anchor"></a>
+					<h3>on<wbr>Merge<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Merge<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>targetText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Text</span>, sourceText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Text</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L53">roosterjs-content-model-types/lib/context/DomIndexer.ts:53</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>targetText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Text</span>, sourceText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Text</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>Invoke when merge two continuous text nodes, we need to merge their indexes as well</p>
+											</div>
+										</div>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>targetText: <span class="tsd-signature-type">Text</span></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>Target text node to merge into</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<h5>sourceText: <span class="tsd-signature-type">Text</span></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>Source text node to merge from</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="onparagraph" class="tsd-anchor"></a>
 					<h3>on<wbr>Paragraph</h3>
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Paragraph<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>paragraphElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L31">roosterjs-content-model-types/lib/context/DomIndexer.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L31">roosterjs-content-model-types/lib/context/DomIndexer.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -194,7 +244,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Segment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>segmentNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, paragraph<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.contentmodelparagraph.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelParagraph</a>, segments<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#contentmodelsegment" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelSegment</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L21">roosterjs-content-model-types/lib/context/DomIndexer.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L21">roosterjs-content-model-types/lib/context/DomIndexer.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -251,7 +301,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>tableElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLTableElement</span>, tableModel<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.contentmodeltable.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelTable</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L37">roosterjs-content-model-types/lib/context/DomIndexer.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L37">roosterjs-content-model-types/lib/context/DomIndexer.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -295,7 +345,7 @@
 					<div class="tsd-signature tsd-kind-icon">reconcile<wbr>Child<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>addedNodes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayLike</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span>, removedNodes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayLike</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L76">roosterjs-content-model-types/lib/context/DomIndexer.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L85">roosterjs-content-model-types/lib/context/DomIndexer.ts:85</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -348,7 +398,7 @@
 					<div class="tsd-signature tsd-kind-icon">reconcile<wbr>Element<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L65">roosterjs-content-model-types/lib/context/DomIndexer.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L74">roosterjs-content-model-types/lib/context/DomIndexer.ts:74</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -390,7 +440,7 @@
 					<div class="tsd-signature tsd-kind-icon">reconcile<wbr>Selection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, newSelection<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a>, oldSelection<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_types.html#cacheselection" class="tsd-signature-type" data-tsd-kind="Type alias">CacheSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cf40800/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L54">roosterjs-content-model-types/lib/context/DomIndexer.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/eeec49f/packages/roosterjs-content-model-types/lib/context/DomIndexer.ts#L63">roosterjs-content-model-types/lib/context/DomIndexer.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -489,6 +539,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.domindexer.html#onblockentity" class="tsd-kind-icon">on<wbr>Block<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.domindexer.html#onmergetext" class="tsd-kind-icon">on<wbr>Merge<wbr>Text</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.domindexer.html#onparagraph" class="tsd-kind-icon">on<wbr>Paragraph</a>
