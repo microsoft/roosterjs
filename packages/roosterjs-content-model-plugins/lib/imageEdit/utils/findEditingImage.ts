@@ -21,12 +21,13 @@ export function findEditingImage(
                     ((imageId && segment.format.id == imageId) || segment.dataset.isEditing)
                 ) {
                     imageAndParagraph = { image: segment, paragraph };
-                    break;
+                    return true;
                 }
             }
-            return !!imageAndParagraph;
+            return false;
         },
         findFirstOnly: true,
     });
+
     return imageAndParagraph;
 }
