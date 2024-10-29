@@ -145,6 +145,11 @@ function getIndexedTableItem(element: HTMLTableElement): TableItem | null {
     }
 }
 
+// Make a node not indexed. Do not export this function since we should not let code outside here know this detail
+function unindex(node: Partial<IndexedSegmentNode>) {
+    delete node.__roosterjsContentModel;
+}
+
 /**
  * @internal
  * Implementation of DomIndexer
@@ -195,6 +200,21 @@ export class DomIndexerImpl implements DomIndexer {
     onBlockEntity(entity: ContentModelEntity, group: ContentModelBlockGroup) {
         this.onBlockEntityDelimiter(entity.wrapper.previousSibling, entity, group);
         this.onBlockEntityDelimiter(entity.wrapper.nextSibling, entity, group);
+    }
+
+    onMergeText(targetText: Text, sourceText: Text) {
+        if (isIndexedSegment(targetText) && isIndexedSegment(sourceText)) {
+            if (targetText.nextSibling == sourceText) {
+                targetText.__roosterjsContentModel.segments.push(
+                    ...sourceText.__roosterjsContentModel.segments
+                );
+
+                unindex(sourceText);
+            }
+        } else {
+            unindex(sourceText);
+            unindex(targetText);
+        }
     }
 
     reconcileSelection(
