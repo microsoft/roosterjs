@@ -30,6 +30,9 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
                 },
                 {
                     apiName: 'handleTabKey',
+                    rawEvent,
+                    changeSource: ChangeSource.Keyboard,
+                    getChangeData: () => rawEvent.which,
                 }
             );
 
@@ -41,7 +44,9 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
                 },
                 {
                     apiName: 'handleTabKey',
+                    rawEvent,
                     changeSource: ChangeSource.Keyboard,
+                    getChangeData: () => rawEvent.which,
                 }
             );
             return true;
