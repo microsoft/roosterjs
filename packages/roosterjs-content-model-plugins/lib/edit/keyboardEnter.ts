@@ -58,6 +58,8 @@ export function keyboardEnter(
             rawEvent,
             scrollCaretIntoView: true,
             changeSource: ChangeSource.Keyboard,
+            getChangeData: () => rawEvent.which,
+            apiName: 'handleEnterKey',
         }
     );
 }
