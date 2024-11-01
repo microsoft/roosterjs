@@ -250,6 +250,103 @@ describe('domIndexerImpl.onBlockEntity', () => {
     });
 });
 
+describe('domIndexImpl.onMergeText', () => {
+    it('Two unindexed node', () => {
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test1');
+        const div = document.createElement('div');
+
+        div.appendChild(text1);
+        div.appendChild(text2);
+
+        new DomIndexerImpl().onMergeText(text1, text2);
+
+        expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+        expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+    });
+
+    it('One indexed node, one unindexed node', () => {
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test1');
+        const div = document.createElement('div');
+
+        div.appendChild(text1);
+        div.appendChild(text2);
+
+        ((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [],
+        };
+
+        new DomIndexerImpl().onMergeText(text1, text2);
+
+        expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+        expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+    });
+
+    it('Two separated indexed node', () => {
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test1');
+        const div = document.createElement('div');
+
+        div.appendChild(text1);
+        div.appendChild(document.createElement('img'));
+        div.appendChild(text2);
+
+        const text1Model = createText('test1');
+        const text2Model = createText('test2');
+
+        ((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [text1Model],
+        };
+        ((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [text2Model],
+        };
+
+        new DomIndexerImpl().onMergeText(text1, text2);
+
+        expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
+            paragraph: createParagraph(),
+            segments: [text1Model],
+        });
+        expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
+            paragraph: createParagraph(),
+            segments: [text2Model],
+        });
+    });
+
+    it('Two continuous indexed node', () => {
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test1');
+        const div = document.createElement('div');
+
+        div.appendChild(text1);
+        div.appendChild(text2);
+
+        const text1Model = createText('test1');
+        const text2Model = createText('test2');
+
+        ((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [text1Model],
+        };
+        ((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [text2Model],
+        };
+
+        new DomIndexerImpl().onMergeText(text1, text2);
+
+        expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
+            paragraph: createParagraph(),
+            segments: [text1Model, text2Model],
+        });
+        expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+    });
+});
+
 describe('domIndexerImpl.reconcileSelection', () => {
     let setSelectionSpy: jasmine.Spy;
     let model: ContentModelDocument;

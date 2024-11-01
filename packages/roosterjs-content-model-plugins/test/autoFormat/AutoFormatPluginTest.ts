@@ -1044,12 +1044,17 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             const segment: ContentModelText = {
                 segmentType: 'Text',
-                text: 'test--test',
+                text: 'test--test ',
                 format: {},
+            };
+            const selectionMarker: ContentModelSelectionMarker = {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
             };
             const paragraph: ContentModelParagraph = {
                 blockType: 'Paragraph',
-                segments: [segment],
+                segments: [segment, selectionMarker],
                 format: {},
             };
             const model: ContentModelDocument = {
@@ -1077,7 +1082,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             expect(model).toEqual(expectedResult);
         }
 
-        xit('should call transformHyphen', () => {
+        it('should call transformHyphen', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
@@ -1095,6 +1100,17 @@ describe('Content Model Auto Format Plugin Test', () => {
                                     text: 'test—test',
                                     format: {},
                                     isSelected: undefined,
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' ',
+                                    format: {},
+                                    isSelected: undefined,
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
@@ -1123,8 +1139,13 @@ describe('Content Model Auto Format Plugin Test', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test--test',
+                                    text: 'test--test ',
                                     format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
@@ -1157,8 +1178,13 @@ describe('Content Model Auto Format Plugin Test', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test--test',
+                                    text: 'test--test ',
                                     format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
                             format: {},
@@ -1185,7 +1211,7 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             const segment: ContentModelText = {
                 segmentType: 'Text',
-                text: '1/2',
+                text: '1/2 ',
                 format: {},
             };
             const paragraph: ContentModelParagraph = {
@@ -1218,7 +1244,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             expect(model).toEqual(expectResult);
         }
 
-        xit('should call transformFraction', () => {
+        it('should call transformFraction', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
@@ -1238,6 +1264,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                                     format: {},
                                     isSelected: undefined,
                                 },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' ',
+                                    format: {},
+                                    isSelected: undefined,
+                                },
                             ],
                         },
                     ],
@@ -1249,7 +1281,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             );
         });
 
-        it('should not call transformHyphen - disable options', () => {
+        it('should not call transformFraction - disable options', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
@@ -1262,7 +1294,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                         {
                             blockType: 'Paragraph',
                             format: {},
-                            segments: [{ segmentType: 'Text', text: '1/2', format: {} }],
+                            segments: [{ segmentType: 'Text', text: '1/2 ', format: {} }],
                         },
                     ],
                 },
@@ -1286,7 +1318,7 @@ describe('Content Model Auto Format Plugin Test', () => {
 
             const segment: ContentModelText = {
                 segmentType: 'Text',
-                text: '1st',
+                text: '1st ',
                 format: {},
             };
             const paragraph: ContentModelParagraph = {
@@ -1319,7 +1351,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             expect(model).toEqual(expectResult);
         }
 
-        xit('should call transformOrdinals', () => {
+        it('should call transformOrdinals', () => {
             const event: EditorInputEvent = {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
@@ -1343,6 +1375,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                                     segmentType: 'Text',
                                     text: 'st',
                                     format: { superOrSubScriptSequence: 'super' },
+                                    isSelected: undefined,
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' ',
+                                    format: {},
                                     isSelected: undefined,
                                 },
                             ],
@@ -1369,7 +1407,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                         {
                             blockType: 'Paragraph',
                             format: {},
-                            segments: [{ segmentType: 'Text', text: '1st', format: {} }],
+                            segments: [{ segmentType: 'Text', text: '1st ', format: {} }],
                         },
                     ],
                 },
