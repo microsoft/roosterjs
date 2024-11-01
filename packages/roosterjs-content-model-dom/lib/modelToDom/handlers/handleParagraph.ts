@@ -98,7 +98,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 handleSegments();
             }
 
-            optimize(container);
+            optimize(container, context);
 
             // It is possible the next sibling node is changed during processing child segments
             // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment

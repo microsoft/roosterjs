@@ -38,6 +38,8 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
                 scrollCaretIntoView: true,
                 rawEvent,
                 changeSource: ChangeSource.Keyboard,
+                getChangeData: () => rawEvent.which,
+                apiName: 'handleInputKey',
             }
         );
 

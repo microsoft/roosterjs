@@ -1,7 +1,6 @@
 import { createEditorCore } from './core/createEditorCore';
 import {
     createEmptyModel,
-    tableProcessor,
     ChangeSource,
     cloneModel,
     transformColor,
@@ -102,9 +101,6 @@ export class Editor implements IEditor {
             case 'disconnected':
                 return cloneModel(
                     core.api.createContentModel(core, {
-                        processorOverride: {
-                            table: tableProcessor,
-                        },
                         tryGetFromCache: false,
                     }),
                     {

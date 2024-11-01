@@ -580,6 +580,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            onMergeText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -617,6 +618,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            onMergeText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -665,6 +667,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            onMergeText: null!,
         };
 
         context.domIndexer = domIndexer;

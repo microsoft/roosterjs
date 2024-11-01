@@ -59,12 +59,7 @@ describe('normalizeContentModel', () => {
                         {
                             segmentType: 'Text',
                             format: {},
-                            text: 'test1',
-                        },
-                        {
-                            segmentType: 'Text',
-                            format: {},
-                            text: 'test2',
+                            text: 'test1test2',
                         },
                     ],
                 },

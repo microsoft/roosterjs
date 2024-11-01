@@ -6,7 +6,12 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
 import { normalizeParagraph } from '../../../lib/modelApi/common/normalizeParagraph';
-import { ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
+import {
+    ContentModelParagraph,
+    ContentModelSegment,
+    ContentModelSegmentFormat,
+    ReadonlyContentModelParagraph,
+} from 'roosterjs-content-model-types';
 
 describe('Normalize text that contains space', () => {
     function runTest(texts: string[], expected: string[], whiteSpace?: string) {
@@ -69,9 +74,9 @@ describe('Normalize text that contains space', () => {
     });
 
     it('Text ends with &nbsp;', () => {
-        runTest(['a\u00A0', 'b'], ['a ', 'b']);
-        runTest(['a\u00A0\u00A0', 'b'], ['a\u00A0 ', 'b']);
-        runTest(['a \u00A0', 'b'], ['a \u00A0', 'b']);
+        runTest(['a\u00A0', 'b'], ['a b']);
+        runTest(['a\u00A0\u00A0', 'b'], ['a\u00A0 b']);
+        runTest(['a \u00A0', 'b'], ['a \u00A0b']);
     });
 
     it('with other type of segment', () => {
@@ -166,12 +171,7 @@ describe('Normalize text that contains space', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'a ',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '\u00A0b',
+                            text: 'a \u00A0b',
                             format: {},
                         },
                     ],
@@ -528,17 +528,11 @@ describe('Move up format', () => {
             segments: [
                 {
                     segmentType: 'Text',
-                    text: 'test1',
-                    format: {},
-                },
-                {
-                    segmentType: 'Text',
-                    text: 'test2',
+                    text: 'test1test2',
                     format: {},
                 },
             ],
             format: {},
-            cachedElement: mockedCache,
         });
     });
 
@@ -838,5 +832,659 @@ describe('Move up format', () => {
             segments: [text],
             format: { whiteSpace: 'pre-wrap' },
         });
+    });
+});
+
+describe('Merge text segments', () => {
+    function runTest(
+        input: ContentModelSegment[],
+        expectedResult: ContentModelSegment[],
+        stillHasCache: boolean,
+        expectedParagraphFormat?: ContentModelSegmentFormat
+    ) {
+        const paragraph = createParagraph();
+        const cache = 'CACHE' as any;
+
+        paragraph.cachedElement = cache;
+
+        paragraph.segments = input;
+
+        normalizeParagraph(paragraph);
+
+        const expectedParagraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            format: {},
+            segments: expectedResult,
+        };
+
+        if (expectedParagraphFormat) {
+            expectedParagraph.segmentFormat = expectedParagraphFormat;
+        }
+
+        if (stillHasCache) {
+            expectedParagraph.cachedElement = cache;
+        }
+
+        expect(paragraph).toEqual(expectedParagraph);
+    }
+
+    it('Empty paragraph', () => {
+        runTest([], [], true);
+    });
+
+    it('Single text segment', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: {},
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: {},
+                },
+            ],
+            true
+        );
+    });
+
+    it('Two text segments, same format', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, same format, with space - 1', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: ' abc ',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: ' def ',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, same format, with space - 2', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: ' def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc\u00A0def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, different format - 1', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt', italic: true },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt', italic: true },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, different format - 2', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos' }
+        );
+    });
+
+    it('Two text segments, different format - 3', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '14pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '14pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos' }
+        );
+    });
+
+    it('Two text segments, one has link', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, both have same link', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: {},
+                    },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: {},
+                    },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, both have different link', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: { href: 'url1' },
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: { href: 'url2' },
+                    },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: { href: 'url1' },
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    link: {
+                        dataset: {},
+                        format: { href: 'url2' },
+                    },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, one has code', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    code: {
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    code: {
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments, both have same code', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    code: {
+                        format: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    code: {
+                        format: {},
+                    },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    code: {
+                        format: {},
+                    },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments around selection marker', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments after selection marker', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two text segments before selection marker', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: {},
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Three text segments with same format', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'ghi',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdefghi',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos', fontSize: '12pt' }
+        );
+    });
+
+    it('Two pairs - 1', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'ghi',
+                    format: { fontFamily: 'Aptos', fontSize: '14pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'jkl',
+                    format: { fontFamily: 'Aptos', fontSize: '14pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'ghijkl',
+                    format: { fontFamily: 'Aptos', fontSize: '14pt' },
+                },
+            ],
+            false,
+            { fontFamily: 'Aptos' }
+        );
+    });
+
+    it('Two pairs - 2', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontSize: '14pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'ghi',
+                    format: { fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'jkl',
+                    format: { fontSize: '14pt' },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontSize: '14pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'ghi',
+                    format: { fontSize: '12pt' },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'jkl',
+                    format: { fontSize: '14pt' },
+                },
+            ],
+            true
+        );
     });
 });
