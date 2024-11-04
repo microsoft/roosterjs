@@ -50,7 +50,6 @@ export function queryContentModel<
             return elements;
         }
         const block = group.blocks[i];
-        console.log(block.blockType);
         switch (block.blockType) {
             case 'BlockGroup':
                 if (type == block.blockType && (!selector || selector(block as T))) {
@@ -77,7 +76,7 @@ export function queryContentModel<
                     if (!segmentType && (!selector || selector(block as T))) {
                         elements.push(block as T);
                     } else if (segmentType) {
-                        const segments = searchInParagraphs(block, segmentType, options, selector);
+                        const segments = searchInParagraphs(block, segmentType, selector);
                         elements.push(...(segments as T[]));
                     }
                 }
@@ -105,18 +104,12 @@ function searchInTables<T extends ReadonlyContentModelBlock | ReadonlyContentMod
 function searchInParagraphs<P extends ReadonlyContentModelBlock | ReadonlyContentModelSegment>(
     block: ReadonlyContentModelParagraph,
     segmentType: ContentModelSegmentType,
-    options: QueryContentModelOptions<P>,
     selector?: (element: P) => boolean
 ): P[] {
     const segments: P[] = [];
     for (const segment of block.segments) {
         if (segment.segmentType == segmentType && (!selector || selector(segment as P))) {
-            if (segment.segmentType !== 'General') {
-                segments.push(segment as P);
-            } else {
-                const blocks = queryContentModel<P>(segment, options);
-                segments.push(...blocks);
-            }
+            segments.push(segment as P);
         }
     }
     return segments;
