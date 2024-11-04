@@ -83,7 +83,10 @@ function calcPosition(
         if (!pos.segment) {
             result = { container: pos.block, offset: 0 };
         } else if (isNodeOfType(pos.segment, 'TEXT_NODE')) {
-            result = { container: pos.segment, offset: pos.segment.nodeValue?.length || 0 };
+            result = {
+                container: pos.segment,
+                offset: pos.offset ?? pos.segment.nodeValue?.length ?? 0,
+            };
         } else if (pos.segment.parentNode) {
             result = {
                 container: pos.segment.parentNode,

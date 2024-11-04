@@ -11,7 +11,7 @@ describe('optimize', () => {
 
     it('Optimize', () => {
         const div = document.createElement('div');
-        optimize(div);
+        optimize(div, {} as any);
 
         expect(mergeNode.mergeNode).toHaveBeenCalled();
         expect(removeUnnecessarySpan.removeUnnecessarySpan).toHaveBeenCalled();
@@ -22,7 +22,7 @@ describe('optimize', () => {
         const span = document.createElement('span');
         div.appendChild(span);
 
-        optimize(div);
+        optimize(div, {} as any);
 
         expect(mergeNode.mergeNode).toHaveBeenCalledTimes(2);
         expect(mergeNode.mergeNode).toHaveBeenCalledWith(div);
@@ -49,7 +49,7 @@ describe('real optimization', () => {
         div.appendChild(span1);
         div.appendChild(span2);
 
-        optimize(div);
+        optimize(div, {} as any);
 
         expect(div.outerHTML).toBe(
             '<div>test1<span class="_Entity _EType_test _EReadonly_1" contenteditable="false"><span>entity</span></span></div>'

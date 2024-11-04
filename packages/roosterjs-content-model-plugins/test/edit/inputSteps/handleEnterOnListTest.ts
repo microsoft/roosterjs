@@ -1817,7 +1817,7 @@ describe('handleEnterOnList - keyboardEnter', () => {
         let editor: any;
 
         editingTestCommon(
-            undefined,
+            'handleEnterKey',
             newEditor => {
                 editor = newEditor;
 

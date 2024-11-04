@@ -104,6 +104,76 @@ describe('contentModelToDom', () => {
         expect((range as RangeSelection).isReverted).toBe(false);
     });
 
+    it('Extract expanded range - range in middle of text', () => {
+        const mockedHandler = jasmine.createSpy('blockGroupChildren');
+        const context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: mockedHandler,
+            },
+        });
+
+        const root = document.createElement('div');
+        const div = document.createElement('div');
+        const text = document.createTextNode('abcd');
+
+        div.appendChild(text);
+        root.appendChild(div);
+
+        context.regularSelection.start = {
+            block: div,
+            segment: text,
+            offset: 1,
+        };
+        context.regularSelection.end = {
+            block: div,
+            segment: text,
+            offset: 3,
+        };
+
+        const range = contentModelToDom(document, root, {} as any, context);
+
+        expect(range!.type).toBe('range');
+        expect((range as RangeSelection).range.startContainer).toBe(text);
+        expect((range as RangeSelection).range.startOffset).toBe(1);
+        expect((range as RangeSelection).range.endContainer).toBe(text);
+        expect((range as RangeSelection).range.endOffset).toBe(3);
+        expect((range as RangeSelection).isReverted).toBe(false);
+    });
+
+    it('Extract range after empty text', () => {
+        const mockedHandler = jasmine.createSpy('blockGroupChildren');
+        const context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: mockedHandler,
+            },
+        });
+
+        const root = document.createElement('div');
+        const div = document.createElement('div');
+        const text = document.createTextNode('');
+
+        div.appendChild(text);
+        root.appendChild(div);
+
+        context.regularSelection.start = {
+            block: div,
+            segment: text,
+        };
+        context.regularSelection.end = {
+            block: div,
+            segment: text,
+        };
+
+        const range = contentModelToDom(document, root, {} as any, context);
+
+        expect(range!.type).toBe('range');
+        expect((range as RangeSelection).range.startContainer).toBe(div);
+        expect((range as RangeSelection).range.startOffset).toBe(0);
+        expect((range as RangeSelection).range.endContainer).toBe(div);
+        expect((range as RangeSelection).range.endOffset).toBe(0);
+        expect((range as RangeSelection).isReverted).toBe(false);
+    });
+
     it('Extract selection range - normal collapsed range with empty text', () => {
         const mockedHandler = jasmine.createSpy('blockGroupChildren');
         const context = createModelToDomContext(undefined, {

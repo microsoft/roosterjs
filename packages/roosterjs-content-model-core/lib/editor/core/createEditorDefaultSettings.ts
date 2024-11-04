@@ -1,5 +1,4 @@
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
-import { tablePreProcessor } from '../../override/tablePreProcessor';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
@@ -21,11 +20,7 @@ import type {
 export function createDomToModelSettings(
     options: EditorOptions
 ): ContentModelSettings<DomToModelOption, DomToModelSettings> {
-    const builtIn: DomToModelOption = {
-        processorOverride: {
-            table: tablePreProcessor,
-        },
-    };
+    const builtIn: DomToModelOption = {};
     const customized: DomToModelOption = options.defaultDomToModelOptions ?? {};
 
     return {
