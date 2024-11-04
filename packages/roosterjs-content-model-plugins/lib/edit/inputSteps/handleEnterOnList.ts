@@ -98,7 +98,7 @@ const createNewListItem = (
     const levels = createNewListLevel(listItem);
     const newListItem: ShallowMutableContentModelListItem = createListItem(
         levels,
-        insertPoint.marker.format
+        listItem.formatHolder.format
     );
 
     newListItem.blocks.push(newParagraph);

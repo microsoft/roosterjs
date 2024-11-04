@@ -1797,6 +1797,108 @@ describe('handleEnterOnList', () => {
         };
         runTest(model, expectedModel, 'range', listItem);
     });
+
+    it('Selection Marker has styles from previous list item', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: { fontSize: '20pt', fontWeight: 'bold' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: { fontWeight: 'bold' },
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: { fontSize: '10pt' },
+                    },
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                },
+            ],
+        };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontSize: '20pt', fontWeight: 'bold' },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontWeight: 'bold' },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {},
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: { fontSize: '10pt' },
+            },
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Br',
+                                    format: { fontSize: '20pt', fontWeight: 'bold' },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { fontSize: '20pt' },
+                        },
+                    ],
+                    format: {},
+                    formatHolder: { segmentType: 'SelectionMarker', format: { fontSize: '10pt' } },
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                },
+                listItem,
+            ],
+        };
+
+        runTest(model, expectedModel, 'range', listItem);
+    });
 });
 
 describe('handleEnterOnList - keyboardEnter', () => {
