@@ -60,4 +60,7 @@ export { setModelIndentation } from './modelApi/block/setModelIndentation';
 export { matchLink } from './modelApi/link/matchLink';
 export { promoteLink } from './modelApi/link/promoteLink';
 export { getListAnnounceData } from './modelApi/list/getListAnnounceData';
-export { queryContentModel, QueryContentModelOptions } from './modelApi/common/queryContentModel';
+export {
+    queryContentModelBlocks,
+    QueryContentModelOptions,
+} from './modelApi/common/queryContentModelBlocks';

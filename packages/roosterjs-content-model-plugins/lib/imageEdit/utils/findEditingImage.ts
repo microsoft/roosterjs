@@ -1,4 +1,4 @@
-import { queryContentModel } from 'roosterjs-content-model-api';
+import { queryContentModelBlocks } from 'roosterjs-content-model-api';
 import type {
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelParagraph,
@@ -13,8 +13,10 @@ export function findEditingImage(
     imageId?: string
 ): ImageAndParagraph | null {
     let imageAndParagraph: ImageAndParagraph | null = null;
-    queryContentModel<ReadonlyContentModelParagraph>(group, {
-        selector: (paragraph: ReadonlyContentModelParagraph) => {
+    queryContentModelBlocks<ReadonlyContentModelParagraph>(group, {
+        filter: (
+            paragraph: ReadonlyContentModelParagraph
+        ): paragraph is ReadonlyContentModelParagraph => {
             for (const segment of paragraph.segments) {
                 if (
                     segment.segmentType == 'Image' &&

@@ -1,13 +1,12 @@
-import { queryContentModel } from '../../../lib/modelApi/common/queryContentModel';
+import { queryContentModelBlocks } from '../../../lib/modelApi/common/queryContentModelBlocks';
 import {
     ReadonlyContentModelBlockGroup,
-    ReadonlyContentModelImage,
     ReadonlyContentModelListItem,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 
-describe('queryContentModel', () => {
+describe('queryContentModelBlocksBlocks', () => {
     it('should return empty array if no blocks', () => {
         // Arrange
         const group: ReadonlyContentModelBlockGroup = {
@@ -16,7 +15,7 @@ describe('queryContentModel', () => {
         };
 
         // Act
-        const result = queryContentModel(group, {});
+        const result = queryContentModelBlocks(group, {});
 
         // Assert
         expect(result).toEqual([]);
@@ -37,7 +36,7 @@ describe('queryContentModel', () => {
         };
 
         // Act
-        const result = queryContentModel(group, { type: 'Table' });
+        const result = queryContentModelBlocks(group, { blockType: 'Table' });
 
         // Assert
         expect(result).toEqual([]);
@@ -319,7 +318,9 @@ describe('queryContentModel', () => {
         ];
 
         // Act
-        const result = queryContentModel<ReadonlyContentModelTable>(group, { type: 'Table' });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(group, {
+            blockType: 'Table',
+        });
 
         // Assert
         expect(result).toEqual(expected);
@@ -376,124 +377,13 @@ describe('queryContentModel', () => {
         };
 
         // Act
-        const result = queryContentModel<ReadonlyContentModelParagraph>(group, {
-            type: 'Paragraph',
-
-            selector: block => block.segments.length == 2,
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(group, {
+            blockType: 'Paragraph',
+            filter: (block): block is ReadonlyContentModelParagraph => block.segments.length == 2,
         });
 
         // Assert
         expect(result).toEqual([paragraph]);
-    });
-
-    it('should return first segment that match the type and selector', () => {
-        const image: ReadonlyContentModelImage = {
-            src:
-                'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-            isSelectedAsImageSelection: true,
-            segmentType: 'Image',
-            isSelected: true,
-            format: {
-                fontFamily: 'Calibri',
-                fontSize: '11pt',
-                textColor: 'rgb(0, 0, 0)',
-                id: 'image_0',
-                maxWidth: '1492px',
-            },
-            dataset: {
-                isEditing: 'true',
-            },
-        };
-        const model: ReadonlyContentModelBlockGroup = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    widths: [120, 153],
-                    rows: [
-                        {
-                            height: 157,
-                            cells: [
-                                {
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            segments: [
-                                                {
-                                                    segmentType: 'Br',
-                                                    format: {},
-                                                },
-                                            ],
-                                            segmentFormat: {},
-                                            blockType: 'Paragraph',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                                {
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            segments: [image],
-                                            segmentFormat: {},
-                                            blockType: 'Paragraph',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    blockType: 'Table',
-                    format: {
-                        useBorderBox: true,
-                        borderCollapse: true,
-                    },
-                    dataset: {
-                        editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":"top"}',
-                    },
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-            ],
-        };
-        const result = queryContentModel<ReadonlyContentModelImage>(model, {
-            segmentType: 'Image',
-            selector: (segment: ReadonlyContentModelImage) => !!segment.dataset.isEditing,
-            findFirstOnly: true,
-        });
-        expect(result).toEqual([image]);
     });
 
     it('should return all tables that match the type and selector', () => {
@@ -875,7 +765,9 @@ describe('queryContentModel', () => {
                 },
             },
         ];
-        const result = queryContentModel<ReadonlyContentModelTable>(model, { type: 'Table' });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, {
+            blockType: 'Table',
+        });
         expect(result).toEqual(expected);
     });
 
@@ -1013,7 +905,9 @@ describe('queryContentModel', () => {
         };
 
         const expected: ReadonlyContentModelTable[] = [table];
-        const result = queryContentModel<ReadonlyContentModelTable>(model, { type: 'Table' });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, {
+            blockType: 'Table',
+        });
         expect(result).toEqual(expected);
     });
 
@@ -1273,272 +1167,12 @@ describe('queryContentModel', () => {
             },
         ];
 
-        const result = queryContentModel<ReadonlyContentModelListItem>(model, {
-            type: 'BlockGroup',
-            selector: block => block.blockGroupType == 'ListItem',
+        const result = queryContentModelBlocks<ReadonlyContentModelListItem>(model, {
+            blockType: 'BlockGroup',
+            filter: (block): block is ReadonlyContentModelListItem =>
+                block.blockGroupType == 'ListItem',
         });
         expect(result).toEqual(listExpected);
-    });
-
-    it('should return all images', () => {
-        const model: ReadonlyContentModelBlockGroup = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    segments: [
-                        {
-                            src:
-                                'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                            segmentType: 'Image',
-                            format: {},
-                            dataset: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: {},
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                startNumberOverride: 1,
-                                listStyleType: 'decimal',
-                            },
-                            dataset: {
-                                editingInfo:
-                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            segments: [
-                                {
-                                    text: 'test',
-                                    segmentType: 'Text',
-                                    format: {},
-                                },
-                            ],
-                            segmentFormat: {},
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: {},
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                listStyleType: 'decimal',
-                            },
-                            dataset: {
-                                editingInfo:
-                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            segments: [
-                                {
-                                    src:
-                                        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                                    segmentType: 'Image',
-                                    format: {},
-                                    dataset: {},
-                                },
-                            ],
-                            segmentFormat: {},
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
-                {
-                    widths: [153],
-                    rows: [
-                        {
-                            height: 157,
-                            cells: [
-                                {
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            segments: [
-                                                {
-                                                    src:
-                                                        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                                                    segmentType: 'Image',
-                                                    format: {},
-                                                    dataset: {},
-                                                },
-                                            ],
-                                            segmentFormat: {},
-                                            blockType: 'Paragraph',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    dataset: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    blockType: 'Table',
-                    format: {},
-                    dataset: {
-                        editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":"top"}',
-                    },
-                },
-                {
-                    isImplicit: true,
-                    segments: [
-                        {
-                            isSelected: true,
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: {},
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                listStyleType: 'decimal',
-                                displayForDummyItem: 'block',
-                            },
-                            dataset: {
-                                editingInfo:
-                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
-                            },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            segments: [
-                                {
-                                    segmentType: 'Br',
-                                    format: {},
-                                },
-                            ],
-                            segmentFormat: {},
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    segmentFormat: {},
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-            ],
-            format: {},
-        };
-
-        const expected: ReadonlyContentModelImage[] = [
-            {
-                src:
-                    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                segmentType: 'Image',
-                format: {},
-                dataset: {},
-            },
-            {
-                src:
-                    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                segmentType: 'Image',
-                format: {},
-                dataset: {},
-            },
-            {
-                src:
-                    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-                segmentType: 'Image',
-                format: {},
-                dataset: {},
-            },
-        ];
-
-        const result = queryContentModel<ReadonlyContentModelImage>(model, {
-            segmentType: 'Image',
-        });
-        expect(result).toEqual(expected);
     });
 
     it('should return image from a word online table', () => {
@@ -1765,32 +1399,76 @@ describe('queryContentModel', () => {
                 textColor: '#000000',
             },
         };
-        const image: ReadonlyContentModelImage = {
-            src:
-                'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
-            isSelectedAsImageSelection: true,
-            segmentType: 'Image',
-            isSelected: true,
-            format: {
-                fontFamily: 'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
-                fontSize: '12pt',
-                textColor: 'rgb(0, 0, 0)',
+        const imageAndParagraph: ReadonlyContentModelParagraph = {
+            segments: [
+                {
+                    text: ' ',
+                    segmentType: 'Text',
+                    format: {
+                        fontFamily: 'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                        fontSize: '12pt',
+                        textColor: 'rgb(0, 0, 0)',
+                        italic: false,
+                        fontWeight: 'normal',
+                        lineHeight: '18px',
+                    },
+                },
+                {
+                    src:
+                        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDB...',
+                    isSelectedAsImageSelection: true,
+                    segmentType: 'Image',
+                    isSelected: true,
+                    format: {
+                        fontFamily: 'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                        fontSize: '12pt',
+                        textColor: 'rgb(0, 0, 0)',
+                        italic: false,
+                        fontWeight: 'normal',
+                        lineHeight: '18px',
+                        backgroundColor: '',
+                        maxWidth: '1492px',
+                        id: 'image_0',
+                    },
+                    dataset: {
+                        isEditing: 'true',
+                    },
+                },
+            ],
+            segmentFormat: {
                 italic: false,
                 fontWeight: 'normal',
-                lineHeight: '18px',
-                backgroundColor: '',
-                maxWidth: '1492px',
-                id: 'image_0',
+                textColor: 'rgb(0, 0, 0)',
             },
-            dataset: {
-                isEditing: 'true',
+            blockType: 'Paragraph',
+            format: {
+                textAlign: 'start',
+                direction: 'ltr',
+                marginLeft: '0px',
+                marginRight: '0px',
+                textIndent: '0px',
+                whiteSpace: 'pre-wrap',
+                marginTop: '0px',
+                marginBottom: '0px',
+            },
+            decorator: {
+                tagName: 'p',
+                format: {},
             },
         };
-        const result = queryContentModel<ReadonlyContentModelImage>(model, {
-            segmentType: 'Image',
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(model, {
             findFirstOnly: true,
-            selector: (segment: ReadonlyContentModelImage) => !!segment.dataset.isEditing,
+            filter: (
+                block: ReadonlyContentModelParagraph
+            ): block is ReadonlyContentModelParagraph => {
+                for (const segment of block.segments) {
+                    if (segment.segmentType == 'Image' && segment.dataset.isEditing) {
+                        return true;
+                    }
+                }
+                return false;
+            },
         });
-        expect(result).toEqual([image]);
+        expect(result).toEqual([imageAndParagraph]);
     });
 });
