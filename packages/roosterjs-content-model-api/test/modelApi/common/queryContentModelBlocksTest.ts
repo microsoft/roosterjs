@@ -15,7 +15,7 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks(group, {});
+        const result = queryContentModelBlocks(group);
 
         // Assert
         expect(result).toEqual([]);
@@ -36,7 +36,7 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks(group, { blockType: 'Table' });
+        const result = queryContentModelBlocks(group, 'Table');
 
         // Assert
         expect(result).toEqual([]);
@@ -318,9 +318,7 @@ describe('queryContentModelBlocksBlocks', () => {
         ];
 
         // Act
-        const result = queryContentModelBlocks<ReadonlyContentModelTable>(group, {
-            blockType: 'Table',
-        });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(group, 'Table');
 
         // Assert
         expect(result).toEqual(expected);
@@ -377,10 +375,11 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(group, {
-            blockType: 'Paragraph',
-            filter: (block): block is ReadonlyContentModelParagraph => block.segments.length == 2,
-        });
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(
+            group,
+            'Paragraph',
+            (block): block is ReadonlyContentModelParagraph => block.segments.length == 2
+        );
 
         // Assert
         expect(result).toEqual([paragraph]);
@@ -765,9 +764,7 @@ describe('queryContentModelBlocksBlocks', () => {
                 },
             },
         ];
-        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, {
-            blockType: 'Table',
-        });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, 'Table');
         expect(result).toEqual(expected);
     });
 
@@ -905,9 +902,7 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         const expected: ReadonlyContentModelTable[] = [table];
-        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, {
-            blockType: 'Table',
-        });
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(model, 'Table');
         expect(result).toEqual(expected);
     });
 
@@ -1167,11 +1162,11 @@ describe('queryContentModelBlocksBlocks', () => {
             },
         ];
 
-        const result = queryContentModelBlocks<ReadonlyContentModelListItem>(model, {
-            blockType: 'BlockGroup',
-            filter: (block): block is ReadonlyContentModelListItem =>
-                block.blockGroupType == 'ListItem',
-        });
+        const result = queryContentModelBlocks<ReadonlyContentModelListItem>(
+            model,
+            'BlockGroup',
+            (block): block is ReadonlyContentModelListItem => block.blockGroupType == 'ListItem'
+        );
         expect(result).toEqual(listExpected);
     });
 
@@ -1456,11 +1451,10 @@ describe('queryContentModelBlocksBlocks', () => {
                 format: {},
             },
         };
-        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(model, {
-            findFirstOnly: true,
-            filter: (
-                block: ReadonlyContentModelParagraph
-            ): block is ReadonlyContentModelParagraph => {
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(
+            model,
+            'Paragraph',
+            (block: ReadonlyContentModelParagraph): block is ReadonlyContentModelParagraph => {
                 for (const segment of block.segments) {
                     if (segment.segmentType == 'Image' && segment.dataset.isEditing) {
                         return true;
@@ -1468,7 +1462,8 @@ describe('queryContentModelBlocksBlocks', () => {
                 }
                 return false;
             },
-        });
+            true /* findFirstOnly */
+        );
         expect(result).toEqual([imageAndParagraph]);
     });
 });

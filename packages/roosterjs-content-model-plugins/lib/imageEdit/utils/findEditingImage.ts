@@ -13,10 +13,10 @@ export function findEditingImage(
     imageId?: string
 ): ImageAndParagraph | null {
     let imageAndParagraph: ImageAndParagraph | null = null;
-    queryContentModelBlocks<ReadonlyContentModelParagraph>(group, {
-        filter: (
-            paragraph: ReadonlyContentModelParagraph
-        ): paragraph is ReadonlyContentModelParagraph => {
+    queryContentModelBlocks<ReadonlyContentModelParagraph>(
+        group,
+        'Paragraph',
+        (paragraph: ReadonlyContentModelParagraph): paragraph is ReadonlyContentModelParagraph => {
             for (const segment of paragraph.segments) {
                 if (
                     segment.segmentType == 'Image' &&
@@ -28,8 +28,8 @@ export function findEditingImage(
             }
             return false;
         },
-        findFirstOnly: true,
-    });
+        true /*findFirstOnly*/
+    );
 
     return imageAndParagraph;
 }
