@@ -2,7 +2,6 @@ import type {
     ContentModelBlockType,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
-    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -36,52 +35,69 @@ export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
 ): T[] {
     const { blockType, filter, findFirstOnly } = options;
     const type = blockType || 'Paragraph';
-
-    return queryContentModelBlocksInternal<T>(group, type, filter, findFirstOnly);
-}
-
-function queryContentModelBlocksInternal<T extends ReadonlyContentModelBlock>(
-    group: ReadonlyContentModelBlockGroup,
-    type: ContentModelBlockType,
-    filter?: (element: T) => element is T,
-    findFirstOnly?: boolean
-): T[] {
     const elements: T[] = [];
     for (let i = 0; i < group.blocks.length; i++) {
         if (findFirstOnly && elements.length > 0) {
             return elements;
         }
         const block = group.blocks[i];
-        switch (block.blockType) {
-            case 'BlockGroup':
-                if (isBlockType<T>(block, type) && (!filter || filter(block))) {
-                    elements.push(block);
+        const results = queryContentModelBlocksInternal<T>(block, type, filter, findFirstOnly);
+        elements.push(...results);
+    }
+    return elements;
+}
+
+function queryContentModelBlocksInternal<T extends ReadonlyContentModelBlock>(
+    block: ReadonlyContentModelBlock,
+    type: ContentModelBlockType,
+    filter?: (element: T) => element is T,
+    findFirstOnly?: boolean
+): T[] {
+    const elements: T[] = [];
+    if (isExpectedBlockType(block, type, filter)) {
+        elements.push(block);
+    }
+
+    if (block.blockType == 'BlockGroup') {
+        for (const childBlock of block.blocks) {
+            if (findFirstOnly && elements.length > 0) {
+                return elements;
+            }
+            const results = queryContentModelBlocksInternal<T>(
+                childBlock,
+                type,
+                filter,
+                findFirstOnly
+            );
+            elements.push(...results);
+        }
+    }
+
+    if (block.blockType == 'Table') {
+        const table = block;
+        for (const row of table.rows) {
+            for (const cell of row.cells) {
+                for (const cellBlock of cell.blocks) {
+                    const results = queryContentModelBlocksInternal<T>(
+                        cellBlock,
+                        type,
+                        filter,
+                        findFirstOnly
+                    );
+                    elements.push(...results);
                 }
-                const blockGroupsResults = queryContentModelBlocksInternal<T>(
-                    block,
-                    type,
-                    filter,
-                    findFirstOnly
-                );
-                elements.push(...blockGroupsResults);
-                break;
-            case 'Table':
-                if (isBlockType<T>(block, type) && (!filter || filter(block))) {
-                    elements.push(block);
-                }
-                const tableResults = searchInTables(block, type, filter, findFirstOnly);
-                elements.push(...tableResults);
-                break;
-            case 'Divider':
-            case 'Entity':
-            case 'Paragraph':
-                if (isBlockType<T>(block, type) && (!filter || filter(block))) {
-                    elements.push(block);
-                }
-                break;
+            }
         }
     }
     return elements;
+}
+
+function isExpectedBlockType<T extends ReadonlyContentModelBlock>(
+    block: ReadonlyContentModelBlock,
+    type: ContentModelBlockType,
+    filter?: (element: T) => element is T
+): block is T {
+    return isBlockType<T>(block, type) && (!filter || filter(block));
 }
 
 function isBlockType<T extends ReadonlyContentModelBlock>(
@@ -89,20 +105,4 @@ function isBlockType<T extends ReadonlyContentModelBlock>(
     type: string
 ): block is T {
     return block.blockType == type;
-}
-
-function searchInTables<T extends ReadonlyContentModelBlock>(
-    table: ReadonlyContentModelTable,
-    type: ContentModelBlockType,
-    filter?: (element: T) => element is T,
-    findFirstOnly?: boolean
-): T[] {
-    const blocks: T[] = [];
-    for (const row of table.rows) {
-        for (const cell of row.cells) {
-            const items = queryContentModelBlocksInternal<T>(cell, type, filter, findFirstOnly);
-            blocks.push(...items);
-        }
-    }
-    return blocks;
 }
