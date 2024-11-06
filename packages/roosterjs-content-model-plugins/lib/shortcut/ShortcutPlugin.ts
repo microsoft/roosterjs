@@ -121,7 +121,7 @@ export class ShortcutPlugin implements EditorPlugin {
             const editor = this.editor;
             const { ctrlKey, metaKey } = event.rawEvent;
             if (ctrlKey && metaKey) {
-                // We don't support both Ctrl and Meta key pressed at the same time
+                // We don't support both Ctrl and Meta key pressed at the same time.
                 return null;
             }
             return (
