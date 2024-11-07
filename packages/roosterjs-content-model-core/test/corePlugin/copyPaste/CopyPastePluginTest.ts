@@ -1394,46 +1394,46 @@ describe('CopyPastePlugin |', () => {
 
     describe('shouldPreventDefaultPaste', () => {
         it('should not prevent default for empty clipboard data', () => {
-            const clipboardData = <ClipboardData>{
+            const clipboardData = <ClipboardData>(<any>{
                 items: null
-            };
+            });
             const editor = <IEditor>(<any>{});
-            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeFalse();
-            expect(shouldPreventDefaultPaste(editor, null)).toBeFalse();
+            expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeFalse();
+            expect(shouldPreventDefaultPaste(null, editor)).toBeFalse();
         });
 
         it('should prevent default on non-Android platforms', () => {
-            const clipboardData = <ClipboardData>{
+            const clipboardData = <ClipboardData>(<any>{
                 items: [{ type: '', kind: 'file' }]
-            };
+            });
             const editor = <IEditor>(<any>{
                 getEnvironment: () => ({ isAndroid: false })
             });
-            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeTrue();
+            expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeTrue();
         });
 
         it('should prevent default for text or image clipboard data on Android platform', () => {
-            const textClipboardData = <ClipboardData>{
+            const textClipboardData = <ClipboardData>(<any>{
                 items: [{ type: 'text/plain', kind: 'string' }]
-            };
-            const imageClipboardData = <ClipboardData>{
+            });
+            const imageClipboardData = <ClipboardData>(<any>{
                 items: [{ type: 'image/png', kind: 'file' }]
-            };
+            });
             const editor = <IEditor>(<any>{
                 getEnvironment: () => ({ isAndroid: true })
             });
-            expect(shouldPreventDefaultPaste(editor, textClipboardData)).toBeTrue();
-            expect(shouldPreventDefaultPaste(editor, imageClipboardData)).toBeTrue();
+            expect(shouldPreventDefaultPaste(textClipboardData, editor)).toBeTrue();
+            expect(shouldPreventDefaultPaste(imageClipboardData, editor)).toBeTrue();
         });
 
         it('should not prevent default for file-only clipboard data on Android platform', () => {
-            const clipboardData = <ClipboardData>{
+            const clipboardData = <ClipboardData>(<any>{
                 items: [{ type: '', kind: 'file' }]
-            };
+            });
             const editor = <IEditor>(<any>{
                 getEnvironment: () => ({ isAndroid: true })
             });
-            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeFalse();
+            expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeFalse();
         });
     });
 });
