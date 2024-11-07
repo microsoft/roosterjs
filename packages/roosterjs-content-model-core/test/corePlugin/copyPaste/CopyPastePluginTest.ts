@@ -27,6 +27,7 @@ import {
     createCopyPastePlugin,
     onNodeCreated,
     preprocessTable,
+    shouldPreventDefaultPaste,
 } from '../../../lib/corePlugin/copyPaste/CopyPastePlugin';
 
 const modelValue = {
@@ -1388,6 +1389,51 @@ describe('CopyPastePlugin |', () => {
                 ],
                 format: {},
             });
+        });
+    });
+
+    describe('shouldPreventDefaultPaste', () => {
+        it('should not prevent default for empty clipboard data', () => {
+            const clipboardData = <ClipboardData>{
+                items: null
+            };
+            const editor = <IEditor>(<any>{});
+            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeFalse();
+            expect(shouldPreventDefaultPaste(editor, null)).toBeFalse();
+        });
+
+        it('should prevent default on non-Android platforms', () => {
+            const clipboardData = <ClipboardData>{
+                items: [{ type: '', kind: 'file' }]
+            };
+            const editor = <IEditor>(<any>{
+                getEnvironment: () => ({ isAndroid: false })
+            });
+            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeTrue();
+        });
+
+        it('should prevent default for text or image clipboard data on Android platform', () => {
+            const textClipboardData = <ClipboardData>{
+                items: [{ type: 'text/plain', kind: 'string' }]
+            };
+            const imageClipboardData = <ClipboardData>{
+                items: [{ type: 'image/png', kind: 'file' }]
+            };
+            const editor = <IEditor>(<any>{
+                getEnvironment: () => ({ isAndroid: true })
+            });
+            expect(shouldPreventDefaultPaste(editor, textClipboardData)).toBeTrue();
+            expect(shouldPreventDefaultPaste(editor, imageClipboardData)).toBeTrue();
+        });
+
+        it('should not prevent default for file-only clipboard data on Android platform', () => {
+            const clipboardData = <ClipboardData>{
+                items: [{ type: '', kind: 'file' }]
+            };
+            const editor = <IEditor>(<any>{
+                getEnvironment: () => ({ isAndroid: true })
+            });
+            expect(shouldPreventDefaultPaste(editor, clipboardData)).toBeFalse();
         });
     });
 });
