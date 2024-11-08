@@ -72,7 +72,8 @@ describe('getFormatState', () => {
                 canUndo: false,
                 canRedo: false,
                 isDarkMode: false,
-            }
+            },
+            undefined
         );
         expect(result).toEqual(expectedFormat);
     }
