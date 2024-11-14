@@ -814,8 +814,8 @@ describe('retrieveModelFormatState', () => {
         const model = createContentModelDocument({});
         const result: ContentModelFormatState = {};
         const para = createParagraph();
-        const text1 = createText('test1', { isBold: true, fontFamily: 'Aptos', fontSize: '16pt' });
-        const text2 = createText('test2', { isBold: false, fontFamily: 'Arial', fontSize: '12pt' });
+        const text1 = createText('test1', { italic: true, fontFamily: 'Aptos', fontSize: '16pt' });
+        const text2 = createText('test2', { fontFamily: 'Arial', fontSize: '12pt' });
         para.segments.push(text1, text2);
 
         text1.isSelected = true;
@@ -830,6 +830,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             isBlockQuote: false,
+            isBold: false,
             isSuperscript: false,
             isSubscript: false,
             fontName: 'Multiple',
