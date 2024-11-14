@@ -809,4 +809,35 @@ describe('retrieveModelFormatState', () => {
             canAddImageAltText: false,
         });
     });
+
+    it('Returns multiple for conflict format', () => {
+        const model = createContentModelDocument({});
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1', { italic: true, fontFamily: 'Aptos', fontSize: '16pt' });
+        const text2 = createText('test2', { fontFamily: 'Arial', fontSize: '12pt' });
+        para.segments.push(text1, text2);
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result, 'returnMultiple');
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontName: 'Multiple',
+            fontSize: 'Multiple',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
 });
