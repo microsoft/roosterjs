@@ -702,6 +702,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 newSelection?.type == 'image' &&
                 selection &&
                 selection.focusNode &&
+                !selection.isCollapsed &&
                 !isSingleImageInSelection(selection)
             ) {
                 const range = selection.getRangeAt(0);
