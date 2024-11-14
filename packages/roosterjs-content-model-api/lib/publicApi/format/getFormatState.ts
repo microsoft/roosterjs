@@ -1,12 +1,16 @@
 import { reducedModelChildProcessor } from '../../modelApi/common/reducedModelChildProcessor';
 import { retrieveModelFormatState } from 'roosterjs-content-model-dom';
-import type { IEditor, ContentModelFormatState } from 'roosterjs-content-model-types';
+import type { IEditor, ContentModelFormatState, ConflictFormatSolution } from 'roosterjs-content-model-types';
 
 /**
  * Get current format state
  * @param editor The editor to get format from
+ * @param conflictSolution The strategy for handling format conflicts
  */
-export function getFormatState(editor: IEditor): ContentModelFormatState {
+export function getFormatState(
+    editor: IEditor,
+    conflictSolution: ConflictFormatSolution = 'remove'
+): ContentModelFormatState {
     const pendingFormat = editor.getPendingFormat();
     const manager = editor.getSnapshotsManager();
     const result: ContentModelFormatState = {
@@ -17,7 +21,7 @@ export function getFormatState(editor: IEditor): ContentModelFormatState {
 
     editor.formatContentModel(
         model => {
-            retrieveModelFormatState(model, pendingFormat, result);
+            retrieveModelFormatState(model, pendingFormat, result, conflictSolution);
 
             return false;
         },
