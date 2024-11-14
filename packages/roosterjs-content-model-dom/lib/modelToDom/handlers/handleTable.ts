@@ -28,7 +28,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     let tableNode = context.allowCacheElement ? table.cachedElement : undefined;
 
     if (tableNode) {
-        refNode = reuseCachedElement(parent, tableNode, refNode);
+        refNode = reuseCachedElement(parent, tableNode, refNode, context);
 
         moveChildNodes(tableNode);
     } else {
@@ -39,6 +39,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         }
 
         parent.insertBefore(tableNode, refNode);
+        context.addedNodes.push(tableNode);
 
         applyFormat(tableNode, context.formatAppliers.block, table.format, context);
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);

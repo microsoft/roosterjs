@@ -81,6 +81,8 @@ export const formatContentModel: FormatContentModel = (
                 data: getChangeData?.(),
                 formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
+                addedNodes: context.addedNodes,
+                removedNodes: context.removedNodes,
             };
 
             core.api.triggerEvent(core, eventData, true /*broadcast*/);

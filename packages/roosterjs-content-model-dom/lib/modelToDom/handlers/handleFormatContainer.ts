@@ -28,7 +28,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     let element = context.allowCacheElement ? container.cachedElement : undefined;
 
     if (element) {
-        refNode = reuseCachedElement(parent, element, refNode);
+        refNode = reuseCachedElement(parent, element, refNode, context);
 
         context.modelHandlers.blockGroupChildren(doc, element, container, context);
     } else if (!isBlockGroupEmpty(container)) {
@@ -39,6 +39,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
         }
 
         parent.insertBefore(containerNode, refNode);
+        context.addedNodes.push(containerNode);
 
         stackFormat(context, container.tagName, () => {
             applyFormat(containerNode, context.formatAppliers.container, container.format, context);

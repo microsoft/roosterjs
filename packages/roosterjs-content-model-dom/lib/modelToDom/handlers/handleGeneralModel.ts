@@ -23,7 +23,7 @@ export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlo
     let node: HTMLElement = group.element;
 
     if (refNode && node.parentNode == parent) {
-        refNode = reuseCachedElement(parent, node, refNode);
+        refNode = reuseCachedElement(parent, node, refNode, context);
     } else {
         node = node.cloneNode() as HTMLElement;
         group.element = node as HTMLElement;
@@ -31,6 +31,7 @@ export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlo
         applyFormat(node, context.formatAppliers.general, group.format, context);
 
         parent.insertBefore(node, refNode);
+        context.addedNodes.push(node);
     }
 
     context.onNodeCreated?.(group, node);
