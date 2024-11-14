@@ -5,10 +5,9 @@ import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import type {
+    ConflictFormatSolution,
     ContentModelFormatState,
     ContentModelSegmentFormat,
-    MergeFormatValueCallback,
-    MergeFormatValueCallbacks,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelBlock,
     ReadonlyContentModelImage,
@@ -24,13 +23,13 @@ import type {
  * @param model The Content Model to retrieve format state from
  * @param pendingFormat Existing pending format, if any
  * @param formatState Existing format state object, used for receiving the result
- * @param callbacks Callbacks to customize the behavior of merging format values
+ * @param conflictSolution The strategy for handling format conflicts
  */
 export function retrieveModelFormatState(
     model: ReadonlyContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState,
-    callbacks?: MergeFormatValueCallbacks
+    conflictSolution: ConflictFormatSolution = 'remove'
 ) {
     let firstTableContext: ReadonlyTableSelectionContext | undefined;
     let firstBlock: ReadonlyContentModelBlock | undefined;
@@ -42,7 +41,7 @@ export function retrieveModelFormatState(
         model,
         (path, tableContext, block, segments) => {
             // Structure formats
-            retrieveStructureFormat(formatState, path, isFirst, callbacks);
+            retrieveStructureFormat(formatState, path, isFirst, conflictSolution);
 
             // Multiple line format
             if (block) {
@@ -55,7 +54,7 @@ export function retrieveModelFormatState(
 
             if (block?.blockType == 'Paragraph') {
                 // Paragraph formats
-                retrieveParagraphFormat(formatState, block, isFirst, callbacks);
+                retrieveParagraphFormat(formatState, block, isFirst, conflictSolution);
 
                 // Segment formats
                 segments?.forEach(segment => {
@@ -79,10 +78,10 @@ export function retrieveModelFormatState(
                                 segment.link?.format,
                                 pendingFormat
                             ),
-                            callbacks
+                            conflictSolution
                         );
 
-                        mergeValue(formatState, 'isCodeInline', !!segment?.code, isFirst, undefined, callbacks);
+                        mergeValue(formatState, 'isCodeInline', !!segment?.code, isFirst, conflictSolution);
                     }
 
                     // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
@@ -144,54 +143,54 @@ function retrieveSegmentFormat(
     result: ContentModelFormatState,
     isFirst: boolean,
     mergedFormat: ContentModelSegmentFormat,
-    callbacks?: MergeFormatValueCallbacks
+    conflictSolution: ConflictFormatSolution = 'remove'
 ) {
     const superOrSubscript = mergedFormat.superOrSubScriptSequence?.split(' ')?.pop();
 
-    mergeValue(result, 'isBold', isBold(mergedFormat.fontWeight), isFirst, undefined, callbacks);
-    mergeValue(result, 'isItalic', mergedFormat.italic, isFirst, undefined, callbacks);
-    mergeValue(result, 'isUnderline', mergedFormat.underline, isFirst, undefined, callbacks);
-    mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst, undefined, callbacks);
-    mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst, undefined, callbacks);
-    mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst, undefined, callbacks);
-    mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst, undefined, callbacks);
+    mergeValue(result, 'isBold', isBold(mergedFormat.fontWeight), isFirst, conflictSolution);
+    mergeValue(result, 'isItalic', mergedFormat.italic, isFirst, conflictSolution);
+    mergeValue(result, 'isUnderline', mergedFormat.underline, isFirst, conflictSolution);
+    mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst, conflictSolution);
+    mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst, conflictSolution);
+    mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst, conflictSolution);
+    mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst, conflictSolution);
 
-    mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst, undefined, callbacks);
+    mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst, conflictSolution);
     mergeValue(
         result,
         'fontSize',
         mergedFormat.fontSize,
         isFirst,
-        val => parseValueWithUnit(val, undefined, 'pt') + 'pt',
-        callbacks
+        conflictSolution,
+        val => parseValueWithUnit(val, undefined, 'pt') + 'pt'
     );
-    mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst, undefined, callbacks);
-    mergeValue(result, 'textColor', mergedFormat.textColor, isFirst, undefined, callbacks);
-    mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst, undefined, callbacks);
-    mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst, undefined, callbacks);
+    mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst, conflictSolution);
+    mergeValue(result, 'textColor', mergedFormat.textColor, isFirst, conflictSolution);
+    mergeValue(result, 'fontWeight', mergedFormat.fontWeight, isFirst, conflictSolution);
+    mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst, conflictSolution);
 }
 
 function retrieveParagraphFormat(
     result: ContentModelFormatState,
     paragraph: ReadonlyContentModelParagraph,
     isFirst: boolean,
-    callbacks?: MergeFormatValueCallbacks
+    conflictSolution: ConflictFormatSolution = 'remove'
 ) {
     const headingLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
     const validHeadingLevel = headingLevel >= 1 && headingLevel <= 6 ? headingLevel : undefined;
 
-    mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst, undefined, callbacks);
-    mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst, undefined, callbacks);
-    mergeValue(result, 'headingLevel', validHeadingLevel, isFirst, undefined, callbacks);
-    mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst, undefined, callbacks);
-    mergeValue(result, 'direction', paragraph.format.direction, isFirst, undefined, callbacks);
+    mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst, conflictSolution);
+    mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst, conflictSolution);
+    mergeValue(result, 'headingLevel', validHeadingLevel, isFirst, conflictSolution);
+    mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst, conflictSolution);
+    mergeValue(result, 'direction', paragraph.format.direction, isFirst, conflictSolution);
 }
 
 function retrieveStructureFormat(
     result: ContentModelFormatState,
     path: ReadonlyContentModelBlockGroup[],
     isFirst: boolean,
-    callbacks?: MergeFormatValueCallbacks
+    conflictSolution: ConflictFormatSolution = 'remove'
 ) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
     const containerIndex = getClosestAncestorBlockGroupIndex(path, ['FormatContainer'], []);
@@ -200,8 +199,8 @@ function retrieveStructureFormat(
         const listItem = path[listItemIndex] as ReadonlyContentModelListItem;
         const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
 
-        mergeValue(result, 'isBullet', listType == 'UL', isFirst, undefined, callbacks);
-        mergeValue(result, 'isNumbering', listType == 'OL', isFirst, undefined, callbacks);
+        mergeValue(result, 'isBullet', listType == 'UL', isFirst, conflictSolution);
+        mergeValue(result, 'isNumbering', listType == 'OL', isFirst, conflictSolution);
     }
 
     mergeValue(
@@ -210,8 +209,7 @@ function retrieveStructureFormat(
         containerIndex >= 0 &&
             (path[containerIndex] as ReadonlyContentModelFormatContainer)?.tagName == 'blockquote',
         isFirst,
-        undefined,
-        callbacks
+        conflictSolution
     );
 }
 
@@ -252,19 +250,27 @@ function mergeValue<K extends keyof ContentModelFormatState>(
     key: K,
     newValue: ContentModelFormatState[K] | undefined,
     isFirst: boolean,
+    conflictSolution: ConflictFormatSolution = 'remove',
     parseFn: (val: ContentModelFormatState[K]) => ContentModelFormatState[K] = val => val,
-    callbacks?: MergeFormatValueCallbacks
 ) {
     if (isFirst) {
         if (newValue !== undefined) {
             format[key] = newValue;
         }
     } else if (parseFn(newValue) !== parseFn(format[key])) {
-        const callback = callbacks?.[key] as MergeFormatValueCallback | undefined;
-        if (callback) {
-            callback(format, newValue);
-        } else {
-            delete format[key];
+        switch (conflictSolution) {
+            case 'remove':
+                delete format[key];
+                break;
+            case 'keepFirst':
+                break;
+            case 'returnMultiple':
+                if (typeof format[key] === 'string') {
+                    (format[key] as string) = 'Multiple';
+                } else {
+                    delete format[key];
+                }
+                break;
         }
     }
 }

@@ -2,7 +2,7 @@ import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelec
 import { addCode } from '../../../lib/modelApi/common/addDecorators';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/editing/applyTableFormat';
-import { ContentModelFormatState, ContentModelSegmentFormat, MergeFormatValueCallbacks } from 'roosterjs-content-model-types';
+import { ContentModelFormatState, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
@@ -810,16 +810,13 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('Different format with callbacks', () => {
+    it('Returns multiple for conflict format', () => {
         const model = createContentModelDocument({});
         const result: ContentModelFormatState = {};
         const para = createParagraph();
-        const text1 = createText('test1', { fontFamily: 'Aptos', fontSize: '16pt' });
-        const text2 = createText('test2', { fontFamily: 'Arial', fontSize: '12pt' });
+        const text1 = createText('test1', { isBold: true, fontFamily: 'Aptos', fontSize: '16pt' });
+        const text2 = createText('test2', { isBold: false, fontFamily: 'Arial', fontSize: '12pt' });
         para.segments.push(text1, text2);
-        const callbacks: MergeFormatValueCallbacks = {
-            fontName: (format, _newValue) => format.fontName = 'Multiple',
-        };
 
         text1.isSelected = true;
         text2.isSelected = true;
@@ -829,14 +826,14 @@ describe('retrieveModelFormatState', () => {
             return false;
         });
 
-        retrieveModelFormatState(model, null, result, callbacks);
+        retrieveModelFormatState(model, null, result, 'returnMultiple');
 
         expect(result).toEqual({
             isBlockQuote: false,
-            isBold: false,
             isSuperscript: false,
             isSubscript: false,
             fontName: 'Multiple',
+            fontSize: 'Multiple',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,

@@ -73,7 +73,7 @@ describe('getFormatState', () => {
                 canRedo: false,
                 isDarkMode: false,
             },
-            undefined
+            'remove'
         );
         expect(result).toEqual(expectedFormat);
     }

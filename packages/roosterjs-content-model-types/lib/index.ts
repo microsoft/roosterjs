@@ -445,7 +445,7 @@ export {
     ModelToTextCallbacks,
     ModelToTextChecker,
 } from './parameter/ModelToTextCallbacks';
-export { MergeFormatValueCallback, MergeFormatValueCallbacks } from './parameter/MergeFormatValueCallbacks';
+export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
