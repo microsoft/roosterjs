@@ -1,5 +1,6 @@
 import {
     ChangeSource,
+    createText,
     deleteSelection,
     isModifierKey,
     normalizeContentModel,
@@ -25,6 +26,18 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
                 if (result.deleteResult == 'range') {
                     // We have deleted something, next input should inherit the segment format from deleted content, so set pending format here
                     context.newPendingFormat = result.insertPoint?.marker.format;
+
+                    if (result.insertPoint) {
+                        const { marker, paragraph } = result.insertPoint;
+                        const text = createText('\u200B', marker.format);
+                        const index = paragraph.segments.indexOf(marker);
+
+                        text.isSelected = true;
+
+                        if (index >= 0) {
+                            paragraph.segments.splice(index, 1, text);
+                        }
+                    }
 
                     normalizeContentModel(model);
 

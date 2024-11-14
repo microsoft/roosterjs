@@ -1,4 +1,4 @@
-import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { createText, deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -12,6 +12,18 @@ export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelS
         const result = deleteSelection(model, [], context);
 
         if (result.deleteResult == 'range') {
+            if (result.insertPoint) {
+                const { marker, paragraph } = result.insertPoint;
+                const text = createText('\u200B', marker.format);
+                const index = paragraph.segments.indexOf(marker);
+
+                text.isSelected = true;
+
+                if (index >= 0) {
+                    paragraph.segments.splice(index, 1, text);
+                }
+            }
+
             normalizeContentModel(model);
 
             editor.takeSnapshot();
