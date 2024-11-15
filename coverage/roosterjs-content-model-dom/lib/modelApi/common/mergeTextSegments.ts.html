@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-core/lib/coreApi/formatContentModel/scrollCaretIntoView.ts</title>
+    <title>Code coverage report for roosterjs-content-model-dom/lib/modelApi/common/mergeTextSegments.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/coreApi/formatContentModel</a> scrollCaretIntoView.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-dom/lib/modelApi/common</a> mergeTextSegments.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/12</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -96,14 +96,77 @@
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">182x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">182x</span>
+<span class="cline-any cline-yes">325x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">325x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">276x</span>
+<span class="cline-any cline-yes">253x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">94x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -116,63 +179,69 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getDOMInsertPointRect } from 'roosterjs-content-model-dom';
-import type { EditorCore, ImageSelection, RangeSelection } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { areSameFormats } from '../../domToModel/utils/areSameFormats';
+import type {
+    ContentModelText,
+    ReadonlyContentModelCode,
+    ReadonlyContentModelLink,
+    ReadonlyContentModelSegment,
+    ShallowMutableContentModelParagraph,
+} from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * @internal
+ * Find continuous text segments that have the same format and decorators, merge them, So we can reduce total count of segments
+ * @param block The parent paragraph to check.
  */
-export function scrollCaretIntoView(core: EditorCore, selection: RangeSelection | ImageSelection) {
-    const rect = getDOMInsertPointRect(
-        core.physicalRoot.ownerDocument,
-        selection.type == 'image'
-            ? {
-                  node: selection.image,
-                  offset: 0,
-              }
-            : selection.isReverted
-            ? {
-                  node: selection.range.startContainer,
-                  offset: selection.range.startOffset,
-              }
-            : {
-                  node: selection.range.endContainer,
-                  offset: selection.range.endOffset,
-              }
-    );
-    const visibleRect = core.api.getVisibleViewport(core);
-    const scrollContainer = core.domEvent.scrollContainer;
+export function mergeTextSegments(block: ShallowMutableContentModelParagraph) {
+    let lastText: ContentModelText | null = null;
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (rect &amp;&amp; visibleRect) {
-        if (rect.bottom &gt; visibleRect.bottom) {
-            const zoomScale = core.domHelper.calculateZoomScale();
+    for (let i = 0; i &lt; block.segments.length; i++) {
+        const segment = block.segments[i];
 &nbsp;
-            scrollContainer.scrollTop += (rect.bottom - visibleRect.bottom) / zoomScale;
-        } else if (rect.top &lt; visibleRect.top) {
-            const zoomScale = core.domHelper.calculateZoomScale();
-&nbsp;
-            scrollContainer.scrollTop += (rect.top - visibleRect.top) / zoomScale;
+        if (segment.segmentType != 'Text') {
+            lastText = null;
+        } else if (!lastText || !segmentsWithSameFormat(lastText, segment)) {
+            lastText = segment;
+        } else {
+            lastText.text += segment.text;
+            block.segments.splice(i, 1);
+            i--;
         }
     }
+}
+&nbsp;
+function segmentsWithSameFormat(
+    seg1: ReadonlyContentModelSegment,
+    seg2: ReadonlyContentModelSegment
+) {
+    return (
+        !!seg1.isSelected == !!seg2.isSelected &amp;&amp;
+        areSameFormats(seg1.format, seg2.format) &amp;&amp;
+        areSameLinks(seg1.link, seg2.link) &amp;&amp;
+        areSameCodes(seg1.code, seg2.code)
+    );
+}
+&nbsp;
+function areSameLinks(
+    link1: ReadonlyContentModelLink | undefined,
+    link2: ReadonlyContentModelLink | undefined
+) {
+    return (
+        (!link1 &amp;&amp; !link2) ||
+        (link1 &amp;&amp;
+            link2 &amp;&amp;
+            areSameFormats(link1.format, link2.format) &amp;&amp;
+            areSameFormats(link1.dataset, link2.dataset))
+    );
+}
+&nbsp;
+function areSameCodes(
+    code1: ReadonlyContentModelCode | undefined,
+    code2: ReadonlyContentModelCode | undefined
+) {
+    return (!code1 &amp;&amp; !code2) || (code1 &amp;&amp; code2 &amp;&amp; areSameFormats(code1.format, code2.format));
 }
 &nbsp;</pre></td></tr></table></pre>
 
