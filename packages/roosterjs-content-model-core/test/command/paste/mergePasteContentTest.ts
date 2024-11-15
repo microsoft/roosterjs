@@ -971,7 +971,7 @@ describe('mergePasteContent', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Unformatted line\n',
+                                text: 'Unformatted line',
                                 format: {
                                     fontSize: '14px',
                                     textColor: 'white',
@@ -1149,7 +1149,15 @@ describe('mergePasteContent', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'Unformatted line\n',
+                            text: 'Unformatted line',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
                             format: {
                                 fontSize: '14px',
                                 textColor: 'white',
@@ -1482,7 +1490,15 @@ describe('mergePasteContent', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Inline text\n',
+                                text: 'Inline text',
+                                format: {
+                                    fontSize: '14px',
+                                    textColor: 'rgb(0,0,0)',
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
                                 format: {
                                     fontSize: '14px',
                                     textColor: 'rgb(0,0,0)',
@@ -1537,7 +1553,15 @@ describe('mergePasteContent', () => {
                         },
                         {
                             segmentType: 'Text',
-                            text: 'Inline text\n',
+                            text: 'Inline text',
+                            format: {
+                                fontSize: '14px',
+                                textColor: 'rgb(0,0,0)',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
                             format: {
                                 fontSize: '14px',
                                 textColor: 'rgb(0,0,0)',
@@ -1605,7 +1629,16 @@ describe('mergePasteContent', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Inline text\n',
+                                text: 'Inline text',
+                                format: {
+                                    fontFamily: 'Aptos',
+                                    fontSize: '14px',
+                                    textColor: 'white',
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '\n',
                                 format: {
                                     fontFamily: 'Aptos',
                                     fontSize: '14px',
@@ -1653,7 +1686,16 @@ describe('mergePasteContent', () => {
                         { segmentType: 'Text', text: 'Text in source', format: {} },
                         {
                             segmentType: 'Text',
-                            text: 'Inline text\n',
+                            text: 'Inline text',
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '14px',
+                                textColor: 'white',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\n',
                             format: {
                                 fontFamily: 'Aptos',
                                 fontSize: '14px',

@@ -2,16 +2,12 @@ import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
-import { mutateBlock, mutateSegment, mutateSegments } from './mutate';
+import { mutateBlock, mutateSegment } from './mutate';
 import { normalizeAllSegments } from './normalizeSegment';
 import type {
     ContentModelSegmentFormat,
-    ContentModelText,
-    ReadonlyContentModelCode,
-    ReadonlyContentModelLink,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
-    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -52,7 +48,6 @@ export function normalizeParagraph(paragraph: ReadonlyContentModelParagraph) {
 
     removeEmptyLinks(paragraph);
     removeEmptySegments(paragraph);
-    mergeTextSegments(paragraph);
     moveUpSegmentFormat(paragraph);
 }
 
@@ -74,58 +69,6 @@ function removeEmptySegments(block: ReadonlyContentModelParagraph) {
             mutateBlock(block).segments.splice(j, 1);
         }
     }
-}
-
-function mergeTextSegments(block: ReadonlyContentModelParagraph) {
-    let lastText: ReadonlyContentModelText | null = null;
-
-    for (let i = 0; i < block.segments.length; i++) {
-        const segment = block.segments[i];
-
-        if (segment.segmentType != 'Text') {
-            lastText = null;
-        } else if (!lastText || !segmentsWithSameFormat(lastText, segment)) {
-            lastText = segment;
-        } else {
-            const [mutableBlock, [mutableLastText]] = mutateSegments(block, [lastText, segment]);
-
-            (mutableLastText as ContentModelText).text += segment.text;
-            mutableBlock.segments.splice(i, 1);
-            i--;
-        }
-    }
-}
-
-function segmentsWithSameFormat(
-    seg1: ReadonlyContentModelSegment,
-    seg2: ReadonlyContentModelSegment
-) {
-    return (
-        !!seg1.isSelected == !!seg2.isSelected &&
-        areSameFormats(seg1.format, seg2.format) &&
-        areSameLinks(seg1.link, seg2.link) &&
-        areSameCodes(seg1.code, seg2.code)
-    );
-}
-
-function areSameLinks(
-    link1: ReadonlyContentModelLink | undefined,
-    link2: ReadonlyContentModelLink | undefined
-) {
-    return (
-        (!link1 && !link2) ||
-        (link1 &&
-            link2 &&
-            areSameFormats(link1.format, link2.format) &&
-            areSameFormats(link1.dataset, link2.dataset))
-    );
-}
-
-function areSameCodes(
-    code1: ReadonlyContentModelCode | undefined,
-    code2: ReadonlyContentModelCode | undefined
-) {
-    return (!code1 && !code2) || (code1 && code2 && areSameFormats(code1.format, code2.format));
 }
 
 function removeEmptyLinks(paragraph: ReadonlyContentModelParagraph) {

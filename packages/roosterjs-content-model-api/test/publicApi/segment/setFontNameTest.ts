@@ -237,15 +237,7 @@ describe('setFontName', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     fontFamily: 'Arial',
                                 },

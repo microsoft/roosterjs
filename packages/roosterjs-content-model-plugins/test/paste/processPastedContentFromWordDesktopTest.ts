@@ -80,7 +80,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],
@@ -101,7 +106,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],
@@ -4254,7 +4264,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     isImplicit: true,
                                     segments: [
                                         {
-                                            text: 'text.',
+                                            text: 'text',
+                                            segmentType: 'Text',
+                                            format: {},
+                                        },
+                                        {
+                                            text: '.',
                                             segmentType: 'Text',
                                             format: {},
                                         },
@@ -4833,7 +4848,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     isImplicit: true,
                                     segments: [
                                         {
-                                            text: 'text ',
+                                            text: 'text',
+                                            segmentType: 'Text',
+                                            format: {},
+                                        },
+                                        {
+                                            text: ' ',
                                             segmentType: 'Text',
                                             format: {},
                                         },
