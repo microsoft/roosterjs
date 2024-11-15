@@ -10,6 +10,7 @@ import {
 import type {
     ContentModelListItem,
     DeleteSelectionStep,
+    ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelListItem,
     ShallowMutableContentModelListItem,
@@ -53,19 +54,28 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
             const nextBlock = listParent.blocks[listIndex + 1];
 
             if (nextBlock) {
-                const nextListItem = listParent.blocks[listIndex + 1];
-
                 if (
-                    isBlockGroupOfType<ContentModelListItem>(nextListItem, 'ListItem') &&
-                    nextListItem.levels[0]
+                    isBlockGroupOfType<ContentModelListItem>(nextBlock, 'ListItem') &&
+                    nextBlock.levels[0]
                 ) {
-                    nextListItem.levels.forEach(level => {
+                    nextBlock.levels.forEach(level => {
                         // Remove startNumberOverride so that next list item can join current list, unless it is 1.
                         // List start with 1 means it should be an explicit new list and should never join another list before it
                         if (level.format.startNumberOverride !== 1) {
                             level.format.startNumberOverride = undefined;
                         }
                     });
+
+                    if (listItem.levels.length == 0) {
+                        const index = findIndex(
+                            listParent.blocks,
+                            nextBlock.levels.length,
+                            listIndex
+                        );
+                        nextBlock.levels[
+                            nextBlock.levels.length - 1
+                        ].format.startNumberOverride = index;
+                    }
                 }
             }
 
@@ -75,12 +85,15 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
 };
 
 const isEmptyListItem = (listItem: ReadonlyContentModelListItem) => {
+    return listItem.blocks.length === 1 && isEmptyParagraph(listItem.blocks[0]);
+};
+
+const isEmptyParagraph = (block: ReadonlyContentModelBlock) => {
     return (
-        listItem.blocks.length === 1 &&
-        listItem.blocks[0].blockType === 'Paragraph' &&
-        listItem.blocks[0].segments.length === 2 &&
-        listItem.blocks[0].segments[0].segmentType === 'SelectionMarker' &&
-        listItem.blocks[0].segments[1].segmentType === 'Br'
+        block.blockType === 'Paragraph' &&
+        block.segments.length === 2 &&
+        block.segments[0].segmentType === 'SelectionMarker' &&
+        block.segments[1].segmentType === 'Br'
     );
 };
 
@@ -98,7 +111,7 @@ const createNewListItem = (
     const levels = createNewListLevel(listItem);
     const newListItem: ShallowMutableContentModelListItem = createListItem(
         levels,
-        insertPoint.marker.format
+        listItem.formatHolder.format
     );
 
     newListItem.blocks.push(newParagraph);
@@ -133,4 +146,30 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
             level.dataset
         );
     });
+};
+
+const findIndex = (
+    blocks: readonly ReadonlyContentModelBlock[],
+    levelLength: number,
+    index: number
+) => {
+    let counter = 1;
+    for (let i = index; i > -1; i--) {
+        const listItem = blocks[i];
+        if (
+            isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
+            listItem.levels.length === levelLength
+        ) {
+            counter++;
+        } else if (
+            !(
+                isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
+                listItem.levels.length == 0
+            )
+        ) {
+            return counter;
+        }
+    }
+
+    return counter;
 };

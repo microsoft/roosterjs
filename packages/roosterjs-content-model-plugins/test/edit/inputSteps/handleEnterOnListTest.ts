@@ -1797,6 +1797,108 @@ describe('handleEnterOnList', () => {
         };
         runTest(model, expectedModel, 'range', listItem);
     });
+
+    it('Selection Marker has styles from previous list item', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: { fontSize: '20pt', fontWeight: 'bold' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: { fontWeight: 'bold' },
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: { fontSize: '10pt' },
+                    },
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                },
+            ],
+        };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { fontSize: '20pt', fontWeight: 'bold' },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontWeight: 'bold' },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {
+                        startNumberOverride: undefined,
+                        displayForDummyItem: undefined,
+                    },
+                    dataset: {},
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: { fontSize: '10pt' },
+            },
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Br',
+                                    format: { fontSize: '20pt', fontWeight: 'bold' },
+                                },
+                            ],
+                            format: {},
+                            segmentFormat: { fontSize: '20pt' },
+                        },
+                    ],
+                    format: {},
+                    formatHolder: { segmentType: 'SelectionMarker', format: { fontSize: '10pt' } },
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                },
+                listItem,
+            ],
+        };
+
+        runTest(model, expectedModel, 'range', listItem);
+    });
 });
 
 describe('handleEnterOnList - keyboardEnter', () => {
@@ -2766,6 +2868,334 @@ describe('handleEnterOnList - keyboardEnter', () => {
             ],
         };
 
+        runTest(model, false, expectedModel, false, 1);
+    });
+
+    it('List item must continue second level', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'lower-alpha',
+                            },
+                            dataset: {
+                                editingInfo: '{"applyListStyleFromLevel":true}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'lower-alpha',
+                            },
+                            dataset: {
+                                editingInfo: '{"applyListStyleFromLevel":true}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'lower-alpha',
+                            },
+                            dataset: {
+                                editingInfo: '{"applyListStyleFromLevel":true}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                                startNumberOverride: undefined,
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'lower-alpha',
+                                startNumberOverride: 2,
+                            },
+                            dataset: {
+                                editingInfo: '{"applyListStyleFromLevel":true}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
         runTest(model, false, expectedModel, false, 1);
     });
 });

@@ -202,7 +202,7 @@ const createShadowSpan = (wrapper: HTMLSpanElement) => {
     const shadowRoot = span.attachShadow({
         mode: 'open',
     });
-    span.style.verticalAlign = 'bottom';
+    wrapper.style.verticalAlign = 'bottom';
     shadowRoot.append(wrapper);
     return span;
 };

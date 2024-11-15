@@ -445,6 +445,7 @@ export {
     ModelToTextCallbacks,
     ModelToTextChecker,
 } from './parameter/ModelToTextCallbacks';
+export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
