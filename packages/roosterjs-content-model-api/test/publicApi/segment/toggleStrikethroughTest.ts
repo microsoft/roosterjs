@@ -229,15 +229,7 @@ describe('toggleStrikethrough', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    strikethrough: true,
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     strikethrough: true,
                                 },

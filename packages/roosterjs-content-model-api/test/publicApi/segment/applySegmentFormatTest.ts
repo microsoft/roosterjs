@@ -275,23 +275,7 @@ describe('applySegmentFormat', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    backgroundColor: undefined,
-                                    fontFamily: undefined,
-                                    fontSize: '10px',
-                                    fontWeight: undefined,
-                                    italic: true,
-                                    strikethrough: undefined,
-                                    superOrSubScriptSequence: undefined,
-                                    textColor: 'red',
-                                    underline: false,
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     backgroundColor: undefined,
                                     fontFamily: undefined,
