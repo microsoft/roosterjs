@@ -1,3 +1,4 @@
+import type { ApplyPendingFormatEvent } from './ApplyPendingFormatEvent';
 import type { BeforeCutCopyEvent } from './BeforeCutCopyEvent';
 import type { BeforeDisposeEvent } from './BeforeDisposeEvent';
 import type { BeforeKeyboardEditingEvent } from './BeforeKeyboardEditingEvent';
@@ -22,6 +23,7 @@ import type { ZoomChangedEvent } from './ZoomChangedEvent';
  * Editor plugin event interface
  */
 export type PluginEvent =
+    | ApplyPendingFormatEvent
     | BeforeCutCopyEvent
     | BeforeDisposeEvent
     | BeforeKeyboardEditingEvent

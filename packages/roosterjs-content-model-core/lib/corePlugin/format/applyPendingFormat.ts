@@ -25,7 +25,7 @@ export function applyPendingFormat(
 
     editor.formatContentModel(
         (model, context) => {
-            iterateSelections(model, (_, __, block, segments) => {
+            iterateSelections(model, (path, _, block, segments) => {
                 if (
                     block?.blockType == 'Paragraph' &&
                     segments?.length == 1 &&
@@ -45,25 +45,36 @@ export function applyPendingFormat(
                                 previousSegment.text = text.substring(0, text.length - data.length);
                             });
 
-                            mutateSegment(block, marker, (marker, block) => {
-                                marker.format = { ...format };
+                            const newText = createText(
+                                data == ANSI_SPACE ? NON_BREAK_SPACE : data,
+                                {
+                                    ...previousSegment.format,
+                                    ...format,
+                                }
+                            );
+                            const [mutableParagraph] = mutateSegment(
+                                block,
+                                marker,
+                                (marker, block) => {
+                                    marker.format = { ...format };
 
-                                const newText = createText(
-                                    data == ANSI_SPACE ? NON_BREAK_SPACE : data,
-                                    {
-                                        ...previousSegment.format,
-                                        ...format,
-                                    }
-                                );
+                                    block.segments.splice(index, 0, newText);
+                                    setParagraphNotImplicit(block);
+                                }
+                            );
 
-                                block.segments.splice(index, 0, newText);
-                                setParagraphNotImplicit(block);
+                            editor.triggerEvent('applyPendingFormat', {
+                                paragraph: mutableParagraph,
+                                text: newText,
+                                path,
+                                format,
                             });
 
                             isChanged = true;
                         }
                     }
                 }
+
                 return true;
             });
 

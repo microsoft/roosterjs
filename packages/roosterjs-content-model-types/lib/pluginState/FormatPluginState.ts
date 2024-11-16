@@ -1,3 +1,4 @@
+import { DOMHelper } from 'roosterjs/lib';
 import type { DOMInsertPoint } from '../selection/DOMSelection';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 
@@ -29,4 +30,12 @@ export interface FormatPluginState {
      * Pending format
      */
     pendingFormat: PendingFormat | null;
+
+    /**
+     * An optional checker function to determine if we should run the default format apply function to current editing position
+     * @param element Current HTML element
+     * @param domHelper DOM Helper to help doing checking
+     * @returns True if we need to apply default format, otherwise false
+     */
+    applyDefaultFormatChecker: ((element: HTMLElement, domHelper: DOMHelper) => boolean) | null;
 }

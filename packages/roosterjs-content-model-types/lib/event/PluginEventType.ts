@@ -128,4 +128,9 @@ export type PluginEventType =
      * Editor content is about to be changed by keyboard event.
      * This is only used by Content Model editing
      */
-    | 'beforeKeyboardEditing';
+    | 'beforeKeyboardEditing'
+
+    /**
+     * We just applied default format to the given text segment
+     */
+    | 'applyPendingFormat';

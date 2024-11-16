@@ -10,6 +10,7 @@ import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { DOMHelper } from '../parameter/DOMHelper';
 
 /**
  * Options for colors and dark mode
@@ -164,6 +165,14 @@ export interface EditorBaseOptions {
      * @returns A template string to announce, use placeholder such as "{0}" for variables if necessary
      */
     announcerStringGetter?: (key: KnownAnnounceStrings) => string;
+
+    /**
+     * An optional checker function to determine if we should run the default format apply function to current editing position
+     * @param element Current HTML element
+     * @param domHelper DOM Helper to help doing checking
+     * @returns True if we need to apply default format, otherwise false
+     */
+    applyDefaultFormatChecker?: (element: HTMLElement, domHelper: DOMHelper) => boolean;
 }
 
 /**

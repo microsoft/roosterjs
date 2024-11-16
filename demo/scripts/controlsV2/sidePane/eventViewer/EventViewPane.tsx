@@ -184,6 +184,22 @@ export default class ContentModelEventViewPane extends React.Component<
             case 'input':
                 return <span>Input type={event.rawEvent.inputType}</span>;
 
+            case 'applyPendingFormat':
+                return (
+                    <>
+                        <span>
+                            Text={event.text.text}
+                            <br />
+                        </span>
+                        {getObjectKeys(event.format).map(key => (
+                            <span>
+                                {key}:{event.format[key]?.toString() ?? ''}
+                                <br />
+                            </span>
+                        ))}
+                    </>
+                );
+
             default:
                 return null;
         }

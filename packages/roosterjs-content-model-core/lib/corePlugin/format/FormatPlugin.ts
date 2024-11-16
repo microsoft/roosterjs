@@ -52,6 +52,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         this.state = {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
+            applyDefaultFormatChecker: option.applyDefaultFormatChecker ?? null,
         };
 
         this.defaultFormatKeys = new Set<keyof CSSStyleDeclaration>();
@@ -118,13 +119,16 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                 break;
 
             case 'keyDown':
-                const isAndroidIME = this.editor.getEnvironment().isAndroid && event.rawEvent.key == UnidentifiedKey;
+                const isAndroidIME =
+                    this.editor.getEnvironment().isAndroid && event.rawEvent.key == UnidentifiedKey;
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
                     this.lastCheckedNode = null;
                 } else if (
                     this.defaultFormatKeys.size > 0 &&
-                    (isAndroidIME || isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                    (isAndroidIME ||
+                        isCharacterValue(event.rawEvent) ||
+                        event.rawEvent.key == ProcessKey) &&
                     this.shouldApplyDefaultFormat(this.editor)
                 ) {
                     applyDefaultFormat(this.editor, this.state.defaultFormat);
@@ -190,6 +194,10 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                 ? posContainer
                 : posContainer.parentElement;
             const foundFormatKeys = new Set<keyof CSSStyleDeclaration>();
+
+            if (element && this.state.applyDefaultFormatChecker?.(element, editor.getDOMHelper())) {
+                return true;
+            }
 
             while (element?.parentElement && domHelper.isNodeInEditor(element.parentElement)) {
                 if (element.getAttribute?.('style')) {
