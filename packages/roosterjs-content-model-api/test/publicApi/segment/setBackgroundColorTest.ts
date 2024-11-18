@@ -248,14 +248,7 @@ describe('setBackgroundColor', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    backgroundColor: 'red',
-                                },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     backgroundColor: 'red',
                                 },

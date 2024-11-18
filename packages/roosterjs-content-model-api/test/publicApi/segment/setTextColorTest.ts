@@ -236,15 +236,7 @@ describe('setTextColor', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    textColor: 'red',
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     textColor: 'red',
                                 },

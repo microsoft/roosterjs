@@ -71,6 +71,7 @@ export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
 export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
+export { mergeTextSegments } from './modelApi/common/mergeTextSegments';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr';
