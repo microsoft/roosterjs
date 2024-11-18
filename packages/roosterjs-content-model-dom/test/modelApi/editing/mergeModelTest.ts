@@ -96,7 +96,12 @@ describe('mergeModel', () => {
             segments: [
                 {
                     segmentType: 'Text',
-                    text: 'test1test2',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
                     format: {},
                 },
                 {
@@ -395,7 +400,12 @@ describe('mergeModel', () => {
                             segments: [
                                 {
                                     segmentType: 'Text',
-                                    text: 'test11newText1',
+                                    text: 'test11',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'newText1',
                                     format: {},
                                 },
                             ],
@@ -1690,7 +1700,12 @@ describe('mergeModel', () => {
                 },
                 {
                     segmentType: 'Text',
-                    text: 'test1new text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
                     format: {},
                 },
                 marker2,
@@ -2937,7 +2952,9 @@ describe('mergeModel', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1sourceTest1sourceTest2', format: {} },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                { segmentType: 'Text', text: 'sourceTest1', format: {} },
+                { segmentType: 'Text', text: 'sourceTest2', format: {} },
                 {
                     segmentType: 'SelectionMarker',
                     isSelected: true,
@@ -4080,7 +4097,12 @@ describe('mergeModel', () => {
                 },
                 {
                     segmentType: 'Text',
-                    text: 'test1new text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
                     format: {},
                 },
                 marker2,
@@ -4952,7 +4974,12 @@ describe('mergeModel', () => {
                 },
                 {
                     segmentType: 'Text',
-                    text: 'test1new text',
+                    text: 'test1',
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'new text',
                     format: {},
                 },
                 marker2,

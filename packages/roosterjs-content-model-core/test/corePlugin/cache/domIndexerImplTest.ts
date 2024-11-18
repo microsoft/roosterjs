@@ -89,6 +89,7 @@ describe('domIndexerImpl.onParagraph', () => {
         const segment1 = 'Segment1' as any;
         const segment2 = 'Segment2' as any;
         const segment3 = 'Segment3' as any;
+        paragraph.segments.push(segment1, segment2, segment3);
 
         text1.__roosterjsContentModel = {
             paragraph,
@@ -135,6 +136,8 @@ describe('domIndexerImpl.onParagraph', () => {
         const segment2 = 'Segment2' as any;
         const segment3 = 'Segment3' as any;
         const segment4 = 'Segment4' as any;
+
+        paragraph.segments.push(segment1, segment2, segment3, segment4);
 
         text1.__roosterjsContentModel = {
             paragraph,
@@ -295,24 +298,27 @@ describe('domIndexImpl.onMergeText', () => {
 
         const text1Model = createText('test1');
         const text2Model = createText('test2');
+        const paragraph = createParagraph();
+
+        paragraph.segments.push(text1Model, text2Model);
 
         ((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text1Model],
         };
         ((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text2Model],
         };
 
         new DomIndexerImpl().onMergeText(text1, text2);
 
         expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text1Model],
         });
         expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text2Model],
         });
     });
@@ -327,20 +333,23 @@ describe('domIndexImpl.onMergeText', () => {
 
         const text1Model = createText('test1');
         const text2Model = createText('test2');
+        const paragraph = createParagraph();
+
+        paragraph.segments.push(text1Model, text2Model);
 
         ((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text1Model],
         };
         ((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel = {
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text2Model],
         };
 
         new DomIndexerImpl().onMergeText(text1, text2);
 
         expect(((text1 as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
-            paragraph: createParagraph(),
+            paragraph: paragraph,
             segments: [text1Model, text2Model],
         });
         expect(((text2 as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
@@ -1086,6 +1095,31 @@ describe('domIndexerImpl.reconcileSelection', () => {
                 segment2,
             ],
         });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
+    it('Index segment is not in paragraph, bad index', () => {
+        const node = document.createTextNode('test');
+        const paragraph = createParagraph();
+        const segment = createText('test');
+
+        domIndexerImpl.onSegment(node, paragraph, [segment]);
+
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
+            isReverted: false,
+        };
+
+        expect(((node as Node) as IndexedSegmentNode).__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment],
+        });
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
+
+        expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
         expect(model.hasRevertedRangeSelection).toBeFalsy();
     });

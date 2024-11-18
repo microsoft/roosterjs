@@ -229,15 +229,7 @@ describe('toggleSuperscript', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    superOrSubScriptSequence: 'super',
-                                },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {
                                     superOrSubScriptSequence: 'super',
                                 },
