@@ -146,16 +146,34 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel, {
-                ignoreSelection: true,
-            });
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedCachedModel,
+                {
+                    ignoreSelection: true,
+                },
+                undefined,
+                {}
+            );
             expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
-            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledTimes(2);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
                 {
                     eventType: 'leavingShadowEdit',
+                },
+                false
+            );
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    source: 'LeftShadowEdit',
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
+                    contentModel: mockedCachedModel,
+                    selection: undefined,
                 },
                 false
             );

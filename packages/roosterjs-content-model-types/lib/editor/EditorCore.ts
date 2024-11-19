@@ -20,6 +20,7 @@ import type {
     ContentModelFormatter,
     FormatContentModelOptions,
 } from '../parameter/FormatContentModelOptions';
+import type { DomManipulationContext } from '../context/DomManipulationContext';
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -53,12 +54,14 @@ export type GetDOMSelection = (core: EditorCore) => DOMSelection | null;
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  * @param onNodeCreated An optional callback that will be called when a DOM node is created
+ * @param domManipulationResult Used for receiving added and removed block elements during this operation
  */
 export type SetContentModel = (
     core: EditorCore,
     model: ContentModelDocument,
     option?: ModelToDomOption,
-    onNodeCreated?: OnNodeCreated
+    onNodeCreated?: OnNodeCreated,
+    domManipulationResult?: Partial<DomManipulationContext>
 ) => DOMSelection | null;
 
 /**

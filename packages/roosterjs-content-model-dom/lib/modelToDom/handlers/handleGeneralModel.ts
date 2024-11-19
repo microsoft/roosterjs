@@ -31,7 +31,7 @@ export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlo
         applyFormat(node, context.formatAppliers.general, group.format, context);
 
         parent.insertBefore(node, refNode);
-        context.addedNodes.push(node);
+        context.addedBlockElements.push(node);
     }
 
     context.onNodeCreated?.(group, node);

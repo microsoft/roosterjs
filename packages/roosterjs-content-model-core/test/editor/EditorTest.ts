@@ -4,14 +4,15 @@ import * as createEditorCore from '../../lib/editor/core/createEditorCore';
 import * as createEmptyModel from 'roosterjs-content-model-dom/lib/modelApi/creators/createEmptyModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { Editor } from '../../lib/editor/Editor';
 import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
-import { ChangeSource } from 'roosterjs-content-model-dom';
 import {
     CachedElementHandler,
     ContentModelDocument,
     ContentModelEntity,
     EditorCore,
+    EditorPlugin,
     Rect,
 } from 'roosterjs-content-model-types';
 
@@ -20,18 +21,52 @@ describe('Editor', () => {
     let updateKnownColorSpy: jasmine.Spy;
     let setContentModelSpy: jasmine.Spy;
     let createEmptyModelSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.callThrough();
-        setContentModelSpy = jasmine.createSpy('setContentModel');
+        setContentModelSpy = jasmine
+            .createSpy('setContentModel')
+            .and.callFake(
+                (
+                    core: any,
+                    model: any,
+                    option: any,
+                    onNodeCreated: any,
+                    domManipulationResult: any
+                ) => {
+                    domManipulationResult.addedBlockElements = [];
+                    domManipulationResult.removedBlockElements = [];
+                }
+            );
         createEmptyModelSpy = spyOn(createEmptyModel, 'createEmptyModel');
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
     });
 
     it('ctor and dispose, no options', () => {
         const div = document.createElement('div');
 
         createEmptyModelSpy.and.callThrough();
+
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            physicalRoot: div,
+            plugins: [] as EditorPlugin[],
+            lifecycle: {
+                isDarkMode: false,
+            },
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
+            },
+        };
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
 
         const editor = new Editor(div);
 
@@ -41,6 +76,16 @@ describe('Editor', () => {
         expect(editor.isDarkMode()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
         expect(createEmptyModelSpy).toHaveBeenCalledWith(undefined);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            mockedCore,
+            {
+                eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
+            },
+            true
+        );
 
         editor.dispose();
 
@@ -90,7 +135,9 @@ describe('Editor', () => {
         expect(setContentModelSpy).toHaveBeenCalledWith(
             jasmine.anything() /*core*/,
             mockedInitialModel,
-            { ignoreSelection: true }
+            { ignoreSelection: true },
+            undefined,
+            {}
         );
 
         expect(initSpy1).toHaveBeenCalledWith(editor);
@@ -128,6 +175,7 @@ describe('Editor', () => {
             api: {
                 createContentModel: createContentModelSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -160,6 +208,7 @@ describe('Editor', () => {
             api: {
                 createContentModel: createContentModelSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -252,6 +301,7 @@ describe('Editor', () => {
             api: {
                 createEditorContext: createEditorContextSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
             environment: {
                 domToModelSettings: {
@@ -370,7 +420,7 @@ describe('Editor', () => {
                 reset: resetSpy,
             },
             environment: mockedEnvironment,
-            api: { setContentModel: setContentModelSpy },
+            api: { setContentModel: setContentModelSpy, triggerEvent: triggerEventSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -402,6 +452,7 @@ describe('Editor', () => {
             api: {
                 getDOMSelection: getDOMSelectionSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -433,6 +484,7 @@ describe('Editor', () => {
             api: {
                 setDOMSelection: setDOMSelectionSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -468,6 +520,7 @@ describe('Editor', () => {
             api: {
                 formatContentModel: formatContentModelSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -511,6 +564,7 @@ describe('Editor', () => {
             format: {},
             api: {
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -550,6 +604,7 @@ describe('Editor', () => {
             api: {
                 addUndoSnapshot: addUndoSnapshotSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -578,7 +633,7 @@ describe('Editor', () => {
                 updateKnownColor: updateKnownColorSpy,
                 reset: resetSpy,
             },
-            api: { setContentModel: setContentModelSpy },
+            api: { setContentModel: setContentModelSpy, triggerEvent: triggerEventSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -606,7 +661,11 @@ describe('Editor', () => {
                 updateKnownColor: updateKnownColorSpy,
                 reset: resetSpy,
             },
-            api: { addUndoSnapshot: addUndoSnapshotSpy, setContentModel: setContentModelSpy },
+            api: {
+                addUndoSnapshot: addUndoSnapshotSpy,
+                setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -639,6 +698,7 @@ describe('Editor', () => {
             api: {
                 restoreUndoSnapshot: restoreUndoSnapshotSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -668,6 +728,7 @@ describe('Editor', () => {
             api: {
                 focus: focusSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -696,6 +757,7 @@ describe('Editor', () => {
             },
             api: {
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
             domHelper: {
                 hasFocus: hasFocusSpy,
@@ -780,6 +842,7 @@ describe('Editor', () => {
             api: {
                 attachDomEvent: attachDomEventSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -812,7 +875,7 @@ describe('Editor', () => {
                 snapshotsManager: mockedSnapshotManager,
                 setContentModel: setContentModelSpy,
             },
-            api: { setContentModel: setContentModelSpy },
+            api: { setContentModel: setContentModelSpy, triggerEvent: triggerEventSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -846,6 +909,7 @@ describe('Editor', () => {
             api: {
                 switchShadowEdit: switchShadowEditSpy,
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -884,7 +948,7 @@ describe('Editor', () => {
         const mockedCore = {
             plugins: [],
             darkColorHandler: mockedColorHandler,
-            api: { setContentModel: setContentModelSpy },
+            api: { setContentModel: setContentModelSpy, triggerEvent: triggerEventSpy },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -937,7 +1001,16 @@ describe('Editor', () => {
 
         expect(editor.isDarkMode()).toBeFalse();
         expect(transformColorSpy).not.toHaveBeenCalled();
-        expect(triggerEventSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            mockedCore,
+            {
+                eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
+            },
+            true
+        );
 
         editor.setDarkModeState(true);
 
@@ -950,7 +1023,7 @@ describe('Editor', () => {
             mockedColorHandler
         );
         expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
-        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
@@ -970,7 +1043,7 @@ describe('Editor', () => {
             'darkToLight',
             mockedColorHandler
         );
-        expect(triggerEventSpy).toHaveBeenCalledTimes(2);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(3);
         expect(triggerEventSpy).toHaveBeenCalledWith(
             mockedCore,
             {
@@ -997,7 +1070,7 @@ describe('Editor', () => {
                 updateKnownColor: updateKnownColorSpy,
                 reset: resetSpy,
             },
-            api: { setContentModel: setContentModelSpy },
+            api: { setContentModel: setContentModelSpy, triggerEvent: triggerEventSpy },
             domEvent: { scrollContainer: mockedScrollContainer },
         } as any;
 
@@ -1029,6 +1102,7 @@ describe('Editor', () => {
                 getVisibleViewport: (core: EditorCore) => {
                     return mockedScrollContainer;
                 },
+                triggerEvent: triggerEventSpy,
             },
             domEvent: { scrollContainer: mockedScrollContainer },
         } as any;
@@ -1060,6 +1134,7 @@ describe('Editor', () => {
             api: {
                 setContentModel: setContentModelSpy,
                 setEditorStyle: setEditorStyleSpy,
+                triggerEvent: triggerEventSpy,
             },
             domEvent: { scrollContainer: mockedScrollContainer },
         } as any;
@@ -1093,6 +1168,7 @@ describe('Editor', () => {
             api: {
                 setContentModel: setContentModelSpy,
                 announce: announceSpy,
+                triggerEvent: triggerEventSpy,
             },
         } as any;
 
@@ -1122,6 +1198,7 @@ describe('Editor', () => {
             },
             api: {
                 setContentModel: setContentModelSpy,
+                triggerEvent: triggerEventSpy,
             },
             experimentalFeatures: ['Feature1', 'Feature2'],
         } as any;

@@ -105,7 +105,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -117,6 +123,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -141,7 +149,13 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -153,6 +167,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -173,7 +189,13 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -185,6 +207,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -214,7 +238,13 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -226,6 +256,8 @@ describe('formatContentModel', () => {
                     data: returnData,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -251,7 +283,8 @@ describe('formatContentModel', () => {
                 core,
                 mockedModel,
                 undefined,
-                onNodeCreated
+                onNodeCreated,
+                {}
             );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -264,6 +297,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -303,7 +338,13 @@ describe('formatContentModel', () => {
             );
 
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -327,6 +368,8 @@ describe('formatContentModel', () => {
                             rawEvent: 'RawEvent',
                         },
                     ],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -365,7 +408,13 @@ describe('formatContentModel', () => {
 
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -388,6 +437,8 @@ describe('formatContentModel', () => {
                             rawEvent: 'RawEvent',
                         },
                     ],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -406,7 +457,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -418,6 +475,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -439,7 +498,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(createContentModel).toHaveBeenCalledWith(core, options, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -451,6 +516,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -476,7 +543,13 @@ describe('formatContentModel', () => {
             expect(getClientWidth).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -488,6 +561,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -508,7 +583,13 @@ describe('formatContentModel', () => {
 
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -520,6 +601,8 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    addedBlockElements: undefined,
+                    removedBlockElements: undefined,
                 },
                 true
             );
@@ -600,7 +683,8 @@ describe('formatContentModel', () => {
                 {
                     ignoreSelection: true,
                 },
-                undefined
+                undefined,
+                {}
             );
             expect(triggerEvent).toHaveBeenCalled();
             expect(core.cache).toEqual({});
@@ -828,7 +912,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(core.undo).toEqual({
                 snapshotsManager: {
                     hasNewContent: true,
@@ -853,7 +943,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -875,7 +971,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -904,7 +1006,13 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -925,7 +1033,13 @@ describe('formatContentModel', () => {
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                {}
+            );
             expect(core.undo).toEqual({
                 isNested: true,
                 snapshotsManager: {
@@ -968,6 +1082,69 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalled();
             expect(triggerEvent).toHaveBeenCalled();
             expect(announce).toHaveBeenCalledWith(core, mockedData);
+        });
+    });
+
+    describe('Return modified nodes', () => {
+        beforeEach(() => {
+            hasFocus.and.returnValue(false);
+        });
+
+        it('Callback return true', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+            const mockedAddedElements = 'ADD' as any;
+            const mockedRemovedElements = 'REMOVE' as any;
+
+            setContentModel.and.callFake(
+                (
+                    core: any,
+                    model: any,
+                    option: any,
+                    onNodeCreated: any,
+                    domManipulationResult: any
+                ) => {
+                    domManipulationResult.addedBlockElements = mockedAddedElements;
+                    domManipulationResult.removedBlockElements = mockedRemovedElements;
+                }
+            );
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                { ignoreSelection: true },
+                undefined,
+                {
+                    addedBlockElements: mockedAddedElements,
+                    removedBlockElements: mockedRemovedElements,
+                }
+            );
+            expect(triggerEvent).toHaveBeenCalledTimes(1);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    source: 'Format',
+                    addedBlockElements: mockedAddedElements,
+                    removedBlockElements: mockedRemovedElements,
+                    contentModel: mockedModel,
+                    selection: undefined,
+                    data: undefined,
+                    formatApiName: apiName,
+                    changedEntities: [],
+                },
+                true
+            );
+            expect(announce).not.toHaveBeenCalled();
         });
     });
 });

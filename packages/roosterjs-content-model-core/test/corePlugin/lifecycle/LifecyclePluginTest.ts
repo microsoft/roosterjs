@@ -40,8 +40,6 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('');
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -83,8 +81,6 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -107,8 +103,6 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('');
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeTrue();
@@ -131,8 +125,6 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');
-        expect(triggerEvent).toHaveBeenCalledTimes(1);
-        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();

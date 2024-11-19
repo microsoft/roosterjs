@@ -1,3 +1,4 @@
+import { DomManipulationContext } from '../context/DomManipulationContext';
 import type { AnnounceData } from '../parameter/AnnounceData';
 import type { BasePluginEvent } from './BasePluginEvent';
 import type { EntityState } from '../parameter/FormatContentModelContext';
@@ -29,7 +30,9 @@ export interface ChangedEntity {
 /**
  * Represents a change to the editor made by another plugin with content model inside
  */
-export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
+export interface ContentChangedEvent
+    extends BasePluginEvent<'contentChanged'>,
+        Partial<DomManipulationContext> {
     /**
      * The content model that is applied which causes this content changed event
      */
@@ -66,7 +69,7 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly formatApiName?: string;
 
     /**
-     * @deprecated Call editor.announce(announceData) directly insteaad
+     * @deprecated Call editor.announce(announceData) directly instead
      */
     readonly announceData?: AnnounceData;
 }

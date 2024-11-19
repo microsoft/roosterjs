@@ -23,6 +23,8 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<hr>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('HR with format', () => {
@@ -38,6 +40,8 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<hr style="margin-top: 10px;">');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('DIV with format', () => {
@@ -53,6 +57,8 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<div style="margin-top: 10px;"></div>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('HR with width, size and display', () => {
@@ -77,6 +83,8 @@ describe('handleDivider', () => {
             ].indexOf(parent.innerHTML) >= 0
         ).toBeTrue();
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('HR with border and padding', () => {
@@ -97,6 +105,8 @@ describe('handleDivider', () => {
             '<hr style="padding-bottom: 30px; border-top: 1px solid black;">'
         );
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('HR with refNode', () => {
@@ -116,6 +126,8 @@ describe('handleDivider', () => {
         expect(parent.innerHTML).toBe('<hr><br>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
         expect(result).toBe(br);
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('HR with refNode, already in target node', () => {
@@ -139,6 +151,8 @@ describe('handleDivider', () => {
         expect(hr.cachedElement).toBe(hrNode);
         expect(parent.firstChild).toBe(hrNode);
         expect(result).toBe(br);
+        expect(context.addedBlockElements).toEqual([]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 
     it('With onNodeCreated', () => {
@@ -157,5 +171,7 @@ describe('handleDivider', () => {
         expect(parent.innerHTML).toBe('<hr>');
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(hr);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('hr'));
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
     });
 });

@@ -73,9 +73,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         // Set editor background color for dark mode
         this.adjustColor();
 
-        // Let other plugins know that we are ready
-        this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
-
         // Initialize the Announce container.
         this.state.announceContainer = createAriaLiveElement(editor.getDocument());
     }

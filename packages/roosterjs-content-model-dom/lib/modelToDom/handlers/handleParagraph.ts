@@ -118,7 +118,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     paragraph.cachedElement = container;
                 }
 
-                context.addedNodes.push(container);
+                context.addedBlockElements.push(container);
             } else {
                 unwrap(container);
                 container = undefined;

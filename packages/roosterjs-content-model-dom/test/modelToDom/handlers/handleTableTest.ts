@@ -1,4 +1,5 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
+import * as reuseCachedElement from '../../../lib/domUtils/reuseCachedElement';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
@@ -22,6 +23,11 @@ describe('handleTable', () => {
         const div = document.createElement('div');
         handleTable(document, div, model, context, null);
         expect(div.innerHTML).toBe(expectedInnerHTML);
+
+        if (expectedInnerHTML) {
+            expect((div.firstChild as HTMLElement).tagName).toBe('TABLE');
+            expect(context.addedBlockElements).toEqual([div.firstChild as HTMLElement]);
+        }
     }
 
     it('Empty table', () => {
@@ -615,5 +621,51 @@ describe('handleTable', () => {
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
         expect(onTableSpy).toHaveBeenCalledWith(div.firstChild, tableModel);
+    });
+
+    it('handleTable with cache', () => {
+        const cachedTable = document.createElement('table');
+        const parent = document.createElement('div');
+        const tableModel = createTable(1);
+        const cell = createTableCell();
+        const reuseCachedElementSpy = spyOn(
+            reuseCachedElement,
+            'reuseCachedElement'
+        ).and.callThrough();
+
+        cachedTable.id = 'table1';
+        tableModel.rows[0].cells.push(cell);
+        tableModel.cachedElement = cachedTable;
+        context.allowCacheElement = true;
+
+        handleTable(document, parent, tableModel, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table id="table1"><tbody><tr><td></td></tr></tbody></table>'
+        );
+        expect(parent.firstChild).toBe(cachedTable);
+        expect(context.addedBlockElements).toEqual([]);
+        expect(context.removedBlockElements).toEqual([]);
+        expect(reuseCachedElementSpy).toHaveBeenCalledWith(parent, cachedTable, null, context);
+    });
+
+    it('handleTable without cache', () => {
+        const parent = document.createElement('div');
+        const tableModel = createTable(1);
+        const cell = createTableCell();
+        const reuseCachedElementSpy = spyOn(
+            reuseCachedElement,
+            'reuseCachedElement'
+        ).and.callThrough();
+
+        tableModel.rows[0].cells.push(cell);
+        context.allowCacheElement = true;
+
+        handleTable(document, parent, tableModel, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
+        expect(context.removedBlockElements).toEqual([]);
+        expect(reuseCachedElementSpy).not.toHaveBeenCalled();
     });
 });

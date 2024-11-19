@@ -1,3 +1,4 @@
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import type {
     ContentModelBlockGroup,
     ContentModelHandler,
@@ -42,7 +43,10 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
         while (refNode) {
             const next = refNode.nextSibling;
 
-            context.removedNodes.push(refNode);
+            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
+                context.removedBlockElements.push(refNode);
+            }
+
             refNode.parentNode?.removeChild(refNode);
             refNode = next;
         }

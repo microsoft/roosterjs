@@ -1,8 +1,13 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
-import { EditorCore } from 'roosterjs-content-model-types';
 import { setContentModel } from '../../../lib/coreApi/setContentModel/setContentModel';
+import {
+    ContentModelDocument,
+    DomManipulationContext,
+    EditorCore,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
@@ -270,5 +275,30 @@ describe('setContentModel', () => {
 
         expect(flushMutationsSpy).toHaveBeenCalledBefore(updateCacheSpy);
         expect(updateCacheSpy).toHaveBeenCalledBefore(setDOMSelectionSpy);
+    });
+
+    it('Receive modified DOM elements', () => {
+        const mockedAddedNodes = 'ADD' as any;
+        const mockedRemovedNodes = 'REMOVE' as any;
+
+        contentModelToDomSpy.and.callFake(
+            (
+                doc: Document,
+                root: Node,
+                model: ContentModelDocument,
+                context: ModelToDomContext
+            ) => {
+                context.addedBlockElements = mockedAddedNodes;
+                context.removedBlockElements = mockedRemovedNodes;
+                return {} as any;
+            }
+        );
+
+        const modifiedNodes: Partial<DomManipulationContext> = {};
+
+        setContentModel(core, mockedModel, undefined, undefined, modifiedNodes);
+
+        expect(modifiedNodes.addedBlockElements).toBe(mockedAddedNodes);
+        expect(modifiedNodes.removedBlockElements).toBe(mockedRemovedNodes);
     });
 });

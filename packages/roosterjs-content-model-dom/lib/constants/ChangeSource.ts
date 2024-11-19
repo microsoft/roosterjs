@@ -61,4 +61,9 @@ export const ChangeSource = {
      * Content changed by auto format
      */
     AutoFormat: 'AutoFormat',
+
+    /**
+     * Editor has left shadow edit mode
+     */
+    LeftShadowEdit: 'LeftShadowEdit',
 };

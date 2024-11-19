@@ -1,5 +1,6 @@
 import { isEntityElement } from './entityUtils';
-import type { ModelToDomContext } from 'roosterjs-content-model-types';
+import { isNodeOfType } from './isNodeOfType';
+import type { DomManipulationContext } from 'roosterjs-content-model-types';
 
 /**
  * When set a DOM tree into editor, reuse the existing element in editor and no need to change it
@@ -14,7 +15,7 @@ export function reuseCachedElement(
     parent: Node,
     element: Node,
     refNode: Node | null,
-    context?: ModelToDomContext
+    context?: DomManipulationContext
 ): Node | null {
     if (element.parentNode == parent) {
         const isEntity = isEntityElement(element);
@@ -26,7 +27,10 @@ export function reuseCachedElement(
             const next = refNode.nextSibling;
 
             refNode.parentNode?.removeChild(refNode);
-            context?.removedNodes.push(refNode);
+
+            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
+                context?.removedBlockElements.push(refNode);
+            }
 
             refNode = next;
         }
@@ -41,14 +45,4 @@ export function reuseCachedElement(
     }
 
     return refNode;
-}
-
-/**
- * @internal
- */
-export function removeNode(node: Node): Node | null {
-    const next = node.nextSibling;
-    node.parentNode?.removeChild(node);
-
-    return next;
 }

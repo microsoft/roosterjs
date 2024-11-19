@@ -12,8 +12,15 @@ import type { SetContentModel } from 'roosterjs-content-model-types';
  * @param core The editor core object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
+ * @param domManipulationResult Used for receiving added and removed block elements during this operation
  */
-export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
+export const setContentModel: SetContentModel = (
+    core,
+    model,
+    option,
+    onNodeCreated,
+    domManipulationResult
+) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
     const modelToDomContext = option
         ? createModelToDomContext(
@@ -47,6 +54,11 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         } else {
             core.selection.selection = selection;
         }
+    }
+
+    if (domManipulationResult) {
+        domManipulationResult.addedBlockElements = modelToDomContext.addedBlockElements;
+        domManipulationResult.removedBlockElements = modelToDomContext.removedBlockElements;
     }
 
     return selection;

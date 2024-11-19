@@ -39,7 +39,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         }
 
         parent.insertBefore(tableNode, refNode);
-        context.addedNodes.push(tableNode);
+        context.addedBlockElements.push(tableNode);
 
         applyFormat(tableNode, context.formatAppliers.block, table.format, context);
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);

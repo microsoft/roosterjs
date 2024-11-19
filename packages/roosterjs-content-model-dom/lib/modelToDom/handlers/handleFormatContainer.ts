@@ -39,7 +39,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
         }
 
         parent.insertBefore(containerNode, refNode);
-        context.addedNodes.push(containerNode);
+        context.addedBlockElements.push(containerNode);
 
         stackFormat(context, container.tagName, () => {
             applyFormat(containerNode, context.formatAppliers.container, container.format, context);

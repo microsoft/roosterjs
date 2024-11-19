@@ -28,7 +28,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
         }
 
         parent.insertBefore(element, refNode);
-        context.addedNodes.push(element);
+        context.addedBlockElements.push(element);
 
         applyFormat(element, context.formatAppliers.divider, divider.format, context);
 

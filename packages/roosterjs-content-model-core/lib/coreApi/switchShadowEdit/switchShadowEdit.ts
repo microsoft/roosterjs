@@ -1,5 +1,5 @@
-import { iterateSelections, moveChildNodes } from 'roosterjs-content-model-dom';
-import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
+import { ChangeSource, iterateSelections, moveChildNodes } from 'roosterjs-content-model-dom';
+import type { DomManipulationContext, SwitchShadowEdit } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -48,9 +48,29 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
                 // Force clear cached element from selected block
                 iterateSelections(core.cache.cachedModel, () => {});
 
-                core.api.setContentModel(core, core.cache.cachedModel, {
-                    ignoreSelection: true, // Do not set focus and selection when quit shadow edit, focus may remain in UI control (picker, ...)
-                });
+                const domManipulationResult: Partial<DomManipulationContext> = {};
+                const selection = core.api.setContentModel(
+                    core,
+                    core.cache.cachedModel,
+                    {
+                        ignoreSelection: true, // Do not set focus and selection when quit shadow edit, focus may remain in UI control (picker, ...)
+                    },
+                    undefined /*onNodeCreated*/,
+                    domManipulationResult
+                );
+
+                core.api.triggerEvent(
+                    core,
+                    {
+                        eventType: 'contentChanged',
+                        source: ChangeSource.LeftShadowEdit,
+                        contentModel: core.cache.cachedModel,
+                        selection: selection ?? undefined,
+                        addedBlockElements: domManipulationResult.addedBlockElements,
+                        removedBlockElements: domManipulationResult.removedBlockElements,
+                    },
+                    false /*broadcast*/
+                );
             }
         }
     }

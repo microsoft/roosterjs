@@ -298,6 +298,7 @@ export {
     ModelToDomListContext,
     ModelToDomFormatContext,
 } from './context/ModelToDomFormatContext';
+export { DomManipulationContext } from './context/DomManipulationContext';
 export {
     ContentModelHandler,
     ContentModelSegmentHandler,
