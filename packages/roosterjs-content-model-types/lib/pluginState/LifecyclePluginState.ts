@@ -1,4 +1,4 @@
-import type { DomModification } from '../context/DomModification';
+import type { RewriteFromModel } from '../context/RewriteFromModel';
 import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 
 /**
@@ -23,7 +23,7 @@ export interface LifecyclePluginState {
     /**
      * added and removed block elements when initialize
      */
-    domModification?: DomModification;
+    rewriteFromModel?: RewriteFromModel;
 
     /**
      * A callback to help get string template to announce, used for accessibility

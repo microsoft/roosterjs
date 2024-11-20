@@ -30,7 +30,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     // It is possible listParent is the same with parent param.
     // This happens when outdent a list item to cause it has no list level
     listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
-    context.domModification.addedBlockElements.push(li);
+    context.rewriteFromModel.addedBlockElements.push(li);
 
     if (level) {
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);

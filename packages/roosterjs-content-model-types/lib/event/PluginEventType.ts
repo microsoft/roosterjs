@@ -112,9 +112,9 @@ export type PluginEventType =
     | 'zoomChanged'
 
     /**
-     * DOM modification happened from Content Model
+     * Rewrite result information from Content Model
      */
-    | 'domModification'
+    | 'rewriteFromModel'
 
     /**
      * EXPERIMENTAL FEATURE

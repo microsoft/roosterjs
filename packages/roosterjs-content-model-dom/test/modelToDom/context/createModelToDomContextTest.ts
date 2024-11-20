@@ -27,7 +27,7 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            domModification: {
+            rewriteFromModel: {
                 addedBlockElements: [],
                 removedBlockElements: [],
             },
@@ -59,7 +59,7 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            domModification: {
+            rewriteFromModel: {
                 addedBlockElements: [],
                 removedBlockElements: [],
             },
@@ -122,7 +122,7 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            domModification: {
+            rewriteFromModel: {
                 addedBlockElements: [],
                 removedBlockElements: [],
             },

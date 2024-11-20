@@ -7,7 +7,7 @@ import { setContentModel } from '../../../lib/coreApi/setContentModel/setContent
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
-const mockedContext = { name: 'CONTEXT', domModification: {} } as any;
+const mockedContext = { name: 'CONTEXT', rewriteFromModel: {} } as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
@@ -286,8 +286,8 @@ describe('setContentModel', () => {
                 model: ContentModelDocument,
                 context: ModelToDomContext
             ) => {
-                context.domModification.addedBlockElements = mockedAddedNodes;
-                context.domModification.removedBlockElements = mockedRemovedNodes;
+                context.rewriteFromModel.addedBlockElements = mockedAddedNodes;
+                context.rewriteFromModel.removedBlockElements = mockedRemovedNodes;
                 return {} as any;
             }
         );
@@ -298,13 +298,13 @@ describe('setContentModel', () => {
         expect(triggerEventSpy).toHaveBeenCalledWith(
             core,
             {
-                eventType: 'domModification',
+                eventType: 'rewriteFromModel',
                 addedBlockElements: mockedAddedNodes,
                 removedBlockElements: mockedRemovedNodes,
             },
             true
         );
-        expect(core.lifecycle.domModification).toBeUndefined();
+        expect(core.lifecycle.rewriteFromModel).toBeUndefined();
     });
 
     it('Receive modified DOM elements, in init', () => {
@@ -318,8 +318,8 @@ describe('setContentModel', () => {
                 model: ContentModelDocument,
                 context: ModelToDomContext
             ) => {
-                context.domModification.addedBlockElements = mockedAddedNodes;
-                context.domModification.removedBlockElements = mockedRemovedNodes;
+                context.rewriteFromModel.addedBlockElements = mockedAddedNodes;
+                context.rewriteFromModel.removedBlockElements = mockedRemovedNodes;
                 return {} as any;
             }
         );
@@ -327,7 +327,7 @@ describe('setContentModel', () => {
         setContentModel(core, mockedModel, undefined, undefined, true);
 
         expect(triggerEventSpy).not.toHaveBeenCalled();
-        expect(core.lifecycle.domModification).toEqual({
+        expect(core.lifecycle.rewriteFromModel).toEqual({
             addedBlockElements: mockedAddedNodes,
             removedBlockElements: mockedRemovedNodes,
         });

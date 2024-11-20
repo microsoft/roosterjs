@@ -61,7 +61,7 @@ describe('handleBlockGroup', () => {
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [clonedChild],
             removedBlockElements: [],
         });
@@ -79,7 +79,7 @@ describe('handleBlockGroup', () => {
         expect(parent.outerHTML).toBe(
             '<div><span style="color: red; background-color: green;"></span></div>'
         );
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -238,7 +238,7 @@ describe('handleBlockGroup', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(result).toBe(br);
         expect(group.element).toBe(clonedChild);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [clonedChild],
             removedBlockElements: [],
         });
@@ -261,7 +261,7 @@ describe('handleBlockGroup', () => {
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context);
         expect(result).toBe(br);
         expect(group.element).toBe(node);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [],
             removedBlockElements: [],
         });

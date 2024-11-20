@@ -23,7 +23,7 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<hr>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -42,7 +42,7 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<hr style="margin-top: 10px;">');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -61,7 +61,7 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<div style="margin-top: 10px;"></div>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -89,7 +89,7 @@ describe('handleDivider', () => {
             ].indexOf(parent.innerHTML) >= 0
         ).toBeTrue();
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -113,7 +113,7 @@ describe('handleDivider', () => {
             '<hr style="padding-bottom: 30px; border-top: 1px solid black;">'
         );
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -136,7 +136,7 @@ describe('handleDivider', () => {
         expect(parent.innerHTML).toBe('<hr><br>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
         expect(result).toBe(br);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
@@ -163,7 +163,7 @@ describe('handleDivider', () => {
         expect(hr.cachedElement).toBe(hrNode);
         expect(parent.firstChild).toBe(hrNode);
         expect(result).toBe(br);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [],
             removedBlockElements: [],
         });
@@ -185,7 +185,7 @@ describe('handleDivider', () => {
         expect(parent.innerHTML).toBe('<hr>');
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(hr);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('hr'));
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });

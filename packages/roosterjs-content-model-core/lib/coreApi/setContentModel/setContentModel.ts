@@ -60,14 +60,14 @@ export const setContentModel: SetContentModel = (
 
     if (isInitializing) {
         // When initialize, we should not trigger event until all plugins are initialized, so put these node in lifecycle state temporarily
-        core.lifecycle.domModification = modelToDomContext.domModification;
+        core.lifecycle.rewriteFromModel = modelToDomContext.rewriteFromModel;
     } else {
-        // Otherwise, trigger DomModification event immediately
+        // Otherwise, trigger RewriteFromModel event immediately
         core.api.triggerEvent(
             core,
             {
-                eventType: 'domModification',
-                ...modelToDomContext.domModification,
+                eventType: 'rewriteFromModel',
+                ...modelToDomContext.rewriteFromModel,
             },
             true /*broadcast*/
         );

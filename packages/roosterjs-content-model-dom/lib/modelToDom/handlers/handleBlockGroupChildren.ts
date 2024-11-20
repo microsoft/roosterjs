@@ -44,7 +44,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             const next = refNode.nextSibling;
 
             if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
-                context.domModification.removedBlockElements.push(refNode);
+                context.rewriteFromModel.removedBlockElements.push(refNode);
             }
 
             refNode.parentNode?.removeChild(refNode);

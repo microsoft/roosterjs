@@ -98,7 +98,7 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeFalse();
     });
 
-    it('init with domModifications', () => {
+    it('init with rewriteFromModel', () => {
         const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
@@ -108,7 +108,7 @@ describe('LifecyclePlugin', () => {
         const mockedAddedElements = 'ADD' as any;
         const mockedRemovedElements = 'REMOVE' as any;
 
-        state.domModification = {
+        state.rewriteFromModel = {
             addedBlockElements: mockedAddedElements,
             removedBlockElements: mockedRemovedElements,
         };

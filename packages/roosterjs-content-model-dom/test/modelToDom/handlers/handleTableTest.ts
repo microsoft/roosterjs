@@ -26,7 +26,7 @@ describe('handleTable', () => {
 
         if (expectedInnerHTML) {
             expect((div.firstChild as HTMLElement).tagName).toBe('TABLE');
-            expect(context.domModification).toEqual({
+            expect(context.rewriteFromModel).toEqual({
                 addedBlockElements: [div.firstChild as HTMLElement],
                 removedBlockElements: [],
             });
@@ -647,7 +647,7 @@ describe('handleTable', () => {
             '<table id="table1"><tbody><tr><td></td></tr></tbody></table>'
         );
         expect(parent.firstChild).toBe(cachedTable);
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [],
             removedBlockElements: [],
         });
@@ -655,7 +655,7 @@ describe('handleTable', () => {
             parent,
             cachedTable,
             null,
-            context.domModification
+            context.rewriteFromModel
         );
     });
 
@@ -674,7 +674,7 @@ describe('handleTable', () => {
         handleTable(document, parent, tableModel, context, null);
 
         expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
-        expect(context.domModification).toEqual({
+        expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });

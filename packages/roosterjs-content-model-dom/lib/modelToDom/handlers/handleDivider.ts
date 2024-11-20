@@ -19,7 +19,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
     let element = context.allowCacheElement ? divider.cachedElement : undefined;
 
     if (element && !divider.isSelected) {
-        refNode = reuseCachedElement(parent, element, refNode, context.domModification);
+        refNode = reuseCachedElement(parent, element, refNode, context.rewriteFromModel);
     } else {
         element = doc.createElement(divider.tagName);
 
@@ -28,7 +28,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
         }
 
         parent.insertBefore(element, refNode);
-        context.domModification.addedBlockElements.push(element);
+        context.rewriteFromModel.addedBlockElements.push(element);
 
         applyFormat(element, context.formatAppliers.divider, divider.format, context);
 

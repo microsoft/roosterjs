@@ -1,7 +1,7 @@
 /**
  * Represents added and removed block elements during content model to dom conversion
  */
-export interface DomModification {
+export interface RewriteFromModel {
     /**
      * Added block elements
      */
@@ -16,9 +16,9 @@ export interface DomModification {
 /**
  * Context object used by contentModelToDom to record added and removed block elements
  */
-export interface DomModificationContext {
+export interface RewriteFromModelContext {
     /**
      * DOM modification object
      */
-    domModification: DomModification;
+    rewriteFromModel: RewriteFromModel;
 }

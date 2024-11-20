@@ -1,12 +1,12 @@
 import { reuseCachedElement } from '../../lib/domUtils/reuseCachedElement';
 import { setEntityElementClasses } from './entityUtilTest';
-import type { DomModification } from 'roosterjs-content-model-types';
+import type { RewriteFromModel } from 'roosterjs-content-model-types';
 
 describe('reuseCachedElement', () => {
     it('No refNode', () => {
         const parent = document.createElement('div');
         const element = document.createElement('span');
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
@@ -29,7 +29,7 @@ describe('reuseCachedElement', () => {
 
         parent.appendChild(refNode);
 
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
@@ -53,7 +53,7 @@ describe('reuseCachedElement', () => {
         parent.appendChild(element);
         parent.appendChild(nextNode);
 
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
@@ -81,7 +81,7 @@ describe('reuseCachedElement', () => {
         parent.appendChild(element);
         parent.appendChild(nextNode);
 
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
@@ -111,7 +111,7 @@ describe('reuseCachedElement', () => {
 
         setEntityElementClasses(refNode, 'TestEntity', true);
 
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
@@ -146,7 +146,7 @@ describe('reuseCachedElement', () => {
         setEntityElementClasses(refNode, 'TestEntity', true);
         setEntityElementClasses(element, 'TestEntity2', true);
 
-        const context: DomModification = {
+        const context: RewriteFromModel = {
             addedBlockElements: [],
             removedBlockElements: [],
         };
