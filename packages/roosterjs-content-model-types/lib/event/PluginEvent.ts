@@ -5,6 +5,7 @@ import type { BeforePasteEvent } from './BeforePasteEvent';
 import type { BeforeSetContentEvent } from './BeforeSetContentEvent';
 import type { ContentChangedEvent } from './ContentChangedEvent';
 import type { ContextMenuEvent } from './ContextMenuEvent';
+import type { DomModificationEvent } from './DomModificationEvent';
 import type { EditImageEvent } from './EditImageEvent';
 import type { EditorInputEvent } from './EditorInputEvent';
 import type { EditorReadyEvent } from './EditorReadyEvent';
@@ -30,6 +31,7 @@ export type PluginEvent =
     | CompositionEndEvent
     | ContentChangedEvent
     | ContextMenuEvent
+    | DomModificationEvent
     | EditImageEvent
     | EditorReadyEvent
     | EnterShadowEditEvent

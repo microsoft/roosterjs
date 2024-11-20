@@ -34,7 +34,7 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     const isContained = wrapper.parentElement?.classList.contains(BlockEntityContainer);
     const elementToReuse = isContained && isCursorAroundEntity ? wrapper.parentElement! : wrapper;
 
-    refNode = reuseCachedElement(parent, elementToReuse, refNode, context);
+    refNode = reuseCachedElement(parent, elementToReuse, refNode, context.domModification);
 
     if (isCursorAroundEntity) {
         if (!isContained) {

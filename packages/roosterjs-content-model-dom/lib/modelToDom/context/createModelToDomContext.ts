@@ -5,7 +5,7 @@ import {
     defaultFormatKeysPerCategory,
 } from '../../formatHandlers/defaultFormatHandlers';
 import type {
-    DomManipulationContext,
+    DomModificationContext,
     EditorContext,
     FormatApplier,
     FormatAppliers,
@@ -44,7 +44,7 @@ export function createModelToDomContextWithConfig(
         editorContext,
         createModelToDomSelectionContext(),
         createModelToDomFormatContext(),
-        createDomManipulationContext(),
+        createDomModificationContext(),
         config
     );
 }
@@ -70,10 +70,12 @@ function createModelToDomFormatContext(): ModelToDomFormatContext {
     };
 }
 
-function createDomManipulationContext(): DomManipulationContext {
+function createDomModificationContext(): DomModificationContext {
     return {
-        addedBlockElements: [],
-        removedBlockElements: [],
+        domModification: {
+            addedBlockElements: [],
+            removedBlockElements: [],
+        },
     };
 }
 

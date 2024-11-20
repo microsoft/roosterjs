@@ -32,7 +32,6 @@ import type {
     DomToModelOptionForCreateModel,
     AnnounceData,
     ExperimentalFeature,
-    DomManipulationContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -50,26 +49,15 @@ export class Editor implements IEditor {
         this.core = createEditorCore(contentDiv, options);
 
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
-        const domManipulationResult: Partial<DomManipulationContext> = {};
 
         this.core.api.setContentModel(
             this.core,
             initialModel,
             { ignoreSelection: true },
             undefined /*onNodeCreated*/,
-            domManipulationResult
+            true /*isInitializing*/
         );
         this.core.plugins.forEach(plugin => plugin.initialize(this));
-
-        // Let other plugins know that we are ready
-        this.triggerEvent(
-            'editorReady',
-            {
-                addedBlockElements: domManipulationResult.addedBlockElements,
-                removedBlockElements: domManipulationResult.removedBlockElements,
-            },
-            true /*broadcast*/
-        );
     }
 
     /**

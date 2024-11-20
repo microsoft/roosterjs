@@ -12,14 +12,16 @@ import type { SetContentModel } from 'roosterjs-content-model-types';
  * @param core The editor core object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @param domManipulationResult Used for receiving added and removed block elements during this operation
+ * @param onNodeCreated An optional callback that will be called when a DOM node is created
+ * @param isInitializing True means editor is being initialized then it will save modification nodes onto
+ * lifecycleState instead of triggering events, false means other cases
  */
 export const setContentModel: SetContentModel = (
     core,
     model,
     option,
     onNodeCreated,
-    domManipulationResult
+    isInitializing
 ) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
     const modelToDomContext = option
@@ -56,9 +58,19 @@ export const setContentModel: SetContentModel = (
         }
     }
 
-    if (domManipulationResult) {
-        domManipulationResult.addedBlockElements = modelToDomContext.addedBlockElements;
-        domManipulationResult.removedBlockElements = modelToDomContext.removedBlockElements;
+    if (isInitializing) {
+        // When initialize, we should not trigger event until all plugins are initialized, so put these node in lifecycle state temporarily
+        core.lifecycle.domModification = modelToDomContext.domModification;
+    } else {
+        // Otherwise, trigger DomModification event immediately
+        core.api.triggerEvent(
+            core,
+            {
+                eventType: 'domModification',
+                ...modelToDomContext.domModification,
+            },
+            true /*broadcast*/
+        );
     }
 
     return selection;

@@ -40,6 +40,12 @@ describe('LifecyclePlugin', () => {
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('');
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
+        expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -81,6 +87,57 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
+        expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+
+        plugin.dispose();
+        expect(div.isContentEditable).toBeFalse();
+    });
+
+    it('init with domModifications', () => {
+        const div = document.createElement('div');
+        const plugin = createLifecyclePlugin({}, div);
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+
+        const state = plugin.getState();
+        const mockedAddedElements = 'ADD' as any;
+        const mockedRemovedElements = 'REMOVE' as any;
+
+        state.domModification = {
+            addedBlockElements: mockedAddedElements,
+            removedBlockElements: mockedRemovedElements,
+        };
+
+        plugin.initialize(<IEditor>(<any>{
+            triggerEvent,
+            getFocusedPosition: () => <any>null,
+            getColorManager: () => <DarkColorHandler | null>null,
+            isDarkMode: () => false,
+            getDocument,
+        }));
+
+        expect(state).toEqual({
+            isDarkMode: false,
+            shadowEditFragment: null,
+            styleElements: {},
+            announcerStringGetter: undefined,
+            announceContainer,
+        });
+
+        expect(div.isContentEditable).toBeTrue();
+        expect(div.style.userSelect).toBe('text');
+        expect(div.innerHTML).toBe('');
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
+        expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
+            addedBlockElements: mockedAddedElements,
+            removedBlockElements: mockedRemovedElements,
+        });
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();
@@ -103,6 +160,12 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('');
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
+        expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         plugin.dispose();
         expect(div.isContentEditable).toBeTrue();
@@ -125,6 +188,12 @@ describe('LifecyclePlugin', () => {
 
         expect(div.isContentEditable).toBeFalse();
         expect(div.style.userSelect).toBe('');
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
+        expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         plugin.dispose();
         expect(div.isContentEditable).toBeFalse();

@@ -57,8 +57,10 @@ describe('handleParagraph', () => {
             '<div></div>',
             0
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle empty implicit paragraph', () => {
@@ -72,8 +74,10 @@ describe('handleParagraph', () => {
             '',
             0
         );
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle paragraph with single text segment', () => {
@@ -99,8 +103,10 @@ describe('handleParagraph', () => {
             context,
             []
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle implicit paragraph single text segment', () => {
@@ -121,8 +127,10 @@ describe('handleParagraph', () => {
         );
 
         expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context, []);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle multiple segments', () => {
@@ -163,8 +171,10 @@ describe('handleParagraph', () => {
             context,
             []
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle p without margin', () => {
@@ -189,8 +199,10 @@ describe('handleParagraph', () => {
             '<p style="margin-top: 0px; margin-bottom: 0px;">test</p>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle p with margin', () => {
@@ -215,8 +227,10 @@ describe('handleParagraph', () => {
             '<p>test</p>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle headers', () => {
@@ -241,8 +255,10 @@ describe('handleParagraph', () => {
             '<h1>test</h1>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle headers with default format override', () => {
@@ -267,8 +283,10 @@ describe('handleParagraph', () => {
             '<h1 style="font-size: 20px;">test</h1>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle headers without default format', () => {
@@ -293,8 +311,10 @@ describe('handleParagraph', () => {
             '<h1>test</h1>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle headers that has non-bold text', () => {
@@ -326,8 +346,10 @@ describe('handleParagraph', () => {
             '<h1>test 1<span style="font-weight: normal;">test 2</span></h1>',
             2
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle headers with implicit block and other inline format', () => {
@@ -353,8 +375,10 @@ describe('handleParagraph', () => {
             '<h1><i>test</i></h1>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('handle implicit paragraph with segments and format', () => {
@@ -378,8 +402,10 @@ describe('handleParagraph', () => {
             '<div style="text-align: center;">test</div>',
             1
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('call stackFormat', () => {
@@ -409,8 +435,10 @@ describe('handleParagraph', () => {
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle paragraph with refNode', () => {
@@ -433,8 +461,10 @@ describe('handleParagraph', () => {
         expect(parent.innerHTML).toBe('<div></div><br>');
         expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
         expect(result).toBe(br);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Handle paragraph with PRE', () => {
@@ -471,11 +501,13 @@ describe('handleParagraph', () => {
         expect(para1.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test1</div>');
         expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
         expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
-        expect(context.addedBlockElements).toEqual([
-            parent.firstChild as HTMLElement,
-            parent.firstChild!.nextSibling as HTMLElement,
-        ]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [
+                parent.firstChild as HTMLElement,
+                parent.firstChild!.nextSibling as HTMLElement,
+            ],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated', () => {
@@ -501,8 +533,10 @@ describe('handleParagraph', () => {
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated on implicit paragraph', () => {
@@ -527,8 +561,10 @@ describe('handleParagraph', () => {
 
         expect(parent.innerHTML).toBe('');
         expect(onNodeCreated).toHaveBeenCalled();
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Paragraph with only selection marker and BR', () => {
@@ -571,8 +607,10 @@ describe('handleParagraph', () => {
             start: { block: div, segment: txt },
             end: { block: div, segment: txt },
         });
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Paragraph with inline format', () => {
@@ -599,8 +637,10 @@ describe('handleParagraph', () => {
         expect(parent.innerHTML).toBe(
             '<div style="font-size: 10px;"><span style="font-family: Arial;">test</span></div>'
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Paragraph with domIndexer', () => {
@@ -647,8 +687,10 @@ describe('handleParagraph', () => {
         expect(onSegmentSpy).toHaveBeenCalledWith(parent.firstChild!.lastChild, paragraph, [
             segment2,
         ]);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Implicit paragraph with domIndexer', () => {
@@ -696,8 +738,10 @@ describe('handleParagraph', () => {
         expect(onSegmentSpy).toHaveBeenCalledTimes(2);
         expect(onSegmentSpy).toHaveBeenCalledWith(parent.firstChild, paragraph, [segment1]);
         expect(onSegmentSpy).toHaveBeenCalledWith(parent.lastChild, paragraph, [segment2]);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 });
 
@@ -734,8 +778,10 @@ describe('Handle paragraph and adjust selections', () => {
             segment: parent.firstChild!.firstChild,
         });
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is at beginning, followed by Text', () => {
@@ -774,8 +820,10 @@ describe('Handle paragraph and adjust selections', () => {
         });
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is in middle of text', () => {
@@ -819,8 +867,10 @@ describe('Handle paragraph and adjust selections', () => {
         });
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is at end of text', () => {
@@ -867,8 +917,10 @@ describe('Handle paragraph and adjust selections', () => {
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.lastChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).not.toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is in middle of text, expanded', () => {
@@ -914,8 +966,10 @@ describe('Handle paragraph and adjust selections', () => {
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.lastChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is in front of text, expanded', () => {
@@ -955,8 +1009,10 @@ describe('Handle paragraph and adjust selections', () => {
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.lastChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is at the end of text, expanded', () => {
@@ -996,8 +1052,10 @@ describe('Handle paragraph and adjust selections', () => {
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.lastChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Selection is in middle of text and BR, expanded', () => {
@@ -1053,8 +1111,10 @@ describe('Handle paragraph and adjust selections', () => {
         expect(parent.firstChild!.firstChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.lastChild!.nodeType).toBe(Node.TEXT_NODE);
         expect(parent.firstChild!.firstChild).not.toBe(parent.firstChild!.lastChild);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Has cache', () => {
@@ -1075,8 +1135,15 @@ describe('Handle paragraph and adjust selections', () => {
 
         expect(parent.innerHTML).toBe('<div id="div1"></div>');
         expect(parent.firstChild).toBe(div);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
-        expect(reuseCachedElementSpy).toHaveBeenCalledWith(parent, div, null, context);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(reuseCachedElementSpy).toHaveBeenCalledWith(
+            parent,
+            div,
+            null,
+            context.domModification
+        );
     });
 });

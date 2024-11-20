@@ -7,7 +7,6 @@ import type {
     FormatContentModel,
     FormatContentModelContext,
     EditorCore,
-    DomManipulationContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -60,15 +59,12 @@ export const formatContentModel: FormatContentModel = (
         try {
             handleImages(core, context);
 
-            const domManipulationResult: Partial<DomManipulationContext> = {};
-
             selection =
                 core.api.setContentModel(
                     core,
                     model,
                     hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
-                    onNodeCreated,
-                    domManipulationResult
+                    onNodeCreated
                 ) ?? undefined;
 
             handlePendingFormat(core, context, selection);
@@ -85,8 +81,6 @@ export const formatContentModel: FormatContentModel = (
                 data: getChangeData?.(),
                 formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
-                addedBlockElements: domManipulationResult.addedBlockElements,
-                removedBlockElements: domManipulationResult.removedBlockElements,
             };
 
             core.api.triggerEvent(core, eventData, true /*broadcast*/);

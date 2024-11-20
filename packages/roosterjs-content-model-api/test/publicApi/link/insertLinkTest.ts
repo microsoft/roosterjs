@@ -330,7 +330,6 @@ describe('insertLink', () => {
         const editor = new Editor(div, {
             plugins: [mockedPlugin],
         });
-        const firstDiv = div.firstChild as HTMLElement;
 
         editor.focus();
 
@@ -349,8 +348,6 @@ describe('insertLink', () => {
             contentModel: jasmine.anything(),
             selection: jasmine.anything(),
             changedEntities: [],
-            addedBlockElements: [div.firstChild],
-            removedBlockElements: [firstDiv],
         });
 
         document.body.removeChild(div);

@@ -6,6 +6,7 @@ import type {
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    DomModification,
 } from 'roosterjs-content-model-types';
 
 const ContentEditableAttributeName = 'contenteditable';
@@ -72,6 +73,15 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         // Set editor background color for dark mode
         this.adjustColor();
+
+        // Let other plugins know that we are ready
+        const domModification: DomModification = this.state.domModification ?? {
+            addedBlockElements: [],
+            removedBlockElements: [],
+        };
+
+        this.editor.triggerEvent('editorReady', domModification, true /*broadcast*/);
+        delete this.state.domModification;
 
         // Initialize the Announce container.
         this.state.announceContainer = createAriaLiveElement(editor.getDocument());

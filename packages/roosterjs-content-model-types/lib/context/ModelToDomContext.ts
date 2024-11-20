@@ -1,4 +1,4 @@
-import type { DomManipulationContext } from './DomManipulationContext';
+import type { DomModificationContext } from './DomModification';
 import type { EditorContext } from './EditorContext';
 import type { ModelToDomFormatContext } from './ModelToDomFormatContext';
 import type { ModelToDomSelectionContext } from './ModelToDomSelectionContext';
@@ -12,4 +12,4 @@ export interface ModelToDomContext
         ModelToDomSelectionContext,
         ModelToDomFormatContext,
         ModelToDomSettings,
-        DomManipulationContext {}
+        DomModificationContext {}

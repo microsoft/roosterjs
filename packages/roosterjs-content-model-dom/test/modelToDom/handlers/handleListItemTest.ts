@@ -77,8 +77,10 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(paragraph.isImplicit).toBeFalse();
-        expect(context.addedBlockElements).toEqual([document.createElement('li')]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [document.createElement('li')],
+            removedBlockElements: [],
+        });
     });
 
     it('OL parent', () => {
@@ -142,8 +144,10 @@ describe('handleListItem without format handler', () => {
             listItem,
             context
         );
-        expect(context.addedBlockElements).toEqual([document.createElement('li')]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [document.createElement('li')],
+            removedBlockElements: [],
+        });
     });
 
     it('UL parent', () => {
@@ -207,8 +211,10 @@ describe('handleListItem without format handler', () => {
             listItem,
             context
         );
-        expect(context.addedBlockElements).toEqual([document.createElement('li')]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [document.createElement('li')],
+            removedBlockElements: [],
+        });
     });
 
     it('UL with refNode', () => {
@@ -232,8 +238,10 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(result).toBe(br);
-        expect(context.addedBlockElements).toEqual([document.createElement('li')]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [document.createElement('li')],
+            removedBlockElements: [],
+        });
     });
 
     it('UL with same format on list and segment', () => {
@@ -276,8 +284,10 @@ describe('handleListItem without format handler', () => {
 
         expect(li.tagName).toBe('LI');
 
-        expect(context.addedBlockElements).toEqual([li, li.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [li, li.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('UL with different format on list and segment', () => {
@@ -320,8 +330,10 @@ describe('handleListItem without format handler', () => {
 
         expect(li.tagName).toBe('LI');
 
-        expect(context.addedBlockElements).toEqual([li, li.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [li, li.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated', () => {
@@ -356,7 +368,9 @@ describe('handleListItem without format handler', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listItem);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('li'));
-        expect(context.addedBlockElements).toEqual([document.createElement('li')]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [document.createElement('li')],
+            removedBlockElements: [],
+        });
     });
 });

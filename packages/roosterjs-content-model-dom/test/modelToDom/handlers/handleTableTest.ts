@@ -26,7 +26,10 @@ describe('handleTable', () => {
 
         if (expectedInnerHTML) {
             expect((div.firstChild as HTMLElement).tagName).toBe('TABLE');
-            expect(context.addedBlockElements).toEqual([div.firstChild as HTMLElement]);
+            expect(context.domModification).toEqual({
+                addedBlockElements: [div.firstChild as HTMLElement],
+                removedBlockElements: [],
+            });
         }
     }
 
@@ -644,9 +647,16 @@ describe('handleTable', () => {
             '<table id="table1"><tbody><tr><td></td></tr></tbody></table>'
         );
         expect(parent.firstChild).toBe(cachedTable);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
-        expect(reuseCachedElementSpy).toHaveBeenCalledWith(parent, cachedTable, null, context);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(reuseCachedElementSpy).toHaveBeenCalledWith(
+            parent,
+            cachedTable,
+            null,
+            context.domModification
+        );
     });
 
     it('handleTable without cache', () => {
@@ -664,8 +674,10 @@ describe('handleTable', () => {
         handleTable(document, parent, tableModel, context, null);
 
         expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
         expect(reuseCachedElementSpy).not.toHaveBeenCalled();
     });
 });

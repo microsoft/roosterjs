@@ -112,6 +112,11 @@ export type PluginEventType =
     | 'zoomChanged'
 
     /**
+     * DOM modification happened from Content Model
+     */
+    | 'domModification'
+
+    /**
      * EXPERIMENTAL FEATURE
      * Editor changed the selection.
      */

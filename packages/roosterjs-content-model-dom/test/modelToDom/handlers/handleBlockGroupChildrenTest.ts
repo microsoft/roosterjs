@@ -42,8 +42,10 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.outerHTML).toBe('<div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlock).not.toHaveBeenCalled();
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Single child block group', () => {
@@ -58,8 +60,10 @@ describe('handleBlockGroupChildren', () => {
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlock).toHaveBeenCalledTimes(1);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph, context, null);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Multiple child block group', () => {
@@ -77,8 +81,10 @@ describe('handleBlockGroupChildren', () => {
         expect(handleBlock).toHaveBeenCalledTimes(2);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph1, context, null);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph2, context, null);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Multiple child block group with nodeStack and no list', () => {
@@ -101,8 +107,10 @@ describe('handleBlockGroupChildren', () => {
         expect(context.listFormat.nodeStack).toBe(nodeStack);
         expect(handleBlock).toHaveBeenCalledTimes(1);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph, context, null);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Multiple child block group with nodeStack and no list', () => {
@@ -141,8 +149,10 @@ describe('handleBlockGroupChildren', () => {
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph1, context, null);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph2, context, null);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, list, context, null);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('handle document with cache 1', () => {
@@ -178,8 +188,10 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.outerHTML).toBe('<div><div>test1</div><div>test2</div></div>');
         expect(parent.firstChild).toBe(div1);
         expect(parent.lastChild).toBe(div2);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('handle document with cache 2', () => {
@@ -215,8 +227,10 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.outerHTML).toBe('<div><div>test2</div><div>test1</div></div>');
         expect(parent.firstChild).toBe(div2);
         expect(parent.firstChild?.nextSibling).toBe(div1);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([div1]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [div1],
+        });
     });
 
     it('handle document with cache 3', () => {
@@ -253,8 +267,10 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.outerHTML).toBe('<div><div>test2</div><div>test1</div></div>');
         expect(parent.firstChild).toBe(div2);
         expect(parent.firstChild?.nextSibling).toBe(div1);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([div1]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [div1],
+        });
     });
 
     it('handle document with cache 4', () => {
@@ -300,8 +316,10 @@ describe('handleBlockGroupChildren', () => {
         );
         expect(parent.firstChild).toBe(div2);
         expect(parent.firstChild?.nextSibling).toBe(quote);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([quote]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [quote],
+        });
     });
 
     it('handle document with cache 5', () => {
@@ -345,8 +363,10 @@ describe('handleBlockGroupChildren', () => {
             '<div><blockquote id="div1"><div><br></div></blockquote></div>'
         );
         expect(parent.firstChild).toBe(quote);
-        expect(context.addedBlockElements).toEqual([parent.firstChild!.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild!.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('Inline entity is next to a cached paragraph', () => {
@@ -399,8 +419,10 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.innerHTML).toBe(
             '<div><br></div><span class="_Entity _EType_MyEntity _EReadonly_0"></span>'
         );
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('child contains entity', () => {
@@ -429,7 +451,9 @@ describe('handleBlockGroupChildren', () => {
         expect(handleBlock).toHaveBeenCalledWith(document, parent, entity, context, null);
         expect(onBlockEntity).toHaveBeenCalledTimes(1);
         expect(onBlockEntity).toHaveBeenCalledWith(entity, group);
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 });

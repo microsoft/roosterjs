@@ -27,8 +27,10 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            addedBlockElements: [],
-            removedBlockElements: [],
+            domModification: {
+                addedBlockElements: [],
+                removedBlockElements: [],
+            },
         });
     });
 
@@ -57,8 +59,10 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            addedBlockElements: [],
-            removedBlockElements: [],
+            domModification: {
+                addedBlockElements: [],
+                removedBlockElements: [],
+            },
         });
     });
 
@@ -118,8 +122,10 @@ describe('createModelToDomContext', () => {
             defaultModelHandlers: defaultContentModelHandlers,
             defaultFormatAppliers,
             metadataAppliers: {},
-            addedBlockElements: [],
-            removedBlockElements: [],
+            domModification: {
+                addedBlockElements: [],
+                removedBlockElements: [],
+            },
         });
     });
 });

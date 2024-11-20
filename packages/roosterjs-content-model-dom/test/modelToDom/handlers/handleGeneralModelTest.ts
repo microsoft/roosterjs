@@ -61,8 +61,10 @@ describe('handleBlockGroup', () => {
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(context.addedBlockElements).toEqual([clonedChild]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [clonedChild],
+            removedBlockElements: [],
+        });
     });
 
     it('General block with color', () => {
@@ -77,8 +79,10 @@ describe('handleBlockGroup', () => {
         expect(parent.outerHTML).toBe(
             '<div><span style="color: red; background-color: green;"></span></div>'
         );
-        expect(context.addedBlockElements).toEqual([parent.firstChild as HTMLElement]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('General segment: empty element', () => {
@@ -234,8 +238,10 @@ describe('handleBlockGroup', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(result).toBe(br);
         expect(group.element).toBe(clonedChild);
-        expect(context.addedBlockElements).toEqual([clonedChild]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [clonedChild],
+            removedBlockElements: [],
+        });
     });
 
     it('General block with refNode, already in target node', () => {
@@ -255,8 +261,10 @@ describe('handleBlockGroup', () => {
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context);
         expect(result).toBe(br);
         expect(group.element).toBe(node);
-        expect(context.addedBlockElements).toEqual([]);
-        expect(context.removedBlockElements).toEqual([]);
+        expect(context.domModification).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated', () => {

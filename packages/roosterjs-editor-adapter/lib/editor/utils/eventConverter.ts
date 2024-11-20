@@ -214,9 +214,12 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
             };
 
         case PluginEventType.EditorReady:
+            const refEditorReadyEvent = refEvent?.eventType == 'editorReady' ? refEvent : undefined;
             return {
                 eventType: 'editorReady',
                 eventDataCache: input.eventDataCache,
+                addedBlockElements: refEditorReadyEvent?.addedBlockElements ?? [],
+                removedBlockElements: refEditorReadyEvent?.removedBlockElements ?? [],
             };
 
         case PluginEventType.EnteredShadowEdit:
