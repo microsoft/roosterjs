@@ -46,11 +46,15 @@ import {
 import {
     Border,
     Colors,
+    ContentModelBlockFormat,
     ContentModelDocument,
+    DomToModelOption,
     EditorOptions,
     EditorPlugin,
     IEditor,
     KnownAnnounceStrings,
+    ModelToDomOption,
+    PluginEvent,
     Snapshots,
 } from 'roosterjs-content-model-types';
 import {
@@ -108,6 +112,32 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     protected model: ContentModelDocument | null = null;
     private knownColors: Record<string, Colors> = {};
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
+
+    private domToModelOption: DomToModelOption = {
+        additionalFormatParsers: {
+            block: [
+                (format, element) => {
+                    if (element.classList.contains('proofing')) {
+                        const proofingFormat = format as ProofingFormat;
+
+                        proofingFormat.isProofing = true;
+                    }
+                },
+            ],
+        },
+    };
+
+    private modelToDomOption: ModelToDomOption = {
+        additionalFormatAppliers: {
+            block: [
+                (format, element) => {
+                    if ((format as ProofingFormat).isProofing) {
+                        element.classList.add('proofing');
+                    }
+                },
+            ],
+        },
+    };
 
     static getInstance() {
         return this.instance;
@@ -343,6 +373,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
+            new TestEditor(),
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
@@ -373,6 +404,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             experimentalFeatures={Array.from(
                                 this.state.initState.experimentalFeatures
                             )}
+                            defaultDomToModelOptions={this.domToModelOption}
+                            defaultModelToDomOptions={this.modelToDomOption}
                         />
                     )}
                 </div>
@@ -539,4 +572,51 @@ function getAnnouncingString(key: KnownAnnounceStrings) {
 
 export function mount(parent: HTMLElement) {
     ReactDOM.render(<MainPane />, parent);
+}
+
+type ProofingFormat = ContentModelBlockFormat & {
+    isProofing?: boolean;
+};
+
+class TestEditor implements EditorPlugin {
+    private editor: IEditor;
+    private lastNode: Node;
+
+    getName() {
+        return 'test';
+    }
+
+    initialize(editor: IEditor) {
+        this.editor = editor;
+    }
+
+    dispose() {
+        this.editor = null;
+    }
+
+    onPluginEvent(event: PluginEvent) {
+        if (event.eventType == 'keyDown') {
+            const selection = this.editor.getDOMSelection();
+
+            if (selection.type == 'range' && selection.range.startContainer != this.lastNode) {
+                this.lastNode = selection.range.startContainer;
+
+                const proofingElement = this.editor
+                    .getDOMHelper()
+                    .findClosestElementAncestor(selection.range.startContainer, '.proofing');
+
+                if (!proofingElement) {
+                    this.editor.formatContentModel((_, context) => {
+                        const proofingFormat: ProofingFormat = {
+                            isProofing: true,
+                        };
+
+                        context.newPendingParagraphFormat = proofingFormat;
+
+                        return false;
+                    });
+                }
+            }
+        }
+    }
 }
