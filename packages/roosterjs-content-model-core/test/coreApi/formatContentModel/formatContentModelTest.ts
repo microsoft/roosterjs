@@ -970,4 +970,138 @@ describe('formatContentModel', () => {
             expect(announce).toHaveBeenCalledWith(core, mockedData);
         });
     });
+
+    describe('Changed entities', () => {
+        it('Callback return true, changed entities are not specified', () => {
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(callback).toHaveBeenCalledWith(mockedModel, {
+                newEntities: [],
+                deletedEntities: [],
+                rawEvent: undefined,
+                newImages: [],
+            });
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalled();
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: 'Format',
+                    data: undefined,
+                    formatApiName: 'mockedApi',
+                    changedEntities: [],
+                },
+                true
+            );
+        });
+
+        it('Callback return true, changed entities are specified', () => {
+            const wrapper1 = document.createElement('span');
+            const wrapper2 = document.createElement('div');
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: any, context: FormatContentModelContext) => {
+                    context.newEntities.push({
+                        segmentType: 'Entity',
+                        blockType: 'Entity',
+                        entityFormat: {
+                            entityType: 'test',
+                        },
+                        format: {},
+                        wrapper: wrapper1,
+                    });
+                    context.deletedEntities.push({
+                        entity: {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            entityFormat: {
+                                entityType: 'test',
+                            },
+                            format: {},
+                            wrapper: wrapper2,
+                        },
+                        operation: 'overwrite',
+                    });
+                    return true;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(callback).toHaveBeenCalled();
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalled();
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: 'Format',
+                    data: undefined,
+                    formatApiName: 'mockedApi',
+                    changedEntities: [
+                        {
+                            entity: {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                entityFormat: { entityType: 'test' },
+                                format: {},
+                                wrapper: wrapper1,
+                            },
+                            operation: 'newEntity',
+                            rawEvent: undefined,
+                        },
+                        {
+                            entity: {
+                                segmentType: 'Entity',
+                                blockType: 'Entity',
+                                entityFormat: { entityType: 'test' },
+                                format: {},
+                                wrapper: wrapper2,
+                            },
+                            operation: 'overwrite',
+                            rawEvent: undefined,
+                        },
+                    ],
+                },
+                true
+            );
+        });
+
+        it('Callback return true, auto detect entity change', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((model: any, context: FormatContentModelContext) => {
+                    context.autoDetectChangedEntities = true;
+                    return true;
+                });
+
+            formatContentModel(core, callback, { apiName });
+
+            expect(callback).toHaveBeenCalled();
+            expect(createContentModel).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalled();
+            expect(setContentModel).toHaveBeenCalled();
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: 'Format',
+                    data: undefined,
+                    formatApiName: 'mockedApi',
+                    changedEntities: undefined,
+                },
+                true
+            );
+        });
+    });
 });

@@ -46,12 +46,13 @@ export interface DeletedEntity {
  */
 export interface FormatContentModelContext {
     /**
-     * New entities added during the format process
+     * New entities added during the format process. This value is only respected when autoDetectChangedEntities is not set to true
      */
     readonly newEntities: ContentModelEntity[];
 
     /**
      * Entities got deleted during formatting. Need to be set by the formatter function
+     * This value is only respected when autoDetectChangedEntities is not set to true
      */
     readonly deletedEntities: DeletedEntity[];
 
@@ -103,4 +104,9 @@ export interface FormatContentModelContext {
      * @optional Set this value to tell AnnouncePlugin to announce the given information
      */
     announceData?: AnnounceData | null;
+
+    /**
+     * @optional When set to true, EntityPlugin will detect any entity changes during this process, newEntities and deletedEntities will be ignored
+     */
+    autoDetectChangedEntities?: boolean;
 }
