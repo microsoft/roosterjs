@@ -60,7 +60,7 @@ describe('FormatPlugin', () => {
         plugin.dispose();
 
         expect(applyPendingFormatSpy).toHaveBeenCalledTimes(1);
-        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'a', mockedFormat);
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'a', mockedFormat, undefined);
         expect(state.pendingFormat).toBeNull();
     });
 
@@ -92,7 +92,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'test', mockedFormat);
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'test', mockedFormat, undefined);
         expect(state.pendingFormat).toBeNull();
     });
 

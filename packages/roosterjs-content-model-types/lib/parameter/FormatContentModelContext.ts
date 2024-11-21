@@ -1,9 +1,9 @@
-import { ContentModelBlockFormat } from 'roosterjs/lib';
 import type { AnnounceData } from './AnnounceData';
 import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
 import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
+import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
 
 /**
  * State for an entity. This is used for storing entity undo snapshot

@@ -671,6 +671,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -694,6 +695,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -709,6 +711,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -724,6 +727,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -747,6 +751,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -770,6 +775,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
