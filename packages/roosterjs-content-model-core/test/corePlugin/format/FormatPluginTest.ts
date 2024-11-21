@@ -225,14 +225,12 @@ describe('FormatPlugin for default format', () => {
     let getDOMSelection: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
-    let takeSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
 
     beforeEach(() => {
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
         getDOMSelection = jasmine.createSpy('getDOMSelection');
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
-        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         formatContentModelSpy = jasmine.createSpy('formatContentModelSpy');
         contentDiv = document.createElement('div');
 
@@ -243,7 +241,6 @@ describe('FormatPlugin for default format', () => {
             getDOMSelection,
             getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,
-            takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
             getEnvironment: () => ({}),
         } as any) as IEditor;
@@ -355,7 +352,6 @@ describe('FormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({});
-        expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Collapsed range, IME input, under editor directly', () => {

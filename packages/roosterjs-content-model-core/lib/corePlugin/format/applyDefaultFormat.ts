@@ -1,4 +1,4 @@
-import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { iterateSelections } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 
 /**
@@ -8,55 +8,59 @@ import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model
  * @param defaultFormat The default segment format to apply
  */
 export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelSegmentFormat) {
-    editor.formatContentModel((model, context) => {
-        const result = deleteSelection(model, [], context);
+    const selection = editor.getDOMSelection();
 
-        if (result.deleteResult == 'range') {
-            normalizeContentModel(model);
+    if (selection?.type == 'range' && selection.range.collapsed) {
+        editor.formatContentModel((model, context) => {
+            iterateSelections(model, (path, _, paragraph, segments) => {
+                const marker = segments?.[0];
+                if (
+                    paragraph?.blockType == 'Paragraph' &&
+                    marker?.segmentType == 'SelectionMarker'
+                ) {
+                    const blocks = path[0].blocks;
+                    const blockCount = blocks.length;
+                    const blockIndex = blocks.indexOf(paragraph);
 
-            editor.takeSnapshot();
+                    if (
+                        paragraph.isImplicit &&
+                        paragraph.segments.length == 1 &&
+                        paragraph.segments[0] == marker &&
+                        blockCount > 0 &&
+                        blockIndex == blockCount - 1
+                    ) {
+                        // Focus is in the last paragraph which is implicit and there is not other segments.
+                        // This can happen when focus is moved after all other content under current block group.
+                        // We need to check if browser will merge focus into previous paragraph by checking if
+                        // previous block is block. If previous block is paragraph, browser will most likely merge
+                        // the input into previous paragraph, then nothing need to do here. Otherwise we need to
+                        // apply pending format since this input event will start a new real paragraph.
+                        const previousBlock = blocks[blockIndex - 1];
 
-            return true;
-        } else if (result.deleteResult == 'notDeleted' && result.insertPoint) {
-            const { paragraph, path, marker } = result.insertPoint;
-            const blocks = path[0].blocks;
-            const blockCount = blocks.length;
-            const blockIndex = blocks.indexOf(paragraph);
-
-            if (
-                paragraph.isImplicit &&
-                paragraph.segments.length == 1 &&
-                paragraph.segments[0] == marker &&
-                blockCount > 0 &&
-                blockIndex == blockCount - 1
-            ) {
-                // Focus is in the last paragraph which is implicit and there is not other segments.
-                // This can happen when focus is moved after all other content under current block group.
-                // We need to check if browser will merge focus into previous paragraph by checking if
-                // previous block is block. If previous block is paragraph, browser will most likely merge
-                // the input into previous paragraph, then nothing need to do here. Otherwise we need to
-                // apply pending format since this input event will start a new real paragraph.
-                const previousBlock = blocks[blockIndex - 1];
-
-                if (previousBlock?.blockType != 'Paragraph') {
-                    context.newPendingFormat = getNewPendingFormat(
-                        editor,
-                        defaultFormat,
-                        marker.format
-                    );
+                        if (previousBlock?.blockType != 'Paragraph') {
+                            context.newPendingFormat = getNewPendingFormat(
+                                editor,
+                                defaultFormat,
+                                marker.format
+                            );
+                        }
+                    } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
+                        context.newPendingFormat = getNewPendingFormat(
+                            editor,
+                            defaultFormat,
+                            marker.format
+                        );
+                    }
                 }
-            } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
-                context.newPendingFormat = getNewPendingFormat(
-                    editor,
-                    defaultFormat,
-                    marker.format
-                );
-            }
-        }
 
-        // We didn't do any change but just apply default format to pending format, so no need to write back
-        return false;
-    });
+                // Stop searching more selection
+                return true;
+            });
+
+            // We didn't do any change but just apply default format to pending format, so no need to write back
+            return false;
+        });
+    }
 }
 
 function getNewPendingFormat(
