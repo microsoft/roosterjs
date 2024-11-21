@@ -1,3 +1,4 @@
+import { ContentModelBlockFormat } from 'roosterjs/lib';
 import type { AnnounceData } from './AnnounceData';
 import type { ContentModelEntity } from '../contentModel/entity/ContentModelEntity';
 import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
@@ -86,6 +87,15 @@ export interface FormatContentModelContext {
      * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
      */
     newPendingFormat?: ContentModelSegmentFormat | 'preserve';
+
+    /**
+     * @optional
+     * Specify new pending format for paragraph
+     * To keep current format event selection position is changed, set this value to "preserved", editor will update pending format position to the new position
+     * To set a new pending format, set this property to the format object
+     * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
+     */
+    newPendingParagraphFormat?: ContentModelBlockFormat | 'preserve';
 
     /**
      * @optional Entity states related to the format API that will be added together with undo snapshot.
