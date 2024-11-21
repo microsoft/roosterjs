@@ -5,7 +5,23 @@ import {
     isModifierKey,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
+import type { DeleteSelectionStep, DOMSelection, IEditor } from 'roosterjs-content-model-types';
+
+// Insert a ZeroWidthSpace(ZWS) segment with selection before selection marker
+// so that later browser will replace this selection with inputted text and keep format
+const insertZWS: DeleteSelectionStep = context => {
+    if (context.deleteResult == 'range') {
+        const { marker, paragraph } = context.insertPoint;
+        const index = paragraph.segments.indexOf(marker);
+
+        if (index >= 0) {
+            const text = createText('\u200B', marker.format);
+            text.isSelected = true;
+
+            paragraph.segments.splice(index, 0, text);
+        }
+    }
+};
 
 /**
  * @internal
@@ -18,7 +34,7 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
 
         editor.formatContentModel(
             (model, context) => {
-                const result = deleteSelection(model, [], context);
+                const result = deleteSelection(model, [insertZWS], context);
 
                 // Skip undo snapshot here and add undo snapshot before the operation so that we don't add another undo snapshot in middle of this replace operation
                 context.skipUndoSnapshot = true;
@@ -26,19 +42,6 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
                 if (result.deleteResult == 'range') {
                     // We have deleted something, next input should inherit the segment format from deleted content, so set pending format here
                     context.newPendingFormat = result.insertPoint?.marker.format;
-
-                    if (result.insertPoint) {
-                        // Replace selection marker to a ZWS text segment so that later browser will replace this selection with inputted text and keep format
-                        const { marker, paragraph } = result.insertPoint;
-                        const text = createText('\u200B', marker.format);
-                        const index = paragraph.segments.indexOf(marker);
-
-                        text.isSelected = true;
-
-                        if (index >= 0) {
-                            paragraph.segments.splice(index, 1, text);
-                        }
-                    }
 
                     normalizeContentModel(model);
 

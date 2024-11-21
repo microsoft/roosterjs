@@ -225,14 +225,12 @@ describe('FormatPlugin for default format', () => {
     let getDOMSelection: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
-    let takeSnapshotSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
 
     beforeEach(() => {
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
         getDOMSelection = jasmine.createSpy('getDOMSelection');
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
-        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         formatContentModelSpy = jasmine.createSpy('formatContentModelSpy');
         contentDiv = document.createElement('div');
 
@@ -243,7 +241,6 @@ describe('FormatPlugin for default format', () => {
             getDOMSelection,
             getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,
-            takeSnapshot: takeSnapshotSpy,
             formatContentModel: formatContentModelSpy,
             getEnvironment: () => ({}),
         } as any) as IEditor;
@@ -355,7 +352,6 @@ describe('FormatPlugin for default format', () => {
         });
 
         expect(context).toEqual({});
-        expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 
     it('Collapsed range, IME input, under editor directly', () => {
@@ -683,5 +679,83 @@ describe('FormatPlugin for default format', () => {
         });
 
         expect(applyDefaultFormatSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe('FormatPlugin with default style checker', () => {
+    it('style checker return false', () => {
+        const div = document.createElement('div');
+        const getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue({
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 0,
+                collapsed: true,
+            },
+        });
+        const domHelper = 'HELPER' as any;
+        const getDOMHelper = jasmine.createSpy('getDOMHelper').and.returnValue(domHelper);
+
+        const editor = ({
+            cacheContentModel: () => {},
+            isDarkMode: () => false,
+            getEnvironment: () => ({}),
+            getDOMSelection,
+            getDOMHelper,
+        } as any) as IEditor;
+        const applyDefaultFormatSpy = spyOn(applyDefaultFormat, 'applyDefaultFormat');
+        const styleChecker = jasmine.createSpy('styleCheker').and.returnValue(false);
+        const plugin = createFormatPlugin({ applyDefaultFormatChecker: styleChecker });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: ({ key: 'a' } as any) as KeyboardEvent,
+        });
+
+        plugin.dispose();
+
+        expect(styleChecker).toHaveBeenCalledWith(div, domHelper);
+        expect(plugin.getState().pendingFormat).toBeNull();
+        expect(applyDefaultFormatSpy).not.toHaveBeenCalled();
+    });
+
+    it('style checker return true', () => {
+        const div = document.createElement('div');
+        const getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue({
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 0,
+                collapsed: true,
+            },
+        });
+        const domHelper = 'HELPER' as any;
+        const getDOMHelper = jasmine.createSpy('getDOMHelper').and.returnValue(domHelper);
+
+        const editor = ({
+            cacheContentModel: () => {},
+            isDarkMode: () => false,
+            getEnvironment: () => ({}),
+            getDOMSelection,
+            getDOMHelper,
+        } as any) as IEditor;
+        const applyDefaultFormatSpy = spyOn(applyDefaultFormat, 'applyDefaultFormat');
+        const styleChecker = jasmine.createSpy('styleCheker').and.returnValue(true);
+        const plugin = createFormatPlugin({ applyDefaultFormatChecker: styleChecker });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: ({ key: 'a' } as any) as KeyboardEvent,
+        });
+
+        plugin.dispose();
+
+        expect(styleChecker).toHaveBeenCalledWith(div, domHelper);
+        expect(plugin.getState().pendingFormat).toBeNull();
+        expect(applyDefaultFormatSpy).toHaveBeenCalledWith(editor, {});
     });
 });

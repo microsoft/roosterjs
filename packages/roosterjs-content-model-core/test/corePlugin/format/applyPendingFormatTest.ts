@@ -1,6 +1,7 @@
 import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyPendingFormat } from '../../../lib/corePlugin/format/applyPendingFormat';
+import { Editor } from '../../../lib/editor/Editor';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -9,6 +10,7 @@ import {
     ContentModelFormatter,
     FormatContentModelOptions,
     IEditor,
+    EditorPlugin,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
@@ -50,8 +52,11 @@ describe('applyPendingFormat', () => {
                 });
             });
 
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+
         const editor = ({
             formatContentModel: formatContentModelSpy,
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -64,6 +69,13 @@ describe('applyPendingFormat', () => {
         });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith('applyPendingFormat', {
+            paragraph: paragraph,
+            text: { segmentType: 'Text', text: 'c', format: { fontSize: '10px' } },
+            path: [model],
+            format: { fontSize: '10px' },
+        });
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -122,8 +134,11 @@ describe('applyPendingFormat', () => {
                 callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             });
 
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+
         const editor = ({
             formatContentModel: formatContentModelSpy,
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -136,6 +151,7 @@ describe('applyPendingFormat', () => {
         });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(0);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -181,8 +197,11 @@ describe('applyPendingFormat', () => {
         };
 
         const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+
         const editor = ({
             formatContentModel: formatContentModelSpy,
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -192,6 +211,7 @@ describe('applyPendingFormat', () => {
 
         applyPendingFormat(editor, 'd', {});
 
+        expect(triggerEventSpy).toHaveBeenCalledTimes(0);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -238,9 +258,11 @@ describe('applyPendingFormat', () => {
                 expect(options.apiName).toEqual('applyPendingFormat');
                 callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             });
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -253,6 +275,7 @@ describe('applyPendingFormat', () => {
         });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(0);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -287,9 +310,11 @@ describe('applyPendingFormat', () => {
                 expect(options.apiName).toEqual('applyPendingFormat');
                 callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             });
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
 
         const editor = ({
             formatContentModel: formatContentModelSpy,
+            triggerEvent: triggerEventSpy,
         } as any) as IEditor;
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -303,6 +328,13 @@ describe('applyPendingFormat', () => {
         });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith('applyPendingFormat', {
+            paragraph: paragraph,
+            text: { segmentType: 'Text', text: 't', format: { fontSize: '10px' } },
+            path: [model],
+            format: { fontSize: '10px' },
+        });
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -336,5 +368,80 @@ describe('applyPendingFormat', () => {
         });
 
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalled();
+    });
+});
+
+describe('applyPendingFormat with event - end to end', () => {
+    let div: HTMLDivElement;
+
+    beforeEach(() => {
+        div = document.createElement('div');
+        document.body.appendChild(div);
+    });
+
+    afterEach(() => {
+        document.body.removeChild(div);
+    });
+
+    it('Test plugin handling applyPendingFormat event', () => {
+        const onPluginEvent = jasmine.createSpy('onPluginEvent');
+        const plugin: EditorPlugin = {
+            getName: () => 'test',
+            initialize: () => {},
+            dispose: () => {},
+            onPluginEvent,
+        };
+
+        const editor = new Editor(div, {
+            plugins: [plugin],
+            initialModel: {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'a',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+        });
+
+        applyPendingFormat(editor, 'a', {});
+
+        editor.dispose();
+
+        const text = { segmentType: 'Text', text: 'a', format: {} };
+        const paragraph = {
+            blockType: 'Paragraph',
+            format: {},
+            segments: [text, { segmentType: 'SelectionMarker', format: {}, isSelected: true }],
+            cachedElement: jasmine.anything(),
+        };
+        const path = [
+            {
+                blockGroupType: 'Document',
+                blocks: [paragraph],
+                persistCache: true,
+            },
+        ];
+
+        expect(onPluginEvent).toHaveBeenCalledWith({
+            eventType: 'applyPendingFormat',
+            paragraph,
+            text,
+            path,
+            format: {},
+        });
     });
 });

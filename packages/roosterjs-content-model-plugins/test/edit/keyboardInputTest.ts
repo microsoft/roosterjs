@@ -99,7 +99,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeFalse();
         expect(mockedContext).toEqual({
             deletedEntities: [],
@@ -130,7 +134,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeTrue();
         expect(mockedContext).toEqual({
             deletedEntities: [],
@@ -140,6 +148,90 @@ describe('keyboardInput', () => {
             newPendingFormat: undefined,
         });
         expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
+    });
+
+    it('Letter input, expanded selection, no modifier key, deleteSelection returns range, do real deleting', () => {
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: false,
+            },
+        });
+        deleteSelectionSpy.and.callThrough();
+
+        mockedModel = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'aa',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: { fontSize: '10pt' },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const rawEvent = {
+            key: 'A',
+        } as any;
+
+        keyboardInput(editor, rawEvent);
+
+        expect(getDOMSelectionSpy).toHaveBeenCalled();
+        expect(takeSnapshotSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
+        expect(formatResult).toBeTrue();
+        expect(mockedContext).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+            skipUndoSnapshot: true,
+            newPendingFormat: { fontSize: '10pt' },
+        });
+        expect(normalizeContentModelSpy).toHaveBeenCalledWith(mockedModel);
+        expect(mockedModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'aa',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\u200B',
+                            format: { fontSize: '10pt' },
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { fontSize: '10pt' },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
     });
 
     it('Letter input, table selection, no modifier key, deleteSelection returns range', () => {
@@ -159,7 +251,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeTrue();
         expect(mockedContext).toEqual({
             deletedEntities: [],
@@ -188,7 +284,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeTrue();
         expect(mockedContext).toEqual({
             deletedEntities: [],
@@ -273,7 +373,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeTrue();
         expect(mockedContext).toEqual({
             deletedEntities: [],
@@ -338,7 +442,11 @@ describe('keyboardInput', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalled();
         expect(takeSnapshotSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalled();
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(mockedModel, [], mockedContext);
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            mockedModel,
+            [jasmine.anything()],
+            mockedContext
+        );
         expect(formatResult).toBeTrue();
         expect(mockedContext).toEqual({
             deletedEntities: [],

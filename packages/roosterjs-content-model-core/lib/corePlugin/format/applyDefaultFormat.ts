@@ -10,9 +10,7 @@ import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model
 export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelSegmentFormat) {
     const selection = editor.getDOMSelection();
 
-    if (!selection) {
-        // NO OP, should never happen
-    } else if (selection?.type == 'range' && selection.range.collapsed) {
+    if (selection?.type == 'range' && selection.range.collapsed) {
         editor.formatContentModel((model, context) => {
             iterateSelections(model, (path, _, paragraph, segments) => {
                 const marker = segments?.[0];
@@ -62,8 +60,6 @@ export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelS
             // We didn't do any change but just apply default format to pending format, so no need to write back
             return false;
         });
-    } else {
-        editor.takeSnapshot();
     }
 }
 

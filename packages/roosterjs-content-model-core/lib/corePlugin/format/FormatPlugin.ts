@@ -17,6 +17,7 @@ import type {
     PluginWithState,
     EditorOptions,
     TextColorFormat,
+    DOMHelper,
 } from 'roosterjs-content-model-types';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -125,7 +126,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                     this.clearPendingFormat();
                     this.lastCheckedNode = null;
                 } else if (
-                    this.defaultFormatKeys.size > 0 &&
+                    (this.defaultFormatKeys.size > 0 || this.state.applyDefaultFormatChecker) &&
                     (isAndroidIME ||
                         isCharacterValue(event.rawEvent) ||
                         event.rawEvent.key == ProcessKey) &&
@@ -193,37 +194,42 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             let element: HTMLElement | null = isNodeOfType(posContainer, 'ELEMENT_NODE')
                 ? posContainer
                 : posContainer.parentElement;
-            const foundFormatKeys = new Set<keyof CSSStyleDeclaration>();
 
-            if (element && this.state.applyDefaultFormatChecker?.(element, editor.getDOMHelper())) {
-                return true;
-            }
-
-            while (element?.parentElement && domHelper.isNodeInEditor(element.parentElement)) {
-                if (element.getAttribute?.('style')) {
-                    const style = element.style;
-                    this.defaultFormatKeys.forEach(key => {
-                        if (style[key]) {
-                            foundFormatKeys.add(key);
-                        }
-                    });
-
-                    if (foundFormatKeys.size == this.defaultFormatKeys.size) {
-                        return false;
-                    }
-                }
-
-                if (isBlockElement(element)) {
-                    break;
-                }
-
-                element = element.parentElement;
-            }
-
-            return true;
+            return (
+                (element && this.state.applyDefaultFormatChecker?.(element, domHelper)) ||
+                (this.defaultFormatKeys.size > 0 &&
+                    this.cssDefaultFormatChecker(element, domHelper))
+            );
         } else {
             return false;
         }
+    }
+
+    private cssDefaultFormatChecker(element: HTMLElement | null, domHelper: DOMHelper): boolean {
+        const foundFormatKeys = new Set<keyof CSSStyleDeclaration>();
+
+        while (element?.parentElement && domHelper.isNodeInEditor(element.parentElement)) {
+            if (element.getAttribute?.('style')) {
+                const style = element.style;
+                this.defaultFormatKeys.forEach(key => {
+                    if (style[key]) {
+                        foundFormatKeys.add(key);
+                    }
+                });
+
+                if (foundFormatKeys.size == this.defaultFormatKeys.size) {
+                    return false;
+                }
+            }
+
+            if (isBlockElement(element)) {
+                break;
+            }
+
+            element = element.parentElement;
+        }
+
+        return true;
     }
 }
 

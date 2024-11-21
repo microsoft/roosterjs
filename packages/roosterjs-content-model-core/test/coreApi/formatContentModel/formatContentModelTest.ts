@@ -622,6 +622,7 @@ describe('formatContentModel', () => {
             core.format = {
                 defaultFormat: {},
                 pendingFormat: null,
+                applyDefaultFormatChecker: null,
             };
 
             const mockedRange = {
