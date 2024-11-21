@@ -15,7 +15,7 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks(group);
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(group, 'Paragraph');
 
         // Assert
         expect(result).toEqual([]);
@@ -36,7 +36,7 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks(group, 'Table');
+        const result = queryContentModelBlocks<ReadonlyContentModelTable>(group, 'Table');
 
         // Assert
         expect(result).toEqual([]);
