@@ -23,13 +23,16 @@ describe('formatTextSegmentBeforeSelectionMarker', () => {
         const formatWithContentModelSpy = jasmine
             .createSpy('formatWithContentModel')
             .and.callFake((callback, options) => {
-                const result = callback(input, {
+                const context: FormatContentModelContext = {
                     newEntities: [],
                     deletedEntities: [],
                     newImages: [],
                     canUndoByBackspace: true,
-                });
+                };
+                const result = callback(input, context);
+
                 expect(result).toBe(expectedResult);
+                expect(context.newPendingFormat).toBe(expectedResult ? 'preserve' : undefined);
             });
 
         formatTextSegmentBeforeSelectionMarker(

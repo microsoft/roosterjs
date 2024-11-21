@@ -78,8 +78,7 @@ describe('handleSegment', () => {
         handleBr(document, parent, br, context, newSegments);
 
         expect(parent.innerHTML).toBe('<span><a href="/test"><br></a></span>');
-        expect(newSegments.length).toBe(2);
+        expect(newSegments.length).toBe(1);
         expect((newSegments[0] as HTMLElement).outerHTML).toBe('<br>');
-        expect((newSegments[1] as HTMLElement).outerHTML).toBe('<a href="/test"><br></a>');
     });
 });

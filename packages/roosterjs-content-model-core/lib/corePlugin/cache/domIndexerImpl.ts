@@ -592,14 +592,14 @@ export class DomIndexerImpl implements DomIndexer {
         const { previousSibling, nextSibling } = node;
 
         if (
-            (segmentItem = getIndexedSegmentItem(previousSibling)) &&
+            (segmentItem = getIndexedSegmentItem(getLastLeaf(previousSibling))) &&
             (existingSegment = segmentItem.segments[segmentItem.segments.length - 1]) &&
             (index = segmentItem.paragraph.segments.indexOf(existingSegment)) >= 0
         ) {
             // When we can find indexed segment before current one, use it as the insert index
             this.indexNode(segmentItem.paragraph, index + 1, node, existingSegment.format);
         } else if (
-            (segmentItem = getIndexedSegmentItem(nextSibling)) &&
+            (segmentItem = getIndexedSegmentItem(getFirstLeaf(nextSibling))) &&
             (existingSegment = segmentItem.segments[0]) &&
             (index = segmentItem.paragraph.segments.indexOf(existingSegment)) >= 0
         ) {
@@ -690,4 +690,20 @@ export class DomIndexerImpl implements DomIndexer {
         paragraph.segments.splice(index, 0, text);
         this.onSegment(textNode, paragraph, [text]);
     }
+}
+
+function getLastLeaf(node: Node | null): Node | null {
+    while (node?.lastChild) {
+        node = node.lastChild;
+    }
+
+    return node;
+}
+
+function getFirstLeaf(node: Node | null): Node | null {
+    while (node?.firstChild) {
+        node = node.firstChild;
+    }
+
+    return node;
 }
