@@ -7,7 +7,10 @@ import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+} from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { EditorContext } from '../context/EditorContext';
@@ -369,6 +372,13 @@ export interface EditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * An optional callback function that will be invoked before write content model back to editor.
+     * This is used for make sure model can satisfy some customized requirement
+     * @param model The model to fix up
+     */
+    readonly onFixUpModel?: (model: ReadonlyContentModelDocument) => void;
 
     /**
      * Enabled experimental features

@@ -114,10 +114,13 @@ describe('setContentModel', () => {
         const mockedRange = {
             type: 'image',
         } as any;
+        const mockedOnFixUpModel = jasmine.createSpy('fixupModel');
 
         contentModelToDomSpy.and.returnValue(mockedRange);
 
         core.environment.modelToDomSettings.builtIn = defaultOption;
+        (core as any).onFixUpModel = mockedOnFixUpModel;
+
         setContentModel(core, mockedModel, additionalOption);
 
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(
@@ -133,6 +136,8 @@ describe('setContentModel', () => {
             mockedContext
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(mockedOnFixUpModel).toHaveBeenCalledWith(mockedModel);
+        expect(mockedOnFixUpModel).toHaveBeenCalledBefore(contentModelToDomSpy);
     });
 
     it('no default option, with shadow edit', () => {
