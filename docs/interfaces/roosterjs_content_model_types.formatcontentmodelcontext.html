@@ -89,6 +89,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodelcontext.html#announcedata" class="tsd-kind-icon">announce<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodelcontext.html#autodetectchangedentities" class="tsd-kind-icon">auto<wbr>Detect<wbr>Changed<wbr>Entities</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodelcontext.html#canundobybackspace" class="tsd-kind-icon">can<wbr>Undo<wbr>ByBackspace</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodelcontext.html#clearmodelcache" class="tsd-kind-icon">clear<wbr>Model<wbr>Cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formatcontentmodelcontext.html#deletedentities" class="tsd-kind-icon">deleted<wbr>Entities</a></li>
@@ -112,7 +113,7 @@
 					<div class="tsd-signature tsd-kind-icon">announce<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.announcedata.html" class="tsd-signature-type" data-tsd-kind="Interface">AnnounceData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L115">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L116">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:116</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -124,12 +125,29 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="autodetectchangedentities" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> auto<wbr>Detect<wbr>Changed<wbr>Entities</h3>
+					<div class="tsd-signature tsd-kind-icon">auto<wbr>Detect<wbr>Changed<wbr>Entities<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L121">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:121</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>optional</dt>
+							<dd><p>When set to true, EntityPlugin will detect any entity changes during this process, newEntities and deletedEntities will be ignored</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="canundobybackspace" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> can<wbr>Undo<wbr>ByBackspace</h3>
 					<div class="tsd-signature tsd-kind-icon">can<wbr>Undo<wbr>ByBackspace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L110">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:110</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L111">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:111</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -146,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">clear<wbr>Model<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L80">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L81">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -163,12 +181,13 @@
 					<div class="tsd-signature tsd-kind-icon">deleted<wbr>Entities<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.deletedentity.html" class="tsd-signature-type" data-tsd-kind="Interface">DeletedEntity</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L57">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L58">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:58</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Entities got deleted during formatting. Need to be set by the formatter function</p>
+							<p>Entities got deleted during formatting. Need to be set by the formatter function
+							This value is only respected when autoDetectChangedEntities is not set to true</p>
 						</div>
 					</div>
 				</section>
@@ -178,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">entity<wbr>States<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.entitystate.html" class="tsd-signature-type" data-tsd-kind="Interface">EntityState</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L105">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L106">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:106</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -197,12 +216,12 @@
 					<div class="tsd-signature tsd-kind-icon">new<wbr>Entities<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodelentity.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEntity</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L52">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L52">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>New entities added during the format process</p>
+							<p>New entities added during the format process. This value is only respected when autoDetectChangedEntities is not set to true</p>
 						</div>
 					</div>
 				</section>
@@ -212,7 +231,7 @@
 					<div class="tsd-signature tsd-kind-icon">new<wbr>Images<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.contentmodelimage.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelImage</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L62">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L63">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -227,7 +246,7 @@
 					<div class="tsd-signature tsd-kind-icon">new<wbr>Pending<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#contentmodelsegmentformat" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelSegmentFormat</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preserve&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L89">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L90">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:90</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -247,7 +266,7 @@
 					<div class="tsd-signature tsd-kind-icon">new<wbr>Pending<wbr>Paragraph<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#contentmodelblockformat" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelBlockFormat</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preserve&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L98">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:98</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L99">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:99</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -267,7 +286,7 @@
 					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Event</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L67">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L68">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:68</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -282,7 +301,7 @@
 					<div class="tsd-signature tsd-kind-icon">skip<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/261055d/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L74">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2a249dd/packages/roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts#L75">roosterjs-content-model-types/lib/parameter/FormatContentModelContext.ts:75</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -340,6 +359,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.formatcontentmodelcontext.html#announcedata" class="tsd-kind-icon">announce<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.formatcontentmodelcontext.html#autodetectchangedentities" class="tsd-kind-icon">auto<wbr>Detect<wbr>Changed<wbr>Entities</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.formatcontentmodelcontext.html#canundobybackspace" class="tsd-kind-icon">can<wbr>Undo<wbr>ByBackspace</a>
