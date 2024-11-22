@@ -7,7 +7,10 @@ import type { ContentModelSegmentFormat } from '../contentModel/format/ContentMo
 import type { CoreApiMap } from './EditorCore';
 import type { DomToModelOption } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+} from '../contentModel/blockGroup/ContentModelDocument';
 import type { Snapshots } from '../parameter/Snapshot';
 import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 
@@ -67,6 +70,13 @@ export interface ContentModelOptions {
      * Default value is the computed style of editor content DIV
      */
     defaultSegmentFormat?: ContentModelSegmentFormat;
+
+    /**
+     * An optional callback function that will be invoked before write content model back to editor.
+     * This is used for make sure model can satisfy some customized requirement
+     * @param model The model to fix up
+     */
+    onFixUpModel?: (model: ReadonlyContentModelDocument) => void;
 
     /**
      * @deprecated

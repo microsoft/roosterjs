@@ -5,6 +5,7 @@ import {
     defaultFormatKeysPerCategory,
 } from '../../formatHandlers/defaultFormatHandlers';
 import type {
+    RewriteFromModelContext,
     EditorContext,
     FormatApplier,
     FormatAppliers,
@@ -37,12 +38,13 @@ export function createModelToDomContext(
 export function createModelToDomContextWithConfig(
     config: ModelToDomSettings,
     editorContext?: EditorContext
-) {
+): ModelToDomContext {
     return Object.assign(
         {},
         editorContext,
         createModelToDomSelectionContext(),
         createModelToDomFormatContext(),
+        createRewriteFromModelContext(),
         config
     );
 }
@@ -65,6 +67,15 @@ function createModelToDomFormatContext(): ModelToDomFormatContext {
             nodeStack: [],
         },
         implicitFormat: {},
+    };
+}
+
+function createRewriteFromModelContext(): RewriteFromModelContext {
+    return {
+        rewriteFromModel: {
+            addedBlockElements: [],
+            removedBlockElements: [],
+        },
     };
 }
 

@@ -1,3 +1,4 @@
+import type { RewriteFromModel } from '../context/RewriteFromModel';
 import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
 
 /**
@@ -18,6 +19,11 @@ export interface LifecyclePluginState {
      * The HTML container for announced string
      */
     announceContainer?: HTMLElement;
+
+    /**
+     * added and removed block elements when initialize
+     */
+    rewriteFromModel?: RewriteFromModel;
 
     /**
      * A callback to help get string template to announce, used for accessibility

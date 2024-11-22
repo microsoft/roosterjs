@@ -36,6 +36,10 @@ describe('handleFormatContainer', () => {
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(quote.cachedElement).toBeUndefined();
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('Quote with child', () => {
@@ -61,6 +65,13 @@ describe('handleFormatContainer', () => {
             context
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [
+                parent.firstChild as HTMLElement,
+                parent.firstChild!.firstChild as HTMLElement,
+            ],
+            removedBlockElements: [],
+        });
     });
 
     it('Quote with child and refNode', () => {
@@ -90,6 +101,13 @@ describe('handleFormatContainer', () => {
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
         expect(result).toBe(br);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [
+                parent.firstChild as HTMLElement,
+                parent.firstChild!.firstChild as HTMLElement,
+            ],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated', () => {
@@ -114,5 +132,12 @@ describe('handleFormatContainer', () => {
         expect(onNodeCreated).toHaveBeenCalledTimes(3);
         expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);
         expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('blockquote'));
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [
+                parent.firstChild as HTMLElement,
+                parent.firstChild!.firstChild as HTMLElement,
+            ],
+            removedBlockElements: [],
+        });
     });
 });

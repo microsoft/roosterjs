@@ -14,8 +14,7 @@ export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegm
     _,
     parent,
     segment,
-    context,
-    segmentNodes
+    context
 ) => {
     const { code, link } = segment;
 
@@ -27,7 +26,6 @@ export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegm
                 applyFormat(a, context.formatAppliers.link, link.format, context);
                 applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
 
-                segmentNodes?.push(a);
                 context.onNodeCreated?.(link, a);
             });
         }
@@ -38,7 +36,6 @@ export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegm
 
                 applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 
-                segmentNodes?.push(codeNode);
                 context.onNodeCreated?.(code, codeNode);
             });
         }

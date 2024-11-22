@@ -148,7 +148,12 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
 
     private checkAndApplyPendingFormat(data: string | null) {
         if (this.editor && data && this.state.pendingFormat) {
-            applyPendingFormat(this.editor, data, this.state.pendingFormat.format);
+            applyPendingFormat(
+                this.editor,
+                data,
+                this.state.pendingFormat.format,
+                this.state.pendingFormat.paragraphFormat
+            );
             this.clearPendingFormat();
         }
     }
