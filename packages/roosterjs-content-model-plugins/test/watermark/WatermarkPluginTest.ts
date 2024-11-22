@@ -36,7 +36,11 @@ describe('WatermarkPlugin', () => {
 
         plugin.initialize(editor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
@@ -65,7 +69,11 @@ describe('WatermarkPlugin', () => {
 
         plugin.initialize(editor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).not.toHaveBeenCalled();
@@ -97,7 +105,11 @@ describe('WatermarkPlugin', () => {
 
         plugin.initialize(editor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
@@ -130,7 +142,11 @@ describe('WatermarkPlugin', () => {
 
         plugin.initialize(editor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
@@ -196,7 +212,11 @@ describe('WatermarkPlugin dark mode', () => {
 
         plugin.initialize(editor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);

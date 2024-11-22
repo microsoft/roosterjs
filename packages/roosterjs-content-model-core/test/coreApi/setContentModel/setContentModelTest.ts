@@ -1,13 +1,13 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
-import { EditorCore } from 'roosterjs-content-model-types';
+import { ContentModelDocument, EditorCore, ModelToDomContext } from 'roosterjs-content-model-types';
 import { setContentModel } from '../../../lib/coreApi/setContentModel/setContentModel';
 
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
-const mockedContext = { name: 'CONTEXT' } as any;
+const mockedContext = { name: 'CONTEXT', rewriteFromModel: {} } as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
@@ -21,6 +21,7 @@ describe('setContentModel', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let flushMutationsSpy: jasmine.Spy;
     let updateCacheSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -38,6 +39,7 @@ describe('setContentModel', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         flushMutationsSpy = jasmine.createSpy('flushMutations');
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
 
         core = {
             physicalRoot: mockedDiv,
@@ -46,6 +48,7 @@ describe('setContentModel', () => {
                 createEditorContext,
                 setDOMSelection: setDOMSelectionSpy,
                 getDOMSelection: getDOMSelectionSpy,
+                triggerEvent: triggerEventSpy,
             },
             lifecycle: {},
             cache: {
@@ -270,5 +273,63 @@ describe('setContentModel', () => {
 
         expect(flushMutationsSpy).toHaveBeenCalledBefore(updateCacheSpy);
         expect(updateCacheSpy).toHaveBeenCalledBefore(setDOMSelectionSpy);
+    });
+
+    it('Receive modified DOM elements, not in init', () => {
+        const mockedAddedNodes = 'ADD' as any;
+        const mockedRemovedNodes = 'REMOVE' as any;
+
+        contentModelToDomSpy.and.callFake(
+            (
+                doc: Document,
+                root: Node,
+                model: ContentModelDocument,
+                context: ModelToDomContext
+            ) => {
+                context.rewriteFromModel.addedBlockElements = mockedAddedNodes;
+                context.rewriteFromModel.removedBlockElements = mockedRemovedNodes;
+                return {} as any;
+            }
+        );
+
+        setContentModel(core, mockedModel);
+
+        expect(triggerEventSpy).toHaveBeenCalledTimes(1);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'rewriteFromModel',
+                addedBlockElements: mockedAddedNodes,
+                removedBlockElements: mockedRemovedNodes,
+            },
+            true
+        );
+        expect(core.lifecycle.rewriteFromModel).toBeUndefined();
+    });
+
+    it('Receive modified DOM elements, in init', () => {
+        const mockedAddedNodes = 'ADD' as any;
+        const mockedRemovedNodes = 'REMOVE' as any;
+
+        contentModelToDomSpy.and.callFake(
+            (
+                doc: Document,
+                root: Node,
+                model: ContentModelDocument,
+                context: ModelToDomContext
+            ) => {
+                context.rewriteFromModel.addedBlockElements = mockedAddedNodes;
+                context.rewriteFromModel.removedBlockElements = mockedRemovedNodes;
+                return {} as any;
+            }
+        );
+
+        setContentModel(core, mockedModel, undefined, undefined, true);
+
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+        expect(core.lifecycle.rewriteFromModel).toEqual({
+            addedBlockElements: mockedAddedNodes,
+            removedBlockElements: mockedRemovedNodes,
+        });
     });
 });

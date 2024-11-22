@@ -8,6 +8,9 @@ describe('FormatPlugin', () => {
     const mockedFormat = {
         fontSize: '10px',
     };
+    const mockedFormat2 = {
+        lineSpace: 2,
+    };
     let applyPendingFormatSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -49,6 +52,7 @@ describe('FormatPlugin', () => {
 
         (state.pendingFormat = {
             format: mockedFormat,
+            paragraphFormat: mockedFormat2,
         } as any),
             plugin.initialize(editor);
 
@@ -60,7 +64,12 @@ describe('FormatPlugin', () => {
         plugin.dispose();
 
         expect(applyPendingFormatSpy).toHaveBeenCalledTimes(1);
-        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'a', mockedFormat);
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            'a',
+            mockedFormat,
+            mockedFormat2
+        );
         expect(state.pendingFormat).toBeNull();
     });
 
@@ -92,7 +101,7 @@ describe('FormatPlugin', () => {
         });
         plugin.dispose();
 
-        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'test', mockedFormat);
+        expect(applyPendingFormatSpy).toHaveBeenCalledWith(editor, 'test', mockedFormat, undefined);
         expect(state.pendingFormat).toBeNull();
     });
 
@@ -111,7 +120,7 @@ describe('FormatPlugin', () => {
         const state = plugin.getState();
 
         state.pendingFormat = {
-            format: mockedFormat,
+            paragraphFormat: mockedFormat2,
         } as any;
 
         plugin.onPluginEvent({
@@ -122,7 +131,7 @@ describe('FormatPlugin', () => {
 
         expect(applyPendingFormatSpy).not.toHaveBeenCalled();
         expect(state.pendingFormat).toEqual({
-            format: mockedFormat,
+            paragraphFormat: mockedFormat2,
         } as any);
     });
 

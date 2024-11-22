@@ -104,6 +104,8 @@ describe('UndoPlugin', () => {
         it('Not handled exclusively for EditorReady event', () => {
             const result = plugin.willHandleEventExclusively({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             expect(result).toBeFalse();
@@ -285,6 +287,8 @@ describe('UndoPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
@@ -306,6 +310,8 @@ describe('UndoPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
@@ -327,6 +333,8 @@ describe('UndoPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);

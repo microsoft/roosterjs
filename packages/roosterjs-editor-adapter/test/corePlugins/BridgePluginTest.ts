@@ -99,7 +99,11 @@ describe('BridgePlugin', () => {
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);
@@ -186,7 +190,11 @@ describe('BridgePlugin', () => {
         expect(onPluginEventSpy1).not.toHaveBeenCalled();
         expect(onPluginEventSpy2).not.toHaveBeenCalled();
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);
@@ -473,7 +481,11 @@ describe('BridgePlugin', () => {
         expect(disposeSpy).not.toHaveBeenCalled();
         expect(initializeSpy).toHaveBeenCalledWith(mockedEditor);
 
-        plugin.onPluginEvent({ eventType: 'editorReady' });
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
 
         expect(onPluginEventSpy1).toHaveBeenCalledTimes(1);
         expect(onPluginEventSpy2).toHaveBeenCalledTimes(1);

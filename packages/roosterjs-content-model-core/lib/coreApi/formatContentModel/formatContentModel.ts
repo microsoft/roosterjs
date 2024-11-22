@@ -136,10 +136,19 @@ function handlePendingFormat(
         context.newPendingFormat == 'preserve'
             ? core.format.pendingFormat?.format
             : context.newPendingFormat;
+    const pendingParagraphFormat =
+        context.newPendingParagraphFormat == 'preserve'
+            ? core.format.pendingFormat?.paragraphFormat
+            : context.newPendingParagraphFormat;
 
-    if (pendingFormat && selection?.type == 'range' && selection.range.collapsed) {
+    if (
+        (pendingFormat || pendingParagraphFormat) &&
+        selection?.type == 'range' &&
+        selection.range.collapsed
+    ) {
         core.format.pendingFormat = {
-            format: { ...pendingFormat },
+            format: pendingFormat ? { ...pendingFormat } : undefined,
+            paragraphFormat: pendingParagraphFormat ? { ...pendingParagraphFormat } : undefined,
             insertPoint: {
                 node: selection.range.startContainer,
                 offset: selection.range.startOffset,
@@ -148,20 +157,25 @@ function handlePendingFormat(
     }
 }
 
-function getChangedEntities(context: FormatContentModelContext, rawEvent?: Event): ChangedEntity[] {
-    return context.newEntities
-        .map(
-            (entity): ChangedEntity => ({
-                entity,
-                operation: 'newEntity',
-                rawEvent,
-            })
-        )
-        .concat(
-            context.deletedEntities.map(entry => ({
-                entity: entry.entity,
-                operation: entry.operation,
-                rawEvent,
-            }))
-        );
+function getChangedEntities(
+    context: FormatContentModelContext,
+    rawEvent?: Event
+): ChangedEntity[] | undefined {
+    return context.autoDetectChangedEntities
+        ? undefined
+        : context.newEntities
+              .map(
+                  (entity): ChangedEntity => ({
+                      entity,
+                      operation: 'newEntity',
+                      rawEvent,
+                  })
+              )
+              .concat(
+                  context.deletedEntities.map(entry => ({
+                      entity: entry.entity,
+                      operation: entry.operation,
+                      rawEvent,
+                  }))
+              );
 }

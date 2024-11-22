@@ -64,6 +64,8 @@ describe('EntityPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             const state = plugin.getState();
@@ -85,6 +87,8 @@ describe('EntityPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             const state = plugin.getState();
@@ -130,6 +134,8 @@ describe('EntityPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: 'editorReady',
+                addedBlockElements: [],
+                removedBlockElements: [],
             });
 
             const state = plugin.getState();
