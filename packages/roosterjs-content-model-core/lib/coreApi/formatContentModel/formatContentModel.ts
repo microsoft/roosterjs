@@ -157,20 +157,25 @@ function handlePendingFormat(
     }
 }
 
-function getChangedEntities(context: FormatContentModelContext, rawEvent?: Event): ChangedEntity[] {
-    return context.newEntities
-        .map(
-            (entity): ChangedEntity => ({
-                entity,
-                operation: 'newEntity',
-                rawEvent,
-            })
-        )
-        .concat(
-            context.deletedEntities.map(entry => ({
-                entity: entry.entity,
-                operation: entry.operation,
-                rawEvent,
-            }))
-        );
+function getChangedEntities(
+    context: FormatContentModelContext,
+    rawEvent?: Event
+): ChangedEntity[] | undefined {
+    return context.autoDetectChangedEntities
+        ? undefined
+        : context.newEntities
+              .map(
+                  (entity): ChangedEntity => ({
+                      entity,
+                      operation: 'newEntity',
+                      rawEvent,
+                  })
+              )
+              .concat(
+                  context.deletedEntities.map(entry => ({
+                      entity: entry.entity,
+                      operation: entry.operation,
+                      rawEvent,
+                  }))
+              );
 }
