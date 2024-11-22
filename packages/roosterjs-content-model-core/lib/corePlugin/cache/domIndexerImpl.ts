@@ -109,7 +109,8 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
         paragraph &&
         paragraph.blockType == 'Paragraph' &&
         Array.isArray(paragraph.segments) &&
-        Array.isArray(segments)
+        Array.isArray(segments) &&
+        segments.every(segment => paragraph.segments.includes(segment))
     );
 }
 

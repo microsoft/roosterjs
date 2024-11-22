@@ -198,10 +198,10 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
             const dataTransfer = event.clipboardData;
 
-            if (dataTransfer?.items) {
+            if (shouldPreventDefaultPaste(dataTransfer, editor)) {
                 event.preventDefault();
                 extractClipboardItems(
-                    toArray(dataTransfer.items),
+                    toArray(dataTransfer!.items),
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
@@ -337,6 +337,32 @@ export function preprocessTable(table: ContentModelTable) {
     table.widths = sel
         ? table.widths.filter((_, index) => index >= sel?.firstColumn && index <= sel?.lastColumn)
         : [];
+}
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export function shouldPreventDefaultPaste(
+    dataTransfer: DataTransfer | null,
+    editor: IEditor
+): boolean {
+    if (!dataTransfer?.items) {
+        return false;
+    }
+
+    if (!editor.getEnvironment().isAndroid) {
+        return true;
+    }
+
+    // On Android, the clipboard data from Office apps is a file, which can't be loaded
+    // so we have to allow the default browser behavior
+    return toArray(dataTransfer.items).some(item => {
+        const { type } = item;
+        const isNormalFile = item.kind === 'file' && type !== '';
+        const isText = type.indexOf('text/') === 0;
+        return isNormalFile || isText;
+    });
 }
 
 /**

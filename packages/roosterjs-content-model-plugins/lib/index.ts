@@ -29,6 +29,7 @@ export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutComma
 export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/ContextMenuPluginBase';
 export { WatermarkPlugin } from './watermark/WatermarkPlugin';
 export { WatermarkFormat } from './watermark/WatermarkFormat';
+export { isModelEmptyFast } from './watermark/isModelEmptyFast';
 export { MarkdownPlugin, MarkdownOptions } from './markdown/MarkdownPlugin';
 export { HyperlinkPlugin } from './hyperlink/HyperlinkPlugin';
 export { HyperlinkToolTip } from './hyperlink/HyperlinkToolTip';

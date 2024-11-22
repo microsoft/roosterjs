@@ -3103,7 +3103,10 @@ describe('wordOnlineHandler', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        segments: [{ segmentType: 'Text', text: 'it went:  ', format: {} }],
+                        segments: [
+                            { segmentType: 'Text', text: 'it went: ', format: {} },
+                            { segmentType: 'Text', text: ' ', format: {} },
+                        ],
                         format: { marginTop: '1em', marginBottom: '1em' },
                         decorator: { tagName: 'p', format: {} },
                     },
@@ -3132,7 +3135,10 @@ describe('wordOnlineHandler', () => {
                         blocks: [
                             {
                                 blockType: 'Paragraph',
-                                segments: [{ segmentType: 'Text', text: 'Test. ', format: {} }],
+                                segments: [
+                                    { segmentType: 'Text', text: 'Test.', format: {} },
+                                    { segmentType: 'Text', text: ' ', format: {} },
+                                ],
                                 format: { marginTop: '1em', marginBottom: '1em' },
                                 decorator: { tagName: 'p', format: {} },
                             },
@@ -4411,7 +4417,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4465,7 +4483,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4519,7 +4549,95 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4583,7 +4701,7 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4593,135 +4711,9 @@ describe('wordOnlineHandler', () => {
                                             lineHeight: '22.0875px',
                                         },
                                     },
-                                ],
-                                format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                decorator: { tagName: 'p', format: {} },
-                            },
-                        ],
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                                dataset: {},
-                            },
-                        ],
-                        formatHolder: {
-                            segmentType: 'SelectionMarker',
-                            isSelected: false,
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                    },
-                    {
-                        blockType: 'BlockGroup',
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                decorator: { tagName: 'p', format: {} },
-                            },
-                        ],
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                                dataset: {},
-                            },
-                        ],
-                        formatHolder: {
-                            segmentType: 'SelectionMarker',
-                            isSelected: false,
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                    },
-                    {
-                        blockType: 'BlockGroup',
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: '_ ',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4795,7 +4787,105 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4859,7 +4949,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4923,7 +5025,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -4977,7 +5091,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5132,7 +5258,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5231,7 +5369,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5291,7 +5441,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5340,7 +5502,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5445,7 +5619,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5544,7 +5730,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5603,7 +5801,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5708,7 +5918,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontWeight: 'normal',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5757,7 +5979,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',
@@ -5816,7 +6050,19 @@ describe('wordOnlineHandler', () => {
                                 segments: [
                                     {
                                         segmentType: 'Text',
-                                        text: '_ ',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
                                         format: {
                                             fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
                                             fontSize: '12pt',

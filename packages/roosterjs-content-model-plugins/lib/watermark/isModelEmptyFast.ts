@@ -1,10 +1,9 @@
-import type { ReadonlyContentModelDocument } from 'roosterjs-content-model-types';
+import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
- * @internal
  * A fast way to check if content model is empty
  */
-export function isModelEmptyFast(model: ReadonlyContentModelDocument): boolean {
+export function isModelEmptyFast(model: ReadonlyContentModelBlockGroup): boolean {
     const firstBlock = model.blocks[0];
 
     if (model.blocks.length > 1) {

@@ -1,5 +1,5 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import { getSelectedSegmentsAndParagraphs, mergeTextSegments } from 'roosterjs-content-model-dom';
 import type {
     ContentModelSegmentFormat,
     IEditor,
@@ -72,11 +72,17 @@ export function formatSegmentWithContentModel(
                   )
                 : false;
 
-            formatsAndSegments.forEach(([format, segment, paragraph]) =>
-                toggleStyleCallback(format, !isTurningOff, segment, paragraph)
-            );
+            formatsAndSegments.forEach(([format, segment, paragraph]) => {
+                toggleStyleCallback(format, !isTurningOff, segment, paragraph);
+            });
 
             afterFormatCallback?.(model);
+
+            formatsAndSegments.forEach(([_, __, paragraph]) => {
+                if (paragraph) {
+                    mergeTextSegments(paragraph);
+                }
+            });
 
             if (isCollapsedSelection) {
                 context.newPendingFormat = segmentAndParagraphs[0][0].format;

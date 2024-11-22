@@ -245,18 +245,7 @@ describe('toggleCode', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'test',
-                                format: {},
-                                isSelected: true,
-                                code: {
-                                    format: {
-                                        fontFamily: 'monospace',
-                                    },
-                                },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
+                                text: 'testtest',
                                 format: {},
                                 isSelected: true,
                                 code: {
