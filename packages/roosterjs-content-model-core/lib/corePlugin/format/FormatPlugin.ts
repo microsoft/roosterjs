@@ -118,13 +118,16 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
                 break;
 
             case 'keyDown':
-                const isAndroidIME = this.editor.getEnvironment().isAndroid && event.rawEvent.key == UnidentifiedKey;
+                const isAndroidIME =
+                    this.editor.getEnvironment().isAndroid && event.rawEvent.key == UnidentifiedKey;
                 if (isCursorMovingKey(event.rawEvent)) {
                     this.clearPendingFormat();
                     this.lastCheckedNode = null;
                 } else if (
                     this.defaultFormatKeys.size > 0 &&
-                    (isAndroidIME || isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                    (isAndroidIME ||
+                        isCharacterValue(event.rawEvent) ||
+                        event.rawEvent.key == ProcessKey) &&
                     this.shouldApplyDefaultFormat(this.editor)
                 ) {
                     applyDefaultFormat(this.editor, this.state.defaultFormat);
@@ -145,7 +148,12 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
 
     private checkAndApplyPendingFormat(data: string | null) {
         if (this.editor && data && this.state.pendingFormat) {
-            applyPendingFormat(this.editor, data, this.state.pendingFormat.format);
+            applyPendingFormat(
+                this.editor,
+                data,
+                this.state.pendingFormat.format,
+                this.state.pendingFormat.paragraphFormat
+            );
             this.clearPendingFormat();
         }
     }

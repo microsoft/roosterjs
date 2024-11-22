@@ -25,7 +25,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
     if (container && paragraph.segments.every(x => x.segmentType != 'General' && !x.isSelected)) {
-        refNode = reuseCachedElement(parent, container, refNode);
+        refNode = reuseCachedElement(parent, container, refNode, context.rewriteFromModel);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
             const needParagraphWrapper =
@@ -117,6 +117,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 if (context.allowCacheElement) {
                     paragraph.cachedElement = container;
                 }
+
+                context.rewriteFromModel.addedBlockElements.push(container);
             } else {
                 unwrap(container);
                 container = undefined;

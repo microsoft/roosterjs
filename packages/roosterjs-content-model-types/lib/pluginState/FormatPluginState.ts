@@ -1,5 +1,6 @@
 import type { DOMInsertPoint } from '../selection/DOMSelection';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
 
 /**
  * Pending format holder interface
@@ -8,7 +9,12 @@ export interface PendingFormat {
     /**
      * The pending format
      */
-    format: ContentModelSegmentFormat;
+    format?: ContentModelSegmentFormat;
+
+    /**
+     * Customized format for paragraph
+     */
+    paragraphFormat?: ContentModelBlockFormat;
 
     /**
      * Insert point of pending format

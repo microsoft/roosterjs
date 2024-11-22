@@ -1,11 +1,16 @@
 import {
     createText,
     iterateSelections,
+    mutateBlock,
     mutateSegment,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockFormat,
+    ContentModelSegmentFormat,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';
@@ -19,7 +24,8 @@ const NON_BREAK_SPACE = '\u00A0';
 export function applyPendingFormat(
     editor: IEditor,
     data: string,
-    format: ContentModelSegmentFormat
+    segmentFormat?: ContentModelSegmentFormat,
+    paragraphFormat?: ContentModelBlockFormat
 ) {
     let isChanged = false;
 
@@ -41,24 +47,35 @@ export function applyPendingFormat(
 
                         // For space, there can be &#32 (space) or &#160 (&nbsp;), we treat them as the same
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
-                            mutateSegment(block, previousSegment, previousSegment => {
-                                previousSegment.text = text.substring(0, text.length - data.length);
-                            });
+                            if (segmentFormat) {
+                                mutateSegment(block, previousSegment, previousSegment => {
+                                    previousSegment.text = text.substring(
+                                        0,
+                                        text.length - data.length
+                                    );
+                                });
 
-                            mutateSegment(block, marker, (marker, block) => {
-                                marker.format = { ...format };
+                                mutateSegment(block, marker, (marker, block) => {
+                                    marker.format = { ...segmentFormat };
 
-                                const newText = createText(
-                                    data == ANSI_SPACE ? NON_BREAK_SPACE : data,
-                                    {
-                                        ...previousSegment.format,
-                                        ...format,
-                                    }
-                                );
+                                    const newText = createText(
+                                        data == ANSI_SPACE ? NON_BREAK_SPACE : data,
+                                        {
+                                            ...previousSegment.format,
+                                            ...segmentFormat,
+                                        }
+                                    );
 
-                                block.segments.splice(index, 0, newText);
-                                setParagraphNotImplicit(block);
-                            });
+                                    block.segments.splice(index, 0, newText);
+                                    setParagraphNotImplicit(block);
+                                });
+                            }
+
+                            if (paragraphFormat) {
+                                const mutableParagraph = mutateBlock(block);
+
+                                Object.assign(mutableParagraph.format, paragraphFormat);
+                            }
 
                             isChanged = true;
                         }

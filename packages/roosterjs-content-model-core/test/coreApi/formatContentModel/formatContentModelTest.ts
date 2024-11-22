@@ -658,6 +658,7 @@ describe('formatContentModel', () => {
         it('Has pending format, callback returns true, preserve pending format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
                 insertPoint: {
                     node: mockedStartContainer1,
                     offset: mockedStartOffset1,
@@ -671,6 +672,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -678,9 +680,35 @@ describe('formatContentModel', () => {
             } as any);
         });
 
-        it('Has pending format, callback returns false, preserve pending format', () => {
+        it('Has pending format, callback returns true, preserve paragraph pending format', () => {
             core.format.pendingFormat = {
                 format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingParagraphFormat = 'preserve';
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: undefined,
+                paragraphFormat: mockedFormat2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
+            } as any);
+        });
+
+        it('Has pending format, callback returns true, preserve both pending format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
                 insertPoint: {
                     node: mockedStartContainer1,
                     offset: mockedStartOffset1,
@@ -689,11 +717,39 @@ describe('formatContentModel', () => {
 
             formatContentModel(core, (model, context) => {
                 context.newPendingFormat = 'preserve';
+                context.newPendingParagraphFormat = 'preserve';
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
+            } as any);
+        });
+
+        it('Has pending format, callback returns false, preserve both pending format', () => {
+            core.format.pendingFormat = {
+                format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingFormat = 'preserve';
+                context.newPendingParagraphFormat = 'preserve';
                 return false;
             });
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat1,
+                paragraphFormat: mockedFormat2,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -709,6 +765,23 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
+            });
+        });
+
+        it('No pending format, callback returns true, new paragraph format', () => {
+            formatContentModel(core, (model, context) => {
+                context.newPendingParagraphFormat = mockedFormat2;
+                return true;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: undefined,
+                paragraphFormat: mockedFormat2,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -724,6 +797,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -747,6 +821,7 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
@@ -770,6 +845,31 @@ describe('formatContentModel', () => {
 
             expect(core.format.pendingFormat).toEqual({
                 format: mockedFormat2,
+                paragraphFormat: undefined,
+                insertPoint: {
+                    node: mockedStartContainer2,
+                    offset: mockedStartOffset2,
+                },
+            });
+        });
+
+        it('Has pending format, callback returns false, new paragraph format', () => {
+            core.format.pendingFormat = {
+                paragraphFormat: mockedFormat1,
+                insertPoint: {
+                    node: mockedStartContainer1,
+                    offset: mockedStartOffset1,
+                },
+            };
+
+            formatContentModel(core, (model, context) => {
+                context.newPendingParagraphFormat = mockedFormat2;
+                return false;
+            });
+
+            expect(core.format.pendingFormat).toEqual({
+                format: undefined,
+                paragraphFormat: mockedFormat2,
                 insertPoint: {
                     node: mockedStartContainer2,
                     offset: mockedStartOffset2,
