@@ -38,6 +38,8 @@ export const setContentModel: SetContentModel = (
 
     modelToDomContext.onNodeCreated = onNodeCreated;
 
+    core.onFixUpModel?.(model);
+
     const selection = contentModelToDom(
         core.logicalRoot.ownerDocument,
         core.logicalRoot,

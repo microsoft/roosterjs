@@ -101,6 +101,7 @@ describe('createEditorCore', () => {
             domHelper: mockedDOMHelper,
             disposeErrorHandler: undefined,
             experimentalFeatures: [],
+            onFixUpModel: undefined,
             ...additionalResult,
         });
 
@@ -149,6 +150,7 @@ describe('createEditorCore', () => {
         const mockedDisposeErrorHandler = 'DISPOSE' as any;
         const mockedGenerateColorKey = 'KEY' as any;
         const mockedKnownColors = 'COLORS' as any;
+        const mockedOnFixUpModel = 'FIXUP' as any;
         const mockedOptions = {
             coreApiOverride: {
                 a: 'b',
@@ -159,6 +161,7 @@ describe('createEditorCore', () => {
             disposeErrorHandler: mockedDisposeErrorHandler,
             generateColorKey: mockedGenerateColorKey,
             knownColors: mockedKnownColors,
+            onFixUpModel: mockedOnFixUpModel,
         } as any;
 
         runTest(mockedDiv, mockedOptions, {
@@ -181,6 +184,7 @@ describe('createEditorCore', () => {
             darkColorHandler: mockedDarkColorHandler,
             trustedHTMLHandler: mockedTrustHtmlHandler,
             disposeErrorHandler: mockedDisposeErrorHandler,
+            onFixUpModel: mockedOnFixUpModel,
         });
 
         expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
