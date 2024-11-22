@@ -50,7 +50,13 @@ export class Editor implements IEditor {
 
         const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
 
-        this.core.api.setContentModel(this.core, initialModel, { ignoreSelection: true });
+        this.core.api.setContentModel(
+            this.core,
+            initialModel,
+            { ignoreSelection: true },
+            undefined /*onNodeCreated*/,
+            true /*isInitializing*/
+        );
         this.core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
