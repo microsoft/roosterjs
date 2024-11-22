@@ -48,6 +48,11 @@ export function formatTextSegmentBeforeSelectionMarker(
 
                     if (previousSegment && previousSegment.segmentType === 'Text') {
                         result = true;
+
+                        // Preserve pending format if any when format text segment, so if there is pending format (e.g. from paste)
+                        // and some auto action happens after paste, the pending format will still take effect
+                        context.newPendingFormat = 'preserve';
+
                         rewrite = callback(
                             model,
                             previousSegment,
