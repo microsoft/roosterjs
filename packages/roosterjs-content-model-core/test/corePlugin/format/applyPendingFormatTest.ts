@@ -94,6 +94,225 @@ describe('applyPendingFormat', () => {
         });
     });
 
+    it('Has pending paragraph format', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'abc',
+            format: {},
+        };
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [text, marker],
+            format: { textAlign: 'start', textIndent: '10pt' },
+        };
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        };
+
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IEditor;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([model], undefined, paragraph, [marker]);
+            return false;
+        });
+
+        applyPendingFormat(editor, 'c', undefined, {
+            textIndent: '20pt',
+            lineHeight: '2',
+        });
+
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: { textAlign: 'start', textIndent: '20pt', lineHeight: '2' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'abc',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Has pending both format', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'abc',
+            format: {},
+        };
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [text, marker],
+            format: { textAlign: 'start', textIndent: '10pt' },
+        };
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        };
+
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IEditor;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([model], undefined, paragraph, [marker]);
+            return false;
+        });
+
+        applyPendingFormat(
+            editor,
+            'c',
+            { fontSize: '10px' },
+            {
+                textIndent: '20pt',
+                lineHeight: '2',
+            }
+        );
+
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: { textAlign: 'start', textIndent: '20pt', lineHeight: '2' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'ab',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'c',
+                            format: {
+                                fontSize: '10px',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: { fontSize: '10px' },
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Has no pending format', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'abc',
+            format: {},
+        };
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [text, marker],
+            format: {},
+        };
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        };
+
+        const formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter, options: FormatContentModelOptions) => {
+                expect(options.apiName).toEqual('applyPendingFormat');
+                callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+            });
+
+        const editor = ({
+            formatContentModel: formatContentModelSpy,
+        } as any) as IEditor;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([model], undefined, paragraph, [marker]);
+            return false;
+        });
+
+        applyPendingFormat(editor, 'c');
+
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'abc',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Has pending format but wrong text', () => {
         const text: ContentModelText = {
             segmentType: 'Text',

@@ -32,6 +32,8 @@ describe('createEditor', () => {
         expect(dispose).not.toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
             eventType: 'editorReady',
+            addedBlockElements: [div.firstChild],
+            removedBlockElements: [],
         });
 
         editor.dispose();

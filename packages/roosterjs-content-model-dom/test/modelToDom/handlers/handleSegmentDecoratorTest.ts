@@ -1,5 +1,4 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { expectHtml } from '../../testUtils';
 import { handleSegmentDecorator } from '../../../lib/modelToDom/handlers/handleSegmentDecorator';
 import {
     ContentModelCode,
@@ -20,8 +19,7 @@ describe('handleSegmentDecorator', () => {
     function runTest(
         link: ContentModelLink | undefined,
         code: ContentModelCode | undefined,
-        expectedInnerHTML: string,
-        expectedSegmentNodesHTML: (string | string[])[]
+        expectedInnerHTML: string
     ) {
         parent = document.createElement('span');
         parent.textContent = 'test';
@@ -37,10 +35,7 @@ describe('handleSegmentDecorator', () => {
         handleSegmentDecorator(document, parent, segment, context, segmentNodes);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
-        expect(segmentNodes.length).toBe(expectedSegmentNodesHTML.length);
-        expectedSegmentNodesHTML.forEach((expectedHTML, i) => {
-            expectHtml((segmentNodes[i] as HTMLElement).outerHTML, expectedHTML);
-        });
+        expect(segmentNodes.length).toBe(0);
     }
 
     it('simple link', () => {
@@ -52,9 +47,7 @@ describe('handleSegmentDecorator', () => {
             dataset: {},
         };
 
-        runTest(link, undefined, '<a href="http://test.com/test">test</a>', [
-            '<a href="http://test.com/test">test</a>',
-        ]);
+        runTest(link, undefined, '<a href="http://test.com/test">test</a>');
     });
 
     it('link with color', () => {
@@ -67,9 +60,7 @@ describe('handleSegmentDecorator', () => {
             dataset: {},
         };
 
-        runTest(link, undefined, '<a href="http://test.com/test" style="color: red;">test</a>', [
-            '<a href="http://test.com/test" style="color: red;">test</a>',
-        ]);
+        runTest(link, undefined, '<a href="http://test.com/test" style="color: red;">test</a>');
     });
 
     it('link without underline', () => {
@@ -84,8 +75,7 @@ describe('handleSegmentDecorator', () => {
         runTest(
             link,
             undefined,
-            '<a href="http://test.com/test" style="text-decoration: none;">test</a>',
-            ['<a href="http://test.com/test" style="text-decoration: none;">test</a>']
+            '<a href="http://test.com/test" style="text-decoration: none;">test</a>'
         );
     });
 
@@ -101,9 +91,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(link, undefined, '<a href="http://test.com/test" data-a="b" data-c="d">test</a>', [
-            '<a href="http://test.com/test" data-a="b" data-c="d">test</a>',
-        ]);
+        runTest(link, undefined, '<a href="http://test.com/test" data-a="b" data-c="d">test</a>');
     });
 
     it('simple code', () => {
@@ -113,7 +101,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(undefined, code, '<code>test</code>', ['<code>test</code>']);
+        runTest(undefined, code, '<code>test</code>');
     });
 
     it('code with font', () => {
@@ -123,9 +111,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(undefined, code, '<code style="font-family: Arial;">test</code>', [
-            '<code style="font-family: Arial;">test</code>',
-        ]);
+        runTest(undefined, code, '<code style="font-family: Arial;">test</code>');
     });
 
     it('link and code', () => {
@@ -142,10 +128,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(link, code, '<code><a href="http://test.com/test">test</a></code>', [
-            '<a href="http://test.com/test">test</a>',
-            '<code><a href="http://test.com/test">test</a></code>',
-        ]);
+        runTest(link, code, '<code><a href="http://test.com/test">test</a></code>');
     });
 
     it('Link with onNodeCreated', () => {
@@ -194,12 +177,7 @@ describe('handleSegmentDecorator', () => {
             dataset: {},
         };
 
-        runTest(
-            link,
-            undefined,
-            '<a href="http://test.com/test" style="display: block;">test</a>',
-            ['<a href="http://test.com/test" style="display: block;">test</a>']
-        );
+        runTest(link, undefined, '<a href="http://test.com/test" style="display: block;">test</a>');
     });
 
     it('code with display: block', () => {
@@ -210,9 +188,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(undefined, code, '<code style="display: block;">test</code>', [
-            '<code style="display: block;">test</code>',
-        ]);
+        runTest(undefined, code, '<code style="display: block;">test</code>');
     });
 
     it('link with background color', () => {
@@ -228,8 +204,7 @@ describe('handleSegmentDecorator', () => {
         runTest(
             link,
             undefined,
-            '<a href="http://test.com/test" style="background-color: red;">test</a>',
-            ['<a href="http://test.com/test" style="background-color: red;">test</a>']
+            '<a href="http://test.com/test" style="background-color: red;">test</a>'
         );
     });
 });

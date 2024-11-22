@@ -44,7 +44,7 @@ const triggerList = (
 ) => {
     setListType(model, listType);
     const isOrderedList = listType == 'OL';
-    if (index && index > 1 && isOrderedList) {
+    if (index && index > 0 && isOrderedList) {
         setModelListStartNumber(model, index);
     }
     setModelListStyle(
