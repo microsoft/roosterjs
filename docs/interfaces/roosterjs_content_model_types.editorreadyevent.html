@@ -77,6 +77,9 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
+						<a href="roosterjs_content_model_types.rewritefrommodel.html" class="tsd-signature-type" data-tsd-kind="Interface">RewriteFromModel</a>
+					</li>
+					<li>
 						<a href="roosterjs_content_model_types.basepluginevent.html" class="tsd-signature-type" data-tsd-kind="Interface">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;editorReady&quot;</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
@@ -93,8 +96,10 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.editorreadyevent.html#addedblockelements" class="tsd-kind-icon">added<wbr>Block<wbr>Elements</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.editorreadyevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.editorreadyevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.editorreadyevent.html#removedblockelements" class="tsd-kind-icon">removed<wbr>Block<wbr>Elements</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,13 +108,29 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="addedblockelements" class="tsd-anchor"></a>
+					<h3>added<wbr>Block<wbr>Elements</h3>
+					<div class="tsd-signature tsd-kind-icon">added<wbr>Block<wbr>Elements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.rewritefrommodel.html">RewriteFromModel</a>.<a href="roosterjs_content_model_types.rewritefrommodel.html#addedblockelements">addedBlockElements</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a58a18/packages/roosterjs-content-model-types/lib/context/RewriteFromModel.ts#L8">roosterjs-content-model-types/lib/context/RewriteFromModel.ts:8</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Added block elements</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventdatacache" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Data<wbr>Cache</h3>
 					<div class="tsd-signature tsd-kind-icon">event<wbr>Data<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_content_model_types.basepluginevent.html#eventdatacache">eventDataCache</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e1f2510/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L17">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a58a18/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L17">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -135,12 +156,28 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_content_model_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e1f2510/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L10">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a58a18/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L10">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Type of this event</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="removedblockelements" class="tsd-anchor"></a>
+					<h3>removed<wbr>Block<wbr>Elements</h3>
+					<div class="tsd-signature tsd-kind-icon">removed<wbr>Block<wbr>Elements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.rewritefrommodel.html">RewriteFromModel</a>.<a href="roosterjs_content_model_types.rewritefrommodel.html#removedblockelements">removedBlockElements</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a58a18/packages/roosterjs-content-model-types/lib/context/RewriteFromModel.ts#L13">roosterjs-content-model-types/lib/context/RewriteFromModel.ts:13</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Removed block elements</p>
 						</div>
 					</div>
 				</section>
@@ -189,10 +226,16 @@
 						<a href="roosterjs_content_model_types.editorreadyevent.html" class="tsd-kind-icon">Editor<wbr>Ready<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.editorreadyevent.html#addedblockelements" class="tsd-kind-icon">added<wbr>Block<wbr>Elements</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.editorreadyevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_content_model_types.editorreadyevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.editorreadyevent.html#removedblockelements" class="tsd-kind-icon">removed<wbr>Block<wbr>Elements</a>
 							</li>
 						</ul>
 					</li>
