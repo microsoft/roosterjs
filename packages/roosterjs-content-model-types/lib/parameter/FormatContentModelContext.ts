@@ -3,6 +3,7 @@ import type { ContentModelEntity } from '../contentModel/entity/ContentModelEnti
 import type { ContentModelImage } from '../contentModel/segment/ContentModelImage';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
+import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
 
 /**
  * State for an entity. This is used for storing entity undo snapshot
@@ -46,12 +47,13 @@ export interface DeletedEntity {
  */
 export interface FormatContentModelContext {
     /**
-     * New entities added during the format process
+     * New entities added during the format process. This value is only respected when autoDetectChangedEntities is not set to true
      */
     readonly newEntities: ContentModelEntity[];
 
     /**
      * Entities got deleted during formatting. Need to be set by the formatter function
+     * This value is only respected when autoDetectChangedEntities is not set to true
      */
     readonly deletedEntities: DeletedEntity[];
 
@@ -88,6 +90,15 @@ export interface FormatContentModelContext {
     newPendingFormat?: ContentModelSegmentFormat | 'preserve';
 
     /**
+     * @optional
+     * Specify new pending format for paragraph
+     * To keep current format event selection position is changed, set this value to "preserved", editor will update pending format position to the new position
+     * To set a new pending format, set this property to the format object
+     * Otherwise, leave it there and editor will automatically decide if the original pending format is still available
+     */
+    newPendingParagraphFormat?: ContentModelBlockFormat | 'preserve';
+
+    /**
      * @optional Entity states related to the format API that will be added together with undo snapshot.
      * When entity states are set, each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
      * when undo/redo to this snapshot
@@ -103,4 +114,9 @@ export interface FormatContentModelContext {
      * @optional Set this value to tell AnnouncePlugin to announce the given information
      */
     announceData?: AnnounceData | null;
+
+    /**
+     * @optional When set to true, EntityPlugin will detect any entity changes during this process, newEntities and deletedEntities will be ignored
+     */
+    autoDetectChangedEntities?: boolean;
 }

@@ -6,6 +6,8 @@ describe('cacheGetEventData', () => {
     it('get cached data', () => {
         const event: EditorReadyEvent = {
             eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
         };
 
         const mockedData = 'DATA';
@@ -21,6 +23,8 @@ describe('cacheGetEventData', () => {
             eventDataCache: {
                 [cacheKey]: mockedData,
             },
+            addedBlockElements: [],
+            removedBlockElements: [],
         });
 
         const data2 = cacheGetEventData(event, cacheKey, mockedGetter);

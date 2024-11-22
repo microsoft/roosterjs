@@ -33,9 +33,8 @@ describe('handleSegmentCommon', () => {
             '<span style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>'
         );
         expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
-        expect(segmentNodes.length).toBe(2);
+        expect(segmentNodes.length).toBe(1);
         expect(segmentNodes[0]).toBe(txt);
-        expect(segmentNodes[1]).toBe(txt.parentNode!);
     });
 
     it('element with child', () => {

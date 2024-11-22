@@ -112,6 +112,11 @@ export type PluginEventType =
     | 'zoomChanged'
 
     /**
+     * Rewrite result information from Content Model
+     */
+    | 'rewriteFromModel'
+
+    /**
      * EXPERIMENTAL FEATURE
      * Editor changed the selection.
      */
