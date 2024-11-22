@@ -361,6 +361,8 @@ describe('oldEventToNewEvent', () => {
             {
                 eventType: 'editorReady',
                 eventDataCache: mockedDataCache,
+                addedBlockElements: [],
+                removedBlockElements: [],
             }
         );
     });
@@ -930,6 +932,8 @@ describe('newEventToOldEvent', () => {
             {
                 eventType: 'editorReady',
                 eventDataCache: mockedDataCache,
+                addedBlockElements: [],
+                removedBlockElements: [],
             },
             undefined,
             {

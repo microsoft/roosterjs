@@ -6,6 +6,7 @@ import type {
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    RewriteFromModel,
 } from 'roosterjs-content-model-types';
 
 const ContentEditableAttributeName = 'contenteditable';
@@ -74,7 +75,13 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
         this.adjustColor();
 
         // Let other plugins know that we are ready
-        this.editor.triggerEvent('editorReady', {}, true /*broadcast*/);
+        const rewriteFromModel: RewriteFromModel = this.state.rewriteFromModel ?? {
+            addedBlockElements: [],
+            removedBlockElements: [],
+        };
+
+        this.editor.triggerEvent('editorReady', rewriteFromModel, true /*broadcast*/);
+        delete this.state.rewriteFromModel;
 
         // Initialize the Announce container.
         this.state.announceContainer = createAriaLiveElement(editor.getDocument());
