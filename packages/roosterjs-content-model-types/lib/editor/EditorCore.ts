@@ -7,7 +7,10 @@ import type { DOMEventRecord } from '../parameter/DOMEventRecord';
 import type { Snapshot } from '../parameter/Snapshot';
 import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
+import type {
+    ContentModelDocument,
+    ReadonlyContentModelDocument,
+} from '../contentModel/blockGroup/ContentModelDocument';
 import type { DOMSelection } from '../selection/DOMSelection';
 import type { DomToModelOptionForCreateModel } from '../context/DomToModelOption';
 import type { EditorContext } from '../context/EditorContext';
@@ -53,12 +56,15 @@ export type GetDOMSelection = (core: EditorCore) => DOMSelection | null;
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  * @param onNodeCreated An optional callback that will be called when a DOM node is created
+ * @param isInitializing True means editor is being initialized then it will save modification nodes onto
+ * lifecycleState instead of triggering events, false means other cases
  */
 export type SetContentModel = (
     core: EditorCore,
     model: ContentModelDocument,
     option?: ModelToDomOption,
-    onNodeCreated?: OnNodeCreated
+    onNodeCreated?: OnNodeCreated,
+    isInitializing?: boolean
 ) => DOMSelection | null;
 
 /**
@@ -211,6 +217,9 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param onNodeCreated An optional callback that will be called when a DOM node is created
+     * @param isInitializing True means editor is being initialized then it will save modification nodes onto
+     * lifecycleState instead of triggering events, false means other cases
      */
     setContentModel: SetContentModel;
 
@@ -369,6 +378,13 @@ export interface EditorCore extends PluginState {
      * @param error The error object we got
      */
     readonly disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
+
+    /**
+     * An optional callback function that will be invoked before write content model back to editor.
+     * This is used for make sure model can satisfy some customized requirement
+     * @param model The model to fix up
+     */
+    readonly onFixUpModel?: (model: ReadonlyContentModelDocument) => void;
 
     /**
      * Enabled experimental features

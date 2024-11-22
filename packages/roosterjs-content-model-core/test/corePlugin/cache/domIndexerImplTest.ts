@@ -17,6 +17,7 @@ import {
     DOMSelection,
 } from 'roosterjs-content-model-types';
 import {
+    addLink,
     createBr,
     createContentModelDocument,
     createEntity,
@@ -1300,6 +1301,77 @@ describe('domIndexerImpl.reconcileChildList', () => {
             format: {},
             segments: [segment],
         });
+    });
+
+    it('Added Text after link that contains image and text', () => {
+        const domIndexer = new DomIndexerImpl(true);
+        const a = document.createElement('a');
+        const img = document.createElement('img');
+        const text = document.createTextNode('test');
+        const newText = document.createTextNode('a');
+        const div = document.createElement('div');
+
+        a.appendChild(img);
+        a.appendChild(text);
+        div.appendChild(a);
+        div.appendChild(newText);
+
+        const paragraph = createParagraph();
+        const segmentImg = createImage('src');
+        const segmentText = createText('test');
+
+        addLink(segmentImg, {
+            format: { href: 'test' },
+            dataset: {},
+        });
+        addLink(segmentText, {
+            format: { href: 'test' },
+            dataset: {},
+        });
+
+        paragraph.segments.push(segmentImg, segmentText);
+
+        ((img as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segmentImg],
+        };
+        ((text as Node) as IndexedSegmentNode).__roosterjsContentModel = {
+            paragraph: paragraph,
+            segments: [segmentText],
+        };
+
+        const result = domIndexer.reconcileChildList([newText], []);
+
+        expect(result).toBeTrue();
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Image',
+                    src: 'src',
+                    format: {},
+                    dataset: {},
+                    link: { format: { href: 'test' }, dataset: {} },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    link: { format: { href: 'test' }, dataset: {} },
+                },
+                { segmentType: 'Text', text: 'a', format: {} },
+            ],
+            format: {},
+        });
+        expect(((newText as Node) as IndexedSegmentNode).__roosterjsContentModel.paragraph).toBe(
+            paragraph
+        );
+        expect(
+            ((newText as Node) as IndexedSegmentNode).__roosterjsContentModel.segments.length
+        ).toBe(1);
+        expect(((newText as Node) as IndexedSegmentNode).__roosterjsContentModel.segments[0]).toBe(
+            paragraph.segments[2]
+        );
     });
 });
 

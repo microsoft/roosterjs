@@ -1,3 +1,4 @@
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import type {
     ContentModelBlockGroup,
     ContentModelHandler,
@@ -41,6 +42,10 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
         // Remove all rest node if any since they don't appear in content model
         while (refNode) {
             const next = refNode.nextSibling;
+
+            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
+                context.rewriteFromModel.removedBlockElements.push(refNode);
+            }
 
             refNode.parentNode?.removeChild(refNode);
             refNode = next;

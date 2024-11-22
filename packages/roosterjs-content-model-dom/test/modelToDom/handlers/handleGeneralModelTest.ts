@@ -61,6 +61,10 @@ describe('handleBlockGroup', () => {
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [clonedChild],
+            removedBlockElements: [],
+        });
     });
 
     it('General block with color', () => {
@@ -75,6 +79,10 @@ describe('handleBlockGroup', () => {
         expect(parent.outerHTML).toBe(
             '<div><span style="color: red; background-color: green;"></span></div>'
         );
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
     });
 
     it('General segment: empty element', () => {
@@ -230,6 +238,10 @@ describe('handleBlockGroup', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(result).toBe(br);
         expect(group.element).toBe(clonedChild);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [clonedChild],
+            removedBlockElements: [],
+        });
     });
 
     it('General block with refNode, already in target node', () => {
@@ -249,6 +261,10 @@ describe('handleBlockGroup', () => {
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context);
         expect(result).toBe(br);
         expect(group.element).toBe(node);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
     });
 
     it('With onNodeCreated', () => {
