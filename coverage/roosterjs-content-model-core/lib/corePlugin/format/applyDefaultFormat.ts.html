@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">89.74% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>35/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -129,7 +129,11 @@
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,16 +144,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
@@ -186,7 +189,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,7 +209,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { iterateSelections } from 'roosterjs-content-model-dom';
 import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -211,55 +219,59 @@ import type { ContentModelSegmentFormat, IEditor } from 'roosterjs-content-model
  * @param defaultFormat The default segment format to apply
  */
 export function applyDefaultFormat(editor: IEditor, defaultFormat: ContentModelSegmentFormat) {
-    editor.formatContentModel((model, context) =&gt; {
-        const result = deleteSelection(model, [], context);
+    const selection = editor.getDOMSelection();
 &nbsp;
-        if (result.deleteResult == 'range') {
-            normalizeContentModel(model);
+    if (selection?.type == 'range' &amp;&amp; selection.range.collapsed) {
+        editor.formatContentModel((model, context) =&gt; {
+            iterateSelections(model, (path, _, paragraph, segments) =&gt; {
+                const marker = segments<span class="branch-0 cbranch-no" title="branch not covered" >?.[0</span>];
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (
+                    paragraph<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph' &amp;&amp;
+                    marker<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>egmentType == 'SelectionMarker'
+                ) {
+                    const blocks = path[0].blocks;
+                    const blockCount = blocks.length;
+                    const blockIndex = blocks.indexOf(paragraph);
 &nbsp;
-            editor.takeSnapshot();
+                    if (
+                        paragraph.isImplicit &amp;&amp;
+                        paragraph.segments.length == 1 &amp;&amp;
+                        paragraph.segments[0] == marker &amp;&amp;
+                        blockCount &gt; 0 &amp;&amp;
+                        blockIndex == blockCount - 1
+                    ) {
+                        // Focus is in the last paragraph which is implicit and there is not other segments.
+                        // This can happen when focus is moved after all other content under current block group.
+                        // We need to check if browser will merge focus into previous paragraph by checking if
+                        // previous block is block. If previous block is paragraph, browser will most likely merge
+                        // the input into previous paragraph, then nothing need to do here. Otherwise we need to
+                        // apply pending format since this input event will start a new real paragraph.
+                        const previousBlock = blocks[blockIndex - 1];
 &nbsp;
-            return true;
-        } else if (result.deleteResult == 'notDeleted' &amp;&amp; result.insertPoint) {
-            const { paragraph, path, marker } = result.insertPoint;
-            const blocks = path[0].blocks;
-            const blockCount = blocks.length;
-            const blockIndex = blocks.indexOf(paragraph);
-&nbsp;
-            if (
-                paragraph.isImplicit &amp;&amp;
-                paragraph.segments.length == 1 &amp;&amp;
-                paragraph.segments[0] == marker &amp;&amp;
-                blockCount &gt; 0 &amp;&amp;
-                blockIndex == blockCount - 1
-            ) {
-                // Focus is in the last paragraph which is implicit and there is not other segments.
-                // This can happen when focus is moved after all other content under current block group.
-                // We need to check if browser will merge focus into previous paragraph by checking if
-                // previous block is block. If previous block is paragraph, browser will most likely merge
-                // the input into previous paragraph, then nothing need to do here. Otherwise we need to
-                // apply pending format since this input event will start a new real paragraph.
-                const previousBlock = blocks[blockIndex - 1];
-&nbsp;
-                if (previousBlock?.blockType != 'Paragraph') {
-                    context.newPendingFormat = getNewPendingFormat(
-                        editor,
-                        defaultFormat,
-                        marker.format
-                    );
+                        if (previousBlock?.blockType != 'Paragraph') {
+                            context.newPendingFormat = getNewPendingFormat(
+                                editor,
+                                defaultFormat,
+                                marker.format
+                            );
+                        }
+                    } else if (paragraph.segments.every(x =&gt; x.segmentType != 'Text')) {
+                        context.newPendingFormat = getNewPendingFormat(
+                            editor,
+                            defaultFormat,
+                            marker.format
+                        );
+                    }
                 }
-            } else if (paragraph.segments.every(x =&gt; x.segmentType != 'Text')) {
-                context.newPendingFormat = getNewPendingFormat(
-                    editor,
-                    defaultFormat,
-                    marker.format
-                );
-            }
-        }
 &nbsp;
-        // We didn't do any change but just apply default format to pending format, so no need to write back
-        return false;
-    });
+                // Stop searching more selection
+                return true;
+            });
+&nbsp;
+            // We didn't do any change but just apply default format to pending format, so no need to write back
+            return false;
+        });
+    }
 }
 &nbsp;
 function getNewPendingFormat(
@@ -280,7 +292,7 @@ function getNewPendingFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 22 2024 19:18:45 GMT+0000 (Coordinated Universal Time)
+                at Sun Nov 24 2024 03:38:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
