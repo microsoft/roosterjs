@@ -7,6 +7,7 @@ import { DomToModelOptionForSanitizing } from 'roosterjs-content-model-types';
 import { pasteBlockEntityParser } from '../../../lib/override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../../lib/override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../../lib/override/pasteTextProcessor';
+import { pasteWhiteSpaceFormatParser } from '../../../lib/override/pasteWhiteSpaceFormatParser';
 
 describe('createDomToModelContextForSanitizing', () => {
     const mockedPasteGeneralProcessor = 'GENERALPROCESSOR' as any;
@@ -61,6 +62,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 },
                 formatParserOverride: {
                     display: pasteDisplayFormatParser,
+                    whiteSpace: pasteWhiteSpaceFormatParser,
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
@@ -106,6 +108,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 },
                 formatParserOverride: {
                     display: pasteDisplayFormatParser,
+                    whiteSpace: pasteWhiteSpaceFormatParser,
                 },
                 additionalFormatParsers: {
                     container: [containerSizeFormatParser],
