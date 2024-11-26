@@ -2,6 +2,9 @@ import type { FormatParser, WhiteSpaceFormat } from 'roosterjs-content-model-typ
 
 const WhiteSpacePre = 'pre';
 
+/**
+ * @internal
+ */
 export const pasteWhiteSpaceFormatParser: FormatParser<WhiteSpaceFormat> = (
     format,
     element,
