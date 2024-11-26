@@ -1,4 +1,4 @@
-import type { FormatParser, WhiteSpaceFormat } from 'roosterjs-content-model-types/lib';
+import type { FormatParser, WhiteSpaceFormat } from 'roosterjs-content-model-types';
 
 const WhiteSpacePre = 'pre';
 
