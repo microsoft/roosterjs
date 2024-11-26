@@ -1,4 +1,4 @@
-import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing.1';
+import { createDomToModelContextForSanitizing } from '../createModelFromHtml/createDomToModelContextForSanitizing';
 import {
     ChangeSource,
     EmptySegmentFormat,
