@@ -11,6 +11,8 @@ import type {
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
+const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
+
 /**
  * @internal
  */
@@ -69,6 +71,7 @@ const createShadowSpan = (wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
+    imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
     wrapper.style.verticalAlign = 'bottom';
     shadowRoot.appendChild(wrapper);
     return imageSpan;
