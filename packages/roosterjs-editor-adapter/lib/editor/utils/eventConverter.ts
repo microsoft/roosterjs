@@ -70,6 +70,7 @@ const EntityOperationNewToOld: Record<NewEntityOperation, OldEntityOperation | n
     updateEntityState: OldEntityOperation.UpdateEntityState,
     snapshotEntityState: null,
     click: OldEntityOperation.Click,
+    beforeFormat: null,
 };
 
 /**
