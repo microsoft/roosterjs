@@ -125,6 +125,9 @@ export function getSelectedSegmentsAndParagraphs(
                     }
                 });
             }
+        } else if (block?.blockType == 'Entity' && includingEntity) {
+            // Here we treat the entity as segment since they are compatible, then it has no parent paragraph
+            result.push([block, null /*paragraph*/, path]);
         }
     });
 

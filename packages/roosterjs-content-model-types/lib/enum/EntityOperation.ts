@@ -59,6 +59,20 @@ export type EntityRemovalOperation =
     | 'overwrite';
 
 /**
+ * DEfine entity format related operations
+ */
+export type EntityFormatOperation =
+    /**
+     * Tell plugins we are doing format change and an entity is inside the selection.
+     * Plugin can handle this event and put root level node (must be under the entity wrapper) into
+     * event.formattableRoots so editor will create content models for each root and do format to their contents
+     */
+    'beforeFormat';
+
+/**
  * Define possible operations to an entity
  */
-export type EntityOperation = EntityLifecycleOperation | EntityRemovalOperation;
+export type EntityOperation =
+    | EntityLifecycleOperation
+    | EntityRemovalOperation
+    | EntityFormatOperation;

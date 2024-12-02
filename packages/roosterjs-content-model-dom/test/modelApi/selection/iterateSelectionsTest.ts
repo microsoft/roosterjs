@@ -1191,7 +1191,7 @@ describe('iterateSelections', () => {
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
     });
 
-    it('With selected entity', () => {
+    it('With selected entity segment', () => {
         const doc = createContentModelDocument();
         const para = createParagraph();
         const entity = createEntity(null!);
@@ -1205,5 +1205,19 @@ describe('iterateSelections', () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
+    });
+
+    it('With selected entity block', () => {
+        const doc = createContentModelDocument();
+        const entity = createEntity(null!);
+
+        entity.isSelected = true;
+
+        doc.blocks.push(entity);
+
+        iterateSelections(doc, callback, { includeListFormatHolder: 'never' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([doc], undefined, entity, undefined);
     });
 });

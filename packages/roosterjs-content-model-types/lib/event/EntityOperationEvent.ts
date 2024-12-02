@@ -1,5 +1,7 @@
 import type { BasePluginEvent } from './BasePluginEvent';
 import type { EntityOperation } from '../enum/EntityOperation';
+import type { DomToModelOption } from '../context/DomToModelOption';
+import type { ModelToDomOption } from '../context/ModelToDomOption';
 
 /**
  * Represents an entity in editor.
@@ -24,8 +26,28 @@ export interface Entity {
 }
 
 /**
+ * Represent a combination of a root element under an entity and options to do DOM and content model conversion
+ */
+export interface FormattableRoot {
+    /**
+     * The root element to apply format under an entity
+     */
+    element: HTMLElement;
+
+    /**
+     * @optional DOM to Content Model option
+     */
+    domToModelOptions?: DomToModelOption;
+
+    /**
+     * @optional Content Model to DOM option
+     */
+    modelToDomOptions?: ModelToDomOption;
+}
+
+/**
  * Provide a chance for plugins to handle entity related events.
- * See enum EntityOperation for more details about each operation
+ * See type EntityOperation for more details about each operation
  */
 export interface EntityOperationEvent extends BasePluginEvent<'entityOperation'> {
     /**
@@ -44,15 +66,21 @@ export interface EntityOperationEvent extends BasePluginEvent<'entityOperation'>
     rawEvent?: Event;
 
     /**
-     * For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
+     * For entity operation "updateEntityState", we use this object to pass the new entity state to plugin.
      * For other operation types, it is not used.
      */
     state?: string;
 
     /**
-     * For EntityOperation.NewEntity, plugin can set this property to true then the entity will be persisted.
+     * For entity operation "newEntity", plugin can set this property to true then the entity will be persisted.
      * A persisted entity won't be touched during undo/redo, unless it does not exist after undo/redo.
      * For other operation types, this value will be ignored.
      */
     shouldPersist?: boolean;
+
+    /**
+     * For entity operation "beforeFormat" (happens when user wants to do format change), we will set this array
+     * in event and plugins can check if there is any elements inside the entity that should also apply the format
+     */
+    formattableRoots?: FormattableRoot[];
 }
