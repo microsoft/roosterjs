@@ -58,6 +58,9 @@ export type EntityRemovalOperation =
      */
     | 'overwrite';
 
+/**
+ * DEfine entity format related operations
+ */
 export type EntityFormatOperation =
     /**
      * Tell plugins we are doing format change and an entity is inside the selection.
