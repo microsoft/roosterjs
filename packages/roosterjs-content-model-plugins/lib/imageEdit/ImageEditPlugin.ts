@@ -121,6 +121,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     }
                 },
             },
+            dragend: {
+                beforeDispatch: ev => {
+                    if (this.editor) {
+                        const target = ev.target as Node;
+                        if (this.isImageSelection(target) && target.id.includes(DRAG_ID)) {
+                            target.id = target.id.replace(DRAG_ID, '').trim();
+                        }
+                    }
+                },
+            },
         });
     }
 

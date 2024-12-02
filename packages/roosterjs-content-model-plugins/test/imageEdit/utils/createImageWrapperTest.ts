@@ -14,22 +14,13 @@ describe('createImageWrapper', () => {
     const editor = initEditor('editor_test');
     function runTest(
         image: HTMLImageElement,
-        imageSpan: HTMLSpanElement,
         options: ImageEditOptions,
         editInfo: ImageMetadataFormat,
         htmlOptions: ImageHtmlOptions,
         operation: ImageEditOperation[],
         expectResult: WrapperElements
     ) {
-        const result = createImageWrapper(
-            editor,
-            image,
-
-            options,
-            editInfo,
-            htmlOptions,
-            operation
-        );
+        const result = createImageWrapper(editor, image, options, editInfo, htmlOptions, operation);
         expect(JSON.stringify(result)).toEqual(JSON.stringify(expectResult));
     }
 
@@ -69,7 +60,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, ['resize'], {
+        runTest(image, options, editInfo, htmlOptions, ['resize'], {
             wrapper,
             shadowSpan,
             imageClone,
@@ -116,7 +107,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, ['rotate'], {
+        runTest(image, options, editInfo, htmlOptions, ['rotate'], {
             wrapper: wrapper,
             shadowSpan: shadowSpan,
             imageClone: imageClone,
@@ -171,7 +162,7 @@ describe('createImageWrapper', () => {
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
 
-        runTest(image, imageSpan, options, editInfo, htmlOptions, ['crop'], {
+        runTest(image, options, editInfo, htmlOptions, ['crop'], {
             wrapper,
             shadowSpan,
             imageClone,
@@ -202,6 +193,7 @@ const createShadowSpan = (wrapper: HTMLSpanElement) => {
     const shadowRoot = span.attachShadow({
         mode: 'open',
     });
+    span.id = 'IMAGE_EDIT_SHADOW_ROOT';
     wrapper.style.verticalAlign = 'bottom';
     shadowRoot.append(wrapper);
     return span;
