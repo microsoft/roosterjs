@@ -24,7 +24,6 @@ describe('domCreator', () => {
     it('domCreator - undefined', () => {
         const doc = document.implementation.createHTMLDocument();
         doc.body.appendChild(document.createTextNode('test'));
-        doc.ownerDocument;
         const result = domCreator(undefined).htmlToDOM('test');
         expect(result.lastChild).toEqual(doc.lastChild);
     });
