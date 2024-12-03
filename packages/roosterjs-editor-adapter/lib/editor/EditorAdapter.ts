@@ -421,10 +421,8 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     insertContent(content: string, option?: InsertOption) {
         if (content) {
             const doc = this.getDocument();
-            const body = new DOMParser().parseFromString(
-                this.getCore().trustedHTMLHandler(content),
-                'text/html'
-            )?.body;
+            const body = this.getCore().domCreator.htmlToDOM(content).body;
+
             let allNodes = body?.childNodes ? toArray(body.childNodes) : [];
 
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with

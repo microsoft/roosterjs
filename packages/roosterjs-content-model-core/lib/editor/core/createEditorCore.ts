@@ -3,6 +3,7 @@ import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMHelper } from './DOMHelperImpl';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import { createEditorCorePlugins } from '../../corePlugin/createEditorCorePlugins';
+import { defaultTrustHtmlHandler, domCreator, isDOMCreator } from '../../utils/domCreator';
 import type {
     EditorEnvironment,
     PluginState,
@@ -18,7 +19,6 @@ import type {
  */
 export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
     const corePlugins = createEditorCorePlugins(options, contentDiv);
-
     return {
         physicalRoot: contentDiv,
         logicalRoot: contentDiv,
@@ -43,7 +43,11 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
             options.knownColors,
             options.generateColorKey
         ),
-        trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
+        trustedHTMLHandler:
+            options.trustedHTMLHandler && !isDOMCreator(options.trustedHTMLHandler)
+                ? options.trustedHTMLHandler
+                : defaultTrustHtmlHandler,
+        domCreator: domCreator(options.trustedHTMLHandler),
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
@@ -88,13 +92,6 @@ function getIsMobileOrTablet(userAgent: string) {
         return true;
     }
     return false;
-}
-
-/**
- * @internal export for test only
- */
-export function defaultTrustHtmlHandler(html: string) {
-    return html;
 }
 
 function getPluginState(corePlugins: EditorCorePlugins): PluginState {

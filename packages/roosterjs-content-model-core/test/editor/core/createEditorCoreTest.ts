@@ -1,14 +1,11 @@
 import * as createDefaultSettings from '../../../lib/editor/core/createEditorDefaultSettings';
 import * as createEditorCorePlugins from '../../../lib/corePlugin/createEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../../lib/editor/core/DarkColorHandlerImpl';
+import * as domCreator from '../../../lib/utils/domCreator';
 import * as DOMHelperImpl from '../../../lib/editor/core/DOMHelperImpl';
 import { coreApiMap } from '../../../lib/coreApi/coreApiMap';
 import { EditorCore, EditorOptions } from 'roosterjs-content-model-types';
-import {
-    createEditorCore,
-    defaultTrustHtmlHandler,
-    getDarkColorFallback,
-} from '../../../lib/editor/core/createEditorCore';
+import { createEditorCore, getDarkColorFallback } from '../../../lib/editor/core/createEditorCore';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -41,6 +38,7 @@ describe('createEditorCore', () => {
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
     const mockedDOMHelper = 'DOMHELPER' as any;
+    const mockedHtmlToDOM = 'HTMLTODOM' as any;
 
     beforeEach(() => {
         spyOn(createEditorCorePlugins, 'createEditorCorePlugins').and.returnValue(mockedPlugins);
@@ -54,6 +52,7 @@ describe('createEditorCore', () => {
             mockedModelToDomSettings
         );
         spyOn(DOMHelperImpl, 'createDOMHelper').and.returnValue(mockedDOMHelper);
+        spyOn(domCreator, 'domCreator').and.returnValue(mockedHtmlToDOM);
     });
 
     function runTest(
@@ -88,7 +87,8 @@ describe('createEditorCore', () => {
                 modelToDomSettings: mockedModelToDomSettings,
             },
             darkColorHandler: mockedDarkColorHandler,
-            trustedHTMLHandler: defaultTrustHtmlHandler,
+            trustedHTMLHandler: domCreator.defaultTrustHtmlHandler,
+            domCreator: mockedHtmlToDOM,
             cache: 'cache' as any,
             format: 'format' as any,
             copyPaste: 'copyPaste' as any,

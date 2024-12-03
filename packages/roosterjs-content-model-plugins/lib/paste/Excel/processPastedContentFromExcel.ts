@@ -1,11 +1,7 @@
 import { addParser } from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type {
-    BeforePasteEvent,
-    ElementProcessor,
-    TrustedHTMLHandler,
-} from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, DOMCreator, ElementProcessor } from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -21,14 +17,14 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 
 export function processPastedContentFromExcel(
     event: BeforePasteEvent,
-    trustedHTMLHandler: TrustedHTMLHandler,
+    domCreator: DOMCreator,
     allowExcelNoBorderTable?: boolean
 ) {
     const { fragment, htmlBefore, clipboardData } = event;
     const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
 
     if (html && clipboardData.html != html) {
-        const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
+        const doc = domCreator.htmlToDOM(html);
         moveChildNodes(fragment, doc?.body);
     }
 

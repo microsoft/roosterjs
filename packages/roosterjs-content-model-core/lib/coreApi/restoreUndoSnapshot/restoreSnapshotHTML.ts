@@ -18,10 +18,7 @@ export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
     } = core;
     let refNode: Node | null = physicalRoot.firstChild;
 
-    const body = new DOMParser().parseFromString(
-        core.trustedHTMLHandler?.(snapshot.html) ?? snapshot.html,
-        'text/html'
-    ).body;
+    const body = core.domCreator.htmlToDOM(snapshot.html).body;
 
     for (let currentNode = body.firstChild; currentNode; ) {
         const next = currentNode.nextSibling;
