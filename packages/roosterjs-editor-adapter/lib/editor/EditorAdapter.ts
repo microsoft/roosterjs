@@ -421,7 +421,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
     insertContent(content: string, option?: InsertOption) {
         if (content) {
             const doc = this.getDocument();
-            const body = this.getCore().domCreator.htmlToDOM(content).body;
+            const body = this.getCore().domCreator.htmlToDOM(content)?.body;
 
             let allNodes = body?.childNodes ? toArray(body.childNodes) : [];
 
