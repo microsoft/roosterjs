@@ -29,6 +29,13 @@ import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+    moveChildNodes,
+} from 'roosterjs-content-model-dom';
 import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import {
     createContextMenuPlugin,
@@ -69,9 +76,7 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
-
 const styles = require('./MainPane.scss');
-
 export interface MainPaneState {
     showSidePane: boolean;
     popoutWindow: Window;
@@ -83,12 +88,23 @@ export interface MainPaneState {
     tableBorderFormat?: Border;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
-
 const PopoutRoot = 'mainPane';
 const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</title></head><body><div id=${PopoutRoot}></div></body></html>`;
 const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
+
+const modelToDomOption: ModelToDomOption = {
+    additionalFormatAppliers: {
+        block: [
+            (format, element) => {
+                if ((format as ProofingFormat).isProofing) {
+                    element.classList.add('proofing');
+                }
+            },
+        ],
+    },
+};
 
 export class MainPane extends React.Component<{}, MainPaneState> {
     private mouseX: number;
@@ -106,7 +122,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private imageEditPlugin: ImageEditPlugin;
-
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
     protected model: ContentModelDocument | null = null;
@@ -127,30 +142,14 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         },
     };
 
-    private modelToDomOption: ModelToDomOption = {
-        additionalFormatAppliers: {
-            block: [
-                (format, element) => {
-                    if ((format as ProofingFormat).isProofing) {
-                        element.classList.add('proofing');
-                    }
-                },
-            ],
-        },
-    };
-
     static getInstance() {
         return this.instance;
     }
-
     static readonly editorDivId = 'RoosterJsContentDiv';
-
     constructor(props: {}) {
         super(props);
-
         MainPane.instance = this;
         this.updateContentPlugin = new UpdateContentPlugin(this.onUpdate);
-
         this.snapshots = {
             snapshots: [],
             totalSize: 0,
@@ -158,7 +157,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             autoCompleteIndex: -1,
             maxSize: 1e7,
         };
-
         this.formatStatePlugin = new FormatStatePlugin();
         this.editorOptionPlugin = new EditorOptionsPlugin();
         this.eventViewPlugin = new EventViewPlugin();
@@ -170,7 +168,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.imageEditPlugin = new ImageEditPlugin();
-
         this.state = {
             showSidePane: window.location.hash != '',
             popoutWindow: null,
@@ -187,7 +184,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             activeTab: 'all',
         };
     }
-
     render() {
         const theme = getTheme(this.state.isDarkMode);
         return (
@@ -201,36 +197,28 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             </ThemeProvider>
         );
     }
-
     componentDidMount() {
         this.themeMatch?.addEventListener('change', this.onThemeChange);
         this.resetEditor();
     }
-
     componentWillUnmount() {
         this.themeMatch?.removeEventListener('change', this.onThemeChange);
     }
-
     popout() {
         this.updateContentPlugin.update();
-
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
         win.document.write(trustedHTMLHandler(POPOUT_HTML));
         win.addEventListener('beforeunload', () => {
             this.updateContentPlugin.update();
-
             unregisterWindowForCss(win);
             this.setState({ popoutWindow: null });
         });
-
         registerWindowForCss(win);
-
         this.popoutRoot = win.document.getElementById(PopoutRoot);
         this.setState({
             popoutWindow: win,
         });
     }
-
     resetEditorPlugin(pluginState: OptionState) {
         this.updateContentPlugin.update();
         this.setState({
@@ -238,51 +226,42 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
         this.resetEditor();
     }
-
     setScale(scale: number): void {
         this.setState({
             scale: scale,
         });
     }
-
     getTableBorder(): Border {
         return this.state.tableBorderFormat;
     }
-
     setTableBorderColor(color: string): void {
         this.setState({
             tableBorderFormat: { ...this.getTableBorder(), color },
         });
     }
-
     setTableBorderWidth(width: string): void {
         this.setState({
             tableBorderFormat: { ...this.getTableBorder(), width },
         });
     }
-
     setTableBorderStyle(style: string): void {
         this.setState({
             tableBorderFormat: { ...this.getTableBorder(), style },
         });
     }
-
     toggleDarkMode(): void {
         this.setState({
             isDarkMode: !this.state.isDarkMode,
         });
     }
-
     changeRibbon(id: tabNames): void {
         this.setState({
             activeTab: id,
         });
     }
-
     setPreset(preset: ContentModelDocument) {
         this.model = preset;
     }
-
     setPageDirection(isRtl: boolean): void {
         this.setState({ isRtl: isRtl });
         [window, this.state.popoutWindow].forEach(win => {
@@ -291,11 +270,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             }
         });
     }
-
     private renderTitleBar() {
         return <TitleBar className={styles.noGrow} />;
     }
-
     private renderTabs() {
         const tabs = getTabs();
         const topRightButtons: RibbonButton<any>[] = [
@@ -306,7 +283,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             exportContentButton,
         ];
         this.state.popoutWindow ? null : topRightButtons.push(popoutButton);
-
         return (
             <div
                 style={{ display: 'inline-flex', justifyContent: 'space-between', height: '30px' }}>
@@ -331,7 +307,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             />
         );
     }
-
     private renderSidePane(fullWidth: boolean) {
         return (
             <SidePane
@@ -343,7 +318,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             />
         );
     }
-
     private resetEditor() {
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
@@ -351,7 +325,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             },
         });
     }
-
     private renderEditor() {
         // Set preset if found
         const search = new URLSearchParams(document.location.search);
@@ -359,7 +332,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         if (hasPreset) {
             this.setPreset(getPresetModelById(hasPreset));
         }
-
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -379,9 +351,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         if (this.state.showSidePane || this.state.popoutWindow) {
             plugins.push(...this.getSidePanePlugins());
         }
-
         this.updateContentPlugin.update();
-
         return (
             <div className={styles.editorContainer} id="EditorContainer">
                 <div style={editorStyles}>
@@ -405,14 +375,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                                 this.state.initState.experimentalFeatures
                             )}
                             defaultDomToModelOptions={this.domToModelOption}
-                            defaultModelToDomOptions={this.modelToDomOption}
+                            defaultModelToDomOptions={modelToDomOption}
                         />
                     )}
                 </div>
             </div>
         );
     }
-
     private renderMainPane() {
         return (
             <>
@@ -429,7 +398,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             </>
         );
     }
-
     private renderSidePaneButton() {
         return (
             <button
@@ -441,7 +409,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             </button>
         );
     }
-
     private renderPopout() {
         return (
             <>
@@ -461,36 +428,30 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             </>
         );
     }
-
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
         document.addEventListener('mousemove', this.onMouseMove, true);
         document.addEventListener('mouseup', this.onMouseUp, true);
         document.body.style.userSelect = 'none';
         this.mouseX = e.pageX;
     };
-
     private onMouseMove = (e: MouseEvent) => {
         this.sidePane.current.changeWidth(this.mouseX - e.pageX);
         this.mouseX = e.pageX;
     };
-
     private onMouseUp = (e: MouseEvent) => {
         document.removeEventListener('mousemove', this.onMouseMove, true);
         document.removeEventListener('mouseup', this.onMouseUp, true);
         document.body.style.userSelect = '';
     };
-
     private onUpdate = (model: ContentModelDocument) => {
         this.model = model;
     };
-
     private onShowSidePane = () => {
         this.setState({
             showSidePane: true,
         });
         this.resetEditor();
     };
-
     private onHideSidePane = () => {
         this.setState({
             showSidePane: false,
@@ -498,13 +459,11 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.resetEditor();
         window.location.hash = '';
     };
-
     private onThemeChange = () => {
         this.setState({
             isDarkMode: this.themeMatch?.matches || false,
         });
     };
-
     private getSidePanePlugins(): SidePanePlugin[] {
         return [
             this.formatStatePlugin,
@@ -516,7 +475,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.presetPlugin,
         ];
     }
-
     private getToggleablePlugins(): EditorPlugin[] {
         const {
             pluginList,
@@ -559,17 +517,14 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         ].filter(x => !!x);
     }
 }
-
 const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceListItemBullet: 'Auto corrected Bullet',
     announceListItemNumbering: 'Auto corrected {0}',
     announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
 };
-
 function getAnnouncingString(key: KnownAnnounceStrings) {
     return AnnounceStringMap[key];
 }
-
 export function mount(parent: HTMLElement) {
     ReactDOM.render(<MainPane />, parent);
 }
@@ -618,5 +573,37 @@ class TestEditor implements EditorPlugin {
                 }
             }
         }
+
+        if (event.eventType == 'beforePaste') {
+            const context = createDomToModelContext();
+            const model = domToContentModel(event.fragment, context);
+
+            model.blocks.forEach(block => {
+                if (block.blockType == 'Paragraph' && !block.isImplicit) {
+                    (block.format as ProofingFormat).isProofing = true;
+                }
+            });
+
+            const context2 = createModelToDomContext(undefined, modelToDomOption);
+
+            moveChildNodes(event.fragment);
+
+            contentModelToDom(document, event.fragment, model, context2);
+        }
+
+        if (event.eventType == 'rewriteFromModel') {
+            console.log('-----------------------------');
+            event.addedBlockElements.forEach(x => console.log(x));
+        }
+
+        // if (event.eventType == 'input' && event.rawEvent.type == 'safasdf') {
+        //     if (!hasClass() || ...) {
+        //         this.editor.formatContentModel(model => {
+        //             (model.blocks[1].format as ProofingFormat).isProofing = true;
+
+        //             return true;
+        //         }
+        //     }
+        // }
     }
 }
