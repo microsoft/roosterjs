@@ -150,7 +150,7 @@ describe('createEditorCore', () => {
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
         const mockedGetDarkColor = 'DARK' as any;
-        const mockedTrustHtmlHandler = 'OPTIONAL TRUSTED' as any;
+        const mockedTrustHtmlHandler = 'TRUSTED' as any;
         const mockedDisposeErrorHandler = 'DISPOSE' as any;
         const mockedGenerateColorKey = 'KEY' as any;
         const mockedKnownColors = 'COLORS' as any;
@@ -167,8 +167,6 @@ describe('createEditorCore', () => {
             knownColors: mockedKnownColors,
             onFixUpModel: mockedOnFixUpModel,
         } as any;
-
-        spyOn(domCreator, 'createTrustedHTMLHandler').and.returnValue(mockedTrustHtmlHandler);
 
         runTest(mockedDiv, mockedOptions, {
             physicalRoot: mockedDiv,
