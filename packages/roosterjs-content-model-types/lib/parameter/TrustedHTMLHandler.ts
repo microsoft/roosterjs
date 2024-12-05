@@ -1,4 +1,5 @@
 /**
+ * @deprecated Use DOMCreator instead
  * A handler type to convert HTML string to a trust HTML string
  */
 export type LegacyTrustedHTMLHandler = (html: string) => string;

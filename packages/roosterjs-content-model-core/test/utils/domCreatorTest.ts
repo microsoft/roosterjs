@@ -1,4 +1,4 @@
-import { domCreator, isDOMCreator } from '../../lib/utils/domCreator';
+import { createDOMCreator, isDOMCreator } from '../../lib/utils/domCreator';
 
 describe('domCreator', () => {
     it('isDOMCreator - True', () => {
@@ -13,26 +13,26 @@ describe('domCreator', () => {
         expect(isDOMCreator(trustedHTMLHandler)).toBe(false);
     });
 
-    it('domCreator - isDOMCreator', () => {
+    it('createDOMCreator - isDOMCreator', () => {
         const trustedHTMLHandler = {
             htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
         };
-        const result = domCreator(trustedHTMLHandler);
+        const result = createDOMCreator(trustedHTMLHandler);
         expect(result).toEqual(trustedHTMLHandler);
     });
 
-    it('domCreator - undefined', () => {
+    it('createDOMCreator - undefined', () => {
         const doc = document.implementation.createHTMLDocument();
         doc.body.appendChild(document.createTextNode('test'));
-        const result = domCreator(undefined).htmlToDOM('test');
+        const result = createDOMCreator(undefined).htmlToDOM('test');
         expect(result.lastChild).toEqual(doc.lastChild);
     });
 
-    it('domCreator - trustedHTML', () => {
+    it('createDOMCreator - trustedHTML', () => {
         const doc = document.implementation.createHTMLDocument();
         doc.body.appendChild(document.createTextNode('test trusted'));
         const trustedHTMLHandler = (html: string) => html + ' trusted';
-        const result = domCreator(trustedHTMLHandler).htmlToDOM('test');
+        const result = createDOMCreator(trustedHTMLHandler).htmlToDOM('test');
         expect(result.lastChild).toEqual(doc.lastChild);
     });
 });

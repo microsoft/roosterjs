@@ -4,8 +4,8 @@ import * as DarkColorHandlerImpl from '../../../lib/editor/core/DarkColorHandler
 import * as domCreator from '../../../lib/utils/domCreator';
 import * as DOMHelperImpl from '../../../lib/editor/core/DOMHelperImpl';
 import { coreApiMap } from '../../../lib/coreApi/coreApiMap';
-import { EditorCore, EditorOptions } from 'roosterjs-content-model-types';
 import { createEditorCore, getDarkColorFallback } from '../../../lib/editor/core/createEditorCore';
+import { DOMCreator, EditorCore, EditorOptions } from 'roosterjs-content-model-types';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -38,7 +38,10 @@ describe('createEditorCore', () => {
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
     const mockedDOMHelper = 'DOMHELPER' as any;
-    const mockedHtmlToDOM = 'HTMLTODOM' as any;
+    const mockedDOMCreator: DOMCreator = {
+        htmlToDOM: mockedDOMHelper,
+    };
+    const mockedTrustHtmlHandler = 'TRUSTED' as any;
 
     beforeEach(() => {
         spyOn(createEditorCorePlugins, 'createEditorCorePlugins').and.returnValue(mockedPlugins);
@@ -52,7 +55,8 @@ describe('createEditorCore', () => {
             mockedModelToDomSettings
         );
         spyOn(DOMHelperImpl, 'createDOMHelper').and.returnValue(mockedDOMHelper);
-        spyOn(domCreator, 'domCreator').and.returnValue(mockedHtmlToDOM);
+        spyOn(domCreator, 'createDOMCreator').and.returnValue(mockedDOMCreator);
+        spyOn(domCreator, 'createTrustedHTMLHandler').and.returnValue(mockedTrustHtmlHandler);
     });
 
     function runTest(
@@ -87,8 +91,8 @@ describe('createEditorCore', () => {
                 modelToDomSettings: mockedModelToDomSettings,
             },
             darkColorHandler: mockedDarkColorHandler,
-            trustedHTMLHandler: domCreator.defaultTrustHtmlHandler,
-            domCreator: mockedHtmlToDOM,
+            trustedHTMLHandler: mockedTrustHtmlHandler,
+            domCreator: mockedDOMCreator,
             cache: 'cache' as any,
             format: 'format' as any,
             copyPaste: 'copyPaste' as any,
@@ -146,7 +150,7 @@ describe('createEditorCore', () => {
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
         const mockedGetDarkColor = 'DARK' as any;
-        const mockedTrustHtmlHandler = 'TRUST' as any;
+        const mockedTrustHtmlHandler = 'OPTIONAL TRUSTED' as any;
         const mockedDisposeErrorHandler = 'DISPOSE' as any;
         const mockedGenerateColorKey = 'KEY' as any;
         const mockedKnownColors = 'COLORS' as any;
@@ -163,6 +167,8 @@ describe('createEditorCore', () => {
             knownColors: mockedKnownColors,
             onFixUpModel: mockedOnFixUpModel,
         } as any;
+
+        spyOn(domCreator, 'createTrustedHTMLHandler').and.returnValue(mockedTrustHtmlHandler);
 
         runTest(mockedDiv, mockedOptions, {
             physicalRoot: mockedDiv,

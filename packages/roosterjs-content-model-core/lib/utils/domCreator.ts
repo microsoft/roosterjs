@@ -7,7 +7,14 @@ import type {
 /**
  * @internal
  */
-export function domCreator(trustedHTMLHandler?: TrustedHTMLHandler): DOMCreator {
+export const createTrustedHTMLHandler = (domCreator: DOMCreator): LegacyTrustedHTMLHandler => {
+    return (html: string) => domCreator.htmlToDOM(html).body.innerHTML;
+};
+
+/**
+ * @internal
+ */
+export function createDOMCreator(trustedHTMLHandler?: TrustedHTMLHandler): DOMCreator {
     return trustedHTMLHandler && isDOMCreator(trustedHTMLHandler)
         ? trustedHTMLHandler
         : trustedHTMLHandlerToDOMCreator(trustedHTMLHandler as LegacyTrustedHTMLHandler);
