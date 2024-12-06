@@ -1,6 +1,6 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, DOMCreator } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
 
@@ -24,12 +24,9 @@ const FORMATING_REGEX = /[\n\t'{}"]+/g;
  * 5. Save data in record and only use the required information.
  *
  */
-export function getStyleMetadata(
-    ev: BeforePasteEvent,
-    trustedHTMLHandler: (val: string) => string
-) {
+export function getStyleMetadata(ev: BeforePasteEvent, domCreator: DOMCreator) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const doc = new DOMParser().parseFromString(trustedHTMLHandler(ev.htmlBefore), 'text/html');
+    const doc = domCreator.htmlToDOM(ev.htmlBefore);
     const styles = doc.querySelectorAll('style');
 
     styles.forEach(style => {

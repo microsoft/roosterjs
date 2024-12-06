@@ -1,5 +1,5 @@
 import { moveChildNodes } from 'roosterjs-content-model-dom';
-import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, DOMCreator } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -9,17 +9,14 @@ import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-content-mod
 
 export function processPastedContentFromPowerPoint(
     event: BeforePasteEvent,
-    trustedHTMLHandler: TrustedHTMLHandler
+    domCreator: DOMCreator
 ) {
     const { fragment, clipboardData } = event;
 
     if (clipboardData.html && !clipboardData.text && clipboardData.image) {
         // It is possible that PowerPoint copied both image and HTML but not plain text.
         // We always prefer HTML if any.
-        const doc = new DOMParser().parseFromString(
-            trustedHTMLHandler(clipboardData.html),
-            'text/html'
-        );
+        const doc = domCreator.htmlToDOM(clipboardData.html);
 
         moveChildNodes(fragment, doc?.body);
     }
