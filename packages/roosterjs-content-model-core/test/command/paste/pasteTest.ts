@@ -6,6 +6,7 @@ import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/
 import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
 import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
+import * as mergePasteContentFile from '../../../lib/command/paste/mergePasteContent';
 import * as PPT from 'roosterjs-content-model-plugins/lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from 'roosterjs-content-model-plugins/lib/paste/utils/setProcessor';
 import * as WacComponents from 'roosterjs-content-model-plugins/lib/paste/WacComponents/processPastedContentWacComponents';
@@ -312,6 +313,7 @@ describe('paste with content model & paste plugin', () => {
 describe('Paste with clipboardData', () => {
     let editor: IEditor = undefined!;
     const ID = 'EDITOR_ID';
+    let mergePasteContentSpy: jasmine.Spy;
 
     beforeEach(() => {
         editor = initEditor(ID);
@@ -325,6 +327,7 @@ describe('Paste with clipboardData', () => {
             htmlFirstLevelChildTags: ['P', 'P'],
             html: '',
         });
+        mergePasteContentSpy = spyOn(mergePasteContentFile, 'mergePasteContent').and.callThrough();
     });
 
     afterEach(() => {
@@ -390,6 +393,33 @@ describe('Paste with clipboardData', () => {
             ],
             format: {},
         });
+        expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
+    });
+
+    it('Second paste', () => {
+        clipboardData.rawHtml = '';
+        clipboardData.modelBeforePaste = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
+
+        paste(editor, clipboardData);
+
+        const model = editor.getContentModelCopy('connected');
+
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    isImplicit: true,
+                    segments: [{ isSelected: true, segmentType: 'SelectionMarker', format: {} }],
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeFalse();
     });
 
     it('Remove unsupported url of link from clipboardContent', () => {
@@ -437,6 +467,7 @@ describe('Paste with clipboardData', () => {
             ],
             format: {},
         });
+        expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
     });
 
     it('Keep supported url of link from clipboardContent', () => {
@@ -496,5 +527,6 @@ describe('Paste with clipboardData', () => {
             ],
             format: {},
         });
+        expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
     });
 });

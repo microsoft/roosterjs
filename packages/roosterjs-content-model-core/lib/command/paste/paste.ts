@@ -24,8 +24,11 @@ export function paste(
     editor.focus();
 
     const trustedHTMLHandler = editor.getTrustedHTMLHandler();
+    let isFirstPaste = false;
 
     if (!clipboardData.modelBeforePaste) {
+        isFirstPaste = true;
+
         editor.formatContentModel(model => {
             clipboardData.modelBeforePaste = cloneModelForPaste(model);
 
@@ -67,7 +70,7 @@ export function paste(
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
     // 6. Merge pasted content into main Content Model
-    mergePasteContent(editor, eventResult);
+    mergePasteContent(editor, eventResult, isFirstPaste);
 }
 
 function createDOMFromHtml(
