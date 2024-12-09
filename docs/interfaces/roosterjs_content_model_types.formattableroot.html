@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DomToModelSelectionContext | RoosterJs API Reference</title>
+	<title>FormattableRoot | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.domtomodelselectioncontext.html">DomToModelSelectionContext</a>
+					<a href="roosterjs_content_model_types.formattableroot.html">FormattableRoot</a>
 				</li>
 			</ul>
-			<h1>Interface DomToModelSelectionContext</h1>
+			<h1>Interface FormattableRoot</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents the selection information of content used by DOM to Content Model conversion</p>
+						<p>Represent a combination of a root element under an entity and options to do DOM and content model conversion</p>
 					</div>
 				</div>
 			</section>
@@ -77,12 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DomToModelSelectionContext</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="roosterjs_content_model_types.domtomodelcontext.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelContext</a>
-							</li>
-						</ul>
+						<span class="target">FormattableRoot</span>
 					</li>
 				</ul>
 			</section>
@@ -93,8 +88,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodelselectioncontext.html#isinselection" class="tsd-kind-icon">is<wbr>InSelection</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domtomodelselectioncontext.html#selection" class="tsd-kind-icon">selection</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formattableroot.html#domtomodeloptions" class="tsd-kind-icon">dom<wbr>ToModel<wbr>Options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formattableroot.html#element" class="tsd-kind-icon">element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.formattableroot.html#modeltodomoptions" class="tsd-kind-icon">model<wbr>ToDom<wbr>Options</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,33 +99,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="isinselection" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>InSelection</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>InSelection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="domtomodeloptions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dom<wbr>ToModel<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">dom<wbr>ToModel<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/334e038/packages/roosterjs-content-model-types/lib/context/DomToModelSelectionContext.ts#L10">roosterjs-content-model-types/lib/context/DomToModelSelectionContext.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/334e038/packages/roosterjs-content-model-types/lib/event/EntityOperationEvent.ts#L40">roosterjs-content-model-types/lib/event/EntityOperationEvent.ts:40</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>optional</dt>
+							<dd><p>DOM to Content Model option</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="element" class="tsd-anchor"></a>
+					<h3>element</h3>
+					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/334e038/packages/roosterjs-content-model-types/lib/event/EntityOperationEvent.ts#L35">roosterjs-content-model-types/lib/event/EntityOperationEvent.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Is current context under a selection</p>
+							<p>The root element to apply format under an entity</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="selection" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> selection</h3>
-					<div class="tsd-signature tsd-kind-icon">selection<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></div>
+					<a name="modeltodomoptions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> model<wbr>ToDom<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">model<wbr>ToDom<wbr>Options<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/334e038/packages/roosterjs-content-model-types/lib/context/DomToModelSelectionContext.ts#L15">roosterjs-content-model-types/lib/context/DomToModelSelectionContext.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/334e038/packages/roosterjs-content-model-types/lib/event/EntityOperationEvent.ts#L45">roosterjs-content-model-types/lib/event/EntityOperationEvent.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Current selection range</p>
-						</div>
+						<dl class="tsd-comment-tags">
+							<dt>optional</dt>
+							<dd><p>Content Model to DOM option</p>
+							</dd>
+						</dl>
 					</div>
 				</section>
 			</section>
@@ -174,13 +189,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.domtomodelselectioncontext.html" class="tsd-kind-icon">Dom<wbr>ToModel<wbr>Selection<wbr>Context</a>
+						<a href="roosterjs_content_model_types.formattableroot.html" class="tsd-kind-icon">Formattable<wbr>Root</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domtomodelselectioncontext.html#isinselection" class="tsd-kind-icon">is<wbr>InSelection</a>
+								<a href="roosterjs_content_model_types.formattableroot.html#domtomodeloptions" class="tsd-kind-icon">dom<wbr>ToModel<wbr>Options</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domtomodelselectioncontext.html#selection" class="tsd-kind-icon">selection</a>
+								<a href="roosterjs_content_model_types.formattableroot.html#element" class="tsd-kind-icon">element</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.formattableroot.html#modeltodomoptions" class="tsd-kind-icon">model<wbr>ToDom<wbr>Options</a>
 							</li>
 						</ul>
 					</li>
