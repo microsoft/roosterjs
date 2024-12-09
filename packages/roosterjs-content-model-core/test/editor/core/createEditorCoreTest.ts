@@ -1,14 +1,11 @@
 import * as createDefaultSettings from '../../../lib/editor/core/createEditorDefaultSettings';
 import * as createEditorCorePlugins from '../../../lib/corePlugin/createEditorCorePlugins';
 import * as DarkColorHandlerImpl from '../../../lib/editor/core/DarkColorHandlerImpl';
+import * as domCreator from '../../../lib/utils/domCreator';
 import * as DOMHelperImpl from '../../../lib/editor/core/DOMHelperImpl';
 import { coreApiMap } from '../../../lib/coreApi/coreApiMap';
-import { EditorCore, EditorOptions } from 'roosterjs-content-model-types';
-import {
-    createEditorCore,
-    defaultTrustHtmlHandler,
-    getDarkColorFallback,
-} from '../../../lib/editor/core/createEditorCore';
+import { createEditorCore, getDarkColorFallback } from '../../../lib/editor/core/createEditorCore';
+import { DOMCreator, EditorCore, EditorOptions } from 'roosterjs-content-model-types';
 
 describe('createEditorCore', () => {
     function createMockedPlugin(stateName: string): any {
@@ -41,6 +38,10 @@ describe('createEditorCore', () => {
     const mockedDomToModelSettings = 'DOMTOMODEL' as any;
     const mockedModelToDomSettings = 'MODELTODOM' as any;
     const mockedDOMHelper = 'DOMHELPER' as any;
+    const mockedDOMCreator: DOMCreator = {
+        htmlToDOM: mockedDOMHelper,
+    };
+    const mockedTrustHtmlHandler = 'TRUSTED' as any;
 
     beforeEach(() => {
         spyOn(createEditorCorePlugins, 'createEditorCorePlugins').and.returnValue(mockedPlugins);
@@ -54,6 +55,8 @@ describe('createEditorCore', () => {
             mockedModelToDomSettings
         );
         spyOn(DOMHelperImpl, 'createDOMHelper').and.returnValue(mockedDOMHelper);
+        spyOn(domCreator, 'createDOMCreator').and.returnValue(mockedDOMCreator);
+        spyOn(domCreator, 'createTrustedHTMLHandler').and.returnValue(mockedTrustHtmlHandler);
     });
 
     function runTest(
@@ -88,7 +91,8 @@ describe('createEditorCore', () => {
                 modelToDomSettings: mockedModelToDomSettings,
             },
             darkColorHandler: mockedDarkColorHandler,
-            trustedHTMLHandler: defaultTrustHtmlHandler,
+            trustedHTMLHandler: mockedTrustHtmlHandler,
+            domCreator: mockedDOMCreator,
             cache: 'cache' as any,
             format: 'format' as any,
             copyPaste: 'copyPaste' as any,
@@ -146,7 +150,7 @@ describe('createEditorCore', () => {
         const mockedPlugin1 = 'P1' as any;
         const mockedPlugin2 = 'P2' as any;
         const mockedGetDarkColor = 'DARK' as any;
-        const mockedTrustHtmlHandler = 'TRUST' as any;
+        const mockedTrustHtmlHandler = 'OPTIONS TRUSTED' as any;
         const mockedDisposeErrorHandler = 'DISPOSE' as any;
         const mockedGenerateColorKey = 'KEY' as any;
         const mockedKnownColors = 'COLORS' as any;

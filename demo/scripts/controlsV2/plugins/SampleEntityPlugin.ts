@@ -63,6 +63,16 @@ export default class SampleEntityPlugin implements EditorPlugin {
                     }
 
                     break;
+
+                case 'beforeFormat':
+                    const span = entity.wrapper.querySelector('span');
+
+                    if (span && event.formattableRoots) {
+                        event.formattableRoots.push({
+                            element: span,
+                        });
+                    }
+                    break;
             }
         }
     }

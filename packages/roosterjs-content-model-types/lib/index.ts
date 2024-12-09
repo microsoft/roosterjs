@@ -77,6 +77,7 @@ export {
     EntityLifecycleOperation,
     EntityOperation,
     EntityRemovalOperation,
+    EntityFormatOperation,
 } from './enum/EntityOperation';
 export {
     TableOperation,
@@ -424,7 +425,11 @@ export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRec
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
-export { TrustedHTMLHandler } from './parameter/TrustedHTMLHandler';
+export {
+    TrustedHTMLHandler,
+    DOMCreator,
+    LegacyTrustedHTMLHandler,
+} from './parameter/TrustedHTMLHandler';
 export { Rect } from './parameter/Rect';
 export { ValueSanitizer } from './parameter/ValueSanitizer';
 export { DOMHelper } from './parameter/DOMHelper';
@@ -459,7 +464,7 @@ export { ContextMenuEvent } from './event/ContextMenuEvent';
 export { RewriteFromModelEvent } from './event/RewriteFromModelEvent';
 export { EditImageEvent } from './event/EditImageEvent';
 export { EditorReadyEvent } from './event/EditorReadyEvent';
-export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
+export { EntityOperationEvent, FormattableRoot, Entity } from './event/EntityOperationEvent';
 export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
 export { EditorInputEvent } from './event/EditorInputEvent';
 export {
