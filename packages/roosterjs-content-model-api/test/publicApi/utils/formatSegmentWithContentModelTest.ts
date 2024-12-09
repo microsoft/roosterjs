@@ -1,3 +1,5 @@
+import { EntityOperationEvent, FormattableRoot } from 'roosterjs-content-model-types';
+import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
 import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
 import {
     ContentModelBlockFormat,
@@ -16,16 +18,22 @@ import {
     createParagraph as originalCreateParagraph,
     createSelectionMarker,
     createText,
+    createEntity,
 } from 'roosterjs-content-model-dom';
 
-describe('formatSegment', () => {
+describe('formatSegmentWithContentModel', () => {
     let editor: IEditor;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
     let formatContentModel: jasmine.Spy;
     let formatResult: boolean | undefined;
     let context: FormatContentModelContext | undefined;
+    let triggerEvent: jasmine.Spy;
+
     const mockedCachedElement = 'CACHE' as any;
+    const mockedDOMHelper = {
+        calculateZoomScale: () => {},
+    } as any;
 
     function createParagraph(
         isImplicit?: boolean,
@@ -56,10 +64,17 @@ describe('formatSegment', () => {
                 formatResult = callback(model, context);
             });
 
-        editor = ({
+        triggerEvent = jasmine.createSpy('triggerEvent');
+
+        editor = {
             focus,
             formatContentModel,
-        } as any) as IEditor;
+            triggerEvent,
+            getDOMHelper: () => mockedDOMHelper,
+            isDarkMode: () => false,
+            getDocument: () => document,
+            getColorManager: () => {},
+        } as any;
     });
 
     it('empty doc', () => {
@@ -325,5 +340,125 @@ describe('formatSegment', () => {
                 fontFamily: 'test',
             },
         });
+    });
+
+    it('doc with entity selection, no plugin handle it', () => {
+        model = createContentModelDocument();
+
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test2');
+        const text3 = document.createTextNode('test3');
+
+        span.appendChild(text2);
+        div.appendChild(text1);
+        div.appendChild(span);
+        div.appendChild(text3);
+
+        const entity = createEntity(div, true, {}, 'TestEntity', 'TestEntity1');
+
+        model.blocks.push(entity);
+        entity.isSelected = true;
+
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { id: 'TestEntity1', entityType: 'TestEntity', isReadonly: true },
+                    wrapper: div,
+                    isSelected: true,
+                },
+            ],
+        });
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeFalse();
+        expect(callback).toHaveBeenCalledTimes(0);
+        expectHtml(div.innerHTML, 'test1<span>test2</span>test3');
+    });
+
+    it('doc with entity selection, plugin returns formattable root', () => {
+        model = createContentModelDocument();
+
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const text1 = document.createTextNode('test1');
+        const text2 = document.createTextNode('test2');
+        const text3 = document.createTextNode('test3');
+
+        span.appendChild(text2);
+        div.appendChild(text1);
+        div.appendChild(span);
+        div.appendChild(text3);
+
+        const entity = createEntity(div, true, {}, 'TestEntity', 'TestEntity1');
+
+        model.blocks.push(entity);
+        entity.isSelected = true;
+
+        let formattableRoots: FormattableRoot[] | undefined;
+
+        const callback = jasmine
+            .createSpy('callback')
+            .and.callFake((format: ContentModelSegmentFormat) => {
+                format.fontFamily = 'test';
+            });
+
+        triggerEvent.and.callFake((eventType: string, event: EntityOperationEvent) => {
+            expect(eventType).toBe('entityOperation');
+            expect(event.operation).toBe('beforeFormat');
+            expect(event.entity).toEqual({
+                id: 'TestEntity1',
+                type: 'TestEntity',
+                isReadonly: true,
+                wrapper: div,
+            });
+            expect(event.formattableRoots).toEqual([]);
+
+            formattableRoots = event.formattableRoots;
+            formattableRoots?.push({
+                element: span,
+            });
+        });
+
+        formatSegmentWithContentModel(editor, apiName, callback);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    entityFormat: { id: 'TestEntity1', entityType: 'TestEntity', isReadonly: true },
+                    wrapper: div,
+                    isSelected: true,
+                },
+            ],
+        });
+        expect(formatContentModel).toHaveBeenCalledTimes(1);
+        expect(formatResult).toBeTrue();
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(triggerEvent).toHaveBeenCalledTimes(1);
+        expect(triggerEvent).toHaveBeenCalledWith('entityOperation', {
+            entity: { id: 'TestEntity1', type: 'TestEntity', isReadonly: true, wrapper: div },
+            operation: 'beforeFormat',
+            formattableRoots: formattableRoots,
+        });
+        expectHtml(
+            div.innerHTML,
+            'test1<span><span style="font-family: test;">test2</span></span>test3'
+        );
     });
 });

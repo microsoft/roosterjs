@@ -77,6 +77,7 @@ export {
     EntityLifecycleOperation,
     EntityOperation,
     EntityRemovalOperation,
+    EntityFormatOperation,
 } from './enum/EntityOperation';
 export {
     TableOperation,
@@ -463,7 +464,7 @@ export { ContextMenuEvent } from './event/ContextMenuEvent';
 export { RewriteFromModelEvent } from './event/RewriteFromModelEvent';
 export { EditImageEvent } from './event/EditImageEvent';
 export { EditorReadyEvent } from './event/EditorReadyEvent';
-export { EntityOperationEvent, Entity } from './event/EntityOperationEvent';
+export { EntityOperationEvent, FormattableRoot, Entity } from './event/EntityOperationEvent';
 export { ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
 export { EditorInputEvent } from './event/EditorInputEvent';
 export {
