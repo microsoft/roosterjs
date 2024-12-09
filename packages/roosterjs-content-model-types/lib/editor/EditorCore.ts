@@ -17,7 +17,7 @@ import type { EditorContext } from '../context/EditorContext';
 import type { EditorEnvironment } from '../parameter/EditorEnvironment';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type { OnNodeCreated } from '../context/ModelToDomSettings';
-import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { DOMCreator, LegacyTrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type {
     ContentModelFormatter,
@@ -361,11 +361,20 @@ export interface EditorCore extends PluginState {
     readonly darkColorHandler: DarkColorHandler;
 
     /**
-     * A handler to convert HTML string to a trust HTML string.
-     * By default it will just return the original HTML string directly.
+     * @deprecated
+     * @see DOMCreator
+     * A handler to convert HTML string to a trust string.
+     * By default it will just convert the original HTML string into a string directly.
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
-    readonly trustedHTMLHandler: TrustedHTMLHandler;
+    readonly trustedHTMLHandler: LegacyTrustedHTMLHandler;
+
+    /**
+     * A handler to convert HTML string to a trust Document.
+     * By default it will just convert the original HTML string into a Document object directly.
+     * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     */
+    readonly domCreator: DOMCreator;
 
     /**
      * A helper class to provide DOM access APIs
