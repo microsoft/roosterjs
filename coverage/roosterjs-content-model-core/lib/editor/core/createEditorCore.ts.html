@@ -30,16 +30,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.44% </span>
+                <span class="strong">97.56% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>38/39</span>
+                <span class='fraction'>40/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -176,8 +176,8 @@
 <a name='L117'></a><a href='#L117'>117</a>
 <a name='L118'></a><a href='#L118'>118</a>
 <a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L120'></a><a href='#L120'>120</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -197,6 +197,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">108x</span>
+<span class="cline-any cline-yes">107x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">107x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,6 +212,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -270,13 +275,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">107x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,6 +297,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { coreApiMap } from '../../coreApi/coreApiMap';
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
+import { createDOMCreator, createTrustedHTMLHandler, isDOMCreator } from '../../utils/domCreator';
 import { createDOMHelper } from './DOMHelperImpl';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import { createEditorCorePlugins } from '../../corePlugin/createEditorCorePlugins';
@@ -317,6 +316,7 @@ import type {
  */
 export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
     const corePlugins = createEditorCorePlugins(options, contentDiv);
+    const domCreator = createDOMCreator(options.trustedHTMLHandler);
 &nbsp;
     return {
         physicalRoot: contentDiv,
@@ -342,7 +342,11 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
             options.knownColors,
             options.generateColorKey
         ),
-        trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustHtmlHandler,
+        trustedHTMLHandler:
+            options.trustedHTMLHandler &amp;&amp; !isDOMCreator(options.trustedHTMLHandler)
+                ? options.trustedHTMLHandler
+                : createTrustedHTMLHandler(domCreator),
+        domCreator: domCreator,
         domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
@@ -389,13 +393,6 @@ function getIsMobileOrTablet(userAgent: string) {
     return false;
 }
 &nbsp;
-/**
- * @internal export for test only
- */
-export function defaultTrustHtmlHandler(html: string) {
-    return html;
-}
-&nbsp;
 function getPluginState(corePlugins: EditorCorePlugins): PluginState {
     return {
         domEvent: corePlugins.domEvent.getState(),
@@ -424,7 +421,7 @@ export function getDarkColorFallback(color: string) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 29 2024 19:38:27 GMT+0000 (Coordinated Universal Time)
+                at Mon Dec 09 2024 13:58:14 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
