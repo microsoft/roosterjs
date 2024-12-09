@@ -1,5 +1,5 @@
 import * as PastePluginFile from '../../lib/paste/Excel/processPastedContentFromExcel';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, DOMCreator } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { processPastedContentFromExcel } from '../../lib/paste/Excel/processPastedContentFromExcel';
 import {
@@ -13,6 +13,9 @@ import {
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
+const domCreator: DOMCreator = {
+    htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
+};
 
 describe('processPastedContentFromExcelTest', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
@@ -26,7 +29,7 @@ describe('processPastedContentFromExcelTest', () => {
         const event = createBeforePasteEventMock(fragment);
 
         event.clipboardData.html = source;
-        processPastedContentFromExcel(event, (s: string) => s);
+        processPastedContentFromExcel(event, domCreator);
 
         const model = domToContentModel(
             fragment,
@@ -349,7 +352,7 @@ describe('Do not run scenarios', () => {
         if (excelHandler) {
             spyOn(PastePluginFile, 'excelHandler').and.returnValue(excelHandler);
         }
-        processPastedContentFromExcel(event, (s: string) => s);
+        processPastedContentFromExcel(event, domCreator);
 
         // Assert
         while (div.firstChild) {
