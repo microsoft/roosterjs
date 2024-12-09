@@ -4,11 +4,14 @@ import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPaste
 import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
-import { BeforePasteEvent, IEditor } from 'roosterjs-content-model-types';
+import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
 import { PastePlugin } from '../../lib/paste/PastePlugin';
 import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
 
 const trustedHTMLHandler = (val: string) => val;
+const domCreator: DOMCreator = {
+    htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
+};
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
 
 describe('Content Model Paste Plugin Test', () => {
@@ -17,6 +20,7 @@ describe('Content Model Paste Plugin Test', () => {
     beforeEach(() => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
+            getDOMCreator: () => domCreator,
         } as any) as IEditor;
         spyOn(addParser, 'addParser').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
@@ -72,7 +76,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler,
+                domCreator,
                 undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
@@ -89,7 +93,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).not.toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler,
+                domCreator,
                 undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
@@ -105,7 +109,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler,
+                domCreator,
                 undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -121,7 +125,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler,
+                domCreator,
                 undefined /*allowExcelNoBorderTable*/
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
@@ -137,7 +141,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(PowerPointFile.processPastedContentFromPowerPoint).toHaveBeenCalledWith(
                 event,
-                trustedHTMLHandler
+                domCreator
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);

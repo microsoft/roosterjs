@@ -6,8 +6,8 @@ import { retrieveHtmlInfo } from './retrieveHtmlInfo';
 import type {
     PasteTypeOrGetter,
     ClipboardData,
-    TrustedHTMLHandler,
     IEditor,
+    DOMCreator,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,9 +22,6 @@ export function paste(
     pasteTypeOrGetter: PasteTypeOrGetter = 'normal'
 ) {
     editor.focus();
-
-    const trustedHTMLHandler = editor.getTrustedHTMLHandler();
-
     if (!clipboardData.modelBeforePaste) {
         editor.formatContentModel(model => {
             clipboardData.modelBeforePaste = cloneModelForPaste(model);
@@ -34,7 +31,7 @@ export function paste(
     }
 
     // 1. Prepare variables
-    const doc = createDOMFromHtml(clipboardData.rawHtml, trustedHTMLHandler);
+    const doc = createDOMFromHtml(clipboardData.rawHtml, editor.getDOMCreator());
     const pasteType =
         typeof pasteTypeOrGetter == 'function'
             ? pasteTypeOrGetter(doc, clipboardData)
@@ -50,7 +47,7 @@ export function paste(
         pasteType,
         (clipboardData.rawHtml == clipboardData.html
             ? doc
-            : createDOMFromHtml(clipboardData.html, trustedHTMLHandler)
+            : createDOMFromHtml(clipboardData.html, editor.getDOMCreator())
         )?.body
     );
 
@@ -72,7 +69,7 @@ export function paste(
 
 function createDOMFromHtml(
     html: string | null | undefined,
-    trustedHTMLHandler: TrustedHTMLHandler
+    domCreator: DOMCreator
 ): Document | null {
-    return html ? new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html') : null;
+    return html ? domCreator.htmlToDOM(html) : null;
 }
