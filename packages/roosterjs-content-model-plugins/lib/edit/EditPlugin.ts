@@ -181,7 +181,8 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
-                    if (!hasCtrlOrMetaKey) {
+                    if (!hasCtrlOrMetaKey && event.rawEvent.keyCode == 13) {
+                        // Safari responds to the EnterKey from IM, where IM should handle the key and the keycode is not 13.
                         keyboardEnter(editor, rawEvent, this.handleNormalEnter);
                     }
                     break;
