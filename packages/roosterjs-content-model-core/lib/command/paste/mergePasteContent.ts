@@ -36,7 +36,11 @@ export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
 /**
  * @internal
  */
-export function mergePasteContent(editor: IEditor, eventResult: BeforePasteEvent) {
+export function mergePasteContent(
+    editor: IEditor,
+    eventResult: BeforePasteEvent,
+    isFirstPaste: boolean
+) {
     const {
         fragment,
         domToModelOption,
@@ -48,7 +52,7 @@ export function mergePasteContent(editor: IEditor, eventResult: BeforePasteEvent
 
     editor.formatContentModel(
         (model, context) => {
-            if (clipboardData.modelBeforePaste) {
+            if (!isFirstPaste && clipboardData.modelBeforePaste) {
                 const clonedModel = cloneModelForPaste(clipboardData.modelBeforePaste);
                 model.blocks = clonedModel.blocks;
             }
