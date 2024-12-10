@@ -1,6 +1,5 @@
 /**
  * Key code enumeration
- * https://www.toptal.com/developers/keycode/table
  */
 export const enum KeyCode {
     /**
