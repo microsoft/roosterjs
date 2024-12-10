@@ -142,7 +142,7 @@ describe('EditPlugin', () => {
 
         it('Enter, normal enter not enabled', () => {
             plugin = new EditPlugin();
-            const rawEvent = { which: 13, key: 'Enter' } as any;
+            const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
             editor.takeSnapshot = addUndoSnapshotSpy;
@@ -165,7 +165,7 @@ describe('EditPlugin', () => {
                 (featureName: string) => featureName == 'HandleEnterKey'
             );
             plugin = new EditPlugin();
-            const rawEvent = { which: 13, key: 'Enter' } as any;
+            const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
             editor.takeSnapshot = addUndoSnapshotSpy;
