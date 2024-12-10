@@ -23,7 +23,25 @@ export interface ContentModelSettings<OptionType, ConfigType> {
      * This is a cached object so that we don't need to cache it every time when we use Content Model
      */
     calculated: ConfigType;
+
+    /**
+     * Paste option used by editor
+     */
+    paste: OptionType;
 }
+
+/**
+ * Settings used by DOM to Content Model conversion
+ */
+export type DomToModelSetting = ContentModelSettings<DomToModelOption, DomToModelSettings>;
+
+/**
+ * Settings used by Content Model to DOM conversion
+ */
+export type ModelToDomSetting = Omit<
+    ContentModelSettings<ModelToDomOption, ModelToDomSettings>,
+    'paste'
+>;
 
 /**
  * Current running environment
@@ -52,10 +70,10 @@ export interface EditorEnvironment {
     /**
      * Settings used by DOM to Content Model conversion
      */
-    readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;
+    readonly domToModelSettings: DomToModelSetting;
 
     /**
      * Settings used by Content Model to DOM conversion
      */
-    readonly modelToDomSettings: ContentModelSettings<ModelToDomOption, ModelToDomSettings>;
+    readonly modelToDomSettings: ModelToDomSetting;
 }

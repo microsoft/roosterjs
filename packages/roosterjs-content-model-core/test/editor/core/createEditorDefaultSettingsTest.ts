@@ -25,20 +25,24 @@ describe('createDomToModelSettings', () => {
             builtIn: {},
             customized: {},
             calculated: mockedCalculatedConfig,
+            paste: {},
         });
         expect(createDomToModelContext.createDomToModelConfig).toHaveBeenCalledWith([{}, {}]);
     });
 
     it('Has options', () => {
         const defaultDomToModelOptions = 'MockedOptions' as any;
+        const pasteOptionDomToModel = 'PasteMockedOptions' as any;
         const settings = createDomToModelSettings({
             defaultDomToModelOptions: defaultDomToModelOptions,
+            pasteOptionDomToModel,
         });
 
         expect(settings).toEqual({
             builtIn: {},
             customized: defaultDomToModelOptions,
             calculated: mockedCalculatedConfig,
+            paste: pasteOptionDomToModel,
         });
         expect(createDomToModelContext.createDomToModelConfig).toHaveBeenCalledWith([
             {},

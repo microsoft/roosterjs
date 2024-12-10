@@ -389,7 +389,12 @@ export {
 export { ContextMenuPluginState } from './pluginState/ContextMenuPluginState';
 
 export { AutoLinkOptions } from './parameter/AutoLinkOptions';
-export { EditorEnvironment, ContentModelSettings } from './parameter/EditorEnvironment';
+export {
+    EditorEnvironment,
+    ContentModelSettings,
+    DomToModelSetting,
+    ModelToDomSetting,
+} from './parameter/EditorEnvironment';
 export {
     EntityState,
     DeletedEntity,

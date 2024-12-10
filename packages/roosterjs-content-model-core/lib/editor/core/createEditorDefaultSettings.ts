@@ -4,12 +4,11 @@ import {
     listLevelMetadataApplier,
 } from '../../override/listMetadataApplier';
 import type {
-    ContentModelSettings,
     DomToModelOption,
-    DomToModelSettings,
     ModelToDomOption,
-    ModelToDomSettings,
     EditorOptions,
+    ModelToDomSetting,
+    DomToModelSetting,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,9 +16,7 @@ import type {
  * Create default DOM to Content Model conversion settings for an editor
  * @param options The editor options
  */
-export function createDomToModelSettings(
-    options: EditorOptions
-): ContentModelSettings<DomToModelOption, DomToModelSettings> {
+export function createDomToModelSettings(options: EditorOptions): DomToModelSetting {
     const builtIn: DomToModelOption = {};
     const customized: DomToModelOption = options.defaultDomToModelOptions ?? {};
 
@@ -27,6 +24,7 @@ export function createDomToModelSettings(
         builtIn,
         customized,
         calculated: createDomToModelConfig([builtIn, customized]),
+        paste: options.pasteOptionDomToModel ?? {},
     };
 }
 
@@ -35,9 +33,7 @@ export function createDomToModelSettings(
  * Create default Content Model to DOM conversion settings for an editor
  * @param options The editor options
  */
-export function createModelToDomSettings(
-    options: EditorOptions
-): ContentModelSettings<ModelToDomOption, ModelToDomSettings> {
+export function createModelToDomSettings(options: EditorOptions): ModelToDomSetting {
     const builtIn: ModelToDomOption = {
         metadataAppliers: {
             listItem: listItemMetadataApplier,

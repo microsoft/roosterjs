@@ -52,7 +52,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             allowedCustomPasteType: option.allowedCustomPasteType || [],
             tempDiv: null,
             defaultPasteType: option.defaultPasteType,
-            pasteOptionDomToModel: option.pasteOptionDomToModel,
         };
     }
 
@@ -206,12 +205,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     this.state.allowedCustomPasteType
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        paste(
-                            editor,
-                            clipboardData,
-                            this.state.defaultPasteType,
-                            this.state.pasteOptionDomToModel
-                        );
+                        paste(editor, clipboardData, this.state.defaultPasteType);
                     }
                 });
             }

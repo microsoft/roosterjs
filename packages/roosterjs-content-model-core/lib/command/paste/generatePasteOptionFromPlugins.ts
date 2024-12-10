@@ -7,16 +7,6 @@ import type {
     IEditor,
 } from 'roosterjs-content-model-types';
 
-const emptyDomToModelOption: Readonly<DomToModelOptionForSanitizing> = {
-    additionalAllowedTags: [],
-    additionalDisallowedTags: [],
-    additionalFormatParsers: {},
-    formatParserOverride: {},
-    processorOverride: {},
-    styleSanitizers: {},
-    attributeSanitizers: {},
-};
-
 /**
  * @internal
  */
@@ -25,8 +15,7 @@ export function generatePasteOptionFromPlugins(
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
-    pasteType: PasteType,
-    domToModelOption: Readonly<Partial<DomToModelOptionForSanitizing>>
+    pasteType: PasteType
 ): BeforePasteEvent {
     const event: BeforePasteEvent = {
         eventType: 'beforePaste',
@@ -36,11 +25,24 @@ export function generatePasteOptionFromPlugins(
         htmlAfter: htmlFromClipboard.htmlAfter ?? '',
         htmlAttributes: htmlFromClipboard.metadata,
         pasteType: pasteType,
-        domToModelOption: Object.assign({}, emptyDomToModelOption, domToModelOption),
+        domToModelOption: createDomToModelOption(editor),
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
     };
 
     return pasteType == 'asPlainText'
         ? event
         : editor.triggerEvent('beforePaste', event, true /* broadcast */);
+}
+function createDomToModelOption(editor: IEditor): DomToModelOptionForSanitizing {
+    const pasteDomToModel = editor.getEnvironment().domToModelSettings.paste;
+    const emptyDomToModelOption: Readonly<DomToModelOptionForSanitizing> = {
+        additionalAllowedTags: [],
+        additionalDisallowedTags: [],
+        additionalFormatParsers: {},
+        formatParserOverride: {},
+        processorOverride: {},
+        styleSanitizers: {},
+        attributeSanitizers: {},
+    };
+    return Object.assign({}, emptyDomToModelOption, pasteDomToModel);
 }

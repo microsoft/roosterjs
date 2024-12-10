@@ -1,4 +1,3 @@
-import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption';
 import type { PasteTypeOrGetter } from '../parameter/PasteTypeOrGetter';
 
 /**
@@ -20,9 +19,4 @@ export interface CopyPastePluginState {
      * Default paste type. By default will use the normal (as-is) paste type.
      */
     defaultPasteType?: PasteTypeOrGetter;
-
-    /**
-     * Paste options for sanitizing HTML before paste
-     */
-    pasteOptionDomToModel?: Partial<DomToModelOptionForSanitizing>;
 }
