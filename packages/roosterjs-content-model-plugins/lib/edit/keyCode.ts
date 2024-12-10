@@ -2,7 +2,7 @@
  * Key code enumeration
  * https://www.toptal.com/developers/keycode/table
  */
-const enum KeyCode {
+export const enum KeyCode {
     /**
      * According to https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
      * 229 can be sent in variants generated when Long press (iOS) or using IM.

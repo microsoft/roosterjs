@@ -2,6 +2,7 @@ import { keyboardDelete } from './keyboardDelete';
 import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
+import { KeyCode } from './keyCode';
 import { parseTableCells } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
