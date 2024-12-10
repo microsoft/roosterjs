@@ -413,8 +413,6 @@ describe('Content Model Auto Format Plugin Test', () => {
                 format: {},
             };
 
-            event.rawEvent.preventDefault = jasmine.createSpy('preventDefault');
-
             formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 callback(
                     inputModel,
@@ -445,6 +443,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Tab',
                     defaultPrevented: false,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -506,6 +505,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Tab',
                     defaultPrevented: false,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -567,6 +567,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Tab',
                     defaultPrevented: false,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -592,7 +593,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 },
                 { autoBullet: true, autoNumbering: false },
                 true,
-                true
+                false
             );
         });
 
@@ -603,6 +604,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Tab',
                     defaultPrevented: false,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -639,6 +641,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Ctrl',
                     defaultPrevented: false,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -675,6 +678,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                     key: 'Tab',
                     defaultPrevented: true,
                     handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -710,6 +714,45 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: {
                     key: 'Tab',
                     defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+                handledByEditFeature: true,
+            };
+            runTest(
+                event,
+                true,
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '*',
+                                    format: {},
+                                },
+                                marker,
+                            ],
+                        },
+                    ],
+                },
+                { autoBullet: true, autoNumbering: true },
+                false,
+                false
+            );
+        });
+
+        it('[TAB] should not trigger keyboardListTrigger - shift key', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    shiftKey: true,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
                 handledByEditFeature: true,
             };
