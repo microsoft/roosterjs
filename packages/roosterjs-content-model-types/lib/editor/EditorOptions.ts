@@ -5,7 +5,7 @@ import type { Colors, ColorTransformFunction } from '../context/DarkColorHandler
 import type { EditorPlugin } from './EditorPlugin';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { CoreApiMap } from './EditorCore';
-import type { DomToModelOption } from '../context/DomToModelOption';
+import type { DomToModelOption, DomToModelOptionForSanitizing } from '../context/DomToModelOption';
 import type { ModelToDomOption } from '../context/ModelToDomOption';
 import type {
     ContentModelDocument,
@@ -82,6 +82,11 @@ export interface ContentModelOptions {
      * @deprecated
      */
     disableCache?: boolean;
+
+    /**
+     * Paste options for sanitizing HTML before paste
+     */
+    pasteOptionDomToModel?: Partial<DomToModelOptionForSanitizing>;
 }
 
 /**

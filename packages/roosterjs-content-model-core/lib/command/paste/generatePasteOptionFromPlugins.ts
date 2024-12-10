@@ -7,6 +7,16 @@ import type {
     IEditor,
 } from 'roosterjs-content-model-types';
 
+const emptyDomToModelOption: Readonly<DomToModelOptionForSanitizing> = {
+    additionalAllowedTags: [],
+    additionalDisallowedTags: [],
+    additionalFormatParsers: {},
+    formatParserOverride: {},
+    processorOverride: {},
+    styleSanitizers: {},
+    attributeSanitizers: {},
+};
+
 /**
  * @internal
  */
@@ -15,18 +25,9 @@ export function generatePasteOptionFromPlugins(
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
-    pasteType: PasteType
+    pasteType: PasteType,
+    domToModelOption: Readonly<Partial<DomToModelOptionForSanitizing>>
 ): BeforePasteEvent {
-    const domToModelOption: DomToModelOptionForSanitizing = {
-        additionalAllowedTags: [],
-        additionalDisallowedTags: [],
-        additionalFormatParsers: {},
-        formatParserOverride: {},
-        processorOverride: {},
-        styleSanitizers: {},
-        attributeSanitizers: {},
-    };
-
     const event: BeforePasteEvent = {
         eventType: 'beforePaste',
         clipboardData,
@@ -35,7 +36,7 @@ export function generatePasteOptionFromPlugins(
         htmlAfter: htmlFromClipboard.htmlAfter ?? '',
         htmlAttributes: htmlFromClipboard.metadata,
         pasteType: pasteType,
-        domToModelOption,
+        domToModelOption: Object.assign({}, emptyDomToModelOption, domToModelOption),
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
     };
 

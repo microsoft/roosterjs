@@ -8,6 +8,7 @@ import type {
     ClipboardData,
     TrustedHTMLHandler,
     IEditor,
+    DomToModelOptionForSanitizing,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -19,7 +20,8 @@ import type {
 export function paste(
     editor: IEditor,
     clipboardData: ClipboardData,
-    pasteTypeOrGetter: PasteTypeOrGetter = 'normal'
+    pasteTypeOrGetter: PasteTypeOrGetter = 'normal',
+    pasteDomToModelOption: Readonly<Partial<DomToModelOptionForSanitizing>> = {}
 ) {
     editor.focus();
 
@@ -60,7 +62,8 @@ export function paste(
         clipboardData,
         sourceFragment,
         htmlFromClipboard,
-        pasteType
+        pasteType,
+        pasteDomToModelOption
     );
 
     // 5. Convert global CSS to inline CSS
