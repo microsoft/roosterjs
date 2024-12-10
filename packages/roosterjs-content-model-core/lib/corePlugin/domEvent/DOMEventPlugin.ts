@@ -18,6 +18,11 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keypress: 'keyPress',
 };
 
+// According to https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+// Key code will be 229 when keydown happens during IME
+// We actually only see it happens in Safari
+const IME_KeyDown = 229;
+
 /**
  * DOMEventPlugin handles customized DOM events, including:
  * 1. Keyboard event
@@ -33,6 +38,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
+    private isSafari = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -62,6 +68,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        this.isSafari = !!this.editor.getEnvironment().isSafari;
 
         const document = this.editor.getDocument();
         const eventHandlers: Partial<
@@ -156,7 +164,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 event.stopPropagation();
             }
 
-            if (this.editor && eventType && !event.isComposing && !this.state.isInIME) {
+            if (this.editor && eventType && !this.isEventInIME(event)) {
                 this.editor.triggerEvent(eventType, {
                     rawEvent: event,
                 });
@@ -168,7 +176,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         beforeDispatch: event => {
             event.stopPropagation();
 
-            if (this.editor && !(event as InputEvent).isComposing && !this.state.isInIME) {
+            if (this.editor && !this.isEventInIME(event as InputEvent)) {
                 this.editor.triggerEvent('input', {
                     rawEvent: event as InputEvent,
                 });
@@ -221,6 +229,16 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             this.state.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
+    }
+
+    private isEventInIME(event: KeyboardEvent | InputEvent): boolean {
+        return (
+            event.isComposing ||
+            this.state.isInIME ||
+            (this.isSafari &&
+                event.type == 'keydown' &&
+                (event as KeyboardEvent).keyCode == IME_KeyDown)
+        );
     }
 }
 

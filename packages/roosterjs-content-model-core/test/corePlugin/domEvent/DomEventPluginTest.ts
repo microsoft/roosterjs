@@ -244,6 +244,69 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 });
 
+describe('DOMEventPlugin verify event handlers while disallow keyboard event propagation (Safari)', () => {
+    let eventMap: Record<string, any>;
+    let plugin: PluginWithState<DOMEventPluginState>;
+    let triggerEventSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        const div = <any>{
+            addEventListener: jasmine.createSpy('addEventListener1'),
+            removeEventListener: jasmine.createSpy('removeEventListener'),
+        };
+
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
+
+        plugin = createDOMEventPlugin({}, div);
+        plugin.initialize(<IEditor>(<any>{
+            getDocument,
+            attachDomEvent: (map: Record<string, any>) => {
+                eventMap = map;
+                return jasmine.createSpy('disposer');
+            },
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            triggerEvent: triggerEventSpy,
+        }));
+    });
+
+    afterEach(() => {
+        plugin.dispose();
+        eventMap = undefined!;
+    });
+
+    it('verify keydown event within IME for Safari - 1', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            type: 'keydown',
+            keyCode: 65,
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalled();
+    });
+
+    it('verify keydown event within IME for Safari - 2', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            type: 'keydown',
+            keyCode: 229,
+        } as any;
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
+    });
+});
+
 describe('DOMEventPlugin handle mouse down and mouse up event', () => {
     let plugin: PluginWithState<DOMEventPluginState>;
     let addEventListener: jasmine.Spy;
