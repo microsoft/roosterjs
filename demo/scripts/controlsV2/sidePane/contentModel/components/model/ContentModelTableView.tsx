@@ -15,6 +15,7 @@ import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableLayoutFormatRenderer } from '../format/formatPart/TableLayoutFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
+import { TitleFormatRenderer } from '../format/formatPart/TitleFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelTableView.scss');
@@ -28,6 +29,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     BorderBoxFormatRenderer,
     DisplayFormatRenderer,
     TableLayoutFormatRenderer,
+    TitleFormatRenderer,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {

@@ -47,6 +47,7 @@ export { TextIndentFormat } from './contentModel/format/formatParts/TextIndentFo
 export { WhiteSpaceFormat } from './contentModel/format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './contentModel/format/formatParts/DisplayFormat';
 export { IdFormat } from './contentModel/format/formatParts/IdFormat';
+export { TitleFormat } from './contentModel/format/formatParts/TitleFormat';
 export { SpacingFormat } from './contentModel/format/formatParts/SpacingFormat';
 export { TableLayoutFormat } from './contentModel/format/formatParts/TableLayoutFormat';
 export { LinkFormat } from './contentModel/format/formatParts/LinkFormat';

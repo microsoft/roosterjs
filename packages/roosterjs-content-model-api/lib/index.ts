@@ -3,6 +3,7 @@ export { formatTable } from './publicApi/table/formatTable';
 export { setTableCellShade } from './publicApi/table/setTableCellShade';
 export { editTable } from './publicApi/table/editTable';
 export { applyTableBorderFormat } from './publicApi/table/applyTableBorderFormat';
+export { setTableTitle } from './publicApi/table/setTableTitle';
 export { toggleBullet } from './publicApi/list/toggleBullet';
 export { toggleNumbering } from './publicApi/list/toggleNumbering';
 export { toggleBold } from './publicApi/segment/toggleBold';

@@ -12,6 +12,7 @@ import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
+import type { TitleFormat } from './formatParts/TitleFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
@@ -196,6 +197,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextIndentFormat
      */
     textIndent: TextIndentFormat;
+
+    /**
+     * Format for TitleFormat
+     */
+    title: TitleFormat;
 
     /**
      * Format for UnderlineFormat

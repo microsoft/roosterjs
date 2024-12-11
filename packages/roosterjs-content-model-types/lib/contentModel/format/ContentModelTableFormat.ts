@@ -1,3 +1,5 @@
+import { AriaDescribedByFormat } from 'roosterjs/lib';
+import { TitleFormat } from './formatParts/TitleFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
@@ -19,4 +21,6 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     MarginFormat &
     DisplayFormat &
     TableLayoutFormat &
-    SizeFormat;
+    SizeFormat &
+    TitleFormat &
+    AriaDescribedByFormat;

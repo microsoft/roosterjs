@@ -31,6 +31,7 @@ import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { textIndentFormatHandler } from './block/textIndentFormatHandler';
+import { titleFormatHandler } from './common/titleFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -83,6 +84,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     textIndent: textIndentFormatHandler,
+    title: titleFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -171,6 +173,7 @@ export const defaultFormatKeysPerCategory: {
         'size',
         'tableLayout',
         'textColor',
+        'title',
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
