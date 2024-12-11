@@ -39,7 +39,5 @@ export function generatePasteOptionFromPlugins(
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
     };
 
-    return pasteType == 'asPlainText'
-        ? event
-        : editor.triggerEvent('beforePaste', event, true /* broadcast */);
+    return editor.triggerEvent('beforePaste', event, true /* broadcast */);
 }
