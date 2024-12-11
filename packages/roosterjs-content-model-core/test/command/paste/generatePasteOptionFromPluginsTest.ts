@@ -254,6 +254,6 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
         });
-        expect(triggerPluginEventSpy).toHaveBeenCalledTimes(0);
+        expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
     });
 });
