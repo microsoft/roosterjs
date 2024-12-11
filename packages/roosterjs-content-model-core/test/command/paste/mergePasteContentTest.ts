@@ -1,3 +1,4 @@
+import * as cloneModel from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
 import * as createDomToModelContextForSanitizing from '../../../lib/command/createModelFromHtml/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as getSegmentTextFormatFile from 'roosterjs-content-model-dom/lib/modelApi/editing/getSegmentTextFormat';
@@ -22,6 +23,7 @@ import {
     FormatContentModelOptions,
     InsertPoint,
     IEditor,
+    ClipboardData,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -30,11 +32,12 @@ describe('mergePasteContent', () => {
     let formatContentModel: jasmine.Spy;
     let sourceModel: ContentModelDocument;
     let editor: IEditor;
-    const mockedClipboard = 'CLIPBOARD' as any;
+    let mockedClipboard: ClipboardData;
 
     beforeEach(() => {
         formatResult = undefined;
         context = undefined;
+        mockedClipboard = 'CLIPBOARD' as any;
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -167,7 +170,7 @@ describe('mergePasteContent', () => {
             clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult);
+        mergePasteContent(editor, eventResult, true);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -274,7 +277,7 @@ describe('mergePasteContent', () => {
             clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult);
+        mergePasteContent(editor, eventResult, true);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -296,7 +299,7 @@ describe('mergePasteContent', () => {
             clipboardData: mockedClipboard,
         } as any;
 
-        mergePasteContent(editor, eventResult);
+        mergePasteContent(editor, eventResult, true);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -377,11 +380,15 @@ describe('mergePasteContent', () => {
             },
         });
 
-        mergePasteContent(editor, {
-            fragment: mockedFragment,
-            domToModelOption: mockedDefaultDomToModelOptions,
-            clipboardData: mockedClipboard,
-        } as any);
+        mergePasteContent(
+            editor,
+            {
+                fragment: mockedFragment,
+                domToModelOption: mockedDefaultDomToModelOptions,
+                clipboardData: mockedClipboard,
+            } as any,
+            true
+        );
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -439,7 +446,7 @@ describe('mergePasteContent', () => {
             containsBlockElements: true,
         } as any;
 
-        mergePasteContent(editor, eventResult);
+        mergePasteContent(editor, eventResult, true);
 
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
@@ -483,13 +490,17 @@ describe('mergePasteContent', () => {
         para.segments.push(marker);
         addBlock(sourceModel, para);
 
-        mergePasteContent(editor, <any>{
-            fragment,
-            containsBlockElements: true,
-            domToModelOption: <any>{},
-            pasteType: 'normal',
-            clipboardData: mockedClipboard,
-        });
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: true,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -876,12 +887,16 @@ describe('mergePasteContent', () => {
         para.segments.push(marker);
         sourceModel.blocks.push(para);
 
-        mergePasteContent(editor, {
-            fragment,
-            domToModelOption: <any>{},
-            pasteType: 'mergeFormat',
-            clipboardData: mockedClipboard,
-        } as any);
+        mergePasteContent(
+            editor,
+            {
+                fragment,
+                domToModelOption: <any>{},
+                pasteType: 'mergeFormat',
+                clipboardData: mockedClipboard,
+            } as any,
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1245,12 +1260,16 @@ describe('mergePasteContent', () => {
         para.segments.push(marker);
         sourceModel.blocks.push(para);
 
-        mergePasteContent(editor, {
-            fragment,
-            domToModelOption: <any>{},
-            pasteType: 'asPlainText',
-            clipboardData: mockedClipboard,
-        } as any);
+        mergePasteContent(
+            editor,
+            {
+                fragment,
+                domToModelOption: <any>{},
+                pasteType: 'asPlainText',
+                clipboardData: mockedClipboard,
+            } as any,
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1472,13 +1491,17 @@ describe('mergePasteContent', () => {
         para.segments.push(createText('Text in source'), marker);
         addBlock(sourceModel, para);
 
-        mergePasteContent(editor, <any>{
-            fragment,
-            containsBlockElements: false,
-            domToModelOption: <any>{},
-            pasteType: 'normal',
-            clipboardData: mockedClipboard,
-        });
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1611,13 +1634,17 @@ describe('mergePasteContent', () => {
         para.segments.push(createText('Text in source'), marker);
         addBlock(sourceModel, para);
 
-        mergePasteContent(editor, <any>{
-            fragment,
-            containsBlockElements: false,
-            domToModelOption: <any>{},
-            pasteType: 'mergeFormat',
-            clipboardData: mockedClipboard,
-        });
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'mergeFormat',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1747,13 +1774,17 @@ describe('mergePasteContent', () => {
         para.segments.push(createText('Text in source'), marker);
         addBlock(sourceModel, para);
 
-        mergePasteContent(editor, <any>{
-            fragment,
-            containsBlockElements: false,
-            domToModelOption: <any>{},
-            pasteType: 'asPlainText',
-            clipboardData: mockedClipboard,
-        });
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'asPlainText',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
 
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
@@ -1841,5 +1872,170 @@ describe('mergePasteContent', () => {
             ],
             format: { fontFamily: 'Aptos', fontSize: '10pt', textColor: 'blue' },
         });
+    });
+
+    it('do not clone model for first paste, and keep cache', () => {
+        const fragment = createPasteFragment(
+            document,
+            { text: 'text' } as any,
+            'asPlainText',
+            document.body
+        );
+        const div = document.createElement('div');
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+
+        sourceModel = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {} }],
+                    format: {},
+                    cachedElement: div,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const modelBeforePaste: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        mockedClipboard = {
+            modelBeforePaste,
+        } as any;
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'asPlainText',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
+
+        expect(sourceModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {} }],
+                    format: {},
+                    cachedElement: div,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text', format: {} },
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(cloneModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('clone model for second paste, and clear cache', () => {
+        const fragment = createPasteFragment(
+            document,
+            { text: 'text' } as any,
+            'asPlainText',
+            document.body
+        );
+        const div = document.createElement('div');
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+
+        sourceModel = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {} }],
+                    format: {},
+                    cachedElement: div,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const modelBeforePaste: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        mockedClipboard = {
+            modelBeforePaste,
+        } as any;
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'asPlainText',
+                clipboardData: mockedClipboard,
+            },
+            false
+        );
+
+        expect(sourceModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text', format: {} },
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    ],
+                    format: {},
+                    cachedElement: undefined,
+                    isImplicit: undefined,
+                },
+            ],
+            format: {},
+        });
+        expect(cloneModelSpy).toHaveBeenCalledTimes(1);
+        expect(cloneModelSpy).toHaveBeenCalledWith(modelBeforePaste, {
+            includeCachedElement: jasmine.anything(),
+        } as any);
     });
 });
