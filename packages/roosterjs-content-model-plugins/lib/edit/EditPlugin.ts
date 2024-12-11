@@ -2,7 +2,6 @@ import { keyboardDelete } from './keyboardDelete';
 import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
-import { KeyCode } from './keyCode';
 import { parseTableCells } from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
@@ -24,6 +23,13 @@ export type EditOptions = {
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+/**
+ * According to https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+ * 229 can be sent in variants generated when Long press (iOS) or using IM.
+ *
+ * Other cases: https://stackoverflow.com/questions/25043934/is-it-ok-to-ignore-keydown-events-with-keycode-229
+ */
+const DEAD_KEY = 229;
 
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
@@ -185,7 +191,7 @@ export class EditPlugin implements EditorPlugin {
                     if (
                         !hasCtrlOrMetaKey &&
                         !event.rawEvent.isComposing &&
-                        event.rawEvent.keyCode !== KeyCode.dead
+                        event.rawEvent.keyCode !== DEAD_KEY
                     ) {
                         keyboardEnter(editor, rawEvent, this.handleNormalEnter);
                     }
