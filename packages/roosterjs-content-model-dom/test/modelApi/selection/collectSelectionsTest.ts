@@ -220,7 +220,7 @@ describe('getSelectedSegmentsAndParagraphs', () => {
         );
     });
 
-    it('Include entity', () => {
+    it('Include entity - entity segment', () => {
         const e1 = createEntity(null!);
         const e2 = createEntity(null!, false);
         const p1 = createParagraph();
@@ -241,6 +241,22 @@ describe('getSelectedSegmentsAndParagraphs', () => {
                 [e1, p1, []],
                 [e2, p1, []],
             ]
+        );
+    });
+
+    it('Include entity - entity block', () => {
+        const e1 = createEntity(null!);
+
+        runTest(
+            [
+                {
+                    path: [],
+                    block: e1,
+                },
+            ],
+            false,
+            true,
+            [[e1, null, []]]
         );
     });
 });

@@ -6,6 +6,7 @@ import { getRootComputedStyleForContext } from '../../coreApi/createEditorContex
 import { pasteBlockEntityParser } from '../../override/pasteCopyBlockEntityParser';
 import { pasteDisplayFormatParser } from '../../override/pasteDisplayFormatParser';
 import { pasteTextProcessor } from '../../override/pasteTextProcessor';
+import { pasteWhiteSpaceFormatParser } from '../../override/pasteWhiteSpaceFormatParser';
 import type {
     ContentModelSegmentFormat,
     DomToModelContext,
@@ -52,6 +53,7 @@ export function createDomToModelContextForSanitizing(
             },
             formatParserOverride: {
                 display: pasteDisplayFormatParser,
+                whiteSpace: pasteWhiteSpaceFormatParser,
             },
             additionalFormatParsers: {
                 container: [containerSizeFormatParser],

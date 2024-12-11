@@ -9,6 +9,7 @@ import { initEditor } from '../TestHelper';
 import {
     ContentModelDocument,
     ContentModelFormatter,
+    DOMEventRecord,
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
@@ -64,7 +65,6 @@ describe('ImageEditPlugin', () => {
     };
     let editor: IEditor;
     let mockedEnvironment: EditorEnvironment;
-    let attachDomEventSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let focusSpy: jasmine.Spy;
@@ -76,8 +76,9 @@ describe('ImageEditPlugin', () => {
     let setEditorStyleSpy: jasmine.Spy;
     let triggerEventSpy: jasmine.Spy;
     let getAttributeSpy: jasmine.Spy;
+    let domEvents: Record<string, DOMEventRecord> = {};
+
     beforeEach(() => {
-        attachDomEventSpy = jasmine.createSpy('attachDomEvent');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         mockedEnvironment = {
             isSafari: false,
@@ -124,7 +125,9 @@ describe('ImageEditPlugin', () => {
         });
         editor = {
             getEnvironment: () => mockedEnvironment,
-            attachDomEvent: attachDomEventSpy,
+            attachDomEvent: (eventMap: Record<string, DOMEventRecord>) => {
+                domEvents = eventMap;
+            },
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
             focus: focusSpy,
@@ -557,6 +560,35 @@ describe('ImageEditPlugin', () => {
         });
         expect(formatContentModelSpy).toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalledTimes(3);
+        plugin.dispose();
+    });
+
+    it('dragImage only', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const draggedImage = document.createElement('img');
+        draggedImage.id = 'image_0';
+        triggerEventSpy.and.callThrough();
+        domEvents.dragstart?.beforeDispatch?.({
+            target: draggedImage,
+        } as any);
+        expect(draggedImage.id).toBe('image_0_dragging');
+        plugin.dispose();
+    });
+
+    it('dragImage at same place', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const draggedImage = document.createElement('img');
+        draggedImage.id = 'image_0';
+        triggerEventSpy.and.callThrough();
+        domEvents.dragstart?.beforeDispatch?.({
+            target: draggedImage,
+        } as any);
+        domEvents.dragend?.beforeDispatch?.({
+            target: draggedImage,
+        } as any);
+        expect(draggedImage.id).toBe('image_0');
         plugin.dispose();
     });
 
