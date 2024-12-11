@@ -1,6 +1,10 @@
-import { EditorCore, Snapshot } from 'roosterjs-content-model-types';
+import { DOMCreator, EditorCore, Snapshot } from 'roosterjs-content-model-types';
 import { restoreSnapshotHTML } from '../../../lib/coreApi/restoreUndoSnapshot/restoreSnapshotHTML';
 import { wrap } from 'roosterjs-content-model-dom';
+
+const domCreator: DOMCreator = {
+    htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
+};
 
 describe('restoreSnapshotHTML', () => {
     let core: EditorCore;
@@ -15,6 +19,7 @@ describe('restoreSnapshotHTML', () => {
             entity: {
                 entityMap: {},
             },
+            domCreator: domCreator,
         } as any;
     });
 
@@ -39,18 +44,17 @@ describe('restoreSnapshotHTML', () => {
     });
 
     it('Simple HTML, no entity, with trustHTMLHandler', () => {
-        const trustedHTMLHandler = jasmine
-            .createSpy('trustedHTMLHandler')
-            .and.callFake((html: string) => html + html);
         const snapshot: Snapshot = {
             html: '<div>test1</div>',
         } as any;
 
-        (<any>core).trustedHTMLHandler = trustedHTMLHandler;
+        const htmlToDOMSpy = spyOn(core.domCreator, 'htmlToDOM').and.callFake((html: string) =>
+            new DOMParser().parseFromString(html + html, 'text/html')
+        );
 
         restoreSnapshotHTML(core, snapshot);
 
-        expect(trustedHTMLHandler).toHaveBeenCalledWith('<div>test1</div>');
+        expect(htmlToDOMSpy).toHaveBeenCalledWith('<div>test1</div>');
         expect(div.innerHTML).toBe('<div>test1</div><div>test1</div>');
     });
 

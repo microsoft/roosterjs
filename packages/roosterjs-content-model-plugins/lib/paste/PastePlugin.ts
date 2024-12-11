@@ -99,7 +99,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event, this.editor.getTrustedHTMLHandler());
+                processPastedContentFromWordDesktop(event, this.editor.getDOMCreator());
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
@@ -110,7 +110,7 @@ export class PastePlugin implements EditorPlugin {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(
                         event,
-                        this.editor.getTrustedHTMLHandler(),
+                        this.editor.getDOMCreator(),
                         this.allowExcelNoBorderTable
                     );
                 }
@@ -121,7 +121,7 @@ export class PastePlugin implements EditorPlugin {
                 );
                 break;
             case 'powerPointDesktop':
-                processPastedContentFromPowerPoint(event, this.editor.getTrustedHTMLHandler());
+                processPastedContentFromPowerPoint(event, this.editor.getDOMCreator());
                 break;
         }
 

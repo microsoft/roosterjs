@@ -1,5 +1,4 @@
 import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
-import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { applyDefaultFormat } from '../../../lib/corePlugin/format/applyDefaultFormat';
 import {
     ContentModelDocument,
@@ -24,8 +23,6 @@ describe('applyDefaultFormat', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let deleteSelectionSpy: jasmine.Spy;
-    let normalizeContentModelSpy: jasmine.Spy;
-    let takeSnapshotSpy: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
     let isNodeInEditorSpy: jasmine.Spy;
 
@@ -46,8 +43,6 @@ describe('applyDefaultFormat', () => {
 
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelectionSpy');
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
-        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
-        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
         isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor');
 
@@ -71,7 +66,6 @@ describe('applyDefaultFormat', () => {
             }),
             getDOMSelection: getDOMSelectionSpy,
             formatContentModel: formatContentModelSpy,
-            takeSnapshot: takeSnapshotSpy,
             getPendingFormat: getPendingFormatSpy,
         } as any;
     });
@@ -82,7 +76,7 @@ describe('applyDefaultFormat', () => {
 
         applyDefaultFormat(editor, defaultFormat);
 
-        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Selection already has style', () => {
@@ -99,6 +93,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
         deleteSelectionSpy.and.returnValue({
@@ -124,6 +119,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: text,
                 startOffset: 0,
+                collapsed: true,
             },
         });
         deleteSelectionSpy.and.returnValue({
@@ -143,6 +139,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -154,9 +151,7 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).toHaveBeenCalledWith(model);
-        expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
-        expect(formatResult).toBeTrue();
+        expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
@@ -174,6 +169,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -185,8 +181,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalledWith();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -204,6 +198,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -215,8 +210,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalledWith();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -246,6 +239,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -257,8 +251,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -288,6 +280,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -299,8 +292,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -331,6 +322,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -342,8 +334,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -373,6 +363,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -384,8 +375,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],
@@ -419,6 +408,7 @@ describe('applyDefaultFormat', () => {
             range: {
                 startContainer: node,
                 startOffset: 0,
+                collapsed: true,
             },
         });
 
@@ -435,8 +425,6 @@ describe('applyDefaultFormat', () => {
         applyDefaultFormat(editor, defaultFormat);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
-        expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatResult).toBeFalse();
         expect(context).toEqual({
             deletedEntities: [],

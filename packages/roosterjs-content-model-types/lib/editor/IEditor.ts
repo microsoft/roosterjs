@@ -15,7 +15,7 @@ import type {
     FormatContentModelOptions,
 } from '../parameter/FormatContentModelOptions';
 import type { DarkColorHandler } from '../context/DarkColorHandler';
-import type { TrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
+import type { DOMCreator, LegacyTrustedHTMLHandler } from '../parameter/TrustedHTMLHandler';
 import type { Rect } from '../parameter/Rect';
 import type { EntityState } from '../parameter/FormatContentModelContext';
 import type { ExperimentalFeature } from './ExperimentalFeature';
@@ -193,12 +193,21 @@ export interface IEditor {
     hasFocus(): boolean;
 
     /**
+     * @deprecated use getDOMCreator instead
      * Get a function to convert HTML string to trusted HTML string.
      * By default it will just return the input HTML directly. To override this behavior,
      * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
-    getTrustedHTMLHandler(): TrustedHTMLHandler;
+    getTrustedHTMLHandler(): LegacyTrustedHTMLHandler;
+
+    /**
+     * Get a function to convert HTML string to a trust Document.
+     * By default it will just convert the original HTML string into a Document object directly.
+     * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getDOMCreator(): DOMCreator;
 
     /**
      * Get the scroll container of the editor

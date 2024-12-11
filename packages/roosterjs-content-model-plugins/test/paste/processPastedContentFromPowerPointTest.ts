@@ -1,10 +1,6 @@
 import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
 import { processPastedContentFromPowerPoint } from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
-import type {
-    BeforePasteEvent,
-    ClipboardData,
-    TrustedHTMLHandler,
-} from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
 
 const getPasteEvent = (): BeforePasteEvent => {
     return {
@@ -29,7 +25,9 @@ const getPasteEvent = (): BeforePasteEvent => {
 
 describe('processPastedContentFromPowerPointTest |', () => {
     let ev: BeforePasteEvent;
-    let trustedHTMLHandlerMock: TrustedHTMLHandler = (html: string) => html;
+    let trustedHTMLHandlerMock: DOMCreator = {
+        htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
+    };
     let image: HTMLImageElement;
     let doc: Document;
 
