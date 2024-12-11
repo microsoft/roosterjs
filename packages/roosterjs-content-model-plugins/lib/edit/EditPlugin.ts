@@ -23,6 +23,13 @@ export type EditOptions = {
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+/**
+ * According to https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+ * 229 can be sent in variants generated when Long press (iOS) or using IM.
+ *
+ * Other cases: https://stackoverflow.com/questions/25043934/is-it-ok-to-ignore-keydown-events-with-keycode-229
+ */
+const DEAD_KEY = 229;
 
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
@@ -181,7 +188,11 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Enter':
-                    if (!hasCtrlOrMetaKey) {
+                    if (
+                        !hasCtrlOrMetaKey &&
+                        !event.rawEvent.isComposing &&
+                        event.rawEvent.keyCode !== DEAD_KEY
+                    ) {
                         keyboardEnter(editor, rawEvent, this.handleNormalEnter);
                     }
                     break;
