@@ -221,6 +221,8 @@ describe('generatePasteOptionFromPlugins', () => {
     it('PasteType=asPlainText', () => {
         triggerPluginEventSpy.and.callFake((core, event) => {
             Object.assign(event, mockedResult);
+
+            return event;
         });
         const result = generatePasteOptionFromPlugins(
             editor,
@@ -236,22 +238,14 @@ describe('generatePasteOptionFromPlugins', () => {
         );
 
         expect(result).toEqual({
-            fragment: mockedFragment,
-            domToModelOption: {
-                additionalAllowedTags: [],
-                additionalDisallowedTags: [],
-                additionalFormatParsers: {},
-                formatParserOverride: {},
-                processorOverride: {},
-                styleSanitizers: {},
-                attributeSanitizers: {},
-            },
-            pasteType: 'asPlainText',
             eventType: 'beforePaste',
-            clipboardData: mockedClipboardData,
-            htmlBefore,
-            htmlAfter,
-            htmlAttributes: mockedMetadata,
+            clipboardData: 'CLIPBOARDDATA' as any,
+            fragment: 'FragmentResult' as any,
+            htmlBefore: 'HTMLBEFORE',
+            htmlAfter: 'HTMLAFTER',
+            htmlAttributes: 'METADATA' as any,
+            pasteType: 'TypeResult' as any,
+            domToModelOption: 'OptionResult' as any,
             containsBlockElements: false,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
