@@ -3,7 +3,6 @@ import * as findImage from '../../lib/imageEdit/utils/findEditingImage';
 import * as getSelectedImage from '../../lib/imageEdit/utils/getSelectedImage';
 import * as normalizeImageSelection from '../../lib/imageEdit/utils/normalizeImageSelection';
 import { ChangeSource, createImage, createParagraph } from 'roosterjs-content-model-dom';
-import { ExtractContentWithDomEvent } from 'roosterjs-editor-types';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
 import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
