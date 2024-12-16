@@ -174,7 +174,22 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.onDropHandler(this.editor);
                 }
                 break;
+            case 'extractContentWithDom':
+                this.removeImageEditing(event.clonedRoot);
+                break;
         }
+    }
+
+    private removeImageEditing(clonedRoot: HTMLElement) {
+        const images = clonedRoot.querySelectorAll('img');
+        images.forEach(image => {
+            if (image.dataset.isEditing) {
+                delete image.dataset.isEditing;
+            }
+            if (image.dataset.editingInfo) {
+                delete image.dataset.editingInfo;
+            }
+        });
     }
 
     private isImageSelection(target: Node): target is HTMLElement {
