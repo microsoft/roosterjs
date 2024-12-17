@@ -1,7 +1,7 @@
 import { findAllEntities } from './findAllEntities';
 import {
     createEntity,
-    generateEntityClassNames,
+    generateEntityClassList,
     getAllEntityWrappers,
     getObjectKeys,
     isEntityElement,
@@ -132,7 +132,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
             if (entityType && !isFakeEntity) {
                 if (operation == 'newEntity') {
                     entity.entityFormat.id = this.ensureUniqueId(entityType, id ?? '', wrapper);
-                    wrapper.className = generateEntityClassNames(entity.entityFormat);
+                    wrapper.classList.add(...generateEntityClassList(entity.entityFormat));
 
                     if (entity.entityFormat.isReadonly) {
                         wrapper.contentEditable = 'false';
