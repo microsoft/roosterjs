@@ -18,6 +18,7 @@ export class WatermarkPlugin implements EditorPlugin {
     private format: WatermarkFormat;
     private isShowing = false;
     private darkTextColor: string | null = null;
+    private disposer: (() => void) | null = null;
 
     /**
      * Create an instance of Watermark plugin
@@ -43,7 +44,7 @@ export class WatermarkPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.editor.attachDomEvent({
+        this.disposer = this.editor.attachDomEvent({
             compositionstart: {
                 beforeDispatch: this.onCompositionStart,
             },
@@ -54,6 +55,9 @@ export class WatermarkPlugin implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
+        this.disposer?.();
+        this.disposer = null;
+
         this.editor = null;
     }
 
