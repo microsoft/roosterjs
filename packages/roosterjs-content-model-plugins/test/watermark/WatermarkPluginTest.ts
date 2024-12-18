@@ -8,12 +8,14 @@ describe('WatermarkPlugin', () => {
     let formatContentModelSpy: jasmine.Spy;
     let isModelEmptyFastSpy: jasmine.Spy;
     let setEditorStyleSpy: jasmine.Spy;
+    let attachDomEventSpy: jasmine.Spy;
 
     const mockedModel = 'Model' as any;
 
     beforeEach(() => {
         isModelEmptyFastSpy = spyOn(isModelEmptyFast, 'isModelEmptyFast');
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
+        attachDomEventSpy = jasmine.createSpy('attachDomEvent');
 
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
@@ -26,6 +28,7 @@ describe('WatermarkPlugin', () => {
             formatContentModel: formatContentModelSpy,
             setEditorStyle: setEditorStyleSpy,
             isDarkMode: () => false,
+            attachDomEvent: attachDomEventSpy,
         } as any;
     });
 
@@ -35,6 +38,12 @@ describe('WatermarkPlugin', () => {
         const plugin = new WatermarkPlugin('test');
 
         plugin.initialize(editor);
+
+        expect(attachDomEventSpy).toHaveBeenCalledWith({
+            compositionstart: {
+                beforeDispatch: jasmine.anything(),
+            },
+        });
 
         plugin.onPluginEvent({
             eventType: 'editorReady',
@@ -169,6 +178,8 @@ describe('WatermarkPlugin dark mode', () => {
     let setEditorStyleSpy: jasmine.Spy;
     let getDarkColorSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
+    let attachDomEventSpy: jasmine.Spy;
+
     const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
 
     const mockedModel = 'Model' as any;
@@ -178,6 +189,7 @@ describe('WatermarkPlugin dark mode', () => {
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         getDarkColorSpy = jasmine.createSpy('getDarkColor');
         isDarkModeSpy = jasmine.createSpy('isDarkMode');
+        attachDomEventSpy = jasmine.createSpy('attachDomEvent');
 
         formatContentModelSpy = jasmine
             .createSpy('formatContentModel')
@@ -191,6 +203,7 @@ describe('WatermarkPlugin dark mode', () => {
             formatContentModel: formatContentModelSpy,
             setEditorStyle: setEditorStyleSpy,
             isDarkMode: isDarkModeSpy,
+            attachDomEvent: attachDomEventSpy,
             getColorManager: () => ({
                 getDarkColor: getDarkColorSpy.and.callFake((color: string) => {
                     return `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`;
