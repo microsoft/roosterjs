@@ -43,6 +43,11 @@ export class WatermarkPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.editor.attachDomEvent({
+            compositionstart: {
+                beforeDispatch: this.onCompositionStart,
+            },
+        });
     }
 
     /**
@@ -63,10 +68,7 @@ export class WatermarkPlugin implements EditorPlugin {
             return;
         }
 
-        if (
-            (event.eventType == 'input' && event.rawEvent.inputType == 'insertText') ||
-            event.eventType == 'compositionEnd'
-        ) {
+        if (event.eventType == 'input' && event.rawEvent.inputType == 'insertText') {
             // When input text, editor must not be empty, so we can do hide watermark now without checking content model
             this.showHide(editor, false /*isEmpty*/);
         } else if (
@@ -92,16 +94,27 @@ export class WatermarkPlugin implements EditorPlugin {
             event.eventType == 'editorReady' ||
             event.eventType == 'contentChanged' ||
             event.eventType == 'input' ||
-            event.eventType == 'beforeDispose'
+            event.eventType == 'beforeDispose' ||
+            event.eventType == 'compositionEnd'
         ) {
-            editor.formatContentModel(model => {
-                const isEmpty = isModelEmptyFast(model);
-
-                this.showHide(editor, isEmpty);
-
-                return false;
-            });
+            this.update(editor);
         }
+    }
+
+    private onCompositionStart = () => {
+        if (this.editor) {
+            this.showHide(this.editor, false /*isEmpty*/);
+        }
+    };
+
+    private update(editor: IEditor) {
+        editor.formatContentModel(model => {
+            const isEmpty = isModelEmptyFast(model);
+
+            this.showHide(editor, isEmpty);
+
+            return false;
+        });
     }
 
     private showHide(editor: IEditor, isEmpty: boolean) {
