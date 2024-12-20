@@ -1,3 +1,4 @@
+import { ariaFormatHandler } from './common/ariaFormatHandler';
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
@@ -51,6 +52,7 @@ type FormatHandlers = {
 };
 
 const defaultFormatHandlerMap: FormatHandlers = {
+    aria: ariaFormatHandler,
     backgroundColor: backgroundColorFormatHandler,
     bold: boldFormatHandler,
     border: borderFormatHandler,
@@ -162,6 +164,7 @@ export const defaultFormatKeysPerCategory: {
     tableRow: ['backgroundColor'],
     tableColumn: ['size'],
     table: [
+        'aria',
         'id',
         'border',
         'backgroundColor',

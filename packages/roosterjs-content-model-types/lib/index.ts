@@ -23,6 +23,7 @@ export { ContentModelImageFormat } from './contentModel/format/ContentModelImage
 export { ContentModelEntityFormat } from './contentModel/format/ContentModelEntityFormat';
 export { FormatHandlerTypeMap, FormatKey } from './contentModel/format/FormatHandlerTypeMap';
 
+export { AriaFormat } from './contentModel/format/formatParts/AriaFormat';
 export { BackgroundColorFormat } from './contentModel/format/formatParts/BackgroundColorFormat';
 export { BoldFormat } from './contentModel/format/formatParts/BoldFormat';
 export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFormat';
