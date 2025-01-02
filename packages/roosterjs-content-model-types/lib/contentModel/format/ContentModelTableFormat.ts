@@ -1,3 +1,4 @@
+import type { AriaFormat } from './formatParts/AriaFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
@@ -13,6 +14,7 @@ import type { SizeFormat } from './formatParts/SizeFormat';
  */
 export type ContentModelTableFormat = ContentModelBlockFormat &
     IdFormat &
+    AriaFormat &
     BorderFormat &
     BorderBoxFormat &
     SpacingFormat &
