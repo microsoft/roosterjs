@@ -107,12 +107,11 @@ function parseEntityClassName(
  * @param format The source entity format object
  * @returns A combined CSS class name string for entity wrapper
  */
-export function generateEntityClassNames(format: ContentModelEntityFormat): string {
+export function generateEntityClassList(format: ContentModelEntityFormat): string[] {
     return format.isFakeEntity
-        ? ''
-        : `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.entityType ?? ''} ${
-              format.id ? `${ENTITY_ID_PREFIX}${format.id} ` : ''
-          }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}`;
+        ? []
+        : [`${ENTITY_INFO_NAME}`, `${ENTITY_TYPE_PREFIX}${format.entityType ?? ''}`, `${format.id ? `${ENTITY_ID_PREFIX}${format.id} ` : ''
+            }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}`];
 }
 
 /**
