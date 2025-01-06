@@ -21,6 +21,7 @@ import { tableBorderColorButton } from '../demoButtons/tableBorderColorButton';
 import { tableBorderStyleButton } from '../demoButtons/tableBorderStyleButton';
 import { tableBorderWidthButton } from '../demoButtons/tableBorderWidthButton';
 import { tableOptionsButton } from '../demoButtons/tableOptionsButton';
+import { tableTitleButton } from '../demoButtons/tableTitleButton';
 import { tabNames } from './getTabs';
 import {
     tableAlignCellButton,
@@ -83,6 +84,7 @@ const tableButtons: RibbonButton<any>[] = [
     insertTableButton,
     formatTableButton,
     setTableCellShadeButton,
+    tableTitleButton,
     tableOptionsButton,
     tableInsertButton,
     tableDeleteButton,
@@ -178,6 +180,7 @@ const allButtons: RibbonButton<any>[] = [
     tableDeleteButton,
     tableMergeButton,
     tableSplitButton,
+    tableTitleButton,
     tableAlignCellButton,
     tableAlignTableButton,
     tableBorderApplyButton,
