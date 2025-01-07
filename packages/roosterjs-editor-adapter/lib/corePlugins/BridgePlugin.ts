@@ -5,6 +5,7 @@ import { IgnoredPluginNames } from '../editor/IgnoredPluginNames';
 import { newEventToOldEvent, oldEventToNewEvent } from '../editor/utils/eventConverter';
 import type {
     EditorPlugin as LegacyEditorPlugin,
+    PluginEvent as LegacyPluginEvent,
     ContextMenuProvider as LegacyContextMenuProvider,
     IEditor as ILegacyEditor,
     ExperimentalFeatures,
@@ -14,6 +15,7 @@ import type {
     DarkColorHandler,
 } from 'roosterjs-editor-types';
 import type { ContextMenuProvider, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type { MixedPlugin } from '../publicTypes/MixedPlugin';
 
 const ExclusivelyHandleEventPluginKey = '__ExclusivelyHandleEventPlugin';
 const OldEventKey = '__OldEventFromNewEvent';
@@ -97,7 +99,13 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     initialize(editor: IEditor) {
         const outerEditor = this.onInitialize(this.createEditorCore(editor));
 
-        this.legacyPlugins.forEach(plugin => plugin.initialize(outerEditor));
+        this.legacyPlugins.forEach(plugin => {
+            plugin.initialize(outerEditor);
+
+            if (isMixedPlugin(plugin)) {
+                plugin.initializeV9(editor);
+            }
+        });
     }
 
     /**
@@ -122,9 +130,9 @@ export class BridgePlugin implements ContextMenuProvider<any> {
             const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
 
             if (exclusivelyHandleEventPlugin) {
-                exclusivelyHandleEventPlugin.onPluginEvent?.(oldEvent);
+                this.handleEvent(exclusivelyHandleEventPlugin, oldEvent, event);
             } else {
-                this.legacyPlugins.forEach(plugin => plugin.onPluginEvent?.(oldEvent));
+                this.legacyPlugins.forEach(plugin => this.handleEvent(plugin, oldEvent, event));
             }
 
             Object.assign(event, oldEventToNewEvent(oldEvent, event));
@@ -164,6 +172,10 @@ export class BridgePlugin implements ContextMenuProvider<any> {
                     if (plugin.willHandleEventExclusively?.(oldEvent)) {
                         return plugin;
                     }
+
+                    if (isMixedPlugin(plugin) && plugin.willHandleEventExclusivelyV9?.(event)) {
+                        return plugin;
+                    }
                 }
             }
 
@@ -185,6 +197,18 @@ export class BridgePlugin implements ContextMenuProvider<any> {
             contextMenuProviders: this.contextMenuProviders,
         };
     }
+
+    private handleEvent(
+        plugin: LegacyEditorPlugin,
+        oldEvent: LegacyPluginEvent,
+        newEvent: PluginEvent
+    ) {
+        plugin.onPluginEvent?.(oldEvent);
+
+        if (isMixedPlugin(plugin)) {
+            plugin.onPluginEventV9?.(newEvent);
+        }
+    }
 }
 
 /**
@@ -199,4 +223,8 @@ function isContextMenuProvider(
     source: LegacyEditorPlugin
 ): source is LegacyContextMenuProvider<any> {
     return !!(<LegacyContextMenuProvider<any>>source)?.getContextMenuItems;
+}
+
+function isMixedPlugin(plugin: LegacyEditorPlugin): plugin is MixedPlugin {
+    return !!(plugin as MixedPlugin).initializeV9;
 }
