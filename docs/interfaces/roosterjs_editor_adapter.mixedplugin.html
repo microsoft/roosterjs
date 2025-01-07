@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>EditorPlugin | RoosterJs API Reference</title>
+	<title>MixedPlugin | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,13 +53,13 @@
 					<a href="../modules.html">RoosterJs API Reference</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
+					<a href="../modules/roosterjs_editor_adapter.html">roosterjs-editor-adapter</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.editorplugin.html">EditorPlugin</a>
+					<a href="roosterjs_editor_adapter.mixedplugin.html">MixedPlugin</a>
 				</li>
 			</ul>
-			<h1>Interface EditorPlugin</h1>
+			<h1>Interface MixedPlugin</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Interface of an editor plugin</p>
+						<p>Represents a mixed version plugin that can handle both v8 and v9 events.
+						This is not commonly used, but just for transitioning from v8 to v9 plugins</p>
 					</div>
 				</div>
 			</section>
@@ -77,36 +78,13 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">EditorPlugin</span>
+						<span class="tsd-signature-type">EditorPlugin</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="roosterjs_react.reacteditorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">ReactEditorPlugin</a>
-							</li>
-							<li>
-								<a href="roosterjs_content_model_types.pluginwithstate.html" class="tsd-signature-type" data-tsd-kind="Interface">PluginWithState</a>
-							</li>
-							<li>
-								<a href="roosterjs_content_model_types.contextmenuprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">ContextMenuProvider</a>
+								<span class="target">MixedPlugin</span>
 							</li>
 						</ul>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implemented by</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../classes/roosterjs_content_model_plugins.autoformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">AutoFormatPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.contextmenupluginbase.html" class="tsd-signature-type" data-tsd-kind="Class">ContextMenuPluginBase</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.customreplaceplugin.html" class="tsd-signature-type" data-tsd-kind="Class">CustomReplacePlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.editplugin.html" class="tsd-signature-type" data-tsd-kind="Class">EditPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.hyperlinkplugin.html" class="tsd-signature-type" data-tsd-kind="Class">HyperlinkPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.imageeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ImageEditPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.markdownplugin.html" class="tsd-signature-type" data-tsd-kind="Class">MarkdownPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.pasteplugin.html" class="tsd-signature-type" data-tsd-kind="Class">PastePlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.pickerplugin.html" class="tsd-signature-type" data-tsd-kind="Class">PickerPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.shortcutplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ShortcutPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></li>
-					<li><a href="../classes/roosterjs_content_model_plugins.watermarkplugin.html" class="tsd-signature-type" data-tsd-kind="Class">WatermarkPlugin</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -116,11 +94,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.editorplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.editorplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.editorplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.editorplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.editorplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_adapter.mixedplugin.html#initializev9" class="tsd-kind-icon">initialize<wbr>V9</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_adapter.mixedplugin.html#onplugineventv9" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event<wbr>V9</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_adapter.mixedplugin.html#willhandleeventexclusivelyv9" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<wbr>V9</a></li>
 							</ul>
 						</section>
 					</div>
@@ -129,74 +105,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="dispose" class="tsd-anchor"></a>
-					<h3>dispose</h3>
-					<div class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<a name="initializev9" class="tsd-anchor"></a>
+					<h3>initialize<wbr>V9</h3>
+					<div class="tsd-signature tsd-kind-icon">initialize<wbr>V9<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L26">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:26</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<div class="tsd-comment tsd-typography">
-											<div class="lead">
-												<p>The last method that editor will call to a plugin before it is disposed.
-													Plugin can take this chance to clear the reference to editor. After this method is
-												called, plugin should not call to any editor method since it will result in error.</p>
-											</div>
-										</div>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="getname" class="tsd-anchor"></a>
-					<h3>get<wbr>Name</h3>
-					<div class="tsd-signature tsd-kind-icon">get<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L11">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:11</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<div class="tsd-comment tsd-typography">
-											<div class="lead">
-												<p>Get a friendly name of this plugin</p>
-											</div>
-										</div>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="initialize" class="tsd-anchor"></a>
-					<h3>initialize</h3>
-					<div class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L19">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts#L16">roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -234,12 +148,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="onpluginevent" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Plugin<wbr>Event</h3>
-					<div class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<a name="onplugineventv9" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Plugin<wbr>Event<wbr>V9</h3>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<wbr>V9<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L44">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts#L34">roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -277,12 +191,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="willhandleeventexclusively" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> will<wbr>Handle<wbr>Event<wbr>Exclusively</h3>
-					<div class="tsd-signature tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
+					<a name="willhandleeventexclusivelyv9" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> will<wbr>Handle<wbr>Event<wbr>Exclusively<wbr>V9</h3>
+					<div class="tsd-signature tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<wbr>V9<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-content-model-types/lib/editor/EditorPlugin.ts#L36">roosterjs-content-model-types/lib/editor/EditorPlugin.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/0bc2578/packages/roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts#L26">roosterjs-editor-adapter/lib/publicTypes/MixedPlugin.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -347,10 +261,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_plugins.html">roosterjs-<wbr>content-<wbr>model-<wbr>plugins</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_adapter.html">roosterjs-<wbr>editor-<wbr>adapter</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -360,30 +274,36 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/roosterjs_editor_adapter.editoradapter.html" class="tsd-kind-icon">Editor<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_editor_adapter.beforepasteadapterevent.html" class="tsd-kind-icon">Before<wbr>Paste<wbr>Adapter<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_editor_adapter.editoradapteroptions.html" class="tsd-kind-icon">Editor<wbr>Adapter<wbr>Options</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.editorplugin.html" class="tsd-kind-icon">Editor<wbr>Plugin</a>
+						<a href="roosterjs_editor_adapter.mixedplugin.html" class="tsd-kind-icon">Mixed<wbr>Plugin</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.editorplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_adapter.mixedplugin.html#initializev9" class="tsd-kind-icon">initialize<wbr>V9</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.editorplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_adapter.mixedplugin.html#onplugineventv9" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event<wbr>V9</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.editorplugin.html#initialize" class="tsd-kind-icon">initialize</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.editorplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.editorplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a>
+								<a href="roosterjs_editor_adapter.mixedplugin.html#willhandleeventexclusivelyv9" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<wbr>V9</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_adapter.html#ignoredpluginnames" class="tsd-kind-icon">Ignored<wbr>Plugin<wbr>Names</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
