@@ -511,4 +511,101 @@ describe('BridgePlugin', () => {
 
         expect(disposeSpy).toHaveBeenCalledTimes(2);
     });
+
+    it('MixedPlugin', () => {
+        const initializeV8Spy = jasmine.createSpy('initializeV8');
+        const initializeV9Spy = jasmine.createSpy('initializeV9');
+        const onPluginEventV8Spy = jasmine.createSpy('onPluginEventV8');
+        const onPluginEventV9Spy = jasmine.createSpy('onPluginEventV9');
+        const willHandleEventExclusivelyV8Spy = jasmine.createSpy('willHandleEventExclusivelyV8');
+        const willHandleEventExclusivelyV9Spy = jasmine.createSpy('willHandleEventExclusivelyV9');
+        const disposeSpy = jasmine.createSpy('dispose');
+
+        const mockedPlugin = {
+            initialize: initializeV8Spy,
+            initializeV9: initializeV9Spy,
+            onPluginEvent: onPluginEventV8Spy,
+            onPluginEventV9: onPluginEventV9Spy,
+            willHandleEventExclusively: willHandleEventExclusivelyV8Spy,
+            willHandleEventExclusivelyV9: willHandleEventExclusivelyV9Spy,
+            dispose: disposeSpy,
+            getName: () => '',
+        } as any;
+        const mockedEditor = {} as any;
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin.BridgePlugin(onInitializeSpy, [mockedPlugin]);
+
+        expect(initializeV8Spy).not.toHaveBeenCalled();
+        expect(initializeV9Spy).not.toHaveBeenCalled();
+        expect(onPluginEventV8Spy).not.toHaveBeenCalled();
+        expect(onPluginEventV9Spy).not.toHaveBeenCalled();
+        expect(disposeSpy).not.toHaveBeenCalled();
+        expect(onInitializeSpy).not.toHaveBeenCalled();
+        expect(willHandleEventExclusivelyV8Spy).not.toHaveBeenCalled();
+        expect(willHandleEventExclusivelyV9Spy).not.toHaveBeenCalled();
+
+        const mockedZoomScale = 'ZOOM' as any;
+        const calculateZoomScaleSpy = jasmine
+            .createSpy('calculateZoomScale')
+            .and.returnValue(mockedZoomScale);
+        const mockedColorManager = 'COLOR' as any;
+        const mockedInnerDarkColorHandler = 'INNERCOLOR' as any;
+        const mockedInnerEditor = {
+            getDOMHelper: () => ({
+                calculateZoomScale: calculateZoomScaleSpy,
+            }),
+            getColorManager: () => mockedInnerDarkColorHandler,
+        } as any;
+
+        const createDarkColorHandlerSpy = spyOn(
+            DarkColorHandler,
+            'createDarkColorHandler'
+        ).and.returnValue(mockedColorManager);
+
+        plugin.initialize(mockedInnerEditor);
+
+        expect(onInitializeSpy).toHaveBeenCalledWith({
+            customData: {},
+            experimentalFeatures: [],
+            sizeTransformer: jasmine.anything(),
+            darkColorHandler: mockedColorManager,
+            edit: 'edit',
+            contextMenuProviders: [],
+        } as any);
+        expect(createDarkColorHandlerSpy).toHaveBeenCalledWith(mockedInnerDarkColorHandler);
+        expect(initializeV8Spy).toHaveBeenCalledTimes(1);
+        expect(initializeV9Spy).toHaveBeenCalledTimes(1);
+        expect(disposeSpy).not.toHaveBeenCalled();
+        expect(initializeV8Spy).toHaveBeenCalledWith(mockedEditor);
+        expect(initializeV9Spy).toHaveBeenCalledWith(mockedInnerEditor);
+        expect(onPluginEventV8Spy).not.toHaveBeenCalled();
+        expect(onPluginEventV9Spy).not.toHaveBeenCalled();
+        expect(willHandleEventExclusivelyV8Spy).not.toHaveBeenCalled();
+        expect(willHandleEventExclusivelyV9Spy).not.toHaveBeenCalled();
+
+        plugin.onPluginEvent({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+
+        expect(onPluginEventV8Spy).toHaveBeenCalledTimes(1);
+        expect(onPluginEventV9Spy).toHaveBeenCalledTimes(1);
+        expect(onPluginEventV8Spy).toHaveBeenCalledWith({
+            eventType: PluginEventType.EditorReady,
+            eventDataCache: undefined,
+        });
+        expect(onPluginEventV9Spy).toHaveBeenCalledWith({
+            eventType: 'editorReady',
+            addedBlockElements: [],
+            removedBlockElements: [],
+            eventDataCache: undefined,
+        });
+        expect(willHandleEventExclusivelyV8Spy).toHaveBeenCalledTimes(1);
+        expect(willHandleEventExclusivelyV9Spy).toHaveBeenCalledTimes(1);
+
+        plugin.dispose();
+
+        expect(disposeSpy).toHaveBeenCalledTimes(1);
+    });
 });
