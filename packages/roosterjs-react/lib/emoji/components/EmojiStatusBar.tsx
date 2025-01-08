@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
 import type { Emoji } from '../type/Emoji';
 import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
-import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
+import type { IProcessedStyleSet } from '@fluentui/react/lib/Styling';
 /**
  * @internal
  * Emoji Status Bar data
@@ -11,7 +11,7 @@ export interface EmojiStatusBarProps {
     emoji: Emoji;
     strings: Record<string, string>;
     hasResult: boolean;
-    classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
+    classNames: IProcessedStyleSet<EmojiPaneStyle>;
 }
 
 const NO_SUGGESTIONS = 'emjDNoSuggetions';

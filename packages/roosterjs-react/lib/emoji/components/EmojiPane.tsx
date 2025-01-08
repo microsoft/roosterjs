@@ -11,6 +11,8 @@ import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { searchEmojis } from '../utils/searchEmojis';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { useTheme } from '@fluentui/react/lib/Theme';
+import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
+import type { IProcessedStyleSet } from '@fluentui/react/lib/Styling';
 import type { EmojiFamilyKeys } from '../utils/emojiList';
 import type { EmojiIconProps } from './EmojiIcon';
 import type { EmojiNavBarProps } from './EmojiNavBar';
@@ -607,149 +609,152 @@ const calcPaneWidth = () => {
     return paneWidth.toString() + 'px';
 };
 
-const getEmojiPaneClassName = memoizeFunction((theme: Theme) => {
-    const palette = theme.palette;
-    return mergeStyleSets({
-        quickPicker: {
-            overflowY: 'hidden',
-            ':after': {
-                content: '',
+const getEmojiPaneClassName = memoizeFunction(
+    (theme: Theme): IProcessedStyleSet<EmojiPaneStyle> => {
+        const palette = theme.palette;
+        const styles: EmojiPaneStyle = {
+            quickPicker: {
+                overflowY: 'hidden',
+                ':after': {
+                    content: '',
+                    position: 'absolute',
+                    left: '0px',
+                    top: '0px',
+                    bottom: '0px',
+                    right: '0px',
+                    zIndex: 1,
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'rgb(255, 255, 255)',
+                    borderImage: 'initial',
+                    outline: 'rgb(102, 102, 102) solid 1px',
+                },
+            },
+
+            tooltip: {
+                padding: '8px',
+            },
+
+            emojiTextInput: {
+                padding: '6px',
+            },
+
+            partialList: {
+                maxHeight: calcMaxHeight(),
+                overflow: 'hidden',
+                overflowY: 'scroll',
+            },
+
+            fullListContent: {
+                width: calcPaneWidth(),
+            },
+
+            fullListBody: {
+                maxHeight: calcMaxHeight(),
+                overflow: 'hidden',
+                overflowY: 'scroll',
+                height: calcMaxHeight(),
+            },
+
+            fullList: {
+                position: 'relative',
+            },
+
+            roosterEmojiPane: {
+                padding: '1px',
+                background: palette.white,
+            },
+
+            emoji: {
+                fontSize: '18px',
+                width: '40px',
+                height: '40px',
+                border: '0',
+                position: 'relative',
+                background: palette.white,
+                transition: 'backgorund 0.5s ease-in-out',
+            },
+
+            emojiSelected: {
+                background: palette.neutralLight,
+            },
+
+            navBar: {
+                top: '-1px',
+                zIndex: 10,
+                position: 'sticky',
+            },
+
+            navBarTooltip: {
+                display: 'inline-block',
+            },
+
+            navBarButton: {
+                height: '40px',
+                width: '40px',
+                border: '0',
+                borderBottom: 'solid 1px',
+                padding: 0,
+                marginBottom: 0,
+                display: 'inline-block',
+                color: palette.themeDark,
+                background: palette.white,
+                '&:hover': {
+                    cursor: 'default',
+                },
+            },
+
+            selected: {
+                borderBottom: '2px solid',
+                borderBottomColor: palette.themeDark,
+            },
+
+            statusBar: {
+                borderTop: 'solid 1px',
+                height: '50px',
+                overflow: 'hidden',
+                position: 'relative',
+                background: palette.white,
+            },
+
+            statusBarIcon: {
+                padding: '4px',
+                fontSize: '25px',
+                display: 'inline-block',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                lineHeight: '40px',
+            },
+
+            statusBarDetailsContainer: {
+                padding: '0 4px',
+                lineHeight: '50px',
                 position: 'absolute',
-                left: '0px',
-                top: '0px',
-                bottom: '0px',
-                right: '0px',
-                zIndex: 1,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'rgb(255, 255, 255)',
-                borderImage: 'initial',
-                outline: 'rgb(102, 102, 102) solid 1px',
+                display: 'inline-block',
+                left: '40px',
+                right: '0',
+                top: '0',
             },
-        },
 
-        tooltip: {
-            padding: '8px',
-        },
-
-        emojiTextInput: {
-            padding: '6px',
-        },
-
-        partialList: {
-            maxHeight: calcMaxHeight(),
-            overflow: 'hidden',
-            overflowY: 'scroll',
-        },
-
-        fullListContent: {
-            width: calcPaneWidth(),
-        },
-
-        fullListBody: {
-            maxHeight: calcMaxHeight(),
-            overflow: 'hidden',
-            overflowY: 'scroll',
-            height: calcMaxHeight(),
-        },
-
-        fullList: {
-            position: 'relative',
-        },
-
-        roosterEmojiPane: {
-            padding: '1px',
-            background: palette.white,
-        },
-
-        emoji: {
-            fontSize: '18px',
-            width: '40px',
-            height: '40px',
-            border: '0',
-            position: 'relative',
-            background: palette.white,
-            transition: 'backgorund 0.5s ease-in-out',
-        },
-
-        emojiSelected: {
-            background: palette.neutralLight,
-        },
-
-        navBar: {
-            top: '-1px',
-            zIndex: 10,
-            position: 'sticky',
-        },
-
-        navBarTooltip: {
-            display: 'inline-block',
-        },
-
-        navBarButton: {
-            height: '40px',
-            width: '40px',
-            border: '0',
-            borderBottom: 'solid 1px',
-            padding: 0,
-            marginBottom: 0,
-            display: 'inline-block',
-            color: palette.themeDark,
-            background: palette.white,
-            '&:hover': {
-                cursor: 'default',
+            statusBarDetails: {
+                fontWeight: 'bold',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
             },
-        },
 
-        selected: {
-            borderBottom: '2px solid',
-            borderBottomColor: palette.themeDark,
-        },
-
-        statusBar: {
-            borderTop: 'solid 1px',
-            height: '50px',
-            overflow: 'hidden',
-            position: 'relative',
-            background: palette.white,
-        },
-
-        statusBarIcon: {
-            padding: '4px',
-            fontSize: '25px',
-            display: 'inline-block',
-            fontStyle: 'normal',
-            fontWeight: 'normal',
-            lineHeight: '40px',
-        },
-
-        statusBarDetailsContainer: {
-            padding: '0 4px',
-            lineHeight: '50px',
-            position: 'absolute',
-            display: 'inline-block',
-            left: '40px',
-            right: '0',
-            top: '0',
-        },
-
-        statusBarDetails: {
-            fontWeight: 'bold',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-        },
-
-        statusBarNoResultDetailsContainer: {
-            lineHeight: '50px',
-            position: 'absolute',
-            display: 'inline-block',
-            top: '0',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            left: '0',
-            padding: '0 8px',
-        },
-    });
-});
+            statusBarNoResultDetailsContainer: {
+                lineHeight: '50px',
+                position: 'absolute',
+                display: 'inline-block',
+                top: '0',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                left: '0',
+                padding: '0 8px',
+            },
+        };
+        return mergeStyleSets(styles);
+    }
+);
