@@ -2,7 +2,7 @@ import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
 import type { Emoji } from '../type/Emoji';
 import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
-import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
+import type { IProcessedStyleSet } from '@fluentui/react/lib/Styling';
 /**
  * @internal
  * Emoji icon data
@@ -11,7 +11,7 @@ export interface EmojiIconProps {
     id: string;
     emoji: Emoji;
     strings: Record<string, string>;
-    classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
+    classNames: IProcessedStyleSet<EmojiPaneStyle>;
     onClick?: (e: React.MouseEvent<EventTarget>) => void;
     onMouseOver?: (e: React.MouseEvent<EventTarget>) => void;
     onFocus?: React.FocusEventHandler<HTMLButtonElement>;
