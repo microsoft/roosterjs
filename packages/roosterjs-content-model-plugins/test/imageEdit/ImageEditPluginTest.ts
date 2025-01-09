@@ -648,6 +648,28 @@ describe('ImageEditPlugin', () => {
         expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEdit', null);
         expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
     });
+
+    it('extractContentWithDom', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const clonedRoot = document.createElement('div');
+        const image = document.createElement('img');
+        clonedRoot.appendChild(image);
+        image.dataset['editingInfo'] = JSON.stringify({
+            src: 'test',
+        });
+        image.dataset['isEditing'] = 'true';
+        const event = {
+            eventType: 'extractContentWithDom',
+            clonedRoot,
+        } as any;
+        plugin.onPluginEvent(event);
+        const expectedClonedRoot = document.createElement('div');
+        const expectedImage = document.createElement('img');
+        expectedClonedRoot.appendChild(expectedImage);
+        expect(event.clonedRoot).toEqual(expectedClonedRoot);
+        plugin.dispose();
+    });
 });
 
 class TestPlugin extends ImageEditPlugin {
