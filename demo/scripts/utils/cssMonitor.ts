@@ -1,4 +1,4 @@
-import { Stylesheet } from '@fluentui/merge-styles/lib/Stylesheet';
+import { Stylesheet } from '@fluentui/merge-styles';
 
 let isCssMonitorStarted: boolean = false;
 const activeWindows: Window[] = [];

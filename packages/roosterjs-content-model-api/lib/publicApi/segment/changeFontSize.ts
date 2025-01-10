@@ -21,13 +21,17 @@ const MAX_FONT_SIZE = 1000;
  * @param change Whether increase or decrease font size
  * @param fontSizes A sorted font size array, in pt. Default value is FONT_SIZES
  */
-export function changeFontSize(editor: IEditor, change: 'increase' | 'decrease') {
+export function changeFontSize(
+    editor: IEditor,
+    change: 'increase' | 'decrease',
+    fontSizes: number[] = FONT_SIZES
+) {
     editor.focus();
 
     formatSegmentWithContentModel(
         editor,
         'changeFontSize',
-        (format, _, __, paragraph) => changeFontSizeInternal(change, format, paragraph),
+        (format, _, __, paragraph) => changeFontSizeInternal(change, format, paragraph, fontSizes),
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/
     );
@@ -36,13 +40,14 @@ export function changeFontSize(editor: IEditor, change: 'increase' | 'decrease')
 function changeFontSizeInternal(
     change: 'increase' | 'decrease',
     format: ContentModelSegmentFormat,
-    paragraph: ShallowMutableContentModelParagraph | null
+    paragraph: ShallowMutableContentModelParagraph | null,
+    fontSizes: number[]
 ) {
     if (format.fontSize) {
         const sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
 
         if (sizeInPt > 0) {
-            const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
+            const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, fontSizes);
 
             setFontSizeInternal(newSize + 'pt', format, paragraph);
         }

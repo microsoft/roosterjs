@@ -1,3 +1,4 @@
+import type { AriaFormat } from './formatParts/AriaFormat';
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
@@ -37,6 +38,11 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for AriaFormat
+     */
+    aria: AriaFormat;
+
     /**
      * Format for BackgroundColorFormat
      */

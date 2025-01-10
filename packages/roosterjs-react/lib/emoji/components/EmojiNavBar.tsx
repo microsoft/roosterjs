@@ -7,7 +7,7 @@ import { Icon } from '@fluentui/react/lib/Icon';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import type { EmojiFamilyKeys } from '../utils/emojiList';
 import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
-import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
+import type { IProcessedStyleSet } from '@fluentui/react/lib/Styling';
 
 /**
  * @internal
@@ -18,7 +18,7 @@ export interface EmojiNavBarProps {
     currentSelected?: string;
     getTabId?: (selected: EmojiFamilyKeys) => string;
     strings: Record<string, string>;
-    classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
+    classNames: IProcessedStyleSet<EmojiPaneStyle>;
 }
 
 /**
