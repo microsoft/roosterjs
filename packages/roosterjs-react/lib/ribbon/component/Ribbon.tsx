@@ -3,6 +3,7 @@ import { CommandBar } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { getLocalizedString } from '../../common/utils/getLocalizedString';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { moreCommands } from '../buttons/moreCommands';
 import type {
@@ -25,6 +26,8 @@ const rtlIcon = mergeStyles({
     transform: 'scaleX(-1)',
 });
 
+let iconInitialized = false;
+
 /**
  * The format ribbon component of roosterjs-react
  * @param props Properties of format ribbon component
@@ -34,6 +37,11 @@ export function Ribbon<T extends string>(props: RibbonProps<T>) {
     const { plugin, buttons, strings, dir } = props;
     const [formatState, setFormatState] = React.useState<ContentModelFormatState | null>(null);
     const isRtl = dir == 'rtl';
+
+    if (!iconInitialized) {
+        iconInitialized = true;
+        initializeIcons();
+    }
 
     const onClick = React.useCallback(
         (_, item?: IContextualMenuItem) => {
