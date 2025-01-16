@@ -13,14 +13,16 @@ describe('keyboardListTrigger', () => {
         expectedResult: boolean,
         shouldSearchForBullet: boolean = true,
         shouldSearchForNumbering: boolean = true,
-        expectedContext?: any
+        expectedContext?: any,
+        removeListMargins?: boolean
     ) {
         const result = keyboardListTrigger(
             model,
             paragraph,
             context,
             shouldSearchForBullet,
-            shouldSearchForNumbering
+            shouldSearchForNumbering,
+            removeListMargins
         );
         expect(result).toBe(expectedResult);
         if (expectedContext) {
@@ -540,6 +542,122 @@ describe('keyboardListTrigger', () => {
                 canUndoByBackspace: true,
                 announceData: { defaultStrings: 'announceListItemNumbering', formatStrings: ['A'] },
             }
+        );
+    });
+
+    it('trigger a new numbering list after a numbering list  no margins', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'A)',
+                    format: {},
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"1) "',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {},
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":3}',
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {
+                            listStyleType: '"2) "',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    paragraph,
+                ],
+                format: {},
+            },
+            paragraph,
+            { canUndoByBackspace: true } as any,
+            true,
+            undefined /* shouldSearchForBullet */,
+            undefined /* shouldSearchForNumbering */,
+            {
+                canUndoByBackspace: true,
+                announceData: { defaultStrings: 'announceListItemNumbering', formatStrings: ['A'] },
+            },
+            true /* removeListMargins */
         );
     });
 });

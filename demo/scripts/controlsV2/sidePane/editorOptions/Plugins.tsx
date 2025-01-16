@@ -112,6 +112,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private autoOrdinals = React.createRef<HTMLInputElement>();
     private autoTel = React.createRef<HTMLInputElement>();
     private autoMailto = React.createRef<HTMLInputElement>();
+    private removeListMargins = React.createRef<HTMLInputElement>();
     private markdownBold = React.createRef<HTMLInputElement>();
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
@@ -179,6 +180,13 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                 this.autoMailto,
                                 this.props.state.autoFormatOptions.autoMailto,
                                 (state, value) => (state.autoFormatOptions.autoMailto = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Remove List Margins',
+                                this.removeListMargins,
+                                this.props.state.autoFormatOptions.removeListMargins,
+                                (state, value) =>
+                                    (state.autoFormatOptions.removeListMargins = value)
                             )}
                         </>
                     )}
