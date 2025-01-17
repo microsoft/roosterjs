@@ -1,6 +1,6 @@
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { mutateBlock } from '../common/mutate';
+import { mutateBlock, mutateSegment } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -8,6 +8,7 @@ import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     BorderFormat,
     ReadonlyContentModelTable,
+    ShallowMutableContentModelTableCell,
     ShallowMutableContentModelTableRow,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
@@ -305,7 +306,7 @@ function setHeaderRowFormat(
                     true /*applyToSegments*/
                 );
             }
-
+            setBoldOnHeaderCell(cell);
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
             setBorderColor(cell.format, 'borderRight', format.headerRowColor);
             setBorderColor(cell.format, 'borderLeft', format.headerRowColor);
@@ -327,4 +328,16 @@ function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: s
 
 function getBorderStyleFromColor(color?: string): string {
     return !color || color == 'transparent' ? 'none' : 'solid';
+}
+
+function setBoldOnHeaderCell(cell: ShallowMutableContentModelTableCell) {
+    for (const block of cell.blocks) {
+        if (block.blockType == 'Paragraph') {
+            for (const segment of block.segments) {
+                mutateSegment(block, segment, segment => {
+                    segment.format.fontWeight = 'bold';
+                });
+            }
+        }
+    }
 }

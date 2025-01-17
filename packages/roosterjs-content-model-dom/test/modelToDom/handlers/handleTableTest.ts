@@ -240,7 +240,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
+            '<table><tbody><tr><th style="font-weight: normal;"></th></tr><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -355,7 +355,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
+            '<table><tbody><tr><th style="font-weight: normal;"></th></tr><tr><td></td></tr></tbody></table>'
         );
         const tableNode = parent.querySelector('table') as HTMLTableElement;
 

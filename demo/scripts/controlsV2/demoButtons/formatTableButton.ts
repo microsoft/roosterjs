@@ -28,7 +28,7 @@ const PREDEFINED_STYLES: Record<
             color /** verticalColors*/,
             false /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
+            true /** headerRow */,
             false /** firstColumn */,
             TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,

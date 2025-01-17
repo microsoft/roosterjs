@@ -1,6 +1,7 @@
 import { applyTableFormat } from '../../../lib/modelApi/editing/applyTableFormat';
 import { TableBorderFormat } from '../../../lib/constants/TableBorderFormat';
 import {
+    ContentModelParagraph,
     ContentModelTable,
     ContentModelTableCell,
     ContentModelTableRow,
@@ -9,10 +10,30 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('applyTableFormat', () => {
-    function createCell(): ContentModelTableCell {
+    function createParagraph(isHeaderRow: boolean = false): ContentModelParagraph {
+        return {
+            format: {} as any,
+            blockType: 'Paragraph',
+            segmentFormat: {},
+            segments: [
+                {
+                    text: 'test',
+                    format: isHeaderRow
+                        ? {
+                              fontWeight: 'bold',
+                          }
+                        : {},
+                    segmentType: 'Text',
+                },
+            ],
+            cachedElement: {} as any,
+        };
+    }
+
+    function createCell(isHeaderRow: boolean = false): ContentModelTableCell {
         return {
             blockGroupType: 'TableCell',
-            blocks: [],
+            blocks: [createParagraph(isHeaderRow)],
             isHeader: false,
             spanAbove: false,
             spanLeft: false,
@@ -22,30 +43,38 @@ describe('applyTableFormat', () => {
         };
     }
 
-    function createRow(count: number): ContentModelTableRow {
+    function createRow(count: number, isHeaderRow: boolean = false): ContentModelTableRow {
         const row: ContentModelTableRow = { format: {}, height: 0, cells: [] };
 
         for (let i = 0; i < count; i++) {
-            row.cells.push(createCell());
+            row.cells.push(createCell(isHeaderRow));
         }
 
         return row;
     }
 
-    function createRows(row: number, column: number): ContentModelTableRow[] {
+    function createRows(
+        row: number,
+        column: number,
+        isHeaderRow: boolean = false
+    ): ContentModelTableRow[] {
         const rows: ContentModelTableRow[] = [];
 
         for (let i = 0; i < row; i++) {
-            rows.push(createRow(column));
+            rows.push(createRow(column, isHeaderRow));
         }
 
         return rows;
     }
 
-    function createTable(row: number, column: number): ContentModelTable {
+    function createTable(
+        row: number,
+        column: number,
+        isHeaderRow: boolean = false
+    ): ContentModelTable {
         return {
             blockType: 'Table',
-            rows: createRows(row, column),
+            rows: createRows(row, column, isHeaderRow),
             format: {},
             widths: [0],
             dataset: {},
@@ -58,7 +87,7 @@ describe('applyTableFormat', () => {
         exportedBackgroundColors: string[][],
         expectedBorders: string[][][]
     ) {
-        const table: ReadonlyContentModelTable = createTable(3, 4);
+        const table: ReadonlyContentModelTable = createTable(3, 4, format?.hasHeaderRow);
 
         applyTableFormat(table, format);
 
@@ -71,6 +100,16 @@ describe('applyTableFormat', () => {
                     exportedBackgroundColors[row][col],
                     `BackgroundColor Row=${row} Col=${col}`
                 );
+
+                if (format?.hasHeaderRow) {
+                    cell.blocks.forEach(block => {
+                        if (block.blockType == 'Paragraph') {
+                            block.segments.forEach(segment => {
+                                expect(segment.format?.fontWeight).toBe('bold');
+                            });
+                        }
+                    });
+                }
 
                 const { borderTop, borderRight, borderLeft, borderBottom } = cell.format;
                 const borders = expectedBorders[row][col];
@@ -92,6 +131,43 @@ describe('applyTableFormat', () => {
             undefined,
             [
                 [U, U, U, U],
+                [U, U, U, U],
+                [U, U, U, U],
+            ],
+            [
+                [
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                ],
+                [
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                ],
+                [
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                    [B, B, B, B],
+                ],
+            ]
+        );
+    });
+
+    it('With Header row', () => {
+        const B = '1px solid #ABABAB';
+        const U = (undefined as any) as string;
+        const H = '#ABABAB';
+        runTest(
+            {
+                hasHeaderRow: true,
+                headerRowColor: '#ABABAB',
+            },
+            [
+                [H, H, H, H],
                 [U, U, U, U],
                 [U, U, U, U],
             ],

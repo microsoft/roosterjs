@@ -104,6 +104,11 @@ export interface FormatHandlerTypeMap {
     fontSize: FontSizeFormat;
 
     /**
+     * Format for BoldFormat, for Table Cell only
+     */
+    fontWeightOnTableCell: BoldFormat;
+
+    /**
      * Format for HtmlAlignFormat
      */
     htmlAlign: HtmlAlignFormat;

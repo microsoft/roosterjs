@@ -11,6 +11,7 @@ import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
+import { fontWeightOnTableCellFormatHandler } from './table/fontWeightOnTableCellFormatHandler';
 import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
@@ -64,6 +65,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     float: floatFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
+    fontWeightOnTableCell: fontWeightOnTableCellFormatHandler,
     entity: entityFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
@@ -154,6 +156,7 @@ export const defaultFormatKeysPerCategory: {
     tableCell: [
         'border',
         'backgroundColor',
+        'fontWeightOnTableCell',
         'padding',
         'verticalAlign',
         'wordBreak',
