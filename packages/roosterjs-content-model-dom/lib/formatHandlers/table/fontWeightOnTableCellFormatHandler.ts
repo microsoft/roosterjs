@@ -8,7 +8,8 @@ export const fontWeightOnTableCellFormatHandler: FormatHandler<BoldFormat> = {
     parse: () => {},
     apply: (_format, element) => {
         // If the element is a TH, remove the font weight so it do not override the font weight of the segment
-        if (element.tagName == 'TH') {
+
+        if (element.tagName == 'TH' && !element.style.fontWeight) {
             element.style.fontWeight = 'normal';
         }
     },
