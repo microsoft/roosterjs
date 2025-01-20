@@ -93,7 +93,7 @@ function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: 
 
         const range = selection.range;
         const { startContainer, endContainer } = selection.range;
-        const isInSameTextNode = startContainer == endContainer && isNodeOfType(startContainer, 'TEXT_NODE');
+        const isInSameTextNode = startContainer === endContainer && isNodeOfType(startContainer, 'TEXT_NODE');
         return !isInSameTextNode || range.startOffset < 1 || range.startOffset > (startContainer.nodeValue?.length ?? 0) - 1;
     } else {
         const range = selection.range;
