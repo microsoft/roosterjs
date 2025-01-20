@@ -26,8 +26,7 @@ export function processPastedContentFromExcel(
     domCreator: DOMCreator,
     allowExcelNoBorderTable?: boolean
 ) {
-    const { htmlBefore, htmlAfter, clipboardData } = event;
-    let { fragment } = event;
+    const { fragment, htmlBefore, htmlAfter, clipboardData } = event;
 
     validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
 
