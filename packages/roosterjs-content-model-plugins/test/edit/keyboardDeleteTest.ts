@@ -651,7 +651,7 @@ describe('keyboardDelete', () => {
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('Delete the first or the last character - handleExpandedSelection disabled', () => {
+    it('Delete all the content of text node - handleExpandedSelection disabled', () => {
         const rawEvent = { key: 'Backspace' } as any;
         const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
         const node = document.createTextNode('test');
@@ -662,7 +662,7 @@ describe('keyboardDelete', () => {
                 startContainer: node,
                 endContainer: node,
                 startOffset: 0,
-                endOffset: 3,
+                endOffset: 4,
             } as any) as Range,
             isReverted: false,
         };
