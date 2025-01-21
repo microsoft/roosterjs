@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">95.12% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>39/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.5% </span>
+                <span class="strong">89.47% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>37/40</span>
+                <span class='fraction'>51/57</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">94.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>36/38</span>
             </div>
         
             
@@ -166,7 +166,17 @@
 <a name='L107'></a><a href='#L107'>107</a>
 <a name='L108'></a><a href='#L108'>108</a>
 <a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -197,12 +207,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,7 +234,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -249,10 +260,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -304,13 +324,14 @@ import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-conte
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The editor object
  * @param rawEvent DOM keyboard event
+ * @param handleExpandedSelection Whether to handle expanded selection within a text node by CM
  * @returns True if the event is handled by content model, otherwise false
  */
-export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent) {
+export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent, handleExpandedSelection: boolean = true) {
     let handled = false;
     const selection = editor.getDOMSelection();
 &nbsp;
-    if (shouldDeleteWithContentModel(selection, rawEvent)) {
+    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection)) {
         editor.formatContentModel(
             (model, context) =&gt; {
                 const result = deleteSelection(
@@ -357,11 +378,20 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     ];
 }
 &nbsp;
-function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
+function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent, handleExpandedSelection: boolean) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!selection) {
 <span class="cstat-no" title="statement not covered" >        return false; </span>// Nothing to delete
-    } else if (selection.type != 'range' || !selection.range.collapsed) {
-        return true; // Selection is not collapsed, need to delete all selections
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (selection.type != 'range') {
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    } else if (!selection.range.collapsed) {
+        if (handleExpandedSelection) {
+            return true; // Selection is not collapsed, need to delete all selections
+        }
+&nbsp;
+        const range = selection.range;
+        const { startContainer, endContainer } = selection.range;
+        const isInSameTextNode = startContainer === endContainer &amp;&amp; isNodeOfType(startContainer, 'TEXT_NODE');
+        return !(isInSameTextNode &amp;&amp; !isModifierKey(rawEvent) &amp;&amp; range.endOffset - range.startOffset &lt; (startContainer.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span>);
     } else {
         const range = selection.range;
 &nbsp;
@@ -391,7 +421,7 @@ function canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 21 2025 15:36:23 GMT+0000 (Coordinated Universal Time)
+                at Tue Jan 21 2025 18:21:31 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
