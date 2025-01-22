@@ -19,6 +19,12 @@ export type EditOptions = {
      * Whether to handle Tab key in keyboard. @default true
      */
     handleTabKey?: boolean;
+
+    /**
+     * Whether expanded selection within a text node should be handled by CM when pressing Backspace/Delete key.
+     * @default true
+     */
+    handleExpandedSelectionOnDelete?: boolean;
 };
 
 const BACKSPACE_KEY = 8;
@@ -33,6 +39,7 @@ const DEAD_KEY = 229;
 
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
+    handleExpandedSelectionOnDelete: true,
 };
 
 /**
@@ -164,7 +171,7 @@ export class EditPlugin implements EditorPlugin {
                 case 'Backspace':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    keyboardDelete(editor, rawEvent);
+                    keyboardDelete(editor, rawEvent, this.options.handleExpandedSelectionOnDelete);
                     break;
 
                 case 'Delete':
@@ -172,7 +179,7 @@ export class EditPlugin implements EditorPlugin {
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     // And leave it to browser when shift key is pressed so that browser will trigger cut event
                     if (!event.rawEvent.shiftKey) {
-                        keyboardDelete(editor, rawEvent);
+                        keyboardDelete(editor, rawEvent, this.options.handleExpandedSelectionOnDelete);
                     }
                     break;
 
@@ -225,7 +232,8 @@ export class EditPlugin implements EditorPlugin {
                         key: 'Backspace',
                         keyCode: BACKSPACE_KEY,
                         which: BACKSPACE_KEY,
-                    })
+                    }),
+                    this.options.handleExpandedSelectionOnDelete
                 );
                 break;
             case 'deleteContentForward':
@@ -235,7 +243,8 @@ export class EditPlugin implements EditorPlugin {
                         key: 'Delete',
                         keyCode: DELETE_KEY,
                         which: DELETE_KEY,
-                    })
+                    }),
+                    this.options.handleExpandedSelectionOnDelete
                 );
                 break;
         }
