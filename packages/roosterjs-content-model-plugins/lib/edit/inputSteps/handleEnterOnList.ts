@@ -150,7 +150,7 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
 
 const findIndex = (blocks: readonly ReadonlyContentModelBlock[], levelLength: number) => {
     let counter = 1;
-    for (let i = 0; i > -1; i++) {
+    for (let i = 0; i < blocks.length; i++) {
         const listItem = blocks[i];
 
         if (
