@@ -37,7 +37,11 @@ describe('applyTableFormat', () => {
             isHeader: false,
             spanAbove: false,
             spanLeft: false,
-            format: {},
+            format: isHeaderRow
+                ? {
+                      fontWeight: 'bold',
+                  }
+                : {},
             dataset: {},
             cachedElement: {} as any,
         };
@@ -61,7 +65,8 @@ describe('applyTableFormat', () => {
         const rows: ContentModelTableRow[] = [];
 
         for (let i = 0; i < row; i++) {
-            rows.push(createRow(column, isHeaderRow));
+            const headerRow = isHeaderRow && i == 0;
+            rows.push(createRow(column, headerRow));
         }
 
         return rows;
@@ -85,9 +90,11 @@ describe('applyTableFormat', () => {
     function runTest(
         format: TableMetadataFormat | undefined,
         exportedBackgroundColors: string[][],
-        expectedBorders: string[][][]
+        expectedBorders: string[][][],
+        formattedTable?: ReadonlyContentModelTable
     ) {
-        const table: ReadonlyContentModelTable = createTable(3, 4, format?.hasHeaderRow);
+        const table: ReadonlyContentModelTable =
+            formattedTable || createTable(3, 4, format?.hasHeaderRow);
 
         applyTableFormat(table, format);
 
@@ -101,16 +108,6 @@ describe('applyTableFormat', () => {
                     `BackgroundColor Row=${row} Col=${col}`
                 );
 
-                if (format?.hasHeaderRow) {
-                    cell.blocks.forEach(block => {
-                        if (block.blockType == 'Paragraph') {
-                            block.segments.forEach(segment => {
-                                expect(segment.format?.fontWeight).toBe('bold');
-                            });
-                        }
-                    });
-                }
-
                 const { borderTop, borderRight, borderLeft, borderBottom } = cell.format;
                 const borders = expectedBorders[row][col];
 
@@ -121,6 +118,20 @@ describe('applyTableFormat', () => {
 
                 expect(cell.cachedElement).toBeUndefined();
             }
+        }
+
+        for (let col = 0; col < 4; col++) {
+            const cell = table.rows[0].cells[col];
+            for (let block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    block.segments.forEach(segment => {
+                        expect(segment.format?.fontWeight).toBe(
+                            format?.hasHeaderRow ? 'bold' : undefined
+                        );
+                    });
+                }
+            }
+            expect(cell.format.fontWeight).toBe(format?.hasHeaderRow ? 'bold' : undefined);
         }
     }
 
@@ -158,40 +169,43 @@ describe('applyTableFormat', () => {
     });
 
     it('With Header row', () => {
-        const B = '1px solid #ABABAB';
-        const U = (undefined as any) as string;
-        const H = '#ABABAB';
-        runTest(
-            {
-                hasHeaderRow: true,
-                headerRowColor: '#ABABAB',
-            },
-            [
-                [H, H, H, H],
-                [U, U, U, U],
-                [U, U, U, U],
-            ],
-            [
-                [
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                ],
-                [
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                ],
-                [
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                    [B, B, B, B],
-                ],
-            ]
-        );
+        const table = createTable(3, 4, false);
+
+        applyTableFormat(table, {
+            hasHeaderRow: true,
+        });
+
+        for (let col = 0; col < 4; col++) {
+            const cell = table.rows[0].cells[col];
+            for (let block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    block.segments.forEach(segment => {
+                        expect(segment.format?.fontWeight).toBe('bold');
+                    });
+                }
+            }
+            expect(cell.format.fontWeight).toBe('normal');
+        }
+    });
+
+    it('Remove Header row', () => {
+        const table = createTable(3, 4, true);
+
+        applyTableFormat(table, {
+            hasHeaderRow: false,
+        });
+
+        for (let col = 0; col < 4; col++) {
+            const cell = table.rows[0].cells[col];
+            for (let block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    block.segments.forEach(segment => {
+                        expect(segment.format?.fontWeight).toBe(undefined);
+                    });
+                }
+            }
+            expect(cell.format.fontWeight).toBe(undefined);
+        }
     });
 
     it('FIRST_COLUMN_HEADER_EXTERNAL', () => {

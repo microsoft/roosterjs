@@ -235,6 +235,10 @@ function formatCells(
 
             // Format Header
             cell.isHeader = false;
+
+            if (rowIndex === 0 && cell.format.fontWeight) {
+                setCellFontWeight(cell, false /*isHeader*/);
+            }
         });
     });
 }
@@ -297,6 +301,7 @@ function setHeaderRowFormat(
 
         cell.isHeader = true;
 
+        setCellFontWeight(cell, true /*isHeader*/);
         if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                 setTableCellBackgroundColor(
@@ -306,7 +311,6 @@ function setHeaderRowFormat(
                     true /*applyToSegments*/
                 );
             }
-            setBoldOnHeaderCell(cell);
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
             setBorderColor(cell.format, 'borderRight', format.headerRowColor);
             setBorderColor(cell.format, 'borderLeft', format.headerRowColor);
@@ -330,14 +334,15 @@ function getBorderStyleFromColor(color?: string): string {
     return !color || color == 'transparent' ? 'none' : 'solid';
 }
 
-function setBoldOnHeaderCell(cell: ShallowMutableContentModelTableCell) {
+function setCellFontWeight(cell: ShallowMutableContentModelTableCell, isHeader: boolean) {
     for (const block of cell.blocks) {
         if (block.blockType == 'Paragraph') {
             for (const segment of block.segments) {
                 mutateSegment(block, segment, segment => {
-                    segment.format.fontWeight = 'bold';
+                    segment.format.fontWeight = isHeader ? 'bold' : undefined;
                 });
             }
         }
     }
+    cell.format.fontWeight = isHeader ? 'normal' : undefined;
 }

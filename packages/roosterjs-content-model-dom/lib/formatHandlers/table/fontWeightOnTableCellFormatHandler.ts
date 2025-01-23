@@ -5,11 +5,14 @@ import type { BoldFormat } from 'roosterjs-content-model-types';
  * @internal
  */
 export const fontWeightOnTableCellFormatHandler: FormatHandler<BoldFormat> = {
-    parse: () => {},
-    apply: (_format, element) => {
+    parse: (format, element) => {
+        if (element.style.fontWeight == 'normal') {
+            format.fontWeight = 'normal';
+        }
+    },
+    apply: (format, element) => {
         // If the element is a TH, remove the font weight so it do not override the font weight of the segment
-
-        if (element.tagName == 'TH' && !element.style.fontWeight) {
+        if (format.fontWeight == 'normal') {
             element.style.fontWeight = 'normal';
         }
     },
