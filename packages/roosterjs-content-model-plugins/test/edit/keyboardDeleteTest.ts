@@ -580,6 +580,31 @@ describe('keyboardDelete', () => {
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 
+    it('No need to delete - handleExpandedSelection disabled', () => {
+        const rawEvent = { key: 'Backspace' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
+        const node = document.createTextNode('test');
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: false,
+                startContainer: node,
+                endContainer: node,
+                startOffset: 1,
+                endOffset: 3,
+            } as any) as Range,
+            isReverted: false,
+        };
+        const editor = {
+            formatContentModel: formatWithContentModelSpy,
+            getDOMSelection: () => range,
+        } as any;
+
+        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
+
+        expect(formatWithContentModelSpy).not.toHaveBeenCalled();
+    });
+
     it('Backspace from the beginning', () => {
         const rawEvent = { key: 'Backspace' } as any;
         const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
@@ -622,6 +647,31 @@ describe('keyboardDelete', () => {
         } as any;
 
         keyboardDelete(editor, rawEvent);
+
+        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Delete all the content of text node - handleExpandedSelection disabled', () => {
+        const rawEvent = { key: 'Backspace' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
+        const node = document.createTextNode('test');
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: false,
+                startContainer: node,
+                endContainer: node,
+                startOffset: 0,
+                endOffset: 4,
+            } as any) as Range,
+            isReverted: false,
+        };
+        const editor = {
+            formatContentModel: formatWithContentModelSpy,
+            getDOMSelection: () => range,
+        } as any;
+
+        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
 
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });

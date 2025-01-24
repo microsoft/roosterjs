@@ -1,13 +1,19 @@
 import { addParser } from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type { BeforePasteEvent, DOMCreator, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    BeforePasteEvent,
+    ClipboardData,
+    DOMCreator,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
+const TABLE_SELECTOR = 'table';
 
 /**
  * @internal
@@ -20,13 +26,9 @@ export function processPastedContentFromExcel(
     domCreator: DOMCreator,
     allowExcelNoBorderTable?: boolean
 ) {
-    const { fragment, htmlBefore, clipboardData } = event;
-    const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
+    const { fragment, htmlBefore, htmlAfter, clipboardData } = event;
 
-    if (html && clipboardData.html != html) {
-        const doc = domCreator.htmlToDOM(html);
-        moveChildNodes(fragment, doc?.body);
-    }
+    validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
 
     // For Excel Online
     const firstChild = fragment.firstChild;
@@ -87,21 +89,62 @@ export const childProcessor: ElementProcessor<ParentNode> = (group, element, con
 };
 
 /**
+ * @internal
+ * Exported only for unit test
+ */
+export function validateExcelFragment(
+    fragment: DocumentFragment,
+    domCreator: DOMCreator,
+    htmlBefore: string,
+    clipboardData: ClipboardData,
+    htmlAfter: string
+) {
+    // Clipboard content of Excel may contain the <StartFragment> and EndFragment comment tags inside the table
+    //
+    // @example
+    // <table>
+    // <!--StartFragment-->
+    // <tr>...</tr>
+    // <!--EndFragment-->
+    // </table>
+    //
+    // This causes that the fragment is not properly created and the table is not extracted.
+    // The content that is before the StartFragment is htmlBefore and the content that is after the EndFragment is htmlAfter.
+    // So attempt to create a new document fragment with the content of htmlBefore + clipboardData.html + htmlAfter
+    // If a table is found, replace the fragment with the new fragment
+    const result =
+        !fragment.querySelector(TABLE_SELECTOR) &&
+        domCreator.htmlToDOM(htmlBefore + clipboardData.html + htmlAfter);
+    if (result && result.querySelector(TABLE_SELECTOR)) {
+        moveChildNodes(fragment, result?.body);
+    } else {
+        // If the table is still not found, try to extract the table from the clipboard data using Regex
+        const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
+
+        if (html && clipboardData.html != html) {
+            const doc = domCreator.htmlToDOM(html);
+            moveChildNodes(fragment, doc?.body);
+        }
+    }
+}
+
+/**
  * @internal Export for test only
  * @param html Source html
  */
-
 export function excelHandler(html: string, htmlBefore: string): string {
-    if (html.match(LAST_TD_END_REGEX)) {
-        const trMatch = htmlBefore.match(LAST_TR_REGEX);
-        const tr = trMatch ? trMatch[0] : '<TR>';
-        html = tr + html + '</TR>';
+    try {
+        if (html.match(LAST_TD_END_REGEX)) {
+            const trMatch = htmlBefore.match(LAST_TR_REGEX);
+            const tr = trMatch ? trMatch[0] : '<TR>';
+            html = tr + html + '</TR>';
+        }
+        if (html.match(LAST_TR_END_REGEX)) {
+            const tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
+            const table = tableMatch ? tableMatch[0] : '<TABLE>';
+            html = table + html + '</TABLE>';
+        }
+    } finally {
+        return html;
     }
-    if (html.match(LAST_TR_END_REGEX)) {
-        const tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
-        const table = tableMatch ? tableMatch[0] : '<TABLE>';
-        html = table + html + '</TABLE>';
-    }
-
-    return html;
 }

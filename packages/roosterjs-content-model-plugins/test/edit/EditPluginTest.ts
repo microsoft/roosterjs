@@ -66,7 +66,7 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, true);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
             expect(keyboardTabSpy).not.toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, true);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
             expect(keyboardTabSpy).not.toHaveBeenCalled();
@@ -104,6 +104,20 @@ describe('EditPlugin', () => {
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
             expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('handleExpandedSelectionOnDelete disabled', () => {
+            plugin = new EditPlugin({ handleExpandedSelectionOnDelete: false });
+            const rawEvent = { key: 'Delete' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, false);
         });
 
         it('Tab', () => {
@@ -259,9 +273,13 @@ describe('EditPlugin', () => {
                 rawEvent: { key: 'Delete' } as any,
             });
 
-            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
-                key: 'Delete',
-            } as any);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(
+                editor,
+                {
+                    key: 'Delete',
+                } as any,
+                true
+            );
 
             plugin.onPluginEvent({
                 eventType: 'keyDown',
@@ -269,9 +287,13 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledTimes(2);
-            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
-                key: 'Delete',
-            } as any);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(
+                editor,
+                {
+                    key: 'Delete',
+                } as any,
+                true
+            );
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
             expect(keyboardTabSpy).not.toHaveBeenCalled();
@@ -309,7 +331,8 @@ describe('EditPlugin', () => {
                     key: 'Backspace',
                     keyCode: 8,
                     which: 8,
-                })
+                }),
+                true
             );
         });
 
@@ -337,7 +360,8 @@ describe('EditPlugin', () => {
                     key: 'Delete',
                     keyCode: 46,
                     which: 46,
-                })
+                }),
+                true
             );
         });
     });
