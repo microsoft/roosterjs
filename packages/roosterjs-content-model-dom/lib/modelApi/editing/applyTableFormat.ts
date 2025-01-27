@@ -1,6 +1,6 @@
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { mutateBlock } from '../common/mutate';
+import { mutateBlock, mutateSegment } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -8,6 +8,7 @@ import { updateTableMetadata } from '../metadata/updateTableMetadata';
 import type {
     BorderFormat,
     ReadonlyContentModelTable,
+    ShallowMutableContentModelTableCell,
     ShallowMutableContentModelTableRow,
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
@@ -234,6 +235,7 @@ function formatCells(
 
             // Format Header
             cell.isHeader = false;
+            setTableHeaderStyle(cell, false);
         });
     });
 }
@@ -295,6 +297,7 @@ function setHeaderRowFormat(
         const cell = mutateBlock(readonlyCell);
 
         cell.isHeader = true;
+        setTableHeaderStyle(cell, true);
 
         if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
@@ -327,4 +330,28 @@ function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: s
 
 function getBorderStyleFromColor(color?: string): string {
     return !color || color == 'transparent' ? 'none' : 'solid';
+}
+
+function setTableHeaderStyle(cell: ShallowMutableContentModelTableCell, isHeader: boolean) {
+    for (const block of cell.blocks) {
+        if (block.blockType == 'Paragraph') {
+            const mutatedBlock = mutateBlock(block);
+            if (isHeader) {
+                mutatedBlock.decorator = {
+                    tagName: 'div',
+                    format: {
+                        fontWeight: 'bold',
+                    },
+                };
+
+                for (const segment of block.segments) {
+                    mutateSegment(block, segment, segment => {
+                        delete segment.format.fontWeight;
+                    });
+                }
+            } else {
+                mutatedBlock.decorator = undefined;
+            }
+        }
+    }
 }

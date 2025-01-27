@@ -224,6 +224,7 @@ describe('mergePasteContent', () => {
                                                     format: {},
                                                 },
                                             ],
+                                            decorator: undefined,
                                             format: {},
                                             isImplicit: true,
                                         },

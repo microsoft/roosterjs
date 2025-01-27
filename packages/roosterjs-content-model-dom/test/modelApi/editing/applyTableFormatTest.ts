@@ -1,6 +1,7 @@
 import { applyTableFormat } from '../../../lib/modelApi/editing/applyTableFormat';
 import { TableBorderFormat } from '../../../lib/constants/TableBorderFormat';
 import {
+    ContentModelParagraphDecorator,
     ContentModelTable,
     ContentModelTableCell,
     ContentModelTableRow,
@@ -630,6 +631,76 @@ describe('applyTableFormat', () => {
                     expect(segment.format?.textColor).toBe(undefined);
                 });
             }
+        });
+    });
+
+    function runHeaderTest(
+        table: ReadonlyContentModelTable,
+        format: TableMetadataFormat | undefined,
+        expectedDecorator?: ContentModelParagraphDecorator
+    ) {
+        applyTableFormat(table, format);
+
+        expect(table.cachedElement).toBeUndefined();
+
+        for (let col = 0; col < 4; col++) {
+            const cell = table.rows[0].cells[col];
+            cell.blocks.forEach(block => {
+                if (block.blockType == 'Paragraph') {
+                    if (expectedDecorator) {
+                        expect(block.decorator).toEqual(expectedDecorator);
+                    } else {
+                        expect(block.decorator).toBeUndefined();
+                    }
+                }
+            });
+        }
+    }
+
+    it('apply header row', () => {
+        const table: ReadonlyContentModelTable = createTable(3, 4);
+        applyTableFormat(table);
+        runHeaderTest(
+            table,
+            {
+                hasHeaderRow: true,
+                headerRowColor: 'red',
+            },
+            {
+                tagName: 'span',
+                format: {
+                    fontWeight: 'bold',
+                },
+            }
+        );
+    });
+
+    it('apply header row', () => {
+        const table: ReadonlyContentModelTable = createTable(3, 4);
+        applyTableFormat(table);
+        runHeaderTest(
+            table,
+            {
+                hasHeaderRow: true,
+                headerRowColor: 'red',
+            },
+            {
+                tagName: 'div',
+                format: {
+                    fontWeight: 'bold',
+                },
+            }
+        );
+    });
+
+    it('remove header row', () => {
+        const table: ReadonlyContentModelTable = createTable(3, 4);
+        applyTableFormat(table, {
+            hasHeaderRow: true,
+            headerRowColor: 'red',
+        });
+        runHeaderTest(table, {
+            hasHeaderRow: false,
         });
     });
 });
