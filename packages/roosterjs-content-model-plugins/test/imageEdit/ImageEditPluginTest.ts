@@ -10,9 +10,11 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     DOMEventRecord,
+    DOMSelection,
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
+    ImageSelection,
 } from 'roosterjs-content-model-types';
 
 describe('ImageEditPlugin', () => {
@@ -668,6 +670,55 @@ describe('ImageEditPlugin', () => {
         const expectedImage = document.createElement('img');
         expectedClonedRoot.appendChild(expectedImage);
         expect(event.clonedRoot).toEqual(expectedClonedRoot);
+        plugin.dispose();
+    });
+
+    it('contentChanged - should remove isEditing', () => {
+        const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        const image = document.createElement('img');
+        image.dataset['isEditing'] = 'true';
+        const selection = {
+            type: 'image',
+            image,
+        } as DOMSelection;
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.SetContent,
+        } as any;
+        plugin.onPluginEvent(event);
+        const newSelection = editor.getDOMSelection() as ImageSelection;
+        expect(newSelection!.type).toBe('image');
+        expect(newSelection!.image.dataset.isEditing).toBeUndefined();
+        plugin.dispose();
+    });
+
+    it('contentChanged - should remove  editor caret style', () => {
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        plugin.setIsEditing(true);
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.Format,
+        } as any;
+        plugin.onPluginEvent(event);
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
+        plugin.dispose();
+    });
+
+    it('contentChanged - should not remove  editor caret style', () => {
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        plugin.setIsEditing(true);
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.Format,
+            formatApiName: 'ImageEditEvent',
+        } as any;
+        plugin.onPluginEvent(event);
+        expect(editor.setEditorStyle).not.toHaveBeenCalled();
         plugin.dispose();
     });
 });
