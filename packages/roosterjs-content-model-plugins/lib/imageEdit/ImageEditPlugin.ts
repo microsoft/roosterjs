@@ -286,17 +286,21 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
+    private formatEventHandler(event: ContentChangedEvent) {
+        if (this.isEditing && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
+            this.cleanInfo();
+            this.isEditing = false;
+            this.isCropMode = false;
+        }
+    }
+
     private contentChangedHandler(editor: IEditor, event: ContentChangedEvent) {
         switch (event.source) {
             case ChangeSource.SetContent:
                 this.setContentHandler(editor);
                 break;
             case ChangeSource.Format:
-                if (this.isEditing && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
-                    this.cleanInfo();
-                    this.isEditing = false;
-                    this.isCropMode = false;
-                }
+                this.formatEventHandler(event);
                 break;
             case ChangeSource.Drop:
                 this.onDropHandler(editor);
