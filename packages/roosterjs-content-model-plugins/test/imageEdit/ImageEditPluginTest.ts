@@ -670,6 +670,45 @@ describe('ImageEditPlugin', () => {
         expect(event.clonedRoot).toEqual(expectedClonedRoot);
         plugin.dispose();
     });
+
+    it('beforeSetContent - should remove isEditing', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const clonedRoot = document.createElement('div');
+        const image = document.createElement('img');
+        clonedRoot.appendChild(image);
+        image.dataset['editingInfo'] = JSON.stringify({
+            src: 'test',
+        });
+        image.dataset['isEditing'] = 'true';
+        const event = {
+            eventType: 'beforeSetContent',
+            newContent: JSON.stringify(clonedRoot),
+        } as any;
+        plugin.onPluginEvent(event);
+        const isEditing = event.newContent.includes('data-is-editing="true"');
+        expect(isEditing).toBeFalse();
+        plugin.dispose();
+    });
+
+    it('beforeSetContent - should editor caret style', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        const clonedRoot = document.createElement('div');
+        const image = document.createElement('img');
+        clonedRoot.appendChild(image);
+        image.dataset['editingInfo'] = JSON.stringify({
+            src: 'test',
+        });
+        image.dataset['isEditing'] = 'true';
+        const event = {
+            eventType: 'beforeSetContent',
+            newContent: JSON.stringify(clonedRoot),
+        } as any;
+        plugin.onPluginEvent(event);
+        expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
+        plugin.dispose();
+    });
 });
 
 class TestPlugin extends ImageEditPlugin {

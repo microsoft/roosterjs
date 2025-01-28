@@ -55,6 +55,7 @@ const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
+const IMAGE_EDIT_DATASET = 'data-is-editing="true"';
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -177,6 +178,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'extractContentWithDom':
                 this.removeImageEditing(event.clonedRoot);
                 break;
+            case 'beforeSetContent':
+                this.beforeSetContentHandler(this.editor, event.newContent);
+                break;
         }
     }
 
@@ -277,6 +281,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 );
             }
         }
+    }
+
+    private beforeSetContentHandler(editor: IEditor, newContent: string) {
+        newContent.replace(IMAGE_EDIT_DATASET, '');
+        editor?.setEditorStyle(IMAGE_EDIT_CLASS_CARET, null);
     }
 
     /**
