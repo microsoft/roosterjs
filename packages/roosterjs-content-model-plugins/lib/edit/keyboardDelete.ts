@@ -27,13 +27,14 @@ import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-conte
  * Do keyboard event handling for DELETE/BACKSPACE key
  * @param editor The editor object
  * @param rawEvent DOM keyboard event
+ * @param handleExpandedSelection Whether to handle expanded selection within a text node by CM
  * @returns True if the event is handled by content model, otherwise false
  */
-export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent) {
+export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent, handleExpandedSelection: boolean = true) {
     let handled = false;
     const selection = editor.getDOMSelection();
 
-    if (shouldDeleteWithContentModel(selection, rawEvent)) {
+    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection)) {
         editor.formatContentModel(
             (model, context) => {
                 const result = deleteSelection(
@@ -80,11 +81,20 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
     ];
 }
 
-function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
+function shouldDeleteWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent, handleExpandedSelection: boolean) {
     if (!selection) {
         return false; // Nothing to delete
-    } else if (selection.type != 'range' || !selection.range.collapsed) {
-        return true; // Selection is not collapsed, need to delete all selections
+    } else if (selection.type != 'range') {
+        return true;
+    } else if (!selection.range.collapsed) {
+        if (handleExpandedSelection) {
+            return true; // Selection is not collapsed, need to delete all selections
+        }
+
+        const range = selection.range;
+        const { startContainer, endContainer } = selection.range;
+        const isInSameTextNode = startContainer === endContainer && isNodeOfType(startContainer, 'TEXT_NODE');
+        return !(isInSameTextNode && !isModifierKey(rawEvent) && range.endOffset - range.startOffset < (startContainer.nodeValue?.length ?? 0));
     } else {
         const range = selection.range;
 
