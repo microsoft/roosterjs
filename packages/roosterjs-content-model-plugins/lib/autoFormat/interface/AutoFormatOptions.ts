@@ -28,4 +28,9 @@ export interface AutoFormatOptions extends AutoLinkOptions {
      * Transform ordinal numbers into superscript
      */
     autoOrdinals?: boolean;
+
+    /**
+     * Remove the margins of auto triggered list
+     */
+    removeListMargins?: boolean;
 }
