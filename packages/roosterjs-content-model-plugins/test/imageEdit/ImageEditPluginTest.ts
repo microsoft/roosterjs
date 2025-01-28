@@ -10,9 +10,11 @@ import {
     ContentModelDocument,
     ContentModelFormatter,
     DOMEventRecord,
+    DOMSelection,
     EditorEnvironment,
     FormatContentModelOptions,
     IEditor,
+    ImageSelection,
 } from 'roosterjs-content-model-types';
 
 describe('ImageEditPlugin', () => {
@@ -671,42 +673,52 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
-    it('beforeSetContent - should remove isEditing', () => {
+    it('contentChanged - should remove isEditing', () => {
         const plugin = new ImageEditPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
-        const clonedRoot = document.createElement('div');
         const image = document.createElement('img');
-        clonedRoot.appendChild(image);
-        image.dataset['editingInfo'] = JSON.stringify({
-            src: 'test',
-        });
         image.dataset['isEditing'] = 'true';
+        const selection = {
+            type: 'image',
+            image,
+        } as DOMSelection;
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         const event = {
-            eventType: 'beforeSetContent',
-            newContent: JSON.stringify(clonedRoot),
+            eventType: 'contentChanged',
+            source: ChangeSource.SetContent,
         } as any;
         plugin.onPluginEvent(event);
-        const isEditing = event.newContent.includes('data-is-editing="true"');
-        expect(isEditing).toBeFalse();
+        const newSelection = editor.getDOMSelection() as ImageSelection;
+        expect(newSelection!.type).toBe('image');
+        expect(newSelection!.image.dataset.isEditing).toBeUndefined();
         plugin.dispose();
     });
 
-    it('beforeSetContent - should editor caret style', () => {
-        const plugin = new ImageEditPlugin();
+    it('contentChanged - should remove  editor caret style', () => {
+        const plugin = new TestPlugin();
         plugin.initialize(editor);
-        const clonedRoot = document.createElement('div');
-        const image = document.createElement('img');
-        clonedRoot.appendChild(image);
-        image.dataset['editingInfo'] = JSON.stringify({
-            src: 'test',
-        });
-        image.dataset['isEditing'] = 'true';
+        plugin.setIsEditing(true);
         const event = {
-            eventType: 'beforeSetContent',
-            newContent: JSON.stringify(clonedRoot),
+            eventType: 'contentChanged',
+            source: ChangeSource.Format,
         } as any;
         plugin.onPluginEvent(event);
         expect(editor.setEditorStyle).toHaveBeenCalledWith('imageEditCaretColor', null);
+        plugin.dispose();
+    });
+
+    it('contentChanged - should not remove  editor caret style', () => {
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        plugin.setIsEditing(true);
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.Format,
+            formatApiName: 'ImageEditEvent',
+        } as any;
+        plugin.onPluginEvent(event);
+        expect(editor.setEditorStyle).not.toHaveBeenCalled();
         plugin.dispose();
     });
 });
