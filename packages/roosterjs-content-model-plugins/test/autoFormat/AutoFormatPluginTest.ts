@@ -378,6 +378,73 @@ describe('Content Model Auto Format Plugin Test', () => {
                 false
             );
         });
+
+        it('should trigger keyboardListTrigger with no margins', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', defaultPrevented: false, inputType: 'insertText' } as any,
+            };
+            runTest(
+                event,
+                true,
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            levels: [
+                                {
+                                    listType: 'UL',
+                                    format: {
+                                        startNumberOverride: 1,
+                                        direction: undefined,
+                                        textAlign: undefined,
+                                        marginBottom: '0px',
+                                        marginTop: '0px',
+                                    },
+                                    dataset: {
+                                        editingInfo:
+                                            '{"applyListStyleFromLevel":false,"unorderedStyleType":1}',
+                                    },
+                                },
+                            ],
+
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {
+                                    fontFamily: undefined,
+                                    fontSize: undefined,
+                                    textColor: undefined,
+                                },
+                            },
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                    segments: [
+                                        marker,
+                                        {
+                                            segmentType: 'Br',
+                                            format: {},
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    autoBullet: true,
+                    autoNumbering: true,
+                    removeListMargins: true,
+                },
+                true
+            );
+        });
     });
 
     describe('onPluginEvent - [TAB] - keyboardListTrigger', () => {

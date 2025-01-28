@@ -28,6 +28,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoHyphen: false,
     autoFraction: false,
     autoOrdinals: false,
+    removeListMargins: false,
 };
 
 /**
@@ -40,6 +41,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
      *  - autoNumbering: A boolean that enables or disables automatic numbering formatting. Defaults to false.
+     *  - removeListMargins: A boolean to remove list margins when it is automatically triggered. Defaults to false.
      *  - autoHyphen: A boolean that enables or disables automatic hyphen transformation. Defaults to false.
      *  - autoFraction: A boolean that enables or disables automatic fraction transformation. Defaults to false.
      *  - autoOrdinals: A boolean that enables or disables automatic ordinal number transformation. Defaults to false.
@@ -125,6 +127,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                                 autoOrdinals,
                                 autoMailto,
                                 autoTel,
+                                removeListMargins,
                             } = this.options;
                             let shouldHyphen = false;
                             let shouldLink = false;
@@ -138,7 +141,8 @@ export class AutoFormatPlugin implements EditorPlugin {
                                     paragraph,
                                     context,
                                     autoBullet,
-                                    autoNumbering
+                                    autoNumbering,
+                                    removeListMargins
                                 );
                             }
 
@@ -211,7 +215,11 @@ export class AutoFormatPlugin implements EditorPlugin {
                         formatTextSegmentBeforeSelectionMarker(
                             editor,
                             (model, _previousSegment, paragraph, _markerFormat, context) => {
-                                const { autoBullet, autoNumbering } = this.options;
+                                const {
+                                    autoBullet,
+                                    autoNumbering,
+                                    removeListMargins,
+                                } = this.options;
                                 let shouldList = false;
                                 if (autoBullet || autoNumbering) {
                                     shouldList = keyboardListTrigger(
@@ -219,7 +227,8 @@ export class AutoFormatPlugin implements EditorPlugin {
                                         paragraph,
                                         context,
                                         autoBullet,
-                                        autoNumbering
+                                        autoNumbering,
+                                        removeListMargins
                                     );
                                     context.canUndoByBackspace = shouldList;
                                 }

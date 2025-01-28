@@ -21,13 +21,14 @@ export function keyboardListTrigger(
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext,
     shouldSearchForBullet: boolean = true,
-    shouldSearchForNumbering: boolean = true
+    shouldSearchForNumbering: boolean = true,
+    removeListMargins?: boolean
 ) {
     const listStyleType = getListTypeStyle(model, shouldSearchForBullet, shouldSearchForNumbering);
     if (listStyleType) {
         paragraph.segments.splice(0, 1);
         const { listType, styleType, index } = listStyleType;
-        triggerList(model, listType, styleType, index);
+        triggerList(model, listType, styleType, index, removeListMargins);
         context.canUndoByBackspace = true;
         setAnnounceData(model, context);
 
@@ -40,9 +41,10 @@ const triggerList = (
     model: ReadonlyContentModelDocument,
     listType: 'OL' | 'UL',
     styleType: number,
-    index?: number
+    index?: number,
+    removeListMargins?: boolean
 ) => {
-    setListType(model, listType);
+    setListType(model, listType, removeListMargins);
     const isOrderedList = listType == 'OL';
     if (index && index > 0 && isOrderedList) {
         setModelListStartNumber(model, index);
