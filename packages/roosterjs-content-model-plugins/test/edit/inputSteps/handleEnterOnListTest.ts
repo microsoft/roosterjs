@@ -3198,4 +3198,898 @@ describe('handleEnterOnList - keyboardEnter', () => {
         };
         runTest(model, false, expectedModel, false, 1);
     });
+
+    it('Should maintain list chain when split the list ', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'two',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'three',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'four',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'two',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                                startNumberOverride: 3,
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'three',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'four',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        runTest(model, false, expectedModel, false, 1);
+    });
+
+    it('Should maintain list chain when split the list two times', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'two',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                                startNumberOverride: 3,
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'three',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'four',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'five',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    isSelected: true,
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'six',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'two',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                                startNumberOverride: 3,
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'three',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'four',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'five',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                listStyleType: 'decimal',
+                                startNumberOverride: 6,
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'six',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        runTest(model, false, expectedModel, false, 1);
+    });
 });
