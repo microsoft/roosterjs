@@ -47,7 +47,10 @@ export const formatContentModel: FormatContentModel = (
 
     if (changed) {
         const isNested = core.undo.isNested;
-        const shouldAddSnapshot = !skipUndoSnapshot && !isNested;
+        const shouldAddSnapshot =
+            (!skipUndoSnapshot || skipUndoSnapshot == 'DoNotSkip') && !isNested;
+        const shouldMarkNewContent =
+            (skipUndoSnapshot === true || skipUndoSnapshot == 'MarkNewContent') && !isNested;
         let selection: DOMSelection | undefined;
 
         if (shouldAddSnapshot) {
@@ -94,7 +97,9 @@ export const formatContentModel: FormatContentModel = (
 
             if (shouldAddSnapshot) {
                 core.api.addUndoSnapshot(core, false /*canUndoByBackspace*/, entityStates);
-            } else {
+            }
+
+            if (shouldMarkNewContent) {
                 core.undo.snapshotsManager.hasNewContent = true;
             }
         } finally {
