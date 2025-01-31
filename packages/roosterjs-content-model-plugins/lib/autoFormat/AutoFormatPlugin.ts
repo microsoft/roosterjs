@@ -114,7 +114,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                     const formatOptions: FormatContentModelOptions = {
                         changeSource: '',
                         apiName: '',
-                        getChangeData: () => null,
+                        getChangeData: undefined,
                     };
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
@@ -153,14 +153,15 @@ export class AutoFormatPlugin implements EditorPlugin {
                                     autoTel,
                                     autoMailto,
                                 });
-                                const anchorNode = createAnchor(
-                                    linkSegment?.link?.format?.href || '',
-                                    linkSegment?.text || ''
-                                );
-                                formatOptions.getChangeData = () => anchorNode;
-                                shouldLink = !!linkSegment;
 
-                                if (shouldLink) {
+                                if (linkSegment) {
+                                    const anchor = createAnchor(
+                                        linkSegment.link?.format.href || '',
+                                        linkSegment.text
+                                    );
+                                    formatOptions.getChangeData = () => anchor;
+
+                                    shouldLink = true;
                                     context.canUndoByBackspace = true;
                                 }
                             }
