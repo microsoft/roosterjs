@@ -16,6 +16,7 @@ import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
 import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
+import { PlainTextPlugin } from '../sidePane/plainText/PlainTextPlugin';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
 import { registerWindowForCss, unregisterWindowForCss } from '../../utils/cssMonitor';
@@ -102,6 +103,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private imageEditPlugin: ImageEditPlugin;
+    private plainTextPlugin: PlainTextPlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -140,6 +142,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.imageEditPlugin = new ImageEditPlugin();
+        this.plainTextPlugin = new PlainTextPlugin();
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -481,6 +484,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.snapshotPlugin,
             this.contentModelPanePlugin,
             this.presetPlugin,
+            this.plainTextPlugin,
         ];
     }
 
