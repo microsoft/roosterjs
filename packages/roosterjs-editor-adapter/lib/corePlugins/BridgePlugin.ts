@@ -126,15 +126,15 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     onPluginEvent(event: PluginEvent) {
         const oldEvent = this.cacheGetOldEvent(event);
 
+        const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
+
+        if (exclusivelyHandleEventPlugin) {
+            this.handleEvent(exclusivelyHandleEventPlugin, oldEvent, event);
+        } else {
+            this.legacyPlugins.forEach(plugin => this.handleEvent(plugin, oldEvent, event));
+        }
+
         if (oldEvent) {
-            const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
-
-            if (exclusivelyHandleEventPlugin) {
-                this.handleEvent(exclusivelyHandleEventPlugin, oldEvent, event);
-            } else {
-                this.legacyPlugins.forEach(plugin => this.handleEvent(plugin, oldEvent, event));
-            }
-
             Object.assign(event, oldEventToNewEvent(oldEvent, event));
         }
     }
@@ -165,17 +165,15 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         return cacheGetEventData(event, ExclusivelyHandleEventPluginKey, event => {
             const oldEvent = this.cacheGetOldEvent(event);
 
-            if (oldEvent) {
-                for (let i = 0; i < this.legacyPlugins.length; i++) {
-                    const plugin = this.legacyPlugins[i];
+            for (let i = 0; i < this.legacyPlugins.length; i++) {
+                const plugin = this.legacyPlugins[i];
 
-                    if (plugin.willHandleEventExclusively?.(oldEvent)) {
-                        return plugin;
-                    }
+                if (oldEvent && plugin.willHandleEventExclusively?.(oldEvent)) {
+                    return plugin;
+                }
 
-                    if (isMixedPlugin(plugin) && plugin.willHandleEventExclusivelyV9?.(event)) {
-                        return plugin;
-                    }
+                if (isMixedPlugin(plugin) && plugin.willHandleEventExclusivelyV9?.(event)) {
+                    return plugin;
                 }
             }
 
@@ -200,10 +198,12 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
     private handleEvent(
         plugin: LegacyEditorPlugin,
-        oldEvent: LegacyPluginEvent,
+        oldEvent: LegacyPluginEvent | undefined,
         newEvent: PluginEvent
     ) {
-        plugin.onPluginEvent?.(oldEvent);
+        if (oldEvent && plugin.onPluginEvent) {
+            plugin.onPluginEvent(oldEvent);
+        }
 
         if (isMixedPlugin(plugin)) {
             plugin.onPluginEventV9?.(newEvent);
