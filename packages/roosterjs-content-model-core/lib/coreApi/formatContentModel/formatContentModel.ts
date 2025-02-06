@@ -25,13 +25,8 @@ export const formatContentModel: FormatContentModel = (
     options,
     domToModelOptions
 ) => {
-    const {
-        onNodeCreated,
-        getChangeData,
-        rawEvent,
-        selectionOverride,
-        scrollCaretIntoView: scroll,
-    } = options || {};
+    const { onNodeCreated, rawEvent, selectionOverride, scrollCaretIntoView: scroll } =
+        options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
         newEntities: [],
@@ -81,7 +76,7 @@ export const formatContentModel: FormatContentModel = (
                 contentModel: clearModelCache ? undefined : model,
                 selection: clearModelCache ? undefined : selection,
                 source: options?.changeSource || ChangeSource.Format,
-                data: getChangeData?.(),
+                data: options?.getChangeData?.(),
                 formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
             };
