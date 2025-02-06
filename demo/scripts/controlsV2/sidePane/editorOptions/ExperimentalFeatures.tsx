@@ -13,7 +13,6 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
             <>
                 {this.renderFeature('PersistCache')}
                 {this.renderFeature('HandleEnterKey')}
-                {this.renderFeature('LegacyImageSelection')}
             </>
         );
     }
