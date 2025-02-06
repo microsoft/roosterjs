@@ -81,7 +81,7 @@ export const formatContentModel: FormatContentModel = (
                 contentModel: clearModelCache ? undefined : model,
                 selection: clearModelCache ? undefined : selection,
                 source: options?.changeSource || ChangeSource.Format,
-                data: options?.getChangeData?.() || getChangeData?.(),
+                data: options?.getChangeData?.(),
                 formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
             };
