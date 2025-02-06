@@ -21,11 +21,9 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
-    MouseUpEvent,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
-const MouseMiddleButton = 1;
 const MouseRightButton = 2;
 const Up = 'ArrowUp';
 const Down = 'ArrowDown';
@@ -141,7 +139,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'mouseUp':
-                this.onMouseUp(this.editor, event);
+                this.onMouseUp();
                 break;
 
             case 'keyDown':
@@ -165,46 +163,30 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         let image: HTMLImageElement | null;
 
         // Image selection
-        if (editor.isExperimentalFeatureEnabled('LegacyImageSelection')) {
-            if (
-                rawEvent.button === MouseRightButton &&
-                (image =
-                    this.getClickingImage(rawEvent) ??
-                    this.getContainedTargetImage(rawEvent, selection)) &&
-                image.isContentEditable
-            ) {
-                this.selectImageWithRange(image, rawEvent);
-                return;
-            } else if (selection?.type == 'image' && selection.image !== rawEvent.target) {
-                this.selectBeforeOrAfterElement(editor, selection.image);
-                return;
-            }
-        } else {
-            if (
-                selection?.type == 'image' &&
-                (rawEvent.button == MouseLeftButton ||
-                    (rawEvent.button == MouseRightButton &&
-                        !this.getClickingImage(rawEvent) &&
-                        !this.getContainedTargetImage(rawEvent, selection)))
-            ) {
-                this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
-            }
+        if (
+            selection?.type == 'image' &&
+            (rawEvent.button == MouseLeftButton ||
+                (rawEvent.button == MouseRightButton &&
+                    !this.getClickingImage(rawEvent) &&
+                    !this.getContainedTargetImage(rawEvent, selection)))
+        ) {
+            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+        }
 
-            if (
-                (image =
-                    this.getClickingImage(rawEvent) ??
-                    this.getContainedTargetImage(rawEvent, selection)) &&
-                image.isContentEditable
-            ) {
-                this.setDOMSelection(
-                    {
-                        type: 'image',
-                        image: image,
-                    },
-                    null
-                );
-                return;
-            }
+        if (
+            (image =
+                this.getClickingImage(rawEvent) ??
+                this.getContainedTargetImage(rawEvent, selection)) &&
+            image.isContentEditable
+        ) {
+            this.setDOMSelection(
+                {
+                    type: 'image',
+                    image: image,
+                },
+                null
+            );
+            return;
         }
 
         // Table selection
@@ -242,25 +224,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     beforeDispatch: this.onMouseMove,
                 },
             });
-        }
-    }
-
-    private selectImageWithRange(image: HTMLImageElement, event: Event) {
-        const range = image.ownerDocument.createRange();
-        range.selectNode(image);
-
-        const domSelection = this.editor?.getDOMSelection();
-        if (domSelection?.type == 'image' && image == domSelection.image) {
-            event.preventDefault();
-        } else {
-            this.setDOMSelection(
-                {
-                    type: 'range',
-                    isReverted: false,
-                    range,
-                },
-                null
-            );
         }
     }
 
@@ -324,21 +287,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onMouseUp(editor: IEditor, event: MouseUpEvent) {
-        let image: HTMLImageElement | null;
-
-        if (
-            editor.isExperimentalFeatureEnabled('LegacyImageSelection') &&
-            (image = this.getClickingImage(event.rawEvent)) &&
-            image.isContentEditable &&
-            event.rawEvent.button != MouseMiddleButton &&
-            (event.rawEvent.button ==
-                MouseRightButton /* it's not possible to drag using right click */ ||
-                event.isClicking)
-        ) {
-            this.selectImageWithRange(image, event.rawEvent);
-        }
-
+    private onMouseUp() {
         this.detachMouseEvent();
     }
 

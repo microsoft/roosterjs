@@ -10,6 +10,7 @@ export type ExperimentalFeature =
      */
     | 'PersistCache'
     /**
+     * @deprecated
      * Workaround for the Legacy Image Edit
      */
     | 'LegacyImageSelection'
