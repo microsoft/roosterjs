@@ -8,6 +8,7 @@ import {
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     mutateBlock,
     MIN_ALLOWED_TABLE_CELL_HEIGHT,
+    parseValueWithUnit,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
@@ -46,7 +47,15 @@ export function createCellResizer(
 
     (anchorContainer || document.body).appendChild(div);
 
-    const context: CellResizerContext = { editor, td, table, isRTL, zoomScale, onStart };
+    const context: CellResizerContext = {
+        editor,
+        td,
+        table,
+        isRTL,
+        zoomScale,
+        onStart,
+        originalWidth: parseValueWithUnit(table.style.width),
+    };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
@@ -79,6 +88,7 @@ export interface CellResizerContext {
     table: HTMLTableElement;
     isRTL: boolean;
     zoomScale: number;
+    originalWidth: number;
     onStart: () => void;
 }
 
@@ -228,6 +238,13 @@ export function onDraggingVertical(
             for (let col = 0; col < tableRow.cells.length; col++) {
                 tableRow.cells[col].style.width = cmTable.widths[col] + 'px';
             }
+        }
+
+        if (context.originalWidth > 0) {
+            const newWidth = context.originalWidth + change + 'px';
+
+            mutableTable.format.width = newWidth;
+            table.style.width = newWidth;
         }
 
         return true;

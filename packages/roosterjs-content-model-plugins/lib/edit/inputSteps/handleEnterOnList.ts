@@ -67,14 +67,14 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                     });
 
                     if (listItem.levels.length == 0) {
-                        const index = findIndex(
+                        const nextBlockIndex = findIndex(
                             listParent.blocks,
-                            nextBlock.levels.length,
-                            listIndex
+                            nextBlock.levels.length
                         );
+
                         nextBlock.levels[
                             nextBlock.levels.length - 1
-                        ].format.startNumberOverride = index;
+                        ].format.startNumberOverride = nextBlockIndex;
                     }
                 }
             }
@@ -148,24 +148,19 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
     });
 };
 
-const findIndex = (
-    blocks: readonly ReadonlyContentModelBlock[],
-    levelLength: number,
-    index: number
-) => {
+const findIndex = (blocks: readonly ReadonlyContentModelBlock[], levelLength: number) => {
     let counter = 1;
-    for (let i = index; i > -1; i--) {
+    for (let i = 0; i < blocks.length; i++) {
         const listItem = blocks[i];
+
         if (
             isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
             listItem.levels.length === levelLength
         ) {
             counter++;
         } else if (
-            !(
-                isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
-                listItem.levels.length == 0
-            )
+            isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
+            listItem.levels.length == 0
         ) {
             return counter;
         }

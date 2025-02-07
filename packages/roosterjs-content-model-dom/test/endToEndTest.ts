@@ -2226,4 +2226,157 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<div style="text-align: center;">test</div>'
         );
     });
+
+    it('TH without font-weight', () => {
+        runTest(
+            '<table><tr><th>test</th></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        widths: [],
+                        rows: [
+                            {
+                                height: 0,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: true,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                isImplicit: true,
+                                                segments: [
+                                                    {
+                                                        text: 'test',
+                                                        segmentType: 'Text',
+                                                        format: {
+                                                            fontWeight: 'bold',
+                                                        },
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {},
+                        dataset: {},
+                    },
+                ],
+            },
+            'test',
+            '<table><tbody><tr><th>test</th></tr></tbody></table>'
+        );
+    });
+
+    it('TH with font-weight: 400', () => {
+        runTest(
+            '<table><tr><th style="font-weight:400">test</th></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        widths: [],
+                        rows: [
+                            {
+                                height: 0,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: true,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                isImplicit: true,
+                                                segments: [
+                                                    {
+                                                        text: 'test',
+                                                        segmentType: 'Text',
+                                                        format: {
+                                                            fontWeight: '400',
+                                                        },
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {},
+                        dataset: {},
+                    },
+                ],
+            },
+            'test',
+            '<table><tbody><tr><th><span style="font-weight: 400;">test</span></th></tr></tbody></table>'
+        );
+    });
+
+    it('TH with font-weight: bold', () => {
+        runTest(
+            '<table><tr><th style="font-weight: bold">test</th></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        widths: [],
+                        rows: [
+                            {
+                                height: 0,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: true,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                isImplicit: true,
+                                                segments: [
+                                                    {
+                                                        text: 'test',
+                                                        segmentType: 'Text',
+                                                        format: {
+                                                            fontWeight: 'bold',
+                                                        },
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Table',
+                        format: {},
+                        dataset: {},
+                    },
+                ],
+            },
+            'test',
+            '<table><tbody><tr><th>test</th></tr></tbody></table>'
+        );
+    });
 });

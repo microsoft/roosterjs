@@ -29,6 +29,7 @@ import type { DragAndDropContext } from './types/DragAndDropContext';
 import type { ImageHtmlOptions } from './types/ImageHtmlOptions';
 import type { ImageEditOptions } from './types/ImageEditOptions';
 import type {
+    ContentChangedEvent,
     ContentModelImage,
     EditorPlugin,
     IEditor,
@@ -55,6 +56,7 @@ const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
+const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
 
 /**
  * ImageEdit plugin handles the following image editing features:
@@ -170,9 +172,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.keyDownHandler(this.editor, event);
                 break;
             case 'contentChanged':
-                if (event.source == ChangeSource.Drop) {
-                    this.onDropHandler(this.editor);
-                }
+                this.contentChangedHandler(this.editor, event);
                 break;
             case 'extractContentWithDom':
                 this.removeImageEditing(event.clonedRoot);
@@ -276,6 +276,35 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     false /* isApiOperation */
                 );
             }
+        }
+    }
+
+    private setContentHandler(editor: IEditor) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'image' && selection.image.dataset.isEditing && !this.isEditing) {
+            delete selection.image.dataset.isEditing;
+        }
+    }
+
+    private formatEventHandler(event: ContentChangedEvent) {
+        if (this.isEditing && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
+            this.cleanInfo();
+            this.isEditing = false;
+            this.isCropMode = false;
+        }
+    }
+
+    private contentChangedHandler(editor: IEditor, event: ContentChangedEvent) {
+        switch (event.source) {
+            case ChangeSource.SetContent:
+                this.setContentHandler(editor);
+                break;
+            case ChangeSource.Format:
+                this.formatEventHandler(event);
+                break;
+            case ChangeSource.Drop:
+                this.onDropHandler(editor);
+                break;
         }
     }
 
@@ -392,6 +421,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         }
                     }
                 },
+                apiName: IMAGE_EDIT_FORMAT_EVENT,
             },
             {
                 tryGetFromCache: true,
