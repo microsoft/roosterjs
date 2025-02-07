@@ -71,8 +71,13 @@ export interface FormatContentModelContext {
      * @optional
      * When pass true, skip adding undo snapshot when write Content Model back to DOM.
      * Need to be set by the formatter function
+     * Default value is false, which means add undo snapshot
+     * When set to true, it will skip adding undo snapshot but mark "hasNewContent" so that next undo snapshot will be added, this is same with "MarkNewContent"
+     * When set to 'DoNotSkip', it will add undo snapshot (default behavior)
+     * When set to 'MarkNewContent', it will skip adding undo snapshot but mark "hasNewContent" so that next undo snapshot will be added
+     * When set to 'SkipAll', it will skip adding undo snapshot and not mark "hasNewContent", as if no change is made
      */
-    skipUndoSnapshot?: boolean;
+    skipUndoSnapshot?: boolean | 'DoNotSkip' | 'MarkNewContent' | 'SkipAll';
 
     /**
      * @optional

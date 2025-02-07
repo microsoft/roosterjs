@@ -3,6 +3,7 @@ import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { moveChildNodes } from '../../domUtils/moveChildNodes';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
+import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelBlockHandler,
     ContentModelTable,
@@ -96,9 +97,9 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
+                const tag = cell.isHeader ? 'th' : 'td';
                 const td =
-                    (context.allowCacheElement && cell.cachedElement) ||
-                    doc.createElement(cell.isHeader ? 'th' : 'td');
+                    (context.allowCacheElement && cell.cachedElement) || doc.createElement(tag);
 
                 tr.appendChild(td);
 
@@ -132,18 +133,25 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                     }
                 }
 
-                if (!cell.cachedElement) {
-                    if (context.allowCacheElement) {
-                        cell.cachedElement = td;
+                stackFormat(context, tag, () => {
+                    if (!cell.cachedElement) {
+                        if (context.allowCacheElement) {
+                            cell.cachedElement = td;
+                        }
+
+                        applyFormat(td, context.formatAppliers.block, cell.format, context);
+                        applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
+                        applyFormat(
+                            td,
+                            context.formatAppliers.tableCellBorder,
+                            cell.format,
+                            context
+                        );
+                        applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
                     }
 
-                    applyFormat(td, context.formatAppliers.block, cell.format, context);
-                    applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
-                    applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
-                    applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
-                }
-
-                context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+                    context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+                });
 
                 context.onNodeCreated?.(cell, td);
             }

@@ -1,6 +1,6 @@
 {
     "react": "9.0.1",
-    "main": "9.18.0",
-    "legacyAdapter": "8.63.1",
+    "main": "9.19.0",
+    "legacyAdapter": "8.63.2",
     "overrides": {}
 }

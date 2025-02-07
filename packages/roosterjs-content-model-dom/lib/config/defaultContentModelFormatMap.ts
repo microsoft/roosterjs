@@ -52,4 +52,7 @@ export const defaultContentModelFormatMap: DefaultImplicitFormatMap = {
         marginTop: '1em',
         marginBottom: '1em',
     },
+    th: {
+        fontWeight: 'bold',
+    },
 };

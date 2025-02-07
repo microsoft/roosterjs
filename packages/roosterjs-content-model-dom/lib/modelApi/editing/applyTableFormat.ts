@@ -262,6 +262,10 @@ export function setFirstColumnFormatBorders(
                 switch (rowIndex) {
                     case 0:
                         cell.isHeader = !!format.hasHeaderRow;
+
+                        if (cell.isHeader) {
+                            cell.format.fontWeight = 'bold';
+                        }
                         break;
                     case rows.length - 1:
                         setBorderColor(cell.format, 'borderTop');
@@ -295,6 +299,7 @@ function setHeaderRowFormat(
         const cell = mutateBlock(readonlyCell);
 
         cell.isHeader = true;
+        cell.format.fontWeight = 'bold';
 
         if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
