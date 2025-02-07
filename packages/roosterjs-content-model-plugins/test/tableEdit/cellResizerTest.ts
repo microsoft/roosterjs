@@ -69,6 +69,7 @@ describe('Cell Resizer tests', () => {
             isRTL: false,
             zoomScale: 1,
             onStart: onStartSpy,
+            originalWidth: 0,
         };
         const editorCMTable = getCMTableFromTable(editor, target as HTMLTableElement);
 
@@ -119,6 +120,7 @@ describe('Cell Resizer tests', () => {
                 isRTL: false,
                 zoomScale: 1,
                 onStart: onStartSpy,
+                originalWidth: 0,
             };
             const delta = 10 * growth;
             const beforeHeight = getCurrentTable(editor).rows[cellRow].getBoundingClientRect()
@@ -194,6 +196,7 @@ describe('Cell Resizer tests', () => {
                 isRTL: false,
                 zoomScale: 1,
                 onStart: onStartSpy,
+                originalWidth: 0,
             };
             const delta = 10 * growth;
             const beforeWidth = getCurrentTable(editor).rows[cellRow].cells[
