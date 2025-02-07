@@ -1,4 +1,4 @@
-import type { BoldFormat } from 'roosterjs/lib';
+import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
