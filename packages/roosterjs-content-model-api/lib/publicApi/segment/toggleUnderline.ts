@@ -20,7 +20,6 @@ export function toggleUnderline(editor: IEditor) {
             }
         },
         (format, segment) => !!format.underline || !!segment?.link?.format?.underline,
-        false /*includingFormatHolder*/,
-        adjustTrailingSpaceSelection
+        false /*includingFormatHolder*/
     );
 }
