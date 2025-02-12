@@ -1,4 +1,3 @@
-import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import type { IEditor } from 'roosterjs-content-model-types';
 
