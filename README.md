@@ -88,6 +88,8 @@ API overrides in Editor options when creating the editor.
 `roosterjs-content-model-api` provides APIs for scenario-based operations triggered by
 user interaction.
 
+`roosterjs-content-model-markdown` provides API to transform Markdown language in Content Model objects.
+
 ## Plugins
 
 Rooster supports plugins. You can use built-in plugins or build your own.

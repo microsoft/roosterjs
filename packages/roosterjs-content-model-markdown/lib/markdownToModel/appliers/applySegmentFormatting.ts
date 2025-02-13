@@ -1,8 +1,10 @@
 import { applyHeading } from './applyHeading';
 import { applyLink } from './applyLink';
+import { applyTextFormatting } from './applyTextFormatting';
 import { createBr, createText } from 'roosterjs-content-model-dom';
-import { splitLinkAndImages } from './splitLinksAndImages';
-import { transformImage } from './transformImage';
+import { createImageSegment } from '../creators/createImageSegment';
+import { splitLinkAndImages } from '../utils/splitLinksAndImages';
+
 import type {
     ContentModelParagraph,
     ContentModelParagraphDecorator,
@@ -11,7 +13,7 @@ import type {
 /**
  * @internal
  */
-export function adjustSegmentFormatting(
+export function applySegmentFormatting(
     text: string,
     paragraph: ContentModelParagraph,
     decorator?: ContentModelParagraphDecorator
@@ -23,13 +25,14 @@ export function adjustSegmentFormatting(
         const textSegments = splitLinkAndImages(text);
         for (const segment of textSegments) {
             const formattedSegment = createText(segment);
-            const image = transformImage(formattedSegment);
+            const image = createImageSegment(formattedSegment);
             if (image) {
                 paragraph.segments.push(image);
             } else {
                 applyHeading(formattedSegment, decorator);
                 applyLink(formattedSegment);
-                paragraph.segments.push(formattedSegment);
+                const formattedSegments = applyTextFormatting(formattedSegment);
+                paragraph.segments.push(...formattedSegments);
             }
         }
     }

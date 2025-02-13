@@ -6,7 +6,7 @@ const imageRegex = /\!\[([^\[]+)\]\((https?:\/\/[^\)]+)\)/g;
 /**
  * @internal
  */
-export function transformImage(textSegment: ContentModelText): ContentModelImage | undefined {
+export function createImageSegment(textSegment: ContentModelText): ContentModelImage | undefined {
     const text = textSegment.text;
     const markdownImage = imageRegex.exec(text);
     if (markdownImage) {

@@ -1,4 +1,4 @@
-import { markdownProcessor } from '../../modelApi/markdown/markdownProcessor';
+import { markdownProcessor } from './processor/markdownProcessor';
 import { mergeModel } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -8,6 +8,9 @@ import type { IEditor } from 'roosterjs-content-model-types';
 export function convertMarkdownToContentModel(editor: IEditor, text: string) {
     editor.formatContentModel(
         (model, context) => {
+            if (text.trim() === '') {
+                return false;
+            }
             const markdownInContentModel = markdownProcessor(text);
             mergeModel(model, markdownInContentModel, context, {
                 mergeFormat: 'mergeAll',

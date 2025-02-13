@@ -5,10 +5,10 @@ const linkRegex = /\[([^\[]+)\]\((https?:\/\/[^\)]+)\)/g;
 /**
  * @internal
  */
-export function applyLink(textSegment: ContentModelText): ContentModelText | undefined {
+export function applyLink(textSegment: ContentModelText): ContentModelText {
     const text = textSegment.text;
     const markdownLink = linkRegex.exec(text);
-    if (markdownLink) {
+    if (markdownLink && markdownLink.length == 3) {
         textSegment.text = markdownLink[1];
         textSegment.link = {
             dataset: {},

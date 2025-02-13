@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { convertMarkdownToContentModel } from 'roosterjs-content-model-api';
+import { convertMarkdownToContentModel } from 'roosterjs-content-model-markdown';
 import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
-import { PlainTextPaneProps } from './PlainTextPlugin';
+import { MarkdownPaneProps } from './MarkdownPanePlugin';
 
-const styles = require('./PlainTextPane.scss');
+const styles = require('./MarkdownPane.scss');
 
-export default class PlainTextPane extends React.Component<PlainTextPaneProps> {
+export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
     private html = React.createRef<HTMLTextAreaElement>();
 
-    constructor(props: PlainTextPaneProps) {
+    constructor(props: MarkdownPaneProps) {
         super(props);
     }
 
@@ -38,7 +38,7 @@ export default class PlainTextPane extends React.Component<PlainTextPaneProps> {
     render() {
         return (
             <div className={styles.container}>
-                <p>Convert plain text to content model</p>
+                <p>Convert Markdown to content model</p>
                 <textarea
                     className={styles.textArea}
                     title="Plain Text Editor"

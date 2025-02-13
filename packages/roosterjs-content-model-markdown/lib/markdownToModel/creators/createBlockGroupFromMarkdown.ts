@@ -1,7 +1,6 @@
 import { createBlockQuoteFromMarkdown } from './createBlockQuoteFromMarkdown';
 import { createListFromMarkdown } from './createListFromMarkdown';
 import type {
-    ContentModelBlockGroup,
     ContentModelBlockGroupType,
     ContentModelFormatContainer,
     ContentModelListItem,
@@ -19,18 +18,11 @@ const MarkdownBlockGroupType: Record<string, ContentModelBlockGroupType> = {
 export function createBlockGroupFromMarkdown(
     text: string,
     patternName: string,
-    group?: ContentModelBlockGroup
+    group?: ContentModelFormatContainer
 ): ContentModelFormatContainer | ContentModelListItem {
     if (MarkdownBlockGroupType[patternName] === 'ListItem') {
-        return createListFromMarkdown(
-            text,
-            patternName,
-            group?.blockGroupType === 'ListItem' ? group : undefined
-        );
+        return createListFromMarkdown(text, patternName);
     } else {
-        return createBlockQuoteFromMarkdown(
-            text,
-            group?.blockGroupType === 'FormatContainer' ? group : undefined
-        );
+        return createBlockQuoteFromMarkdown(text, group);
     }
 }
