@@ -49,7 +49,7 @@
         "coverage-istanbul-loader": "3.0.5",
         "css-loader": "3.5.3",
         "detect-port": "^1.3.0",
-        "dompurify": "2.5.4",
+        "dompurify": "3.2.4",
         "eslint": "^8.50.0",
         "eslint-plugin-etc": "^2.0.3",
         "eslint-plugin-react": "^7.33.2",
