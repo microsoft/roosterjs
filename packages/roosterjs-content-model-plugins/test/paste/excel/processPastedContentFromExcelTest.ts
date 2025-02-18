@@ -1,5 +1,4 @@
 import * as PastePluginFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import * as setupExcelTableHandlersFile from '../../../lib/paste/Excel/setupExcelTableHandlers';
 import { ContentModelDocument, DOMCreator } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from '../createBeforePasteEventMock';
 import { processPastedContentFromExcel } from '../../../lib/paste/Excel/processPastedContentFromExcel';
@@ -30,7 +29,12 @@ describe('processPastedContentFromExcelTest', () => {
         const event = createBeforePasteEventMock(fragment);
 
         event.clipboardData.html = source;
-        processPastedContentFromExcel(event, domCreator);
+        processPastedContentFromExcel(
+            event,
+            domCreator,
+            false /* allowExcelNoBorderTable */,
+            true /* isNativeEvent */
+        );
 
         const model = domToContentModel(
             fragment,
@@ -353,7 +357,12 @@ describe('Do not run scenarios', () => {
         if (excelHandler) {
             spyOn(PastePluginFile, 'excelHandler').and.returnValue(excelHandler);
         }
-        processPastedContentFromExcel(event, domCreator);
+        processPastedContentFromExcel(
+            event,
+            domCreator,
+            false /* allowExcelNoBorderTable */,
+            true /* isNativeEvent */
+        );
 
         // Assert
         while (div.firstChild) {
@@ -398,7 +407,7 @@ describe('childProcessorTest', () => {
         const tableCell = createTableCell();
         tableCell.format.textColor = 'black';
 
-        setupExcelTableHandlersFile.childProcessor(tableCell, element, context);
+        PastePluginFile.childProcessor(tableCell, element, context);
 
         expect(tableCell.format.textColor).toBeUndefined();
         expect(context.segmentFormat.textColor).toBeUndefined();
@@ -418,7 +427,7 @@ describe('childProcessorTest', () => {
         const tableCell = createTableCell();
         tableCell.format.textColor = 'black';
 
-        setupExcelTableHandlersFile.childProcessor(tableCell, element, context);
+        PastePluginFile.childProcessor(tableCell, element, context);
 
         expect(tableCell.format.textColor).toBeUndefined();
         expect(context.segmentFormat.textColor).toEqual('blue');

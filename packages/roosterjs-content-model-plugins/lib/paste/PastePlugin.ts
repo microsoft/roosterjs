@@ -4,7 +4,6 @@ import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
-import { handleExcelContentFromNotNativeEvent } from './Excel/handleExcelContentFromNotNativeEvent';
 import { parseLink } from './utils/linkParser';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
@@ -107,12 +106,14 @@ export class PastePlugin implements EditorPlugin {
                 break;
             case 'excelOnline':
             case 'excelDesktop':
+            case 'excelNonNativeEvent':
                 if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(
                         event,
                         this.editor.getDOMCreator(),
-                        this.allowExcelNoBorderTable
+                        !!this.allowExcelNoBorderTable,
+                        pasteSource != 'excelNonNativeEvent' /* isNativeEvent */
                     );
                 }
                 break;
@@ -123,9 +124,6 @@ export class PastePlugin implements EditorPlugin {
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(event, this.editor.getDOMCreator());
-                break;
-            case 'excelNonNativeEvent':
-                handleExcelContentFromNotNativeEvent(event, !!this.allowExcelNoBorderTable);
                 break;
         }
 
