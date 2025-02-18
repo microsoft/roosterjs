@@ -1,18 +1,11 @@
-import { addParser } from '../utils/addParser';
 import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
-import { setProcessor } from '../utils/setProcessor';
-import type {
-    BeforePasteEvent,
-    ClipboardData,
-    DOMCreator,
-    ElementProcessor,
-} from 'roosterjs-content-model-types';
+import { setupExcelTableHandlers } from './setupExcelTableHandlers';
+import type { BeforePasteEvent, ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
-const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 const TABLE_SELECTOR = 'table';
 
 /**
@@ -54,39 +47,8 @@ export function processPastedContentFromExcel(
         }
     }
 
-    addParser(event.domToModelOption, 'tableCell', (format, element) => {
-        if (!allowExcelNoBorderTable && element.style.borderStyle === 'none') {
-            format.borderBottom = DEFAULT_BORDER_STYLE;
-            format.borderLeft = DEFAULT_BORDER_STYLE;
-            format.borderRight = DEFAULT_BORDER_STYLE;
-            format.borderTop = DEFAULT_BORDER_STYLE;
-        }
-    });
-
-    setProcessor(event.domToModelOption, 'child', childProcessor);
+    setupExcelTableHandlers(event, allowExcelNoBorderTable, true /* handleForNativeEvent */);
 }
-
-/**
- * @internal
- * Exported only for unit test
- */
-export const childProcessor: ElementProcessor<ParentNode> = (group, element, context) => {
-    const segmentFormat = { ...context.segmentFormat };
-    if (
-        group.blockGroupType === 'TableCell' &&
-        group.format.textColor &&
-        !context.segmentFormat.textColor
-    ) {
-        context.segmentFormat.textColor = group.format.textColor;
-    }
-
-    context.defaultElementProcessors.child(group, element, context);
-
-    if (group.blockGroupType === 'TableCell' && group.format.textColor) {
-        context.segmentFormat = segmentFormat;
-        delete group.format.textColor;
-    }
-};
 
 /**
  * @internal

@@ -1,7 +1,8 @@
-import * as PastePluginFile from '../../lib/paste/Excel/processPastedContentFromExcel';
+import * as PastePluginFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
+import * as setupExcelTableHandlersFile from '../../../lib/paste/Excel/setupExcelTableHandlers';
 import { ContentModelDocument, DOMCreator } from 'roosterjs-content-model-types';
-import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { processPastedContentFromExcel } from '../../lib/paste/Excel/processPastedContentFromExcel';
+import { createBeforePasteEventMock } from '../createBeforePasteEventMock';
+import { processPastedContentFromExcel } from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import {
     contentModelToDom,
     createDomToModelContext,
@@ -397,7 +398,7 @@ describe('childProcessorTest', () => {
         const tableCell = createTableCell();
         tableCell.format.textColor = 'black';
 
-        PastePluginFile.childProcessor(tableCell, element, context);
+        setupExcelTableHandlersFile.childProcessor(tableCell, element, context);
 
         expect(tableCell.format.textColor).toBeUndefined();
         expect(context.segmentFormat.textColor).toBeUndefined();
@@ -417,7 +418,7 @@ describe('childProcessorTest', () => {
         const tableCell = createTableCell();
         tableCell.format.textColor = 'black';
 
-        PastePluginFile.childProcessor(tableCell, element, context);
+        setupExcelTableHandlersFile.childProcessor(tableCell, element, context);
 
         expect(tableCell.format.textColor).toBeUndefined();
         expect(context.segmentFormat.textColor).toEqual('blue');
