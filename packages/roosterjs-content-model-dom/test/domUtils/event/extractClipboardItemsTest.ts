@@ -292,4 +292,20 @@ describe('extractClipboardItems', () => {
             pasteNativeEvent: true,
         });
     });
+
+    it('input with text/uri-list', async () => {
+        const text = 'https://example.com';
+        const clipboardData = await extractClipboardItems([
+            createStringItem('text/uri-list', text),
+        ]);
+        expect(clipboardData).toEqual({
+            types: ['text/uri-list'],
+            text: text,
+            image: null,
+            files: [],
+            rawHtml: null,
+            customValues: {},
+            pasteNativeEvent: true,
+        });
+    });
 });
