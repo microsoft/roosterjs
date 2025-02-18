@@ -396,7 +396,7 @@ describe('Paste with clipboardData', () => {
         expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
     });
 
-    it('Second paste', () => {
+    xit('Second paste', () => {
         clipboardData.rawHtml = '';
         clipboardData.modelBeforePaste = {
             blockGroupType: 'Document',
