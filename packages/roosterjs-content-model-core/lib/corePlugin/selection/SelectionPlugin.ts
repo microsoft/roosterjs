@@ -646,21 +646,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
-
-            if (
-                newSelection?.type == 'image' &&
-                selection &&
-                selection.focusNode &&
-                !isSingleImageInSelection(selection)
-            ) {
-                const range = selection.getRangeAt(0);
-                this.editor.setDOMSelection({
-                    type: 'range',
-                    range,
-                    isReverted:
-                        selection.focusNode != range.endContainer ||
-                        selection.focusOffset != range.endOffset,
-                });
+            if (selection && selection.focusNode) {
+                const image = isSingleImageInSelection(selection);
+                if (newSelection?.type == 'image' && !image) {
+                    const range = selection.getRangeAt(0);
+                    this.editor.setDOMSelection({
+                        type: 'range',
+                        range,
+                        isReverted:
+                            selection.focusNode != range.endContainer ||
+                            selection.focusOffset != range.endOffset,
+                    });
+                } else if (newSelection?.type !== 'image' && image) {
+                    this.editor.setDOMSelection({
+                        type: 'image',
+                        image,
+                    });
+                }
             }
 
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
