@@ -1,4 +1,4 @@
-import { BeforePasteEvent, ClipboardData } from 'roosterjs';
+import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 
 export function createBeforePasteEventMock(
     fragment: DocumentFragment,
