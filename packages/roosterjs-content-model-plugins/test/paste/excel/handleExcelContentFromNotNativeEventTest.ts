@@ -30,7 +30,7 @@ describe('handleExcelContentFromNotNativeEvent', () => {
         expect(setupExcelTableHandlersFile.setupExcelTableHandlers).toHaveBeenCalledWith(
             event,
             allowExcelNoBorderTable,
-            false /* handleForNativeEvemt */
+            false /* handleForNativeEvent */
         );
         expect(setProcessorFile.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserFile.addParser).toHaveBeenCalledTimes(1);
