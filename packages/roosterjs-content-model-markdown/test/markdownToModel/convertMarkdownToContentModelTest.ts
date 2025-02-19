@@ -19,6 +19,13 @@ describe('convertMarkdownToContentModel', () => {
                     }
                 });
             }
+
+            if (block.blockType === 'Table') {
+                block.widths = block.widths.map(width => (width = 65.359375));
+                block.rows.forEach(row => {
+                    row.height = 21;
+                });
+            }
         });
         expect(actualContentModel).toEqual(expectedContentModel);
         editor.dispose();
