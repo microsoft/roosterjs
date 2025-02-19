@@ -1,4 +1,4 @@
-import { applyHeading } from './applyHeading';
+import { adjustHeading } from '../utils/adjustHeading';
 import { applyLink } from './applyLink';
 import { applyTextFormatting } from './applyTextFormatting';
 import { createBr, createText } from 'roosterjs-content-model-dom';
@@ -29,7 +29,7 @@ export function applySegmentFormatting(
             if (image) {
                 paragraph.segments.push(image);
             } else {
-                applyHeading(formattedSegment, decorator);
+                adjustHeading(formattedSegment, decorator);
                 applyLink(formattedSegment);
                 const formattedSegments = applyTextFormatting(formattedSegment);
                 paragraph.segments.push(...formattedSegments);

@@ -14,11 +14,11 @@ import type {
 const MarkdownPattern: Record<string, RegExp> = {
     heading: /^#{1,6} .*/,
     horizontal_line: /^---$/,
+    table: /^\|.*\|\s*$/,
     blockquote: /^>\s.*$/,
     unordered_list: /^\s*[\*\-\+] .*/,
     ordered_list: /^\s*\d+\. .*/,
     paragraph: /^[^#\-\*\d\|].*/,
-    table: /^\|.*\|$/,
 };
 
 const MarkdownBlockType: Record<string, ContentModelBlockType> = {
@@ -35,12 +35,16 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
  * @internal
  * Process markdown text and convert it to ContentModelDocument
  * @param text The markdown text
+ * @param splitLinesPattern The pattern to split lines. Default is /\r\n|\r|\\n|\n/
  * @returns The ContentModelDocument
  */
 
-export function markdownProcessor(text: string): ContentModelDocument {
-    const markdownText = text.split(/\r\n|\r|\\n|\n/).filter(line => line.trim().length > 0);
+export function markdownProcessor(text: string, splitLinesPattern?: string): ContentModelDocument {
+    const markdownText = text
+        .split(splitLinesPattern || /\r\n|\r|\\n|\n/)
+        .filter(line => line.trim().length > 0);
     markdownText.push(''); // Add an empty line to make sure the last block is processed
+
     const doc = createContentModelDocument();
     return convertMarkdownText(doc, markdownText);
 }
@@ -56,7 +60,12 @@ function addMarkdownBlockToModel(
     }
 ) {
     if (blockType !== 'Table' && table && table.length > 0) {
-        if (table[1].trim().length > 0 && isMarkdownTable(table[1]) && table.length > 1) {
+        if (
+            table.length > 2 &&
+            table[1].trim().length > 0 &&
+            isMarkdownTable(table[1]) &&
+            table.length > 1
+        ) {
             const tableModel = createTableFromMarkdown(table);
             model.blocks.push(tableModel);
         } else {

@@ -6,8 +6,7 @@ describe('applyLink', () => {
     function runTest(text: string, expectedSegment: ContentModelText) {
         const textSegment = createText(text);
         const result = applyLink(textSegment);
-        expect(result.text).toEqual(expectedSegment.text);
-        expect(result.link?.format.href).toEqual(expectedSegment.link?.format.href);
+        expect(result).toEqual(expectedSegment);
     }
 
     it('should apply link to text segment', () => {
@@ -22,20 +21,20 @@ describe('applyLink', () => {
         runTest('[link](https://www.example.com)', linkSegment);
     });
 
-    it('should apply link to text segment with space in text', () => {
-        const linkSegment = createText('link with space');
-        linkSegment.link = {
-            dataset: {},
-            format: {
-                href: 'http://www.example.com',
-                underline: true,
-            },
-        };
-        runTest('[link with space](http://www.example.com)', linkSegment);
-    });
-
     it('should not apply link to text segment with space in link', () => {
         const textSegment = createText('[link](https://www.example.com/with space)');
         runTest('[link](https://www.example.com/with space)', textSegment);
+    });
+
+    it('should apply link to text segment with space in text', () => {
+        const linkSegmentWith = createText('link with space');
+        linkSegmentWith.link = {
+            dataset: {},
+            format: {
+                href: 'https://www.example.com',
+                underline: true,
+            },
+        };
+        runTest('[link with space](https://www.example.com)', linkSegmentWith);
     });
 });

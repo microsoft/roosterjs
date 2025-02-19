@@ -525,7 +525,6 @@ describe('markdownProcessor', () => {
             blocks: [
                 {
                     widths: [],
-                    dataset: {},
                     blockType: 'Table',
                     rows: [
                         {
@@ -550,6 +549,11 @@ describe('markdownProcessor', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                        backgroundColor: '#ABABAB',
                                     },
                                     isHeader: true,
                                 },
@@ -577,9 +581,13 @@ describe('markdownProcessor', () => {
                                             blockType: 'Paragraph',
                                         },
                                     ],
-
+                                    isHeader: false,
                                     format: {
                                         textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
                                     },
                                 },
                             ],
@@ -589,6 +597,10 @@ describe('markdownProcessor', () => {
                     ],
                     format: {
                         borderCollapse: true,
+                    },
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
                 },
                 {
@@ -604,5 +616,313 @@ describe('markdownProcessor', () => {
             ],
         };
         runTest('|text1|\n|----|\n|text2|', document);
+    });
+
+    it('should return a table with two rows and two columns', () => {
+        const document: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    widths: [],
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text1',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                        backgroundColor: '#ABABAB',
+                                    },
+                                    isHeader: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text2',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                        backgroundColor: '#ABABAB',
+                                    },
+                                    isHeader: true,
+                                },
+                            ],
+                            height: 0,
+                            format: {},
+                        },
+                        {
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text3',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    isHeader: false,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text4',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'start',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    isHeader: false,
+                                },
+                            ],
+                            height: 0,
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        borderCollapse: true,
+                    },
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            format: {},
+                            segmentType: 'Br',
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        runTest('|text1|text2|\n|----|----|\n|text3|text4|', document);
+    });
+
+    it('should return a table with two rows and two columns with alignment', () => {
+        const document: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    widths: [],
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text1',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'center',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                        backgroundColor: '#ABABAB',
+                                    },
+                                    isHeader: true,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text2',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'end',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                        backgroundColor: '#ABABAB',
+                                    },
+                                    isHeader: true,
+                                },
+                            ],
+                            height: 0,
+                            format: {},
+                        },
+                        {
+                            cells: [
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text3',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'center',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    isHeader: false,
+                                },
+                                {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    dataset: {},
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            segments: [
+                                                {
+                                                    text: 'text4',
+                                                    format: {},
+                                                    segmentType: 'Text',
+                                                },
+                                            ],
+                                            format: {},
+                                            blockType: 'Paragraph',
+                                        },
+                                    ],
+                                    format: {
+                                        textAlign: 'end',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    isHeader: false,
+                                },
+                            ],
+                            height: 0,
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        borderCollapse: true,
+                    },
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            format: {},
+                            segmentType: 'Br',
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        runTest('|text1|text2|\n|:----:|----:|\n|text3|text4|', document);
     });
 });

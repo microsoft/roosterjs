@@ -1,8 +1,8 @@
-import { applyHeading } from '../../../lib/markdownToModel/appliers/applyHeading';
+import { adjustHeading } from '../../../lib/markdownToModel/utils/adjustHeading';
 import { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
 import { createText } from 'roosterjs-content-model-dom';
 
-describe('applyHeading', () => {
+describe('adjustHeading', () => {
     function runTest(text: string, tagName: string, expected: string) {
         // Arrange
         const textSegment = createText(text);
@@ -12,7 +12,7 @@ describe('applyHeading', () => {
         };
 
         // Act
-        const result = applyHeading(textSegment, decorator);
+        const result = adjustHeading(textSegment, decorator);
 
         // Assert
         expect(result.text).toEqual(expected);

@@ -1,11 +1,10 @@
 import type { ContentModelText } from 'roosterjs-content-model-types';
 
-const linkRegex = /\[([^\[]+)\]\((https?:\/\/[^\)]+)\)/g;
-
 /**
  * @internal
  */
 export function applyLink(textSegment: ContentModelText): ContentModelText {
+    const linkRegex = /\[([^\[]+)\]\((https?:\/\/[^\s\)]+)\)/g;
     const text = textSegment.text;
     const markdownLink = linkRegex.exec(text);
     if (markdownLink && markdownLink.length == 3) {
@@ -18,5 +17,6 @@ export function applyLink(textSegment: ContentModelText): ContentModelText {
             },
         };
     }
+
     return textSegment;
 }

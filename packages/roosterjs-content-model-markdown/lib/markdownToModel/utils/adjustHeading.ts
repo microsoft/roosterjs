@@ -15,7 +15,7 @@ const MarkdownHeadings: Record<string, string> = {
 /**
  * @internal
  */
-export function applyHeading(
+export function adjustHeading(
     textSegment: ContentModelText,
     decorator?: ContentModelParagraphDecorator
 ): ContentModelText {
