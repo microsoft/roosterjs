@@ -117,6 +117,7 @@ export const defaultHTMLStyleMap: DefaultStyleMap = {
     },
     th: {
         display: 'table-cell',
+        fontWeight: 'bold',
     },
     u: {
         textDecoration: 'underline',

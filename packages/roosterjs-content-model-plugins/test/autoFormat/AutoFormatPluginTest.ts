@@ -3,6 +3,7 @@ import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions } from '../../lib/autoFormat/interface/AutoFormatOptions';
 import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import {
     ContentChangedEvent,
     ContentModelDocument,
@@ -10,6 +11,7 @@ import {
     ContentModelSelectionMarker,
     ContentModelText,
     EditorInputEvent,
+    FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
 } from 'roosterjs-content-model-types';
@@ -966,16 +968,18 @@ describe('Content Model Auto Format Plugin Test', () => {
     describe('onPluginEvent - promoteLink', () => {
         function runTest(
             event: EditorInputEvent,
+            text: string,
             expectResult: ContentModelParagraph,
             options: AutoFormatOptions,
-            shouldCallFormat: boolean
+            shouldCallFormat: boolean,
+            expectedOptions: FormatContentModelOptions
         ) {
             const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
             plugin.initialize(editor);
 
             const segment: ContentModelText = {
                 segmentType: 'Text',
-                text: 'www.test.com',
+                text,
                 format: {},
             };
             const paragraph: ContentModelParagraph = {
@@ -984,13 +988,19 @@ describe('Content Model Auto Format Plugin Test', () => {
                 format: {},
             };
 
-            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback) => {
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
                 callback(
                     null!,
                     segment,
                     paragraph,
                     {},
                     { deletedEntities: [], newEntities: [], newImages: [] }
+                );
+
+                expect(options?.changeSource).toEqual(expectedOptions.changeSource);
+                expect(options?.apiName).toEqual(expectedOptions.apiName);
+                expect(JSON.stringify(options?.getChangeData?.())).toEqual(
+                    JSON.stringify(expectedOptions.getChangeData?.())
                 );
 
                 return true;
@@ -1009,8 +1019,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
+            const link = document.createElement('a');
+            link.href = 'www.test.com';
+            link.textContent = 'www.test.com';
             runTest(
                 event,
+                'www.test.com',
                 {
                     blockType: 'Paragraph',
                     format: {},
@@ -1033,7 +1047,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                 {
                     autoLink: true,
                 },
-                true
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: '',
+                    getChangeData: () => link,
+                }
             );
         });
 
@@ -1042,8 +1061,10 @@ describe('Content Model Auto Format Plugin Test', () => {
                 eventType: 'input',
                 rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
             };
+
             runTest(
                 event,
+                'www.test.com',
                 {
                     blockType: 'Paragraph',
                     format: {},
@@ -1058,7 +1079,54 @@ describe('Content Model Auto Format Plugin Test', () => {
                 {
                     autoTel: true,
                 },
-                true
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('should call promoteLink with telephone | autoTel', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'tel:9999999';
+            link.textContent = 'tel:9999999';
+            runTest(
+                event,
+                'tel:9999999',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tel:9999999',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'tel:9999999',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoTel: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: '',
+                    getChangeData: () => link,
+                }
             );
         });
 
@@ -1069,6 +1137,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(
                 event,
+                'www.test.com',
                 {
                     blockType: 'Paragraph',
                     format: {},
@@ -1083,7 +1152,54 @@ describe('Content Model Auto Format Plugin Test', () => {
                 {
                     autoMailto: true,
                 },
-                true
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('should call promoteLink with mailto | autoMailto', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: { data: ' ', preventDefault: () => {}, inputType: 'insertText' } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'mailto:test@mail.com';
+            link.textContent = 'mailto:test@mail.com';
+            runTest(
+                event,
+                'mailto:test@mail.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'mailto:test@mail.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'mailto:test@mail.com',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoMailto: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: '',
+                    getChangeData: () => link,
+                }
             );
         });
 
@@ -1094,6 +1210,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(
                 event,
+                'www.test.com',
                 {
                     blockType: 'Paragraph',
                     format: {},
@@ -1108,7 +1225,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                 {
                     autoLink: false,
                 },
-                true
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
             );
         });
 
@@ -1123,6 +1245,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             };
             runTest(
                 event,
+                'www.test.com',
                 {
                     blockType: 'Paragraph',
                     format: {},
@@ -1137,7 +1260,12 @@ describe('Content Model Auto Format Plugin Test', () => {
                 {
                     autoLink: true,
                 },
-                false
+                false,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
             );
         });
     });
