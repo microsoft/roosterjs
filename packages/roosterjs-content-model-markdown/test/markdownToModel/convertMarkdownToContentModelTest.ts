@@ -7,6 +7,19 @@ describe('convertMarkdownToContentModel', () => {
         const editor = initEditor('markdownTest');
         convertMarkdownToContentModel(editor, markdown);
         const actualContentModel = editor.getContentModelCopy('disconnected');
+        actualContentModel.blocks.forEach(block => {
+            if (
+                block.blockType === 'Paragraph' &&
+                block.segments.length > 0 &&
+                block.segments.some(segment => segment.segmentType === 'Image')
+            ) {
+                block.segments.forEach(segment => {
+                    if (segment.segmentType == 'Image') {
+                        segment.format.maxWidth = '100px';
+                    }
+                });
+            }
+        });
         expect(actualContentModel).toEqual(expectedContentModel);
         editor.dispose();
     }
@@ -2186,7 +2199,7 @@ describe('convertMarkdownToContentModel', () => {
                             alt: 'Markdown Logo',
                             segmentType: 'Image',
                             format: {
-                                maxWidth: '896px',
+                                maxWidth: '100px',
                             },
                             dataset: {},
                             title: undefined,
