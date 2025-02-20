@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/isWordDesktopDocument.ts</title>
+    <title>Code coverage report for roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/isExcelNonNativeEvent.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/paste/pasteSourceValidations</a> isWordDesktopDocument.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/paste/pasteSourceValidations</a> isExcelNonNativeEvent.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -75,15 +75,9 @@
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -91,30 +85,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { GetSourceFunction, GetSourceInputParams } from './getPasteSource';
 &nbsp;
-const WORD_ATTRIBUTE_NAME = 'xmlns:w';
-const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
-const WORD_PROG_ID = 'Word.Document';
+const ShadowWorkbookClipboardType = 'web data/shadow-workbook';
 &nbsp;
 /**
  * @internal
- * Checks whether the Array provided contains strings that identify Word Desktop documents
- * @param props Properties related to the PasteEvent
- * @returns
+ * When the clipboard content is retrieved programatically, the clipboard html does not contain the usual
+ * attributes we use to determine if the content is from Excel. This function is used to handle that case.
  */
-export const isWordDesktopDocument: GetSourceFunction = props =&gt; {
-    const { htmlAttributes } = props;
+export const isExcelNotNativeEvent: GetSourceFunction = (props: GetSourceInputParams) =&gt; {
+    const { clipboardData } = props;
+&nbsp;
     return (
-        htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID
+        clipboardData.types.includes(ShadowWorkbookClipboardType) &amp;&amp;
+        clipboardData.htmlFirstLevelChildTags<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength == 1 &amp;&amp;
+        clipboardData.htmlFirstLevelChildTags[0] == 'TABLE'
     );
 };
 &nbsp;</pre></td></tr></table></pre>
