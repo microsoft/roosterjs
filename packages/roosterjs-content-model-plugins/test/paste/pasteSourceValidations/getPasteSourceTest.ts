@@ -51,6 +51,13 @@ describe('getPasteSourceTest | ', () => {
         const result = getPasteSource(defaultParam(), false /* shouldConvertSingleImage */);
         expect(result).toBe('default');
     });
+    it('Is Excel Non-Native Event', () => {
+        const result = getPasteSource(
+            excelNonNativeEventParam(),
+            false /* shouldConvertSingleImage */
+        );
+        expect(result).toBe('excelNonNativeEvent');
+    });
 });
 
 function wacParam(): BeforePasteEvent {
@@ -78,8 +85,9 @@ function googleSheetParam(): BeforePasteEvent {
 
 function converSingleImageParam(): BeforePasteEvent {
     const fragment = document.createDocumentFragment();
-    const clipboardData = <ClipboardData>{
+    const clipboardData = <any>{
         htmlFirstLevelChildTags: ['IMG'],
+        types: [],
     };
 
     return <BeforePasteEvent>{
@@ -111,5 +119,17 @@ function wordParam(): BeforePasteEvent {
 function defaultParam(): BeforePasteEvent {
     const fragment = document.createDocumentFragment();
 
-    return <BeforePasteEvent>{ htmlAttributes: {}, fragment, clipboardData: {} };
+    return <BeforePasteEvent>{ htmlAttributes: {}, fragment, clipboardData: <any>{ types: [] } };
+}
+
+function excelNonNativeEventParam(): BeforePasteEvent {
+    const fragment = document.createDocumentFragment();
+
+    const clipboardData: ClipboardData = {
+        types: ['web data/shadow-workbook'],
+        rawHtml: '',
+        htmlFirstLevelChildTags: ['TABLE'],
+    } as any;
+
+    return <BeforePasteEvent>{ fragment, clipboardData, htmlAttributes: {} };
 }

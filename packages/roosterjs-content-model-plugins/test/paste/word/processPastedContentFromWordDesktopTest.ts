@@ -1,8 +1,8 @@
-import * as getStyleMetadata from '../../lib/paste/WordDesktop/getStyleMetadata';
-import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
-import { expectEqual } from './e2e/testUtils';
-import { processPastedContentFromWordDesktop } from '../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { WordMetadata } from '../../lib/paste/WordDesktop/WordMetadata';
+import * as getStyleMetadata from '../../../lib/paste/WordDesktop/getStyleMetadata';
+import { createBeforePasteEventMock } from '../createBeforePasteEventMock';
+import { expectEqual } from '../e2e/testUtils';
+import { processPastedContentFromWordDesktop } from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
+import { WordMetadata } from '../../../lib/paste/WordDesktop/WordMetadata';
 import {
     createDomToModelContext,
     domToContentModel,
@@ -5222,30 +5222,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
         });
     });
 });
-
-export function createBeforePasteEventMock(
-    fragment: DocumentFragment,
-    htmlBefore: string = ''
-): BeforePasteEvent {
-    return {
-        eventType: 'beforePaste',
-        clipboardData: <ClipboardData>{},
-        fragment: fragment,
-        htmlBefore,
-        htmlAfter: '',
-        htmlAttributes: {},
-        pasteType: 'normal',
-        domToModelOption: {
-            additionalAllowedTags: [],
-            additionalDisallowedTags: [],
-            additionalFormatParsers: {},
-            attributeSanitizers: {},
-            formatParserOverride: {},
-            processorOverride: {},
-            styleSanitizers: {},
-        },
-    };
-}
 
 function createListElementFromWord(
     tag: string,

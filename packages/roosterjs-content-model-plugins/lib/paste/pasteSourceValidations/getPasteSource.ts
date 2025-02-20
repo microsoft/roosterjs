@@ -1,5 +1,6 @@
 import { documentContainWacElements } from './documentContainWacElements';
 import { isExcelDesktopDocument } from './isExcelDesktopDocument';
+import { isExcelNotNativeEvent } from './isExcelNonNativeEvent';
 import { isExcelOnlineDocument } from './isExcelOnlineDocument';
 import { isGoogleSheetDocument } from './isGoogleSheetDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
@@ -29,7 +30,8 @@ export type KnownPasteSourceType =
     | 'googleSheets'
     | 'wacComponents'
     | 'default'
-    | 'singleImage';
+    | 'singleImage'
+    | 'excelNonNativeEvent';
 
 /**
  * @internal
@@ -44,6 +46,7 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
     ['wacComponents', documentContainWacElements],
     ['googleSheets', isGoogleSheetDocument],
     ['singleImage', shouldConvertToSingleImage],
+    ['excelNonNativeEvent', isExcelNotNativeEvent],
 ]);
 
 /**
