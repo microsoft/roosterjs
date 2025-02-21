@@ -1,5 +1,5 @@
 import { ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
-import { validateExcelFragment } from '../../lib/paste/Excel/processPastedContentFromExcel';
+import { validateExcelFragment } from '../../../lib/paste/Excel/processPastedContentFromExcel';
 
 describe('validateExcelFragment', () => {
     let domCreator: DOMCreator;

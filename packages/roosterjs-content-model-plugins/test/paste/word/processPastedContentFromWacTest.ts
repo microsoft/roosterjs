@@ -1,9 +1,9 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { expectEqual } from './e2e/testUtils';
+import { createBeforePasteEventMock } from '../createBeforePasteEventMock';
+import { expectEqual } from '../e2e/testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { pasteDisplayFormatParser } from 'roosterjs-content-model-core/lib/override/pasteDisplayFormatParser';
-import { processPastedContentWacComponents } from '../../lib/paste/WacComponents/processPastedContentWacComponents';
+import { processPastedContentWacComponents } from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import {
     listItemMetadataApplier,
     listLevelMetadataApplier,
