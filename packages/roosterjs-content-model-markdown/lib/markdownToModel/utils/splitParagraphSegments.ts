@@ -1,5 +1,8 @@
 const linkRegex = /(\[([^\[]+)\]\((https?:\/\/[^\)]+)\))|(\!\[([^\[]+)\]\((https?:\/\/[^\)]+)\))/g;
 
+/**
+ * @internal
+ */
 interface MarkdownSegment {
     text: string;
     url: string;

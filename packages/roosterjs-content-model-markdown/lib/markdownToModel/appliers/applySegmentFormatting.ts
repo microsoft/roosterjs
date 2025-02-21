@@ -25,18 +25,16 @@ export function applySegmentFormatting(
         const textSegments = splitParagraphSegments(text);
         for (const segment of textSegments) {
             const formattedSegment = createText(segment.text);
-            switch (segment.type) {
-                case 'image':
-                    const image = createImageSegment(segment.text, segment.url);
-                    paragraph.segments.push(image);
-                    break;
-                case 'link':
+            if (segment.type === 'image') {
+                const image = createImageSegment(segment.text, segment.url);
+                paragraph.segments.push(image);
+            } else {
+                if (segment.type === 'link') {
                     applyLink(formattedSegment, segment.text, segment.url);
-                case 'text':
-                    adjustHeading(formattedSegment, decorator);
-                    const formattedSegments = applyTextFormatting(formattedSegment);
-                    paragraph.segments.push(...formattedSegments);
-                    break;
+                }
+                adjustHeading(formattedSegment, decorator);
+                const formattedSegments = applyTextFormatting(formattedSegment);
+                paragraph.segments.push(...formattedSegments);
             }
         }
     }
