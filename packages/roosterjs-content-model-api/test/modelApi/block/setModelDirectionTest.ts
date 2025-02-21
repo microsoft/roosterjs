@@ -1,3 +1,4 @@
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setModelDirection } from '../../../lib/modelApi/block/setModelDirection';
 
@@ -7,6 +8,7 @@ describe('setModelDirection', () => {
     const color = '#AABBCC';
     const testBorderString = `${width} ${style} ${color}`;
     const mockedCachedElement = 'CACHE' as any;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
 
     function runTest(
         model: ContentModelDocument,
@@ -23,7 +25,16 @@ describe('setModelDirection', () => {
             model.blocks[0].dataset = {};
         }
         expect(model).toEqual(expectedModel);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     }
+
+    beforeEach(() => {
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        );
+    });
 
     it('set direction for paragraph', () => {
         runTest(
