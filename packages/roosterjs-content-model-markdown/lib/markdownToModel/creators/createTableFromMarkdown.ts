@@ -12,9 +12,9 @@ import {
  */
 export function createTableFromMarkdown(tableLines: string[]): ContentModelTable {
     const tableDivider = tableLines[1].split('|').filter(content => content.trim() !== '');
-    const tableModel = tableLines.filter(line => tableLines.indexOf(line) !== 1);
+    tableLines.splice(1, 1);
     const table = createTable(0, { borderCollapse: true });
-    for (const line of tableModel) {
+    for (const line of tableLines) {
         createTableModel(line, table, tableDivider);
     }
     applyTableFormat(table, {

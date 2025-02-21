@@ -39,10 +39,11 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
  * @returns The ContentModelDocument
  */
 
-export function markdownProcessor(text: string, splitLinesPattern?: string): ContentModelDocument {
-    const markdownText = text
-        .split(splitLinesPattern || /\r\n|\r|\\n|\n/)
-        .filter(line => line.trim().length > 0);
+export function markdownProcessor(
+    text: string,
+    splitLinesPattern: string | RegExp
+): ContentModelDocument {
+    const markdownText = text.split(splitLinesPattern).filter(line => line.trim().length > 0);
     markdownText.push(''); // Add an empty line to make sure the last block is processed
 
     const doc = createContentModelDocument();
