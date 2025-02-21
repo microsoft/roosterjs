@@ -106,12 +106,14 @@ export class PastePlugin implements EditorPlugin {
                 break;
             case 'excelOnline':
             case 'excelDesktop':
+            case 'excelNonNativeEvent':
                 if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(
                         event,
                         this.editor.getDOMCreator(),
-                        this.allowExcelNoBorderTable
+                        !!this.allowExcelNoBorderTable,
+                        pasteSource != 'excelNonNativeEvent' /* isNativeEvent */
                     );
                 }
                 break;
