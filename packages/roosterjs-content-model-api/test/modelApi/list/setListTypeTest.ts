@@ -1,4 +1,5 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { setListType } from '../../../lib/modelApi/list/setListType';
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
@@ -19,8 +20,14 @@ import {
 
 describe('indent', () => {
     let normalizeContentModelSpy: jasmine.Spy;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
+
     beforeEach(() => {
         normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
     });
 
     it('Empty group', () => {
@@ -33,6 +40,8 @@ describe('indent', () => {
             blocks: [],
         });
         expect(result).toBeFalse();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group without selection', () => {
@@ -48,6 +57,8 @@ describe('indent', () => {
             blocks: [para],
         });
         expect(result).toBeFalse();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with single paragraph selection', () => {
@@ -108,6 +119,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with single paragraph selection remove margins', () => {
@@ -170,7 +183,10 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
+
     it('Group with single list item selection in a different type', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
@@ -199,6 +215,8 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with single list item selection in same type', () => {
@@ -229,6 +247,8 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with single list item selection in same type and then normalize', () => {
@@ -252,6 +272,8 @@ describe('indent', () => {
             blocks: [para],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with single list item selection in same type with implicit paragraph', () => {
@@ -296,6 +318,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with mixed selection', () => {
@@ -387,6 +411,8 @@ describe('indent', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Carry over existing segment and direction format', () => {
@@ -469,6 +495,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('do not turn on list for empty paragraphs', () => {
@@ -554,6 +582,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('still turn on list for empty paragraphs if it is the only selected paragraph', () => {
@@ -610,6 +640,8 @@ describe('indent', () => {
                 para3,
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('do not turn on list for table', () => {
@@ -722,6 +754,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Change style type to existing list', () => {
@@ -752,6 +786,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('turn on list on indented paragraph', () => {
@@ -829,6 +865,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(2);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('turn off list on indented paragraph', () => {
@@ -961,5 +999,7 @@ describe('indent', () => {
             ],
             format: {},
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 });

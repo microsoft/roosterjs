@@ -1,5 +1,6 @@
 import { alignTable } from '../table/alignTable';
 import { getOperationalBlocks, mutateBlock } from 'roosterjs-content-model-dom';
+import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import type {
     ContentModelListItem,
     ReadonlyContentModelDocument,
@@ -53,6 +54,8 @@ export function setModelAlignment(
     model: ReadonlyContentModelDocument,
     alignment: 'left' | 'center' | 'right' | 'justify'
 ) {
+    splitSelectedParagraphByBr(model);
+
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],

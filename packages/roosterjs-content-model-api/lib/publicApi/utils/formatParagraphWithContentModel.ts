@@ -1,4 +1,5 @@
 import { getSelectedParagraphs } from 'roosterjs-content-model-dom';
+import { splitSelectedParagraphByBr } from '../../modelApi/block/splitSelectedParagraphByBr';
 import type { IEditor, ShallowMutableContentModelParagraph } from 'roosterjs-content-model-types';
 
 /**
@@ -14,6 +15,8 @@ export function formatParagraphWithContentModel(
 ) {
     editor.formatContentModel(
         (model, context) => {
+            splitSelectedParagraphByBr(model);
+
             const paragraphs = getSelectedParagraphs(model, true /*mutate*/);
 
             paragraphs.forEach(setStyleCallback);
