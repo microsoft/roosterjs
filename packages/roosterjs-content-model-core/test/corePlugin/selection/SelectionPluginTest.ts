@@ -2857,4 +2857,39 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('onSelectionChange on image | 4', () => {
+        const image = document.createElement('img');
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+            range: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
 });

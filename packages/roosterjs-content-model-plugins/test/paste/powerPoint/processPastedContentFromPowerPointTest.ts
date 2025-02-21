@@ -1,5 +1,5 @@
 import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
-import { processPastedContentFromPowerPoint } from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
+import { processPastedContentFromPowerPoint } from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import type { BeforePasteEvent, ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
 
 const getPasteEvent = (): BeforePasteEvent => {

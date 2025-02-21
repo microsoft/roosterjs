@@ -1,4 +1,3 @@
-import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -20,7 +19,6 @@ export function toggleUnderline(editor: IEditor) {
             }
         },
         (format, segment) => !!format.underline || !!segment?.link?.format?.underline,
-        false /*includingFormatHolder*/,
-        adjustTrailingSpaceSelection
+        false /*includingFormatHolder*/
     );
 }
