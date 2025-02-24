@@ -1,3 +1,4 @@
+import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import { wrapBlockStep1, wrapBlockStep2 } from '../common/wrapBlock';
 import {
     getOperationalBlocks,
@@ -28,6 +29,8 @@ export function toggleModelBlockQuote(
     formatLtr: ContentModelFormatContainerFormat,
     formatRtl: ContentModelFormatContainerFormat
 ): boolean {
+    splitSelectedParagraphByBr(model);
+
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
     >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/);

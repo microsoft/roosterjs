@@ -1,3 +1,4 @@
+import { splitSelectedParagraphByBr } from '../block/splitSelectedParagraphByBr';
 import {
     createListItem,
     createListLevel,
@@ -27,6 +28,8 @@ export function setListType(
     listType: 'OL' | 'UL',
     removeMargins: boolean = false
 ) {
+    splitSelectedParagraphByBr(model);
+
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],
