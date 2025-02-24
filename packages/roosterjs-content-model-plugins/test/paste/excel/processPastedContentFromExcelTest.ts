@@ -1,7 +1,7 @@
-import * as PastePluginFile from '../../lib/paste/Excel/processPastedContentFromExcel';
+import * as PastePluginFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { ContentModelDocument, DOMCreator } from 'roosterjs-content-model-types';
-import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { processPastedContentFromExcel } from '../../lib/paste/Excel/processPastedContentFromExcel';
+import { createBeforePasteEventMock } from '../createBeforePasteEventMock';
+import { processPastedContentFromExcel } from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import {
     contentModelToDom,
     createDomToModelContext,
@@ -29,7 +29,12 @@ describe('processPastedContentFromExcelTest', () => {
         const event = createBeforePasteEventMock(fragment);
 
         event.clipboardData.html = source;
-        processPastedContentFromExcel(event, domCreator);
+        processPastedContentFromExcel(
+            event,
+            domCreator,
+            false /* allowExcelNoBorderTable */,
+            true /* isNativeEvent */
+        );
 
         const model = domToContentModel(
             fragment,
@@ -352,7 +357,12 @@ describe('Do not run scenarios', () => {
         if (excelHandler) {
             spyOn(PastePluginFile, 'excelHandler').and.returnValue(excelHandler);
         }
-        processPastedContentFromExcel(event, domCreator);
+        processPastedContentFromExcel(
+            event,
+            domCreator,
+            false /* allowExcelNoBorderTable */,
+            true /* isNativeEvent */
+        );
 
         // Assert
         while (div.firstChild) {

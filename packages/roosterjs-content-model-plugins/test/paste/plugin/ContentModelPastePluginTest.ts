@@ -1,12 +1,12 @@
-import * as addParser from '../../lib/paste/utils/addParser';
-import * as ExcelFile from '../../lib/paste/Excel/processPastedContentFromExcel';
-import * as getPasteSource from '../../lib/paste/pasteSourceValidations/getPasteSource';
-import * as PowerPointFile from '../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
-import * as setProcessor from '../../lib/paste/utils/setProcessor';
-import * as WacFile from '../../lib/paste/WacComponents/processPastedContentWacComponents';
+import * as addParser from '../../../lib/paste/utils/addParser';
+import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
+import * as getPasteSource from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
+import * as setProcessor from '../../../lib/paste/utils/setProcessor';
+import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
-import { PastePlugin } from '../../lib/paste/PastePlugin';
-import { PastePropertyNames } from '../../lib/paste/pasteSourceValidations/constants';
+import { PastePlugin } from '../../../lib/paste/PastePlugin';
+import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
 
 const trustedHTMLHandler = (val: string) => val;
 const domCreator: DOMCreator = {
@@ -38,6 +38,7 @@ describe('Content Model Paste Plugin Test', () => {
                 eventType: 'beforePaste',
                 clipboardData: <any>{
                     html: '',
+                    types: [],
                 },
                 fragment: document.createDocumentFragment(),
                 htmlBefore: '',
@@ -77,7 +78,8 @@ describe('Content Model Paste Plugin Test', () => {
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
                 domCreator,
-                undefined /*allowExcelNoBorderTable*/
+                false /*allowExcelNoBorderTable*/,
+                true
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
@@ -94,7 +96,8 @@ describe('Content Model Paste Plugin Test', () => {
             expect(ExcelFile.processPastedContentFromExcel).not.toHaveBeenCalledWith(
                 event,
                 domCreator,
-                undefined /*allowExcelNoBorderTable*/
+                false /* allowExcelNoBorderTable */,
+                true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
@@ -110,7 +113,8 @@ describe('Content Model Paste Plugin Test', () => {
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
                 domCreator,
-                undefined /*allowExcelNoBorderTable*/
+                false /* allowExcelNoBorderTable */,
+                true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
@@ -126,7 +130,8 @@ describe('Content Model Paste Plugin Test', () => {
             expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
                 event,
                 domCreator,
-                undefined /*allowExcelNoBorderTable*/
+                false /* allowExcelNoBorderTable */,
+                true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
@@ -171,6 +176,23 @@ describe('Content Model Paste Plugin Test', () => {
             expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
             expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
             expect(Object.keys(event.domToModelOption.styleSanitizers).length).toEqual(4);
+        });
+
+        it('excelNonNativeEvent', () => {
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelNonNativeEvent');
+            spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(ExcelFile.processPastedContentFromExcel).toHaveBeenCalledWith(
+                event,
+                domCreator,
+                false /* allowExcelNoBorderTable */,
+                false /* isNativeEvent */
+            );
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
         it('Default with customized Sanitizing option', () => {

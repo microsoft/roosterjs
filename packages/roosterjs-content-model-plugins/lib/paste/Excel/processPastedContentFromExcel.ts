@@ -12,23 +12,29 @@ const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
-const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 const TABLE_SELECTOR = 'table';
+const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 
 /**
  * @internal
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
  * @param event The BeforePaste event
+ * @param domCreator The DOM creator
+ * @param allowExcelNoBorderTable Allow table copied from Excel without border
+ * @param isNativeEvent Whether the event is native event
  */
-
 export function processPastedContentFromExcel(
     event: BeforePasteEvent,
     domCreator: DOMCreator,
-    allowExcelNoBorderTable?: boolean
+    allowExcelNoBorderTable: boolean,
+    isNativeEvent: boolean
 ) {
     const { fragment, htmlBefore, htmlAfter, clipboardData } = event;
 
-    validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
+    // For non native event we already validated that the content contains a table
+    if (isNativeEvent) {
+        validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
+    }
 
     // For Excel Online
     const firstChild = fragment.firstChild;
@@ -54,39 +60,12 @@ export function processPastedContentFromExcel(
         }
     }
 
-    addParser(event.domToModelOption, 'tableCell', (format, element) => {
-        if (!allowExcelNoBorderTable && element.style.borderStyle === 'none') {
-            format.borderBottom = DEFAULT_BORDER_STYLE;
-            format.borderLeft = DEFAULT_BORDER_STYLE;
-            format.borderRight = DEFAULT_BORDER_STYLE;
-            format.borderTop = DEFAULT_BORDER_STYLE;
-        }
-    });
-
-    setProcessor(event.domToModelOption, 'child', childProcessor);
+    setupExcelTableHandlers(
+        event,
+        allowExcelNoBorderTable,
+        isNativeEvent /* handleForNativeEvent */
+    );
 }
-
-/**
- * @internal
- * Exported only for unit test
- */
-export const childProcessor: ElementProcessor<ParentNode> = (group, element, context) => {
-    const segmentFormat = { ...context.segmentFormat };
-    if (
-        group.blockGroupType === 'TableCell' &&
-        group.format.textColor &&
-        !context.segmentFormat.textColor
-    ) {
-        context.segmentFormat.textColor = group.format.textColor;
-    }
-
-    context.defaultElementProcessors.child(group, element, context);
-
-    if (group.blockGroupType === 'TableCell' && group.format.textColor) {
-        context.segmentFormat = segmentFormat;
-        delete group.format.textColor;
-    }
-};
 
 /**
  * @internal
@@ -148,3 +127,50 @@ export function excelHandler(html: string, htmlBefore: string): string {
         return html;
     }
 }
+
+/**
+ * @internal
+ * Exported only for unit test
+ */
+export function setupExcelTableHandlers(
+    event: BeforePasteEvent,
+    allowExcelNoBorderTable: boolean | undefined,
+    isNativeEvent: boolean
+) {
+    addParser(event.domToModelOption, 'tableCell', (format, element) => {
+        if (
+            !allowExcelNoBorderTable &&
+            (element.style.borderStyle === 'none' ||
+                (!isNativeEvent && element.style.borderStyle == ''))
+        ) {
+            format.borderBottom = DEFAULT_BORDER_STYLE;
+            format.borderLeft = DEFAULT_BORDER_STYLE;
+            format.borderRight = DEFAULT_BORDER_STYLE;
+            format.borderTop = DEFAULT_BORDER_STYLE;
+        }
+    });
+
+    setProcessor(event.domToModelOption, 'child', childProcessor);
+}
+
+/**
+ * @internal
+ * Exported only for unit test
+ */
+export const childProcessor: ElementProcessor<ParentNode> = (group, element, context) => {
+    const segmentFormat = { ...context.segmentFormat };
+    if (
+        group.blockGroupType === 'TableCell' &&
+        group.format.textColor &&
+        !context.segmentFormat.textColor
+    ) {
+        context.segmentFormat.textColor = group.format.textColor;
+    }
+
+    context.defaultElementProcessors.child(group, element, context);
+
+    if (group.blockGroupType === 'TableCell' && group.format.textColor) {
+        context.segmentFormat = segmentFormat;
+        delete group.format.textColor;
+    }
+};
