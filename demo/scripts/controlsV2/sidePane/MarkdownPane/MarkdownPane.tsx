@@ -49,7 +49,7 @@ export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
 
     private generateMarkdown = () => {
         const selection = this.props.getEditor().getDOMSelection();
-        if (selection && !(selection.type == 'range' && selection.range.collapsed)) {
+        if (selection) {
             const content = exportEditorSelectionToMarkdown(selection);
             this.html.current.value = content;
         }

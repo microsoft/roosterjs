@@ -17,8 +17,8 @@ const HEADINGS: Record<string, string> = {
  */
 export function createMarkdownContentFromSelection(selection: RangeSelection): string {
     let content = '';
-    const doc = selection.range.cloneContents();
-    const nodes = toArray(doc.children);
+    const rangeContent = selection.range.cloneContents();
+    const nodes = toArray(rangeContent.childNodes);
 
     for (const node of nodes) {
         if (isNodeOfType(node, 'ELEMENT_NODE')) {
@@ -48,6 +48,10 @@ export function createMarkdownContentFromSelection(selection: RangeSelection): s
                             lastColumn: table.rows[0].cells.length - 1,
                         }) + '\n';
                     break;
+                case 'B':
+                case 'I':
+                    content += convertItalicAndBoldToMarkdown(element);
+                    break;
                 case 'H1':
                 case 'H2':
                 case 'H3':
@@ -61,7 +65,7 @@ export function createMarkdownContentFromSelection(selection: RangeSelection): s
                     content += createMarkdownFromBlockParagraph(element) + '\n\n';
                     break;
                 default:
-                    content += element.textContent + '\n\n';
+                    content += createMarkdownSegments(element);
             }
         } else {
             content += node.textContent;
@@ -141,4 +145,8 @@ function convertListToMarkdown(list: HTMLUListElement | HTMLOListElement): strin
 
 function getListMarker(list: HTMLUListElement | HTMLOListElement, position: number): string {
     return list.nodeName === 'UL' ? '-' : `${position}.`;
+}
+
+function convertItalicAndBoldToMarkdown(element: HTMLElement): string {
+    return element.nodeName === 'B' ? `**${element.textContent}**` : `*${element.textContent}*`;
 }

@@ -10,6 +10,9 @@ export function selectionProcessor(selection: DOMSelection): string {
     let content = '';
     switch (selection?.type) {
         case 'range':
+            if (selection.range.collapsed) {
+                return '';
+            }
             content = createMarkdownContentFromSelection(selection);
             break;
         case 'image':

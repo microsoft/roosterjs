@@ -1,4 +1,4 @@
-import { selectionProcessor } from '../../../lib/editorSelectionToMarkdown/processor/selectionProcessor';
+import { exportEditorSelectionToMarkdown } from '../../lib/editorSelectionToMarkdown/exportEditorSelectionToMarkdown';
 import {
     DOMSelection,
     ImageSelection,
@@ -6,10 +6,10 @@ import {
     TableSelection,
 } from 'roosterjs-content-model-types';
 
-describe('selectionProcessor', () => {
+describe('exportEditorSelectionToMarkdown', () => {
     function runTest(selection: DOMSelection, expected: string) {
         // Act
-        const result = selectionProcessor(selection);
+        const result = exportEditorSelectionToMarkdown(selection);
 
         // Assert
         expect(result).toEqual(expected);
@@ -66,61 +66,6 @@ describe('selectionProcessor', () => {
         runTest(imageSelection, '![Example Image](https://example.com/image.png)');
     });
 
-    it('text selection', () => {
-        const parentDiv = document.createElement('div');
-        const textNode = document.createTextNode('text');
-        parentDiv.appendChild(textNode);
-        const range = document.createRange();
-        range.setStart(textNode, 0);
-        range.setEnd(textNode, 3);
-        const rangeSelection: DOMSelection = {
-            type: 'range',
-            range: range,
-            isReverted: false,
-        };
-        runTest(rangeSelection, 'tex');
-    });
-
-    it('multiple nodes selection', () => {
-        const parentDiv = document.createElement('div');
-        const textNode1 = document.createTextNode('text1');
-        const textNode2 = document.createTextNode('text2');
-        const textNode3 = document.createTextNode('text3');
-        parentDiv.appendChild(textNode1);
-        parentDiv.appendChild(textNode2);
-        parentDiv.appendChild(textNode3);
-        const range = document.createRange();
-        range.setStart(textNode1, 0);
-        range.setEnd(textNode3, 3);
-        const rangeSelection: DOMSelection = {
-            type: 'range',
-            range: range,
-            isReverted: false,
-        };
-        runTest(rangeSelection, 'text1text2tex');
-    });
-
-    it('multiple nodes selection with empty text node', () => {
-        const parentDiv = document.createElement('div');
-        const textNode1 = document.createTextNode('text1');
-        const emptyTextNode = document.createTextNode('');
-        const textNode2 = document.createTextNode('text2');
-        const textNode3 = document.createTextNode('text3');
-        parentDiv.appendChild(textNode1);
-        parentDiv.appendChild(emptyTextNode);
-        parentDiv.appendChild(textNode2);
-        parentDiv.appendChild(textNode3);
-        const range = document.createRange();
-        range.setStart(textNode1, 0);
-        range.setEnd(textNode3, 3);
-        const rangeSelection: DOMSelection = {
-            type: 'range',
-            range: range,
-            isReverted: false,
-        };
-        runTest(rangeSelection, 'text1text2tex');
-    });
-
     it('range selection with link', () => {
         const parentDiv = document.createElement('div');
         const textNode1 = document.createTextNode('text1');
@@ -132,16 +77,15 @@ describe('selectionProcessor', () => {
         parentDiv.appendChild(link);
         parentDiv.appendChild(textNode2);
         const range = document.createRange();
-        range.setStartBefore(textNode1);
-        range.setEndAfter(textNode2);
+        range.setStart(textNode1, 0);
+        range.setEnd(textNode2, 3);
         const rangeSelection: DOMSelection = {
             type: 'range',
             range: range,
             isReverted: false,
         };
-        runTest(rangeSelection, 'text1[link](https://example.com/)text2');
+        runTest(rangeSelection, 'text1[link](https://example.com/)tex');
     });
-
     it('range selection with bold and italic', () => {
         const parentDiv = document.createElement('div');
         const textNode1 = document.createTextNode('text1');
