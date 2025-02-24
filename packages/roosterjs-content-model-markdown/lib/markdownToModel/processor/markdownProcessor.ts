@@ -45,7 +45,6 @@ export function markdownProcessor(
 ): ContentModelDocument {
     const markdownText = text.split(splitLinesPattern).filter(line => line.trim().length > 0);
     markdownText.push(''); // Add an empty line to make sure the last block is processed
-
     const doc = createContentModelDocument();
     return convertMarkdownText(doc, markdownText);
 }
@@ -89,7 +88,9 @@ function addMarkdownBlockToModel(
             break;
         case 'BlockGroup':
             const blockGroup = createBlockGroupFromMarkdown(markdown, patternName, quote.lastQuote);
-            model.blocks.push(blockGroup);
+            if (!quote.lastQuote) {
+                model.blocks.push(blockGroup);
+            }
             quote.lastQuote =
                 blockGroup.blockGroupType === 'FormatContainer' ? blockGroup : undefined;
             break;

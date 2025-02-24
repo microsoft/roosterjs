@@ -1889,45 +1889,6 @@ describe('convertMarkdownToContentModel', () => {
                 },
                 //27
                 {
-                    tagName: 'blockquote',
-                    blockType: 'BlockGroup',
-                    format: {
-                        borderLeft: '3px solid rgb(200, 200, 200)',
-                        marginTop: '1em',
-                        marginBottom: '1em',
-                        marginLeft: '40px',
-                        marginRight: '40px',
-                        paddingLeft: '10px',
-                        textColor: 'rgb(102, 102, 102)',
-                    },
-                    blockGroupType: 'FormatContainer',
-                    blocks: [
-                        {
-                            segments: [
-                                {
-                                    text: ' This is a quote.',
-                                    segmentType: 'Text',
-                                    format: {},
-                                },
-                            ],
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                        {
-                            segments: [
-                                {
-                                    text: ' It can span multiple lines.',
-                                    segmentType: 'Text',
-                                    format: {},
-                                },
-                            ],
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
-                //28
-                {
                     segments: [
                         {
                             segmentType: 'Br',
