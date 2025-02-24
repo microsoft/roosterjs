@@ -3,7 +3,7 @@ import { applyLink } from './applyLink';
 import { applyTextFormatting } from './applyTextFormatting';
 import { createBr, createText } from 'roosterjs-content-model-dom';
 import { createImageSegment } from '../creators/createImageSegment';
-import { splitLinkAndImages } from '../utils/splitLinksAndImages';
+import { splitParagraphSegments } from '../utils/splitParagraphSegments';
 
 import type {
     ContentModelParagraph,
@@ -22,15 +22,17 @@ export function applySegmentFormatting(
         const br = createBr();
         paragraph.segments.push(br);
     } else {
-        const textSegments = splitLinkAndImages(text);
+        const textSegments = splitParagraphSegments(text);
         for (const segment of textSegments) {
-            const formattedSegment = createText(segment);
-            const image = createImageSegment(formattedSegment);
-            if (image) {
+            const formattedSegment = createText(segment.text);
+            if (segment.type === 'image') {
+                const image = createImageSegment(segment.text, segment.url);
                 paragraph.segments.push(image);
             } else {
+                if (segment.type === 'link') {
+                    applyLink(formattedSegment, segment.text, segment.url);
+                }
                 adjustHeading(formattedSegment, decorator);
-                applyLink(formattedSegment);
                 const formattedSegments = applyTextFormatting(formattedSegment);
                 paragraph.segments.push(...formattedSegments);
             }

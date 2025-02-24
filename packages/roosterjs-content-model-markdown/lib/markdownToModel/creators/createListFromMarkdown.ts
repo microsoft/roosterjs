@@ -5,9 +5,9 @@ import type { ContentModelListItem } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export function createListFromMarkdown(text: string, patternName: string): ContentModelListItem {
-    const listType = patternName === 'ordered_list' ? 'OL' : 'UL';
-    const itemText = text.trim().substring(listType == 'OL' ? 2 : 1);
+export function createListFromMarkdown(text: string, listType: 'OL' | 'UL'): ContentModelListItem {
+    const marker = text.trim().split(' ')[0];
+    const itemText = text.trim().substring(marker.length);
     const paragraph = createParagraphFromMarkdown(itemText.trim());
     const levels = createLevels(text, listType);
     const listModel = createListItem(levels);

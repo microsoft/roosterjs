@@ -21,7 +21,7 @@ export function createBlockGroupFromMarkdown(
     group?: ContentModelFormatContainer
 ): ContentModelFormatContainer | ContentModelListItem {
     if (MarkdownBlockGroupType[patternName] === 'ListItem') {
-        return createListFromMarkdown(text, patternName);
+        return createListFromMarkdown(text, patternName === 'ordered_list' ? 'OL' : 'UL');
     } else {
         return createBlockQuoteFromMarkdown(text, group);
     }

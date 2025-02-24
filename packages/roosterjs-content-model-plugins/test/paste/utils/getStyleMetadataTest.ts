@@ -1,5 +1,5 @@
 import { BeforePasteEvent } from 'roosterjs-content-model-types';
-import { getStyleMetadata } from '../../lib/paste/WordDesktop/getStyleMetadata';
+import { getStyleMetadata } from '../../../lib/paste/WordDesktop/getStyleMetadata';
 
 const domCreator = {
     htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),

@@ -45,19 +45,14 @@ const createDataTransfer = (
 
 const createDataTransferItems = (data: ClipboardItems) => {
     const isTEXT = (type: string) => type.startsWith('text/');
-    const isIMAGE = (type: string) => type.startsWith('image/');
     const dataTransferItems: Promise<DataTransferItem>[] = [];
     data.forEach(item => {
         item.types.forEach(type => {
-            if (isTEXT(type) || isIMAGE(type)) {
-                dataTransferItems.push(
-                    item
-                        .getType(type)
-                        .then(blob =>
-                            createDataTransfer(isTEXT(type) ? 'string' : 'file', type, blob)
-                        )
-                );
-            }
+            dataTransferItems.push(
+                item
+                    .getType(type)
+                    .then(blob => createDataTransfer(isTEXT(type) ? 'string' : 'file', type, blob))
+            );
         });
     });
     return dataTransferItems;

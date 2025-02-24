@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { MarkdownPaneProps } from './MarkdownPanePlugin';
 import {
     convertMarkdownToContentModel,
     exportEditorSelectionToMarkdown,
 } from 'roosterjs-content-model-markdown';
+import {
+    createBr,
+    createParagraph,
+    createSelectionMarker,
+    mergeModel,
+} from 'roosterjs-content-model-dom';
 
 const styles = require('./MarkdownPane.scss');
 
@@ -17,7 +22,11 @@ export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
 
     private convert = () => {
         const editor = this.props.getEditor();
-        convertMarkdownToContentModel(editor, this.html.current.value);
+        editor.formatContentModel((model, context) => {
+            const markdownModel = convertMarkdownToContentModel(this.html.current.value);
+            mergeModel(model, markdownModel, context);
+            return true;
+        });
     };
 
     private clear = () => {

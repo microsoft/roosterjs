@@ -4,7 +4,7 @@ import { markdownProcessor } from '../../../lib/markdownToModel/processor/markdo
 describe('markdownProcessor', () => {
     function runTest(test: string, expected: ContentModelDocument) {
         // Act
-        const result = markdownProcessor(test);
+        const result = markdownProcessor(test, /\r\n|\r|\\n|\n/);
 
         // Assert
         expect(result).toEqual(expected);

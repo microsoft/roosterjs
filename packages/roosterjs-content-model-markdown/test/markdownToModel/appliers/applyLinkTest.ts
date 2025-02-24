@@ -3,9 +3,9 @@ import { ContentModelText } from 'roosterjs-content-model-types';
 import { createText } from 'roosterjs-content-model-dom';
 
 describe('applyLink', () => {
-    function runTest(text: string, expectedSegment: ContentModelText) {
+    function runTest(text: string, url: string, expectedSegment: ContentModelText) {
         const textSegment = createText(text);
-        const result = applyLink(textSegment);
+        const result = applyLink(textSegment, text, url);
         expect(result).toEqual(expectedSegment);
     }
 
@@ -18,12 +18,7 @@ describe('applyLink', () => {
                 underline: true,
             },
         };
-        runTest('[link](https://www.example.com)', linkSegment);
-    });
-
-    it('should not apply link to text segment with space in link', () => {
-        const textSegment = createText('[link](https://www.example.com/with space)');
-        runTest('[link](https://www.example.com/with space)', textSegment);
+        runTest('link', 'https://www.example.com', linkSegment);
     });
 
     it('should apply link to text segment with space in text', () => {
@@ -35,6 +30,6 @@ describe('applyLink', () => {
                 underline: true,
             },
         };
-        runTest('[link with space](https://www.example.com)', linkSegmentWith);
+        runTest('link with space', 'https://www.example.com', linkSegmentWith);
     });
 });
