@@ -1,5 +1,6 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import { getListAnnounceData } from '../list/getListAnnounceData';
+import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import {
     createListLevel,
     getOperationalBlocks,
@@ -33,6 +34,8 @@ export function setModelIndentation(
     length: number = IndentStepInPixel,
     context?: FormatContentModelContext
 ) {
+    splitSelectedParagraphByBr(model);
+
     const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],

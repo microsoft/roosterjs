@@ -1,3 +1,4 @@
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { ContentModelBlockFormat } from 'roosterjs-content-model-types';
 import { setModelAlignment } from '../../../lib/modelApi/block/setModelAlignment';
 import {
@@ -12,6 +13,14 @@ import {
 
 describe('align left', () => {
     const mockedCachedElement = 'CACHE' as any;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
+    });
 
     function createParagraph(isImplicit?: boolean, format?: ContentModelBlockFormat) {
         const result = originalCreateParagraph(isImplicit, format);
@@ -31,6 +40,8 @@ describe('align left', () => {
             blocks: [],
         });
         expect(result).toBeFalse();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group without selection', () => {
@@ -45,6 +56,8 @@ describe('align left', () => {
             blocks: [para],
         });
         expect(result).toBeFalse();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected paragraph', () => {
@@ -91,6 +104,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with multiple selected paragraph', () => {
@@ -141,6 +156,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected  paragraph in RTL', () => {
@@ -170,6 +187,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with paragraph under OL', () => {
@@ -214,6 +233,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('align table, list, paragraph left', () => {
@@ -329,6 +350,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('align table, list, paragraph center', () => {
@@ -442,6 +465,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('align table, list, paragraph right', () => {
@@ -555,6 +580,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('[RTL] align table, list, paragraph left', () => {
@@ -675,6 +702,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('[RTL] align table, list, paragraph center', () => {
@@ -795,6 +824,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('[RTL] align table, list, paragraph right', () => {
@@ -916,6 +947,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTrue();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('align justify paragraph', () => {
@@ -941,6 +974,8 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTruthy();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('align justify list item', () => {
@@ -985,5 +1020,7 @@ describe('align left', () => {
             ],
         });
         expect(result).toBeTruthy();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 });
