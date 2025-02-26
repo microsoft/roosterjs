@@ -13,12 +13,16 @@ export function transformHyphen(
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ): boolean {
+    // If the selection marker is at the beginning of a paragraph, there is no text to be transformed before it
+    if (paragraph.segments[0].segmentType == 'SelectionMarker') {
+        return false;
+    }
+
     const segments = previousSegment.text.split(' ');
     const dashes = segments[segments.length - 2];
     if (dashes === '--') {
         const textIndex = previousSegment.text.lastIndexOf('--');
         const textSegment = splitTextSegment(previousSegment, paragraph, textIndex, textIndex + 2);
-
         textSegment.text = textSegment.text.replace('--', '—');
         context.canUndoByBackspace = true;
         return true;

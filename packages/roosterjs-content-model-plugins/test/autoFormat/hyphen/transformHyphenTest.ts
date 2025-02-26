@@ -142,6 +142,27 @@ describe('transformHyphen', () => {
         };
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
+
+    it('selection before text', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test--test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                segment,
+            ],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
 });
 
 describe('formatTextSegmentBeforeSelectionMarker - transformHyphen', () => {
