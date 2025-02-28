@@ -31,7 +31,7 @@ export function createMarkdownContentFromSelection(selection: RangeSelection): s
                     break;
                 case 'BLOCKQUOTE':
                     const blockquote = element as HTMLQuoteElement;
-                    content += convertMarkdownBlockquote(blockquote) + '\n';
+                    content += convertBlockquoteToMarkdown(blockquote) + '\n';
                     break;
                 case 'HR':
                     content += '\n---\n\n';
@@ -58,14 +58,14 @@ export function createMarkdownContentFromSelection(selection: RangeSelection): s
                 case 'H4':
                 case 'H5':
                 case 'H6':
-                    content += convertMarkdownHeader(element) + '\n\n';
+                    content += convertHeaderToMarkdown(element) + '\n\n';
                     break;
                 case 'DIV':
                 case 'P':
-                    content += createMarkdownFromBlockParagraph(element) + '\n\n';
+                    content += convertParagraphsToMarkdown(element) + '\n\n';
                     break;
                 default:
-                    content += createMarkdownSegments(element);
+                    content += convertSegmentsToMarkdown(element);
             }
         } else {
             content += node.textContent;
@@ -74,19 +74,19 @@ export function createMarkdownContentFromSelection(selection: RangeSelection): s
     return content;
 }
 
-function convertMarkdownHeader(textElement: HTMLElement): string {
+function convertHeaderToMarkdown(textElement: HTMLElement): string {
     const heading = textElement.nodeName;
-    const content = createMarkdownFromBlockParagraph(textElement);
+    const content = convertParagraphsToMarkdown(textElement);
     return (HEADINGS[heading] || '') + ' ' + content;
 }
 
-function convertMarkdownBlockquote(textElement: HTMLElement): string {
+function convertBlockquoteToMarkdown(textElement: HTMLElement): string {
     const quotes = toArray(textElement.childNodes);
-    const content = quotes.map(quote => '> ' + createMarkdownSegments(quote)).join('\n');
+    const content = quotes.map(quote => '> ' + convertSegmentsToMarkdown(quote)).join('\n');
     return content;
 }
 
-function createMarkdownSegments(child: ChildNode): string {
+function convertSegmentsToMarkdown(child: ChildNode): string {
     switch (child.nodeName) {
         case 'IMG':
             const image = child as HTMLImageElement;
@@ -99,15 +99,15 @@ function createMarkdownSegments(child: ChildNode): string {
     }
 }
 
-function createMarkdownFromBlockParagraph(textElement: HTMLElement): string {
+function convertParagraphsToMarkdown(textElement: HTMLElement): string {
     let content = '';
     const childNodes = Array.from(textElement.childNodes);
     for (const child of childNodes) {
         if (child.nodeName === 'SPAN') {
             const spanChild = toArray(child.childNodes);
-            content += spanChild.map(spanChild => createMarkdownSegments(spanChild)).join('');
+            content += spanChild.map(spanChild => convertSegmentsToMarkdown(spanChild)).join('');
         } else {
-            content += createMarkdownSegments(child);
+            content += convertSegmentsToMarkdown(child);
         }
     }
     return content;
@@ -134,9 +134,7 @@ function convertListToMarkdown(list: HTMLUListElement | HTMLOListElement): strin
     let position = 1;
     for (const child of children) {
         if (isNodeOfType(child, 'ELEMENT_NODE') && isElementOfType(child, 'li')) {
-            content += `${getListMarker(list, position)} ${createMarkdownFromBlockParagraph(
-                child
-            )}\n`;
+            content += `${getListMarker(list, position)} ${convertParagraphsToMarkdown(child)}\n`;
             position++;
         }
     }
