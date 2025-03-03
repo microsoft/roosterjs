@@ -1,6 +1,5 @@
 import * as insertHorizontalLineIntoModelFile from '../../../lib/modelApi/block/insertHorizontalLineIntoModel';
 import { insertHorizontalLine } from '../../../lib/publicApi/block/insertHorizontalLine';
-import { insertHorizontalLineIntoModel } from '../../../lib/modelApi/block/insertHorizontalLineIntoModel';
 import {
     ContentModelFormatter,
     DomToModelOptionForCreateModel,

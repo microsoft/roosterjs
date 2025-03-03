@@ -284,6 +284,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                         para.segments = para.segments.filter(s => s.segmentType != 'Text');
                         insertHorizontalLineIntoModel(model, context);
                         event.rawEvent.preventDefault();
+                        context.canUndoByBackspace = true;
                     }
                     return shouldFormat;
                 });
