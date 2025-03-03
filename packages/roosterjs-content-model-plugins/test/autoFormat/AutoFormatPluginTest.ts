@@ -1656,4 +1656,248 @@ describe('Content Model Auto Format Plugin Test', () => {
             );
         });
     });
+
+    describe('onPluginEvent - [Enter] - autoHorizontalLine', () => {
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        function runTest(
+            event: KeyDownEvent,
+            stringInSegment: string,
+            expectResult: ContentModelDocument,
+            options: AutoFormatOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+
+            const textSegment: ContentModelText = {
+                segmentType: 'Text',
+                text: stringInSegment,
+                format: {},
+            };
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [textSegment, marker],
+                format: {},
+            };
+            const inputModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [paragraph],
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                callback(
+                    inputModel,
+                    textSegment,
+                    paragraph,
+                    {},
+                    { newEntities: [], newImages: [], deletedEntities: [] }
+                );
+
+                return true;
+            });
+
+            plugin.onPluginEvent(event);
+
+            expect(inputModel).toEqual(expectResult);
+        }
+
+        it('Add divider ---', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '---',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Add divider ===', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '===',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Add divider ___', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '___',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider _-_', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '_-_',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_-_',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider __', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '__',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '__',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider ___, option disabled', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '___',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '___',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: false }
+            );
+        });
+    });
 });

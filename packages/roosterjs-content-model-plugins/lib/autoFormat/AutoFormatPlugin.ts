@@ -1,11 +1,15 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
-import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
+import {
+    formatTextSegmentBeforeSelectionMarker,
+    insertHorizontalLineIntoModel,
+    promoteLink,
+} from 'roosterjs-content-model-api';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
@@ -29,8 +33,10 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoFraction: false,
     autoOrdinals: false,
     removeListMargins: false,
+    autoHorizontalLine: true,
 };
 
+const HorizontalLineTriggerCharacters = ['-', '=', '_'];
 /**
  * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
  * It can be customized with options to enable or disable auto list features.
@@ -49,6 +55,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
      *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
+     *  - autoHorizontalLine: A boolean that enables or disables automatic horizontal line creation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -251,7 +258,36 @@ export class AutoFormatPlugin implements EditorPlugin {
                             }
                         );
                     }
+                    break;
+                case 'Enter':
+                    this.handleEnterKey(editor, event);
+                    break;
             }
+        }
+    }
+
+    private handleEnterKey(editor: IEditor, event: KeyDownEvent) {
+        if (this.options.autoHorizontalLine) {
+            formatTextSegmentBeforeSelectionMarker(editor, (model, _, para, __, context) => {
+                const allText = para.segments.reduce(
+                    (acc, segment) => (segment.segmentType === 'Text' ? acc + segment.text : acc),
+                    ''
+                );
+                // At least 3 characters are needed to trigger horizontal line
+                if (allText.length < 3) {
+                    return false;
+                }
+
+                return HorizontalLineTriggerCharacters.some(c => {
+                    const shouldFormat = allText.split('').every(char => char === c);
+                    if (shouldFormat) {
+                        para.segments = para.segments.filter(s => s.segmentType != 'Text');
+                        insertHorizontalLineIntoModel(model, context);
+                        event.rawEvent.preventDefault();
+                    }
+                    return shouldFormat;
+                });
+            });
         }
     }
 
