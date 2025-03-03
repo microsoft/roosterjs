@@ -33,7 +33,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoFraction: false,
     autoOrdinals: false,
     removeListMargins: false,
-    autoHorizontalLine: true,
+    autoHorizontalLine: false,
 };
 
 const HorizontalLineTriggerCharacters = ['-', '=', '_'];
