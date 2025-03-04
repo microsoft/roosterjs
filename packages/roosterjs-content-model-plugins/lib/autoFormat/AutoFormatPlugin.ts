@@ -10,13 +10,36 @@ import { unlink } from './link/unlink';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
+    ContentModelText,
     EditorInputEvent,
     EditorPlugin,
+    FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
     PluginEvent,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ */
+type AutoFormatFeature = 'list' | 'link' | 'hyphen' | 'fraction' | 'ordinal';
+
+/**
+ * @internal
+ */
+interface Feature {
+    autoFormat: AutoFormatFeature;
+    enabled: boolean;
+    transformFunction: (
+        model: ReadonlyContentModelDocument,
+        previousSegment: ContentModelText,
+        paragraph: ShallowMutableContentModelParagraph,
+        context: FormatContentModelContext
+    ) => boolean | HTMLElement;
+}
 
 /**
  * @internal
@@ -103,6 +126,57 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
+    private features: Feature[] = [
+        {
+            autoFormat: 'list',
+            enabled: !!(this.options.autoBullet || this.options.autoNumbering),
+            transformFunction: (model, _previousSegment, paragraph, context) =>
+                keyboardListTrigger(
+                    model,
+                    paragraph,
+                    context,
+                    this.options.autoBullet,
+                    this.options.autoNumbering,
+                    this.options.removeListMargins
+                ),
+        },
+        {
+            autoFormat: 'link',
+            enabled: !!(this.options.autoLink || this.options.autoTel || this.options.autoMailto),
+            transformFunction: (_model, previousSegment, paragraph, context) => {
+                const { autoLink, autoTel, autoMailto } = this.options;
+                const linkSegment = promoteLink(previousSegment, paragraph, {
+                    autoLink,
+                    autoTel,
+                    autoMailto,
+                });
+
+                if (linkSegment) {
+                    return createAnchor(linkSegment.link?.format.href || '', linkSegment.text);
+                }
+                return false;
+            },
+        },
+        {
+            autoFormat: 'hyphen',
+            enabled: !!this.options.autoHyphen,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformHyphen(previousSegment, paragraph, context),
+        },
+        {
+            autoFormat: 'fraction',
+            enabled: !!this.options.autoFraction,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformFraction(previousSegment, paragraph, context),
+        },
+        {
+            autoFormat: 'ordinal',
+            enabled: !!this.options.autoOrdinals,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformOrdinals(previousSegment, paragraph, context),
+        },
+    ];
+
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
         const selection = editor.getDOMSelection();
@@ -122,87 +196,32 @@ export class AutoFormatPlugin implements EditorPlugin {
                     formatTextSegmentBeforeSelectionMarker(
                         editor,
                         (model, previousSegment, paragraph, _markerFormat, context) => {
-                            const {
-                                autoBullet,
-                                autoNumbering,
-                                autoLink,
-                                autoHyphen,
-                                autoFraction,
-                                autoOrdinals,
-                                autoMailto,
-                                autoTel,
-                                removeListMargins,
-                            } = this.options;
-                            let shouldHyphen = false;
-                            let shouldLink = false;
-                            let shouldList = false;
-                            let shouldFraction = false;
-                            let shouldOrdinals = false;
+                            let formatApplied: AutoFormatFeature | undefined = undefined;
 
-                            if (autoBullet || autoNumbering) {
-                                shouldList = keyboardListTrigger(
-                                    model,
-                                    paragraph,
-                                    context,
-                                    autoBullet,
-                                    autoNumbering,
-                                    removeListMargins
-                                );
-                            }
-
-                            if (autoLink || autoTel || autoMailto) {
-                                const linkSegment = promoteLink(previousSegment, paragraph, {
-                                    autoLink,
-                                    autoTel,
-                                    autoMailto,
-                                });
-
-                                if (linkSegment) {
-                                    const anchor = createAnchor(
-                                        linkSegment.link?.format.href || '',
-                                        linkSegment.text
+                            for (const feature of this.features) {
+                                if (feature.enabled) {
+                                    const result = feature.transformFunction(
+                                        model,
+                                        previousSegment,
+                                        paragraph,
+                                        context
                                     );
-                                    formatOptions.getChangeData = () => anchor;
-
-                                    shouldLink = true;
-                                    context.canUndoByBackspace = true;
+                                    if (result) {
+                                        if (typeof result !== 'boolean') {
+                                            formatOptions.getChangeData = () => result;
+                                        }
+                                        formatApplied = feature.autoFormat;
+                                        break;
+                                    }
                                 }
                             }
 
-                            if (autoHyphen) {
-                                shouldHyphen = transformHyphen(previousSegment, paragraph, context);
+                            if (formatApplied) {
+                                formatOptions.changeSource = getChangeSource(formatApplied);
+                                formatOptions.apiName = getApiName(formatApplied);
                             }
 
-                            if (autoFraction) {
-                                shouldFraction = transformFraction(
-                                    previousSegment,
-                                    paragraph,
-                                    context
-                                );
-                            }
-
-                            if (autoOrdinals) {
-                                shouldOrdinals = transformOrdinals(
-                                    previousSegment,
-                                    paragraph,
-                                    context
-                                );
-                            }
-
-                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
-                            formatOptions.changeSource = getChangeSource(
-                                shouldList,
-                                shouldHyphen,
-                                shouldLink
-                            );
-
-                            return (
-                                shouldList ||
-                                shouldHyphen ||
-                                shouldLink ||
-                                shouldFraction ||
-                                shouldOrdinals
-                            );
+                            return !!formatApplied;
                         },
                         formatOptions
                     );
@@ -280,14 +299,14 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 }
 
-const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
-    return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
+const getApiName = (autoFormat: AutoFormatFeature) => {
+    return autoFormat == 'list' ? 'autoToggleList' : autoFormat == 'hyphen' ? 'autoHyphen' : '';
 };
 
-const getChangeSource = (shouldList: boolean, shouldHyphen: boolean, shouldLink: boolean) => {
-    return shouldList || shouldHyphen
+const getChangeSource = (autoFormat: AutoFormatFeature) => {
+    return autoFormat == 'list' || autoFormat == 'hyphen'
         ? ChangeSource.AutoFormat
-        : shouldLink
+        : autoFormat == 'link'
         ? ChangeSource.AutoLink
         : '';
 };
