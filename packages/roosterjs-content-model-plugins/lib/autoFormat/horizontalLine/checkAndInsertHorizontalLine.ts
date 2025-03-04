@@ -51,7 +51,7 @@ const HorizontalLineStyles: Map<
         {
             borderTop: '3pt double',
             borderRight: '3pt none',
-            borderBottom: '3pt double',
+            borderBottom: '3pt none',
             borderLeft: '3pt none',
             ...commonStyles,
         },
@@ -71,7 +71,7 @@ const HorizontalLineStyles: Map<
         {
             borderTop: '1px none',
             borderRight: '1px none',
-            borderBottom: '1px dashed',
+            borderBottom: '3px dotted',
             borderLeft: '1px none',
             ...commonStyles,
         },
@@ -79,9 +79,9 @@ const HorizontalLineStyles: Map<
     [
         '~',
         {
-            borderTop: '1px wave',
+            borderTop: '1px none',
             borderRight: '1px none',
-            borderBottom: '1px wave',
+            borderBottom: '1px solid',
             borderLeft: '1px none',
             ...commonStyles,
         },
