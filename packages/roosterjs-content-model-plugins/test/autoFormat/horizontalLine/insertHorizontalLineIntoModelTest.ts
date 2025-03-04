@@ -2,7 +2,7 @@ import * as addBlockFile from 'roosterjs-content-model-dom/lib/modelApi/common/a
 import * as createContentModelDocumentFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createContentModelDocument';
 import * as createDividerFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createDivider';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { insertHorizontalLineIntoModel } from '../../../lib/autoFormat/horizontalLine/insertHorizontalLineIntoModel';
+import { insertHorizontalLineIntoModel } from '../../../lib/autoFormat/horizontalLine/checkAndInsertHorizontalLine';
 import {
     addBlock,
     createContentModelDocument,
@@ -12,6 +12,11 @@ import {
     FormatContentModelContext,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
+
+const commonStyles = {
+    width: '98%',
+    display: 'inline-block',
+};
 
 describe('insertHorizontalLineIntoModel', () => {
     let model: ShallowMutableContentModelDocument;
@@ -46,15 +51,13 @@ describe('insertHorizontalLineIntoModel', () => {
 
         insertHorizontalLineIntoModel(model, context, '-');
 
-        expect(createDividerSpy).toHaveBeenCalledWith(
-            'hr',
-            Object({
-                borderTop: '1px none',
-                borderRight: '1px none',
-                borderBottom: '1px solid',
-                borderLeft: '1px none',
-            })
-        );
+        expect(createDividerSpy).toHaveBeenCalledWith('hr', {
+            borderTop: '1px none',
+            borderRight: '1px none',
+            borderBottom: '1px solid',
+            borderLeft: '1px none',
+            ...commonStyles,
+        });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
         expect(addBlockSpy).toHaveBeenCalled();
@@ -76,6 +79,7 @@ describe('insertHorizontalLineIntoModel', () => {
             borderRight: '3pt none',
             borderBottom: '3pt double',
             borderLeft: '3pt none',
+            ...commonStyles,
         });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
@@ -98,6 +102,7 @@ describe('insertHorizontalLineIntoModel', () => {
             borderRight: '1px none',
             borderBottom: '1px solid',
             borderLeft: '1px none',
+            ...commonStyles,
         });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
@@ -120,6 +125,7 @@ describe('insertHorizontalLineIntoModel', () => {
             borderRight: '1px none',
             borderBottom: '1px dashed',
             borderLeft: '1px none',
+            ...commonStyles,
         });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
@@ -142,6 +148,7 @@ describe('insertHorizontalLineIntoModel', () => {
             borderRight: '1px none',
             borderBottom: '1px wave',
             borderLeft: '1px none',
+            ...commonStyles,
         });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
@@ -164,6 +171,7 @@ describe('insertHorizontalLineIntoModel', () => {
             borderRight: '3pt none',
             borderBottom: '3pt double',
             borderLeft: '3pt none',
+            ...commonStyles,
         });
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();

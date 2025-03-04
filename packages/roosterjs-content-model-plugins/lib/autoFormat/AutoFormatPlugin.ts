@@ -1,13 +1,12 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
+import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
 import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
-import { insertHorizontalLineIntoModel } from './horizontalLine/insertHorizontalLineIntoModel';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
-import type { HorizontalLineTriggerCharacter } from './horizontalLine/HorizontalLineTriggerCharacter';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
@@ -33,15 +32,6 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     removeListMargins: false,
     autoHorizontalLine: false,
 };
-
-const HorizontalLineTriggerCharacters: HorizontalLineTriggerCharacter[] = [
-    '-',
-    '=',
-    '_',
-    '*',
-    '~',
-    '#',
-];
 
 /**
  * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
@@ -274,27 +264,7 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     private handleEnterKey(editor: IEditor, event: KeyDownEvent) {
         if (this.options.autoHorizontalLine) {
-            formatTextSegmentBeforeSelectionMarker(editor, (model, _, para, __, context) => {
-                const allText = para.segments.reduce(
-                    (acc, segment) => (segment.segmentType === 'Text' ? acc + segment.text : acc),
-                    ''
-                );
-                // At least 3 characters are needed to trigger horizontal line
-                if (allText.length < 3) {
-                    return false;
-                }
-
-                return HorizontalLineTriggerCharacters.some(c => {
-                    const shouldFormat = allText.split('').every(char => char === c);
-                    if (shouldFormat) {
-                        para.segments = para.segments.filter(s => s.segmentType != 'Text');
-                        insertHorizontalLineIntoModel(model, context, c);
-                        event.rawEvent.preventDefault();
-                        context.canUndoByBackspace = true;
-                    }
-                    return shouldFormat;
-                });
-            });
+            checkAndInsertHorizontalLine(editor, event);
         }
     }
 

@@ -1729,6 +1729,8 @@ describe('Content Model Auto Format Plugin Test', () => {
                                 borderRight: '1px none',
                                 borderBottom: '1px solid',
                                 borderLeft: '1px none',
+                                width: '98%',
+                                display: 'inline-block',
                             },
                         },
                         {
@@ -1769,6 +1771,8 @@ describe('Content Model Auto Format Plugin Test', () => {
                                 borderRight: '3pt none',
                                 borderBottom: '3pt double',
                                 borderLeft: '3pt none',
+                                width: '98%',
+                                display: 'inline-block',
                             },
                         },
                         {
@@ -1809,6 +1813,8 @@ describe('Content Model Auto Format Plugin Test', () => {
                                 borderRight: '1px none',
                                 borderBottom: '1px solid',
                                 borderLeft: '1px none',
+                                width: '98%',
+                                display: 'inline-block',
                             },
                         },
                         {

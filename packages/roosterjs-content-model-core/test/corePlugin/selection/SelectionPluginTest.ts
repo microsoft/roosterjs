@@ -23,7 +23,6 @@ describe('SelectionPlugin', () => {
         const attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         const removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         const addEventListenerSpy = jasmine.createSpy('addEventListener');
-        const setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         const getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
@@ -36,7 +35,6 @@ describe('SelectionPlugin', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
-            setEditorStyle: setEditorStyleSpy,
         } as any) as IEditor;
 
         plugin.initialize(editor);
@@ -74,7 +72,6 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
         });
-        const setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
@@ -82,7 +79,6 @@ describe('SelectionPlugin', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
-            setEditorStyle: setEditorStyleSpy,
         }));
 
         expect(state).toEqual({
@@ -114,7 +110,6 @@ describe('SelectionPlugin', () => {
             removeEventListener: removeEventListenerSpy,
             addEventListener: addEventListenerSpy,
         });
-        const setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         plugin.initialize(<IEditor>(<any>{
             getDocument: getDocumentSpy,
             attachDomEvent,
@@ -122,7 +117,6 @@ describe('SelectionPlugin', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
-            setEditorStyle: setEditorStyleSpy,
         }));
 
         expect(state).toEqual({
@@ -150,7 +144,6 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
     let removeEventListenerSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let getScrollContainerSpy: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -165,7 +158,6 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
         });
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getScrollContainerSpy = jasmine.createSpy('getScrollContainer');
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         plugin = createSelectionPlugin({});
 
@@ -183,7 +175,6 @@ describe('SelectionPlugin handle onFocus and onBlur event', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
-            setEditorStyle: setEditorStyleSpy,
         });
         plugin.initialize(editor);
     });
@@ -264,7 +255,6 @@ describe('SelectionPlugin scroll event ', () => {
     let addEventListenerSpy: jasmine.Spy;
     let getScrollContainerSpy: jasmine.Spy;
     let hasFocusSpy: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     let editor: IEditor;
 
@@ -280,7 +270,6 @@ describe('SelectionPlugin scroll event ', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getScrollContainerSpy = jasmine.createSpy('getScrollContainer');
         hasFocusSpy = jasmine.createSpy('hasFocus');
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         plugin = createSelectionPlugin({});
 
@@ -298,7 +287,6 @@ describe('SelectionPlugin scroll event ', () => {
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
-            setEditorStyle: setEditorStyleSpy,
         });
         plugin.initialize(editor);
     });
@@ -351,7 +339,6 @@ describe('SelectionPlugin handle image selection', () => {
     let requestAnimationFrameSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let findClosestElementAncestor: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
@@ -370,7 +357,6 @@ describe('SelectionPlugin handle image selection', () => {
         domHelperSpy = jasmine.createSpy('domHelperSpy').and.returnValue({
             findClosestElementAncestor: findClosestElementAncestor,
         });
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         editor = {
             getDOMHelper: domHelperSpy,
@@ -387,7 +373,6 @@ describe('SelectionPlugin handle image selection', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
-            setEditorStyle: setEditorStyleSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -749,7 +734,6 @@ describe('SelectionPlugin handle table selection', () => {
     let getComputedStyleSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let announceSpy: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -770,7 +754,6 @@ describe('SelectionPlugin handle table selection', () => {
         });
         focusDisposer = jasmine.createSpy('focus');
         mouseMoveDisposer = jasmine.createSpy('mouseMove');
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         const domHelper = createDOMHelper(contentDiv);
 
@@ -796,7 +779,6 @@ describe('SelectionPlugin handle table selection', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
-            setEditorStyle: setEditorStyleSpy,
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
@@ -2471,7 +2453,6 @@ describe('SelectionPlugin on Safari', () => {
     let getDOMSelectionSpy: jasmine.Spy;
     let editor: IEditor;
     let getSelectionSpy: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -2491,7 +2472,6 @@ describe('SelectionPlugin on Safari', () => {
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         editor = ({
             getDocument: getDocumentSpy,
@@ -2508,7 +2488,6 @@ describe('SelectionPlugin on Safari', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
-            setEditorStyle: setEditorStyleSpy,
         } as any) as IEditor;
     });
 
@@ -2530,7 +2509,6 @@ describe('SelectionPlugin on Safari', () => {
         expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
         expect(removeEventListenerSpy).not.toHaveBeenCalled();
         expect(disposer).not.toHaveBeenCalled();
-        expect(setEditorStyleSpy).toHaveBeenCalledWith('HRStyle', 'font-size: 5px');
 
         const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
 
@@ -2538,7 +2516,6 @@ describe('SelectionPlugin on Safari', () => {
 
         expect(removeEventListenerSpy).toHaveBeenCalledWith('selectionchange', onSelectionChange);
         expect(disposer).toHaveBeenCalled();
-        expect(setEditorStyleSpy).toHaveBeenCalledWith('HRStyle', null);
     });
 
     it('onSelectionChange when editor has focus, no selection, not in shadow edit', () => {
@@ -2744,7 +2721,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
     let setDOMSelectionSpy: jasmine.Spy;
     let getRangeAtSpy: jasmine.Spy;
     let getSelectionSpy: jasmine.Spy;
-    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -2771,7 +2747,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
-        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         editor = ({
             getDocument: getDocumentSpy,
@@ -2783,7 +2758,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
-            setEditorStyle: setEditorStyleSpy,
         } as any) as IEditor;
     });
 
