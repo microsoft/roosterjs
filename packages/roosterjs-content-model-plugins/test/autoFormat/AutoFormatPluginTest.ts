@@ -1769,7 +1769,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                             format: {
                                 borderTop: '3pt double',
                                 borderRight: '3pt none',
-                                borderBottom: '3pt double',
+                                borderBottom: '3pt none',
                                 borderLeft: '3pt none',
                                 width: '98%',
                                 display: 'inline-block',

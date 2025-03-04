@@ -74,13 +74,17 @@ describe('insertHorizontalLineIntoModel', () => {
 
         insertHorizontalLineIntoModel(model, context, '=');
 
-        expect(createDividerSpy).toHaveBeenCalledWith('hr', {
-            borderTop: '3pt double',
-            borderRight: '3pt none',
-            borderBottom: '3pt double',
-            borderLeft: '3pt none',
-            ...commonStyles,
-        });
+        expect(createDividerSpy).toHaveBeenCalledWith(
+            'hr',
+            Object({
+                borderTop: '3pt double',
+                borderRight: '3pt none',
+                borderBottom: '3pt none',
+                borderLeft: '3pt none',
+                width: '98%',
+                display: 'inline-block',
+            })
+        );
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
         expect(addBlockSpy).toHaveBeenCalled();
@@ -120,13 +124,17 @@ describe('insertHorizontalLineIntoModel', () => {
 
         insertHorizontalLineIntoModel(model, context, '*');
 
-        expect(createDividerSpy).toHaveBeenCalledWith('hr', {
-            borderTop: '1px none',
-            borderRight: '1px none',
-            borderBottom: '1px dashed',
-            borderLeft: '1px none',
-            ...commonStyles,
-        });
+        expect(createDividerSpy).toHaveBeenCalledWith(
+            'hr',
+            Object({
+                borderTop: '1px none',
+                borderRight: '1px none',
+                borderBottom: '3px dotted',
+                borderLeft: '1px none',
+                width: '98%',
+                display: 'inline-block',
+            })
+        );
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
         expect(addBlockSpy).toHaveBeenCalled();
@@ -143,13 +151,17 @@ describe('insertHorizontalLineIntoModel', () => {
 
         insertHorizontalLineIntoModel(model, context, '~');
 
-        expect(createDividerSpy).toHaveBeenCalledWith('hr', {
-            borderTop: '1px wave',
-            borderRight: '1px none',
-            borderBottom: '1px wave',
-            borderLeft: '1px none',
-            ...commonStyles,
-        });
+        expect(createDividerSpy).toHaveBeenCalledWith(
+            'hr',
+            Object({
+                borderTop: '1px none',
+                borderRight: '1px none',
+                borderBottom: '1px solid',
+                borderLeft: '1px none',
+                width: '98%',
+                display: 'inline-block',
+            })
+        );
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
         expect(addBlockSpy).toHaveBeenCalled();
