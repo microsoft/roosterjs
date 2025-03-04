@@ -1,15 +1,13 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createLink } from './link/createLink';
+import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
+import { insertHorizontalLineIntoModel } from './horizontalLine/insertHorizontalLineIntoModel';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
-import {
-    formatTextSegmentBeforeSelectionMarker,
-    insertHorizontalLineIntoModel,
-    promoteLink,
-} from 'roosterjs-content-model-api';
+import type { HorizontalLineTriggerCharacter } from './horizontalLine/HorizontalLineTriggerCharacter';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
@@ -36,7 +34,15 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoHorizontalLine: false,
 };
 
-const HorizontalLineTriggerCharacters = ['-', '=', '_'];
+const HorizontalLineTriggerCharacters: HorizontalLineTriggerCharacter[] = [
+    '-',
+    '=',
+    '_',
+    '*',
+    '~',
+    '#',
+];
+
 /**
  * Auto Format plugin handles auto formatting, such as transforming * characters into a bullet list.
  * It can be customized with options to enable or disable auto list features.
@@ -282,7 +288,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                     const shouldFormat = allText.split('').every(char => char === c);
                     if (shouldFormat) {
                         para.segments = para.segments.filter(s => s.segmentType != 'Text');
-                        insertHorizontalLineIntoModel(model, context);
+                        insertHorizontalLineIntoModel(model, context, c);
                         event.rawEvent.preventDefault();
                         context.canUndoByBackspace = true;
                     }

@@ -30,6 +30,8 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+const HrElementFontSize = 'font-size: 5px';
+const HrElementStyleKey = 'HRStyle';
 
 /**
  * @internal
@@ -110,6 +112,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 drop: { beforeDispatch: this.onDrop },
             });
         }
+
+        // This style is to set the font size of the HR element to 5px, so the cursor is shown smaller when the
+        // selection is in the hr element. If we do not apply this style, the cursor is shown misaligned.
+        editor.setEditorStyle(HrElementStyleKey, HrElementFontSize);
     }
 
     dispose() {
@@ -121,6 +127,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         this.detachMouseEvent();
+        this.editor?.setEditorStyle(HrElementStyleKey, null /* cssRule */);
         this.editor = null;
     }
 
@@ -344,6 +351,34 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             rawEvent.preventDefault();
                         } else {
                             win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                        }
+                    } else if (key == Left || key == Right) {
+                        // The Hr element is handled in a uncommen way, causing the cursor to always be shown
+                        // in the beginning of the hr element, even when the selection is after the HR element.
+                        // This is a workaround to move the cursor to the end of the hr element when the selection
+                        // is after the hr element.
+                        const node = selection.range.startContainer;
+                        const isRight = key == Right;
+                        const element = node.childNodes.item(
+                            selection.range.startOffset + (isRight ? 0 : -1)
+                        );
+
+                        if (
+                            isNodeOfType(element, 'ELEMENT_NODE') &&
+                            isElementOfType(element, 'hr')
+                        ) {
+                            const newRange = editor.getDocument().createRange();
+                            if (isRight) {
+                                newRange.setStartAfter(element);
+                            } else {
+                                newRange.setStartBefore(element);
+                            }
+
+                            editor.setDOMSelection({
+                                type: 'range',
+                                isReverted: false,
+                                range: newRange,
+                            });
                         }
                     }
                 }
@@ -662,6 +697,24 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         type: 'image',
                         image,
                     });
+                } else if (
+                    selection &&
+                    selection.isCollapsed &&
+                    isNodeOfType(selection.focusNode, 'ELEMENT_NODE')
+                ) {
+                    const element = selection.focusNode;
+
+                    const element2 = element.childNodes.item(selection.focusOffset - 1);
+
+                    if (isNodeOfType(element2, 'ELEMENT_NODE') && isElementOfType(element2, 'hr')) {
+                        const newRange = this.editor.getDocument().createRange();
+                        newRange.setStartAfter(element2);
+                        this.editor.setDOMSelection({
+                            type: 'range',
+                            isReverted: false,
+                            range: newRange,
+                        });
+                    }
                 }
             }
 

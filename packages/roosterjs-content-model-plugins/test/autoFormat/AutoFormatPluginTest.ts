@@ -1721,7 +1721,16 @@ describe('Content Model Auto Format Plugin Test', () => {
                     blockGroupType: 'Document',
                     format: {},
                     blocks: [
-                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '1px none',
+                                borderRight: '1px none',
+                                borderBottom: '1px solid',
+                                borderLeft: '1px none',
+                            },
+                        },
                         {
                             blockType: 'Paragraph',
                             segments: [
@@ -1752,7 +1761,16 @@ describe('Content Model Auto Format Plugin Test', () => {
                     blockGroupType: 'Document',
                     format: {},
                     blocks: [
-                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '3pt double',
+                                borderRight: '3pt none',
+                                borderBottom: '3pt double',
+                                borderLeft: '3pt none',
+                            },
+                        },
                         {
                             blockType: 'Paragraph',
                             segments: [
@@ -1783,7 +1801,16 @@ describe('Content Model Auto Format Plugin Test', () => {
                     blockGroupType: 'Document',
                     format: {},
                     blocks: [
-                        { blockType: 'Divider', tagName: 'hr', format: {} },
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '1px solid',
+                                borderRight: '1px none',
+                                borderBottom: '1px solid',
+                                borderLeft: '1px none',
+                            },
+                        },
                         {
                             blockType: 'Paragraph',
                             segments: [

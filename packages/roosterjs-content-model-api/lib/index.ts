@@ -23,7 +23,6 @@ export { insertImage } from './publicApi/image/insertImage';
 export { setListStyle } from './publicApi/list/setListStyle';
 export { setListStartNumber } from './publicApi/list/setListStartNumber';
 export { setIndentation } from './publicApi/block/setIndentation';
-export { insertHorizontalLine } from './publicApi/block/insertHorizontalLine';
 export { setAlignment } from './publicApi/block/setAlignment';
 export { setDirection } from './publicApi/block/setDirection';
 export { setHeadingLevel } from './publicApi/block/setHeadingLevel';
@@ -53,7 +52,6 @@ export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWi
 export { formatTextSegmentBeforeSelectionMarker } from './publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 export { formatInsertPointWithContentModel } from './publicApi/utils/formatInsertPointWithContentModel';
 
-export { insertHorizontalLineIntoModel } from './modelApi/block/insertHorizontalLineIntoModel';
 export { setListType } from './modelApi/list/setListType';
 export { setModelListStyle } from './modelApi/list/setModelListStyle';
 export { setModelListStartNumber } from './modelApi/list/setModelListStartNumber';
