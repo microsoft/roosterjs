@@ -138,6 +138,12 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     tableSelectors
                 );
                 core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
+                core.api.setEditorStyle(
+                    core,
+                    HIDE_SELECTION_CSS_KEY,
+                    TRANSPARENT_SELECTION_CSS_RULE,
+                    [SELECTION_SELECTOR]
+                );
 
                 const nodeToSelect = firstCell.cell?.firstElementChild || firstCell.cell;
 
