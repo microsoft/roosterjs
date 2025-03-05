@@ -114,6 +114,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
         try {
             const clipboardData = Object.assign({}, this.state.clipboardData);
             if (this.state.shouldEncrypt) {
+                clipboardData.text = clipboardData.text?.replace(/./g, '■');
                 clipboardData.rawHtml = replaceTextWithX(clipboardData.rawHtml);
                 clipboardData.html = replaceTextWithX(clipboardData.html);
             }
