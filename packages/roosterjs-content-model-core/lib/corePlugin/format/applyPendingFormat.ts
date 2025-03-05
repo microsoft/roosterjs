@@ -1,5 +1,6 @@
 import {
     createText,
+    getObjectKeys,
     iterateSelections,
     mutateBlock,
     mutateSegment,
@@ -8,6 +9,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockFormat,
+    ContentModelFormatBase,
     ContentModelSegmentFormat,
     IEditor,
 } from 'roosterjs-content-model-types';
@@ -47,7 +49,10 @@ export function applyPendingFormat(
 
                         // For space, there can be &#32 (space) or &#160 (&nbsp;), we treat them as the same
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
-                            if (segmentFormat) {
+                            if (
+                                segmentFormat &&
+                                !includeSegmentFormat(previousSegment.format, segmentFormat)
+                            ) {
                                 mutateSegment(block, previousSegment, previousSegment => {
                                     previousSegment.text = text.substring(
                                         0,
@@ -69,15 +74,19 @@ export function applyPendingFormat(
                                     block.segments.splice(index, 0, newText);
                                     setParagraphNotImplicit(block);
                                 });
+
+                                isChanged = true;
                             }
 
-                            if (paragraphFormat) {
+                            if (
+                                paragraphFormat &&
+                                !includeSegmentFormat(block.format, paragraphFormat)
+                            ) {
                                 const mutableParagraph = mutateBlock(block);
 
                                 Object.assign(mutableParagraph.format, paragraphFormat);
+                                isChanged = true;
                             }
-
-                            isChanged = true;
                         }
                     }
                 }
@@ -95,4 +104,17 @@ export function applyPendingFormat(
             apiName: 'applyPendingFormat',
         }
     );
+}
+
+function includeSegmentFormat<T extends ContentModelFormatBase>(containerFormat: T, subFormat: T) {
+    const keys = getObjectKeys(subFormat);
+    let result = true;
+
+    keys.forEach(key => {
+        if (containerFormat[key] !== subFormat[key]) {
+            result = false;
+        }
+    });
+
+    return result;
 }
