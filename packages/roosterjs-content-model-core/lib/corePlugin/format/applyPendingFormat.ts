@@ -51,7 +51,7 @@ export function applyPendingFormat(
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
                             if (
                                 segmentFormat &&
-                                !includeSegmentFormat(previousSegment.format, segmentFormat)
+                                !isSubFormatIncluded(previousSegment.format, segmentFormat)
                             ) {
                                 mutateSegment(block, previousSegment, previousSegment => {
                                     previousSegment.text = text.substring(
@@ -80,7 +80,7 @@ export function applyPendingFormat(
 
                             if (
                                 paragraphFormat &&
-                                !includeSegmentFormat(block.format, paragraphFormat)
+                                !isSubFormatIncluded(block.format, paragraphFormat)
                             ) {
                                 const mutableParagraph = mutateBlock(block);
 
@@ -106,7 +106,7 @@ export function applyPendingFormat(
     );
 }
 
-function includeSegmentFormat<T extends ContentModelFormatBase>(containerFormat: T, subFormat: T) {
+function isSubFormatIncluded<T extends ContentModelFormatBase>(containerFormat: T, subFormat: T) {
     const keys = getObjectKeys(subFormat);
     let result = true;
 
