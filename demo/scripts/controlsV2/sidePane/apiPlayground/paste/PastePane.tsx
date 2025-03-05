@@ -14,7 +14,7 @@ interface PastePaneState {
 
 export default class PastePane extends React.Component<ApiPaneProps, PastePaneState> {
     private html = React.createRef<HTMLTextAreaElement>();
-    private cliboardDataRef = React.createRef<HTMLTextAreaElement>();
+    private clipboardDataRef = React.createRef<HTMLTextAreaElement>();
     private pasteTypeRef = React.createRef<HTMLSelectElement>();
     private shouldEncryptRef = React.createRef<HTMLInputElement>();
 
@@ -61,7 +61,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
     };
 
     private onExtractClipboardProgramatically = async () => {
-        const doc = this.cliboardDataRef.current.ownerDocument;
+        const doc = this.clipboardDataRef.current.ownerDocument;
         const clipboard = doc.defaultView.navigator.clipboard;
         if (clipboard && clipboard.read) {
             try {
@@ -72,7 +72,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
                 const clipboardData = await extractClipboardItems(dataTransferItems);
                 this.trySetClipboardData(clipboardData);
             } catch {
-                this.cliboardDataRef.current.value = 'Error parsing clipboard data';
+                this.clipboardDataRef.current.value = 'Error parsing clipboard data';
             }
         }
     };
@@ -138,7 +138,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
             <>
                 <h3>Retrieve Clipboard Data</h3>
                 <div>
-                    <label htmlFor="shouldEncrypt">ShouldEncryptContent</label>
+                    <label htmlFor="shouldEncrypt">Should mask the text content in clipboard</label>
                     <input
                         type="checkbox"
                         value={this.state.shouldEncrypt ? 'checked' : ''}
@@ -187,7 +187,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
                         <textarea
                             placeholder="Clipboard data will be shown here"
                             className={styles.showClipboardTextArea}
-                            ref={this.cliboardDataRef}
+                            ref={this.clipboardDataRef}
                             readOnly
                             value={this.getClipboardDataJson()}></textarea>
                     </details>
