@@ -1,0 +1,21 @@
+.pasteHereTextarea {
+    outline: none;
+    resize: none;
+    min-height: 20px;
+    width: 100%;
+}
+
+.showClipboardTextArea {
+    outline: none;
+    resize: none;
+    min-height: 400px;
+    width: 100%;
+}
+
+.button {
+    margin-right: 5px;
+}
+.button:disabled {
+    background-color: black;
+    color: gray;
+}
