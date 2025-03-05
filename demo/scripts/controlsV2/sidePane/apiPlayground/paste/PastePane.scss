@@ -1,7 +1,7 @@
 .pasteHereTextarea {
     outline: none;
     resize: none;
-    min-height: 20px;
+    min-height: 50px;
     width: 100%;
 }
 
@@ -14,8 +14,4 @@
 
 .button {
     margin-right: 5px;
-}
-.button:disabled {
-    background-color: black;
-    color: gray;
 }

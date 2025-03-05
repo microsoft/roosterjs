@@ -39,7 +39,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
             downloadAnchorNode.remove();
         } else {
             alert(
-                'No clipboard data available to export, either paste in the text area above or use the extract clipboard programatically button.'
+                'No clipboard data available to export, either paste in the text area above or use the extract clipboard programmatically button.'
             );
         }
     };
@@ -60,7 +60,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
         input.click();
     };
 
-    private onExtractClipboardProgramatically = async () => {
+    private onExtractClipboardProgrammatically = async () => {
         const doc = this.clipboardDataRef.current.ownerDocument;
         const clipboard = doc.defaultView.navigator.clipboard;
         if (clipboard && clipboard.read) {
@@ -91,7 +91,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
             paste(editor, this.getClipboardData(), pasteType);
         } else {
             alert(
-                'No clipboard data available to paste, either paste in the text area above or use the extract clipboard programatically button.'
+                'No clipboard data available to paste, either paste in the text area above or use the extract clipboard programmatically button.'
             );
         }
     };
@@ -120,7 +120,7 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
             }
             return clipboardData;
         } catch {
-            alert('Error encrypting clipboard data');
+            alert('Error masking clipboard data');
             return undefined;
         }
     };
@@ -152,16 +152,16 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
                     />
                 </div>
                 <div>
-                    <button onClick={this.onExtractClipboardProgramatically}>
-                        Extract clipboard data programatically
+                    <button onClick={this.onExtractClipboardProgrammatically}>
+                        Extract clipboard data programmatically
                     </button>
                 </div>
                 <div>
                     <textarea
                         placeholder={
                             this.state.clipboardData
-                                ? 'We got your clipboard data, check the options below or paste again here to set the new clipboard data'
-                                : 'Paste here to retrieve clipboard data!'
+                                ? 'Clipboard data retrieved. Check the options below or paste (Ctrl + V) again to update the clipboard data.'
+                                : 'Press Ctrl + V to paste and retrieve clipboard data!'
                         }
                         className={styles.pasteHereTextarea}
                         ref={this.html}
