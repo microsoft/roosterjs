@@ -10,6 +10,7 @@ export const exportButton: RibbonButton<'buttonNameExport'> = {
         const model = getCurrentContentModel();
 
         if (model) {
+            editor.focus();
             editor.formatContentModel(currentModel => {
                 mutateBlock(currentModel).blocks = model.blocks;
 

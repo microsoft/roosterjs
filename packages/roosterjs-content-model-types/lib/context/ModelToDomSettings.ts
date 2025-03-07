@@ -1,3 +1,4 @@
+import type { ContentModelSelectionMarker } from '../contentModel/segment/ContentModelSelectionMarker';
 import type { Definition } from '../metadata/Definition';
 import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock';
 import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
@@ -159,6 +160,11 @@ export type ContentModelHandlerMap = {
      * Content Model type for ContentModelCode
      */
     segmentDecorator: ContentModelSegmentHandler<ContentModelSegment>;
+
+    /**
+     * Content Model type for ContentModelSelectionMarker
+     */
+    selectionMarker: ContentModelSegmentHandler<ContentModelSelectionMarker>;
 
     /**
      * Content Model type for ContentModelTable

@@ -2,6 +2,7 @@ import { createDOMHelper } from '../../editor/core/DOMHelperImpl';
 import {
     findClosestBlockEntityContainer,
     findClosestEntityWrapper,
+    hasHintTextClass,
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
 import type { DOMHelper, TextMutationObserver } from 'roosterjs-content-model-types';
@@ -47,6 +48,7 @@ class TextMutationObserverImpl implements TextMutationObserver {
         let addedNodes: Node[] = [];
         let removedNodes: Node[] = [];
         let reconcileText = false;
+        let hintNode: HTMLElement | null = null;
 
         const ignoredNodes = new Set<Node>();
         const includedNodes = new Set<Node>();
@@ -55,7 +57,17 @@ class TextMutationObserverImpl implements TextMutationObserver {
             const mutation = mutations[i];
             const target = mutation.target;
 
-            if (ignoredNodes.has(target)) {
+            if (hintNode == target) {
+                continue;
+            } else if (isNodeOfType(target, 'ELEMENT_NODE') && hasHintTextClass(target)) {
+                if (!hintNode) {
+                    hintNode = target;
+                } else {
+                    canHandle = false;
+                }
+
+                continue;
+            } else if (ignoredNodes.has(target)) {
                 continue;
             } else if (!includedNodes.has(target)) {
                 if (
@@ -122,6 +134,13 @@ class TextMutationObserverImpl implements TextMutationObserver {
 
             if (reconcileText) {
                 this.onMutation({ type: 'text' });
+            }
+
+            if (hintNode) {
+                this.onMutation({
+                    type: 'hintText',
+                    hintNode,
+                });
             }
         } else {
             this.onMutation({ type: 'unknown' });

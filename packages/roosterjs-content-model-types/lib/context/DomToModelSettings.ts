@@ -86,6 +86,11 @@ export type ElementProcessorMap = {
         '#text': ElementProcessor<Text>;
 
         /**
+         * Processor for hint text node after selection marker
+         */
+        hintText: ElementProcessor<HTMLElement>;
+
+        /**
          * Processor for text node with selection.
          * This is an internal processor used by #text processor
          */

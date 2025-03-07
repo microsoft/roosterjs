@@ -1,4 +1,5 @@
 import * as React from 'react';
+import HintTextPane from './hintText/hintTextPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import { ApiPaneProps, ApiPlaygroundComponent } from './ApiPaneProps';
 
@@ -18,6 +19,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     entity: {
         name: 'Insert Entity',
         component: InsertEntityPane,
+    },
+    hintText: {
+        name: 'Hint Text',
+        component: HintTextPane,
     },
     more: {
         name: 'Coming soon...',
