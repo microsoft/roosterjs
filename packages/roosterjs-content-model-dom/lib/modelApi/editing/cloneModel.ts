@@ -345,7 +345,10 @@ function cloneGeneralBlock(
 function cloneSelectionMarker(
     marker: ReadonlyContentModelSelectionMarker
 ): ContentModelSelectionMarker {
-    return Object.assign({ isSelected: marker.isSelected }, cloneSegmentBase(marker));
+    return Object.assign(
+        { isSelected: marker.isSelected, hintText: marker.hintText },
+        cloneSegmentBase(marker)
+    );
 }
 
 function cloneImage(image: ReadonlyContentModelImage): ContentModelImage {

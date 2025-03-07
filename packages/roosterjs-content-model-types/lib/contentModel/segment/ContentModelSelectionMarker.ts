@@ -4,12 +4,25 @@ import type {
 } from './ContentModelSegmentBase';
 
 /**
+ * Common part of Content Model of IMG
+ */
+export interface ContentModelSelectionMarkerCommon {
+    /**
+     * Hint text shown next to the selection marker
+     */
+    hintText?: string;
+}
+
+/**
  * Content Model of Selection Marker
  */
-export interface ContentModelSelectionMarker extends ContentModelSegmentBase<'SelectionMarker'> {}
+export interface ContentModelSelectionMarker
+    extends ContentModelSelectionMarkerCommon,
+        ContentModelSegmentBase<'SelectionMarker'> {}
 
 /**
  * Content Model of Selection Marker (Readonly)
  */
 export interface ReadonlyContentModelSelectionMarker
-    extends ReadonlyContentModelSegmentBase<'SelectionMarker'> {}
+    extends Readonly<ContentModelSelectionMarkerCommon>,
+        ReadonlyContentModelSegmentBase<'SelectionMarker'> {}
