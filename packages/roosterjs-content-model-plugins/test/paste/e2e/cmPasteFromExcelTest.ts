@@ -90,6 +90,7 @@ describe(ID, () => {
                                 textColor: '',
                                 underline: false,
                             },
+                            hintText: undefined,
                         },
                         { segmentType: 'Br', isSelected: undefined, format: {} },
                     ],

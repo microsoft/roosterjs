@@ -614,6 +614,8 @@ describe('handleTable', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;

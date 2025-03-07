@@ -2024,7 +2024,12 @@ describe('mergePasteContent', () => {
                     blockType: 'Paragraph',
                     segments: [
                         { segmentType: 'Text', text: 'text', format: {} },
-                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                            hintText: undefined,
+                        },
                     ],
                     format: {},
                     cachedElement: undefined,
