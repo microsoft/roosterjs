@@ -138,6 +138,7 @@ const mainPackages = [
     'roosterjs-content-model-api',
     'roosterjs-content-model-plugins',
     'roosterjs-color-utils',
+    'roosterjs-content-model-markdown',
 ];
 const legacyAdapterPackages = ['roosterjs-editor-adapter'];
 const reactPackages = ['roosterjs-react'];
