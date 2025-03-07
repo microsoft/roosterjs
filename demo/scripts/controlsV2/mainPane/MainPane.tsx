@@ -58,6 +58,7 @@ import {
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
+    HintTextPlugin,
     HyperlinkPlugin,
     ImageEditPlugin,
     MarkdownPlugin,
@@ -527,6 +528,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         : linkTitle
                 ),
             pluginList.customReplace && new CustomReplacePlugin(customReplacements),
+            pluginList.hintText && new HintTextPlugin(),
         ].filter(x => !!x);
     }
 }

@@ -3,6 +3,7 @@ import { blockProcessor } from './blockProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
+import { hasHintTextClass } from '../../domUtils/hintText';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
@@ -68,6 +69,8 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 )
             );
         }
+    } else if (hasHintTextClass(element)) {
+        context.elementProcessors.hintText(group, element, context);
     } else {
         stackFormat(
             context,

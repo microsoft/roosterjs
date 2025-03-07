@@ -25,6 +25,13 @@ export interface DomIndexer {
     ) => void;
 
     /**
+     * Invoked when a selection marker is created in DOM tree with hint text
+     * @param node The hint text node
+     * @param paragraph Parent paragraph of this selection marker
+     */
+    onSelectionMarker: (node: HTMLElement, paragraph: ContentModelParagraph) => void;
+
+    /**
      * Invoked when new paragraph node is created in DOM tree
      * @param paragraphElement The new DOM node for this paragraph
      */
@@ -83,4 +90,11 @@ export interface DomIndexer {
      * @returns True if the changed nodes are successfully reconciled, otherwise false
      */
     reconcileChildList: (addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>) => boolean;
+
+    /**
+     * When hint text node is changed, we can use this method to do sync the change from editor into content model.
+     * @param hintNode The hint text node that is changed
+     * @returns True if the changed hint text node is successfully reconciled, otherwise false
+     */
+    reconcileHintText: (hintNode: HTMLElement) => boolean;
 }

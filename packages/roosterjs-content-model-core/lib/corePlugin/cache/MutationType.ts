@@ -17,7 +17,11 @@ export type MutationType =
     /**
      * Child list is changed
      */
-    | 'childList';
+    | 'childList'
+    /**
+     * Hint text node is changed
+     */
+    | 'hintText';
 
 /**
  * @internal
@@ -54,4 +58,16 @@ export interface ChildListMutation extends MutationBase<'childList'> {
 /**
  * @internal
  */
-export type Mutation = UnknownMutation | ElementIdMutation | TextMutation | ChildListMutation;
+export interface HintTextMutation extends MutationBase<'hintText'> {
+    hintNode: HTMLElement;
+}
+
+/**
+ * @internal
+ */
+export type Mutation =
+    | UnknownMutation
+    | ElementIdMutation
+    | TextMutation
+    | ChildListMutation
+    | HintTextMutation;
