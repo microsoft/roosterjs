@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { ApiPaneProps } from '../ApiPaneProps';
-import { ClipboardData, PasteType } from 'roosterjs-content-model-types';
-import { extractClipboardItems, toArray } from 'roosterjs-content-model-dom';
+import { ApiPaneProps, ApiPlaygroundComponent } from '../ApiPaneProps';
+import { ClipboardData, PasteType, PluginEvent } from 'roosterjs-content-model-types';
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { extractClipboardItems } from 'roosterjs-content-model-dom';
 import { paste } from 'roosterjs-content-model-core';
 
 const styles = require('./PastePane.scss');
@@ -12,19 +13,28 @@ interface PastePaneState {
     shouldEncrypt: boolean;
 }
 
-export default class PastePane extends React.Component<ApiPaneProps, PastePaneState> {
-    private html = React.createRef<HTMLTextAreaElement>();
+let lastClipboardData: ClipboardData | undefined = undefined;
+
+export default class PastePane extends React.Component<ApiPaneProps, PastePaneState>
+    implements ApiPlaygroundComponent {
     private clipboardDataRef = React.createRef<HTMLTextAreaElement>();
     private pasteTypeRef = React.createRef<HTMLSelectElement>();
     private shouldEncryptRef = React.createRef<HTMLInputElement>();
+    private ignoreBeforePasteEvent: boolean = false;
 
     constructor(props: ApiPaneProps) {
         super(props);
         this.state = {
-            clipboardData: undefined,
+            clipboardData: lastClipboardData,
             shouldEncrypt: false,
         };
     }
+
+    public onPluginEvent = (e: PluginEvent) => {
+        if (e.eventType == 'beforePaste' && !this.ignoreBeforePasteEvent) {
+            this.trySetClipboardData(e.clipboardData);
+        }
+    };
 
     private downloadClipboardDataAsJson = () => {
         if (this.state.clipboardData) {
@@ -81,6 +91,8 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
         this.setState({
             clipboardData,
         });
+
+        lastClipboardData = clipboardData;
     }
 
     private paste = () => {
@@ -88,7 +100,9 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
             const editor = this.props.getEditor();
             const pasteType = (this.pasteTypeRef.current.value || 'normal') as PasteType;
 
+            this.ignoreBeforePasteEvent = true;
             paste(editor, this.getClipboardData(), pasteType);
+            this.ignoreBeforePasteEvent = false;
         } else {
             alert(
                 'No clipboard data available to paste, either paste in the text area above or use the extract clipboard programmatically button.'
@@ -96,27 +110,13 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
         }
     };
 
-    private extractClipboardFromPasteEvent = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
-        const dataTransfer = event.clipboardData;
-        event.preventDefault();
-        extractClipboardItems(toArray(dataTransfer!.items), []).then(
-            (clipboardData: ClipboardData) => {
-                this.trySetClipboardData(clipboardData);
-            }
-        );
-    };
-
-    private preventChangeOnTextArea = (_event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        this.html.current.value = '';
-    };
-
     private getClipboardData = () => {
         try {
             const clipboardData = Object.assign({}, this.state.clipboardData);
             if (this.state.shouldEncrypt) {
                 clipboardData.text = clipboardData.text?.replace(/./g, '■');
-                clipboardData.rawHtml = replaceTextWithX(clipboardData.rawHtml);
-                clipboardData.html = replaceTextWithX(clipboardData.html);
+                clipboardData.rawHtml = maskContent(clipboardData.rawHtml);
+                clipboardData.html = maskContent(clipboardData.html);
             }
             return clipboardData;
         } catch {
@@ -136,37 +136,20 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
     render() {
         return (
             <>
-                <h3>Retrieve Clipboard Data</h3>
                 <div>
-                    <label htmlFor="shouldEncrypt">Should mask the text content in clipboard</label>
-                    <input
-                        type="checkbox"
-                        value={this.state.shouldEncrypt ? 'checked' : ''}
-                        ref={this.shouldEncryptRef}
-                        onChange={e => {
-                            this.setState({
-                                clipboardData: this.state.clipboardData,
-                                shouldEncrypt: e.target.checked,
-                            });
-                        }}
-                    />
-                </div>
-                <div>
-                    <button onClick={this.onExtractClipboardProgrammatically}>
-                        Extract clipboard data programmatically
-                    </button>
-                </div>
-                <div>
-                    <textarea
-                        placeholder={
-                            this.state.clipboardData
-                                ? 'Clipboard data retrieved. Check the options below or paste (Ctrl + V) again to update the clipboard data.'
-                                : 'Press Ctrl + V to paste and retrieve clipboard data!'
-                        }
-                        className={styles.pasteHereTextarea}
-                        ref={this.html}
-                        onChange={this.preventChangeOnTextArea}
-                        onPaste={this.extractClipboardFromPasteEvent}></textarea>
+                    {this.state.clipboardData ? (
+                        <PrimaryButton
+                            iconProps={{
+                                iconName: 'Checkmark',
+                            }}
+                            text="Clipboard available. Export or paste with options below."
+                        />
+                    ) : (
+                        <DefaultButton
+                            iconProps={{ iconName: 'Error' }}
+                            text="No clipboard data available. Please paste content into the editor or import a JSON file."
+                        />
+                    )}
                 </div>
                 <h3>Export / Import Clipboard Data</h3>
                 <div>
@@ -190,6 +173,31 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
                             ref={this.clipboardDataRef}
                             readOnly
                             value={this.getClipboardDataJson()}></textarea>
+                    </details>
+                    <details>
+                        <summary>Advanced actions</summary>
+                        <div>
+                            <label htmlFor="shouldEncrypt">
+                                Should mask the text content in clipboard
+                            </label>
+                            <input
+                                type="checkbox"
+                                value={this.state.shouldEncrypt ? 'checked' : ''}
+                                ref={this.shouldEncryptRef}
+                                onChange={e => {
+                                    this.setState({
+                                        clipboardData: this.state.clipboardData,
+                                        shouldEncrypt: e.target.checked,
+                                    });
+                                }}
+                            />
+                            <hr />
+                            <div>
+                                <button onClick={this.onExtractClipboardProgrammatically}>
+                                    Extract clipboard data programmatically
+                                </button>
+                            </div>
+                        </div>
                     </details>
                 </div>
                 <h3>Paste using clipboard data</h3>
@@ -244,7 +252,7 @@ const createDataTransferItems = (data: ClipboardItems) => {
     return dataTransferItems;
 };
 
-const replaceTextWithX = (html: string | undefined): string => {
+const maskContent = (html: string | undefined): string => {
     return html
         ? html.replace(/>([^<]+)</g, (_match, p1) => {
               return '>' + '■'.repeat(p1.length) + '<';
