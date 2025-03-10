@@ -662,24 +662,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         type: 'image',
                         image,
                     });
-                } else if (
-                    selection &&
-                    selection.isCollapsed &&
-                    isNodeOfType(selection.focusNode, 'ELEMENT_NODE')
-                ) {
-                    const element = selection.focusNode;
-
-                    const element2 = element.childNodes.item(selection.focusOffset - 1);
-
-                    if (isNodeOfType(element2, 'ELEMENT_NODE') && isElementOfType(element2, 'hr')) {
-                        const newRange = this.editor.getDocument().createRange();
-                        newRange.setStartAfter(element2);
-                        this.editor.setDOMSelection({
-                            type: 'range',
-                            isReverted: false,
-                            range: newRange,
-                        });
-                    }
                 }
             }
 
