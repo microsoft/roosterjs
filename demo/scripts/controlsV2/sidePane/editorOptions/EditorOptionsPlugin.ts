@@ -48,6 +48,7 @@ const initialState: OptionState = {
         autoMailto: true,
         autoTel: true,
         removeListMargins: false,
+        autoHorizontalLine: true,
     },
     markdownOptions: {
         bold: true,

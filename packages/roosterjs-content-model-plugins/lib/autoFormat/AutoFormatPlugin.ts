@@ -1,4 +1,5 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
+import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
 import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
@@ -52,6 +53,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoFraction: false,
     autoOrdinals: false,
     removeListMargins: false,
+    autoHorizontalLine: false,
 };
 
 /**
@@ -72,6 +74,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
      *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
+     *  - autoHorizontalLine: A boolean that enables or disables automatic horizontal line creation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -270,7 +273,17 @@ export class AutoFormatPlugin implements EditorPlugin {
                             }
                         );
                     }
+                    break;
+                case 'Enter':
+                    this.handleEnterKey(editor, event);
+                    break;
             }
+        }
+    }
+
+    private handleEnterKey(editor: IEditor, event: KeyDownEvent) {
+        if (this.options.autoHorizontalLine) {
+            checkAndInsertHorizontalLine(editor, event);
         }
     }
 
