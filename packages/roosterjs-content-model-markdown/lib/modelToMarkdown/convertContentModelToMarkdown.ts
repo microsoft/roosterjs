@@ -3,7 +3,7 @@ import { modelProcessor } from './processor/modelProcessor';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
- * Export current selection in editor to markdown
+ * Export content model document to markdown
  * @param selection The editor selection
  * @returns The markdown string
  */
