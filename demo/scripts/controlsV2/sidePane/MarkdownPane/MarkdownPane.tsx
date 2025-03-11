@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MarkdownPaneProps } from './MarkdownPanePlugin';
 import {
     convertMarkdownToContentModel,
-    exportEditorSelectionToMarkdown,
+    convertContentModelToMarkdown,
 } from 'roosterjs-content-model-markdown';
 import {
     createBr,
@@ -48,9 +48,9 @@ export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
     };
 
     private generateMarkdown = () => {
-        const selection = this.props.getEditor().getDOMSelection();
-        if (selection) {
-            const content = exportEditorSelectionToMarkdown(selection);
+        const model = this.props.getEditor().getContentModelCopy('disconnected');
+        if (model) {
+            const content = convertContentModelToMarkdown(model);
             this.html.current.value = content;
         }
     };
