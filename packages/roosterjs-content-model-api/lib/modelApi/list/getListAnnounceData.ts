@@ -24,7 +24,7 @@ export function getListAnnounceData(path: ReadonlyContentModelBlockGroup[]): Ann
         const listItem = path[index] as ContentModelListItem;
         const level = listItem.levels[listItem.levels.length - 1];
 
-        if (level.format.displayForDummyItem) {
+        if (!level || level.format.displayForDummyItem) {
             return null;
         } else if (level.listType == 'OL') {
             const listNumber = getListNumber(path, listItem);
