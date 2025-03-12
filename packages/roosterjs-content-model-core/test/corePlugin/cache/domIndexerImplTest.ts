@@ -14,6 +14,7 @@ import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelSegment,
+    ContentModelSelectionMarker,
     DOMSelection,
 } from 'roosterjs-content-model-types';
 import {
@@ -433,6 +434,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
                     segmentType: 'SelectionMarker',
                     format: {},
                     isSelected: true,
+                    hintText: undefined,
                 },
                 segment2,
             ],
@@ -579,8 +581,14 @@ describe('domIndexerImpl.reconcileSelection', () => {
             text: 't2',
             format: {},
         };
-        const marker1 = createSelectionMarker();
-        const marker2 = createSelectionMarker();
+        const marker1: ContentModelSelectionMarker = {
+            ...createSelectionMarker(),
+            hintText: undefined,
+        };
+        const marker2: ContentModelSelectionMarker = {
+            ...createSelectionMarker(),
+            hintText: undefined,
+        };
 
         expect(result).toBeTrue();
         expect(node1.__roosterjsContentModel).toEqual({
@@ -640,7 +648,10 @@ describe('domIndexerImpl.reconcileSelection', () => {
             isSelected: true,
         };
 
-        const marker1 = createSelectionMarker();
+        const marker1: ContentModelSelectionMarker = {
+            ...createSelectionMarker(),
+            hintText: undefined,
+        };
         const marker2 = createSelectionMarker();
 
         expect(result).toBeTrue();
@@ -907,7 +918,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, createSelectionMarker(), segment2],
+            segments: [segment1, { ...createSelectionMarker(), hintText: undefined }, segment2],
         });
         expect(setSelectionSpy).toHaveBeenCalled();
         expect(model.hasRevertedRangeSelection).toBeFalsy();
@@ -1092,6 +1103,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
                     format: {},
                     isSelected: true,
                     link,
+                    hintText: undefined,
                 },
                 segment2,
             ],

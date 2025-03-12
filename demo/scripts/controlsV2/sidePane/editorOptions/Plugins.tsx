@@ -304,7 +304,8 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                         )
                     )}
                     {this.renderPluginItem('customReplace', 'Custom Replace')}
-                    {this.renderPluginItem('imageEditPlugin', 'ImageEditPlugin')}
+                    {this.renderPluginItem('imageEditPlugin', 'ImageEditPlugin')}{' '}
+                    {this.renderPluginItem('hintText', 'HintText')}
                 </tbody>
             </table>
         );

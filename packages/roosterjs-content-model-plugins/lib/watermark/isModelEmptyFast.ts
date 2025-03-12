@@ -20,7 +20,8 @@ export function isModelEmptyFast(model: ReadonlyContentModelBlockGroup): boolean
                 x.segmentType == 'Entity' ||
                 x.segmentType == 'Image' ||
                 x.segmentType == 'General' ||
-                (x.segmentType == 'Text' && x.text)
+                (x.segmentType == 'Text' && x.text) ||
+                (x.segmentType == 'SelectionMarker' && !!x.hintText)
         )
     ) {
         return false; // Has meaningful segments, it is not empty

@@ -109,6 +109,12 @@ export { readFile } from './domUtils/readFile';
 export { transformColor } from './domUtils/style/transformColor';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
+export {
+    hasHintTextClass,
+    getHintTextElement,
+    getHintText,
+    setupHintTextNode,
+} from './domUtils/hintText';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 
