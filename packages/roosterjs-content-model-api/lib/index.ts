@@ -51,7 +51,6 @@ export { formatParagraphWithContentModel } from './publicApi/utils/formatParagra
 export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
 export { formatTextSegmentBeforeSelectionMarker } from './publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 export { formatInsertPointWithContentModel } from './publicApi/utils/formatInsertPointWithContentModel';
-export { getEditorHTMLContent } from './publicApi/utils/getEditorHTMLContent';
 
 export { setListType } from './modelApi/list/setListType';
 export { setModelListStyle } from './modelApi/list/setModelListStyle';

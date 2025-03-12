@@ -2,6 +2,7 @@ import {
     contentModelToDom,
     contentModelToText,
     createModelToDomContext,
+    transformColor,
 } from 'roosterjs-content-model-dom';
 import type {
     ExportContentMode,
@@ -38,30 +39,56 @@ export function exportContent(
  */
 export function exportContent(editor: IEditor, mode: 'PlainTextFast'): string;
 
+/**
+ * Export plain text using editor's textContent property directly
+ * @param editor The editor to get content from
+ * @param mode Specify CleanHTML to get the innerHTML of the editor
+ * @param options @optional Options for Model to DOM conversion
+ */
+export function exportContent(editor: IEditor, mode: 'CleanHTML'): string;
+
 export function exportContent(
     editor: IEditor,
     mode: ExportContentMode = 'HTML',
     optionsOrCallbacks?: ModelToDomOption | ModelToTextCallbacks
 ): string {
-    if (mode == 'PlainTextFast') {
-        return editor.getDOMHelper().getTextContent();
-    } else {
-        const model = editor.getContentModelCopy('clean');
-
-        if (mode == 'PlainText') {
+    switch (mode) {
+        case 'PlainTextFast':
+            return editor.getDOMHelper().getTextContent();
+        case 'PlainText':
             return contentModelToText(
-                model,
+                editor.getContentModelCopy('clean'),
                 undefined /*separator*/,
                 optionsOrCallbacks as ModelToTextCallbacks
             );
-        } else {
+        case 'CleanHTML':
+            const clonedRoot = editor.getDOMHelper().getClonedRoot();
+
+            if (editor.isDarkMode()) {
+                transformColor(
+                    clonedRoot,
+                    false /*includeSelf*/,
+                    'darkToLight',
+                    editor.getColorManager()
+                );
+            }
+
+            editor.triggerEvent(
+                'extractContentWithDom',
+                {
+                    clonedRoot,
+                },
+                true /*broadcast*/
+            );
+
+            return clonedRoot.innerHTML;
+        default:
             const doc = editor.getDocument();
             const div = doc.createElement('div');
-
             contentModelToDom(
                 doc,
                 div,
-                model,
+                editor.getContentModelCopy('clean'),
                 createModelToDomContext(
                     undefined /*editorContext*/,
                     optionsOrCallbacks as ModelToDomOption
@@ -71,6 +98,5 @@ export function exportContent(
             editor.triggerEvent('extractContentWithDom', { clonedRoot: div }, true /*broadcast*/);
 
             return div.innerHTML;
-        }
     }
 }

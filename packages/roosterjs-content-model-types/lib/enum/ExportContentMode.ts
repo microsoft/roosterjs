@@ -15,4 +15,9 @@ export type ExportContentMode =
     /**
      * Export to plain text via browser's textContent property
      */
-    | 'PlainTextFast';
+    | 'PlainTextFast'
+
+    /**
+     * Export editor innerHTML
+     */
+    | 'CleanHTML';
