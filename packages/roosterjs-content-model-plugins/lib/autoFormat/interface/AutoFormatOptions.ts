@@ -33,4 +33,9 @@ export interface AutoFormatOptions extends AutoLinkOptions {
      * Remove the margins of auto triggered list
      */
     removeListMargins?: boolean;
+
+    /**
+     * Auto Horizontal line
+     */
+    autoHorizontalLine?: boolean;
 }
