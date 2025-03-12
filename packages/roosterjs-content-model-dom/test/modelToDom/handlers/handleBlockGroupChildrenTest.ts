@@ -456,4 +456,57 @@ describe('handleBlockGroupChildren', () => {
             removedBlockElements: [],
         });
     });
+
+    it('handle document and update the parent format based on the document format', () => {
+        const div1 = document.createElement('div');
+        const div2 = document.createElement('div');
+
+        div1.textContent = 'test1';
+        div2.textContent = 'test2';
+
+        parent.appendChild(div1);
+        parent.appendChild(div2);
+
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    cachedElement: div1,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    cachedElement: div2,
+                },
+            ],
+            format: {
+                fontFamily: 'Arial',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                backgroundColor: 'red',
+                textColor: 'blue',
+            },
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.outerHTML).toBe(
+            '<div style="font-family: Arial; font-size: 12px; color: blue; background-color: red;"><b><div>test1</div><div>test2</div></b></div>'
+        );
+        expect(parent.firstChild?.firstChild).toBe(div1);
+        expect(parent.firstChild?.lastChild).toBe(div2);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(parent.style.fontFamily).toBe('Arial');
+        expect(parent.style.fontSize).toBe('12px');
+        expect(parent.style.color).toBe('blue');
+        expect(parent.style.backgroundColor).toBe('red');
+        expect((parent.firstChild as HTMLElement | undefined)?.tagName).toBe('B');
+    });
 });

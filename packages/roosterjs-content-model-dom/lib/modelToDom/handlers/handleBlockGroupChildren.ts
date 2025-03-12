@@ -1,3 +1,4 @@
+import { applyFormat } from '../utils/applyFormat';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import type {
     ContentModelBlockGroup,
@@ -38,6 +39,14 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 context.domIndexer?.onBlockEntity(childBlock, group);
             }
         });
+
+        if (
+            group.blockGroupType == 'Document' &&
+            group.format &&
+            isNodeOfType(parent, 'ELEMENT_NODE')
+        ) {
+            applyFormat(parent, context.formatAppliers.segment, group.format, context);
+        }
 
         // Remove all rest node if any since they don't appear in content model
         while (refNode) {
