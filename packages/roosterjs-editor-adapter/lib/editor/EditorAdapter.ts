@@ -103,7 +103,7 @@ const GetContentModeMap: Record<GetContentMode, ExportContentMode> = {
     [GetContentMode.CleanHTML]: 'HTML',
     [GetContentMode.PlainText]: 'PlainText',
     [GetContentMode.PlainTextFast]: 'PlainTextFast',
-    [GetContentMode.RawHTMLOnly]: 'CleanHTML',
+    [GetContentMode.RawHTMLOnly]: 'HTML',
     [GetContentMode.RawHTMLWithSelection]: 'HTML',
 };
 
@@ -353,19 +353,16 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
         const exportMode = GetContentModeMap[mode] ?? 'HTML';
 
         switch (exportMode) {
-            case 'HTML':
+            case 'PlainText':
+                return exportContent(this, 'PlainText');
+            case 'PlainTextFast':
+                return exportContent(this, 'PlainTextFast');
+            default:
                 return exportContent(
                     this,
                     'HTML',
                     this.getCore().environment.modelToDomSettings.customized
                 );
-            case 'PlainText':
-                return exportContent(this, 'PlainText');
-
-            case 'PlainTextFast':
-                return exportContent(this, 'PlainTextFast');
-            case 'CleanHTML':
-                return exportContent(this, 'CleanHTML');
         }
     }
 
