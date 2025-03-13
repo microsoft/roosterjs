@@ -1,11 +1,15 @@
-import { createMarkdownBlock } from './createMarkdownBlock';
+import { createMarkdownBlock, MarkdownLineBreaks } from './createMarkdownBlock';
 import type { ListCounter } from './createMarkdownBlockGroup';
 import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function createMarkdownTable(table: ContentModelTable, listCounter: ListCounter): string {
+export function createMarkdownTable(
+    table: ContentModelTable,
+    newLinePattern: MarkdownLineBreaks,
+    listCounter: ListCounter
+): string {
     let markdownString = '';
     const { rows } = table;
     let firstRow = true;
@@ -13,11 +17,19 @@ export function createMarkdownTable(table: ContentModelTable, listCounter: ListC
         markdownString += '|';
         for (const cell of row.cells) {
             for (const block of cell.blocks) {
-                markdownString += createMarkdownBlock(block, listCounter);
+                markdownString += createMarkdownBlock(
+                    block,
+                    newLinePattern,
+                    listCounter,
+                    {
+                        divider: '',
+                    },
+                    true /* ignoreLineBreaks */
+                );
             }
             markdownString += '|';
         }
-        markdownString += '\n';
+        markdownString += newLinePattern.newLine;
         if (firstRow) {
             markdownString += addTableDivider(row);
             firstRow = false;

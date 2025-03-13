@@ -4,7 +4,10 @@ import type { ContentModelParagraph, ContentModelText } from 'roosterjs-content-
 /**
  * @internal
  */
-export function createMarkdownParagraph(paragraph: ContentModelParagraph): string {
+export function createMarkdownParagraph(
+    paragraph: ContentModelParagraph,
+    ignoreLineBreaks: boolean = false
+): string {
     const { segments } = paragraph;
     let markdownString = '';
     for (const segment of segments) {
@@ -16,7 +19,9 @@ export function createMarkdownParagraph(paragraph: ContentModelParagraph): strin
                 markdownString += `![${segment.alt}](${segment.src})`;
                 break;
             case 'Br':
-                markdownString += '\n';
+                if (!ignoreLineBreaks) {
+                    markdownString += '\n';
+                }
                 break;
             default:
                 break;

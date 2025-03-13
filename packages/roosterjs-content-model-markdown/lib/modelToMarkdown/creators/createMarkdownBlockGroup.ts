@@ -1,4 +1,4 @@
-import { createMarkdownBlock } from './createMarkdownBlock';
+import { createMarkdownBlock, MarkdownLineBreaks } from './createMarkdownBlock';
 import type {
     ContentModelBlockGroup,
     ContentModelFormatContainer,
@@ -18,33 +18,44 @@ export interface ListCounter {
  */
 export function createMarkdownBlockGroup(
     blockGroup: ContentModelBlockGroup,
+    newLinePattern: MarkdownLineBreaks,
     listCounter: ListCounter
 ): string {
     let markdownString = '';
     switch (blockGroup.blockGroupType) {
         case 'ListItem':
             if (listCounter) {
-                markdownString += createMarkdownListItem(blockGroup, listCounter);
+                markdownString += createMarkdownListItem(blockGroup, newLinePattern, listCounter);
             }
             break;
         case 'FormatContainer':
-            markdownString += createMarkdownBlockQuote(blockGroup, listCounter);
+            markdownString += createMarkdownBlockQuote(blockGroup, newLinePattern, listCounter);
             break;
         default:
             const { blocks } = blockGroup;
             for (const block of blocks) {
-                markdownString += createMarkdownBlock(block, listCounter);
+                markdownString += createMarkdownBlock(block, newLinePattern, listCounter);
             }
             break;
     }
     return markdownString;
 }
 
-function createMarkdownListItem(listItem: ContentModelListItem, listCounter: ListCounter): string {
+function createMarkdownListItem(
+    listItem: ContentModelListItem,
+    newLinePattern: MarkdownLineBreaks,
+    listCounter: ListCounter
+): string {
     let markdownString = '';
     const { blocks } = listItem;
     for (const block of blocks) {
-        markdownString += createMarkdownBlock(block, listCounter);
+        markdownString += createMarkdownBlock(
+            block,
+            newLinePattern,
+            listCounter,
+            undefined /* newLines */,
+            true /* ignoreLineBreaks */
+        );
     }
     const lastIndex = listItem.levels.length - 1;
     const isSubList = lastIndex + 1 > 1;
@@ -64,18 +75,28 @@ function createMarkdownListItem(listItem: ContentModelListItem, listCounter: Lis
         }
     }
 
-    return markdownString + '\n';
+    return markdownString + newLinePattern.newLine;
 }
 
 function createMarkdownBlockQuote(
     blockquote: ContentModelFormatContainer,
+    newLinePattern: MarkdownLineBreaks,
     listCounter: ListCounter
 ): string {
     let markdownString = '';
     if (blockquote.tagName == 'blockquote') {
         const { blocks } = blockquote;
         for (const block of blocks) {
-            markdownString += '> ' + createMarkdownBlock(block, listCounter) + '\n';
+            markdownString +=
+                '> ' +
+                createMarkdownBlock(
+                    block,
+                    newLinePattern,
+                    listCounter,
+                    undefined /* newLines */,
+                    true /* ignoreLineBreaks */
+                ) +
+                newLinePattern.newLine;
         }
     }
 
