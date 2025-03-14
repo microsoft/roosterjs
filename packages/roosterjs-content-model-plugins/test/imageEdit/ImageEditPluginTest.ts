@@ -677,6 +677,7 @@ describe('ImageEditPlugin', () => {
         const plugin = new TestPlugin();
         const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
+        plugin.setIsEditing(false);
         const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
         const image = document.createElement('img');
         image.dataset['isEditing'] = 'true';
@@ -696,6 +697,35 @@ describe('ImageEditPlugin', () => {
         expect(newSelection!.image.dataset.isEditing).toBeUndefined();
         expect(plugin.getIsEditing()).toBe(false);
         expect(cleanInfoSpy).toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('contentChanged - should apply format', () => {
+        const plugin = new TestPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        plugin.setIsEditing(true);
+        const applyFormatWithContentModelSpy = spyOn(plugin, 'applyFormatWithContentModel');
+        const image = document.createElement('img');
+        image.dataset['isEditing'] = 'true';
+        const selection = {
+            type: 'image',
+            image,
+        } as DOMSelection;
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.SetContent,
+        } as any;
+        plugin.onPluginEvent(event);
+
+        const newSelection = editor.getDOMSelection() as ImageSelection;
+        expect(newSelection!.type).toBe('image');
+        expect(applyFormatWithContentModelSpy).toHaveBeenCalledWith(
+            editor,
+            false /* isCrop*/,
+            true /* shouldSelectImage */
+        );
         plugin.dispose();
     });
 
