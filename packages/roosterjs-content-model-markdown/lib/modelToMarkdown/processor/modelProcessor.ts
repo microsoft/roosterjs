@@ -1,4 +1,5 @@
-import { createMarkdownBlock, MarkdownLineBreaks } from '../creators/createMarkdownBlock';
+import { createMarkdownBlock } from '../creators/createMarkdownBlock';
+import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 import type { ListCounter } from '../creators/createMarkdownBlockGroup';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 

@@ -1,4 +1,5 @@
-import { createMarkdownBlock, MarkdownLineBreaks } from './createMarkdownBlock';
+import { createMarkdownBlock } from './createMarkdownBlock';
+import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 import type { ListCounter } from './createMarkdownBlockGroup';
 import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-model-types';
 
@@ -24,7 +25,9 @@ export function createMarkdownTable(
                     {
                         divider: '',
                     },
-                    true /* ignoreLineBreaks */
+                    {
+                        ignoreLineBreaks: true,
+                    }
                 );
             }
             markdownString += '|';

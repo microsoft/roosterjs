@@ -1,11 +1,18 @@
 import { ContentModelParagraph } from 'roosterjs-content-model-types';
-import { createImage, createParagraph, createText } from 'roosterjs-content-model-dom';
-import { createMarkdownParagraph } from '../../../lib/modelToMarkdown/creators/createMarkdownParagraph';
+import { createBr, createImage, createParagraph, createText } from 'roosterjs-content-model-dom';
+import {
+    createMarkdownParagraph,
+    ParagraphContext,
+} from '../../../lib/modelToMarkdown/creators/createMarkdownParagraph';
 
 describe('createMarkdownParagraph', () => {
-    function runTest(paragraph: ContentModelParagraph, expectedMarkdown: string) {
+    function runTest(
+        paragraph: ContentModelParagraph,
+        expectedMarkdown: string,
+        context?: ParagraphContext
+    ) {
         // Act
-        const result = createMarkdownParagraph(paragraph);
+        const result = createMarkdownParagraph(paragraph, context);
 
         // Assert
         expect(result).toEqual(expectedMarkdown);
@@ -154,5 +161,23 @@ describe('createMarkdownParagraph', () => {
             format: {},
         };
         runTest(paragraph, '###### text');
+    });
+
+    it('should not ignore the BR', () => {
+        const paragraph = createParagraph();
+        const text = createText('text');
+        const br = createBr();
+        paragraph.segments.push(text);
+        paragraph.segments.push(br);
+        runTest(paragraph, 'text\n', { ignoreLineBreaks: false });
+    });
+
+    it('should ignore the BR', () => {
+        const paragraph = createParagraph();
+        const text = createText('text');
+        const br = createBr();
+        paragraph.segments.push(text);
+        paragraph.segments.push(br);
+        runTest(paragraph, 'text', { ignoreLineBreaks: true });
     });
 });

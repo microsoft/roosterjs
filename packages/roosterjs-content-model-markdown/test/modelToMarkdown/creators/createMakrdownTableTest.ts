@@ -10,10 +10,17 @@ import {
 
 describe('createMarkdownTable', () => {
     function runTest(table: ContentModelTable, expected: string) {
-        const result = createMarkdownTable(table, {
-            listItemCount: 0,
-            subListItemCount: 0,
-        });
+        const result = createMarkdownTable(
+            table,
+            {
+                newLine: '\n',
+                lineBreak: '\n\n',
+            },
+            {
+                listItemCount: 0,
+                subListItemCount: 0,
+            }
+        );
         expect(result).toBe(expected);
     }
 

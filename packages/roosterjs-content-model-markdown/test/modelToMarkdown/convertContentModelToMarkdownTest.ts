@@ -15,7 +15,10 @@ import {
 describe('convertContentModelToMarkdown', () => {
     function runTest(model: ContentModelDocument, expectedMarkdown: string) {
         // Act
-        const result = convertContentModelToMarkdown(model);
+        const result = convertContentModelToMarkdown(model, {
+            newLine: '\n',
+            lineBreak: '\n\n',
+        });
 
         // Assert
         expect(result).toEqual(expectedMarkdown);

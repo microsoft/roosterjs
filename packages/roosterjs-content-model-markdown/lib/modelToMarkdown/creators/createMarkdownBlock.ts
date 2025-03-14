@@ -1,14 +1,14 @@
 import { createMarkdownBlockGroup } from './createMarkdownBlockGroup';
 import { createMarkdownParagraph } from './createMarkdownParagraph';
 import { createMarkdownTable } from './createMarkdownTable';
+import type { ParagraphContext } from './createMarkdownParagraph';
 import type { ContentModelBlock } from 'roosterjs-content-model-types';
 import type { ListCounter } from './createMarkdownBlockGroup';
+import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 
-export interface MarkdownLineBreaks {
-    newLine: string;
-    lineBreak: string;
-}
-
+/**
+ * @internal
+ */
 export interface MarkdownLineBreaksByBlockType {
     table: string;
     paragraph: string;
@@ -29,13 +29,13 @@ export function createMarkdownBlock(
     newLinePattern: MarkdownLineBreaks,
     listCounter: ListCounter,
     newLines?: Partial<MarkdownLineBreaksByBlockType>,
-    ignoreLineBreaks?: boolean
+    paragraphContext?: ParagraphContext
 ): string {
     let markdownString = '';
     const lines = { ...DEFAULT_NEW_LINE, ...newLines };
     switch (block.blockType) {
         case 'Paragraph':
-            markdownString += createMarkdownParagraph(block, ignoreLineBreaks) + lines.paragraph;
+            markdownString += createMarkdownParagraph(block, paragraphContext) + lines.paragraph;
             break;
         case 'BlockGroup':
             markdownString += createMarkdownBlockGroup(block, newLinePattern, listCounter);
@@ -44,7 +44,7 @@ export function createMarkdownBlock(
             markdownString += createMarkdownTable(block, newLinePattern, listCounter) + lines.table;
             break;
         case 'Divider':
-            if (!ignoreLineBreaks) {
+            if (!paragraphContext?.ignoreLineBreaks) {
                 markdownString += '---' + lines.divider;
             }
 

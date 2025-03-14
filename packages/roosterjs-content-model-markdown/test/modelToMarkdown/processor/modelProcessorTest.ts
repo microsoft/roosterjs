@@ -16,7 +16,10 @@ import {
 describe('modelProcessor', () => {
     function runTest(model: ContentModelDocument, expectedMarkdown: string) {
         // Act
-        const result = modelProcessor(model);
+        const result = modelProcessor(model, {
+            newLine: '\n',
+            lineBreak: '\n\n',
+        });
 
         // Assert
         expect(result).toEqual(expectedMarkdown);

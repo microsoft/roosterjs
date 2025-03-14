@@ -1,6 +1,5 @@
-import { MarkdownLineBreaks } from './creators/createMarkdownBlock';
 import { modelProcessor } from './processor/modelProcessor';
-
+import type { MarkdownLineBreaks } from '../constants/markdownLineBreaks';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**

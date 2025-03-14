@@ -1,4 +1,5 @@
-import { createMarkdownBlock, MarkdownLineBreaks } from './createMarkdownBlock';
+import { createMarkdownBlock } from './createMarkdownBlock';
+import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 import type {
     ContentModelBlockGroup,
     ContentModelFormatContainer,
@@ -54,11 +55,18 @@ function createMarkdownListItem(
             newLinePattern,
             listCounter,
             undefined /* newLines */,
-            true /* ignoreLineBreaks */
+            {
+                ignoreLineBreaks: true,
+            }
         );
     }
     const lastIndex = listItem.levels.length - 1;
     const isSubList = lastIndex + 1 > 1;
+    const dummyFormat = listItem.levels[lastIndex].format.displayForDummyItem;
+    if (dummyFormat && dummyFormat !== 'listItem') {
+        return (markdownString = ` ${markdownString}`);
+    }
+
     if (isSubList) {
         listCounter.subListItemCount++;
         if (listItem.levels[lastIndex].listType == 'OL') {
@@ -89,13 +97,9 @@ function createMarkdownBlockQuote(
         for (const block of blocks) {
             markdownString +=
                 '> ' +
-                createMarkdownBlock(
-                    block,
-                    newLinePattern,
-                    listCounter,
-                    undefined /* newLines */,
-                    true /* ignoreLineBreaks */
-                ) +
+                createMarkdownBlock(block, newLinePattern, listCounter, undefined /* newLines */, {
+                    ignoreLineBreaks: true,
+                }) +
                 newLinePattern.newLine;
         }
     }

@@ -15,10 +15,21 @@ import {
 
 describe('createMarkdownBlock', () => {
     function runTest(block: ContentModelBlock, expectedResult: string) {
-        const result = createMarkdownBlock(block, {
-            listItemCount: 0,
-            subListItemCount: 0,
-        });
+        const result = createMarkdownBlock(
+            block,
+            {
+                newLine: '\n',
+                lineBreak: '\n\n',
+            },
+            {
+                listItemCount: 0,
+                subListItemCount: 0,
+            },
+            undefined,
+            {
+                ignoreLineBreaks: false,
+            }
+        );
         expect(result).toBe(expectedResult);
     }
 

@@ -17,7 +17,14 @@ describe('createMarkdownBlockGroup', () => {
         expected: string,
         listItemCount: ListCounter
     ) {
-        const result = createMarkdownBlockGroup(blockGroup, listItemCount);
+        const result = createMarkdownBlockGroup(
+            blockGroup,
+            {
+                newLine: '\n',
+                lineBreak: '\n\n',
+            },
+            listItemCount
+        );
         expect(result).toBe(expected);
     }
 
