@@ -674,9 +674,10 @@ describe('ImageEditPlugin', () => {
     });
 
     it('contentChanged - should remove isEditing', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new TestPlugin();
         const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
+        const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
         const image = document.createElement('img');
         image.dataset['isEditing'] = 'true';
         const selection = {
@@ -689,9 +690,12 @@ describe('ImageEditPlugin', () => {
             source: ChangeSource.SetContent,
         } as any;
         plugin.onPluginEvent(event);
+
         const newSelection = editor.getDOMSelection() as ImageSelection;
         expect(newSelection!.type).toBe('image');
         expect(newSelection!.image.dataset.isEditing).toBeUndefined();
+        expect(plugin.getIsEditing()).toBe(false);
+        expect(cleanInfoSpy).toHaveBeenCalled();
         plugin.dispose();
     });
 
@@ -741,6 +745,10 @@ class TestPlugin extends ImageEditPlugin {
             bottomPercent: 0,
             angleRad: 0,
         };
+    }
+
+    public getIsEditing() {
+        return this.isEditing;
     }
 
     public applyFormatWithContentModel(
