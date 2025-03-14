@@ -1,5 +1,11 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { markdownProcessor } from '../../../lib/markdownToModel/processor/markdownProcessor';
+import {
+    createContentModelDocument,
+    createFormatContainer,
+    createParagraph,
+    createText,
+} from 'roosterjs-content-model-dom';
 
 describe('markdownProcessor', () => {
     function runTest(test: string, expected: ContentModelDocument) {
@@ -21,17 +27,6 @@ describe('markdownProcessor', () => {
                             text: 'text',
                             format: {},
                             segmentType: 'Text',
-                        },
-                    ],
-
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
                         },
                     ],
 
@@ -60,17 +55,6 @@ describe('markdownProcessor', () => {
                             format: {},
                             segmentType: 'Image',
                             dataset: {},
-                        },
-                    ],
-
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
                         },
                     ],
 
@@ -109,17 +93,6 @@ describe('markdownProcessor', () => {
 
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
-                },
             ],
         };
         runTest('text [link](https://www.example.com) ', document);
@@ -148,17 +121,6 @@ describe('markdownProcessor', () => {
 
                     format: {},
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
-                },
             ],
         };
         runTest('text **bold** ', document);
@@ -182,17 +144,6 @@ describe('markdownProcessor', () => {
                                 italic: true,
                             },
                             segmentType: 'Text',
-                        },
-                    ],
-
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
                         },
                     ],
 
@@ -233,17 +184,6 @@ describe('markdownProcessor', () => {
                             format: {},
                             segmentType: 'Image',
                             dataset: {},
-                        },
-                    ],
-
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
                         },
                     ],
 
@@ -292,17 +232,6 @@ describe('markdownProcessor', () => {
                         isSelected: false,
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
-                },
             ],
         };
         runTest('1. text', document);
@@ -342,17 +271,6 @@ describe('markdownProcessor', () => {
                         format: {},
                         isSelected: false,
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
                 },
             ],
         };
@@ -394,17 +312,6 @@ describe('markdownProcessor', () => {
                         isSelected: false,
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
-                },
             ],
         };
         runTest('- text', document);
@@ -444,17 +351,6 @@ describe('markdownProcessor', () => {
                         format: {},
                         isSelected: false,
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
                 },
             ],
         };
@@ -502,17 +398,6 @@ describe('markdownProcessor', () => {
                         format: {},
                         isSelected: false,
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-
-                    format: {},
                 },
             ],
         };
@@ -603,16 +488,6 @@ describe('markdownProcessor', () => {
                         editingInfo:
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-                    format: {},
                 },
             ],
         };
@@ -760,19 +635,114 @@ describe('markdownProcessor', () => {
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
                 },
+            ],
+        };
+        runTest('|text1|text2|\n|----|----|\n|text3|text4|', document);
+    });
+
+    it('paragraph after list', () => {
+        const document: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
                         {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    text: 'text',
+                                    format: {},
+                                    segmentType: 'Text',
+                                },
+                            ],
+
                             format: {},
-                            segmentType: 'Br',
                         },
                     ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: false,
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    text: 'text',
+                                    format: {},
+                                    segmentType: 'Text',
+                                },
+                            ],
+
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {
+                                displayForDummyItem: 'block',
+                            },
+                        },
+                    ],
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: false,
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'paragraph', format: {} }],
                     format: {},
                 },
             ],
         };
-        runTest('|text1|text2|\n|----|----|\n|text3|text4|', document);
+        runTest('- text\ntext\n\nparagraph', document);
+    });
+
+    it('paragraph after blockquote ', () => {
+        const doc = createContentModelDocument();
+        const blockquote = createFormatContainer('blockquote');
+        const paragraph1 = createParagraph();
+        blockquote.format = {
+            borderLeft: '3px solid rgb(200, 200, 200)',
+            textColor: 'rgb(102, 102, 102)',
+            marginTop: '1em',
+            marginBottom: '1em',
+            marginLeft: '40px',
+            marginRight: '40px',
+            paddingLeft: '10px',
+        };
+        const text1 = createText(' text');
+        const paragraph2 = createParagraph();
+        const text2 = createText('text');
+        paragraph1.segments.push(text1);
+        paragraph2.segments.push(text2);
+        blockquote.blocks.push(paragraph1, paragraph2);
+        doc.blocks.push(blockquote);
+        const paragraph3 = createParagraph();
+        const text3 = createText('paragraph');
+        paragraph3.segments.push(text3);
+        doc.blocks.push(paragraph3);
+        runTest('> text\ntext\n\nparagraph', doc);
     });
 
     it('should return a table with two rows and two columns with alignment', () => {
@@ -915,16 +885,6 @@ describe('markdownProcessor', () => {
                         editingInfo:
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            format: {},
-                            segmentType: 'Br',
-                        },
-                    ],
-                    format: {},
                 },
             ],
         };
