@@ -71,6 +71,18 @@ describe('getListAnnounceData', () => {
         expect(getAutoListStyleTypeSpy).not.toHaveBeenCalled();
     });
 
+    it('path has list item without list levels', () => {
+        const doc = createContentModelDocument();
+        const listItem = createListItem([]);
+
+        doc.blocks.push(listItem);
+
+        const result = getListAnnounceData([listItem, doc]);
+
+        expect(result).toEqual(null);
+        expect(getAutoListStyleTypeSpy).not.toHaveBeenCalled();
+    });
+
     it('path with bullet list', () => {
         const doc = createContentModelDocument();
         const listItem = createListItem([createListLevel('UL')]);
