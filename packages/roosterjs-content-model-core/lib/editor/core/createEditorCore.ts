@@ -4,6 +4,7 @@ import { createDOMCreator, createTrustedHTMLHandler, isDOMCreator } from '../../
 import { createDOMHelper } from './DOMHelperImpl';
 import { createDomToModelSettings, createModelToDomSettings } from './createEditorDefaultSettings';
 import { createEditorCorePlugins } from '../../corePlugin/createEditorCorePlugins';
+import { IdGeneratorImpl } from './IdGeneratorImpl';
 import type {
     EditorEnvironment,
     PluginState,
@@ -55,6 +56,7 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         disposeErrorHandler: options.disposeErrorHandler,
         onFixUpModel: options.onFixUpModel,
         experimentalFeatures: options.experimentalFeatures ? [...options.experimentalFeatures] : [],
+        paragraphIdGenerator: new IdGeneratorImpl('paragraph'),
     };
 }
 

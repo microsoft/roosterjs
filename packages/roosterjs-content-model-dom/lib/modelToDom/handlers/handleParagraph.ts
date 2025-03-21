@@ -4,6 +4,7 @@ import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
+import { writeMarkerToElement } from '../../modelApi/block/paragraphMarker';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
@@ -94,6 +95,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     formatOnWrapper,
                     context
                 );
+
+                writeMarkerToElement(container, paragraph, context.paragraphIdGenerator);
             } else {
                 handleSegments();
             }

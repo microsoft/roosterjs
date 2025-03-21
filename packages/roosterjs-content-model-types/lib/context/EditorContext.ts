@@ -1,3 +1,4 @@
+import type { IdGenerator } from '../parameter/IdGenerator';
 import type { DarkColorHandler } from './DarkColorHandler';
 import type { DomIndexer } from './DomIndexer';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
@@ -62,4 +63,9 @@ export interface EditorContext {
      * Enabled experimental features
      */
     experimentalFeatures?: ReadonlyArray<string>;
+
+    /**
+     * Id generator for paragraph
+     */
+    paragraphIdGenerator?: IdGenerator;
 }

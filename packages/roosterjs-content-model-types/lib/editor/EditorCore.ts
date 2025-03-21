@@ -23,6 +23,7 @@ import type {
     ContentModelFormatter,
     FormatContentModelOptions,
 } from '../parameter/FormatContentModelOptions';
+import type { IdGenerator } from '../parameter/IdGenerator';
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -399,4 +400,9 @@ export interface EditorCore extends PluginState {
      * Enabled experimental features
      */
     readonly experimentalFeatures: ReadonlyArray<string>;
+
+    /**
+     * A utility object to generate unique paragraph ID
+     */
+    readonly paragraphIdGenerator: IdGenerator;
 }

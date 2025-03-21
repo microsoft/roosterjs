@@ -2,6 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { ContextStyles } from './formatContainerProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { parseFormat } from '../utils/parseFormat';
+import { readOrCreateMarkerFromElement } from '../../modelApi/block/paragraphMarker';
 import type {
     ContentModelBlockGroup,
     ContentModelSegmentFormat,
@@ -41,6 +42,8 @@ export function blockProcessor(
             segmentFormat,
             decorator
         );
+
+        readOrCreateMarkerFromElement(element, paragraph);
 
         addBlock(group, paragraph);
     }
