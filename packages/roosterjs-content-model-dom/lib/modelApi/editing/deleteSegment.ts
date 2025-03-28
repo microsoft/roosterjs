@@ -8,6 +8,7 @@ import type {
     FormatContentModelContext,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,7 +23,8 @@ export function deleteSegment(
     readonlyParagraph: ReadonlyContentModelParagraph,
     readonlySegmentToDelete: ReadonlyContentModelSegment,
     context?: FormatContentModelContext,
-    direction?: 'forward' | 'backward'
+    direction?: 'forward' | 'backward',
+    undeletableSegments?: ShallowMutableContentModelSegment[]
 ): boolean {
     const [paragraph, segmentToDelete, index] = mutateSegment(
         readonlyParagraph,
@@ -41,7 +43,7 @@ export function deleteSegment(
         case 'Br':
         case 'Image':
         case 'SelectionMarker':
-            segments.splice(index, 1);
+            removeSegment(segments, index, direction, undeletableSegments);
             return true;
 
         case 'Entity':
@@ -53,7 +55,7 @@ export function deleteSegment(
                 ? 'removeFromEnd'
                 : undefined;
             if (operation !== undefined) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, undeletableSegments);
                 context?.deletedEntities.push({
                     entity: segmentToDelete,
                     operation,
@@ -66,7 +68,7 @@ export function deleteSegment(
             let text = segmentToDelete.text;
 
             if (text.length == 0 || segmentToDelete.isSelected) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, undeletableSegments);
             } else if (direction) {
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
@@ -75,7 +77,7 @@ export function deleteSegment(
                 }
 
                 if (text == '') {
-                    segments.splice(index, 1);
+                    removeSegment(segments, index, direction, undeletableSegments);
                 } else {
                     segmentToDelete.text = text;
                 }
@@ -85,7 +87,7 @@ export function deleteSegment(
 
         case 'General':
             if (segmentToDelete.isSelected) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, undeletableSegments);
                 return true;
             } else {
                 return false;
@@ -93,6 +95,47 @@ export function deleteSegment(
 
         default:
             return false;
+    }
+}
+
+function removeSegment(
+    segments: ShallowMutableContentModelSegment[],
+    index: number,
+    direction?: 'forward' | 'backward',
+    undeletableSegments?: ShallowMutableContentModelSegment[]
+) {
+    const segment = segments.splice(index, 1)[0];
+
+    if (segment.link?.format.undeletable) {
+        // If the segment is undeletable, we need to reinsert it back to the segments array
+        // to keep the model consistent
+        // We need to find the right place to insert it back based on the direction of deletion
+        if (undeletableSegments) {
+            undeletableSegments.push(segment);
+        } else {
+            let insertIndex: number;
+
+            switch (direction) {
+                case 'forward':
+                    insertIndex =
+                        index > 0 && segments[index - 1].segmentType == 'SelectionMarker'
+                            ? index - 1
+                            : index;
+                    break;
+
+                case 'backward':
+                    insertIndex =
+                        index < segments.length && segments[index].segmentType == 'SelectionMarker'
+                            ? index + 1
+                            : index;
+                    break;
+
+                default:
+                    insertIndex = index;
+            }
+
+            segments.splice(insertIndex, 0, segment);
+        }
     }
 }
 
