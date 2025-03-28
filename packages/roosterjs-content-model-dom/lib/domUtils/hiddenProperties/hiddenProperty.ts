@@ -2,9 +2,10 @@
  * @internal
  */
 export interface HiddenProperty {
-    dummy?: {}; // Temp used by test, will be removed later
-
-    // TODO: Add more properties as needed
+    /**
+     * Specify we should not delete this element when delete/backspace key is pressed
+     */
+    undeletable?: boolean;
 }
 
 interface NodeWithHiddenProperty extends Node {

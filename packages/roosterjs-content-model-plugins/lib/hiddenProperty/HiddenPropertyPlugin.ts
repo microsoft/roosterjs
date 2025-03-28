@@ -5,8 +5,6 @@ import type { HiddenPropertyOptions } from './HiddenPropertyOptions';
 
 /**
  * HiddenPropertyPlugin helps editor to maintain hidden properties in DOM after editor content is reset using HTML
- * This includes:
- * TODO: ADD more hidden properties here
  */
 export class HiddenPropertyPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
