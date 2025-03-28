@@ -38,6 +38,7 @@ export function deleteExpandedSelection(
         deleteResult: 'notDeleted',
         insertPoint: null,
         formatContext,
+        undeletableSegments: [],
     };
 
     iterateSelections(
@@ -64,6 +65,8 @@ export function deleteExpandedSelection(
                     insertMarkerIndex = indexes[0];
                     markerFormat = getSegmentTextFormat(segments[0], true /*includingBIU*/);
 
+                    const isFirstDeletingParagraph = !context.lastParagraph;
+
                     context.lastParagraph = paragraph;
                     context.lastTableContext = tableContext;
 
@@ -81,7 +84,15 @@ export function deleteExpandedSelection(
                                 path,
                                 tableContext
                             );
-                        } else if (deleteSegment(block, segment, context.formatContext)) {
+                        } else if (
+                            deleteSegment(
+                                block,
+                                segment,
+                                context.formatContext,
+                                undefined /*direction*/,
+                                isFirstDeletingParagraph ? undefined : context.undeletableSegments // For first paragraph we can keep undeletable segments so ono need to merge it later
+                            )
+                        ) {
                             context.deleteResult = 'range';
                         }
                     });

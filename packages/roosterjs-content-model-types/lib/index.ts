@@ -57,6 +57,7 @@ export { ListThreadFormat } from './contentModel/format/formatParts/ListThreadFo
 export { ListStyleFormat } from './contentModel/format/formatParts/ListStyleFormat';
 export { FloatFormat } from './contentModel/format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFormat';
+export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
