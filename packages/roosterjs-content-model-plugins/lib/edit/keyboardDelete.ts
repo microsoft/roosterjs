@@ -1,3 +1,6 @@
+import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
+import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
+import { deleteList } from './deleteSteps/deleteList';
 import {
     ChangeSource,
     deleteSelection,
@@ -6,9 +9,6 @@ import {
     isModifierKey,
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
-import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
-import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
-import { deleteList } from './deleteSteps/deleteList';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -138,7 +138,8 @@ function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number) {
         const isNextSiblingUndeletable =
             isNodeOfType(nextSibling, 'ELEMENT_NODE') &&
             isElementOfType(nextSibling, 'a') &&
-            isLinkUndeletable(nextSibling);
+            isLinkUndeletable(nextSibling) &&
+            !nextSibling.firstChild;
 
         // If next sibling is undeletable, we cannot let browser handle it since it will remove the anchor
         // So we return false here to let Content Model handle it
