@@ -1,3 +1,4 @@
+import { createEmptyAnchor } from '../creators/createEmptyAnchor';
 import { deleteSingleChar } from './deleteSingleChar';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
 import { mutateSegment } from '../common/mutate';
@@ -8,6 +9,7 @@ import type {
     FormatContentModelContext,
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
+    ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -22,7 +24,8 @@ export function deleteSegment(
     readonlyParagraph: ReadonlyContentModelParagraph,
     readonlySegmentToDelete: ReadonlyContentModelSegment,
     context?: FormatContentModelContext,
-    direction?: 'forward' | 'backward'
+    direction?: 'forward' | 'backward',
+    remainingSegments?: ShallowMutableContentModelSegment[]
 ): boolean {
     const [paragraph, segmentToDelete, index] = mutateSegment(
         readonlyParagraph,
@@ -41,7 +44,7 @@ export function deleteSegment(
         case 'Br':
         case 'Image':
         case 'SelectionMarker':
-            segments.splice(index, 1);
+            removeSegment(segments, index, direction, remainingSegments);
             return true;
 
         case 'Entity':
@@ -53,7 +56,7 @@ export function deleteSegment(
                 ? 'removeFromEnd'
                 : undefined;
             if (operation !== undefined) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, remainingSegments);
                 context?.deletedEntities.push({
                     entity: segmentToDelete,
                     operation,
@@ -66,7 +69,7 @@ export function deleteSegment(
             let text = segmentToDelete.text;
 
             if (text.length == 0 || segmentToDelete.isSelected) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, remainingSegments);
             } else if (direction) {
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
@@ -75,7 +78,7 @@ export function deleteSegment(
                 }
 
                 if (text == '') {
-                    segments.splice(index, 1);
+                    removeSegment(segments, index, direction, remainingSegments);
                 } else {
                     segmentToDelete.text = text;
                 }
@@ -85,7 +88,7 @@ export function deleteSegment(
 
         case 'General':
             if (segmentToDelete.isSelected) {
-                segments.splice(index, 1);
+                removeSegment(segments, index, direction, remainingSegments);
                 return true;
             } else {
                 return false;
@@ -93,6 +96,48 @@ export function deleteSegment(
 
         default:
             return false;
+    }
+}
+
+function removeSegment(
+    segments: ShallowMutableContentModelSegment[],
+    index: number,
+    direction?: 'forward' | 'backward',
+    remainingSegments?: ShallowMutableContentModelSegment[]
+) {
+    const segment = segments.splice(index, 1)[0];
+    const linkFormat = segment.link?.format;
+
+    if (linkFormat && linkFormat.name && !linkFormat.href) {
+        // We deleted a segment with anchor, need to add back the anchor with empty text
+        const remainingSegment = createEmptyAnchor(linkFormat.name, segment.format);
+
+        if (remainingSegments) {
+            remainingSegments.push(remainingSegment);
+        } else {
+            let insertIndex: number;
+
+            switch (direction) {
+                case 'forward':
+                    insertIndex =
+                        index > 0 && segments[index - 1].segmentType == 'SelectionMarker'
+                            ? index - 1
+                            : index;
+                    break;
+
+                case 'backward':
+                    insertIndex =
+                        index < segments.length && segments[index].segmentType == 'SelectionMarker'
+                            ? index + 1
+                            : index;
+                    break;
+
+                default:
+                    insertIndex = index;
+            }
+
+            segments.splice(insertIndex, 0, remainingSegment);
+        }
     }
 }
 

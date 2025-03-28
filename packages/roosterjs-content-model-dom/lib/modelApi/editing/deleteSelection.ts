@@ -34,7 +34,13 @@ export function deleteSelection(
 
 // If we end up with multiple paragraphs impacted, we need to merge them
 function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
-    const { insertPoint, deleteResult, lastParagraph, lastTableContext } = context;
+    const {
+        insertPoint,
+        deleteResult,
+        lastParagraph,
+        lastTableContext,
+        remainingSegments,
+    } = context;
 
     if (
         insertPoint &&
@@ -45,8 +51,13 @@ function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
         lastTableContext == insertPoint.tableContext
     ) {
         const mutableLastParagraph = mutateBlock(lastParagraph);
+        const mutableInsertingParagraph = mutateBlock(insertPoint.paragraph);
 
-        mutateBlock(insertPoint.paragraph).segments.push(...mutableLastParagraph.segments);
+        if (remainingSegments) {
+            mutableLastParagraph.segments.unshift(...remainingSegments);
+        }
+
+        mutableInsertingParagraph.segments.push(...mutableLastParagraph.segments);
         mutableLastParagraph.segments = [];
     }
 }
