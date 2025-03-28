@@ -21,6 +21,7 @@ export function getHiddenProperty<Key extends keyof HiddenProperty>(
 ): HiddenProperty[Key] | undefined {
     const nodeWithHiddenProperty = node as NodeWithHiddenProperty;
     const hiddenProperty = nodeWithHiddenProperty.__roosterjsHiddenProperty;
+
     return hiddenProperty ? hiddenProperty[key] : undefined;
 }
 

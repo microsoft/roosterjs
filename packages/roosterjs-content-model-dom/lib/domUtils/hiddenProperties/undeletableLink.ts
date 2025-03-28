@@ -1,4 +1,7 @@
 import { getHiddenProperty, setHiddenProperty } from './hiddenProperty';
+import type { HiddenProperty } from './hiddenProperty';
+
+const UndeletableLinkKey: keyof HiddenProperty = 'undeletable';
 
 /**
  * Set a hidden property on a link element to indicate whether it is undeletable or not.
@@ -7,7 +10,7 @@ import { getHiddenProperty, setHiddenProperty } from './hiddenProperty';
  * @param undeletable Whether the link is undeletable or not
  */
 export function setLinkUndeletable(a: HTMLAnchorElement, undeletable: boolean) {
-    setHiddenProperty(a, 'undeletable', undeletable);
+    setHiddenProperty(a, UndeletableLinkKey, undeletable);
 }
 
 /**
@@ -17,5 +20,5 @@ export function setLinkUndeletable(a: HTMLAnchorElement, undeletable: boolean) {
  * @returns True if the link is undeletable, false otherwise
  */
 export function isLinkUndeletable(a: HTMLAnchorElement): boolean {
-    return !!getHiddenProperty(a, 'undeletable');
+    return !!getHiddenProperty(a, UndeletableLinkKey);
 }

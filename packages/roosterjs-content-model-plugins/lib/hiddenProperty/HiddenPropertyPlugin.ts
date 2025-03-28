@@ -1,11 +1,10 @@
-import { ChangeSource, setLinkUndeletable } from 'roosterjs-content-model-dom';
+import { ChangeSource } from 'roosterjs-content-model-dom';
+import { fixupHiddenProperties } from './fixupHiddenProperties';
 import type { IEditor, PluginEvent, EditorPlugin } from 'roosterjs-content-model-types';
 import type { HiddenPropertyOptions } from './HiddenPropertyOptions';
 
 /**
  * HiddenPropertyPlugin helps editor to maintain hidden properties in DOM after editor content is reset using HTML
- * This includes:
- * 1. Undeletable property
  */
 export class HiddenPropertyPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
@@ -54,25 +53,7 @@ export class HiddenPropertyPlugin implements EditorPlugin {
         }
 
         if (event.eventType == 'contentChanged' && event.source == ChangeSource.SetContent) {
-            this.fixupHiddenProperties(this.editor);
-        }
-    }
-
-    private fixupHiddenProperties(editor: IEditor) {
-        if (this.option.undeletableLinkChecker) {
-            this.checkUndeletable(editor, this.option.undeletableLinkChecker);
-        }
-
-        // We can add more checkers here
-    }
-
-    private checkUndeletable(editor: IEditor, checker: (link: HTMLAnchorElement) => boolean) {
-        const anchors = editor.getDOMHelper().queryElements('a');
-
-        for (const a of anchors) {
-            if (checker(a)) {
-                setLinkUndeletable(a, true);
-            }
+            fixupHiddenProperties(this.editor, this.option);
         }
     }
 }
