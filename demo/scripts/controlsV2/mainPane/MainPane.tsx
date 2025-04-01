@@ -4,6 +4,7 @@ import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { darkModeButton } from '../demoButtons/darkModeButton';
+import { defaultDomToModelOption } from '../options/defaultDomToModelOption';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
@@ -27,6 +28,7 @@ import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
+import { undeletableLinkChecker } from '../options/demoUndeletableAnchorParser';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
@@ -377,6 +379,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             experimentalFeatures={Array.from(
                                 this.state.initState.experimentalFeatures
                             )}
+                            defaultDomToModelOptions={defaultDomToModelOption}
                         />
                     )}
                 </div>
@@ -528,7 +531,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         : linkTitle
                 ),
             pluginList.customReplace && new CustomReplacePlugin(customReplacements),
-            pluginList.hiddenProperty && new HiddenPropertyPlugin({}),
+            pluginList.hiddenProperty &&
+                new HiddenPropertyPlugin({
+                    undeletableLinkChecker: undeletableLinkChecker,
+                }),
         ].filter(x => !!x);
     }
 }
