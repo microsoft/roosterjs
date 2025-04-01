@@ -453,6 +453,7 @@ export {
     ModelToTextChecker,
 } from './parameter/ModelToTextCallbacks';
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
+export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

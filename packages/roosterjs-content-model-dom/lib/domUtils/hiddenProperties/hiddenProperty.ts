@@ -2,7 +2,11 @@
  * @internal
  */
 export interface HiddenProperty {
-    dummy?: {}; // Temp used by test, will be removed later
+    /**
+     * A marker string that can be used to identify a specific paragraph in the DOM.
+     * This is useful for scenarios where you need to track or manipulate specific paragraphs
+     */
+    paragraphMarker?: string;
 
     // TODO: Add more properties as needed
 }
