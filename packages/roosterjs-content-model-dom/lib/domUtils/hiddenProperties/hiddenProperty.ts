@@ -8,7 +8,12 @@ export interface HiddenProperty {
      */
     paragraphMarker?: string;
 
-    // TODO: Add more properties as needed
+    /**
+     * Specify we should not delete this element when delete/backspace key is pressed
+     */
+    undeletable?: boolean;
+
+    // Add more properties as needed
 }
 
 interface NodeWithHiddenProperty extends Node {
