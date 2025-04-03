@@ -17,6 +17,7 @@ import type {
  * @param readonlySegmentToDelete The segment to delete
  * @param context @optional Context object provided by formatContentModel API
  * @param direction @optional Whether this is deleting forward or backward. This is only used for deleting entity.
+ * @param undeletableSegments @optional When passed, if this segment is undeletable, it will be added to this array instead of being deleted.
  * If not specified, only selected entity will be deleted
  */
 export function deleteSegment(
@@ -65,21 +66,22 @@ export function deleteSegment(
             return true;
 
         case 'Text':
-            let text = segmentToDelete.text;
-
-            if (text.length == 0 || segmentToDelete.isSelected) {
+            if (segmentToDelete.text.length == 0 || segmentToDelete.isSelected) {
+                segmentToDelete.text = '';
                 removeSegment(segments, index, direction, undeletableSegments);
             } else if (direction) {
+                let text = segmentToDelete.text;
+
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
                     text = normalizeText(text, isForward);
                 }
 
+                segmentToDelete.text = text;
+
                 if (text == '') {
                     removeSegment(segments, index, direction, undeletableSegments);
-                } else {
-                    segmentToDelete.text = text;
                 }
             }
 
@@ -107,12 +109,17 @@ function removeSegment(
     const segment = segments.splice(index, 1)[0];
 
     if (segment.link?.format.undeletable) {
-        // If the segment is undeletable, we need to reinsert it back to the segments array
-        // to keep the model consistent
-        // We need to find the right place to insert it back based on the direction of deletion
+        // Segment is not deletable, but at least we should unselect it
+        delete segment.isSelected;
+
         if (undeletableSegments) {
+            // For undeletable segments, if an undeletableSegments array is passed in,
+            // put it into this array after we delete it, so caller knows that we have deleted some undeletable segments
+            // and do proper handling
             undeletableSegments.push(segment);
         } else {
+            // Otherwise, we need to reinsert it back to the segments array to keep the model consistent.
+            // We need to find the right place to insert it back based on the direction of deletion
             let insertIndex: number;
 
             switch (direction) {
