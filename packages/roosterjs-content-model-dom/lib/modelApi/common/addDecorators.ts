@@ -12,7 +12,7 @@ export function addLink(
     segment: ShallowMutableContentModelSegment,
     link: ReadonlyContentModelLink
 ) {
-    if (link.format.href) {
+    if (link.format.href || link.format.name) {
         segment.link = {
             format: { ...link.format },
             dataset: { ...link.dataset },
