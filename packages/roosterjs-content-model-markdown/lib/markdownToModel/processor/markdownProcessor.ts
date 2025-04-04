@@ -8,8 +8,15 @@ import type {
     ContentModelBlockType,
     ContentModelDocument,
     ContentModelFormatContainer,
+    ContentModelListItem,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
+
+interface MarkdownContext {
+    lastQuote?: ContentModelFormatContainer;
+    lastList?: ContentModelListItem;
+    tableLines: string[];
+}
 
 const MarkdownPattern: Record<string, RegExp> = {
     heading: /^#{1,6} .*/,
@@ -18,6 +25,7 @@ const MarkdownPattern: Record<string, RegExp> = {
     blockquote: /^>\s.*$/,
     unordered_list: /^\s*[\*\-\+] .*/,
     ordered_list: /^\s*\d+\. .*/,
+    space: /^\s*$/,
     paragraph: /^[^#\-\*\d\|].*/,
 };
 
@@ -29,6 +37,7 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
     ordered_list: 'BlockGroup',
     table: 'Table',
     blockquote: 'BlockGroup',
+    space: 'Paragraph',
 };
 
 /**
@@ -43,7 +52,7 @@ export function markdownProcessor(
     text: string,
     splitLinesPattern: string | RegExp
 ): ContentModelDocument {
-    const markdownText = text.split(splitLinesPattern).filter(line => line.trim().length > 0);
+    const markdownText = text.split(splitLinesPattern);
     markdownText.push(''); // Add an empty line to make sure the last block is processed
     const doc = createContentModelDocument();
     return convertMarkdownText(doc, markdownText);
@@ -54,27 +63,44 @@ function addMarkdownBlockToModel(
     blockType: ContentModelBlockType,
     markdown: string,
     patternName: string,
-    table: string[],
-    quote: {
-        lastQuote?: ContentModelFormatContainer;
-    }
+    markdownContext: MarkdownContext
 ) {
-    if (blockType !== 'Table' && table && table.length > 0) {
+    if (
+        blockType !== 'Table' &&
+        markdownContext.tableLines &&
+        markdownContext.tableLines.length > 0
+    ) {
         if (
-            table.length > 2 &&
-            table[1].trim().length > 0 &&
-            isMarkdownTable(table[1]) &&
-            table.length > 1
+            markdownContext.tableLines.length > 2 &&
+            markdownContext.tableLines[1].trim().length > 0 &&
+            isMarkdownTable(markdownContext.tableLines[1]) &&
+            markdownContext.tableLines.length > 1
         ) {
-            const tableModel = createTableFromMarkdown(table);
+            const tableModel = createTableFromMarkdown(markdownContext.tableLines);
             model.blocks.push(tableModel);
         } else {
-            for (const line of table) {
+            for (const line of markdownContext.tableLines) {
                 const paragraph = createParagraphFromMarkdown(line);
                 model.blocks.push(paragraph);
             }
         }
-        table.length = 0;
+        markdownContext.tableLines.length = 0;
+    }
+
+    if (patternName == 'space') {
+        markdownContext.tableLines = [];
+        markdownContext.lastQuote = undefined;
+        markdownContext.lastList = undefined;
+        return;
+    }
+
+    if (blockType == 'Paragraph' && (markdownContext.lastList || markdownContext.lastQuote)) {
+        blockType = 'BlockGroup';
+        patternName = markdownContext.lastList
+            ? markdownContext.lastList.levels[0].listType == 'OL'
+                ? 'ordered_list'
+                : 'unordered_list'
+            : 'blockquote';
     }
 
     switch (blockType) {
@@ -87,30 +113,36 @@ function addMarkdownBlockToModel(
             model.blocks.push(divider);
             break;
         case 'BlockGroup':
-            const blockGroup = createBlockGroupFromMarkdown(markdown, patternName, quote.lastQuote);
-            if (!quote.lastQuote) {
+            const blockGroup = createBlockGroupFromMarkdown(
+                markdown,
+                patternName,
+                markdownContext.lastQuote
+            );
+            if (!markdownContext.lastQuote) {
                 model.blocks.push(blockGroup);
             }
-            quote.lastQuote =
-                blockGroup.blockGroupType === 'FormatContainer' ? blockGroup : undefined;
+            markdownContext.lastQuote =
+                blockGroup.blockGroupType == 'FormatContainer' ? blockGroup : undefined;
+            markdownContext.lastList =
+                blockGroup.blockGroupType == 'ListItem' ? blockGroup : undefined;
             break;
         case 'Table':
-            table = table || [];
-            table.push(markdown);
+            markdownContext.tableLines = markdownContext.tableLines || [];
+            markdownContext.tableLines.push(markdown);
             break;
     }
 
     if (blockType !== 'BlockGroup') {
-        quote.lastQuote = undefined;
+        markdownContext.lastQuote = undefined;
+        markdownContext.lastList = undefined;
     }
 }
 
 function convertMarkdownText(model: ContentModelDocument, lines: string[]): ContentModelDocument {
-    const tableLines: string[] = [];
-    const quoteModel: {
-        lastQuote?: ContentModelFormatContainer;
-    } = {
+    const markdownContext: MarkdownContext = {
         lastQuote: undefined,
+        lastList: undefined,
+        tableLines: [],
     };
     for (const line of lines) {
         let matched = false;
@@ -123,8 +155,7 @@ function convertMarkdownText(model: ContentModelDocument, lines: string[]): Cont
                         MarkdownBlockType[patternName],
                         line,
                         patternName,
-                        tableLines,
-                        quoteModel
+                        markdownContext
                     );
                     matched = true;
                     break;
@@ -133,7 +164,7 @@ function convertMarkdownText(model: ContentModelDocument, lines: string[]): Cont
         }
 
         if (!matched) {
-            addMarkdownBlockToModel(model, 'Paragraph', line, 'paragraph', tableLines, quoteModel);
+            addMarkdownBlockToModel(model, 'Paragraph', line, 'paragraph', markdownContext);
         }
     }
     return model;

@@ -24,7 +24,14 @@ export function createTableFromMarkdown(tableLines: string[]): ContentModelTable
 }
 
 function createTableModel(markdown: string, table: ContentModelTable, tableDivider: string[]) {
-    const contents = markdown.split('|').filter(content => content.trim() !== '');
+    const contents = markdown.split('|');
+    if (contents[0].trim() === '') {
+        contents.shift();
+    }
+    if (contents[contents.length - 1].trim() === '') {
+        contents.pop();
+    }
+
     addTableRow(table, contents, tableDivider);
 }
 
