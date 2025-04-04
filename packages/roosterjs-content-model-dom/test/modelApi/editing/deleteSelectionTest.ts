@@ -1,4 +1,5 @@
 import { ContentModelSelectionMarker, DeletedEntity } from 'roosterjs-content-model-types';
+import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
@@ -996,6 +997,452 @@ describe('deleteSelection - selectionOnly', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [marker],
+                },
+            ],
+        });
+    });
+
+    it('Single paragraph, has empty undeletable segment', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText(
+            '',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+
+        text.isSelected = true;
+
+        para.segments.push(text);
+        model.blocks.push(para);
+
+        deleteSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Single paragraph, has empty undeletable segment and other segments', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText(
+            '',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+
+        segment2.isSelected = true;
+        text.isSelected = true;
+        segment3.isSelected = true;
+
+        para.segments.push(segment1, segment2, text, segment3, segment4);
+        model.blocks.push(para);
+
+        deleteSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Single paragraph, has undeletable segment and other segments', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText(
+            'test',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+
+        segment2.isSelected = true;
+        text.isSelected = true;
+        segment3.isSelected = true;
+
+        para.segments.push(segment1, segment2, text, segment3, segment4);
+        model.blocks.push(para);
+
+        deleteSelection(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Multiple paragraphs, undeletable segment is in the first paragraph', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+        const undeletableSegment = createText(
+            'test',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        undeletableSegment.isSelected = true;
+
+        para1.segments.push(segment1, undeletableSegment);
+        para2.segments.push(segment2);
+        para3.segments.push(segment3, segment4);
+
+        model.blocks.push(para1, para2, para3);
+
+        deleteSelection(model);
+
+        // Normalize it to remove empty blocks
+        model.blocks = model.blocks.filter(
+            x => x.blockType != 'Paragraph' || x.segments.length > 0
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Multiple paragraphs, undeletable segment is in the middle paragraph', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+        const undeletableSegment = createText(
+            'test',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        undeletableSegment.isSelected = true;
+
+        para1.segments.push(segment1, segment2);
+        para2.segments.push(undeletableSegment);
+        para3.segments.push(segment3, segment4);
+
+        model.blocks.push(para1, para2, para3);
+
+        deleteSelection(model);
+
+        // Normalize it to remove empty blocks
+        model.blocks = model.blocks.filter(
+            x => x.blockType != 'Paragraph' || x.segments.length > 0
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Multiple paragraphs, undeletable segment is in the last paragraph', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+        const undeletableSegment = createText(
+            'test',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name',
+                    undeletable: true,
+                },
+            }
+        );
+
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        undeletableSegment.isSelected = true;
+
+        para1.segments.push(segment1, segment2);
+        para2.segments.push(segment3);
+        para3.segments.push(undeletableSegment, segment4);
+
+        model.blocks.push(para1, para2, para3);
+
+        deleteSelection(model);
+
+        // Normalize it to remove empty blocks
+        model.blocks = model.blocks.filter(
+            x => x.blockType != 'Paragraph' || x.segments.length > 0
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Multiple paragraphs, multiple undeletable segments', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const segment1 = createText('s1');
+        const segment2 = createBr();
+        const segment3 = createText('s3');
+        const segment4 = createImage('src');
+        const undeletableSegment1 = createText(
+            'test1',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name1',
+                    undeletable: true,
+                },
+            }
+        );
+        const undeletableSegment2 = createText(
+            'test2',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name2',
+                    undeletable: true,
+                },
+            }
+        );
+        const undeletableSegment3 = createText(
+            'test3',
+            {},
+            {
+                dataset: {},
+                format: {
+                    name: 'name3',
+                    undeletable: true,
+                },
+            }
+        );
+
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        undeletableSegment1.isSelected = true;
+        undeletableSegment2.isSelected = true;
+        undeletableSegment3.isSelected = true;
+
+        para1.segments.push(segment1, segment2, undeletableSegment1);
+        para2.segments.push(segment3, undeletableSegment2);
+        para3.segments.push(undeletableSegment3, segment4);
+
+        model.blocks.push(para1, para2, para3);
+
+        deleteSelection(model);
+
+        // Normalize it to remove empty blocks
+        model.blocks = model.blocks.filter(
+            x => x.blockType != 'Paragraph' || x.segments.length > 0
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        segment1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name1', undeletable: true }, dataset: {} },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name2', undeletable: true }, dataset: {} },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '',
+                            format: {},
+                            link: { format: { name: 'name3', undeletable: true }, dataset: {} },
+                        },
+                        segment4,
+                    ],
                 },
             ],
         });
