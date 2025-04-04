@@ -32,6 +32,7 @@ import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { textIndentFormatHandler } from './block/textIndentFormatHandler';
+import { undeletableLinkFormatHandler } from './segment/undeletableLinkFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -85,6 +86,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     textIndent: textIndentFormatHandler,
+    undeletableLink: undeletableLinkFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -200,6 +202,7 @@ export const defaultFormatKeysPerCategory: {
         'border',
         'size',
         'textAlign',
+        'undeletableLink',
     ],
     segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],

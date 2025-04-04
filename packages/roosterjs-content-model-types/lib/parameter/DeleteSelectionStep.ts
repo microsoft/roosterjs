@@ -3,6 +3,7 @@ import type { DeleteResult } from '../enum/DeleteResult';
 import type { FormatContentModelContext } from './FormatContentModelContext';
 import type { InsertPoint } from '../selection/InsertPoint';
 import type { ReadonlyTableSelectionContext } from '../selection/TableSelectionContext';
+import type { ShallowMutableContentModelSegment } from '../contentModel/segment/ContentModelSegment';
 
 /**
  * Result of deleteSelection API
@@ -37,6 +38,12 @@ export interface DeleteSelectionContext extends DeleteSelectionResult {
      * Format context provided by formatContentModel API
      */
     formatContext?: FormatContentModelContext;
+
+    /**
+     * To store those undeletable segments whose paragraph is deleted.
+     * So at the end we can insert them back in to the remaining paragraph
+     */
+    undeletableSegments?: ShallowMutableContentModelSegment[];
 }
 
 /**

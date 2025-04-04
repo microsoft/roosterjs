@@ -65,7 +65,7 @@ function normalizeParagraphStyle(paragraph: ReadonlyContentModelParagraph) {
 
 function removeEmptySegments(block: ReadonlyContentModelParagraph) {
     for (let j = block.segments.length - 1; j >= 0; j--) {
-        if (isSegmentEmpty(block.segments[j])) {
+        if (isSegmentEmpty(block.segments[j], true /*treatAnchorAsNotEmpty*/)) {
             mutateBlock(block).segments.splice(j, 1);
         }
     }

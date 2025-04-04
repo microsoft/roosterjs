@@ -2,6 +2,7 @@ import type { DarkColorHandler } from './DarkColorHandler';
 import type { DomIndexer } from './DomIndexer';
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { PendingFormat } from '../pluginState/FormatPluginState';
+import type { ParagraphMap } from '../parameter/ParagraphMap';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -62,4 +63,9 @@ export interface EditorContext {
      * Enabled experimental features
      */
     experimentalFeatures?: ReadonlyArray<string>;
+
+    /**
+     * A helper class that manages a mapping from paragraph marker to paragraph object.
+     */
+    paragraphMap?: ParagraphMap;
 }
