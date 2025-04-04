@@ -39,5 +39,8 @@ export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './pick
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
+export { HintTextPlugin } from './hintText/HintTextPlugin';
+export { addHintText } from './hintText/addHintText';
+export { clearHintText } from './hintText/clearHintText';
 export { HiddenPropertyPlugin } from './hiddenProperty/HiddenPropertyPlugin';
 export { HiddenPropertyOptions } from './hiddenProperty/HiddenPropertyOptions';

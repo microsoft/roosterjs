@@ -157,6 +157,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                     break;
 
+                case 'hintText':
+                    if (!this.state.domIndexer?.reconcileHintText(mutation.hintNode)) {
+                        this.invalidateCache();
+                    }
+                    break;
+
                 case 'unknown':
                     this.invalidateCache();
                     break;

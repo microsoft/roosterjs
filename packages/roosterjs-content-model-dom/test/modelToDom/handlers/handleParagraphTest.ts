@@ -691,6 +691,8 @@ describe('handleParagraph', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -742,6 +744,8 @@ describe('handleParagraph', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;

@@ -42,6 +42,10 @@ export const handleSegment: ContentModelSegmentHandler<ContentModelSegment> = (
         case 'Entity':
             context.modelHandlers.entitySegment(doc, parent, segment, context, segmentNodes);
             break;
+
+        case 'SelectionMarker':
+            context.modelHandlers.selectionMarker(doc, parent, segment, context, segmentNodes);
+            break;
     }
 
     // If end position is not set, or it is not finalized, and current segment is still in selection, set end position

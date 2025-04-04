@@ -112,6 +112,12 @@ export { transformColor } from './domUtils/style/transformColor';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export {
+    hasHintTextClass,
+    getHintTextElement,
+    getHintText,
+    setupHintTextNode,
+} from './domUtils/hintText';
+export {
     setParagraphMarker,
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
