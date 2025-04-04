@@ -111,6 +111,10 @@ export { readFile } from './domUtils/readFile';
 export { transformColor } from './domUtils/style/transformColor';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
+export {
+    setParagraphMarker,
+    getParagraphMarker,
+} from './domUtils/hiddenProperties/paragraphMarker';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 

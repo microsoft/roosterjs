@@ -3,9 +3,17 @@
  */
 export interface HiddenProperty {
     /**
+     * A marker string that can be used to identify a specific paragraph in the DOM.
+     * This is useful for scenarios where you need to track or manipulate specific paragraphs
+     */
+    paragraphMarker?: string;
+
+    /**
      * Specify we should not delete this element when delete/backspace key is pressed
      */
     undeletable?: boolean;
+
+    // Add more properties as needed
 }
 
 interface NodeWithHiddenProperty extends Node {
