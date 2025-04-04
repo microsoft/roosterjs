@@ -90,7 +90,7 @@ export function deleteExpandedSelection(
                                 segment,
                                 context.formatContext,
                                 undefined /*direction*/,
-                                isFirstDeletingParagraph ? undefined : context.undeletableSegments // For first paragraph we can keep undeletable segments so ono need to merge it later
+                                isFirstDeletingParagraph ? undefined : context.undeletableSegments // For first paragraph we can keep undeletable segments so no need to merge it later
                             )
                         ) {
                             context.deleteResult = 'range';
