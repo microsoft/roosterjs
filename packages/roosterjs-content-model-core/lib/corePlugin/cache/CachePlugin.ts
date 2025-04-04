@@ -1,4 +1,5 @@
 import { areSameSelections } from './areSameSelections';
+import { createParagraphMap } from './ParagraphMapImpl';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
 import { updateCache } from './updateCache';
@@ -32,6 +33,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                           option.experimentalFeatures.indexOf('PersistCache') >= 0
                   ),
                   textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+                  paragraphMap: createParagraphMap(),
               };
     }
 
@@ -178,6 +180,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         if (!this.editor?.isInShadowEdit()) {
             this.state.cachedModel = undefined;
             this.state.cachedSelection = undefined;
+
+            // Clear paragraph indexer to prevent stale references to old paragraphs
+            // It will be rebuild next time when we create a new Content Model
+            this.state.paragraphMap?.clear();
         }
     }
 

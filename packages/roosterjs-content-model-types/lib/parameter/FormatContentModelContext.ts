@@ -4,6 +4,7 @@ import type { ContentModelImage } from '../contentModel/segment/ContentModelImag
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type { EntityRemovalOperation } from '../enum/EntityOperation';
 import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
+import type { ParagraphIndexer } from './ParagraphMap';
 
 /**
  * State for an entity. This is used for storing entity undo snapshot
@@ -61,6 +62,11 @@ export interface FormatContentModelContext {
      * Images inserted in the editor that needs to have their size adjusted
      */
     readonly newImages: ContentModelImage[];
+
+    /**
+     * A helper class to help find paragraph from its marker
+     */
+    readonly paragraphIndexer?: ParagraphIndexer;
 
     /**
      * Raw Event that triggers this format call

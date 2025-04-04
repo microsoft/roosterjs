@@ -100,6 +100,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     formatOnWrapper,
                     context
                 );
+
+                context.paragraphMap?.applyMarkerToDom(container, paragraph);
             } else {
                 handleSegments();
             }

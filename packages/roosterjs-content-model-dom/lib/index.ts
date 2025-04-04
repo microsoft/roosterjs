@@ -39,6 +39,8 @@ export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
 
+export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
+
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
 export { createFormatContainer } from './modelApi/creators/createFormatContainer';
@@ -115,6 +117,10 @@ export {
     getHintText,
     setupHintTextNode,
 } from './domUtils/hintText';
+export {
+    setParagraphMarker,
+    getParagraphMarker,
+} from './domUtils/hiddenProperties/paragraphMarker';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 

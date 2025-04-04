@@ -19,10 +19,12 @@ describe('handleParagraph', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
     let handleSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelSegment>>;
+    let applyMarkerToDomSpy: jasmine.Spy;
 
     beforeEach(() => {
         parent = document.createElement('div');
         handleSegment = jasmine.createSpy('handleSegment');
+        applyMarkerToDomSpy = jasmine.createSpy('applyMarkerToDom');
         context = createModelToDomContext(
             {
                 allowCacheElement: true,
@@ -33,18 +35,24 @@ describe('handleParagraph', () => {
                 },
             }
         );
+
+        context.paragraphMap = {
+            applyMarkerToDom: applyMarkerToDomSpy,
+        } as any;
     });
 
     function runTest(
         paragraph: ContentModelParagraph,
         expectedInnerHTML: string,
-        expectedCreateSegmentFromContentCalledTimes: number
+        expectedCreateSegmentFromContentCalledTimes: number,
+        applyMarkerToDomCalledTimes: number
     ) {
         handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleSegment).toHaveBeenCalledTimes(expectedCreateSegmentFromContentCalledTimes);
         expect(paragraph.cachedElement).toBe((parent.firstChild as HTMLElement) || undefined);
+        expect(applyMarkerToDomSpy).toHaveBeenCalledTimes(applyMarkerToDomCalledTimes);
     }
 
     it('Handle empty explicit paragraph', () => {
@@ -55,7 +63,8 @@ describe('handleParagraph', () => {
                 format: {},
             },
             '<div></div>',
-            0
+            0,
+            1
         );
         expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
@@ -72,6 +81,7 @@ describe('handleParagraph', () => {
                 format: {},
             },
             '',
+            0,
             0
         );
         expect(context.rewriteFromModel).toEqual({
@@ -93,6 +103,7 @@ describe('handleParagraph', () => {
                 format: {},
             },
             '<div></div>',
+            1,
             1
         );
 
@@ -123,7 +134,8 @@ describe('handleParagraph', () => {
                 format: {},
             },
             '',
-            1
+            1,
+            0
         );
 
         expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context, []);
@@ -154,7 +166,8 @@ describe('handleParagraph', () => {
                 format: {},
             },
             '<div></div>',
-            2
+            2,
+            1
         );
 
         expect(handleSegment).toHaveBeenCalledWith(
@@ -197,6 +210,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<p style="margin-top: 0px; margin-bottom: 0px;">test</p>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -225,6 +239,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<p>test</p>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -253,6 +268,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1>test</h1>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -281,6 +297,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1 style="font-size: 20px;">test</h1>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -309,6 +326,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1>test</h1>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -344,7 +362,8 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1>test 1<span style="font-weight: normal;">test 2</span></h1>',
-            2
+            2,
+            1
         );
         expect(context.rewriteFromModel).toEqual({
             addedBlockElements: [parent.firstChild as HTMLElement],
@@ -373,6 +392,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1><i>test</i></h1>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -400,6 +420,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<div style="text-align: center;">test</div>',
+            1,
             1
         );
         expect(context.rewriteFromModel).toEqual({
@@ -430,6 +451,7 @@ describe('handleParagraph', () => {
                 ],
             },
             '<h1>test</h1>',
+            1,
             1
         );
 

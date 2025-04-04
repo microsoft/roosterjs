@@ -22,6 +22,7 @@ const initialState: OptionState = {
         hyperlink: true,
         customReplace: true,
         hintText: true,
+        hiddenProperty: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',

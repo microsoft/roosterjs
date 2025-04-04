@@ -7,6 +7,7 @@ import type {
     SelectionBase,
     TableSelection,
 } from '../selection/DOMSelection';
+import type { ParagraphIndexer, ParagraphMap } from '../parameter/ParagraphMap';
 
 /**
  * Represents a range selection used for cache. We store the start and end insert point here instead of range itself
@@ -48,6 +49,11 @@ export interface CachePluginState {
      * When reuse Content Model is allowed, we cache the Content Model object here after created
      */
     cachedModel?: ContentModelDocument;
+
+    /**
+     * A helper class that manages a mapping from paragraph marker to paragraph object.
+     */
+    paragraphMap?: ParagraphMap & ParagraphIndexer;
 
     /**
      * @optional Indexer for CachePlugin, to help build backward relationship from DOM node to Content Model
