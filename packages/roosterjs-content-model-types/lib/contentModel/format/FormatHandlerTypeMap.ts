@@ -29,6 +29,7 @@ import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
+import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
@@ -202,6 +203,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextIndentFormat
      */
     textIndent: TextIndentFormat;
+
+    /**
+     * Format for Undeletable link
+     */
+    undeletableLink: UndeletableFormat;
 
     /**
      * Format for UnderlineFormat

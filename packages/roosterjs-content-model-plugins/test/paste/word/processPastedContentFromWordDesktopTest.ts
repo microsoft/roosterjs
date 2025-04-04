@@ -1522,6 +1522,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 underline: true,
                                                 textColor: 'rgb(70, 120, 134)',
                                             },
+                                            link: {
+                                                format: { name: 'OLE_LINK3' },
+                                                dataset: {},
+                                            },
                                         },
                                     ],
                                     blockType: 'Paragraph',
@@ -1631,6 +1635,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         underline: true,
                                         textColor: 'rgb(70, 120, 134)',
                                     },
+                                },
+                                {
+                                    text: '',
+                                    segmentType: 'Text',
+                                    format: { underline: true, textColor: 'rgb(70, 120, 134)' },
+                                    link: { format: { name: 'OLE_LINK2' }, dataset: {} },
                                 },
                             ],
                             blockType: 'Paragraph',
@@ -4271,6 +4281,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                             text: 'text',
                                             segmentType: 'Text',
                                             format: {},
+                                            link: {
+                                                format: { name: '_Hlk155259411' },
+                                                dataset: {},
+                                            },
                                         },
                                         {
                                             text: '.',

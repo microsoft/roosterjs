@@ -4,6 +4,8 @@ import { deleteList } from './deleteSteps/deleteList';
 import {
     ChangeSource,
     deleteSelection,
+    isElementOfType,
+    isLinkUndeletable,
     isModifierKey,
     isNodeOfType,
 } from 'roosterjs-content-model-dom';
@@ -110,23 +112,44 @@ function shouldDeleteWithContentModel(
         );
     } else {
         const range = selection.range;
+        const startContainer = range.startContainer;
+        const startOffset = range.startOffset;
 
         // When selection is collapsed and is in middle of text node, no need to use Content Model to delete
         return !(
-            isNodeOfType(range.startContainer, 'TEXT_NODE') &&
+            isNodeOfType(startContainer, 'TEXT_NODE') &&
             !isModifierKey(rawEvent) &&
-            (canDeleteBefore(rawEvent, range) || canDeleteAfter(rawEvent, range))
+            (canDeleteBefore(rawEvent, startContainer, startOffset) ||
+                canDeleteAfter(rawEvent, startContainer, startOffset))
         );
     }
 }
 
-function canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
-    return rawEvent.key == 'Backspace' && range.startOffset > 1;
+function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number) {
+    if (rawEvent.key != 'Backspace' || offset <= 1) {
+        return false;
+    }
+
+    const length = text.nodeValue?.length ?? 0;
+
+    if (offset == length) {
+        // At the end of text, need to check if next segment is deletable
+        const nextSibling = text.nextSibling;
+        const isNextSiblingUndeletable =
+            isNodeOfType(nextSibling, 'ELEMENT_NODE') &&
+            isElementOfType(nextSibling, 'a') &&
+            isLinkUndeletable(nextSibling) &&
+            !nextSibling.firstChild;
+
+        // If next sibling is undeletable, we cannot let browser handle it since it will remove the anchor
+        // So we return false here to let Content Model handle it
+        return !isNextSiblingUndeletable;
+    } else {
+        // In middle of text, we can safely let browser handle deletion
+        return true;
+    }
 }
 
-function canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
-    return (
-        rawEvent.key == 'Delete' &&
-        range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1
-    );
+function canDeleteAfter(rawEvent: KeyboardEvent, text: Text, offset: number) {
+    return rawEvent.key == 'Delete' && offset < (text.nodeValue?.length ?? 0) - 1;
 }

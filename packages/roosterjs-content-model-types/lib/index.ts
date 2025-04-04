@@ -57,6 +57,7 @@ export { ListThreadFormat } from './contentModel/format/formatParts/ListThreadFo
 export { ListStyleFormat } from './contentModel/format/formatParts/ListStyleFormat';
 export { FloatFormat } from './contentModel/format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFormat';
+export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
@@ -453,6 +454,7 @@ export {
     ModelToTextChecker,
 } from './parameter/ModelToTextCallbacks';
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
+export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

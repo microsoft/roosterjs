@@ -27,6 +27,7 @@ describe('formatContentModel', () => {
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
     const mockedSelection = 'Selection' as any;
+    const mockedParagraphMap = 'PARAMAP' as any;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -56,7 +57,9 @@ describe('formatContentModel', () => {
                 announce,
             },
             lifecycle: {},
-            cache: {},
+            cache: {
+                paragraphMap: mockedParagraphMap,
+            },
             undo: {
                 snapshotsManager: {},
             },
@@ -82,6 +85,7 @@ describe('formatContentModel', () => {
                 deletedEntities: [],
                 rawEvent: undefined,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -100,6 +104,7 @@ describe('formatContentModel', () => {
                 deletedEntities: [],
                 rawEvent: undefined,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
@@ -137,6 +142,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: true,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -174,6 +180,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: false,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
@@ -211,6 +218,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: 'DoNotSkip',
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
@@ -248,6 +256,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: 'MarkNewContent',
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
@@ -285,6 +294,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: 'SkipAll',
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
@@ -318,6 +328,7 @@ describe('formatContentModel', () => {
                 deletedEntities: [],
                 rawEvent: undefined,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
@@ -359,6 +370,7 @@ describe('formatContentModel', () => {
                 rawEvent: undefined,
                 skipUndoSnapshot: true,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -392,6 +404,7 @@ describe('formatContentModel', () => {
                 deletedEntities: [],
                 rawEvent: undefined,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
@@ -696,6 +709,7 @@ describe('formatContentModel', () => {
             expect(core.cache).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
+                paragraphMap: mockedParagraphMap,
             });
             expect(announce).not.toHaveBeenCalled();
         });
@@ -752,7 +766,9 @@ describe('formatContentModel', () => {
                 undefined
             );
             expect(triggerEvent).toHaveBeenCalled();
-            expect(core.cache).toEqual({});
+            expect(core.cache).toEqual({
+                paragraphMap: mockedParagraphMap,
+            });
         });
     });
 
@@ -1229,6 +1245,7 @@ describe('formatContentModel', () => {
                 deletedEntities: [],
                 rawEvent: undefined,
                 newImages: [],
+                paragraphIndexer: mockedParagraphMap,
             });
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
