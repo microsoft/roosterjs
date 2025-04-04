@@ -1,6 +1,6 @@
 import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
-import { ChangeSource } from 'roosterjs-content-model-dom';
+import { ChangeSource, setLinkUndeletable } from 'roosterjs-content-model-dom';
 import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from '../../lib/edit/deleteSteps/deleteEmptyQuote';
@@ -662,6 +662,39 @@ describe('keyboardDelete', () => {
                 startContainer: node,
                 endContainer: node,
                 startOffset: 0,
+                endOffset: 4,
+            } as any) as Range,
+            isReverted: false,
+        };
+        const editor = {
+            formatContentModel: formatWithContentModelSpy,
+            getDOMSelection: () => range,
+        } as any;
+
+        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
+
+        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Next sibling is undeletable', () => {
+        const rawEvent = { key: 'Backspace' } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
+        const node = document.createTextNode('test');
+        const next = document.createElement('a');
+
+        setLinkUndeletable(next, true);
+
+        const parentDiv = document.createElement('div');
+        parentDiv.appendChild(node);
+        parentDiv.appendChild(next);
+
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: true,
+                startContainer: node,
+                endContainer: node,
+                startOffset: 4,
                 endOffset: 4,
             } as any) as Range,
             isReverted: false,

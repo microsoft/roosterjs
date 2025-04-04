@@ -39,6 +39,8 @@ export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
 
+export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
+
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';
 export { createFormatContainer } from './modelApi/creators/createFormatContainer';
@@ -109,6 +111,10 @@ export { readFile } from './domUtils/readFile';
 export { transformColor } from './domUtils/style/transformColor';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
+export {
+    setParagraphMarker,
+    getParagraphMarker,
+} from './domUtils/hiddenProperties/paragraphMarker';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 
