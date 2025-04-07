@@ -43,6 +43,11 @@ export interface FormatContentModelOptions {
      * When pass to true, scroll the editing caret into view after write DOM tree if need
      */
     scrollCaretIntoView?: boolean;
+
+    /**
+     * Ignore selection
+     */
+    skipSelectionChange?: boolean;
 }
 
 /**

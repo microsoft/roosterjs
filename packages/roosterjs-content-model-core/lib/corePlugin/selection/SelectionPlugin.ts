@@ -1,5 +1,6 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import { isShadowDOM } from './isShadowDOM';
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
@@ -165,6 +166,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         // Image selection
         if (
             selection?.type == 'image' &&
+            selection.image !== rawEvent.target &&
             (rawEvent.button == MouseLeftButton ||
                 (rawEvent.button == MouseRightButton &&
                     !this.getClickingImage(rawEvent) &&
@@ -646,7 +648,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
-            if (selection && selection.focusNode) {
+            const rootNodeId = this.editor.getDOMHelper().getClonedRoot().id;
+            if (
+                selection &&
+                selection.focusNode &&
+                !isShadowDOM(selection.focusNode) &&
+                !(
+                    isNodeOfType(selection.focusNode, 'ELEMENT_NODE') &&
+                    selection.focusNode.id == rootNodeId
+                )
+            ) {
                 const image = isSingleImageInSelection(selection);
                 if (newSelection?.type == 'image' && !image) {
                     const range = selection.getRangeAt(0);
