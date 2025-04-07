@@ -27,13 +27,16 @@ export const linkProcessor: ElementProcessor<HTMLElement> = (group, element, con
 
             if (isAnchor && !element.firstChild) {
                 // Empty anchor, need to make sure it has some child in model
-                addSegment(
-                    group,
-                    createText('', context.segmentFormat, {
-                        dataset: context.link.dataset,
-                        format: context.link.format,
-                    })
-                );
+                const emptyText = createText('', context.segmentFormat, {
+                    dataset: context.link.dataset,
+                    format: context.link.format,
+                });
+
+                if (context.isInSelection) {
+                    emptyText.isSelected = true;
+                }
+
+                addSegment(group, emptyText);
             } else {
                 knownElementProcessor(group, element, context);
             }
