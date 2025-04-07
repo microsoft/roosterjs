@@ -76,7 +76,7 @@ describe('CachePlugin', () => {
             expect(plugin.getState()).toEqual({});
         });
 
-        it('initialize with cache', () => {
+        it('initialize without paragraph map', () => {
             const startObservingSpy = jasmine.createSpy('startObserving');
             const stopObservingSpy = jasmine.createSpy('stopObserving');
             const mockedObserver = {
@@ -88,6 +88,29 @@ describe('CachePlugin', () => {
             );
             init({
                 disableCache: false,
+            });
+            expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
+            expect(plugin.getState()).toEqual({
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+            });
+            expect(resetMapSpy).not.toHaveBeenCalled();
+            expect(startObservingSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('initialize with cache and paragraph map', () => {
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+            const mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+            init({
+                disableCache: false,
+                enableParagraphMap: true,
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
@@ -115,7 +138,9 @@ describe('CachePlugin', () => {
                 'createTextMutationObserver'
             ).and.returnValue(mockedObserver);
 
-            init({});
+            init({
+                enableParagraphMap: true,
+            });
 
             const state = plugin.getState();
 
@@ -371,7 +396,7 @@ describe('CachePlugin', () => {
 
     describe('ContentChanged', () => {
         beforeEach(() => {
-            init({ disableCache: true });
+            init({ disableCache: true, enableParagraphMap: true });
         });
         afterEach(() => {
             plugin.dispose();
@@ -392,9 +417,10 @@ describe('CachePlugin', () => {
             expect(state).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
+                paragraphMap: mockedParagraphMap,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
-            expect(resetMapSpy).toHaveBeenCalledTimes(0);
+            expect(resetMapSpy).toHaveBeenCalledTimes(1);
         });
 
         it('No domIndexer, has model in event', () => {
@@ -418,9 +444,10 @@ describe('CachePlugin', () => {
             expect(state).toEqual({
                 cachedModel: undefined,
                 cachedSelection: undefined,
+                paragraphMap: mockedParagraphMap,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
-            expect(resetMapSpy).toHaveBeenCalledTimes(0);
+            expect(resetMapSpy).toHaveBeenCalledTimes(1);
         });
 
         it('Has domIndexer, has model in event', () => {
@@ -446,6 +473,7 @@ describe('CachePlugin', () => {
                 cachedModel: model,
                 cachedSelection: newRangeEx,
                 domIndexer,
+                paragraphMap: mockedParagraphMap,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
@@ -479,7 +507,7 @@ describe('CachePlugin', () => {
                 }
             );
 
-            init({});
+            init({ enableParagraphMap: true });
 
             mockedIndexer = {
                 reconcileSelection: reconcileSelectionSpy,
