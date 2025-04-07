@@ -93,7 +93,6 @@ describe('CachePlugin', () => {
             expect(plugin.getState()).toEqual({
                 domIndexer: new DomIndexerImpl(),
                 textMutationObserver: mockedObserver,
-                paragraphMap: mockedParagraphMap,
             });
             expect(resetMapSpy).not.toHaveBeenCalled();
             expect(startObservingSpy).toHaveBeenCalledTimes(1);
