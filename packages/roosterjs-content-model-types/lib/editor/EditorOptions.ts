@@ -174,6 +174,12 @@ export interface EditorBaseOptions {
      * @returns A template string to announce, use placeholder such as "{0}" for variables if necessary
      */
     announcerStringGetter?: (key: KnownAnnounceStrings) => string;
+
+    /**
+     * Whether to enable paragraph map. Default value is false.
+     * Paragraph map is used to save a marker for paragraphs so it can be found even content is changed from a previous marked paragraph.
+     */
+    enableParagraphMap?: boolean;
 }
 
 /**
