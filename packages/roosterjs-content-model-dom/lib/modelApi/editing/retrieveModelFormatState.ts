@@ -277,7 +277,7 @@ function mergeValue<K extends keyof ContentModelFormatState>(
 
 function px2Pt(px: string) {
     if (px) {
-        let index = px.indexOf('px');
+        const index = px.indexOf('px');
         if (index !== -1 && index === px.length - 2) {
             // Edge may not handle the floating computing well which causes the calculated value to be a little less than the actual value
             // So add 0.05 to fix it
