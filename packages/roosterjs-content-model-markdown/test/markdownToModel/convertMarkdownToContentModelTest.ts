@@ -127,16 +127,6 @@ describe('convertMarkdownToContentModel', () => {
                         },
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
             ],
         };
         runTest(markdown, expectedContentModel);
@@ -165,16 +155,6 @@ describe('convertMarkdownToContentModel', () => {
                         },
                     ],
 
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
                     format: {},
                 },
             ],
@@ -477,16 +457,6 @@ describe('convertMarkdownToContentModel', () => {
                         },
                     ],
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
             ],
         };
         runTest(markdown, expectedContentModel);
@@ -697,16 +667,6 @@ describe('convertMarkdownToContentModel', () => {
                         },
                     ],
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
             ],
         };
         runTest(markdown, expectedContentModel);
@@ -810,23 +770,13 @@ describe('convertMarkdownToContentModel', () => {
                         format: {},
                     },
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
             ],
         };
         runTest(list, expectedContentModel);
     });
 
     it('should convert sample doc', () => {
-        const markdown = `# Sample Markdown Document\nThis document showcases basic Markdown syntax.\n## Paragraphs\nThis is a paragraph. It can span multiple lines and is rendered as a single block of text.\nHere's another paragraph, separated by a blank line.\n## Emphasis\n*Italic text*(using asterisks)\n**Bold text**(using double asterisks)\n***Bold and italic***(using triple asterisks)\n## Lists\n### Unordered List\n- First item\n- Second item\n- Third item\n  - Second level list item\n### Ordered List\n1. First item\n2. Second item\n3. Third item\n  1. Second level list item\n## Tables\n|Header 1|Header 2|Header 3|\n|----------|----------|----------|\n|Row 1|Data 1|Data 1|\n|Row 2|Data 2|Data 2|\n|Row 3|Data 3|Data 3|\n## Links and Images\nHere is a [link to Markdown documentation](https://commonmark.org).\n![Markdown Logo](https://markdown-here.com/img/icon256.png)\n## Blockquotes\n> This is a quote.\n> It can span multiple lines.`;
+        const markdown = `# Sample Markdown Document\nThis document showcases basic Markdown syntax.\n## Paragraphs\nThis is a paragraph. It can span multiple lines and is rendered as a single block of text.\n\nHere's another paragraph, separated by a blank line.\n## Emphasis\n*Italic text*(using asterisks)\n**Bold text**(using double asterisks)\n***Bold and italic***(using triple asterisks)\n## Lists\n\n### Unordered List\n\n- First item\n- Second item\n- Third item\n  - Second level list item\n\n### Ordered List\n1. First item\n2. Second item\n3. Third item\n  1. Second level list item\n\n## Tables\n|Header 1|Header 2|Header 3|\n|----------|----------|----------|\n|Row 1|Data 1|Data 1|\n|Row 2|Data 2|Data 2|\n|Row 3|Data 3|Data 3|\n## Links and Images\nHere is a [link to Markdown documentation](https://commonmark.org).\n![Markdown Logo](https://markdown-here.com/img/icon256.png)\n## Blockquotes\n> This is a quote.\n> It can span multiple lines.`;
         const sample: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -1886,18 +1836,6 @@ describe('convertMarkdownToContentModel', () => {
                             format: {},
                         },
                     ],
-                },
-                //27
-                {
-                    segments: [
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    blockType: 'Paragraph',
-
-                    format: {},
                 },
             ],
         };
