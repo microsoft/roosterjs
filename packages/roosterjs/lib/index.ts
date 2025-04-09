@@ -5,3 +5,4 @@ export * from 'roosterjs-content-model-core';
 export * from 'roosterjs-content-model-api';
 export * from 'roosterjs-content-model-plugins';
 export * from 'roosterjs-color-utils';
+export * from 'roosterjs-content-model-markdown';
