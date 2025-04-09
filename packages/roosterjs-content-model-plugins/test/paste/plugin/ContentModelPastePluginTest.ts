@@ -260,7 +260,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(3);
             expect(oneNoteFile.processPastedContentFromOneNote).toHaveBeenCalledWith(event);
         });
     });

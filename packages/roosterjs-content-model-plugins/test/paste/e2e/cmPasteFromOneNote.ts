@@ -8,6 +8,7 @@ import { paste } from 'roosterjs-content-model-core';
 import {
     oneNoteClipboardContent1,
     oneNoteClipboardContent2,
+    oneNoteClipboardContent3,
 } from './htmlTemplates/oneNoteClipboardContent';
 
 describe('OneNote', () => {
@@ -28,7 +29,7 @@ describe('OneNote', () => {
     it('OneNote', () => {
         paste(editor!, oneNoteClipboardContent1, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
 
@@ -1574,7 +1575,7 @@ describe('OneNote', () => {
     it('OneNote 2', () => {
         paste(editor!, oneNoteClipboardContent2, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
 
@@ -3222,6 +3223,1861 @@ describe('OneNote', () => {
                         format: {
                             marginLeft: '0px',
                         },
+                    },
+                ],
+                format: {},
+            });
+        }
+    });
+
+    it('OneNote 3', () => {
+        paste(editor!, oneNoteClipboardContent3, 'normal');
+
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(4);
+        expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
+
+        const model = editor?.getContentModelCopy('connected');
+        expect(model).toBeDefined();
+        if (model) {
+            expectEqual(model, {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'circle',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'circle',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'square',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'square',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'square',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'circle',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'circle',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'circle',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        formatHolder: {
+                            isSelected: false,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                textColor: 'rgb(0, 0, 0)',
+                            },
+                        },
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0in',
+                                    marginBottom: '0in',
+                                    listStyleType: 'disc',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        blockType: 'BlockGroup',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        text: '1',
+                                        segmentType: 'Text',
+                                        format: {
+                                            textColor: 'rgb(0, 0, 0)',
+                                            fontFamily: 'Calibri',
+                                            fontSize: '11pt',
+                                        },
+                                    },
+                                ],
+                                segmentFormat: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                blockType: 'Paragraph',
+                                format: {},
+                            },
+                        ],
+                    },
+                    {
+                        segments: [
+                            {
+                                text: ' ',
+                                segmentType: 'Text',
+                                format: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0in',
+                            marginRight: '0in',
+                            marginBottom: '0in',
+                            marginLeft: '36px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        segments: [
+                            {
+                                text: ' ',
+                                segmentType: 'Text',
+                                format: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0in',
+                            marginRight: '0in',
+                            marginBottom: '0in',
+                            marginLeft: '0px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        segments: [
+                            {
+                                text: ' ',
+                                segmentType: 'Text',
+                                format: {
+                                    fontFamily: 'Calibri',
+                                    fontSize: '11pt',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0in',
+                            marginRight: '0in',
+                            marginBottom: '0in',
+                            marginLeft: '0px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        segments: [
+                            {
+                                isSelected: true,
+                                segmentType: 'SelectionMarker',
+                                format: {
+                                    backgroundColor: '',
+                                    fontFamily: '',
+                                    fontSize: '',
+                                    fontWeight: '',
+                                    italic: false,
+                                    letterSpacing: '',
+                                    lineHeight: '',
+                                    strikethrough: false,
+                                    superOrSubScriptSequence: '',
+                                    textColor: '',
+                                    underline: false,
+                                },
+                            },
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        blockType: 'Paragraph',
+                        format: {},
                     },
                 ],
                 format: {},

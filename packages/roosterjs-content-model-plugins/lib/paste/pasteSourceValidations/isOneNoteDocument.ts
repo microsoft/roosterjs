@@ -5,9 +5,9 @@ const ONE_NOTE_ATTRIBUTE_VALUE = 'OneNote.File';
 
 /**
  * @internal
- * Checks whether the Array provided contains strings that identify Excel Desktop documents
+ * Checks whether the provided HTML attributes identify a OneNote Desktop document
  * @param props Properties related to the PasteEvent
- * @returns
+ * @returns True if the document is identified as a OneNote Desktop document, otherwise false
  */
 export const isOneNoteDesktopDocument: GetSourceFunction = props => {
     const { htmlAttributes } = props;
