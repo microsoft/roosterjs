@@ -1,6 +1,7 @@
 import * as addParser from '../../../lib/paste/utils/addParser';
 import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import * as getPasteSource from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as oneNoteFile from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
@@ -249,6 +250,18 @@ describe('Content Model Paste Plugin Test', () => {
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
                 PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
             ]);
+        });
+
+        it('One Note Desktop', () => {
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('oneNoteDesktop');
+            spyOn(oneNoteFile, 'processPastedContentFromOneNote').and.callThrough();
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
+            expect(oneNoteFile.processPastedContentFromOneNote).toHaveBeenCalledWith(event);
         });
     });
 });
