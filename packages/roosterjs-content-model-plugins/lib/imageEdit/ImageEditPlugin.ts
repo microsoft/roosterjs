@@ -18,11 +18,12 @@ import {
     ChangeSource,
     getSafeIdSelector,
     getSelectedParagraphs,
+    getSelectedSegmentsAndParagraphs,
     isElementOfType,
     isNodeOfType,
     mutateBlock,
     mutateSegment,
-    unwrap,
+    //unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
 import type { DragAndDropContext } from './types/DragAndDropContext';
@@ -36,10 +37,13 @@ import type {
     ImageEditOperation,
     ImageEditor,
     ImageMetadataFormat,
-    KeyDownEvent,
-    MouseDownEvent,
-    MouseUpEvent,
+    // KeyDownEvent,
+    // MouseDownEvent,
+    // MouseUpEvent,
     PluginEvent,
+    ReadonlyContentModelImage,
+    ReadonlyContentModelParagraph,
+    SelectionChangedEvent,
 } from 'roosterjs-content-model-types';
 
 const DefaultOptions: Partial<ImageEditOptions> = {
@@ -52,7 +56,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     onSelectState: ['resize', 'rotate'],
 };
 
-const MouseRightButton = 2;
+//const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
@@ -67,7 +71,7 @@ const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
  */
 export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     protected editor: IEditor | null = null;
-    private shadowSpan: HTMLSpanElement | null = null;
+    public shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
     protected imageEditInfo: ImageMetadataFormat | null = null;
@@ -83,6 +87,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
     protected isEditing = false;
+    private imageModelParagraph: ReadonlyContentModelParagraph | null = null;
 
     constructor(protected options: ImageEditOptions = DefaultOptions) {}
 
@@ -162,14 +167,17 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             return;
         }
         switch (event.eventType) {
+            case 'selectionChanged':
+                this.selectionChangeHandler(this.editor, event);
+                break;
             case 'mouseDown':
-                this.mouseDownHandler(this.editor, event);
+                // this.mouseDownHandler(this.editor, event);
                 break;
             case 'mouseUp':
-                this.mouseUpHandler(this.editor, event);
+                // this.mouseUpHandler(this.editor, event);
                 break;
             case 'keyDown':
-                this.keyDownHandler(this.editor, event);
+                //this.keyDownHandler(this.editor, event);
                 break;
             case 'contentChanged':
                 this.contentChangedHandler(this.editor, event);
@@ -177,6 +185,100 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'extractContentWithDom':
                 this.removeImageEditing(event.clonedRoot);
                 break;
+        }
+    }
+
+    private selectionChangeHandler(editor: IEditor, event: SelectionChangedEvent) {
+        if (
+            this.imageModelParagraph &&
+            !(event.newSelection?.type == 'image' && event.newSelection.image == this.selectedImage)
+        ) {
+            editor.formatContentModel((model, context) => {
+                if (this.imageModelParagraph) {
+                    const paragraph = context.paragraphIndexer?.getParagraphFromMarker(
+                        this.imageModelParagraph
+                    );
+                    const imageParagraph = paragraph && mutateBlock(paragraph);
+                    const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
+                    if (
+                        imageParagraph &&
+                        lastSrc &&
+                        selectedImage &&
+                        imageEditInfo &&
+                        clonedImage
+                    ) {
+                        const imageModel = imageParagraph.segments.filter(
+                            segment => segment.segmentType == 'Image' && segment.dataset.isEditing
+                        );
+                        if (imageModel.length == 1 && imageModel[0].segmentType == 'Image') {
+                            mutateSegment(imageParagraph, imageModel[0], image => {
+                                applyChange(
+                                    editor,
+                                    selectedImage,
+                                    image,
+                                    imageEditInfo,
+                                    lastSrc,
+                                    this.wasImageResized || this.isCropMode,
+                                    clonedImage
+                                );
+
+                                delete image.dataset.isEditing;
+                            });
+                            this.isEditing = false;
+
+                            this.cleanInfo();
+
+                            return true;
+                        }
+                    }
+                }
+                this.imageModelParagraph = null;
+                return false;
+            });
+        }
+
+        if (event.newSelection?.type == 'image' && !this.imageModelParagraph) {
+            const htmlImage = event.newSelection.image;
+            let imageModel: ReadonlyContentModelImage;
+
+            editor.formatContentModel(
+                (model, context) => {
+                    const selectedImageModel = getSelectedSegmentsAndParagraphs(model, false);
+                    if (
+                        selectedImageModel.length > 0 &&
+                        selectedImageModel[0][0].segmentType == 'Image' &&
+                        selectedImageModel[0][1]
+                    ) {
+                        imageModel = selectedImageModel[0][0];
+                        const paragraph = selectedImageModel[0][1];
+                        this.imageModelParagraph = selectedImageModel[0][1];
+                        this.isEditing = true;
+
+                        mutateSegment(paragraph, imageModel, image => {
+                            this.imageEditInfo = updateImageEditInfo(image, htmlImage);
+                            image.dataset.isEditing = 'true';
+                        });
+
+                        return true;
+                    }
+
+                    return false;
+                },
+                {
+                    skipSelectionChange: true,
+                    onNodeCreated: (model, node) => {
+                        if (
+                            model == imageModel &&
+                            isNodeOfType(node, 'ELEMENT_NODE') &&
+                            isElementOfType(node, 'img')
+                        ) {
+                            this.selectedImage = node;
+                            this.startRotateAndResize(editor, htmlImage);
+                        }
+                    },
+                    changeSource: 'ImageSelection',
+                }
+            );
         }
     }
 
@@ -205,29 +307,29 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         );
     }
 
-    private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
-        const selection = editor.getDOMSelection();
-        if ((selection && selection.type == 'image') || this.isEditing) {
-            const shouldSelectImage =
-                this.isImageSelection(event.rawEvent.target as Node) &&
-                event.rawEvent.button === MouseRightButton;
-            this.applyFormatWithContentModel(editor, this.isCropMode, shouldSelectImage);
-        }
-    }
+    // private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
+    //     const selection = editor.getDOMSelection();
+    //     if ((selection && selection.type == 'image') || this.isEditing) {
+    //         const shouldSelectImage =
+    //             this.isImageSelection(event.rawEvent.target as Node) &&
+    //             event.rawEvent.button === MouseRightButton;
+    //         this.applyFormatWithContentModel(editor, this.isCropMode, shouldSelectImage);
+    //     }
+    // }
 
-    private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        if (
-            this.isEditing &&
-            this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton
-        ) {
-            this.applyFormatWithContentModel(
-                editor,
-                this.isCropMode,
-                this.shadowSpan === event.rawEvent.target
-            );
-        }
-    }
+    // private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
+    //     if (
+    //         this.isEditing &&
+    //         this.isImageSelection(event.rawEvent.target as Node) &&
+    //         event.rawEvent.button !== MouseRightButton
+    //     ) {
+    //         this.applyFormatWithContentModel(
+    //             editor,
+    //             this.isCropMode,
+    //             this.shadowSpan === event.rawEvent.target
+    //         );
+    //     }
+    // }
 
     private onDropHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
@@ -257,33 +359,33 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
-        if (this.isEditing) {
-            if (
-                event.rawEvent.key === 'Escape' ||
-                event.rawEvent.key === 'Delete' ||
-                event.rawEvent.key === 'Backspace'
-            ) {
-                if (event.rawEvent.key === 'Escape') {
-                    this.removeImageWrapper();
-                }
-                this.cleanInfo();
-            } else {
-                this.applyFormatWithContentModel(
-                    editor,
-                    this.isCropMode,
-                    true /** should selectImage */,
-                    false /* isApiOperation */
-                );
-            }
-        }
-    }
+    // private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
+    //     if (this.isEditing) {
+    //         if (
+    //             event.rawEvent.key === 'Escape' ||
+    //             event.rawEvent.key === 'Delete' ||
+    //             event.rawEvent.key === 'Backspace'
+    //         ) {
+    //             if (event.rawEvent.key === 'Escape') {
+    //                 this.removeImageWrapper();
+    //             }
+    //             this.cleanInfo();
+    //         } else {
+    //             this.applyFormatWithContentModel(
+    //                 editor,
+    //                 this.isCropMode,
+    //                 true /** should selectImage */,
+    //                 false /* isApiOperation */
+    //             );
+    //         }
+    //     }
+    // }
 
     private setContentHandler(editor: IEditor) {
-        const selection = editor.getDOMSelection();
-        if (selection?.type == 'image' && selection.image.dataset.isEditing && !this.isEditing) {
-            delete selection.image.dataset.isEditing;
-        }
+        // const selection = editor.getDOMSelection();
+        // if (selection?.type == 'image' && selection.image.dataset.isEditing && !this.isEditing) {
+        //     delete selection.image.dataset.isEditing;
+        // }
     }
 
     private formatEventHandler(event: ContentChangedEvent) {
@@ -714,23 +816,23 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = [];
     }
 
-    private removeImageWrapper() {
-        let image: HTMLImageElement | null = null;
-        if (this.shadowSpan && this.shadowSpan.parentElement) {
-            if (
-                this.shadowSpan.firstElementChild &&
-                isNodeOfType(this.shadowSpan.firstElementChild, 'ELEMENT_NODE') &&
-                isElementOfType(this.shadowSpan.firstElementChild, 'img')
-            ) {
-                image = this.shadowSpan.firstElementChild;
-            }
-            unwrap(this.shadowSpan);
-            this.shadowSpan = null;
-            this.wrapper = null;
-        }
+    // private removeImageWrapper() {
+    //     let image: HTMLImageElement | null = null;
+    //     if (this.shadowSpan && this.shadowSpan.parentElement) {
+    //         if (
+    //             this.shadowSpan.firstElementChild &&
+    //             isNodeOfType(this.shadowSpan.firstElementChild, 'ELEMENT_NODE') &&
+    //             isElementOfType(this.shadowSpan.firstElementChild, 'img')
+    //         ) {
+    //             image = this.shadowSpan.firstElementChild;
+    //         }
+    //         unwrap(this.shadowSpan);
+    //         this.shadowSpan = null;
+    //         this.wrapper = null;
+    //     }
 
-        return image;
-    }
+    //     return image;
+    // }
 
     public flipImage(direction: 'horizontal' | 'vertical') {
         const selection = this.editor?.getDOMSelection();

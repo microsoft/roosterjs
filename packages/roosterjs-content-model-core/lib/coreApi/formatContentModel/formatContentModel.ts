@@ -25,8 +25,13 @@ export const formatContentModel: FormatContentModel = (
     options,
     domToModelOptions
 ) => {
-    const { onNodeCreated, rawEvent, selectionOverride, scrollCaretIntoView: scroll } =
-        options || {};
+    const {
+        onNodeCreated,
+        rawEvent,
+        selectionOverride,
+        scrollCaretIntoView: scroll,
+        skipSelectionChange,
+    } = options || {};
     const model = core.api.createContentModel(core, domToModelOptions, selectionOverride);
     const context: FormatContentModelContext = {
         newEntities: [],
@@ -62,7 +67,7 @@ export const formatContentModel: FormatContentModel = (
                 core.api.setContentModel(
                     core,
                     model,
-                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
+                    hasFocus && !skipSelectionChange ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
                     onNodeCreated
                 ) ?? undefined;
 
