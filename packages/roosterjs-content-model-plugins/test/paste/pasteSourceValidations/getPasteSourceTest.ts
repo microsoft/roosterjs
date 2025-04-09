@@ -58,6 +58,22 @@ describe('getPasteSourceTest | ', () => {
         );
         expect(result).toBe('excelNonNativeEvent');
     });
+    it('should return "oneNoteDesktop" when isOneNoteDesktopDocument returns true', () => {
+        const mockEvent: any = {
+            htmlAttributes: {
+                [PastePropertyNames.PROG_ID_NAME]: 'OneNote.File',
+            },
+            clipboardData: {
+                types: [],
+            } as any,
+            fragment: document.createDocumentFragment(),
+        };
+        const shouldConvertSingleImage = false;
+
+        const result = getPasteSource(mockEvent, shouldConvertSingleImage);
+
+        expect(result).toBe('oneNoteDesktop');
+    });
 });
 
 function wacParam(): BeforePasteEvent {
