@@ -269,6 +269,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 }
                 this.cleanInfo();
             } else {
+                if (event.rawEvent.key == 'Enter') {
+                    event.rawEvent.preventDefault();
+                }
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,
