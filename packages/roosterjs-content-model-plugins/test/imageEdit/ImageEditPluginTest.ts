@@ -1132,10 +1132,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1279,10 +1279,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1428,10 +1428,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
