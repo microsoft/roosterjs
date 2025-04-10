@@ -657,7 +657,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.editor.focus(); // Safari will keep the selection when click crop, then the focus() call should not be called
         }
         const selection = this.editor.getDOMSelection();
-
         if (selection?.type == 'image') {
             this.applyFormatWithContentModel(
                 this.editor,
