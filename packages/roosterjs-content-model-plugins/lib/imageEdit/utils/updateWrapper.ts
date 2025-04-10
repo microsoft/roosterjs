@@ -1,7 +1,7 @@
 import { doubleCheckResize } from './doubleCheckResize';
 import { getGeneratedImageSize } from './generateImageSize';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
@@ -94,6 +94,9 @@ export function updateWrapper(
         const cropOverlays = croppers.filter(
             cropper => cropper.className === ImageEditElementClass.CropOverlay
         );
+        const cropHandles = toArray<HTMLElement>(
+            cropContainer.querySelectorAll(`.${ImageEditElementClass.CropHandle}`)
+        );
 
         setSize(
             cropContainer,
@@ -110,7 +113,7 @@ export function updateWrapper(
         setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
 
         if (angleRad !== undefined) {
-            updateHandleCursor(croppers, angleRad);
+            updateHandleCursor(cropHandles, angleRad);
         }
     }
 
