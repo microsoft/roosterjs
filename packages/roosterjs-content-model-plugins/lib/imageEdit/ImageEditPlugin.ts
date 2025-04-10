@@ -269,7 +269,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 }
                 this.cleanInfo();
             } else {
-                if (event.rawEvent.key == 'Enter') {
+                if (event.rawEvent.key == 'Enter' && this.isCropMode) {
                     event.rawEvent.preventDefault();
                 }
                 this.applyFormatWithContentModel(
@@ -657,6 +657,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.editor.focus(); // Safari will keep the selection when click crop, then the focus() call should not be called
         }
         const selection = this.editor.getDOMSelection();
+
         if (selection?.type == 'image') {
             this.applyFormatWithContentModel(
                 this.editor,
