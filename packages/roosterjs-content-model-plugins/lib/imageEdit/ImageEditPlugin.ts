@@ -104,7 +104,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.disposer = editor.attachDomEvent({
             blur: {
                 beforeDispatch: () => {
-                    if (this.editor) {
+                    if (this.editor && this.imageEditInfo) {
                         this.applyFormatWithContentModel(
                             this.editor,
                             this.isCropMode,
@@ -219,7 +219,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.isEditing &&
             this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton
+            event.rawEvent.button !== MouseRightButton &&
+            !this.isCropMode
         ) {
             this.applyFormatWithContentModel(
                 editor,
