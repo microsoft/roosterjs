@@ -5,14 +5,18 @@
  * If fail to read, dataUrl will be null
  */
 export function readFile(file: File, callback: (dataUrl: string | null) => void) {
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            callback(reader.result as string);
-        };
-        reader.onerror = () => {
-            callback(null);
-        };
-        reader.readAsDataURL(file);
+    try {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                callback(reader.result as string);
+            };
+            reader.onerror = () => {
+                callback(null);
+            };
+            reader.readAsDataURL(file);
+        }
+    } catch {
+        callback(null);
     }
 }
