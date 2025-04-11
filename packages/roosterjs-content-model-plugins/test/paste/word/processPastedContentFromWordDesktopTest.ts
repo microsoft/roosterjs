@@ -4,9 +4,7 @@ import { expectEqual } from '../e2e/testUtils';
 import { processPastedContentFromWordDesktop } from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { WordMetadata } from '../../../lib/paste/WordDesktop/WordMetadata';
 import {
-    contentModelToDom,
     createDomToModelContext,
-    createModelToDomContext,
     domToContentModel,
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
