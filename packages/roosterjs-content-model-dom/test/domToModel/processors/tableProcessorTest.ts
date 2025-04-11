@@ -20,11 +20,16 @@ describe('tableProcessor', () => {
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
+        context = createDomToModelContext(
+            {
+                recalculateTableSize: true,
             },
-        });
+            {
+                processorOverride: {
+                    child: childProcessor,
+                },
+            }
+        );
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
@@ -336,7 +341,9 @@ describe('tableProcessor with format', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createDomToModelContext();
+        context = createDomToModelContext({
+            recalculateTableSize: true,
+        });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
@@ -576,9 +583,14 @@ describe('tableProcessor', () => {
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: { child: childProcessor },
-        });
+        context = createDomToModelContext(
+            {
+                recalculateTableSize: true,
+            },
+            {
+                processorOverride: { child: childProcessor },
+            }
+        );
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
@@ -1404,6 +1416,61 @@ describe('tableProcessor', () => {
                     format: {},
                 },
             ],
+        });
+    });
+});
+
+describe('tableProcessor without recalculateTableSize', () => {
+    let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<Node>>;
+
+    beforeEach(() => {
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+    });
+
+    function runTest(tableHTML: string, getExpectedModel: (div: HTMLElement) => ContentModelBlock) {
+        const doc = createContentModelDocument();
+
+        const div = document.createElement('div');
+        div.innerHTML = tableHTML;
+
+        const expectedModel = getExpectedModel(div);
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        expect(doc.blocks[0]).toEqual(expectedModel);
+    }
+
+    it('Process a regular 1*1 table', () => {
+        runTest('<table class="tb1"><tr id="tr1"><td id="td1"></td></tr></table>', div => {
+            return {
+                blockType: 'Table',
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                blocks: [],
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                    },
+                ],
+                format: {},
+                widths: [],
+                dataset: {},
+            };
         });
     });
 });

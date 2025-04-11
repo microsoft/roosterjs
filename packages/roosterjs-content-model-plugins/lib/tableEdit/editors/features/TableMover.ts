@@ -334,7 +334,7 @@ export function onDragEnd(
                     if (ip && initValue?.cmTable) {
                         // Insert new table
                         const doc: ShallowMutableContentModelDocument = createContentModelDocument();
-                        doc.blocks.push(mutateBlock(initValue.cmTable));
+                        doc.blocks.push(oldTable ?? mutateBlock(initValue.cmTable));
                         insertionSuccess = !!mergeModel(model, cloneModel(doc), context, {
                             mergeFormat: 'none',
                             insertPosition: ip,
