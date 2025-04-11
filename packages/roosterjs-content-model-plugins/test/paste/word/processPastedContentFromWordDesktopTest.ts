@@ -46,12 +46,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 expect(model).toEqual(expectedModel);
             }
         }
-
-        const div = document.createElement('div');
-        contentModelToDom(document, div, model, createModelToDomContext());
-
-        document.body.appendChild(div);
-        document.body.removeChild(div);
     }
 
     it('Remove Comment | mso-element:comment-list', () => {
