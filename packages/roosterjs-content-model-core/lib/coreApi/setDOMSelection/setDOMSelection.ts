@@ -3,6 +3,7 @@ import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
+import { toggleCaret } from './toggleCaret';
 import {
     getSafeIdSelector,
     isNodeOfType,
@@ -17,11 +18,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
-const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
@@ -44,8 +43,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     const isDarkMode = core.lifecycle.isDarkMode;
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
-    core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_SELECTION_CSS_KEY, null /*cssRule*/);
+
+    toggleCaret(core, false /* hide */);
 
     try {
         switch (selection?.type) {
@@ -137,13 +137,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     `background-color:${tableSelectionColor}!important;`,
                     tableSelectors
                 );
-                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
                 core.api.setEditorStyle(
                     core,
                     HIDE_SELECTION_CSS_KEY,
                     TRANSPARENT_SELECTION_CSS_RULE,
                     [SELECTION_SELECTOR]
                 );
+
+                toggleCaret(core, true /* hide */);
 
                 const nodeToSelect = firstCell.cell?.firstElementChild || firstCell.cell;
 

@@ -1,4 +1,5 @@
 import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
+import * as toggleCaret from '../../../lib/coreApi/setDOMSelection/toggleCaret';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { switchShadowEdit } from '../../../lib/coreApi/switchShadowEdit/switchShadowEdit';
 
@@ -11,12 +12,14 @@ describe('switchShadowEdit', () => {
     let setContentModel: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
     let triggerEvent: jasmine.Spy;
+    let toggleCaretSpy: jasmine.Spy;
 
     beforeEach(() => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         getSelectionRange = jasmine.createSpy('getSelectionRange');
         triggerEvent = jasmine.createSpy('triggerEvent');
+        toggleCaretSpy = spyOn(toggleCaret, 'toggleCaret');
 
         const contentDiv = document.createElement('div');
 
@@ -50,6 +53,7 @@ describe('switchShadowEdit', () => {
                 },
                 false
             );
+            expect(toggleCaretSpy).toHaveBeenCalledWith(core, true);
         });
 
         it('with cache, isOn', () => {
@@ -69,6 +73,7 @@ describe('switchShadowEdit', () => {
                 },
                 false
             );
+            expect(toggleCaretSpy).toHaveBeenCalledWith(core, true);
         });
 
         it('no cache, isOff', () => {
@@ -79,6 +84,7 @@ describe('switchShadowEdit', () => {
             expect(core.cache.cachedModel).toBe(undefined);
 
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(toggleCaretSpy).not.toHaveBeenCalled();
         });
 
         it('with cache, isOff', () => {
@@ -91,6 +97,7 @@ describe('switchShadowEdit', () => {
             expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(toggleCaretSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -107,6 +114,7 @@ describe('switchShadowEdit', () => {
             expect(core.cache.cachedModel).toBe(undefined);
 
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(toggleCaretSpy).not.toHaveBeenCalled();
         });
 
         it('with cache, isOn', () => {
@@ -119,6 +127,7 @@ describe('switchShadowEdit', () => {
             expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).not.toHaveBeenCalled();
+            expect(toggleCaretSpy).not.toHaveBeenCalled();
         });
 
         it('no cache, isOff', () => {
@@ -136,6 +145,7 @@ describe('switchShadowEdit', () => {
                 },
                 false
             );
+            expect(toggleCaretSpy).toHaveBeenCalledWith(core, false);
         });
 
         it('with cache, isOff', () => {
@@ -159,6 +169,7 @@ describe('switchShadowEdit', () => {
                 },
                 false
             );
+            expect(toggleCaretSpy).toHaveBeenCalledWith(core, false);
         });
     });
 });
