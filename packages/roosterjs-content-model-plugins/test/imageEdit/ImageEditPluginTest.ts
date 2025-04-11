@@ -200,9 +200,6 @@ describe('ImageEditPlugin', () => {
             type: 'image',
             image: mockedImage,
         });
-        const image = createImage('');
-        const paragraph = createParagraph();
-        paragraph.segments.push(image);
         plugin.cropImage();
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         plugin.onPluginEvent({
