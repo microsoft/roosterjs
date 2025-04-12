@@ -1,4 +1,5 @@
 import { iterateSelections, moveChildNodes } from 'roosterjs-content-model-dom';
+import { toggleCaret } from '../setDOMSelection/toggleCaret';
 import type { SwitchShadowEdit } from 'roosterjs-content-model-types';
 
 /**
@@ -32,9 +33,13 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
                 core.cache.cachedModel = model;
             }
 
+            toggleCaret(core, true /* hide */);
+
             core.lifecycle.shadowEditFragment = fragment;
         } else {
             core.lifecycle.shadowEditFragment = null;
+
+            toggleCaret(core, false /* hide */);
 
             core.api.triggerEvent(
                 core,
