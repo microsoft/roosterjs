@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.99% </span>
+                <span class="strong">98.98% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>98/99</span>
+                <span class='fraction'>97/98</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.96% </span>
+                <span class="strong">98.95% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>95/96</span>
+                <span class='fraction'>94/95</span>
             </div>
         
             
@@ -324,26 +324,26 @@
 <a name='L265'></a><a href='#L265'>265</a>
 <a name='L266'></a><a href='#L266'>266</a>
 <a name='L267'></a><a href='#L267'>267</a>
-<a name='L268'></a><a href='#L268'>268</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -371,6 +371,7 @@
 <span class="cline-any cline-yes">110x</span>
 <span class="cline-any cline-yes">110x</span>
 <span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">110x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">110x</span>
@@ -464,12 +465,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -596,6 +598,7 @@ import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
+import { toggleCaret } from './toggleCaret';
 import {
     getSafeIdSelector,
     isNodeOfType,
@@ -610,11 +613,9 @@ import type {
 } from 'roosterjs-content-model-types';
 &nbsp;
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
-const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
 const IMAGE_ID = 'image';
 const TABLE_ID = 'table';
-const CARET_CSS_RULE = 'caret-color: transparent';
 const TRANSPARENT_SELECTION_CSS_RULE = 'background-color: transparent !important;';
 const SELECTION_SELECTOR = '*::selection';
 const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
@@ -637,8 +638,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     const isDarkMode = core.lifecycle.isDarkMode;
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
-    core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_SELECTION_CSS_KEY, null /*cssRule*/);
+&nbsp;
+    toggleCaret(core, false /* hide */);
 &nbsp;
     try {
         switch (selection?.type) {
@@ -730,13 +732,14 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     `background-color:${tableSelectionColor}!important;`,
                     tableSelectors
                 );
-                core.api.setEditorStyle(core, HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
                 core.api.setEditorStyle(
                     core,
                     HIDE_SELECTION_CSS_KEY,
                     TRANSPARENT_SELECTION_CSS_RULE,
                     [SELECTION_SELECTOR]
                 );
+&nbsp;
+                toggleCaret(core, true /* hide */);
 &nbsp;
                 const nodeToSelect = firstCell.cell<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>irstElementChild || firstCell.cell;
 &nbsp;
@@ -865,7 +868,7 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Apr 11 2025 17:33:43 GMT+0000 (Coordinated Universal Time)
+                at Sat Apr 12 2025 04:25:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
