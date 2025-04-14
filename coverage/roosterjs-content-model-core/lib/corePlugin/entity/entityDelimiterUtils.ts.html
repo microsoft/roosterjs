@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.88% </span>
+                <span class="strong">85.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>139/160</span>
+                <span class='fraction'>141/165</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.51% </span>
+                <span class="strong">66.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>141/212</span>
+                <span class='fraction'>146/220</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.66% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>26/29</span>
+                <span class='fraction'>26/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.62% </span>
+                <span class="strong">85.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>136/157</span>
+                <span class='fraction'>138/162</span>
             </div>
         
             
@@ -454,7 +454,19 @@
 <a name='L395'></a><a href='#L395'>395</a>
 <a name='L396'></a><a href='#L396'>396</a>
 <a name='L397'></a><a href='#L397'>397</a>
-<a name='L398'></a><a href='#L398'>398</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L398'></a><a href='#L398'>398</a>
+<a name='L399'></a><a href='#L399'>399</a>
+<a name='L400'></a><a href='#L400'>400</a>
+<a name='L401'></a><a href='#L401'>401</a>
+<a name='L402'></a><a href='#L402'>402</a>
+<a name='L403'></a><a href='#L403'>403</a>
+<a name='L404'></a><a href='#L404'>404</a>
+<a name='L405'></a><a href='#L405'>405</a>
+<a name='L406'></a><a href='#L406'>406</a>
+<a name='L407'></a><a href='#L407'>407</a>
+<a name='L408'></a><a href='#L408'>408</a>
+<a name='L409'></a><a href='#L409'>409</a>
+<a name='L410'></a><a href='#L410'>410</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -743,6 +755,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -784,11 +803,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -1137,8 +1161,15 @@ function handleInputOnDelimiter(
             });
         } else {
             <span class="missing-if-branch" title="if path not taken" >I</span>if (isEnter) {
-<span class="cstat-no" title="statement not covered" >                rawEvent.preventDefault();</span>
-<span class="cstat-no" title="statement not covered" >                editor.formatContentModel(handleEnterInlineEntity);</span>
+<span class="cstat-no" title="statement not covered" >                editor.formatContentModel(<span class="fstat-no" title="function not covered" >(m</span>odel, context) =&gt; {</span>
+                    const result = <span class="cstat-no" title="statement not covered" >handleEnterInlineEntity(model, context);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (result) {</span>
+<span class="cstat-no" title="statement not covered" >                        rawEvent.preventDefault();</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    return result;</span>
+                });
             } else {
                 editor.takeSnapshot();
                 editor
@@ -1184,9 +1215,14 @@ export const handleEnterInlineEntity: ContentModelFormatter = model =&gt; {
     iterateSelections(model, (path, _tableContext, block) =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph') {
             readonlySelectionBlock = block;
-            selectionBlockParent = path[path.length - 1];
+            selectionBlockParent = path[0];
         }
     });
+&nbsp;
+    if (selectionBlockParent<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockGroupType == 'ListItem') {
+        // No need to handle list item since it will be handled by common enter handler code
+        return false;
+    }
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (readonlySelectionBlock &amp;&amp; selectionBlockParent) {
         const markerIndex = readonlySelectionBlock.segments.findIndex(
@@ -1255,7 +1291,7 @@ const triggerEntityEventOnEnter = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Apr 14 2025 19:45:02 GMT+0000 (Coordinated Universal Time)
+                at Mon Apr 14 2025 20:27:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
