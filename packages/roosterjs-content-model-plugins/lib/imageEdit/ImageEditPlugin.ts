@@ -219,7 +219,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.isEditing &&
             this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton
+            event.rawEvent.button !== MouseRightButton &&
+            !this.isCropMode
         ) {
             this.applyFormatWithContentModel(
                 editor,
