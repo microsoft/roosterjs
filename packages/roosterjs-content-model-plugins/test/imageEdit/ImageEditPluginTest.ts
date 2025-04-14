@@ -190,6 +190,35 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('keyDown - ENTER - CROP', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        const image = createImage('');
+        const paragraph = createParagraph();
+        paragraph.segments.push(image);
+        plugin.cropImage();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'Enter',
+                target: mockedImage,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
+        plugin.dispose();
+    });
+
     it('keyDown - DELETE', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
@@ -1132,10 +1161,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1279,10 +1308,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1428,10 +1457,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
