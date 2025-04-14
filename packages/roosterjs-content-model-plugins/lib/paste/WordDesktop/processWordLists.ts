@@ -4,6 +4,7 @@ import {
     createListItem,
     createListLevel,
     getListStyleTypeFromString,
+    isElementOfType,
     isEmpty,
     parseFormat,
     updateListMetadata,
@@ -17,6 +18,7 @@ import type {
     ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
+    FormatParser,
 } from 'roosterjs-content-model-types';
 
 /** Word list metadata style name */
@@ -144,7 +146,12 @@ function processAsListItem(
 
     parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
-    parseFormat(element, [removeNegativeTextIndentParser], listItem.format, context);
+    parseFormat(
+        element,
+        [removeNegativeTextIndentParser, nonListElementParser],
+        listItem.format,
+        context
+    );
 
     if (listType == 'OL') {
         setStartNumber(listItem, context, listMetadata);
@@ -257,3 +264,24 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
 
     return undefined;
 }
+
+const nonListElementParser: FormatParser<ContentModelListItemFormat> = (
+    format,
+    element,
+    _context,
+    defaultStyle
+): void => {
+    if (!isElementOfType(element, 'li')) {
+        Object.keys(defaultStyle).forEach(keyInput => {
+            const key = keyInput as keyof CSSStyleDeclaration;
+            const formatKey = keyInput as keyof ContentModelListItemFormat;
+            if (
+                key != 'display' &&
+                format[formatKey] != undefined &&
+                format[formatKey] == defaultStyle[key]
+            ) {
+                delete format[formatKey];
+            }
+        });
+    }
+};
