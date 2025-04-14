@@ -104,7 +104,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.disposer = editor.attachDomEvent({
             blur: {
                 beforeDispatch: () => {
-                    if (this.editor && this.imageEditInfo) {
+                    if (this.isEditing && this.editor && !this.editor.isDisposed()) {
                         this.applyFormatWithContentModel(
                             this.editor,
                             this.isCropMode,
@@ -142,13 +142,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * called, plugin should not call to any editor method since it will result in error.
      */
     dispose() {
-        this.editor = null;
-        this.isEditing = false;
-        this.cleanInfo();
         if (this.disposer) {
             this.disposer();
             this.disposer = null;
         }
+        this.isEditing = false;
+        this.cleanInfo();
+        this.editor = null;
     }
 
     /**
