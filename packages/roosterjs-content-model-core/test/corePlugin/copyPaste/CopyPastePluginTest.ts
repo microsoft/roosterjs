@@ -132,8 +132,7 @@ describe('CopyPastePlugin |', () => {
             },
             getContentModelCopy: (options: any) => getContentModelCopySpy(options),
             triggerEvent(eventType: any, data: any, broadcast: any) {
-                triggerPluginEventSpy(eventType, data, broadcast);
-                return data;
+                return triggerPluginEventSpy(eventType, data, broadcast) || data;
             },
             runAsync(callback: any) {
                 callback(editor);
@@ -167,6 +166,7 @@ describe('CopyPastePlugin |', () => {
                     domToModelSettings: {},
                     modelToDomSettings: {},
                 } as any),
+            isExperimentalFeatureEnabled: () => false,
         });
 
         pasteSpy = spyOn(paste, 'paste');
@@ -370,6 +370,228 @@ describe('CopyPastePlugin |', () => {
             expect(formatResult).toBeFalsy();
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(1);
         });
+
+        describe('withCustomCopyCutEnabled |', () => {
+            let extractContentsSpy: jasmine.Spy;
+            beforeEach(() => {
+                editor.isExperimentalFeatureEnabled = () => true;
+                plugin.initialize(editor);
+                extractContentsSpy = jasmine.createSpy('extractContentsSpy');
+                triggerPluginEventSpy.and.returnValue({
+                    range: <any>{
+                        extractContents: extractContentsSpy,
+                    },
+                });
+                const fragment = document.createDocumentFragment();
+                const div = document.createElement('div');
+                div.appendChild(document.createTextNode('text'));
+                fragment.appendChild(div);
+                extractContentsSpy.and.returnValue(fragment);
+            });
+
+            function createClipboardEventMock(): ClipboardEvent {
+                return <any>{
+                    clipboardData: {
+                        setData: jasmine.createSpy('setData'),
+                    },
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                };
+            }
+
+            it('Selection not Collapsed and normal selection', () => {
+                // Arrange
+                selectionValue = <DOMSelection>{
+                    type: 'range',
+                    range: { collapsed: false },
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection');
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.copy.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
+                // On Cut Spy
+                expect(formatContentModelSpy).not.toHaveBeenCalled();
+                expect(formatResult).toBeFalsy();
+            });
+
+            it('Selection not Collapsed and table selection', () => {
+                // Arrange
+                const table = document.createElement('table');
+                table.id = 'table';
+                // Arrange
+                selectionValue = <DOMSelection>{
+                    type: 'table',
+                    table,
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection');
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                    const container = document.createElement('div');
+                    container.append(table);
+
+                    div.appendChild(container);
+                    return selectionValue;
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.copy.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<div>text</div>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).not.toHaveBeenCalled();
+                expect(formatResult).toBeFalsy();
+            });
+
+            it('Selection not Collapsed and image selection', () => {
+                // Arrange
+                const image = document.createElement('image');
+                image.id = 'image';
+                selectionValue = <DOMSelection>{
+                    type: 'image',
+                    image,
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection');
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                    div.appendChild(image);
+                    return selectionValue;
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.copy.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<div>text</div>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).not.toHaveBeenCalled();
+                expect(formatResult).toBeFalsy();
+                expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(0);
+            });
+
+            it('Selection not Collapsed and entity selection in Dark mode', () => {
+                // Arrange
+                const wrapper = document.createElement('span');
+
+                document.body.appendChild(wrapper);
+
+                setEntityElementClasses(wrapper, 'Entity', true, 'Entity');
+                selectionValue = <DOMSelection>{
+                    type: 'range',
+                    range: createRange(wrapper),
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection');
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                    div.appendChild(wrapper);
+                    return selectionValue;
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+
+                editor.isDarkMode = () => true;
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.copy.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<div>text</div>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).not.toHaveBeenCalled();
+                expect(formatResult).toBeFalsy();
+                expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(1);
+            });
+        });
     });
 
     describe('Cut |', () => {
@@ -541,6 +763,203 @@ describe('CopyPastePlugin |', () => {
             expect(formatResult).toBeTrue();
             expect(modelResult).toEqual(modelValue);
             expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(modelValue);
+        });
+
+        describe('withCustomCopyCutEnabled |', () => {
+            let extractContentsSpy: jasmine.Spy;
+            beforeEach(() => {
+                editor.isExperimentalFeatureEnabled = () => true;
+                plugin.initialize(editor);
+                extractContentsSpy = jasmine.createSpy('extractContentsSpy');
+                const fragment = document.createDocumentFragment();
+                const div = document.createElement('div');
+                div.appendChild(document.createTextNode('text'));
+                fragment.appendChild(div);
+                extractContentsSpy.and.returnValue(fragment);
+            });
+
+            function createClipboardEventMock(): ClipboardEvent {
+                return <any>{
+                    clipboardData: {
+                        setData: jasmine.createSpy('setData'),
+                    },
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                };
+            }
+
+            it('Selection not Collapsed', () => {
+                // Arrange
+                selectionValue = <DOMSelection>{
+                    type: 'range',
+                    range: <any>{
+                        collapsed: false,
+                        extractContents: extractContentsSpy,
+                    },
+                };
+
+                const deleteSelectionSpy = spyOn(
+                    deleteSelectionsFile,
+                    'deleteSelection'
+                ).and.callFake((model: any, steps: any, options: any) => {
+                    return {
+                        deletedModel: pasteModelValue,
+                        insertPoint: insertPointValue,
+                        deleteResult: deleteResultValue,
+                    };
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
+
+                triggerPluginEventSpy.and.callThrough();
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.cut.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<div>text</div>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+                expect(formatResult).toBeTrue();
+                expect(modelResult).toEqual(modelValue);
+            });
+
+            it('Selection not Collapsed and table selection', () => {
+                // Arrange
+                const table = document.createElement('table');
+                table.id = 'table';
+                selectionValue = <DOMSelection>{
+                    type: 'table',
+                    table,
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
+                    deleteResult: 'range',
+                    insertPoint: null!,
+                });
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                    const container = document.createElement('div');
+                    container.append(table);
+
+                    div.appendChild(container);
+                    return selectionValue;
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+                spyOn(normalizeContentModel, 'normalizeContentModel');
+
+                triggerPluginEventSpy.and.callThrough();
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.cut.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<div><table id="table"></table></div>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+                expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalled();
+                expect(formatResult).toBeTrue();
+                expect(modelResult).toEqual(modelValue);
+                expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(
+                    modelValue
+                );
+            });
+
+            it('Selection not Collapsed and image selection', () => {
+                // Arrange
+                const image = document.createElement('image');
+                image.id = 'image';
+                selectionValue = <DOMSelection>{
+                    type: 'image',
+                    image,
+                };
+
+                spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
+                    deleteResult: 'range',
+                    insertPoint: null!,
+                });
+                spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                    div.appendChild(image);
+                    return selectionValue;
+                });
+                spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+                spyOn(normalizeContentModel, 'normalizeContentModel');
+
+                triggerPluginEventSpy.and.callThrough();
+                focusSpy.and.callThrough();
+                setDOMSelectionSpy.and.callThrough();
+                const event = createClipboardEventMock();
+
+                // Act
+                domEvents.cut.beforeDispatch?.(event);
+
+                // Assert
+                expect(getDOMSelectionSpy).toHaveBeenCalled();
+                expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                    document,
+                    div,
+                    pasteModelValue,
+                    { ...createModelToDomContext(), onNodeCreated }
+                );
+                expect(getContentModelCopySpy).toHaveBeenCalled();
+                expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+                expect(focusSpy).toHaveBeenCalled();
+                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+                expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
+                    'text/html',
+                    '<image id="image"></image>'
+                );
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+
+                // On Cut Spy
+                expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+                expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalled();
+                expect(formatResult).toBeTrue();
+                expect(modelResult).toEqual(modelValue);
+                expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(
+                    modelValue
+                );
+            });
         });
     });
 
@@ -1395,7 +1814,7 @@ describe('CopyPastePlugin |', () => {
     describe('shouldPreventDefaultPaste', () => {
         it('should not prevent default for empty clipboard data', () => {
             const clipboardData = <DataTransfer>(<any>{
-                items: null
+                items: null,
             });
             const editor = <IEditor>(<any>{});
             expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeFalse();
@@ -1404,23 +1823,23 @@ describe('CopyPastePlugin |', () => {
 
         it('should prevent default on non-Android platforms', () => {
             const clipboardData = <DataTransfer>(<any>{
-                items: [{ type: '', kind: 'file' }]
+                items: [{ type: '', kind: 'file' }],
             });
             const editor = <IEditor>(<any>{
-                getEnvironment: () => ({ isAndroid: false })
+                getEnvironment: () => ({ isAndroid: false }),
             });
             expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeTrue();
         });
 
         it('should prevent default for text or image clipboard data on Android platform', () => {
             const textClipboardData = <DataTransfer>(<any>{
-                items: [{ type: 'text/plain', kind: 'string' }]
+                items: [{ type: 'text/plain', kind: 'string' }],
             });
             const imageClipboardData = <DataTransfer>(<any>{
-                items: [{ type: 'image/png', kind: 'file' }]
+                items: [{ type: 'image/png', kind: 'file' }],
             });
             const editor = <IEditor>(<any>{
-                getEnvironment: () => ({ isAndroid: true })
+                getEnvironment: () => ({ isAndroid: true }),
             });
             expect(shouldPreventDefaultPaste(textClipboardData, editor)).toBeTrue();
             expect(shouldPreventDefaultPaste(imageClipboardData, editor)).toBeTrue();
@@ -1428,10 +1847,10 @@ describe('CopyPastePlugin |', () => {
 
         it('should not prevent default for file-only clipboard data on Android platform', () => {
             const clipboardData = <DataTransfer>(<any>{
-                items: [{ type: '', kind: 'file' }]
+                items: [{ type: '', kind: 'file' }],
             });
             const editor = <IEditor>(<any>{
-                getEnvironment: () => ({ isAndroid: true })
+                getEnvironment: () => ({ isAndroid: true }),
             });
             expect(shouldPreventDefaultPaste(clipboardData, editor)).toBeFalse();
         });

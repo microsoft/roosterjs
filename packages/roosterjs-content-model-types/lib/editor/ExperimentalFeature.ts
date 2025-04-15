@@ -17,4 +17,9 @@ export type ExperimentalFeature =
     /**
      * Use Content Model handle ENTER key
      */
-    | 'HandleEnterKey';
+    | 'HandleEnterKey'
+    /**
+     *  Prevent default browser behavior for copy/cut event,
+     *  and set the clipboard data with custom implementation.
+     */
+    | 'CustomCopyCut';
