@@ -284,8 +284,15 @@ function handleInputOnDelimiter(
             });
         } else {
             if (isEnter) {
-                rawEvent.preventDefault();
-                editor.formatContentModel(handleEnterInlineEntity);
+                editor.formatContentModel((model, context) => {
+                    const result = handleEnterInlineEntity(model, context);
+
+                    if (result) {
+                        rawEvent.preventDefault();
+                    }
+
+                    return result;
+                });
             } else {
                 editor.takeSnapshot();
                 editor
@@ -331,9 +338,14 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
     iterateSelections(model, (path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
             readonlySelectionBlock = block;
-            selectionBlockParent = path[path.length - 1];
+            selectionBlockParent = path[0];
         }
     });
+
+    if (selectionBlockParent?.blockGroupType == 'ListItem') {
+        // No need to handle list item since it will be handled by common enter handler code
+        return false;
+    }
 
     if (readonlySelectionBlock && selectionBlockParent) {
         const markerIndex = readonlySelectionBlock.segments.findIndex(
