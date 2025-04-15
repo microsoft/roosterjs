@@ -42,6 +42,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
+    private customCopyCutEnabled: boolean = false;
 
     /**
      * Construct a new instance of CopyPastePlugin
@@ -79,6 +80,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                 beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
             },
         });
+        this.customCopyCutEnabled = editor.isExperimentalFeatureEnabled('CustomCopyCut');
     }
 
     /**
@@ -131,7 +133,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             }
 
             const tempDiv = this.getTempDiv(this.editor.getDocument());
-            const context = createModelToDomContext();
+            const context = createModelToDomContext(undefined /* editorContext */);
 
             context.onNodeCreated = onNodeCreated;
 
@@ -154,7 +156,13 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     isCut,
                 }).range;
 
-                if (newRange) {
+                if (this.customCopyCutEnabled && isClipboardEvent(event)) {
+                    event.preventDefault();
+                    const contents = newRange.extractContents();
+                    moveChildNodes(tempDiv, contents);
+                    event.clipboardData?.setData('text/html', tempDiv.innerHTML);
+                    event.clipboardData?.setData('text/plain', tempDiv.innerText);
+                } else if (newRange) {
                     addRangeToSelection(doc, newRange);
                 }
 
@@ -225,7 +233,9 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             tempDiv.style.userSelect = 'text';
             tempDiv.contentEditable = 'true';
 
-            doc.body.appendChild(tempDiv);
+            if (!this.customCopyCutEnabled) {
+                doc.body.appendChild(tempDiv);
+            }
 
             this.state.tempDiv = tempDiv;
         }
@@ -243,7 +253,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         return div;
     }
 }
-
 /**
  * @internal
  * Exported only for unit testing
