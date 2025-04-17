@@ -1,9 +1,13 @@
 import * as retrieveModelFormatState from 'roosterjs-content-model-dom/lib/modelApi/editing/retrieveModelFormatState';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { ContentModelFormatState } from 'roosterjs-content-model-types';
 import { getFormatState } from '../../../lib/publicApi/format/getFormatState';
 import { IEditor } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../../lib/modelApi/common/reducedModelChildProcessor';
+import {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+    DOMHelper,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createDomToModelContext,
@@ -23,6 +27,7 @@ describe('getFormatState', () => {
         expectedModel: ContentModelDocument,
         expectedFormat: ContentModelFormatState
     ) {
+        const mockedDOMHelper: DOMHelper = {} as any;
         const editor = ({
             getSnapshotsManager: () => ({
                 hasNewContent: false,
@@ -31,6 +36,7 @@ describe('getFormatState', () => {
             isDarkMode: () => false,
             getZoomScale: () => 1,
             getPendingFormat: () => pendingFormat,
+            getDOMHelper: () => mockedDOMHelper,
             formatContentModel: (callback: Function) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
@@ -73,7 +79,8 @@ describe('getFormatState', () => {
                 canRedo: false,
                 isDarkMode: false,
             },
-            'remove'
+            'remove',
+            mockedDOMHelper
         );
         expect(result).toEqual(expectedFormat);
     }
