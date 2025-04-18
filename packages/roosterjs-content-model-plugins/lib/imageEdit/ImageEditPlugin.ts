@@ -219,7 +219,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.isEditing &&
             this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton
+            event.rawEvent.button !== MouseRightButton &&
+            !this.isCropMode
         ) {
             this.applyFormatWithContentModel(
                 editor,
@@ -269,6 +270,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 }
                 this.cleanInfo();
             } else {
+                if (event.rawEvent.key == 'Enter' && this.isCropMode) {
+                    event.rawEvent.preventDefault();
+                }
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,

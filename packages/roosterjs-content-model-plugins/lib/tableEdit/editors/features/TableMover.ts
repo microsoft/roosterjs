@@ -334,7 +334,7 @@ export function onDragEnd(
                     if (ip && initValue?.cmTable) {
                         // Insert new table
                         const doc: ShallowMutableContentModelDocument = createContentModelDocument();
-                        doc.blocks.push(mutateBlock(initValue.cmTable));
+                        doc.blocks.push(oldTable ?? mutateBlock(initValue.cmTable));
                         insertionSuccess = !!mergeModel(model, cloneModel(doc), context, {
                             mergeFormat: 'none',
                             insertPosition: ip,
@@ -345,14 +345,15 @@ export function onDragEnd(
                             const finalTable = getFirstSelectedTable(model)[0] ?? initValue.cmTable;
                             if (finalTable) {
                                 // Add selection marker to the first cell of the table
-                                const FirstCell = finalTable.rows[0].cells[0];
-                                const markerParagraph = FirstCell?.blocks[0];
+                                const firstCell = finalTable.rows[0].cells[0];
+                                const markerParagraph = firstCell?.blocks[0];
+
                                 if (markerParagraph?.blockType == 'Paragraph') {
                                     const marker = createSelectionMarker(model.format);
 
                                     mutateBlock(markerParagraph).segments.unshift(marker);
                                     setParagraphNotImplicit(markerParagraph);
-                                    setSelection(FirstCell, marker);
+                                    setSelection(model, marker);
                                 }
                             }
                         }

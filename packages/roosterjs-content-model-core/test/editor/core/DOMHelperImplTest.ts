@@ -366,4 +366,44 @@ describe('DOMHelperImpl', () => {
             expect(cloneSpy).toHaveBeenCalledWith(true);
         });
     });
+
+    describe('getContainerFormat', () => {
+        it('getContainerFormat', () => {
+            const mockedDiv: HTMLDivElement = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: () => ({
+                            fontSize: '12px',
+                            fontFamily: 'Arial',
+                            fontWeight: 'bold',
+                            color: 'red',
+                            backgroundColor: 'blue',
+                            fontStyle: 'italic',
+                            letterSpacing: '1px',
+                            lineHeight: '1.5',
+                            textDecoration: 'line-through underline',
+                            verticalAlign: 'super',
+                        }),
+                    },
+                },
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.getContainerFormat();
+
+            expect(result).toEqual({
+                fontSize: '12px',
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+                textColor: 'red',
+                backgroundColor: 'blue',
+                italic: true,
+                letterSpacing: '1px',
+                lineHeight: '1.5',
+                strikethrough: true,
+                superOrSubScriptSequence: 'super',
+                underline: true,
+            });
+        });
+    });
 });

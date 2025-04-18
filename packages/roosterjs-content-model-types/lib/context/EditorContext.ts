@@ -68,4 +68,9 @@ export interface EditorContext {
      * A helper class that manages a mapping from paragraph marker to paragraph object.
      */
     paragraphMap?: ParagraphMap;
+
+    /**
+     * When set to true, size of table will be recalculated when converting from DOM to Content Model.
+     */
+    recalculateTableSize?: boolean;
 }
