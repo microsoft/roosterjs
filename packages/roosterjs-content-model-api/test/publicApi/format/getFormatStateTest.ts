@@ -148,26 +148,22 @@ describe('getFormatState', () => {
                 blockGroupType: 'Document',
                 blocks: [
                     {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
                             {
-                                segmentType: 'Text',
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'line1', format: {} }],
                                 format: {},
-                                text: 'line1',
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'line2', format: {} }],
+                                format: {},
                             },
                         ],
-                    },
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: {},
-                                text: 'line2',
-                            },
-                        ],
+                        format: { id: 'Selected' },
                     },
                 ],
             },
