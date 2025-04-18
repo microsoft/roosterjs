@@ -3,6 +3,7 @@ import { isExcelDesktopDocument } from './isExcelDesktopDocument';
 import { isExcelNotNativeEvent } from './isExcelNonNativeEvent';
 import { isExcelOnlineDocument } from './isExcelOnlineDocument';
 import { isGoogleSheetDocument } from './isGoogleSheetDocument';
+import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
@@ -31,7 +32,8 @@ export type KnownPasteSourceType =
     | 'wacComponents'
     | 'default'
     | 'singleImage'
-    | 'excelNonNativeEvent';
+    | 'excelNonNativeEvent'
+    | 'oneNoteDesktop';
 
 /**
  * @internal
@@ -47,6 +49,7 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
     ['googleSheets', isGoogleSheetDocument],
     ['singleImage', shouldConvertToSingleImage],
     ['excelNonNativeEvent', isExcelNotNativeEvent],
+    ['oneNoteDesktop', isOneNoteDesktopDocument],
 ]);
 
 /**

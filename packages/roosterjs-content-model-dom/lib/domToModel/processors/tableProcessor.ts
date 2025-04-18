@@ -129,25 +129,29 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                         const td = tr.cells[sourceCol];
                         const hasSelectionBeforeCell = context.isInSelection;
-                        const colEnd = targetCol + td.colSpan;
-                        const rowEnd = row + td.rowSpan;
-                        const needCalcWidth = columnPositions[colEnd] === undefined;
-                        const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                        if (needCalcWidth || needCalcHeight) {
-                            const rect = getBoundingClientRect(td);
+                        if (context.recalculateTableSize) {
+                            const colEnd = targetCol + td.colSpan;
+                            const rowEnd = row + td.rowSpan;
+                            const needCalcWidth = columnPositions[colEnd] === undefined;
+                            const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                            if (rect.width > 0 || rect.height > 0) {
-                                if (needCalcWidth) {
-                                    const pos = columnPositions[targetCol];
+                            if (needCalcWidth || needCalcHeight) {
+                                const rect = getBoundingClientRect(td);
 
-                                    columnPositions[colEnd] =
-                                        (typeof pos == 'number' ? pos : 0) + rect.width / zoomScale;
-                                }
+                                if (rect.width > 0 || rect.height > 0) {
+                                    if (needCalcWidth) {
+                                        const pos = columnPositions[targetCol];
 
-                                if (needCalcHeight) {
-                                    rowPositions[rowEnd] =
-                                        rowPositions[row] + rect.height / zoomScale;
+                                        columnPositions[colEnd] =
+                                            (typeof pos == 'number' ? pos : 0) +
+                                            rect.width / zoomScale;
+                                    }
+
+                                    if (needCalcHeight) {
+                                        rowPositions[rowEnd] =
+                                            rowPositions[row] + rect.height / zoomScale;
+                                    }
                                 }
                             }
                         }

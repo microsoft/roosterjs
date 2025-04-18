@@ -190,6 +190,32 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('keyDown - ENTER - CROP', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.cropImage();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'Enter',
+                target: mockedImage,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(2);
+        plugin.dispose();
+    });
+
     it('keyDown - DELETE', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
@@ -512,6 +538,32 @@ describe('ImageEditPlugin', () => {
             type: 'range',
             range: {} as any,
         });
+        plugin.onPluginEvent({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: target,
+            } as any,
+        });
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
+    it('mouseDown  on crop mode', () => {
+        const target = {
+            contains: () => true,
+        };
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.cropImage();
         plugin.onPluginEvent({
             eventType: 'mouseDown',
             rawEvent: {
@@ -1132,10 +1184,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1279,10 +1331,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1428,10 +1480,10 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [122],
+                    widths: [],
                     rows: [
                         {
-                            height: 24,
+                            height: 0,
                             cells: [
                                 {
                                     spanAbove: false,
