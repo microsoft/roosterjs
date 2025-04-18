@@ -375,4 +375,78 @@ describe('formatContainerProcessor', () => {
             ],
         });
     });
+
+    it('div with id', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        id: 'testId',
+                    } as ContentModelBlockFormat,
+                    isImplicit: false,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with id, multiple children', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        const child = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+        div.appendChild(child);
+
+        child.appendChild(document.createTextNode('test2'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                            format: {},
+                            isImplicit: true,
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test2', format: {} }],
+                            format: {},
+                        },
+                        { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+                    ],
+                    format: {
+                        id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
 });

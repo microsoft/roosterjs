@@ -30,6 +30,7 @@ const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
     'minWidth',
     'minHeight',
 ];
+const FormatContainerTriggerAttributes = ['id'];
 const ByPassFormatContainerTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'A'];
 const SegmentDecoratorTags = ['A', 'CODE'];
 
@@ -115,7 +116,8 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     if (
         FormatContainerTriggerStyles.some(
             key => parseInt((style[key] as string) || (defaultStyle[key] as string) || '') > 0
-        )
+        ) ||
+        FormatContainerTriggerAttributes.some(attr => element.hasAttribute(attr))
     ) {
         return true;
     }
