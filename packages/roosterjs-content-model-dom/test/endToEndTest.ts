@@ -2379,4 +2379,99 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<table><tbody><tr><th>test</th></tr></tbody></table>'
         );
     });
+
+    it('div with id, no child', () => {
+        runTest(
+            '<div id="test"></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [],
+                        format: { id: 'test' },
+                    },
+                ],
+            },
+            '',
+            '<div id="test"></div>'
+        );
+    });
+
+    it('div with id, 1 child', () => {
+        runTest(
+            '<div id="test"><div>test</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        format: { id: 'test' },
+                    },
+                ],
+            },
+            'test',
+            '<div id="test"><div>test</div></div>'
+        );
+    });
+
+    it('div with id, 2 child', () => {
+        runTest(
+            '<div id="test"><div>test1</div><div>test2</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test1',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test2',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        format: { id: 'test' },
+                    },
+                ],
+            },
+            'test1\r\ntest2',
+            '<div id="test"><div>test1</div><div>test2</div></div>'
+        );
+    });
 });
