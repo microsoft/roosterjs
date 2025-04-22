@@ -345,14 +345,15 @@ export function onDragEnd(
                             const finalTable = getFirstSelectedTable(model)[0] ?? initValue.cmTable;
                             if (finalTable) {
                                 // Add selection marker to the first cell of the table
-                                const FirstCell = finalTable.rows[0].cells[0];
-                                const markerParagraph = FirstCell?.blocks[0];
+                                const firstCell = finalTable.rows[0].cells[0];
+                                const markerParagraph = firstCell?.blocks[0];
+
                                 if (markerParagraph?.blockType == 'Paragraph') {
                                     const marker = createSelectionMarker(model.format);
 
                                     mutateBlock(markerParagraph).segments.unshift(marker);
                                     setParagraphNotImplicit(markerParagraph);
-                                    setSelection(FirstCell, marker);
+                                    setSelection(model, marker);
                                 }
                             }
                         }
