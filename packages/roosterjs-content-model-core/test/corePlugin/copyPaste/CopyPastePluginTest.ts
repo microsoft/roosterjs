@@ -372,21 +372,9 @@ describe('CopyPastePlugin |', () => {
         });
 
         describe('withCustomCopyCutEnabled |', () => {
-            let extractContentsSpy: jasmine.Spy;
             beforeEach(() => {
                 editor.isExperimentalFeatureEnabled = () => true;
                 plugin.initialize(editor);
-                extractContentsSpy = jasmine.createSpy('extractContentsSpy');
-                triggerPluginEventSpy.and.returnValue({
-                    range: <any>{
-                        extractContents: extractContentsSpy,
-                    },
-                });
-                const fragment = document.createDocumentFragment();
-                const div = document.createElement('div');
-                div.appendChild(document.createTextNode('text'));
-                fragment.appendChild(div);
-                extractContentsSpy.and.returnValue(fragment);
             });
 
             function createClipboardEventMock(): ClipboardEvent {
@@ -480,9 +468,9 @@ describe('CopyPastePlugin |', () => {
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<div>text</div>'
+                    '<div><table id="table"></table></div>'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -528,9 +516,9 @@ describe('CopyPastePlugin |', () => {
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<div>text</div>'
+                    '<image id="image"></image>'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -582,9 +570,9 @@ describe('CopyPastePlugin |', () => {
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<div>text</div>'
+                    '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false"></span>'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -766,16 +754,9 @@ describe('CopyPastePlugin |', () => {
         });
 
         describe('withCustomCopyCutEnabled |', () => {
-            let extractContentsSpy: jasmine.Spy;
             beforeEach(() => {
                 editor.isExperimentalFeatureEnabled = () => true;
                 plugin.initialize(editor);
-                extractContentsSpy = jasmine.createSpy('extractContentsSpy');
-                const fragment = document.createDocumentFragment();
-                const div = document.createElement('div');
-                div.appendChild(document.createTextNode('text'));
-                fragment.appendChild(div);
-                extractContentsSpy.and.returnValue(fragment);
             });
 
             function createClipboardEventMock(): ClipboardEvent {
@@ -793,7 +774,6 @@ describe('CopyPastePlugin |', () => {
                     type: 'range',
                     range: <any>{
                         collapsed: false,
-                        extractContents: extractContentsSpy,
                     },
                 };
 
@@ -832,11 +812,8 @@ describe('CopyPastePlugin |', () => {
                 expect(focusSpy).toHaveBeenCalled();
                 expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith(
-                    'text/html',
-                    '<div>text</div>'
-                );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', 'text');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/html', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).toHaveBeenCalledTimes(1);

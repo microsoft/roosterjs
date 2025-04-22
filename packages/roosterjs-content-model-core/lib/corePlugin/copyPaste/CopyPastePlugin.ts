@@ -3,9 +3,11 @@ import { adjustImageSelectionOnSafari } from './utils/adjustImageSelectionOnSafa
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
 import { paste } from '../../command/paste/paste';
+import { pruneUnselectedModel } from './utils/pruneUnselectedModel';
 import {
     ChangeSource,
     contentModelToDom,
+    contentModelToText,
     createModelToDomContext,
     deleteSelection,
     extractClipboardItems,
@@ -119,6 +121,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const pasteModel = this.editor.getContentModelCopy('disconnected');
 
+            pruneUnselectedModel(pasteModel);
+
             if (selection.type === 'table') {
                 iterateSelections(pasteModel, (_, tableContext) => {
                     if (tableContext?.table) {
@@ -158,10 +162,9 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
                 if (this.customCopyCutEnabled && isClipboardEvent(event)) {
                     event.preventDefault();
-                    const contents = newRange.extractContents();
-                    moveChildNodes(tempDiv, contents);
+                    const text = contentModelToText(pasteModel);
                     event.clipboardData?.setData('text/html', tempDiv.innerHTML);
-                    event.clipboardData?.setData('text/plain', tempDiv.innerText);
+                    event.clipboardData?.setData('text/plain', text);
                 } else if (newRange) {
                     addRangeToSelection(doc, newRange);
                 }
