@@ -4,7 +4,6 @@ import {
     createDivider,
     createEntity,
     createFormatContainer,
-    createGeneralBlock,
     createGeneralSegment,
     createListItem,
     createListLevel,
@@ -14,18 +13,6 @@ import {
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
-
-/**
- * Utility function to write a JSON stringified object to the clipboard.
- * @param data The data to be written to the clipboard.
- */
-async function writeToClipboard(data: any) {
-    try {
-        const jsonString = JSON.stringify(data);
-        await navigator.clipboard.writeText(`expect(group).toEqual(${jsonString});`);
-    } finally {
-    }
-}
 
 describe('pruneUnselectedModel', () => {
     it('should handle an empty document', () => {
@@ -960,7 +947,7 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(para1);
 
         pruneUnselectedModel(group);
-        writeToClipboard(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
