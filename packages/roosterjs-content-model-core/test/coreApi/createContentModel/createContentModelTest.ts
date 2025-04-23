@@ -11,7 +11,7 @@ import {
     TextMutationObserver,
 } from 'roosterjs-content-model-types';
 
-const mockedEditorContext = 'EDITORCONTEXT' as any;
+const mockedEditorContext = { name: 'EDITORCONTEXT' } as any;
 const originalContext = { context: 'Context' } as any;
 const mockedModel = 'MODEL' as any;
 const mockedDiv = 'DIV' as any;
@@ -121,7 +121,7 @@ describe('createContentModel with selection', () => {
         mockedContext = { ...originalContext } as any;
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel');
-        createEditorContextSpy = jasmine.createSpy('createEditorContext');
+        createEditorContextSpy = jasmine.createSpy('createEditorContext').and.returnValue({});
 
         spyOn(createDomToModelContext, 'createDomToModelContextWithConfig').and.returnValue(
             mockedContext
@@ -344,7 +344,7 @@ describe('createContentModel and cache management', () => {
     ) {
         flushMutationsSpy = jasmine.createSpy('flushMutations');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(mockedSelection);
-        createEditorContextSpy = jasmine.createSpy('createEditorContext');
+        createEditorContextSpy = jasmine.createSpy('createEditorContext').and.returnValue({});
         updateCacheSpy = spyOn(updateCache, 'updateCache');
 
         textMutationObserver = { flushMutations: flushMutationsSpy } as any;
@@ -457,6 +457,17 @@ describe('createContentModel and cache management', () => {
 
         it('option not allow cache, has selectionOverride, has shadow edit', () => {
             runTest({ tryGetFromCache: false }, true, true, false, false, false);
+        });
+
+        it('option allow cache, has recalculateTableSize, no shadow edit', () => {
+            runTest(
+                { tryGetFromCache: false, recalculateTableSize: true },
+                false,
+                false,
+                false,
+                false,
+                false
+            );
         });
     });
 
