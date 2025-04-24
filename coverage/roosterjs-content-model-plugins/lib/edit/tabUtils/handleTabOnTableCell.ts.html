@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.95% </span>
+                <span class="strong">73.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/19</span>
+                <span class='fraction'>17/23</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -118,7 +118,8 @@
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,14 +144,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -164,17 +164,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -204,38 +206,39 @@ export function handleTabOnTableCell(
 ) {
     const readonlyTableModel = getFirstSelectedTable(model)[0];
 &nbsp;
-    // Check if cursor is on last cell of the table
-    if (
-        !rawEvent.shiftKey &amp;&amp;
-        readonlyTableModel &amp;&amp;
-        readonlyTableModel.rows[readonlyTableModel.rows.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[
-            readonlyTableModel.widths.length - 1
-        ] === cell
-    ) {
-        const tableModel = mutateBlock(readonlyTableModel);
-        insertTableRow(tableModel, 'insertBelow');
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (readonlyTableModel) {
+        // Check if cursor is on last cell of the table
+        const lastRow = readonlyTableModel.rows[readonlyTableModel.rows.length - 1];
+        const lastColumn = lastRow ? lastRow.cells.length - 1 : <span class="branch-1 cbranch-no" title="branch not covered" >-1;</span>
+        const lastCell = lastRow<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[lastColumn];
 &nbsp;
-        // Clear Table selection
-        clearSelectedCells(tableModel, {
-            firstRow: tableModel.rows.length - 1,
-            firstColumn: 0,
-            lastRow: tableModel.rows.length - 1,
-            lastColumn: tableModel.widths.length - 1,
-        });
-        normalizeTable(tableModel, model.format);
+        if (!rawEvent.shiftKey &amp;&amp; lastCell &amp;&amp; lastCell === cell) {
+            const tableModel = mutateBlock(readonlyTableModel);
+            insertTableRow(tableModel, 'insertBelow');
 &nbsp;
-        // Add selection marker to the first cell of the new row
-        const markerParagraph = tableModel.rows[tableModel.rows.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>locks[0];
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (markerParagraph.blockType == 'Paragraph') {
-            const marker = createSelectionMarker(model.format);
+            // Clear Table selection
+            clearSelectedCells(tableModel, {
+                firstRow: tableModel.rows.length - 1,
+                firstColumn: 0,
+                lastRow: tableModel.rows.length - 1,
+                lastColumn: lastColumn,
+            });
+            normalizeTable(tableModel, model.format);
 &nbsp;
-            mutateBlock(markerParagraph).segments.unshift(marker);
-            setParagraphNotImplicit(markerParagraph);
-            setSelection(tableModel.rows[tableModel.rows.length - 1].cells[0], marker);
+            // Add selection marker to the first cell of the new row
+            const markerParagraph =
+                tableModel.rows[tableModel.rows.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>locks[0];
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (markerParagraph.blockType == 'Paragraph') {
+                const marker = createSelectionMarker(model.format);
+&nbsp;
+                mutateBlock(markerParagraph).segments.unshift(marker);
+                setParagraphNotImplicit(markerParagraph);
+                setSelection(tableModel.rows[tableModel.rows.length - 1].cells[0], marker);
+            }
+&nbsp;
+            rawEvent.preventDefault();
+            return true;
         }
-&nbsp;
-        rawEvent.preventDefault();
-        return true;
     }
 &nbsp;
     return false;
@@ -247,7 +250,7 @@ export function handleTabOnTableCell(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Apr 21 2025 17:27:42 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 24 2025 17:04:37 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
