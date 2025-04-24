@@ -1,4 +1,5 @@
 import * as React from 'react';
+import InsertCustomContainerPane from './insertCustomContainer/InsertCustomContainerPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import PastePane from './paste/PastePane';
 import { ApiPaneProps, ApiPlaygroundComponent } from './ApiPaneProps';
@@ -23,6 +24,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     paste: {
         name: 'Paste',
         component: PastePane,
+    },
+    customContainer: {
+        name: 'Insert Custom Container',
+        component: InsertCustomContainerPane,
     },
     more: {
         name: 'Coming soon...',
