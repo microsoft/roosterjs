@@ -64,6 +64,9 @@ export function formatTableWithContentModel(
         {
             apiName,
             selectionOverride,
+        },
+        {
+            recalculateTableSize: 'selected',
         }
     );
 }
