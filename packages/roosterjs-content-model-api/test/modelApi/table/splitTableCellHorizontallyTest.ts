@@ -307,4 +307,41 @@ describe('splitTableCellHorizontally', () => {
         expect(table.rows[0].cells[1].dataset).toEqual({ editingInfo: '{"bgColorOverride":true}' });
         expect(table.rows[0].cells[1].format).toEqual({ backgroundColor: '1' });
     });
+
+    it('cell already has width', () => {
+        const table = createTable(1);
+        const cells = [createTableCell(false, false, false, { width: '100px' })];
+
+        table.rows[0].cells = cells;
+        table.widths = [100];
+        table.rows[0].height = 200;
+
+        cells[0].isSelected = true;
+
+        splitTableCellHorizontally(table);
+
+        expect(cells).toEqual([
+            {
+                blockGroupType: 'TableCell',
+                blocks: [],
+                format: {},
+                spanLeft: false,
+                spanAbove: false,
+                isHeader: false,
+                dataset: {},
+                isSelected: true,
+            },
+            {
+                blockGroupType: 'TableCell',
+                blocks: [],
+                format: {},
+                spanLeft: false,
+                spanAbove: false,
+                isHeader: false,
+                dataset: {},
+                isSelected: true,
+            },
+        ]);
+        expect(table.widths).toEqual([50, 50]);
+    });
 });
