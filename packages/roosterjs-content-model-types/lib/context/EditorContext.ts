@@ -72,5 +72,5 @@ export interface EditorContext {
     /**
      * When set to true, size of table will be recalculated when converting from DOM to Content Model.
      */
-    recalculateTableSize?: boolean;
+    recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
 }
