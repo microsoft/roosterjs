@@ -2,6 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
+import { getSelectionRootNode } from '../../domUtils/selection/getSelectionRootNode';
 import { isElementOfType } from '../../domUtils/isElementOfType';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { parseFormat } from '../utils/parseFormat';
@@ -47,6 +48,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const tableSelection = context.selection?.type == 'table' ? context.selection : null;
             const selectedTable = tableSelection?.table;
             const hasTableSelection = selectedTable == tableElement;
+            const recalculateTableSize = shouldRecalculateTableSize(tableElement, context);
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -130,7 +132,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         const td = tr.cells[sourceCol];
                         const hasSelectionBeforeCell = context.isInSelection;
 
-                        if (context.recalculateTableSize) {
+                        if (recalculateTableSize) {
                             const colEnd = targetCol + td.colSpan;
                             const rowEnd = row + td.rowSpan;
                             const needCalcWidth = columnPositions[colEnd] === undefined;
@@ -343,4 +345,25 @@ function processColGroup(
     }
 
     return hasColGroup;
+}
+
+function shouldRecalculateTableSize(table: HTMLTableElement, context: DomToModelContext): boolean {
+    switch (context.recalculateTableSize) {
+        case true:
+        case 'all':
+            return true;
+
+        case 'selected':
+            const selectionRoot = getSelectionRootNode(context.selection);
+
+            return (
+                !!selectionRoot &&
+                (selectionRoot == table ||
+                    table.contains(selectionRoot) ||
+                    selectionRoot.contains(table))
+            );
+
+        default:
+            return false;
+    }
 }
