@@ -8,7 +8,8 @@ export function removeUnnecessarySpan(root: Node) {
         if (
             isNodeOfType(child, 'ELEMENT_NODE') &&
             child.tagName == 'SPAN' &&
-            child.attributes.length == 0
+            child.attributes.length == 0 &&
+            !child.shadowRoot
         ) {
             const node = child;
             let refNode = child.nextSibling;
