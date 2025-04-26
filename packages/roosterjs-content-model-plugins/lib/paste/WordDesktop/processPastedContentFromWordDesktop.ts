@@ -11,7 +11,6 @@ import type {
     ContentModelBlockFormat,
     ContentModelListItemLevelFormat,
     ContentModelTableFormat,
-    DOMCreator,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -26,8 +25,8 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  * Handles Pasted content when source is Word Desktop
  * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: BeforePasteEvent, domCreator: DOMCreator) {
-    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, domCreator);
+export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
