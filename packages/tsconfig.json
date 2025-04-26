@@ -21,5 +21,9 @@
         "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["./*/lib/**/*.ts", "./*/lib/**/*.tsx"]
+    "include": [
+        "./*/lib/**/*.ts",
+        "./*/lib/**/*.tsx",
+        "roosterjs-content-model-plugins/lib/paste/parsers/listLevelParser.ts"
+    ]
 }
