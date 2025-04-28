@@ -15,14 +15,14 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('pruneUnselectedModel', () => {
-    it('should handle an empty document', () => {
+    it('handles empty document by removing all blocks', () => {
         const group = createContentModelDocument();
         pruneUnselectedModel(group);
 
         expect(group).toEqual({ blockGroupType: 'Document', blocks: [] });
     });
 
-    it('should remove all blocks when no selection exists', () => {
+    it('removes all blocks when no selection exists', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -39,7 +39,7 @@ describe('pruneUnselectedModel', () => {
         expect(group).toEqual({ blockGroupType: 'Document', blocks: [] });
     });
 
-    it('should retain a single selected segment', () => {
+    it('retains a single selected segment in a paragraph', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -69,7 +69,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain multiple selected segments', () => {
+    it('retains multiple selected segments across paragraphs', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -107,7 +107,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain selection inside a list item', () => {
+    it('retains selection inside a list item', () => {
         const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para1 = createParagraph();
@@ -116,6 +116,41 @@ describe('pruneUnselectedModel', () => {
         const text2 = createText('text2');
 
         text1.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+
+        listItem.blocks.push(para1);
+
+        group.blocks.push(listItem);
+        group.blocks.push(para2);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('retains list and text after a paragraph', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([]);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -151,11 +186,18 @@ describe('pruneUnselectedModel', () => {
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text2', format: {}, isSelected: true },
+                    ],
+                    format: {},
+                },
             ],
         });
     });
 
-    it('should retain selection inside a blockquote', () => {
+    it('retains selection inside a blockquote', () => {
         const group = createContentModelDocument();
         const quote = createFormatContainer('blockquote');
         const para1 = createParagraph();
@@ -174,26 +216,14 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(para2);
 
         pruneUnselectedModel(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'text1',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
                 },
@@ -201,7 +231,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain selection inside a table cell', () => {
+    it('retains selection inside a table cell', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
@@ -236,7 +266,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain selection inside nested table, list, and blockquote', () => {
+    it('retains selection inside nested table, list, and blockquote', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
@@ -260,39 +290,14 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(para2);
 
         pruneUnselectedModel(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'text1',
-                                            format: {},
-                                            isSelected: true,
-                                        },
-                                    ],
-                                    format: {},
-                                },
-                            ],
-                            levels: [],
-                            formatHolder: {
-                                segmentType: 'SelectionMarker',
-                                isSelected: false,
-                                format: {},
-                            },
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
                 },
@@ -300,7 +305,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle table selection with selected cell content', () => {
+    it('handles table selection with selected cell content', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell1 = createTableCell();
@@ -368,7 +373,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle table selection ignoring selected cell content', () => {
+    it('handles table selection ignoring selected cell content', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell1 = createTableCell();
@@ -436,7 +441,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle whole table selection ignoring selected cell content', () => {
+    it('handles whole table selection ignoring selected cell content', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell1 = createTableCell();
@@ -516,7 +521,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection spanning from the end of one paragraph to another', () => {
+    it('handles selection spanning from the end of one paragraph to another', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '20px' });
         const para2 = createParagraph(false, { lineHeight: '30px' });
@@ -542,7 +547,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection spanning to the start of a paragraph', () => {
+    it('handles selection spanning to the start of a paragraph', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '20px' });
         const para2 = createParagraph(false, { lineHeight: '30px' });
@@ -568,7 +573,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection spanning from the end to the start of a paragraph', () => {
+    it('handles selection spanning from the end to the start of a paragraph', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '20px' });
         const para2 = createParagraph(false, { lineHeight: '30px' });
@@ -598,7 +603,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection spanning multiple paragraphs', () => {
+    it('handles selection spanning multiple paragraphs', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -650,7 +655,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should include format holder when selection spans a list item', () => {
+    it('includes format holder when selection spans a list item', () => {
         const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
@@ -662,35 +667,22 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(listItem);
 
         pruneUnselectedModel(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test1',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
                     ],
-                    levels: [],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
         });
     });
 
-    it('should exclude format holder when not all segments in a list item are selected', () => {
+    it('excludes format holder when not all segments in a list item are selected', () => {
         const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
@@ -704,35 +696,22 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(listItem);
 
         pruneUnselectedModel(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test1',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
                     ],
-                    levels: [],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
         });
     });
 
-    it('should handle selection inside a general node', () => {
+    it('handles selection inside a general node', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para = createParagraph(true /*implicit*/);
@@ -746,36 +725,23 @@ describe('pruneUnselectedModel', () => {
         group.blocks.push(generalSpan);
 
         pruneUnselectedModel(group);
+
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
-                <any>{
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'General',
-                    segmentType: 'General',
-                    format: {},
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test1',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                            isImplicit: true,
-                        },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
                     ],
-                    element: jasmine.anything(),
+                    format: {},
+                    isImplicit: true,
                 },
             ],
         });
     });
 
-    it('should handle selection inside a general segment', () => {
+    it('handles selection inside a general segment', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para1 = createParagraph(true /*implicit*/);
@@ -834,7 +800,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle empty general segment with no selection', () => {
+    it('handles empty general segment with no selection', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para1 = createParagraph(true /*implicit*/);
@@ -846,7 +812,7 @@ describe('pruneUnselectedModel', () => {
         expect(group).toEqual({ blockGroupType: 'Document', blocks: [] });
     });
 
-    it('should handle general segment with selected content', () => {
+    it('handles general segment with selected content', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para1 = createParagraph(true /*implicit*/);
@@ -899,7 +865,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle empty selected general segment', () => {
+    it('handles empty selected general segment', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para1 = createParagraph(true /*implicit*/);
@@ -932,7 +898,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selected general segment with content', () => {
+    it('handles selected general segment with content', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para1 = createParagraph(true /*implicit*/);
@@ -971,7 +937,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection of a divider', () => {
+    it('handles selection of a divider', () => {
         const group = createContentModelDocument();
         const divider = createDivider('div');
 
@@ -985,7 +951,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain first selection in nested block groups', () => {
+    it('retains first selection in nested block groups', () => {
         const group = createContentModelDocument();
         const quote1 = createFormatContainer('blockquote');
         const quote2 = createFormatContainer('blockquote');
@@ -1053,7 +1019,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain whole table selection', () => {
+    it('retains whole table selection', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
@@ -1105,7 +1071,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should retain selection of specific table cells', () => {
+    it('retains selection of specific table cells', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
@@ -1171,7 +1137,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should include list format holder when any segment is selected', () => {
+    it('includes list format holder when any segment is selected', () => {
         const doc = createContentModelDocument();
         const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
@@ -1185,36 +1151,21 @@ describe('pruneUnselectedModel', () => {
         doc.blocks.push(list);
 
         pruneUnselectedModel(doc);
-
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test2',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test2', format: {}, isSelected: true },
                     ],
-                    levels: [{ listType: 'OL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
         });
     });
 
-    it('should include list format holder when all segments are selected', () => {
+    it('includes list format holder when all segments are selected', () => {
         const doc = createContentModelDocument();
         const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
@@ -1229,41 +1180,23 @@ describe('pruneUnselectedModel', () => {
         doc.blocks.push(list);
 
         pruneUnselectedModel(doc);
+
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test1',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'test2',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                            ],
-                            format: {},
-                        },
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
+                        { segmentType: 'Text', text: 'test2', format: {}, isSelected: true },
                     ],
-                    levels: [{ listType: 'OL', format: {}, dataset: {} }],
-                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
                     format: {},
                 },
             ],
         });
     });
 
-    it('should handle selection of an entity segment', () => {
+    it('handles selection of an entity segment', () => {
         const doc = createContentModelDocument();
         const para = createParagraph();
         const entity = createEntity(null!);
@@ -1299,7 +1232,7 @@ describe('pruneUnselectedModel', () => {
         });
     });
 
-    it('should handle selection of an entity block', () => {
+    it('handles selection of an entity block', () => {
         const doc = createContentModelDocument();
         const entity = createEntity(null!);
 

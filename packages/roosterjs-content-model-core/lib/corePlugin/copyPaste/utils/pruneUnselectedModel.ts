@@ -19,7 +19,6 @@ export function pruneUnselectedModel(
         switch (block.blockType) {
             case 'BlockGroup':
                 pruneUnselectedModel(block, isSelectionAfterElement);
-
                 if (
                     block.blockGroupType == 'General'
                         ? block.blocks.length == 0 && !block.isSelected
@@ -97,5 +96,10 @@ export function pruneUnselectedModel(
                 }
                 break;
         }
+    }
+
+    const block = model.blocks[0];
+    if (model.blocks.length == 1 && block.blockType == 'BlockGroup') {
+        model.blocks = block.blocks;
     }
 }
