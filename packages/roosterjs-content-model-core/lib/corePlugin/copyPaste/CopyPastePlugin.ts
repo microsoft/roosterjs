@@ -137,7 +137,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             }
 
             const tempDiv = this.getTempDiv(this.editor.getDocument());
-            const context = createModelToDomContext(undefined /* editorContext */);
+            const context = createModelToDomContext();
 
             context.onNodeCreated = onNodeCreated;
 
