@@ -8,13 +8,15 @@ const STYLE_TAG_END = '</style>';
 
 function extractStyleTagsFromHtml(htmlContent: string): string[] {
     const styles: string[] = [];
-    let styleStartIndex = htmlContent.indexOf(STYLE_TAG);
+    const lowerCaseHtmlContent = htmlContent.toLowerCase();
+
+    let styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG);
     while (styleStartIndex >= 0) {
-        const styleEndIndex = htmlContent.indexOf(STYLE_TAG_END, styleStartIndex);
+        const styleEndIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG_END, styleStartIndex);
         if (styleEndIndex >= 0) {
             const styleContent = htmlContent.substring(styleStartIndex + 7, styleEndIndex).trim();
             styles.push(styleContent);
-            styleStartIndex = htmlContent.indexOf(STYLE_TAG, styleEndIndex);
+            styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG, styleEndIndex);
         } else {
             break;
         }
