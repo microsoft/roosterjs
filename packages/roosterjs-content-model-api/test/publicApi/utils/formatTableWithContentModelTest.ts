@@ -43,10 +43,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback);
 
         expect(callback).not.toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: undefined,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: undefined,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(formatResult).toBeFalse();
     });
 
@@ -63,10 +69,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback);
 
         expect(callback).not.toHaveBeenCalled();
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: undefined,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: undefined,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(formatResult).toBeFalse();
         expect(table.cachedElement).toBeDefined();
     });
@@ -91,10 +103,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback);
 
         expect(callback).toHaveBeenCalledWith(table);
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: undefined,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: undefined,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(
             ensureFocusableParagraphForTable.ensureFocusableParagraphForTable
         ).not.toHaveBeenCalled();
@@ -127,10 +145,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback);
 
         expect(callback).toHaveBeenCalledWith(table);
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: undefined,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: undefined,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(
             ensureFocusableParagraphForTable.ensureFocusableParagraphForTable
         ).toHaveBeenCalledWith(model, [model], table);
@@ -189,10 +213,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback);
 
         expect(callback).toHaveBeenCalledWith(table);
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: undefined,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: undefined,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(
             ensureFocusableParagraphForTable.ensureFocusableParagraphForTable
         ).toHaveBeenCalledWith(model, [model], table);
@@ -254,10 +284,16 @@ describe('formatTableWithContentModel', () => {
         formatTableWithContentModel(editor, 'editTable', callback, mockedSelection);
 
         expect(callback).toHaveBeenCalledWith(table);
-        expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.anything(), {
-            apiName: 'editTable',
-            selectionOverride: mockedSelection,
-        });
+        expect(formatContentModelSpy).toHaveBeenCalledWith(
+            jasmine.anything(),
+            {
+                apiName: 'editTable',
+                selectionOverride: mockedSelection,
+            },
+            {
+                recalculateTableSize: 'selected',
+            }
+        );
         expect(
             ensureFocusableParagraphForTable.ensureFocusableParagraphForTable
         ).toHaveBeenCalledWith(model, [model], table);

@@ -20,8 +20,8 @@ export function handleTabOnTable(model: ReadonlyContentModelDocument, rawEvent: 
 }
 
 function isWholeTableSelected(tableModel: ReadonlyContentModelTable) {
-    return (
-        tableModel.rows[0]?.cells[0]?.isSelected &&
-        tableModel.rows[tableModel.rows.length - 1]?.cells[tableModel.widths.length - 1]?.isSelected
-    );
+    const lastRow = tableModel.rows[tableModel.rows.length - 1];
+    const lastCell = lastRow?.cells[lastRow.cells.length - 1];
+
+    return tableModel.rows[0]?.cells[0]?.isSelected && lastCell?.isSelected;
 }
