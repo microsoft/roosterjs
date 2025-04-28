@@ -795,6 +795,48 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
+    it('has old range, normal range on indexed text, no segment', () => {
+        const node1 = document.createTextNode('test1');
+        const node2 = document.createTextNode('test2');
+        const oldRangeEx: CacheSelection = {
+            type: 'range',
+            start: {
+                node: node1,
+                offset: 2,
+            },
+            end: {
+                node: node1,
+                offset: 2,
+            },
+            isReverted: false,
+        };
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node2, 2),
+            isReverted: false,
+        };
+
+        (node1 as any).__roosterjsContentModel = {
+            paragraph: createParagraph(),
+            segments: [],
+        };
+
+        const text2 = createText('text2');
+        const para2 = createParagraph();
+
+        para2.segments.push(text2);
+        (node2 as any).__roosterjsContentModel = {
+            paragraph: para2,
+            segments: [text2],
+        };
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx, oldRangeEx);
+
+        expect(result).toBeTrue();
+        expect(setSelectionSpy).toHaveBeenCalled();
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
     it('has old range - collapsed, expanded new range', () => {
         const node = document.createTextNode('test') as any;
         const oldRangeEx: CacheSelection = {

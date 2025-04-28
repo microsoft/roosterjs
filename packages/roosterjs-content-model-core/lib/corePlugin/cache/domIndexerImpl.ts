@@ -224,13 +224,17 @@ export class DomIndexerImpl implements DomIndexer {
         oldSelection?: CacheSelection
     ): boolean {
         if (oldSelection) {
+            let startNode: Node | undefined;
+
             if (
                 oldSelection.type == 'range' &&
                 this.isCollapsed(oldSelection) &&
-                isNodeOfType(oldSelection.start.node, 'TEXT_NODE') &&
-                isIndexedSegment(oldSelection.start.node)
+                (startNode = oldSelection.start.node) &&
+                isNodeOfType(startNode, 'TEXT_NODE') &&
+                isIndexedSegment(startNode) &&
+                startNode.__roosterjsContentModel.segments.length > 0
             ) {
-                this.reconcileTextSelection(oldSelection.start.node);
+                this.reconcileTextSelection(startNode);
             } else {
                 setSelection(model);
             }
