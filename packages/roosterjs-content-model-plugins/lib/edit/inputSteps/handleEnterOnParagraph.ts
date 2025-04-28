@@ -11,6 +11,7 @@ export const handleEnterOnParagraph: DeleteSelectionStep = context => {
 
     if (context.deleteResult == 'notDeleted' && paraIndex >= 0) {
         const newPara = splitParagraph(context.insertPoint);
+        delete newPara.format.id;
 
         mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newPara);
 

@@ -25,6 +25,14 @@ export type EditOptions = {
      * @default true
      */
     handleExpandedSelectionOnDelete?: boolean;
+
+    /**
+     * Whether Rooster should handle the Enter key or not
+     * @default false
+     * @param editor the editor object
+     * @returns
+     */
+    shouldHandleEnterKey?: ((editor: IEditor) => boolean) | boolean;
 };
 
 const BACKSPACE_KEY = 8;
@@ -40,6 +48,7 @@ const DEAD_KEY = 229;
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
     handleExpandedSelectionOnDelete: true,
+    shouldHandleEnterKey: false,
 };
 
 /**
@@ -54,7 +63,6 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleNormalEnter = false;
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
@@ -77,7 +85,6 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('HandleEnterKey');
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -179,7 +186,11 @@ export class EditPlugin implements EditorPlugin {
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     // And leave it to browser when shift key is pressed so that browser will trigger cut event
                     if (!event.rawEvent.shiftKey) {
-                        keyboardDelete(editor, rawEvent, this.options.handleExpandedSelectionOnDelete);
+                        keyboardDelete(
+                            editor,
+                            rawEvent,
+                            this.options.handleExpandedSelectionOnDelete
+                        );
                     }
                     break;
 
@@ -198,9 +209,14 @@ export class EditPlugin implements EditorPlugin {
                     if (
                         !hasCtrlOrMetaKey &&
                         !event.rawEvent.isComposing &&
-                        event.rawEvent.keyCode !== DEAD_KEY
+                        event.rawEvent.keyCode !== DEAD_KEY &&
+                        this.editor
                     ) {
-                        keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                        const handleEnterKey =
+                            typeof this.options.shouldHandleEnterKey == 'boolean'
+                                ? this.options.shouldHandleEnterKey
+                                : this.options.shouldHandleEnterKey?.(this.editor);
+                        keyboardEnter(editor, rawEvent, !!handleEnterKey);
                     }
                     break;
 

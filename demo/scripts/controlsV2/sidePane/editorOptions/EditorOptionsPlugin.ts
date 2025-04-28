@@ -61,7 +61,7 @@ const initialState: OptionState = {
         handleTabKey: true,
     },
     customReplacements: emojiReplacements,
-    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache', 'HandleEnterKey']),
+    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

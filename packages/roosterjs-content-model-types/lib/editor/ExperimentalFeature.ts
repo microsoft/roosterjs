@@ -15,6 +15,7 @@ export type ExperimentalFeature =
      */
     | 'LegacyImageSelection'
     /**
+     * @deprecated
      * Use Content Model handle ENTER key
      */
     | 'HandleEnterKey';

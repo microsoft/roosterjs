@@ -21,14 +21,15 @@ const apiEntries: { [key: string]: ApiEntry } = {
         name: 'Insert Entity',
         component: InsertEntityPane,
     },
-    paste: {
-        name: 'Paste',
-        component: PastePane,
-    },
     customContainer: {
         name: 'Insert Custom Container',
         component: InsertCustomContainerPane,
     },
+    paste: {
+        name: 'Paste',
+        component: PastePane,
+    },
+
     more: {
         name: 'Coming soon...',
     },
