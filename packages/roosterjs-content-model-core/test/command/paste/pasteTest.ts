@@ -211,8 +211,8 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
 
@@ -267,8 +267,8 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(4);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
 
