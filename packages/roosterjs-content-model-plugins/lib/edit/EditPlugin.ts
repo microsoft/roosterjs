@@ -27,10 +27,10 @@ export type EditOptions = {
     handleExpandedSelectionOnDelete?: boolean;
 
     /**
-     * Whether Rooster should handle the Enter key or not
-     * @default false
-     * @param editor the editor object
-     * @returns
+     * Callback function to determine whether the Rooster should handle the Enter key press.
+     * If the function returns true, the Rooster will handle the Enter key press instead of the browser.
+     * @param editor - The editor instance.
+     * @returns A boolean
      */
     shouldHandleEnterKey?: ((editor: IEditor) => boolean) | boolean;
 };
@@ -48,7 +48,6 @@ const DEAD_KEY = 229;
 const DefaultOptions: Partial<EditOptions> = {
     handleTabKey: true,
     handleExpandedSelectionOnDelete: true,
-    shouldHandleEnterKey: false,
 };
 
 /**
@@ -63,12 +62,33 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
+    private handleNormalEnter: (editor: IEditor) => boolean = (editor: IEditor) => false;
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
      * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
      */
     constructor(private options: EditOptions = DefaultOptions) {}
+
+    private createNormalEnterChecker(result: boolean) {
+        return result ? () => true : () => false;
+    }
+
+    private getHandleNormalEnter(editor: IEditor) {
+        switch (typeof this.options.shouldHandleEnterKey) {
+            case 'function':
+                return this.options.shouldHandleEnterKey;
+                break;
+            case 'boolean':
+                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
+                break;
+            default:
+                return this.createNormalEnterChecker(
+                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
+                );
+                break;
+        }
+    }
 
     /**
      * Get name of this plugin
@@ -85,6 +105,7 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.handleNormalEnter = this.getHandleNormalEnter(editor);
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -209,14 +230,9 @@ export class EditPlugin implements EditorPlugin {
                     if (
                         !hasCtrlOrMetaKey &&
                         !event.rawEvent.isComposing &&
-                        event.rawEvent.keyCode !== DEAD_KEY &&
-                        this.editor
+                        event.rawEvent.keyCode !== DEAD_KEY
                     ) {
-                        const handleEnterKey =
-                            typeof this.options.shouldHandleEnterKey == 'boolean'
-                                ? this.options.shouldHandleEnterKey
-                                : this.options.shouldHandleEnterKey?.(this.editor);
-                        keyboardEnter(editor, rawEvent, !!handleEnterKey);
+                        keyboardEnter(editor, rawEvent, this.handleNormalEnter(editor));
                     }
                     break;
 
