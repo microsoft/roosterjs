@@ -1,6 +1,7 @@
 import type {
     ContentModelBlockGroupBase,
     ContentModelBlockGroupType,
+    ContentModelParagraph,
     ContentModelSegment,
     ContentModelTableCell,
     ContentModelTableRow,
@@ -10,15 +11,23 @@ import type {
  * @internal
  */
 export function pruneUnselectedModel(
+    model: ContentModelBlockGroupBase<ContentModelBlockGroupType, HTMLElement>
+) {
+    pruneUnselectedModelInternal(model, false /* isSelectionAfterElement */);
+
+    unwrap(model);
+}
+
+function pruneUnselectedModelInternal(
     model: ContentModelBlockGroupBase<ContentModelBlockGroupType, HTMLElement>,
-    isSelectionAfterElement: boolean = false
+    isSelectionAfterElement: boolean
 ) {
     for (let index = model.blocks.length - 1; index >= 0; index--) {
         const block = model.blocks[index];
 
         switch (block.blockType) {
             case 'BlockGroup':
-                pruneUnselectedModel(block, isSelectionAfterElement);
+                pruneUnselectedModelInternal(block, isSelectionAfterElement);
                 if (
                     block.blockGroupType == 'General'
                         ? block.blocks.length == 0 && !block.isSelected
@@ -61,7 +70,7 @@ export function pruneUnselectedModel(
                     for (let j = 0; j < row.cells.length; j++) {
                         const cell = row.cells[j];
                         if (!cell.isSelected) {
-                            pruneUnselectedModel(cell, isSelectionAfterElement);
+                            pruneUnselectedModelInternal(cell, isSelectionAfterElement);
                         } else {
                             isSelectionAfterElement = true;
                         }
@@ -97,9 +106,38 @@ export function pruneUnselectedModel(
                 break;
         }
     }
+    return isSelectionAfterElement;
+}
 
-    const block = model.blocks[0];
-    if (model.blocks.length == 1 && block.blockType == 'BlockGroup') {
-        model.blocks = block.blocks;
+function unwrap(model: ContentModelBlockGroupBase<ContentModelBlockGroupType, HTMLElement>) {
+    let block = model.blocks[0];
+    if (model.blocks.length == 1) {
+        while (block.blockType == 'BlockGroup') {
+            model.blocks = block.blocks;
+            block = model.blocks[0];
+
+            if (model.blocks.length > 1) {
+                return;
+            }
+        }
+
+        if (block.blockType == 'Paragraph') {
+            block.isImplicit = true;
+            block.format = {};
+            inheritSegmentFormatToChildren(block);
+        }
+    }
+}
+
+function inheritSegmentFormatToChildren(parent: ContentModelParagraph) {
+    const value = parent.segmentFormat;
+    if (value !== undefined) {
+        for (let index = 0; index < parent.segments.length; index++) {
+            const segment = parent.segments[index];
+            segment.format = {
+                ...parent.segmentFormat,
+                ...segment.format,
+            };
+        }
     }
 }

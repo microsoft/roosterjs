@@ -1,10 +1,12 @@
 import { pruneUnselectedModel } from '../../../../lib/corePlugin/copyPaste/utils/pruneUnselectedModel';
 import {
+    createBr,
     createContentModelDocument,
     createDivider,
     createEntity,
     createFormatContainer,
     createGeneralSegment,
+    createImage,
     createListItem,
     createListLevel,
     createParagraph,
@@ -64,6 +66,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -136,6 +139,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -226,6 +230,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -261,6 +266,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -300,6 +306,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'text1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -541,7 +548,8 @@ describe('pruneUnselectedModel', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [{ segmentType: 'Text', text: 'test', format: {}, isSelected: true }],
-                    format: { lineHeight: '30px' },
+                    format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -567,7 +575,8 @@ describe('pruneUnselectedModel', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [{ segmentType: 'Text', text: 'test', format: {}, isSelected: true }],
-                    format: { lineHeight: '20px' },
+                    format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -597,7 +606,8 @@ describe('pruneUnselectedModel', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [{ segmentType: 'Text', text: 'test', format: {}, isSelected: true }],
-                    format: { lineHeight: '30px' },
+                    format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -677,6 +687,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -706,6 +717,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'test1', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -873,7 +885,6 @@ describe('pruneUnselectedModel', () => {
         generalSpan.isSelected = true;
         para1.segments.push(generalSpan);
         group.blocks.push(para1);
-        debugger;
         pruneUnselectedModel(group);
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -993,6 +1004,7 @@ describe('pruneUnselectedModel', () => {
                             format: {},
                         },
                     ],
+
                     format: {},
                 },
                 {
@@ -1160,6 +1172,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'test2', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -1191,6 +1204,7 @@ describe('pruneUnselectedModel', () => {
                         { segmentType: 'Text', text: 'test2', format: {}, isSelected: true },
                     ],
                     format: {},
+                    isImplicit: true,
                 },
             ],
         });
@@ -1226,6 +1240,7 @@ describe('pruneUnselectedModel', () => {
                             isSelected: true,
                         },
                     ],
+                    isImplicit: true,
                     format: {},
                 },
             ],
@@ -1251,6 +1266,211 @@ describe('pruneUnselectedModel', () => {
                     entityFormat: { isReadonly: true, id: undefined, entityType: undefined },
                     wrapper: <any>null,
                     isSelected: true,
+                },
+            ],
+        });
+    });
+
+    it('Inherits the segment format to child segments', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph(
+            false /* isImplicit */,
+            {
+                backgroundColor: 'red',
+            },
+            {
+                backgroundColor: 'blue',
+                fontSize: '12px',
+            }
+        );
+        const segment1 = createText('Text1');
+        const segment2 = createBr();
+        const segment3 = createGeneralSegment(document.createElement('span'));
+        const segment4 = createEntity(document.createElement('span'));
+        const segment5 = createImage('https://www.bing.com');
+
+        segment1.isSelected = true;
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        segment4.isSelected = true;
+        segment5.isSelected = true;
+
+        para.segments.push(segment1, segment2, segment3, segment4, segment5);
+        doc.blocks.push(para);
+
+        pruneUnselectedModel(doc);
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text1',
+                            format: { backgroundColor: 'blue', fontSize: '12px' },
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: { backgroundColor: 'blue', fontSize: '12px' },
+                            isSelected: true,
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: { backgroundColor: 'blue', fontSize: '12px' },
+                            blocks: [],
+                            element: jasmine.anything(),
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: { backgroundColor: 'blue', fontSize: '12px' },
+                            entityFormat: {
+                                isReadonly: true,
+                                id: undefined,
+                                entityType: undefined,
+                            },
+                            wrapper: jasmine.anything(),
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Image',
+                            src: 'https://www.bing.com',
+                            format: { backgroundColor: 'blue', fontSize: '12px' },
+                            dataset: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: { backgroundColor: 'blue', fontSize: '12px' },
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Inherits the segment format to child segments, but retain the format if existent', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph(
+            false /* isImplicit */,
+            {
+                backgroundColor: 'red',
+            },
+            {
+                backgroundColor: 'blue',
+                fontSize: '12px',
+                textColor: 'aquamarine',
+            }
+        );
+        const segment1 = createText('Text1', {
+            backgroundColor: 'red',
+            fontSize: '10px',
+        });
+        const segment2 = createBr({
+            backgroundColor: 'red',
+            fontSize: '10px',
+        });
+        const segment3 = createGeneralSegment(document.createElement('span'), {
+            backgroundColor: 'red',
+            fontSize: '10px',
+        });
+        const segment4 = createEntity(document.createElement('span'), false, {
+            backgroundColor: 'red',
+            fontSize: '10px',
+        });
+        const segment5 = createImage('https://www.bing.com', {
+            backgroundColor: 'red',
+            fontSize: '10px',
+        });
+
+        segment1.isSelected = true;
+        segment2.isSelected = true;
+        segment3.isSelected = true;
+        segment4.isSelected = true;
+        segment5.isSelected = true;
+
+        para.segments.push(segment1, segment2, segment3, segment4, segment5);
+        doc.blocks.push(para);
+
+        pruneUnselectedModel(doc);
+        navigator.clipboard.writeText(JSON.stringify(doc));
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Text1',
+                            format: {
+                                backgroundColor: 'red',
+                                fontSize: '10px',
+                                textColor: 'aquamarine',
+                            },
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {
+                                backgroundColor: 'red',
+                                fontSize: '10px',
+                                textColor: 'aquamarine',
+                            },
+                            isSelected: true,
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {
+                                backgroundColor: 'red',
+                                fontSize: '10px',
+                                textColor: 'aquamarine',
+                            },
+                            blocks: [],
+                            element: jasmine.anything(),
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            format: {
+                                backgroundColor: 'red',
+                                fontSize: '10px',
+                                textColor: 'aquamarine',
+                            },
+                            entityFormat: {
+                                isReadonly: false,
+                                id: undefined,
+                                entityType: undefined,
+                            },
+                            wrapper: jasmine.anything(),
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Image',
+                            src: 'https://www.bing.com',
+                            format: {
+                                backgroundColor: 'red',
+                                fontSize: '10px',
+                                textColor: 'aquamarine',
+                            },
+                            dataset: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        backgroundColor: 'blue',
+                        fontSize: '12px',
+                        textColor: 'aquamarine',
+                    },
+                    isImplicit: true,
                 },
             ],
         });
