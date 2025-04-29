@@ -285,8 +285,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private setContentHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
-        if (selection?.type == 'image' && selection.image.dataset.isEditing) {
-            delete selection.image.dataset.isEditing;
+        if (selection?.type == 'image') {
+            if (selection.image.dataset.isEditing) {
+                delete selection.image.dataset.isEditing;
+            }
             this.cleanInfo();
             this.isEditing = false;
             this.isCropMode = false;
