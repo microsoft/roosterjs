@@ -1,4 +1,4 @@
-import { Preset } from './allPresets';
+import { Preset } from './Preset';
 
 export const image64x64Gradient: Preset = {
     buttonName: 'Image 64x64 All Colours - png',
