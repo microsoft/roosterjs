@@ -1148,8 +1148,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1195,6 +1196,123 @@ describe('handleEnterInlineEntity', () => {
         });
     });
 
+    it('handle after entity under list item', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {},
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [
+                        {
+                            dataset: {},
+                            listType: 'UL',
+                            format: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Entity',
+                                    blockType: 'Entity',
+                                    format: {},
+                                    entityFormat: {
+                                        entityType: '',
+                                        isReadonly: true,
+                                    },
+                                    wrapper: <any>{},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(result).toBeFalse();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {},
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [
+                        {
+                            dataset: {},
+                            listType: 'UL',
+                            format: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Entity',
+                                    blockType: 'Entity',
+                                    format: {},
+                                    entityFormat: {
+                                        entityType: '',
+                                        isReadonly: true,
+                                    },
+                                    wrapper: <any>{},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        });
+    });
+
     it('handle before entity', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -1234,8 +1352,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1315,8 +1434,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1394,8 +1514,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [

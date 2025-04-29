@@ -25,8 +25,8 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  * Handles Pasted content when source is Word Desktop
  * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: BeforePasteEvent, dom: any) {
-    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, dom);
+export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);

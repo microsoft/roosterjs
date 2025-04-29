@@ -200,9 +200,6 @@ describe('ImageEditPlugin', () => {
             type: 'image',
             image: mockedImage,
         });
-        const image = createImage('');
-        const paragraph = createParagraph();
-        paragraph.segments.push(image);
         plugin.cropImage();
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         plugin.onPluginEvent({
@@ -541,6 +538,32 @@ describe('ImageEditPlugin', () => {
             type: 'range',
             range: {} as any,
         });
+        plugin.onPluginEvent({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: target,
+            } as any,
+        });
+        expect(formatContentModelSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
+    it('mouseDown  on crop mode', () => {
+        const target = {
+            contains: () => true,
+        };
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.cropImage();
         plugin.onPluginEvent({
             eventType: 'mouseDown',
             rawEvent: {
