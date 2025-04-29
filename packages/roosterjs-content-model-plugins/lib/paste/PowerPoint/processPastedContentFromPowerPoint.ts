@@ -194,6 +194,6 @@ function getPptListStart(
             return bullet + ')';
 
         default:
-            undefined;
+            return undefined;
     }
 }
