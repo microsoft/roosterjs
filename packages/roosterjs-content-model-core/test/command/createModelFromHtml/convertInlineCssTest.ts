@@ -1,7 +1,5 @@
-import {
-    convertInlineCss,
-    CssRule,
-} from '../../../lib/command/createModelFromHtml/convertInlineCss';
+import { convertInlineCss } from '../../../lib/command/createModelFromHtml/convertInlineCss';
+import { CssRule } from 'roosterjs-content-model-types';
 
 describe('convertInlineCss', () => {
     it('Empty DOM, empty CSS', () => {
