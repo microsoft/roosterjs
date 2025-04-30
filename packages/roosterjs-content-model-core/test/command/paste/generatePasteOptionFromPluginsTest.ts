@@ -56,6 +56,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            cssRulesToBeConverted: [],
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(originalEvent).toEqual({
@@ -76,6 +77,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 attributeSanitizers: {},
             },
             containsBlockElements: false,
+            cssRulesToBeConverted: [],
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             'beforePaste',
@@ -89,6 +91,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                cssRulesToBeConverted: [],
             },
             true
         );
@@ -130,6 +133,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            cssRulesToBeConverted: [],
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -145,6 +149,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 domToModelOption: 'OptionResult',
                 customizedMerge: mockedCustomizedMerge,
                 containsBlockElements: false,
+                cssRulesToBeConverted: [],
             },
             true
         );
@@ -180,6 +185,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            cssRulesToBeConverted: [],
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -194,6 +200,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                cssRulesToBeConverted: [],
             },
             true
         );
@@ -214,6 +221,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 styleSanitizers: {},
                 attributeSanitizers: {},
             },
+            cssRulesToBeConverted: [],
             containsBlockElements: false,
         });
     });
@@ -247,6 +255,7 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'TypeResult' as any,
             domToModelOption: 'OptionResult' as any,
             containsBlockElements: false,
+            cssRulesToBeConverted: [],
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
     });

@@ -403,6 +403,7 @@ export {
     ContentModelFormatter,
 } from './parameter/FormatContentModelOptions';
 export { ContentModelFormatState } from './parameter/ContentModelFormatState';
+export { CssRule } from './parameter/CssRule';
 export { PasteTypeOrGetter } from './parameter/PasteTypeOrGetter';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';

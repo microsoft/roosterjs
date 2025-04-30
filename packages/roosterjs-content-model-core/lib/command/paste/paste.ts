@@ -65,7 +65,10 @@ export function paste(
     );
 
     // 5. Convert global CSS to inline CSS
-    convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
+    convertInlineCss(
+        eventResult.fragment,
+        htmlFromClipboard.globalCssRules.concat(eventResult.cssRulesToBeConverted || [])
+    );
 
     // 6. Merge pasted content into main Content Model
     mergePasteContent(editor, eventResult, isFirstPaste);

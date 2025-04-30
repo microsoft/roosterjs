@@ -12,6 +12,7 @@ export function createBeforePasteEventMock(
         htmlAfter: '',
         htmlAttributes: {},
         pasteType: 'normal',
+        cssRulesToBeConverted: [],
         domToModelOption: {
             additionalAllowedTags: [],
             additionalDisallowedTags: [],

@@ -1,7 +1,10 @@
-import { isBlockElement, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { retrieveCssRules } from '../createModelFromHtml/convertInlineCss';
-import type { ClipboardData } from 'roosterjs-content-model-types';
-import type { CssRule } from '../createModelFromHtml/convertInlineCss';
+import {
+    isBlockElement,
+    isNodeOfType,
+    toArray,
+    retrieveCssRules,
+} from 'roosterjs-content-model-dom';
+import type { CssRule, ClipboardData } from 'roosterjs-content-model-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';

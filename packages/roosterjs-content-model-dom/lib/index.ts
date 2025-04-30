@@ -101,6 +101,7 @@ export {
 } from './modelToDom/context/createModelToDomContext';
 
 export { isBold } from './domUtils/style/isBold';
+export { retrieveCssRules } from './domUtils/style/retrieveCssRules';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
 export { getDOMInsertPointRect } from './domUtils/selection/getDOMInsertPointRect';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';

@@ -2,6 +2,7 @@ import * as convertInlineCss from '../../../lib/command/createModelFromHtml/conv
 import * as createDomToModelContextForSanitizing from '../../../lib/command/createModelFromHtml/createDomToModelContextForSanitizing';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as parseFormat from 'roosterjs-content-model-dom/lib/domToModel/utils/parseFormat';
+import * as retrieveCssRules from 'roosterjs-content-model-dom/lib/domUtils/style/retrieveCssRules';
 import { createModelFromHtml } from '../../../lib/command/createModelFromHtml/createModelFromHtml';
 import {
     ContentModelGeneralBlock,
@@ -108,7 +109,7 @@ describe('createModelFromHtml', () => {
             mockedDoc
         );
         const mockedRules = 'RULES' as any;
-        const retrieveCssRulesSpy = spyOn(convertInlineCss, 'retrieveCssRules').and.returnValue(
+        const retrieveCssRulesSpy = spyOn(retrieveCssRules, 'retrieveCssRules').and.returnValue(
             mockedRules
         );
         const convertInlineCssSpy = spyOn(convertInlineCss, 'convertInlineCss');
@@ -170,7 +171,7 @@ describe('createModelFromHtml', () => {
             mockedDoc
         );
         const mockedRules = 'RULES' as any;
-        const retrieveCssRulesSpy = spyOn(convertInlineCss, 'retrieveCssRules').and.returnValue(
+        const retrieveCssRulesSpy = spyOn(retrieveCssRules, 'retrieveCssRules').and.returnValue(
             mockedRules
         );
         const convertInlineCssSpy = spyOn(convertInlineCss, 'convertInlineCss');

@@ -1,12 +1,7 @@
 import { addParser } from '../utils/addParser';
-import { isNodeOfType, moveChildNodes } from 'roosterjs-content-model-dom';
+import { isNodeOfType, moveChildNodes, retrieveCssRules } from 'roosterjs-content-model-dom';
 import { setProcessor } from '../utils/setProcessor';
-import type {
-    BeforePasteEvent,
-    ClipboardData,
-    DOMCreator,
-    ElementProcessor,
-} from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, DOMCreator, ElementProcessor } from 'roosterjs-content-model-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -14,6 +9,8 @@ const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 const TABLE_SELECTOR = 'table';
 const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
+const HTML_COMMENT_START = '\x3C!--';
+const HTML_COMMENT_END = '-->';
 
 /**
  * @internal
@@ -29,15 +26,13 @@ export function processPastedContentFromExcel(
     allowExcelNoBorderTable: boolean,
     isNativeEvent: boolean
 ) {
-    const { fragment, htmlBefore, htmlAfter, clipboardData } = event;
-
     // For non native event we already validated that the content contains a table
     if (isNativeEvent) {
-        validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
+        validateExcelFragment(event, domCreator);
     }
 
     // For Excel Online
-    const firstChild = fragment.firstChild;
+    const firstChild = event.fragment.firstChild;
     if (
         isNodeOfType(firstChild, 'ELEMENT_NODE') &&
         firstChild.tagName == 'div' &&
@@ -71,13 +66,8 @@ export function processPastedContentFromExcel(
  * @internal
  * Exported only for unit test
  */
-export function validateExcelFragment(
-    fragment: DocumentFragment,
-    domCreator: DOMCreator,
-    htmlBefore: string,
-    clipboardData: ClipboardData,
-    htmlAfter: string
-) {
+export function validateExcelFragment(event: BeforePasteEvent, domCreator: DOMCreator) {
+    const { clipboardData, fragment, htmlBefore, htmlAfter } = event;
     // Clipboard content of Excel may contain the <StartFragment> and EndFragment comment tags inside the table
     //
     // @example
@@ -91,10 +81,19 @@ export function validateExcelFragment(
     // The content that is before the StartFragment is htmlBefore and the content that is after the EndFragment is htmlAfter.
     // So attempt to create a new document fragment with the content of htmlBefore + clipboardData.html + htmlAfter
     // If a table is found, replace the fragment with the new fragment
-    const result =
-        !fragment.querySelector(TABLE_SELECTOR) &&
-        domCreator.htmlToDOM(htmlBefore + clipboardData.html + htmlAfter);
+    const htmlBeforeRemovingComments = htmlBefore
+        .replace(HTML_COMMENT_START, '')
+        .replace(HTML_COMMENT_END, '');
+    const result = domCreator.htmlToDOM(
+        htmlBeforeRemovingComments + clipboardData.html + htmlAfter
+    );
     if (result && result.querySelector(TABLE_SELECTOR)) {
+        const newRules = retrieveCssRules(result);
+        if (event.cssRulesToBeConverted) {
+            event.cssRulesToBeConverted.push(...newRules);
+        } else {
+            event.cssRulesToBeConverted = newRules;
+        }
         moveChildNodes(fragment, result?.body);
     } else {
         // If the table is still not found, try to extract the table from the clipboard data using Regex

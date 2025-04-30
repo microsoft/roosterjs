@@ -27,7 +27,15 @@ describe('validateExcelFragment', () => {
         const htmlAfter = '</table>';
         clipboardData.html = '<tr><td>Test</td></tr></table>';
 
-        validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
+        const ev = <any>{
+            htmlBefore,
+            htmlAfter,
+            clipboardData,
+            fragment,
+            cssRulesToBeConverted: [],
+        };
+
+        validateExcelFragment(ev, domCreator);
 
         expect(fragment.querySelector('table')).not.toBeNull();
         expect(domCreator.htmlToDOM).toHaveBeenCalledWith(
@@ -40,7 +48,15 @@ describe('validateExcelFragment', () => {
         const htmlAfter = '';
         clipboardData.html = '<tr><td>Test</td></tr>';
 
-        validateExcelFragment(fragment, domCreator, htmlBefore, clipboardData, htmlAfter);
+        const ev = <any>{
+            htmlBefore,
+            htmlAfter,
+            clipboardData,
+            cssRulesToBeConverted: [],
+            fragment,
+        };
+
+        validateExcelFragment(ev, domCreator);
 
         expect(fragment.querySelector('table')).not.toBeNull();
         expect(domCreator.htmlToDOM).toHaveBeenCalledTimes(2);

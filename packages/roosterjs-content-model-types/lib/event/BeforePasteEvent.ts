@@ -1,3 +1,4 @@
+import type { CssRule } from '../parameter/CssRule';
 import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
@@ -67,4 +68,11 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * Whether the current clipboard contains at least a block element.
      */
     readonly containsBlockElements?: boolean;
+
+    /**
+     * Additional Css rules to be converted to inline styles.
+     * This property accumulates additional CSS rules extracted from pasted content,
+     * which are then merged with global CSS rules during the inline style conversion process.
+     */
+    cssRulesToBeConverted?: CssRule[];
 }

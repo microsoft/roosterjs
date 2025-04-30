@@ -1,7 +1,8 @@
-import { convertInlineCss, retrieveCssRules } from './convertInlineCss';
+import { convertInlineCss } from './convertInlineCss';
 import { createDOMCreator } from '../../utils/domCreator';
 import { createDomToModelContextForSanitizing } from './createDomToModelContextForSanitizing';
 import { createEmptyModel, domToContentModel, parseFormat } from 'roosterjs-content-model-dom';
+import { retrieveCssRules } from '../../../../roosterjs-content-model-dom/lib/domUtils/style/retrieveCssRules';
 import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
