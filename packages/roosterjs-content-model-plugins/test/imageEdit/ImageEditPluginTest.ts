@@ -736,6 +736,7 @@ describe('ImageEditPlugin', () => {
             image,
         } as DOMSelection;
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
         const event = {
             eventType: 'contentChanged',
             source: ChangeSource.SetContent,
@@ -744,6 +745,7 @@ describe('ImageEditPlugin', () => {
         const newSelection = editor.getDOMSelection() as ImageSelection;
         expect(newSelection!.type).toBe('image');
         expect(newSelection!.image.dataset.isEditing).toBeUndefined();
+        expect(cleanInfoSpy).toHaveBeenCalled();
         plugin.dispose();
     });
 
