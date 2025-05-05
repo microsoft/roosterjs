@@ -9,6 +9,10 @@ import {
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
 
+const domCreator = {
+    htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
+};
+
 describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
     let fragment: DocumentFragment;
@@ -27,7 +31,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event);
+        processPastedContentFromWordDesktop(event, domCreator);
 
         const model = domToContentModel(
             fragment,
