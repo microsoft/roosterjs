@@ -1,28 +1,8 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent, DOMCreator } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
-const STYLE_TAG = '<style>';
-const STYLE_TAG_END = '</style>';
-
-function extractStyleTagsFromHtml(htmlContent: string): string[] {
-    const styles: string[] = [];
-    const lowerCaseHtmlContent = htmlContent.toLowerCase();
-
-    let styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG);
-    while (styleStartIndex >= 0) {
-        const styleEndIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG_END, styleStartIndex);
-        if (styleEndIndex >= 0) {
-            const styleContent = htmlContent.substring(styleStartIndex + 7, styleEndIndex).trim();
-            styles.push(styleContent);
-            styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG, styleEndIndex);
-        } else {
-            break;
-        }
-    }
-    return styles;
-}
 
 /**
  * @internal
@@ -44,11 +24,14 @@ function extractStyleTagsFromHtml(htmlContent: string): string[] {
  * 5. Save data in record and only use the required information.
  *
  */
-export function getStyleMetadata(ev: BeforePasteEvent) {
+export function getStyleMetadata(ev: BeforePasteEvent, domCreator: DOMCreator) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore);
+    const doc = domCreator.htmlToDOM(ev.htmlBefore);
+    const styles = doc.querySelectorAll('style');
 
-    headStyles.forEach(text => {
+    styles.forEach(style => {
+        const text = style?.innerHTML.trim() || '';
+
         let index = 0;
         while (index >= 0) {
             const indexAt = text.indexOf('@', index + 1);
@@ -94,6 +77,5 @@ export function getStyleMetadata(ev: BeforePasteEvent) {
             }
         }
     });
-
     return metadataMap;
 }

@@ -18,4 +18,9 @@ export type ExperimentalFeature =
      * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
      * Use Content Model handle ENTER key
      */
-    | 'HandleEnterKey';
+    | 'HandleEnterKey'
+    /**
+     *  Prevent default browser behavior for copy/cut event,
+     *  and set the clipboard data with custom implementation.
+     */
+    | 'CustomCopyCut';

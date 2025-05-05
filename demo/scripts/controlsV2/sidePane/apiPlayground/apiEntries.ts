@@ -1,4 +1,5 @@
 import * as React from 'react';
+import CreateModelFromHtmlPane from './createModelFromHtml/CreateModelFromHtmlPane';
 import InsertCustomContainerPane from './insertCustomContainer/InsertCustomContainerPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import PastePane from './paste/PastePane';
@@ -21,15 +22,18 @@ const apiEntries: { [key: string]: ApiEntry } = {
         name: 'Insert Entity',
         component: InsertEntityPane,
     },
-    customContainer: {
-        name: 'Insert Custom Container',
-        component: InsertCustomContainerPane,
-    },
     paste: {
         name: 'Paste',
         component: PastePane,
     },
-
+    createModelFromHtml: {
+        name: 'Create Model from HTML',
+        component: CreateModelFromHtmlPane,
+    },
+    customContainer: {
+        name: 'Insert Custom Container',
+        component: InsertCustomContainerPane,
+    },
     more: {
         name: 'Coming soon...',
     },
