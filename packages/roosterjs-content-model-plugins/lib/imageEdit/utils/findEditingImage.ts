@@ -20,7 +20,7 @@ export function findEditingImage(
             for (const segment of paragraph.segments) {
                 if (
                     segment.segmentType == 'Image' &&
-                    ((imageId && segment.format.id == imageId) || segment.dataset.isEditing)
+                    ((imageId && segment.format.id == imageId) || segment.format.imageMarker)
                 ) {
                     imageAndParagraph = { image: segment, paragraph };
                     return true;

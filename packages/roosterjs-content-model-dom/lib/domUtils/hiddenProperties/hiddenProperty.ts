@@ -13,7 +13,10 @@ export interface HiddenProperty {
      */
     undeletable?: boolean;
 
-    // Add more properties as needed
+    /**
+     * Specify a property for the image. Example: if the image is in editable state
+     */
+    imageMarker?: string;
 }
 
 interface NodeWithHiddenProperty extends Node {

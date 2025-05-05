@@ -14,6 +14,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
+import { imageMarkerFormatHandler } from './segment/imageMarkerFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
@@ -68,6 +69,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     entity: entityFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
+    imageMarker: imageMarkerFormatHandler,
     italic: italicFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
@@ -190,6 +192,7 @@ export const defaultFormatKeysPerCategory: {
         'display',
         'float',
         'verticalAlign',
+        'imageMarker',
     ],
     link: [
         'link',

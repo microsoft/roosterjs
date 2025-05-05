@@ -115,6 +115,7 @@ export {
     setParagraphMarker,
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
+export { setImageMarker, getImageMarker } from './domUtils/hiddenProperties/imageMarker';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 
