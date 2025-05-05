@@ -67,18 +67,18 @@ function adjustPercentileLineHeight(format: ContentModelBlockFormat, element: HT
     }
 }
 
-function listLevelParser(
+const listLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format: ContentModelListItemLevelFormat,
     element: HTMLElement,
     _context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
-): void {
+) => {
     if (element.style.marginLeft != '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
     format.marginBottom = undefined;
-}
+};
 
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {

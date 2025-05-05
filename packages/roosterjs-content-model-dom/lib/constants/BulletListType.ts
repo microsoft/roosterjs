@@ -52,7 +52,6 @@ export const BulletListType = {
     Xrhombus: 11,
     /**
      * Check mark bullet type
-
      */
     CheckMark: 12,
     /**
