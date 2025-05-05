@@ -100,7 +100,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event);
+                processPastedContentFromWordDesktop(event, this.editor.getDOMCreator());
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
