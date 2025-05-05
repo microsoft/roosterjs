@@ -25,6 +25,14 @@ export type EditOptions = {
      * @default true
      */
     handleExpandedSelectionOnDelete?: boolean;
+
+    /**
+     * Callback function to determine whether the Rooster should handle the Enter key press.
+     * If the function returns true, the Rooster will handle the Enter key press instead of the browser.
+     * @param editor - The editor instance.
+     * @returns A boolean
+     */
+    shouldHandleEnterKey?: ((editor: IEditor) => boolean) | boolean;
 };
 
 const BACKSPACE_KEY = 8;
@@ -54,13 +62,33 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleNormalEnter = false;
+    private handleNormalEnter: (editor: IEditor) => boolean = (editor: IEditor) => false;
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
      * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
      */
     constructor(private options: EditOptions = DefaultOptions) {}
+
+    private createNormalEnterChecker(result: boolean) {
+        return result ? () => true : () => false;
+    }
+
+    private getHandleNormalEnter(editor: IEditor) {
+        switch (typeof this.options.shouldHandleEnterKey) {
+            case 'function':
+                return this.options.shouldHandleEnterKey;
+                break;
+            case 'boolean':
+                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
+                break;
+            default:
+                return this.createNormalEnterChecker(
+                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
+                );
+                break;
+        }
+    }
 
     /**
      * Get name of this plugin
@@ -77,7 +105,7 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleNormalEnter = this.editor.isExperimentalFeatureEnabled('HandleEnterKey');
+        this.handleNormalEnter = this.getHandleNormalEnter(editor);
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -179,7 +207,11 @@ export class EditPlugin implements EditorPlugin {
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     // And leave it to browser when shift key is pressed so that browser will trigger cut event
                     if (!event.rawEvent.shiftKey) {
-                        keyboardDelete(editor, rawEvent, this.options.handleExpandedSelectionOnDelete);
+                        keyboardDelete(
+                            editor,
+                            rawEvent,
+                            this.options.handleExpandedSelectionOnDelete
+                        );
                     }
                     break;
 
@@ -200,7 +232,7 @@ export class EditPlugin implements EditorPlugin {
                         !event.rawEvent.isComposing &&
                         event.rawEvent.keyCode !== DEAD_KEY
                     ) {
-                        keyboardEnter(editor, rawEvent, this.handleNormalEnter);
+                        keyboardEnter(editor, rawEvent, this.handleNormalEnter(editor));
                     }
                     break;
 

@@ -15,6 +15,7 @@ export type ExperimentalFeature =
      */
     | 'LegacyImageSelection'
     /**
+     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
      * Use Content Model handle ENTER key
      */
     | 'HandleEnterKey'
