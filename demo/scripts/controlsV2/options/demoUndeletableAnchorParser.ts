@@ -1,6 +1,6 @@
 import { FormatParser, UndeletableFormat } from 'roosterjs-content-model-types';
 
-const DemoUndeletableName = 'DemoUndeletable';
+export const DemoUndeletableName = 'DemoUndeletable';
 
 export function undeletableLinkChecker(a: HTMLAnchorElement): boolean {
     return a.getAttribute('name') == DemoUndeletableName;
