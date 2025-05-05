@@ -1,4 +1,5 @@
 import * as React from 'react';
+import CreateModelFromHtmlPane from './createModelFromHtml/CreateModelFromHtmlPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import PastePane from './paste/PastePane';
 import { ApiPaneProps, ApiPlaygroundComponent } from './ApiPaneProps';
@@ -23,6 +24,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     paste: {
         name: 'Paste',
         component: PastePane,
+    },
+    createModelFromHtml: {
+        name: 'Create Model from HTML',
+        component: CreateModelFromHtmlPane,
     },
     more: {
         name: 'Coming soon...',
