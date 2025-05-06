@@ -1,4 +1,5 @@
 const HtmlCommentStart = '\x3C!--';
+const HtmlCommentStart2 = '<!--';
 const HtmlCommentEnd = '-->';
 const styleTag = '<style';
 const styleClosingTag = '</style>';
@@ -13,6 +14,7 @@ export function cleanHtmlComments(html: string) {
 
     while (styleIndex < headEndIndex && styleIndex > -1) {
         html = removeCommentsFromHtml(html, HtmlCommentStart, styleEndIndex, styleIndex);
+        html = removeCommentsFromHtml(html, HtmlCommentStart2, styleEndIndex, styleIndex);
         html = removeCommentsFromHtml(html, HtmlCommentEnd, styleEndIndex, styleIndex);
 
         ({ styleIndex, headEndIndex, styleEndIndex } = extractHtmlIndexes(html, styleEndIndex + 1));
