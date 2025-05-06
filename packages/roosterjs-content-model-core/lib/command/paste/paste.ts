@@ -1,3 +1,4 @@
+import { cleanHtmlComments } from './cleanHtmlComments';
 import { cloneModelForPaste, mergePasteContent } from './mergePasteContent';
 import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
 import { createPasteFragment } from './createPasteFragment';
@@ -75,5 +76,8 @@ function createDOMFromHtml(
     html: string | null | undefined,
     domCreator: DOMCreator
 ): Document | null {
-    return html ? domCreator.htmlToDOM(html) : null;
+    if (html) {
+        return domCreator.htmlToDOM(cleanHtmlComments(html));
+    }
+    return null;
 }
