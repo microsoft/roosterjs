@@ -14,7 +14,7 @@ function extractStyleTagsFromHtml(htmlContent: string): string[] {
     while (styleStartIndex >= 0) {
         const styleEndIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG_END, styleStartIndex);
         if (styleEndIndex >= 0) {
-            const styleContent = htmlContent.substring(styleStartIndex + 7, styleEndIndex).trim();
+            const styleContent = htmlContent.substring(styleStartIndex + STYLE_TAG.length, styleEndIndex).trim();
             styles.push(styleContent);
             styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG, styleEndIndex);
         } else {
