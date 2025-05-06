@@ -1,5 +1,8 @@
+import { domToContentModel } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockType,
+    ContentModelEntity,
+    DomToModelContext,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockBase,
     ReadonlyContentModelBlockGroup,
@@ -11,12 +14,14 @@ import type {
  * @param type The type of block to query
  * @param filter Optional selector to filter the blocks
  * @param findFirstOnly True to return the first block only, false to return all blocks
+ * @param shouldExpandEntity Optional function to determine if an entity's children should be recursively queried, should return a DomToModelContext if the entity should be expanded, or null if not
  */
 export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
     group: ReadonlyContentModelBlockGroup,
     type: T extends ReadonlyContentModelBlockBase<infer U> ? U : never,
     filter?: (element: T) => element is T,
-    findFirstOnly?: boolean
+    findFirstOnly?: boolean,
+    shouldExpandEntity?: (entity: ContentModelEntity) => DomToModelContext | null
 ): T[] {
     const elements: T[] = [];
     for (let i = 0; i < group.blocks.length; i++) {
@@ -32,12 +37,32 @@ export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
                 if (isExpectedBlockType(block, type, filter)) {
                     elements.push(block);
                 }
+                if (block.blockType == 'Entity' && shouldExpandEntity) {
+                    const context = shouldExpandEntity(block);
+                    if (context) {
+                        const model = domToContentModel(block.wrapper, context);
+                        const results = queryContentModelBlocks<T>(
+                            model,
+                            type,
+                            filter,
+                            findFirstOnly,
+                            shouldExpandEntity
+                        );
+                        elements.push(...results);
+                    }
+                }
                 break;
             case 'BlockGroup':
                 if (isExpectedBlockType(block, type, filter)) {
                     elements.push(block);
                 }
-                const results = queryContentModelBlocks<T>(block, type, filter, findFirstOnly);
+                const results = queryContentModelBlocks<T>(
+                    block,
+                    type,
+                    filter,
+                    findFirstOnly,
+                    shouldExpandEntity
+                );
                 elements.push(...results);
                 break;
             case 'Table':
@@ -50,7 +75,8 @@ export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
                             cell,
                             type,
                             filter,
-                            findFirstOnly
+                            findFirstOnly,
+                            shouldExpandEntity
                         );
                         elements.push(...results);
                     }

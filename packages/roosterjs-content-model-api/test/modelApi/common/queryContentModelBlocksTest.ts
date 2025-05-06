@@ -1,3 +1,4 @@
+import { domToContentModel } from 'roosterjs-content-model-dom';
 import { queryContentModelBlocks } from '../../../lib/modelApi/common/queryContentModelBlocks';
 import {
     ReadonlyContentModelBlockGroup,
@@ -1465,5 +1466,72 @@ describe('queryContentModelBlocksBlocks', () => {
             true /* findFirstOnly */
         );
         expect(result).toEqual([imageAndParagraph]);
+    });
+
+    it('should return empty array if no blocks match the type', () => {
+        // Arrange
+        const insideEntity: ReadonlyContentModelBlockGroup = {
+            blockGroupType: 'FormatContainer',
+            blockType: 'BlockGroup',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: { backgroundColor: 'green' },
+                    segmentFormat: {},
+                },
+            ],
+            tagName: 'div',
+            format: {},
+        };
+        const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            insideEntity
+        );
+        const contents = insideEntity.blocks;
+
+        const group: ReadonlyContentModelBlockGroup = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: { backgroundColor: 'red' },
+                    segmentFormat: {},
+                },
+                {
+                    blockType: 'Entity',
+                    wrapper: (undefined as unknown) as HTMLElement,
+                    entityFormat: {
+                        id: '',
+                        entityType: '',
+                        isReadonly: true,
+                        isFakeEntity: true,
+                    },
+                    format: {},
+                    segmentType: 'Entity',
+                },
+            ],
+        };
+
+        // Act
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(group, 'Paragraph');
+
+        // Assert
+        expect(result).toEqual([
+            // group (Document) > blocks[0] (Paragraph)
+            {
+                blockType: 'Paragraph',
+                segments: [],
+                format: { backgroundColor: 'red' },
+                segmentFormat: {},
+            },
+            // group (Document) > blocks[1] (Entity) > insideEntity (FormatContainer) > blocks[0] (Paragraph)
+            {
+                blockType: 'Paragraph',
+                segments: [],
+                format: { backgroundColor: 'green' },
+                segmentFormat: {},
+            },
+        ]);
     });
 });
