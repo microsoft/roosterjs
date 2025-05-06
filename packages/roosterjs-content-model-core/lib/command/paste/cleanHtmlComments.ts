@@ -12,7 +12,7 @@ const headClosingTag = '</head>';
 export function cleanHtmlComments(html: string) {
     let { styleIndex, headEndIndex, styleEndIndex } = extractHtmlIndexes(html);
 
-    while (styleIndex < headEndIndex && styleIndex > -1) {
+    while (headEndIndex > -1 && styleIndex < headEndIndex && styleIndex > -1) {
         html = removeCommentsFromHtml(html, HtmlCommentStart, styleEndIndex, styleIndex);
         html = removeCommentsFromHtml(html, HtmlCommentStart2, styleEndIndex, styleIndex);
         html = removeCommentsFromHtml(html, HtmlCommentEnd, styleEndIndex, styleIndex);
