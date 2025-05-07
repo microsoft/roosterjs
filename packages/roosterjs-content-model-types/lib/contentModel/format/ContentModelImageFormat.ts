@@ -8,7 +8,7 @@ import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
-import type { ImageMarkerFormat } from './formatParts/ImageMarkerFormat';
+import type { ImageStateFormat } from './formatParts/ImageStateFormat';
 
 /**
  * The format object for an image in Content Model
@@ -23,4 +23,4 @@ export type ContentModelImageFormat = ContentModelSegmentFormat &
     DisplayFormat &
     FloatFormat &
     VerticalAlignFormat &
-    ImageMarkerFormat;
+    ImageStateFormat;

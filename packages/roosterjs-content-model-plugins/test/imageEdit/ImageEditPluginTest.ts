@@ -9,8 +9,8 @@ import {
     ChangeSource,
     createImage,
     createParagraph,
-    getImageMarker,
-    setImageMarker,
+    getImageState,
+    setImageState,
 } from 'roosterjs-content-model-dom';
 import {
     ContentModelDocument,
@@ -760,7 +760,7 @@ describe('ImageEditPlugin', () => {
         const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
         const image = document.createElement('img');
-        setImageMarker(image, 'isEditing');
+        setImageState(image, 'isEditing');
         const selection = {
             type: 'image',
             image,
@@ -773,7 +773,7 @@ describe('ImageEditPlugin', () => {
         } as any;
         plugin.onPluginEvent(event);
         const newSelection = editor.getDOMSelection() as ImageSelection;
-        const marker = getImageMarker(newSelection!.image);
+        const marker = getImageState(newSelection!.image);
         expect(marker).toBe('');
         expect(newSelection!.type).toBe('image');
         expect(cleanInfoSpy).toHaveBeenCalled();
@@ -899,7 +899,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                         },
@@ -1012,7 +1012,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                             alt: undefined,
@@ -1054,7 +1054,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                         },
@@ -1093,7 +1093,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test2',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,
@@ -1142,7 +1142,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     src: 'test',
                                                     segmentType: 'Image',
                                                     format: {
-                                                        imageMarker: 'isEditing',
+                                                        imageState: 'isEditing',
                                                     },
                                                     dataset: {},
                                                 },
@@ -1356,7 +1356,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     segmentType: 'Image',
                                                     isSelected: true,
                                                     format: {
-                                                        imageMarker: 'isEditing',
+                                                        imageState: 'isEditing',
                                                     },
                                                     dataset: {},
                                                     alt: undefined,
@@ -1438,7 +1438,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     src: 'test',
                                                     segmentType: 'Image',
                                                     format: {
-                                                        imageMarker: 'isEditing',
+                                                        imageState: 'isEditing',
                                                     },
                                                     dataset: {},
                                                     isSelectedAsImageSelection: undefined,
@@ -1544,7 +1544,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,
@@ -1603,7 +1603,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                     src: 'test',
                                     segmentType: 'Image',
                                     format: {
-                                        imageMarker: 'isEditing',
+                                        imageState: 'isEditing',
                                     },
                                     dataset: {},
                                 },
@@ -1803,7 +1803,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                     src: 'test',
                                     segmentType: 'Image',
                                     format: {
-                                        imageMarker: 'isEditing',
+                                        imageState: 'isEditing',
                                     },
                                     dataset: {},
                                     isSelectedAsImageSelection: true,
@@ -1879,7 +1879,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                     src: 'test',
                                     segmentType: 'Image',
                                     format: {
-                                        imageMarker: 'isEditing',
+                                        imageState: 'isEditing',
                                     },
                                     dataset: {},
                                     isSelectedAsImageSelection: undefined,
@@ -1964,7 +1964,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             src: 'test',
                             segmentType: 'Image',
                             format: {
-                                imageMarker: 'isEditing',
+                                imageState: 'isEditing',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,

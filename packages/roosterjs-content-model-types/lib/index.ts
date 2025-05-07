@@ -58,7 +58,7 @@ export { ListStyleFormat } from './contentModel/format/formatParts/ListStyleForm
 export { FloatFormat } from './contentModel/format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFormat';
 export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
-export { ImageMarkerFormat } from './contentModel/format/formatParts/ImageMarkerFormat';
+export { ImageStateFormat } from './contentModel/format/formatParts/ImageStateFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';

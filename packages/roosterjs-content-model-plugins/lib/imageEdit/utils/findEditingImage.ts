@@ -26,7 +26,7 @@ export function findEditingImage(
                 if (
                     segment.segmentType == 'Image' &&
                     ((imageId && segment.format.id == imageId) ||
-                        segment.format.imageMarker == EDITING_MARKER)
+                        segment.format.imageState == EDITING_MARKER)
                 ) {
                     imageAndParagraph = { image: segment, paragraph };
                     return true;

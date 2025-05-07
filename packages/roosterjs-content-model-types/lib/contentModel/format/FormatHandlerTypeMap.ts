@@ -14,7 +14,7 @@ import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
-import type { ImageMarkerFormat } from './formatParts/ImageMarkerFormat';
+import type { ImageStateFormat } from './formatParts/ImageStateFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { LinkFormat } from './formatParts/LinkFormat';
@@ -116,9 +116,9 @@ export interface FormatHandlerTypeMap {
     id: IdFormat;
 
     /**
-     * Format of ImageMarkerFormat
+     * Format of ImageStateFormat
      */
-    imageMarker: ImageMarkerFormat;
+    imageState: ImageStateFormat;
 
     /**
      * Format for ItalicFormat

@@ -22,7 +22,7 @@ import {
     isNodeOfType,
     mutateBlock,
     mutateSegment,
-    setImageMarker,
+    setImageState,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -285,7 +285,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         const selection = editor.getDOMSelection();
         if (selection?.type == 'image') {
             this.cleanInfo();
-            setImageMarker(selection.image, '');
+            setImageState(selection.image, '');
             this.isEditing = false;
             this.isCropMode = false;
         }
@@ -336,7 +336,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
-                    previousSelectedImage?.image.format.imageMarker == EDITING_MARKER ||
+                    previousSelectedImage?.image.format.imageState == EDITING_MARKER ||
                     isApiOperation
                 ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
@@ -364,7 +364,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
-                                image.format.imageMarker = undefined;
+                                image.format.imageState = undefined;
 
                                 if (selection?.type == 'range' && !selection.range.collapsed) {
                                     const selectedParagraphs = getSelectedParagraphs(model, true);
@@ -400,7 +400,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
-                            image.format.imageMarker = 'isEditing';
+                            image.format.imageState = 'isEditing';
                         });
 
                         result = true;
@@ -415,7 +415,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         !isApiOperation &&
                         editingImageModel &&
                         editingImageModel == model &&
-                        editingImageModel.format.imageMarker == EDITING_MARKER &&
+                        editingImageModel.format.imageState == EDITING_MARKER &&
                         isNodeOfType(node, 'ELEMENT_NODE') &&
                         isElementOfType(node, 'img')
                     ) {
