@@ -1,7 +1,7 @@
 const HtmlCommentStart = '\x3C!--';
 const HtmlCommentStart2 = '<!--';
 const HtmlCommentEnd = '-->';
-const styleTag = '<style';
+const styleTag = '<style>';
 const styleClosingTag = '</style>';
 const headClosingTag = '</head>';
 

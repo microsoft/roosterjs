@@ -76,8 +76,5 @@ function createDOMFromHtml(
     html: string | null | undefined,
     domCreator: DOMCreator
 ): Document | null {
-    if (html) {
-        return domCreator.htmlToDOM(cleanHtmlComments(html));
-    }
-    return null;
+    return html ? domCreator.htmlToDOM(cleanHtmlComments(html)) : null;
 }

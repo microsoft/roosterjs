@@ -58,6 +58,14 @@ describe('cleanHtmlComments', () => {
         expect(cleanHtmlComments(input)).toBe(expected);
     });
 
+    it('handle different style tags', () => {
+        const input =
+            '<head><style111><!--some text--></style111>some other text<style><!--... --></style></head>';
+        const expected =
+            '<head><style111><!--some text--></style111>some other text<style>... </style></head>';
+        expect(cleanHtmlComments(input)).toBe(expected);
+    });
+
     it('handles empty input', () => {
         const input = '';
         const expected = '';
