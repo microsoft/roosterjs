@@ -3,9 +3,11 @@ import { adjustImageSelectionOnSafari } from './utils/adjustImageSelectionOnSafa
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
 import { paste } from '../../command/paste/paste';
+import { pruneUnselectedModel } from './utils/pruneUnselectedModel';
 import {
     ChangeSource,
     contentModelToDom,
+    contentModelToText,
     createModelToDomContext,
     deleteSelection,
     extractClipboardItems,
@@ -42,6 +44,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
+    private customCopyCutEnabled: boolean = false;
 
     /**
      * Construct a new instance of CopyPastePlugin
@@ -79,6 +82,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                 beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
             },
         });
+        this.customCopyCutEnabled = editor.isExperimentalFeatureEnabled('CustomCopyCut');
     }
 
     /**
@@ -117,6 +121,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const pasteModel = this.editor.getContentModelCopy('disconnected');
 
+            pruneUnselectedModel(pasteModel);
+
             if (selection.type === 'table') {
                 iterateSelections(pasteModel, (_, tableContext) => {
                     if (tableContext?.table) {
@@ -154,7 +160,12 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     isCut,
                 }).range;
 
-                if (newRange) {
+                if (this.customCopyCutEnabled && isClipboardEvent(event)) {
+                    event.preventDefault();
+                    const text = contentModelToText(pasteModel);
+                    event.clipboardData?.setData('text/html', tempDiv.innerHTML);
+                    event.clipboardData?.setData('text/plain', text);
+                } else if (newRange) {
                     addRangeToSelection(doc, newRange);
                 }
 
@@ -225,7 +236,9 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             tempDiv.style.userSelect = 'text';
             tempDiv.contentEditable = 'true';
 
-            doc.body.appendChild(tempDiv);
+            if (!this.customCopyCutEnabled) {
+                doc.body.appendChild(tempDiv);
+            }
 
             this.state.tempDiv = tempDiv;
         }
@@ -243,7 +256,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         return div;
     }
 }
-
 /**
  * @internal
  * Exported only for unit testing
