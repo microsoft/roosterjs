@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.4% </span>
+                <span class="strong">85.26% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>269/315</span>
+                <span class='fraction'>266/312</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.28% </span>
+                <span class="strong">62.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>175/281</span>
+                <span class='fraction'>173/277</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.2% </span>
+                <span class="strong">85.05% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>259/304</span>
+                <span class='fraction'>256/301</span>
             </div>
         
             
@@ -838,11 +838,7 @@
 <a name='L779'></a><a href='#L779'>779</a>
 <a name='L780'></a><a href='#L780'>780</a>
 <a name='L781'></a><a href='#L781'>781</a>
-<a name='L782'></a><a href='#L782'>782</a>
-<a name='L783'></a><a href='#L783'>783</a>
-<a name='L784'></a><a href='#L784'>784</a>
-<a name='L785'></a><a href='#L785'>785</a>
-<a name='L786'></a><a href='#L786'>786</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L782'></a><a href='#L782'>782</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -859,6 +855,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1030,9 +1027,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1131,8 +1125,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1632,7 +1624,7 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { findEditingImage } from './utils/findEditingImage';
+import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -1651,6 +1643,7 @@ import {
     isNodeOfType,
     mutateBlock,
     mutateSegment,
+    setImageState,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -1812,9 +1805,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private removeImageEditing(clonedRoot: HTMLElement) {
         const images = clonedRoot.querySelectorAll('img');
         images.forEach(image =&gt; {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (image.dataset.isEditing) {
-                delete image.dataset.isEditing;
-            }
             <span class="missing-if-branch" title="else path not taken" >E</span>if (image.dataset.editingInfo) {
                 delete image.dataset.editingInfo;
             }
@@ -1915,10 +1905,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private setContentHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
         <span class="missing-if-branch" title="else path not taken" >E</span>if (selection<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype == 'image') {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.image.dataset.isEditing) {
-                delete selection.image.dataset.isEditing;
-            }
             this.cleanInfo();
+            setImageState(selection.image, '');
             this.isEditing = false;
             this.isCropMode = false;
         }
@@ -1969,7 +1957,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
-<span class="branch-2 cbranch-no" title="branch not covered" >                    previousSelectedImage?.image.dataset.isEditing </span>||
+<span class="branch-2 cbranch-no" title="branch not covered" >                    previousSelectedImage?.image.format.imageState == EDITING_MARKER </span>||
 <span class="branch-3 cbranch-no" title="branch not covered" >                    isApiOperation</span>
                 ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
@@ -1997,7 +1985,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 &nbsp;
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
-                                delete image.dataset.isEditing;
+                                image.format.imageState = undefined;
 &nbsp;
                                 <span class="missing-if-branch" title="if path not taken" >I</span>if (selection<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype == 'range' &amp;&amp; !selection.range.collapsed) {
                                     const selectedParagraphs = <span class="cstat-no" title="statement not covered" >getSelectedParagraphs(model, true);</span>
@@ -2033,7 +2021,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         mutateSegment(editingImage.paragraph, editingImage.image, image =&gt; {
                             editingImageModel = image;
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
-                            image.dataset.isEditing = 'true';
+                            image.format.imageState = 'isEditing';
                         });
 &nbsp;
                         result = true;
@@ -2048,7 +2036,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         !isApiOperation &amp;&amp;
                         editingImageModel &amp;&amp;
                         editingImageModel == model &amp;&amp;
-                        editingImageModel.dataset.isEditing &amp;&amp;
+                        editingImageModel.format.imageState == EDITING_MARKER &amp;&amp;
                         isNodeOfType(node, 'ELEMENT_NODE') &amp;&amp;
                         isElementOfType(node, 'img')
                     ) {
@@ -2419,7 +2407,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 05 2025 17:19:23 GMT+0000 (Coordinated Universal Time)
+                at Wed May 07 2025 21:14:18 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
