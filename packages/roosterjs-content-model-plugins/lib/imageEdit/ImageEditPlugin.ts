@@ -3,7 +3,7 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { findEditingImage } from './utils/findEditingImage';
+import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -175,7 +175,19 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'contentChanged':
                 this.contentChangedHandler(this.editor, event);
                 break;
+            case 'extractContentWithDom':
+                this.removeImageEditing(event.clonedRoot);
+                break;
         }
+    }
+
+    private removeImageEditing(clonedRoot: HTMLElement) {
+        const images = clonedRoot.querySelectorAll('img');
+        images.forEach(image => {
+            if (image.dataset.editingInfo) {
+                delete image.dataset.editingInfo;
+            }
+        });
     }
 
     private isImageSelection(target: Node): target is HTMLElement {
@@ -324,7 +336,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
-                    previousSelectedImage?.image.format.imageMarker ||
+                    previousSelectedImage?.image.format.imageMarker == EDITING_MARKER ||
                     isApiOperation
                 ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
@@ -403,7 +415,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         !isApiOperation &&
                         editingImageModel &&
                         editingImageModel == model &&
-                        editingImageModel.format.imageMarker &&
+                        editingImageModel.format.imageMarker == EDITING_MARKER &&
                         isNodeOfType(node, 'ELEMENT_NODE') &&
                         isElementOfType(node, 'img')
                     ) {

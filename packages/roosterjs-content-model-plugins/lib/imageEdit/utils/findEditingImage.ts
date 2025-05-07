@@ -8,6 +8,11 @@ import type { ImageAndParagraph } from '../types/ImageAndParagraph';
 /**
  * @internal
  */
+export const EDITING_MARKER = 'isEditing';
+
+/**
+ * @internal
+ */
 export function findEditingImage(
     group: ReadonlyContentModelBlockGroup,
     imageId?: string
@@ -20,7 +25,8 @@ export function findEditingImage(
             for (const segment of paragraph.segments) {
                 if (
                     segment.segmentType == 'Image' &&
-                    ((imageId && segment.format.id == imageId) || segment.format.imageMarker)
+                    ((imageId && segment.format.id == imageId) ||
+                        segment.format.imageMarker == EDITING_MARKER)
                 ) {
                     imageAndParagraph = { image: segment, paragraph };
                     return true;
