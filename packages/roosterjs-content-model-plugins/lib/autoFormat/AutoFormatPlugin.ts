@@ -25,13 +25,7 @@ import type {
 /**
  * @internal
  */
-type AutoFormatFeature = 'list' | 'link' | 'hyphen' | 'fraction' | 'ordinal';
-
-/**
- * @internal
- */
 interface Feature {
-    autoFormat: AutoFormatFeature;
     enabled: boolean;
     transformFunction: (
         model: ReadonlyContentModelDocument,
@@ -39,6 +33,8 @@ interface Feature {
         paragraph: ShallowMutableContentModelParagraph,
         context: FormatContentModelContext
     ) => boolean | HTMLElement;
+    changeSource: string;
+    apiName: string;
 }
 
 /**
@@ -126,9 +122,27 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
-    private features: Feature[] = [
+    private autoLink: Feature = {
+        enabled: !!(this.options.autoLink || this.options.autoTel || this.options.autoMailto),
+        transformFunction: (_model, previousSegment, paragraph, context) => {
+            const { autoLink, autoTel, autoMailto } = this.options;
+            const linkSegment = promoteLink(previousSegment, paragraph, {
+                autoLink,
+                autoTel,
+                autoMailto,
+            });
+
+            if (linkSegment) {
+                return createAnchor(linkSegment.link?.format.href || '', linkSegment.text);
+            }
+            return false;
+        },
+        apiName: 'autoLink',
+        changeSource: ChangeSource.AutoLink,
+    };
+
+    private tabFeatures: Feature[] = [
         {
-            autoFormat: 'list',
             enabled: !!(this.options.autoBullet || this.options.autoNumbering),
             transformFunction: (model, _previousSegment, paragraph, context) =>
                 keyboardListTrigger(
@@ -139,43 +153,88 @@ export class AutoFormatPlugin implements EditorPlugin {
                     this.options.autoNumbering,
                     this.options.removeListMargins
                 ),
+            apiName: 'autoToggleList',
+            changeSource: ChangeSource.AutoFormat,
         },
-        {
-            autoFormat: 'link',
-            enabled: !!(this.options.autoLink || this.options.autoTel || this.options.autoMailto),
-            transformFunction: (_model, previousSegment, paragraph, context) => {
-                const { autoLink, autoTel, autoMailto } = this.options;
-                const linkSegment = promoteLink(previousSegment, paragraph, {
-                    autoLink,
-                    autoTel,
-                    autoMailto,
-                });
+        this.autoLink,
+    ];
 
-                if (linkSegment) {
-                    return createAnchor(linkSegment.link?.format.href || '', linkSegment.text);
-                }
-                return false;
-            },
-        },
+    private features: Feature[] = [
+        ...this.tabFeatures,
         {
-            autoFormat: 'hyphen',
             enabled: !!this.options.autoHyphen,
+            apiName: 'autoHyphen',
+            changeSource: ChangeSource.Format,
             transformFunction: (_model, previousSegment, paragraph, context) =>
                 transformHyphen(previousSegment, paragraph, context),
         },
         {
-            autoFormat: 'fraction',
             enabled: !!this.options.autoFraction,
+            apiName: 'autoFraction',
+            changeSource: ChangeSource.Format,
             transformFunction: (_model, previousSegment, paragraph, context) =>
                 transformFraction(previousSegment, paragraph, context),
         },
         {
-            autoFormat: 'ordinal',
             enabled: !!this.options.autoOrdinals,
+            apiName: 'autoOrdinal',
+            changeSource: ChangeSource.Format,
             transformFunction: (_model, previousSegment, paragraph, context) =>
                 transformOrdinals(previousSegment, paragraph, context),
         },
     ];
+
+    private enterFeatures: Feature[] = [
+        {
+            enabled: !!this.options.autoHorizontalLine,
+            transformFunction: (model, _previousSegment, paragraph, context) =>
+                checkAndInsertHorizontalLine(model, paragraph, context),
+            apiName: 'autoHorizontalLine',
+            changeSource: ChangeSource.AutoFormat,
+        },
+        this.autoLink,
+    ];
+
+    private handleKeyboardEvents(editor: IEditor, features: Feature[]): FormatContentModelOptions {
+        const formatOptions: FormatContentModelOptions = {
+            changeSource: '',
+            apiName: '',
+            getChangeData: undefined,
+        };
+
+        formatTextSegmentBeforeSelectionMarker(
+            editor,
+            (model, previousSegment, paragraph, _markerFormat, context) => {
+                let featureApplied: Feature | undefined = undefined;
+                for (const feature of features) {
+                    if (feature.enabled) {
+                        const result = feature.transformFunction(
+                            model,
+                            previousSegment,
+                            paragraph,
+                            context
+                        );
+                        if (result) {
+                            if (typeof result !== 'boolean') {
+                                formatOptions.getChangeData = () => result;
+                            }
+                            featureApplied = feature;
+                            break;
+                        }
+                    }
+                }
+
+                if (featureApplied) {
+                    formatOptions.changeSource = featureApplied.changeSource;
+                    formatOptions.apiName = featureApplied.apiName;
+                }
+
+                return !!featureApplied;
+            },
+            formatOptions
+        );
+        return formatOptions;
+    }
 
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
@@ -188,44 +247,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
-                    const formatOptions: FormatContentModelOptions = {
-                        changeSource: '',
-                        apiName: '',
-                        getChangeData: undefined,
-                    };
-                    formatTextSegmentBeforeSelectionMarker(
-                        editor,
-                        (model, previousSegment, paragraph, _markerFormat, context) => {
-                            let formatApplied: AutoFormatFeature | undefined = undefined;
-
-                            for (const feature of this.features) {
-                                if (feature.enabled) {
-                                    const result = feature.transformFunction(
-                                        model,
-                                        previousSegment,
-                                        paragraph,
-                                        context
-                                    );
-                                    if (result) {
-                                        if (typeof result !== 'boolean') {
-                                            formatOptions.getChangeData = () => result;
-                                        }
-                                        formatApplied = feature.autoFormat;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (formatApplied) {
-                                formatOptions.changeSource = getChangeSource(formatApplied);
-                                formatOptions.apiName = getApiName(formatApplied);
-                            }
-
-                            return !!formatApplied;
-                        },
-                        formatOptions
-                    );
-
+                    this.handleKeyboardEvents(editor, this.features);
                     break;
             }
         }
@@ -242,48 +264,19 @@ export class AutoFormatPlugin implements EditorPlugin {
                     break;
                 case 'Tab':
                     if (!rawEvent.shiftKey) {
-                        formatTextSegmentBeforeSelectionMarker(
-                            editor,
-                            (model, _previousSegment, paragraph, _markerFormat, context) => {
-                                const {
-                                    autoBullet,
-                                    autoNumbering,
-                                    removeListMargins,
-                                } = this.options;
-                                let shouldList = false;
-                                if (autoBullet || autoNumbering) {
-                                    shouldList = keyboardListTrigger(
-                                        model,
-                                        paragraph,
-                                        context,
-                                        autoBullet,
-                                        autoNumbering,
-                                        removeListMargins
-                                    );
-                                    context.canUndoByBackspace = shouldList;
-                                }
-                                if (shouldList) {
-                                    event.rawEvent.preventDefault();
-                                }
-                                return shouldList;
-                            },
-                            {
-                                changeSource: ChangeSource.AutoFormat,
-                                apiName: 'autoToggleList',
-                            }
-                        );
+                        const eventHandled = this.handleKeyboardEvents(editor, this.tabFeatures);
+                        if (eventHandled.apiName == 'autoToggleList') {
+                            event.rawEvent.preventDefault();
+                        }
                     }
                     break;
                 case 'Enter':
-                    this.handleEnterKey(editor, event);
+                    const eventHandled = this.handleKeyboardEvents(editor, this.enterFeatures);
+                    if (eventHandled.apiName == 'autoHorizontalLine') {
+                        event.rawEvent.preventDefault();
+                    }
                     break;
             }
-        }
-    }
-
-    private handleEnterKey(editor: IEditor, event: KeyDownEvent) {
-        if (this.options.autoHorizontalLine) {
-            checkAndInsertHorizontalLine(editor, event);
         }
     }
 
@@ -298,18 +291,6 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 }
-
-const getApiName = (autoFormat: AutoFormatFeature) => {
-    return autoFormat == 'list' ? 'autoToggleList' : autoFormat == 'hyphen' ? 'autoHyphen' : '';
-};
-
-const getChangeSource = (autoFormat: AutoFormatFeature) => {
-    return autoFormat == 'list' || autoFormat == 'hyphen'
-        ? ChangeSource.AutoFormat
-        : autoFormat == 'link'
-        ? ChangeSource.AutoLink
-        : '';
-};
 
 const createAnchor = (url: string, text: string) => {
     const anchor = document.createElement('a');
