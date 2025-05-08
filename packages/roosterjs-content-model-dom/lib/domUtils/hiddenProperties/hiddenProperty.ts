@@ -13,7 +13,10 @@ export interface HiddenProperty {
      */
     undeletable?: boolean;
 
-    // Add more properties as needed
+    /**
+     * Specify the image state. Example: if the image is in editable state
+     */
+    imageState?: string;
 }
 
 interface NodeWithHiddenProperty extends Node {

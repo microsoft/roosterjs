@@ -1,3 +1,4 @@
+import type { ImageMetadataFormat } from '../contentModel/format/metadata/ImageMetadataFormat';
 import type { TableMetadataFormat } from '../contentModel/format/metadata/TableMetadataFormat';
 import type { ImageFormatState } from './ImageFormatState';
 
@@ -151,9 +152,14 @@ export interface ContentModelFormatState {
     fontWeight?: string;
 
     /**
-     * Format of image, if there is table at cursor position
+     * Format of image, if there is image at cursor position
      */
     imageFormat?: ImageFormatState;
+
+    /**
+     * Editing metadata of image, if there is image at cursor position
+     */
+    imageEditingMetadata?: ImageMetadataFormat | null;
 
     /**
      * Letter spacing
