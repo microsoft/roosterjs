@@ -36,7 +36,11 @@ export function paste(
     }
 
     // 1. Prepare variables
-    const doc = createDOMFromHtml(clipboardData.rawHtml, editor.getDOMCreator());
+    const domCreator = editor.getDOMCreator();
+    if (!domCreator.isBypassed && clipboardData.rawHtml) {
+        clipboardData.rawHtml = cleanHtmlComments(clipboardData.rawHtml);
+    }
+    const doc = createDOMFromHtml(clipboardData.rawHtml, domCreator);
     const pasteType =
         typeof pasteTypeOrGetter == 'function'
             ? pasteTypeOrGetter(doc, clipboardData)
@@ -52,7 +56,7 @@ export function paste(
         pasteType,
         (clipboardData.rawHtml == clipboardData.html
             ? doc
-            : createDOMFromHtml(clipboardData.html, editor.getDOMCreator())
+            : createDOMFromHtml(clipboardData.html, domCreator)
         )?.body
     );
 
@@ -76,5 +80,5 @@ function createDOMFromHtml(
     html: string | null | undefined,
     domCreator: DOMCreator
 ): Document | null {
-    return html ? domCreator.htmlToDOM(cleanHtmlComments(html)) : null;
+    return html ? domCreator.htmlToDOM(html) : null;
 }
