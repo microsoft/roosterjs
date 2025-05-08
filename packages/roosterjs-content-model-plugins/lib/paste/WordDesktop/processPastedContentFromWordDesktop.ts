@@ -3,7 +3,7 @@ import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
-import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
+import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -68,18 +68,18 @@ function adjustPercentileLineHeight(format: ContentModelBlockFormat, element: HT
     }
 }
 
-function listLevelParser(
+const listLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format: ContentModelListItemLevelFormat,
     element: HTMLElement,
-    context: DomToModelContext,
+    _context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
-): void {
+) => {
     if (element.style.marginLeft != '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
     format.marginBottom = undefined;
-}
+};
 
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {

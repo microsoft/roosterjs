@@ -1,14 +1,5 @@
-import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
-import {
-    addBlock,
-    createListItem,
-    createListLevel,
-    getListStyleTypeFromString,
-    isElementOfType,
-    isEmpty,
-    parseFormat,
-    updateListMetadata,
-} from 'roosterjs-content-model-dom';
+import { getListStyleTypeFromString, isEmpty } from 'roosterjs-content-model-dom';
+import { processAsListItem, setupListFormat } from '../utils/customListUtils';
 import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBlockGroup,
@@ -18,7 +9,6 @@ import type {
     ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
-    FormatParser,
 } from 'roosterjs-content-model-types';
 
 /** Word list metadata style name */
@@ -69,8 +59,8 @@ export function processWordList(
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = level && parseInt(level.substr('level'.length));
-
     listFormat.wordList = lNumber || WORD_FIRST_LIST;
+
     if (listFormat.levels.length == 0) {
         listFormat.levels =
             (listFormat.wordList && listFormat.wordKnownLevels.get(listFormat.wordList)) || [];
@@ -86,30 +76,25 @@ export function processWordList(
                 : 'UL';
 
         // Create the new level of the list item and parse the format
-        const newLevel: ContentModelListLevel = createListLevel(listType);
-        parseFormat(
-            element,
-            [...context.formatParsers.listLevel, wordListPaddingParser],
-            newLevel.format,
-            context
-        );
-
-        // If the list format is in a different level, update the array so we get the new item
-        // To be in the same level as the provided level metadata.
-        if (wordLevel > listFormat.levels.length) {
-            while (wordLevel != listFormat.levels.length) {
-                listFormat.levels.push(newLevel);
-            }
-        } else {
-            listFormat.levels.splice(wordLevel, listFormat.levels.length - 1);
-            listFormat.levels[wordLevel - 1] = newLevel;
-        }
+        setupListFormat(listType, element, context, wordLevel, listFormat, group, [
+            wordListPaddingParser,
+        ]);
         (listFormat.levels[listFormat.levels.length - 1]
             .format as WordListFormat).wordList = wordList;
 
-        listFormat.listParent = group;
+        const bullet = getBulletFromMetadata(listMetadata, listType);
+        const listFormatMetadata = bullet
+            ? {
+                  unorderedStyleType: listType == 'UL' ? bullet : undefined,
+                  orderedStyleType: listType == 'OL' ? bullet : undefined,
+              }
+            : undefined;
 
-        processAsListItem(listFormat, context, element, group, listMetadata);
+        processAsListItem(context, element, group, listFormatMetadata, listItem => {
+            if (listType == 'OL') {
+                setStartNumber(listItem, context, listMetadata);
+            }
+        });
 
         if (
             listFormat.levels.length > 0 &&
@@ -121,44 +106,6 @@ export function processWordList(
     }
 
     return false;
-}
-
-function processAsListItem(
-    listFormat: WordDesktopListFormat,
-    context: DomToModelContext,
-    element: HTMLElement,
-    group: ContentModelBlockGroup,
-    listMetadata: WordMetadata | undefined
-) {
-    const listLevel = listFormat.levels[listFormat.levels.length - 1];
-    const { listType } = listLevel;
-    const bullet = getBulletFromMetadata(listMetadata, listType);
-    if (bullet) {
-        updateListMetadata(listFormat.levels[listFormat.levels.length - 1], metadata =>
-            Object.assign({}, metadata, {
-                unorderedStyleType: listType == 'UL' ? bullet : undefined,
-                orderedStyleType: listType == 'OL' ? bullet : undefined,
-            })
-        );
-    }
-
-    const listItem = createListItem(listFormat.levels, context.segmentFormat);
-
-    parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
-    parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
-    parseFormat(
-        element,
-        [removeNegativeTextIndentParser, nonListElementParser],
-        listItem.format,
-        context
-    );
-
-    if (listType == 'OL') {
-        setStartNumber(listItem, context, listMetadata);
-    }
-
-    context.elementProcessors.child(listItem, element, context);
-    addBlock(group, listItem);
 }
 
 function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {
@@ -210,18 +157,6 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
     return getListStyleTypeFromString(listType, templateFinal);
 }
 
-function wordListPaddingParser(
-    format: ContentModelListItemLevelFormat,
-    element: HTMLElement
-): void {
-    if (element.style.marginLeft && element.style.marginLeft != '0in') {
-        format.paddingLeft = '0px';
-    }
-    if (element.style.marginRight && element.style.marginRight != '0in') {
-        format.paddingRight = '0px';
-    }
-}
-
 function setStartNumber(
     listItem: ContentModelListItem,
     context: DomToModelContext,
@@ -265,23 +200,14 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
     return undefined;
 }
 
-const nonListElementParser: FormatParser<ContentModelListItemFormat> = (
-    format,
-    element,
-    _context,
-    defaultStyle
-): void => {
-    if (!isElementOfType(element, 'li')) {
-        Object.keys(defaultStyle).forEach(keyInput => {
-            const key = keyInput as keyof CSSStyleDeclaration;
-            const formatKey = keyInput as keyof ContentModelListItemFormat;
-            if (
-                key != 'display' &&
-                format[formatKey] != undefined &&
-                format[formatKey] == defaultStyle[key]
-            ) {
-                delete format[formatKey];
-            }
-        });
+function wordListPaddingParser(
+    format: ContentModelListItemLevelFormat,
+    element: HTMLElement
+): void {
+    if (element.style.marginLeft && element.style.marginLeft != '0in') {
+        format.paddingLeft = '0px';
     }
-};
+    if (element.style.marginRight && element.style.marginRight != '0in') {
+        format.paddingRight = '0px';
+    }
+}
