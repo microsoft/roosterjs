@@ -74,6 +74,7 @@ export { addSegment } from './modelApi/common/addSegment';
 export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 export { mergeTextSegments } from './modelApi/common/mergeTextSegments';
+export { normalizeSegmentFormat } from './modelApi/common/normalizeSegmentFormat';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr';
@@ -115,6 +116,7 @@ export {
     setParagraphMarker,
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
+export { setImageState, getImageState } from './domUtils/hiddenProperties/imageState';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 

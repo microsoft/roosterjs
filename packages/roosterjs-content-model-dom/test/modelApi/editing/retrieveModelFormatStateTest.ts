@@ -18,6 +18,7 @@ import {
     ContentModelFormatState,
     ContentModelSegmentFormat,
     DOMHelper,
+    ImageMetadataFormat,
 } from 'roosterjs-content-model-types';
 
 describe('retrieveModelFormatState', () => {
@@ -649,6 +650,49 @@ describe('retrieveModelFormatState', () => {
                 boxShadow: undefined,
                 borderRadius: undefined,
             },
+            imageEditingMetadata: null,
+        });
+    });
+
+    it('With selection under image that has metadata', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        const mockedMetadata: ImageMetadataFormat = {
+            src: 'test',
+        };
+
+        image.dataset = { editingInfo: JSON.stringify(mockedMetadata) };
+        image.isSelected = true;
+
+        para.segments.push(image);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [image]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: {
+                borderColor: 'red',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: undefined,
+                borderRadius: undefined,
+            },
+            imageEditingMetadata: mockedMetadata,
         });
     });
 
@@ -683,6 +727,7 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: true,
             imageFormat: undefined,
+            imageEditingMetadata: undefined,
         });
     });
 

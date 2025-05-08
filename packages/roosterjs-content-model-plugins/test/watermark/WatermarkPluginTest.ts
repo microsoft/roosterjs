@@ -55,7 +55,7 @@ describe('WatermarkPlugin', () => {
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
             '_WatermarkContent',
-            'position: absolute; pointer-events: none; content: "test";font-size: 14px!important;color: #AAAAAA!important;',
+            'position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-size: 14px!important;color: #AAAAAA!important;',
             'before'
         );
 
@@ -98,7 +98,7 @@ describe('WatermarkPlugin', () => {
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
             '_WatermarkContent',
-            'position: absolute; pointer-events: none; content: "test";font-size: 14px!important;color: #AAAAAA!important;',
+            'position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-size: 14px!important;color: #AAAAAA!important;',
             'before'
         );
     });
@@ -124,7 +124,7 @@ describe('WatermarkPlugin', () => {
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
             '_WatermarkContent',
-            'position: absolute; pointer-events: none; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;',
+            'position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;',
             'before'
         );
 
@@ -161,7 +161,7 @@ describe('WatermarkPlugin', () => {
         expect(setEditorStyleSpy).toHaveBeenCalledTimes(1);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
             '_WatermarkContent',
-            'position: absolute; pointer-events: none; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;',
+            'position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;',
             'before'
         );
 
@@ -220,8 +220,8 @@ describe('WatermarkPlugin dark mode', () => {
             fontSize: '20pt',
             textColor: textColor,
         });
-        const darkModeStyles = `position: absolute; pointer-events: none; content: "test";font-family: Arial!important;font-size: 20pt!important;color: ${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${textColor}!important;`;
-        const lightModeStyles = `position: absolute; pointer-events: none; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;`;
+        const darkModeStyles = `position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-family: Arial!important;font-size: 20pt!important;color: ${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${textColor}!important;`;
+        const lightModeStyles = `position: absolute; pointer-events: none; margin-inline-start: 1px; content: "test";font-family: Arial!important;font-size: 20pt!important;color: red!important;`;
 
         plugin.initialize(editor);
 

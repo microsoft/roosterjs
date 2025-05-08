@@ -40,5 +40,6 @@ function trustedHTMLHandlerToDOMCreator(trustedHTMLHandler?: LegacyTrustedHTMLHa
     const handler = trustedHTMLHandler || defaultTrustHtmlHandler;
     return {
         htmlToDOM: (html: string) => new DOMParser().parseFromString(handler(html), 'text/html'),
+        isBypassed: !trustedHTMLHandler,
     };
 }
