@@ -43,7 +43,19 @@ export const BulletListType = {
      */
     Circle: 9,
     /**
+     * Box Shadow bullet type
+     */
+    BoxShadow: 10,
+    /**
+     * Rhombus with a cross inside
+     */
+    Xrhombus: 11,
+    /**
+     * Check mark bullet type
+     */
+    CheckMark: 12,
+    /**
      * Maximum value of the enum
      */
-    Max: 9,
+    Max: 12,
 };

@@ -13,4 +13,7 @@ export const UnorderedListStyleMap: Record<number, string> = {
     [BulletListType.ShortArrow]: '"➢ "',
     [BulletListType.UnfilledArrow]: '"➪ "',
     [BulletListType.Hyphen]: '"— "',
+    [BulletListType.CheckMark]: '"✔ "',
+    [BulletListType.Xrhombus]: '"❖ "',
+    [BulletListType.BoxShadow]: '"❑ "',
 };
