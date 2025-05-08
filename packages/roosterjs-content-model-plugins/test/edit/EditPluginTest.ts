@@ -174,11 +174,57 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
-        it('Enter, normal enter enabled', () => {
+        it('Enter, normal enter enabled with experimental feature', () => {
             isExperimentalFeatureEnabledSpy.and.callFake(
                 (featureName: string) => featureName == 'HandleEnterKey'
             );
             plugin = new EditPlugin();
+            const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.takeSnapshot = addUndoSnapshotSpy;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('Enter, normal enter enabled', () => {
+            plugin = new EditPlugin({
+                shouldHandleEnterKey: true,
+            });
+            const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
+            const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+            editor.takeSnapshot = addUndoSnapshotSpy;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('Enter, normal enter enabled with callback', () => {
+            plugin = new EditPlugin({
+                shouldHandleEnterKey: _editor => {
+                    return true;
+                },
+            });
             const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 

@@ -23,7 +23,7 @@ describe('splitParagraph', () => {
         para.segments.push(marker, br);
         doc.blocks.push(para);
 
-        const result = splitParagraph(ip);
+        const result = splitParagraph(ip, ['direction']);
 
         const expectedResult: ContentModelParagraph = {
             blockType: 'Paragraph',
@@ -92,6 +92,52 @@ describe('splitParagraph', () => {
                     blockType: 'Paragraph',
                     segments: [text1],
                     format: {},
+                },
+            ],
+        });
+    });
+
+    it('Paragraph with more segments with format', () => {
+        const doc = createContentModelDocument();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const para = createParagraph(false);
+        para.format.id = 'ID';
+        para.format.borderLeft = '5px';
+        const ip: InsertPoint = {
+            marker: marker,
+            paragraph: para,
+            path: [doc],
+        };
+
+        para.segments.push(text1, marker, text2);
+        doc.blocks.push(para);
+
+        const result = splitParagraph(ip);
+
+        const expectedResult: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker, text2],
+            format: {},
+        };
+
+        expect(result).toEqual(expectedResult);
+        expect(ip).toEqual({
+            marker: marker,
+            paragraph: expectedResult,
+            path: [doc],
+        });
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1],
+                    format: {
+                        id: 'ID',
+                        borderLeft: '5px',
+                    },
                 },
             ],
         });
