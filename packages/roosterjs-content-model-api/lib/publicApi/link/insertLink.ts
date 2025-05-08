@@ -54,14 +54,16 @@ export function insertLink(
                     false /*includingFormatHolder*/,
                     true /*mutate*/
                 );
+
                 const originalText = segments
                     .map(x => (x.segmentType == 'Text' ? x.text : ''))
                     .join('');
                 const text = displayText || originalText || '';
 
                 if (
-                    segments.some(x => x.segmentType != 'SelectionMarker') &&
-                    originalText == text
+                    (segments.some(x => x.segmentType != 'SelectionMarker') &&
+                        originalText == text) ||
+                    (segments.length == 1 && segments[0].segmentType == 'Image')
                 ) {
                     segments.forEach(x => {
                         const link = createLink(
