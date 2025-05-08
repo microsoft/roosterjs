@@ -1,14 +1,8 @@
 import { createContentModelDocument } from '../creators/createContentModelDocument';
 import { createText } from '../creators/createText';
 import { ensureParagraph } from './ensureParagraph';
-import {
-    createModelToDomContext,
-    createModelToDomContextWithConfig,
-} from '../../modelToDom/context/createModelToDomContext';
-import {
-    createDomToModelContext,
-    createDomToModelContextWithConfig,
-} from '../../domToModel/context/createDomToModelContext';
+import { createModelToDomContextWithConfig } from '../../modelToDom/context/createModelToDomContext';
+import { createDomToModelContextWithConfig } from '../../domToModel/context/createDomToModelContext';
 import type {
     ContentModelSegmentFormat,
     DomToModelContext,
@@ -24,17 +18,17 @@ import type {
  */
 export function normalizeSegmentFormat(
     format: ContentModelSegmentFormat,
-    environment?: EditorEnvironment
+    environment: EditorEnvironment
 ): ContentModelSegmentFormat {
     const span = document.createElement('span');
     const segment = createText('text', format);
 
-    const domToModelContext: DomToModelContext = environment
-        ? createDomToModelContextWithConfig(environment.domToModelSettings.calculated)
-        : createDomToModelContext();
-    const modelToDomContext: ModelToDomContext = environment
-        ? createModelToDomContextWithConfig(environment.modelToDomSettings.calculated)
-        : createModelToDomContext();
+    const domToModelContext: DomToModelContext = createDomToModelContextWithConfig(
+        environment.domToModelSettings.calculated
+    );
+    const modelToDomContext: ModelToDomContext = createModelToDomContextWithConfig(
+        environment.modelToDomSettings.calculated
+    );
     const model = createContentModelDocument();
 
     modelToDomContext.modelHandlers.segment(
