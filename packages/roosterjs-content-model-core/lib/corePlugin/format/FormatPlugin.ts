@@ -6,6 +6,7 @@ import {
     isCharacterValue,
     isCursorMovingKey,
     isNodeOfType,
+    normalizeSegmentFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     BackgroundColorFormat,
@@ -78,6 +79,11 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        this.state.defaultFormat = normalizeSegmentFormat(
+            this.state.defaultFormat,
+            editor.getEnvironment()
+        );
     }
 
     /**
