@@ -175,6 +175,7 @@ describe('PowerPoint', () => {
                                     direction: 'ltr',
                                     marginTop: '10pt',
                                     marginBottom: '0pt',
+                                    listStyleType: 'square',
                                 },
                                 dataset: { editingInfo: '{"unorderedStyleType":3}' },
                             },
@@ -185,7 +186,6 @@ describe('PowerPoint', () => {
                             lineHeight: '90%',
                             marginTop: '10pt',
                             marginBottom: '0pt',
-                            listStyleType: '"∎ "',
                         },
                         blockGroupType: 'ListItem',
                         blocks: [
