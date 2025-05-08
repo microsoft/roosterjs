@@ -1397,7 +1397,6 @@ describe('pruneUnselectedModel', () => {
         doc.blocks.push(para);
 
         pruneUnselectedModel(doc);
-        navigator.clipboard.writeText(JSON.stringify(doc));
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
