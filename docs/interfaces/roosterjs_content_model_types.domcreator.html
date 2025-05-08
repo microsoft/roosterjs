@@ -89,6 +89,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domcreator.html#htmltodom" class="tsd-kind-icon">html<wbr>ToDOM</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domcreator.html#isbypassed" class="tsd-kind-icon">is<wbr>Bypassed</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,7 +103,7 @@
 					<div class="tsd-signature tsd-kind-icon">html<wbr>ToDOM<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>html<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Document</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed226f0/packages/roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts#L11">roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7760c1/packages/roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts#L14">roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -114,6 +115,11 @@
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>Callback to convert HTML string to a DOM object</p>
+											</div>
+										</div>
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
@@ -125,6 +131,22 @@
 								</ul>
 							</li>
 						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isbypassed" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Bypassed</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Bypassed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d7760c1/packages/roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts#L20">roosterjs-content-model-types/lib/parameter/TrustedHTMLHandler.ts:20</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Flag to indicate if this handler is bypassed or not.
+							If this is true, it means that when converting HTML string to DOM object, we don&#39;t need to do any conversion.</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -176,6 +198,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.domcreator.html#htmltodom" class="tsd-kind-icon">html<wbr>ToDOM</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.domcreator.html#isbypassed" class="tsd-kind-icon">is<wbr>Bypassed</a>
 							</li>
 						</ul>
 					</li>

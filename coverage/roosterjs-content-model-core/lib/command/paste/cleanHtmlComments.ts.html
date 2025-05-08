@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel.ts</title>
+    <title>Code coverage report for roosterjs-content-model-core/lib/command/paste/cleanHtmlComments.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-dom/lib/modelApi/common</a> normalizeContentModel.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/command/paste</a> cleanHtmlComments.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>32/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/11</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -104,99 +104,120 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1509x</span>
-<span class="cline-any cline-yes">3044x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3044x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">815x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">799x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">815x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2149x</span>
-<span class="cline-any cline-yes">2149x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-yes">118x</span>
-<span class="cline-any cline-yes">260x</span>
-<span class="cline-any cline-yes">260x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3044x</span>
-<span class="cline-any cline-yes">836x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isBlockEmpty } from './isEmpty';
-import { mutateBlock } from './mutate';
-import { normalizeParagraph } from './normalizeParagraph';
-import { unwrapBlock } from './unwrapBlock';
-import type { ReadonlyContentModelBlockGroup } from 'roosterjs-content-model-types';
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const HtmlCommentStart = '\x3C!--';
+const HtmlCommentStart2 = '&lt;!--';
+const HtmlCommentEnd = '--&gt;';
+const styleTag = '&lt;style';
+const styleClosingTag = '&lt;/style&gt;';
+const nonWordCharacterRegex = /\W/;
 &nbsp;
 /**
- * For a given content model, normalize it to make the model be consistent.
- * This process includes:
- * - For a list item without any list level, unwrap the list item
- * - For a paragraph, make sure it has BR at the end if it is an empty paragraph
- * - For text segments under paragraph, make sure its space values are correct (use nbsp to replace space when necessary)
- * - For an empty block, remove it
- * @param group The root level block group of content model to normalize
+ * @internal
+ * Exported only for unit test
  */
-export function normalizeContentModel(group: ReadonlyContentModelBlockGroup) {
-    for (let i = group.blocks.length - 1; i &gt;= 0; i--) {
-        const block = group.blocks[i];
+export function cleanHtmlComments(html: string) {
+    let { styleIndex, styleEndIndex } = extractHtmlIndexes(html);
 &nbsp;
-        switch (block.blockType) {
-            case 'BlockGroup':
-                if (block.blockGroupType == 'ListItem' &amp;&amp; block.levels.length == 0) {
-                    i += block.blocks.length;
-                    unwrapBlock(group, block);
-                } else {
-                    normalizeContentModel(block);
-                }
-                break;
-            case 'Paragraph':
-                normalizeParagraph(block);
-                break;
-            case 'Table':
-                for (let r = 0; r &lt; block.rows.length; r++) {
-                    for (let c = 0; c &lt; block.rows[r].cells.length; c++) {
-                        <span class="missing-if-branch" title="else path not taken" >E</span>if (block.rows[r].cells[c]) {
-                            normalizeContentModel(block.rows[r].cells[c]);
-                        }
-                    }
-                }
-                break;
-        }
+    while (styleIndex &gt; -1) {
+        html = removeCommentsFromHtml(html, HtmlCommentStart, styleEndIndex, styleIndex);
+        html = removeCommentsFromHtml(html, HtmlCommentStart2, styleEndIndex, styleIndex);
+        html = removeCommentsFromHtml(html, HtmlCommentEnd, styleEndIndex, styleIndex);
 &nbsp;
-        if (isBlockEmpty(block)) {
-            mutateBlock(group).blocks.splice(i, 1);
-        }
+        ({ styleIndex, styleEndIndex } = extractHtmlIndexes(html, styleEndIndex + 1));
     }
+&nbsp;
+    return html;
+}
+&nbsp;
+function extractHtmlIndexes(html: string, startIndex: number = 0) {
+    const htmlLowercase = html.toLowerCase();
+    let styleIndex = htmlLowercase.indexOf(styleTag, startIndex);
+    let currentIndex = styleIndex + styleTag.length;
+    let nextChar = html.substring(currentIndex, currentIndex + 1);
+&nbsp;
+    while (!nonWordCharacterRegex.test(nextChar) &amp;&amp; styleIndex &gt; -1) {
+        styleIndex = htmlLowercase.indexOf(styleTag, styleIndex + 1);
+        currentIndex = styleIndex + styleTag.length;
+        nextChar = html.substring(currentIndex, currentIndex + 1);
+    }
+&nbsp;
+    const styleEndIndex = htmlLowercase.indexOf(styleClosingTag, startIndex);
+    return { styleIndex, styleEndIndex };
+}
+&nbsp;
+function removeCommentsFromHtml(
+    html: string,
+    marker: string,
+    endId: number,
+    startId: number
+): string {
+    let id = html.indexOf(marker, startId);
+    while (id &gt; -1 &amp;&amp; id &lt; endId) {
+        html = html.substring(0, id) + html.substring(id + marker.length);
+        id = html.indexOf(marker, id + 1);
+    }
+    return html;
 }
 &nbsp;</pre></td></tr></table></pre>
 
