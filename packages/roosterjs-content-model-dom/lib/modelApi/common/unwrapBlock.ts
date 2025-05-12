@@ -1,3 +1,4 @@
+import { copyBlockFormat } from '../../modelApi/block/copyBlockFormat';
 import { mutateBlock } from './mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
@@ -20,7 +21,20 @@ export function unwrapBlock(
         groupToUnwrap.blocks.forEach(setParagraphNotImplicit);
 
         if (parent) {
-            mutateBlock(parent)?.blocks.splice(index, 1, ...groupToUnwrap.blocks.map(mutateBlock));
+            mutateBlock(parent)?.blocks.splice(
+                index,
+                1,
+                ...groupToUnwrap.blocks.map(x => {
+                    const mutableBlock = mutateBlock(x);
+
+                    mutableBlock.format = Object.assign(
+                        copyBlockFormat(groupToUnwrap.format, false /*deleteOriginalFormat*/),
+                        mutableBlock.format
+                    );
+
+                    return mutableBlock;
+                })
+            );
         }
     }
 }

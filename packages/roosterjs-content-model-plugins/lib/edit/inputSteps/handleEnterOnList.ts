@@ -1,12 +1,13 @@
-import { getListAnnounceData } from 'roosterjs-content-model-api';
-import { splitParagraph } from '../utils/splitParagraph';
 import {
+    copyBlockFormat,
     createListItem,
     createListLevel,
     getClosestAncestorBlockGroupIndex,
     isBlockGroupOfType,
     mutateBlock,
 } from 'roosterjs-content-model-dom';
+import { getListAnnounceData } from 'roosterjs-content-model-api';
+import { splitParagraph } from '../utils/splitParagraph';
 import type {
     ContentModelListItem,
     DeleteSelectionStep,
@@ -115,6 +116,7 @@ const createNewListItem = (
     );
 
     newListItem.blocks.push(newParagraph);
+    newListItem.format = copyBlockFormat(listItem.format, false /*deleteOriginalFormat*/);
 
     const remainingBlockCount = listItem.blocks.length - paraIndex - 1;
 

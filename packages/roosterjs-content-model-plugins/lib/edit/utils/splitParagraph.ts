@@ -1,4 +1,5 @@
 import {
+    copyBlockFormat,
     createBr,
     createParagraph,
     normalizeParagraph,
@@ -35,12 +36,13 @@ const DEFAULT_FORMAT_KEYS: Partial<keyof ContentModelBlockFormat>[] = [
  * @param formatKeys The format that needs to be copied from the splitted paragraph, if not specified,  some default format will be copied
  * @returns The new paragraph it created
  */
-export function splitParagraph(
-    insertPoint: InsertPoint,
-    formatKeys: Partial<keyof ContentModelBlockFormat>[] = DEFAULT_FORMAT_KEYS
-) {
+export function splitParagraph(insertPoint: InsertPoint) {
     const { paragraph, marker } = insertPoint;
-    const newFormat = createNewFormat(paragraph.format, formatKeys);
+    const newFormat = copyBlockFormat(
+        paragraph.format,
+        false /*deleteOriginalFormat*/,
+        DEFAULT_FORMAT_KEYS
+    );
     const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
         newFormat,
@@ -67,19 +69,3 @@ export function splitParagraph(
 
     return newParagraph;
 }
-
-const createNewFormat = (
-    format: ContentModelBlockFormat,
-    formatKeys: Partial<keyof ContentModelBlockFormat>[]
-) => {
-    let newFormat: ContentModelBlockFormat = {};
-    for (const key of formatKeys) {
-        if (format[key]) {
-            newFormat = {
-                ...newFormat,
-                [key]: format[key],
-            };
-        }
-    }
-    return newFormat;
-};
