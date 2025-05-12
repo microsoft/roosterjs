@@ -1,14 +1,11 @@
-import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
 import type {
     ContentModelDividerFormat,
     FormatContentModelContext,
-    IEditor,
-    KeyDownEvent,
-    ShallowMutableContentModelDocument,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 import {
     addBlock,
-    ChangeSource,
     createContentModelDocument,
     createDivider,
     mergeModel,
@@ -107,14 +104,13 @@ const HorizontalLineStyles: Map<
  * @param context the formatting context
  */
 export function insertHorizontalLineIntoModel(
-    model: ShallowMutableContentModelDocument,
+    model: ReadonlyContentModelDocument,
     context: FormatContentModelContext,
     triggerChar: HorizontalLineTriggerCharacter
 ) {
     const hr = createDivider('hr', HorizontalLineStyles.get(triggerChar));
     const doc = createContentModelDocument();
     addBlock(doc, hr);
-
     mergeModel(model, doc, context);
 }
 
@@ -127,33 +123,27 @@ export function insertHorizontalLineIntoModel(
  * @param event The keydown event
  * @returns True if horizontal line is inserted, otherwise false
  */
-export function checkAndInsertHorizontalLine(editor: IEditor, event: KeyDownEvent) {
-    return formatTextSegmentBeforeSelectionMarker(
-        editor,
-        (model, _, para, __, context) => {
-            const allText = para.segments.reduce(
-                (acc, segment) => (segment.segmentType === 'Text' ? acc + segment.text : acc),
-                ''
-            );
-            // At least 3 characters are needed to trigger horizontal line
-            if (allText.length < 3) {
-                return false;
-            }
-
-            return HorizontalLineTriggerCharacters.some(triggerCharacter => {
-                const shouldFormat = allText.split('').every(char => char === triggerCharacter);
-                if (shouldFormat) {
-                    para.segments = para.segments.filter(s => s.segmentType != 'Text');
-                    insertHorizontalLineIntoModel(model, context, triggerCharacter);
-                    event.rawEvent.preventDefault();
-                    context.canUndoByBackspace = true;
-                }
-                return shouldFormat;
-            });
-        },
-        {
-            changeSource: ChangeSource.AutoFormat,
-            apiName: 'autoHorizontalLine',
-        }
+export const checkAndInsertHorizontalLine = (
+    model: ReadonlyContentModelDocument,
+    paragraph: ShallowMutableContentModelParagraph,
+    context: FormatContentModelContext
+) => {
+    const allText = paragraph.segments.reduce(
+        (acc, segment) => (segment.segmentType === 'Text' ? acc + segment.text : acc),
+        ''
     );
-}
+    // At least 3 characters are needed to trigger horizontal line
+    if (allText.length < 3) {
+        return false;
+    }
+
+    return HorizontalLineTriggerCharacters.some(triggerCharacter => {
+        const shouldFormat = allText.split('').every(char => char === triggerCharacter);
+        if (shouldFormat) {
+            paragraph.segments = paragraph.segments.filter(s => s.segmentType != 'Text');
+            insertHorizontalLineIntoModel(model, context, triggerCharacter);
+            context.canUndoByBackspace = true;
+        }
+        return shouldFormat;
+    });
+};

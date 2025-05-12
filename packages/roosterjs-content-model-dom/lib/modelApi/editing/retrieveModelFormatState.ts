@@ -1,5 +1,6 @@
 import { extractBorderValues } from '../../domUtils/style/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getImageMetadata } from '../metadata/updateImageMetadata';
 import { getTableMetadata } from '../metadata/updateTableMetadata';
 import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
@@ -124,6 +125,7 @@ export function retrieveModelFormatState(
                             isFirstImage = false;
                         } else {
                             formatState.imageFormat = undefined;
+                            formatState.imageEditingMetadata = undefined;
                         }
                     }
                 });
@@ -257,6 +259,7 @@ function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentMo
     const borderColor = extractedBorder.color;
     const borderWidth = extractedBorder.width;
     const borderStyle = extractedBorder.style;
+
     result.imageFormat = {
         borderColor,
         borderWidth,
@@ -264,6 +267,7 @@ function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentMo
         boxShadow: format.boxShadow,
         borderRadius: format.borderRadius,
     };
+    result.imageEditingMetadata = getImageMetadata(image);
 }
 
 function mergeValue<K extends keyof ContentModelFormatState>(

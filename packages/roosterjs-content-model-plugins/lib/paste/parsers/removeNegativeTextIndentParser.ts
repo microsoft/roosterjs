@@ -3,7 +3,7 @@ import type { FormatParser, TextIndentFormat } from 'roosterjs-content-model-typ
 /**
  * @internal
  */
-export const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = (format, element) => {
+export const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = format => {
     if (format.textIndent?.startsWith('-')) {
         delete format.textIndent;
     }
