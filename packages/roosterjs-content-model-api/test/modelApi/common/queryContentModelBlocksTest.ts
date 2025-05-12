@@ -1,6 +1,10 @@
-import { domToContentModel } from 'roosterjs-content-model-dom';
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
+import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import { queryContentModelBlocks } from '../../../lib/modelApi/common/queryContentModelBlocks';
 import {
+    ContentModelDocument,
+    DomToModelContext,
+    EditorContext,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelListItem,
     ReadonlyContentModelParagraph,
@@ -1470,9 +1474,12 @@ describe('queryContentModelBlocksBlocks', () => {
 
     it('should return empty array if no blocks match the type', () => {
         // Arrange
-        const insideEntity: ReadonlyContentModelBlockGroup = {
-            blockGroupType: 'FormatContainer',
-            blockType: 'BlockGroup',
+        const fakeWrapper = ('wrapper' as unknown) as HTMLElement;
+        const fakeEditorContext = ('editorContext' as unknown) as EditorContext;
+        const fakeDomToModelContext = ('domToModelContext' as unknown) as DomToModelContext;
+
+        const insideEntity: ContentModelDocument = {
+            blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -1481,13 +1488,15 @@ describe('queryContentModelBlocksBlocks', () => {
                     segmentFormat: {},
                 },
             ],
-            tagName: 'div',
             format: {},
         };
+        const createDomToModelContextSpy = spyOn(
+            createDomToModelContext,
+            'createDomToModelContext'
+        ).and.returnValue(fakeDomToModelContext);
         const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
             insideEntity
         );
-        const contents = insideEntity.blocks;
 
         const group: ReadonlyContentModelBlockGroup = {
             blockGroupType: 'Document',
@@ -1500,7 +1509,7 @@ describe('queryContentModelBlocksBlocks', () => {
                 },
                 {
                     blockType: 'Entity',
-                    wrapper: (undefined as unknown) as HTMLElement,
+                    wrapper: fakeWrapper,
                     entityFormat: {
                         id: '',
                         entityType: '',
@@ -1514,9 +1523,17 @@ describe('queryContentModelBlocksBlocks', () => {
         };
 
         // Act
-        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(group, 'Paragraph');
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(
+            group,
+            'Paragraph',
+            undefined /* filter */,
+            undefined /* findFirstOnly */,
+            entity => fakeEditorContext
+        );
 
         // Assert
+        expect(createDomToModelContextSpy).toHaveBeenCalledWith(fakeEditorContext);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(fakeWrapper, fakeDomToModelContext);
         expect(result).toEqual([
             // group (Document) > blocks[0] (Paragraph)
             {

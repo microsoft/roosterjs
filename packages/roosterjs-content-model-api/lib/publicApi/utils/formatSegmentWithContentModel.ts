@@ -135,7 +135,16 @@ export function formatSegmentWithContentModel(
     );
 }
 
-function createEditorContextForEntity(editor: IEditor, entity: ContentModelEntity): EditorContext {
+/**
+ * Create EditorContext for an entity
+ * @param editor The editor object
+ * @param entity The entity to create the context for
+ * @returns The EditorContext for the entity
+ */
+export function createEditorContextForEntity(
+    editor: IEditor,
+    entity: ContentModelEntity
+): EditorContext {
     const domHelper = editor.getDOMHelper();
     const context: EditorContext = {
         isDarkMode: editor.isDarkMode(),

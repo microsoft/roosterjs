@@ -1,8 +1,8 @@
-import { domToContentModel } from 'roosterjs-content-model-dom';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockType,
     ContentModelEntity,
-    DomToModelContext,
+    EditorContext,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockBase,
     ReadonlyContentModelBlockGroup,
@@ -14,14 +14,14 @@ import type {
  * @param type The type of block to query
  * @param filter Optional selector to filter the blocks
  * @param findFirstOnly True to return the first block only, false to return all blocks
- * @param shouldExpandEntity Optional function to determine if an entity's children should be recursively queried, should return a DomToModelContext if the entity should be expanded, or null if not
+ * @param shouldExpandEntity Optional function to determine if an entity's children should be recursively queried, should return a EditorContext if the entity should be expanded, or null if not
  */
 export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
     group: ReadonlyContentModelBlockGroup,
     type: T extends ReadonlyContentModelBlockBase<infer U> ? U : never,
     filter?: (element: T) => element is T,
     findFirstOnly?: boolean,
-    shouldExpandEntity?: (entity: ContentModelEntity) => DomToModelContext | null
+    shouldExpandEntity?: (entity: ContentModelEntity) => EditorContext | null
 ): T[] {
     const elements: T[] = [];
     for (let i = 0; i < group.blocks.length; i++) {
@@ -38,8 +38,9 @@ export function queryContentModelBlocks<T extends ReadonlyContentModelBlock>(
                     elements.push(block);
                 }
                 if (block.blockType == 'Entity' && shouldExpandEntity) {
-                    const context = shouldExpandEntity(block);
-                    if (context) {
+                    const editorContext = shouldExpandEntity(block);
+                    if (editorContext) {
+                        const context = createDomToModelContext(editorContext);
                         const model = domToContentModel(block.wrapper, context);
                         const results = queryContentModelBlocks<T>(
                             model,

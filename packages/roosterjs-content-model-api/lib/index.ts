@@ -48,7 +48,10 @@ export { clearSelectedCells } from './modelApi/table/clearSelectedCells';
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { formatImageWithContentModel } from './publicApi/utils/formatImageWithContentModel';
 export { formatParagraphWithContentModel } from './publicApi/utils/formatParagraphWithContentModel';
-export { formatSegmentWithContentModel } from './publicApi/utils/formatSegmentWithContentModel';
+export {
+    formatSegmentWithContentModel,
+    createEditorContextForEntity,
+} from './publicApi/utils/formatSegmentWithContentModel';
 export { formatTextSegmentBeforeSelectionMarker } from './publicApi/utils/formatTextSegmentBeforeSelectionMarker';
 export { formatInsertPointWithContentModel } from './publicApi/utils/formatInsertPointWithContentModel';
 
