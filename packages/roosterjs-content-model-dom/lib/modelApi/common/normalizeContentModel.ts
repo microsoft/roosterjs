@@ -1,4 +1,5 @@
 import { isBlockEmpty } from './isEmpty';
+import { ListFormats } from '../block/copyFormat';
 import { mutateBlock } from './mutate';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
@@ -21,7 +22,7 @@ export function normalizeContentModel(group: ReadonlyContentModelBlockGroup) {
             case 'BlockGroup':
                 if (block.blockGroupType == 'ListItem' && block.levels.length == 0) {
                     i += block.blocks.length;
-                    unwrapBlock(group, block);
+                    unwrapBlock(group, block, ListFormats);
                 } else {
                     normalizeContentModel(block);
                 }

@@ -1,32 +1,15 @@
 import {
-    copyBlockFormat,
+    copyFormat,
     createBr,
     createParagraph,
     normalizeParagraph,
+    ParagraphFormats,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelBlockFormat,
     InsertPoint,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
-
-const DEFAULT_FORMAT_KEYS: Partial<keyof ContentModelBlockFormat>[] = [
-    'backgroundColor',
-    'direction',
-    'textAlign',
-    'htmlAlign',
-    'lineHeight',
-    'textIndent',
-    'marginTop',
-    'marginRight',
-    'marginBottom',
-    'marginLeft',
-    'paddingTop',
-    'paddingRight',
-    'paddingBottom',
-    'paddingLeft',
-];
 
 /**
  * @internal
@@ -38,16 +21,13 @@ const DEFAULT_FORMAT_KEYS: Partial<keyof ContentModelBlockFormat>[] = [
  */
 export function splitParagraph(insertPoint: InsertPoint) {
     const { paragraph, marker } = insertPoint;
-    const newFormat = copyBlockFormat(
-        paragraph.format,
-        false /*deleteOriginalFormat*/,
-        DEFAULT_FORMAT_KEYS
-    );
     const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
-        newFormat,
+        {},
         paragraph.segmentFormat
     );
+
+    copyFormat(newParagraph.format, paragraph.format, ParagraphFormats);
 
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(

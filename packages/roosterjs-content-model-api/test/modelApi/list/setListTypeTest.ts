@@ -470,6 +470,7 @@ describe('indent', () => {
                     },
                     format: {
                         textAlign: 'start',
+                        direction: 'rtl',
                     },
                 },
             ],

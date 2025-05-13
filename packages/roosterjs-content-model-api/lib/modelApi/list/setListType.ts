@@ -1,16 +1,20 @@
-import { copyBlockFormat } from 'roosterjs/lib';
 import { splitSelectedParagraphByBr } from '../block/splitSelectedParagraphByBr';
 import {
+    copyFormat,
     createListItem,
     createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    ListFormats,
+    ListFormatsToKeep,
+    ListFormatsToMove,
     mutateBlock,
     normalizeContentModel,
     setParagraphNotImplicit,
     updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelBlockFormat,
     ContentModelListItem,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
@@ -55,12 +59,9 @@ export function setListType(
             }
 
             if (alreadyInExpectedType) {
-                //if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
+                // if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
                 block.blocks.forEach(x => {
-                    Object.assign(
-                        x.format,
-                        copyBlockFormat(block.format, false /*deleteOriginalFormat*/)
-                    );
+                    copyFormat<ContentModelBlockFormat>(x.format, block.format, ListFormats);
                 });
             }
         } else {
@@ -102,9 +103,17 @@ export function setListType(
                     const mutableBlock = mutateBlock(block);
 
                     newListItem.blocks.push(mutableBlock);
-                    newListItem.format = copyBlockFormat(
+
+                    copyFormat<ContentModelBlockFormat>(
+                        newListItem.format,
                         mutableBlock.format,
+                        ListFormatsToMove,
                         true /*deleteOriginalFormat*/
+                    );
+                    copyFormat<ContentModelBlockFormat>(
+                        newListItem.format,
+                        mutableBlock.format,
+                        ListFormatsToKeep
                     );
 
                     mutateBlock(parent).blocks.splice(index, 1, newListItem);

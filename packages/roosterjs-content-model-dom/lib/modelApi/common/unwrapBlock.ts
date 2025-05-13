@@ -1,7 +1,8 @@
-import { copyBlockFormat } from '../../modelApi/block/copyBlockFormat';
+import { copyFormat } from '../../modelApi/block/copyFormat';
 import { mutateBlock } from './mutate';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import type {
+    ContentModelBlockFormat,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
@@ -13,7 +14,8 @@ import type {
  */
 export function unwrapBlock(
     parent: ReadonlyContentModelBlockGroup | null,
-    groupToUnwrap: ReadonlyContentModelBlockGroup & ReadonlyContentModelBlock
+    groupToUnwrap: ReadonlyContentModelBlockGroup & ReadonlyContentModelBlock,
+    formatsToKeep?: (keyof ContentModelBlockFormat)[]
 ) {
     const index = parent?.blocks.indexOf(groupToUnwrap) ?? -1;
 
@@ -27,10 +29,13 @@ export function unwrapBlock(
                 ...groupToUnwrap.blocks.map(x => {
                     const mutableBlock = mutateBlock(x);
 
-                    mutableBlock.format = Object.assign(
-                        copyBlockFormat(groupToUnwrap.format, false /*deleteOriginalFormat*/),
-                        mutableBlock.format
-                    );
+                    if (formatsToKeep) {
+                        copyFormat<ContentModelBlockFormat>(
+                            mutableBlock.format,
+                            groupToUnwrap.format,
+                            formatsToKeep
+                        );
+                    }
 
                     return mutableBlock;
                 })
