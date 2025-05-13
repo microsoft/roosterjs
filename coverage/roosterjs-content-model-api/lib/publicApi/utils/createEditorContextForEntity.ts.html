@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-api/lib/modelApi/link/getLinkUrl.ts</title>
+    <title>Code coverage report for roosterjs-content-model-api/lib/publicApi/utils/createEditorContextForEntity.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-api/lib/modelApi/link</a> getLinkUrl.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-api/lib/publicApi/utils</a> createEditorContextForEntity.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.24% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/21</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -83,57 +83,69 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">70x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">38x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">38x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { matchLink } from './matchLink';
-import type { AutoLinkOptions } from 'roosterjs-content-model-types';
-&nbsp;
-const COMMON_REGEX = `[\s]*[a-zA-Z0-9+][\s]*`;
-const TELEPHONE_REGEX = `(T|t)el:${COMMON_REGEX}`;
-const MAILTO_REGEX = `(M|m)ailto:${COMMON_REGEX}`;
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { ContentModelEntity, EditorContext, IEditor } from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * @internal
+ * Create an EditorContext for an entity
+ * @param editor The editor object
+ * @param entity The entity to create the context for
+ * @returns The generated EditorContext for the entity
  */
-export function getLinkUrl(text: string, autoLinkOptions?: AutoLinkOptions): string | undefined {
-    const { autoLink, autoMailto, autoTel } = autoLinkOptions ?? <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
-    const linkMatch = autoLink ? matchLink(text)?.normalizedUrl : undefined;
-    const telMatch = autoTel ? matchTel(text) : undefined;
-    const mailtoMatch = autoMailto ? matchMailTo(text) : undefined;
+export function createEditorContextForEntity(
+    editor: IEditor,
+    entity: ContentModelEntity
+): EditorContext {
+    const domHelper = editor.getDOMHelper();
+    const context: EditorContext = {
+        isDarkMode: editor.isDarkMode(),
+        defaultFormat: { ...entity.format },
+        darkColorHandler: editor.getColorManager(),
+        addDelimiterForEntity: false,
+        allowCacheElement: false,
+        domIndexer: undefined,
+        zoomScale: domHelper.calculateZoomScale(),
+        experimentalFeatures: [],
+    };
 &nbsp;
-    return linkMatch || telMatch || mailtoMatch;
-}
+    if (editor.getDocument().defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etComputedStyle(entity.wrapper).direction == 'rtl') {
+        context.isRootRtl = true;
+    }
 &nbsp;
-function matchTel(text: string) {
-    return text.match(TELEPHONE_REGEX) ? text.toLocaleLowerCase() : undefined;
-}
-&nbsp;
-function matchMailTo(text: string) {
-    return text.match(MAILTO_REGEX) ? text.toLocaleLowerCase() : undefined;
+    return context;
 }
 &nbsp;</pre></td></tr></table></pre>
 
