@@ -1,4 +1,3 @@
-import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import {
     contentModelToDom,
     createDomToModelContext,
@@ -11,7 +10,6 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelSegmentFormat,
-    EditorContext,
     FormattableRoot,
     IEditor,
     PluginEventData,
@@ -19,6 +17,8 @@ import type {
     ShallowMutableContentModelParagraph,
     ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
+import { createEditorContextForEntity } from './createEditorContextForEntity';
 
 /**
  * Invoke a callback to format the selected segment using Content Model
@@ -133,35 +133,6 @@ export function formatSegmentWithContentModel(
             apiName,
         }
     );
-}
-
-/**
- * Create EditorContext for an entity
- * @param editor The editor object
- * @param entity The entity to create the context for
- * @returns The EditorContext for the entity
- */
-export function createEditorContextForEntity(
-    editor: IEditor,
-    entity: ContentModelEntity
-): EditorContext {
-    const domHelper = editor.getDOMHelper();
-    const context: EditorContext = {
-        isDarkMode: editor.isDarkMode(),
-        defaultFormat: { ...entity.format },
-        darkColorHandler: editor.getColorManager(),
-        addDelimiterForEntity: false,
-        allowCacheElement: false,
-        domIndexer: undefined,
-        zoomScale: domHelper.calculateZoomScale(),
-        experimentalFeatures: [],
-    };
-
-    if (editor.getDocument().defaultView?.getComputedStyle(entity.wrapper).direction == 'rtl') {
-        context.isRootRtl = true;
-    }
-
-    return context;
 }
 
 function expandEntitySelections(
