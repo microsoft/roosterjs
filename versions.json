@@ -2,5 +2,7 @@
     "react": "9.0.2",
     "main": "9.27.0",
     "legacyAdapter": "8.63.2",
-    "overrides": {}
+    "overrides": {
+        "roosterjs-content-model-api": "9.27.1"
+    }
 }
