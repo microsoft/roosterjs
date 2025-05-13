@@ -3,6 +3,6 @@
     "main": "9.27.0",
     "legacyAdapter": "8.63.2",
     "overrides": {
-        "roosterjs-content-model-api": "9.27.1"
+        "roosterjs-content-model-api": "9.28.0"
     }
 }
