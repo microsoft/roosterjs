@@ -33,10 +33,6 @@ describe('PowerPoint', () => {
         document.getElementById('PowerPoint')?.remove();
     });
 
-    function copy(string1: any) {
-        window.navigator.clipboard.writeText(JSON.stringify(string1));
-    }
-
     it('PowerPoint 1', () => {
         paste(editor!, pptClipboardContent1, 'normal');
 
@@ -2607,7 +2603,6 @@ describe('PowerPoint', () => {
         const model = editor?.getContentModelCopy('connected');
         expect(model).toBeDefined();
         if (model) {
-            copy(model);
             expectEqual(model, {
                 blockGroupType: 'Document',
                 blocks: [

@@ -1,5 +1,10 @@
-import { getListStyleTypeFromString, isEmpty } from 'roosterjs-content-model-dom';
 import { processAsListItem, setupListFormat } from '../utils/customListUtils';
+import {
+    getListStyleTypeFromString,
+    isElementOfType,
+    isEmpty,
+    isNodeOfType,
+} from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
 import type {
     ContentModelBlockGroup,
@@ -92,7 +97,7 @@ export function processWordList(
 
         processAsListItem(context, element, group, listFormatMetadata, listItem => {
             if (listType == 'OL') {
-                setStartNumber(listItem, context, listMetadata);
+                setStartNumber(listItem, context, listMetadata, element);
             }
         });
 
@@ -160,7 +165,8 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
 function setStartNumber(
     listItem: ContentModelListItem,
     context: DomToModelContext,
-    listMetadata: WordMetadata | undefined
+    listMetadata: WordMetadata | undefined,
+    element: HTMLElement
 ) {
     const {
         listParent,
@@ -185,6 +191,15 @@ function setStartNumber(
 
         if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
             listItem.levels[listItem.levels.length - 1].format.startNumberOverride = start;
+        } else if (
+            isElementOfType(element, 'li') &&
+            isNodeOfType(element.parentElement, 'ELEMENT_NODE') &&
+            isElementOfType(element.parentElement, 'ol') &&
+            element.parentElement.firstElementChild == element &&
+            knownLevel.length != element.parentElement.start
+        ) {
+            listItem.levels[listItem.levels.length - 1].format.startNumberOverride =
+                element.parentElement.start;
         }
     }
 }

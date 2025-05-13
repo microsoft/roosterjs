@@ -4,6 +4,7 @@ import { cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
+import { wordClipboardContent1 } from './htmlTemplates/wordClipboardContent';
 
 const ID = 'CM_Paste_From_WORD_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -283,6 +284,560 @@ describe(ID, () => {
                         tagName: 'p',
                         format: {},
                     },
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('E2E Word Content ', () => {
+        paste(editor, wordClipboardContent1);
+
+        const model = editor.getContentModelCopy('connected');
+
+        expect(wordFile.processPastedContentFromWordDesktop).toHaveBeenCalled();
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            text: '■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text:
+                                '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)', italic: true },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text:
+                                '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { startNumberOverride: 1, listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        { text: '■■■', segmentType: 'Text', format: { textColor: 'rgb(0, 0, 0)' } },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■■■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { startNumberOverride: 1, listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        { text: '■■■', segmentType: 'Text', format: { textColor: 'rgb(0, 0, 0)' } },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { startNumberOverride: 1, listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        { text: '■■■', segmentType: 'Text', format: { textColor: 'rgb(0, 0, 0)' } },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        { text: '■■■', segmentType: 'Text', format: { textColor: 'rgb(0, 0, 0)' } },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: { textColor: 'rgb(0, 0, 0)' },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)', fontWeight: 'bold' },
+                                },
+                                {
+                                    text:
+                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
+                                    segmentType: 'Text',
+                                    format: { textColor: 'rgb(0, 0, 0)' },
+                                },
+                            ],
+                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    blockType: 'Paragraph',
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    decorator: { tagName: 'p', format: {} },
+                },
+                {
+                    segments: [
+                        {
+                            text: '■■■■',
+                            segmentType: 'Text',
+                            format: { textColor: 'rgb(0, 0, 0)' },
+                        },
+                    ],
+                    segmentFormat: { textColor: 'rgb(0, 0, 0)' },
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                backgroundColor: '',
+                                fontFamily: '',
+                                fontSize: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                textColor: '',
+                                underline: false,
+                            },
+                        },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    blockType: 'Paragraph',
+                    format: {},
                 },
             ],
             format: {},
