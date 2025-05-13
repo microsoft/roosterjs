@@ -63,7 +63,7 @@ export function copyFormat<T extends ContentModelFormatBase>(
     deleteOriginalFormat?: boolean
 ) {
     for (const key of formatKeys) {
-        if (sourceFormat[key]) {
+        if (sourceFormat[key] !== undefined) {
             Object.assign(targetFormat, {
                 [key]: sourceFormat[key],
             });
