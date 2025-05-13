@@ -135,7 +135,7 @@ export class WatermarkPlugin implements EditorPlugin {
     }
 
     private applyWatermarkStyle(editor: IEditor) {
-        let rule = `position: absolute; pointer-events: none; content: "${this.watermark}";`;
+        let rule = `position: absolute; pointer-events: none; margin-inline-start: 1px; content: "${this.watermark}";`;
         const format = {
             ...this.format,
             textColor: editor.isDarkMode() ? this.darkTextColor : this.format.textColor,

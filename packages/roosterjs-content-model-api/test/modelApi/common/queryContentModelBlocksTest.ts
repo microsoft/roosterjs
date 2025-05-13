@@ -1310,10 +1310,9 @@ describe('queryContentModelBlocksBlocks', () => {
                                                                 backgroundColor: '',
                                                                 maxWidth: '1492px',
                                                                 id: 'image_0',
+                                                                imageState: 'isEditing',
                                                             },
-                                                            dataset: {
-                                                                isEditing: 'true',
-                                                            },
+                                                            dataset: {},
                                                         },
                                                     ],
                                                     segmentFormat: {
@@ -1429,10 +1428,9 @@ describe('queryContentModelBlocksBlocks', () => {
                         backgroundColor: '',
                         maxWidth: '1492px',
                         id: 'image_0',
+                        imageState: 'isEditing',
                     },
-                    dataset: {
-                        isEditing: 'true',
-                    },
+                    dataset: {},
                 },
             ],
             segmentFormat: {
@@ -1461,7 +1459,7 @@ describe('queryContentModelBlocksBlocks', () => {
             'Paragraph',
             (block: ReadonlyContentModelParagraph): block is ReadonlyContentModelParagraph => {
                 for (const segment of block.segments) {
-                    if (segment.segmentType == 'Image' && segment.dataset.isEditing) {
+                    if (segment.segmentType == 'Image' && segment.format.imageState) {
                         return true;
                     }
                 }
