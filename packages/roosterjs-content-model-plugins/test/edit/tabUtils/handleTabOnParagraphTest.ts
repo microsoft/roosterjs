@@ -10,7 +10,6 @@ describe('handleTabOnParagraph', () => {
         model: ContentModelDocument,
         paragraph: ContentModelParagraph,
         rawEvent: KeyboardEvent,
-        selection: RangeSelection,
         expectedReturnValue: boolean
     ) {
         // Act
@@ -48,13 +47,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: false,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Outdent - collapsed range should return false when cursor is at the end', () => {
@@ -85,13 +79,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, false);
+
+        runTest(model, paragraph, rawEvent, false);
     });
 
     it('Indent - collapsed range should return true when cursor is at the start', () => {
@@ -122,13 +111,7 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: false,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Outdent - collapsed range should return false when cursor is at the start', () => {
@@ -159,13 +142,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, false);
+
+        runTest(model, paragraph, rawEvent, false);
     });
 
     it('Outdent - collapsed range should return true when cursor is at the start and exist indentation', () => {
@@ -175,6 +153,11 @@ describe('handleTabOnParagraph', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -186,9 +169,7 @@ describe('handleTabOnParagraph', () => {
                             format: {},
                         },
                     ],
-                    format: {
-                        marginLeft: '4px',
-                    },
+                    format: {},
                 },
             ],
             format: {},
@@ -198,13 +179,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Indent - collapsed range should return true when cursor is at the middle', () => {
@@ -240,13 +216,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: false,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Outdent - collapsed range should return true when cursor is at the middle', () => {
@@ -282,13 +253,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, false);
+
+        runTest(model, paragraph, rawEvent, false);
     });
 
     it('Outdent - Intended - collapsed range should return true when cursor is at the end', () => {
@@ -324,13 +290,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Outdent - Intended - collapsed range should return true when cursor is at the middle', () => {
@@ -371,13 +332,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: true,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('Indent - expanded range should return true', () => {
@@ -414,13 +370,8 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: false,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: false,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 
     it('outdent - expanded range should return true', () => {
@@ -457,12 +408,7 @@ describe('handleTabOnParagraph', () => {
             key: 'Tab',
             shiftKey: true,
         });
-        const selection = {
-            type: 'range',
-            range: {
-                collapsed: false,
-            },
-        } as RangeSelection;
-        runTest(model, paragraph, rawEvent, selection, true);
+
+        runTest(model, paragraph, rawEvent, true);
     });
 });
