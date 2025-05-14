@@ -1,9 +1,5 @@
+import { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { handleTabOnParagraph } from '../../../lib/edit/tabUtils/handleTabOnParagraph';
-import {
-    ContentModelDocument,
-    ContentModelParagraph,
-    RangeSelection,
-} from 'roosterjs-content-model-types';
 
 describe('handleTabOnParagraph', () => {
     function runTest(
