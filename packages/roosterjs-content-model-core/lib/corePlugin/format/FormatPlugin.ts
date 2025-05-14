@@ -1,5 +1,6 @@
 import { applyDefaultFormat } from './applyDefaultFormat';
 import { applyPendingFormat } from './applyPendingFormat';
+import { normalizeFontFamily } from './normalizeFontFamily';
 import {
     getObjectKeys,
     isBlockElement,
@@ -54,6 +55,12 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
         };
+
+        const defaultFormat = this.state.defaultFormat;
+
+        if (defaultFormat.fontFamily) {
+            defaultFormat.fontFamily = normalizeFontFamily(defaultFormat.fontFamily);
+        }
 
         this.defaultFormatKeys = new Set<keyof CSSStyleDeclaration>();
 
