@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.06% </span>
+                <span class="strong">98.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>58/63</span>
+                <span class='fraction'>51/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">87.93% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>60/70</span>
+                <span class='fraction'>51/58</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.67% </span>
+                <span class="strong">97.96% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>55/60</span>
+                <span class='fraction'>48/49</span>
             </div>
         
             
@@ -215,15 +215,13 @@
 <a name='L156'></a><a href='#L156'>156</a>
 <a name='L157'></a><a href='#L157'>157</a>
 <a name='L158'></a><a href='#L158'>158</a>
-<a name='L159'></a><a href='#L159'>159</a>
-<a name='L160'></a><a href='#L160'>160</a>
-<a name='L161'></a><a href='#L161'>161</a>
-<a name='L162'></a><a href='#L162'>162</a>
-<a name='L163'></a><a href='#L163'>163</a>
-<a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L159'></a><a href='#L159'>159</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -281,16 +279,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,17 +322,15 @@
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
@@ -389,16 +375,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { splitSelectedParagraphByBr } from '../block/splitSelectedParagraphByBr';
 import {
+    copyFormat,
     createListItem,
     createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    ListFormats,
+    ListFormatsToKeep,
+    ListFormatsToMove,
     mutateBlock,
     normalizeContentModel,
     setParagraphNotImplicit,
     updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelBlockFormat,
     ContentModelListItem,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
@@ -443,19 +434,9 @@ export function setListType(
             }
 &nbsp;
             if (alreadyInExpectedType) {
-                //if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
+                // if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
                 block.blocks.forEach(x =&gt; {
-                    if (block.format.marginLeft) {
-                        x.format.marginLeft = block.format.marginLeft;
-                    }
-&nbsp;
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (block.format.marginRight) {
-<span class="cstat-no" title="statement not covered" >                        x.format.marginRight = block.format.marginRight;</span>
-                    }
-&nbsp;
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (block.format.textAlign) {
-<span class="cstat-no" title="statement not covered" >                        x.format.textAlign = block.format.textAlign;</span>
-                    }
+                    copyFormat&lt;ContentModelBlockFormat&gt;(x.format, block.format, ListFormats);
                 });
             }
         } else {
@@ -498,19 +479,17 @@ export function setListType(
 &nbsp;
                     newListItem.blocks.push(mutableBlock);
 &nbsp;
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (mutableBlock.format.marginRight) {
-<span class="cstat-no" title="statement not covered" >                        newListItem.format.marginRight = mutableBlock.format.marginRight;</span>
-<span class="cstat-no" title="statement not covered" >                        mutableBlock.format.marginRight = undefined;</span>
-                    }
-&nbsp;
-                    if (mutableBlock.format.marginLeft) {
-                        newListItem.format.marginLeft = mutableBlock.format.marginLeft;
-                        mutableBlock.format.marginLeft = undefined;
-                    }
-&nbsp;
-                    if (mutableBlock.format.textAlign) {
-                        newListItem.format.textAlign = mutableBlock.format.textAlign;
-                    }
+                    copyFormat&lt;ContentModelBlockFormat&gt;(
+                        newListItem.format,
+                        mutableBlock.format,
+                        ListFormatsToMove,
+                        true /*deleteOriginalFormat*/
+                    );
+                    copyFormat&lt;ContentModelBlockFormat&gt;(
+                        newListItem.format,
+                        mutableBlock.format,
+                        ListFormatsToKeep
+                    );
 &nbsp;
                     mutateBlock(parent).blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);
@@ -559,7 +538,7 @@ function shouldIgnoreBlock(block: ReadonlyContentModelBlock) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 13 2025 19:04:48 GMT+0000 (Coordinated Universal Time)
+                at Wed May 14 2025 17:37:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
