@@ -1,6 +1,6 @@
 import * as applyDefaultFormat from '../../../lib/corePlugin/format/applyDefaultFormat';
 import * as applyPendingFormat from '../../../lib/corePlugin/format/applyPendingFormat';
-import * as normalizeFontFamily from '../../../lib/corePlugin/format/normalizeFontFamily';
+import * as normalizeFontFamily from 'roosterjs-content-model-dom/lib/domUtils/style/normalizeFontFamily';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createFormatPlugin } from '../../../lib/corePlugin/format/FormatPlugin';
 import { EditorEnvironment, IEditor } from 'roosterjs-content-model-types';

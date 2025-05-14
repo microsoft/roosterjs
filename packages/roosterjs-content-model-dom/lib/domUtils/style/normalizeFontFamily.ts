@@ -1,7 +1,8 @@
 /**
- * @internal
  * Normalize font family string to a standard format
  * Add quotes around font family names that contain non-alphanumeric/dash characters
+ * @param fontFamily The font family string to normalize
+ * @returns The normalized font family string
  */
 export function normalizeFontFamily(fontFamily: string): string {
     const existingQuotedFontsRegex = /".*?"/g;

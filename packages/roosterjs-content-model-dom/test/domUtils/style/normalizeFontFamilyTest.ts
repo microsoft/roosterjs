@@ -1,4 +1,4 @@
-import { normalizeFontFamily } from '../../../lib/corePlugin/format/normalizeFontFamily';
+import { normalizeFontFamily } from '../../../lib/domUtils/style/normalizeFontFamily';
 
 describe('normalizeFontFamily', () => {
     it('empty string', () => {

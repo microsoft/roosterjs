@@ -1,12 +1,12 @@
 import { applyDefaultFormat } from './applyDefaultFormat';
 import { applyPendingFormat } from './applyPendingFormat';
-import { normalizeFontFamily } from './normalizeFontFamily';
 import {
     getObjectKeys,
     isBlockElement,
     isCharacterValue,
     isCursorMovingKey,
     isNodeOfType,
+    normalizeFontFamily,
     normalizeSegmentFormat,
 } from 'roosterjs-content-model-dom';
 import type {
