@@ -117,7 +117,7 @@ describe('keyboardTab', () => {
             format: {},
         };
 
-        runTest(model, 'indent', false, true);
+        runTest(model, undefined, false, true);
     });
 
     it('tab on empty list', () => {
@@ -1179,6 +1179,11 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     blockType: 'Paragraph',
                     segments: [
                         {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {},
@@ -1187,6 +1192,57 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                             segmentType: 'Text',
                             text: 'test',
                             format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(input, 'Tab', true, false, expectedResult);
+    });
+
+    it('non collapsed range | tab on the start of paragraph that has space unselected', () => {
+        const input: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const expectedResult: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            isSelected: true,
                         },
                     ],
                     format: {
@@ -1297,6 +1353,11 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     blockType: 'Paragraph',
                     segments: [
                         {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {},
@@ -1307,9 +1368,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                             format: {},
                         },
                     ],
-                    format: {
-                        marginLeft: '40px',
-                    },
+                    format: {},
                 },
             ],
             format: {},
@@ -1332,9 +1391,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                             format: {},
                         },
                     ],
-                    format: {
-                        marginLeft: '0px',
-                    },
+                    format: {},
                 },
             ],
             format: {},
