@@ -1,5 +1,5 @@
 import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
-import { getHintText } from '../../domUtils/hintText';
+import { getHintText } from '../../domUtils/hiddenProperties/hintText';
 import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**

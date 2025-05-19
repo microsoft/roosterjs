@@ -1,13 +1,9 @@
 import { isElementOfType } from './isElementOfType';
 import { moveChildNodes } from './moveChildNodes';
+import { setHintText } from './hiddenProperties/hintText';
 import type { DOMHelper } from 'roosterjs-content-model-types';
 
 const HintTextClass = 'roosterjs-hint-text';
-
-interface HintTextElement extends HTMLSpanElement {
-    __roosterjsHintText: string;
-}
-
 const ZWS = '\u200B';
 
 /**
@@ -25,28 +21,19 @@ export function setupHintTextNode(containerSpan: HTMLSpanElement, hintText: stri
     const zws2 = doc.createTextNode(ZWS);
 
     const hintInnerNode = doc.createElement('span');
-    const hintNode = containerSpan as HintTextElement;
 
-    hintNode.__roosterjsHintText = hintText;
-    hintNode.className = HintTextClass;
-    hintNode.appendChild(zws1);
-    hintNode.appendChild(hintInnerNode);
-    hintNode.appendChild(zws2);
+    setHintText(containerSpan, hintText);
+
+    containerSpan.className = HintTextClass;
+    containerSpan.appendChild(zws1);
+    containerSpan.appendChild(hintInnerNode);
+    containerSpan.appendChild(zws2);
 
     const shadowRoot = hintInnerNode.attachShadow({ mode: 'open' });
     const hintTextNode = doc.createElement('span');
     hintTextNode.textContent = hintText;
     hintTextNode.style.color = '#999';
     shadowRoot.appendChild(hintTextNode);
-}
-
-/**
- * Get the hint text from a given element, if any. Otherwise return empty string.
- * @param element The element to get hint text from
- * @returns The hint text
- */
-export function getHintText(element: HTMLElement): string {
-    return (element as HintTextElement)?.__roosterjsHintText ?? '';
 }
 
 /**
