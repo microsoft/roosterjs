@@ -38,11 +38,15 @@ export function splitTableCellVertically(table: ShallowMutableContentModelTable)
                     format: { ...row.format },
                     height: newHeight,
                     cells: row.cells.map((cell, colIndex) => {
+                        const mutableCell = mutateBlock(cell);
+
+                        delete mutableCell.format.height;
+
                         const newCell = createTableCell(
                             cell.spanLeft,
                             cell.spanAbove,
                             cell.isHeader,
-                            cell.format
+                            mutableCell.format
                         );
 
                         newCell.dataset = { ...cell.dataset };

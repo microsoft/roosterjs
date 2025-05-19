@@ -2,11 +2,12 @@ import { addParser } from './utils/addParser';
 import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
-import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
+import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
-import { parseLink } from './utils/linkParser';
+import { parseLink } from './parsers/linkParser';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
+import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
@@ -99,7 +100,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event, this.editor.getDOMCreator());
+                processPastedContentFromWordDesktop(event);
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
@@ -124,6 +125,10 @@ export class PastePlugin implements EditorPlugin {
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(event, this.editor.getDOMCreator());
+                break;
+
+            case 'oneNoteDesktop':
+                processPastedContentFromOneNote(event);
                 break;
         }
 

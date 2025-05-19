@@ -1,15 +1,10 @@
 import { allTextFormats } from './textPresets';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { image64x64Black, image64x64Gradient, image64x64White } from './imagePresets';
 import { mergedTableNoText, simpleTable, simpleTableWithHeader } from './tablePresets';
 import { mixedParagraphs } from './paragraphPresets';
 import { numberedList, simpleList } from './listPresets';
-
-export type Preset = {
-    buttonName: string;
-    id: string;
-    content: ContentModelDocument;
-};
+import { Preset } from './Preset';
+import { undeleteableText } from './undeleteablePresets';
 
 const wipeEditor: Preset = {
     buttonName: 'Wipe Editor',
@@ -33,6 +28,7 @@ export const allPresets: Preset[] = [
     image64x64Gradient,
     image64x64Black,
     image64x64White,
+    undeleteableText,
 ];
 
 export function getPresetModelById(id: string) {

@@ -255,13 +255,17 @@ export class DomIndexerImpl implements DomIndexer {
     ): boolean {
         let hintText: string | undefined;
         if (oldSelection) {
+            let startNode: Node | undefined;
+
             if (
                 oldSelection.type == 'range' &&
                 this.isCollapsed(oldSelection) &&
-                isNodeOfType(oldSelection.start.node, 'TEXT_NODE') &&
-                isIndexedSegment(oldSelection.start.node)
+                (startNode = oldSelection.start.node) &&
+                isNodeOfType(startNode, 'TEXT_NODE') &&
+                isIndexedSegment(startNode) &&
+                startNode.__roosterjsContentModel.segments.length > 0
             ) {
-                const { paragraph } = oldSelection.start.node.__roosterjsContentModel;
+                const { paragraph } = startNode.__roosterjsContentModel;
                 const marker = paragraph.segments.filter(
                     (x: ContentModelSegment): x is ContentModelSelectionMarker =>
                         x.segmentType == 'SelectionMarker' && !!x.hintText
@@ -269,7 +273,7 @@ export class DomIndexerImpl implements DomIndexer {
 
                 hintText = marker?.hintText;
 
-                this.reconcileTextSelection(oldSelection.start.node);
+                this.reconcileTextSelection(startNode);
             } else {
                 setSelection(model);
             }

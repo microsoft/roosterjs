@@ -99,6 +99,7 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
     private handleTabKey = React.createRef<HTMLInputElement>();
+    private handleEnterKey = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
@@ -201,12 +202,21 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     {this.renderPluginItem(
                         'edit',
                         'Edit',
-                        this.renderCheckBox(
-                            'Handle Tab Key',
-                            this.handleTabKey,
-                            this.props.state.editPluginOptions.handleTabKey,
-                            (state, value) => (state.editPluginOptions.handleTabKey = value)
-                        )
+                        <>
+                            {this.renderCheckBox(
+                                'Handle Tab Key',
+                                this.handleTabKey,
+                                this.props.state.editPluginOptions.handleTabKey,
+                                (state, value) => (state.editPluginOptions.handleTabKey = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Handle Enter Key',
+                                this.handleEnterKey,
+                                this.props.state.editPluginOptions.shouldHandleEnterKey as boolean,
+                                (state, value) =>
+                                    (state.editPluginOptions.shouldHandleEnterKey = value)
+                            )}
+                        </>
                     )}
                     {this.renderPluginItem(
                         'paste',

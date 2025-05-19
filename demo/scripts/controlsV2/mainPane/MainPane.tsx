@@ -70,6 +70,7 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
+import DOMPurify = require('dompurify');
 
 const styles = require('./MainPane.scss');
 
@@ -192,7 +193,15 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.updateContentPlugin.update();
 
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
-        win.document.write(trustedHTMLHandler(POPOUT_HTML));
+        win.document.write(
+            (DOMPurify.sanitize(POPOUT_HTML, {
+                ADD_TAGS: ['head', 'meta', 'iframe'],
+                ADD_ATTR: ['name', 'content'],
+                WHOLE_DOCUMENT: true,
+                ALLOW_UNKNOWN_PROTOCOLS: true,
+                RETURN_TRUSTED_TYPE: true,
+            }) as any) as string
+        );
         win.addEventListener('beforeunload', () => {
             this.updateContentPlugin.update();
 

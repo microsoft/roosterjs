@@ -359,4 +359,79 @@ describe('linkProcessor', () => {
             dataset: {},
         });
     });
+
+    it('empty anchor', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('selected empty anchor', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+
+        context.isInSelection = true;
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            isSelected: true,
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
 });

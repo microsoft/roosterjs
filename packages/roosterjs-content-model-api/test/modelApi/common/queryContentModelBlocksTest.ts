@@ -1,5 +1,10 @@
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
+import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import { queryContentModelBlocks } from '../../../lib/modelApi/common/queryContentModelBlocks';
 import {
+    ContentModelDocument,
+    DomToModelContext,
+    EditorContext,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelListItem,
     ReadonlyContentModelParagraph,
@@ -1305,10 +1310,9 @@ describe('queryContentModelBlocksBlocks', () => {
                                                                 backgroundColor: '',
                                                                 maxWidth: '1492px',
                                                                 id: 'image_0',
+                                                                imageState: 'isEditing',
                                                             },
-                                                            dataset: {
-                                                                isEditing: 'true',
-                                                            },
+                                                            dataset: {},
                                                         },
                                                     ],
                                                     segmentFormat: {
@@ -1424,10 +1428,9 @@ describe('queryContentModelBlocksBlocks', () => {
                         backgroundColor: '',
                         maxWidth: '1492px',
                         id: 'image_0',
+                        imageState: 'isEditing',
                     },
-                    dataset: {
-                        isEditing: 'true',
-                    },
+                    dataset: {},
                 },
             ],
             segmentFormat: {
@@ -1456,7 +1459,7 @@ describe('queryContentModelBlocksBlocks', () => {
             'Paragraph',
             (block: ReadonlyContentModelParagraph): block is ReadonlyContentModelParagraph => {
                 for (const segment of block.segments) {
-                    if (segment.segmentType == 'Image' && segment.dataset.isEditing) {
+                    if (segment.segmentType == 'Image' && segment.format.imageState) {
                         return true;
                     }
                 }
@@ -1465,5 +1468,85 @@ describe('queryContentModelBlocksBlocks', () => {
             true /* findFirstOnly */
         );
         expect(result).toEqual([imageAndParagraph]);
+    });
+
+    it('should return empty array if no blocks match the type', () => {
+        // Arrange
+        const fakeWrapper = ('wrapper' as unknown) as HTMLElement;
+        const fakeEditorContext = ('editorContext' as unknown) as EditorContext;
+        const fakeDomToModelContext = ('domToModelContext' as unknown) as DomToModelContext;
+
+        const insideEntity: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: { backgroundColor: 'green' },
+                    segmentFormat: {},
+                },
+            ],
+            format: {},
+        };
+        const createDomToModelContextSpy = spyOn(
+            createDomToModelContext,
+            'createDomToModelContext'
+        ).and.returnValue(fakeDomToModelContext);
+        const domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            insideEntity
+        );
+
+        const group: ReadonlyContentModelBlockGroup = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: { backgroundColor: 'red' },
+                    segmentFormat: {},
+                },
+                {
+                    blockType: 'Entity',
+                    wrapper: fakeWrapper,
+                    entityFormat: {
+                        id: '',
+                        entityType: '',
+                        isReadonly: true,
+                        isFakeEntity: true,
+                    },
+                    format: {},
+                    segmentType: 'Entity',
+                },
+            ],
+        };
+
+        // Act
+        const result = queryContentModelBlocks<ReadonlyContentModelParagraph>(
+            group,
+            'Paragraph',
+            undefined /* filter */,
+            undefined /* findFirstOnly */,
+            entity => fakeEditorContext
+        );
+
+        // Assert
+        expect(createDomToModelContextSpy).toHaveBeenCalledWith(fakeEditorContext);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(fakeWrapper, fakeDomToModelContext);
+        expect(result).toEqual([
+            // group (Document) > blocks[0] (Paragraph)
+            {
+                blockType: 'Paragraph',
+                segments: [],
+                format: { backgroundColor: 'red' },
+                segmentFormat: {},
+            },
+            // group (Document) > blocks[1] (Entity) > insideEntity (FormatContainer) > blocks[0] (Paragraph)
+            {
+                blockType: 'Paragraph',
+                segments: [],
+                format: { backgroundColor: 'green' },
+                segmentFormat: {},
+            },
+        ]);
     });
 });

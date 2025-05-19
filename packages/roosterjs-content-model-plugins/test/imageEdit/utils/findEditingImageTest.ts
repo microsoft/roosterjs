@@ -42,10 +42,9 @@ describe('findEditingImage', () => {
                                 textColor: 'rgb(0, 0, 0)',
                                 id: 'image_0',
                                 maxWidth: '1800px',
+                                imageState: 'isEditing',
                             },
-                            dataset: {
-                                isEditing: 'true',
-                            },
+                            dataset: {},
                         },
                     ],
                     format: {},
@@ -74,10 +73,9 @@ describe('findEditingImage', () => {
                     textColor: 'rgb(0, 0, 0)',
                     id: 'image_0',
                     maxWidth: '1800px',
+                    imageState: 'isEditing',
                 },
-                dataset: {
-                    isEditing: 'true',
-                },
+                dataset: {},
             },
             paragraph: {
                 blockType: 'Paragraph',
@@ -91,10 +89,9 @@ describe('findEditingImage', () => {
                             textColor: 'rgb(0, 0, 0)',
                             id: 'image_0',
                             maxWidth: '1800px',
+                            imageState: 'isEditing',
                         },
-                        dataset: {
-                            isEditing: 'true',
-                        },
+                        dataset: {},
                     },
                 ],
                 format: {},
@@ -137,10 +134,9 @@ describe('findEditingImage', () => {
                                                         textColor: 'rgb(0, 0, 0)',
                                                         id: 'image_0',
                                                         maxWidth: '773px',
+                                                        imageState: 'isEditing',
                                                     },
-                                                    dataset: {
-                                                        isEditing: 'true',
-                                                    },
+                                                    dataset: {},
                                                 },
                                             ],
                                             segmentFormat: {
@@ -339,10 +335,9 @@ describe('findEditingImage', () => {
                     textColor: 'rgb(0, 0, 0)',
                     id: 'image_0',
                     maxWidth: '773px',
+                    imageState: 'isEditing',
                 },
-                dataset: {
-                    isEditing: 'true',
-                },
+                dataset: {},
             },
             paragraph: {
                 segments: [
@@ -358,10 +353,9 @@ describe('findEditingImage', () => {
                             textColor: 'rgb(0, 0, 0)',
                             id: 'image_0',
                             maxWidth: '773px',
+                            imageState: 'isEditing',
                         },
-                        dataset: {
-                            isEditing: 'true',
-                        },
+                        dataset: {},
                     },
                 ],
                 segmentFormat: {
@@ -545,10 +539,9 @@ describe('findEditingImage', () => {
                                 fontSize: '11pt',
                                 textColor: 'rgb(0, 0, 0)',
                                 maxWidth: '1800px',
+                                imageState: 'isEditing',
                             },
-                            dataset: {
-                                isEditing: 'true',
-                            },
+                            dataset: {},
                         },
                     ],
                     format: {},
@@ -576,10 +569,9 @@ describe('findEditingImage', () => {
                     fontSize: '11pt',
                     textColor: 'rgb(0, 0, 0)',
                     maxWidth: '1800px',
+                    imageState: 'isEditing',
                 },
-                dataset: {
-                    isEditing: 'true',
-                },
+                dataset: {},
             },
             paragraph: {
                 blockType: 'Paragraph',
@@ -592,10 +584,9 @@ describe('findEditingImage', () => {
                             fontSize: '11pt',
                             textColor: 'rgb(0, 0, 0)',
                             maxWidth: '1800px',
+                            imageState: 'isEditing',
                         },
-                        dataset: {
-                            isEditing: 'true',
-                        },
+                        dataset: {},
                     },
                 ],
                 format: {},
@@ -666,10 +657,9 @@ describe('findEditingImage', () => {
                                 fontSize: '11pt',
                                 textColor: 'rgb(0, 0, 0)',
                                 maxWidth: '1800px',
+                                imageState: 'isEditing',
                             },
-                            dataset: {
-                                isEditing: 'true',
-                            },
+                            dataset: {},
                         },
                     ],
                     format: {},

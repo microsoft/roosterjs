@@ -2,7 +2,6 @@ import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelec
 import { addCode } from '../../../lib/modelApi/common/addDecorators';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/editing/applyTableFormat';
-import { ContentModelFormatState, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
@@ -15,6 +14,12 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { retrieveModelFormatState } from '../../../lib/modelApi/editing/retrieveModelFormatState';
+import {
+    ContentModelFormatState,
+    ContentModelSegmentFormat,
+    DOMHelper,
+    ImageMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 describe('retrieveModelFormatState', () => {
     const segmentFormat: ContentModelSegmentFormat = {
@@ -645,6 +650,49 @@ describe('retrieveModelFormatState', () => {
                 boxShadow: undefined,
                 borderRadius: undefined,
             },
+            imageEditingMetadata: null,
+        });
+    });
+
+    it('With selection under image that has metadata', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        const mockedMetadata: ImageMetadataFormat = {
+            src: 'test',
+        };
+
+        image.dataset = { editingInfo: JSON.stringify(mockedMetadata) };
+        image.isSelected = true;
+
+        para.segments.push(image);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [image]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: {
+                borderColor: 'red',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: undefined,
+                borderRadius: undefined,
+            },
+            imageEditingMetadata: mockedMetadata,
         });
     });
 
@@ -679,6 +727,7 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: true,
             imageFormat: undefined,
+            imageEditingMetadata: undefined,
         });
     });
 
@@ -838,6 +887,39 @@ describe('retrieveModelFormatState', () => {
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,
+        });
+    });
+
+    it('No format in model, with dom helper', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1');
+
+        text1.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [text1]);
+            return false;
+        });
+
+        const domHelper: DOMHelper = {
+            getContainerFormat: () => ({ fontFamily: 'a', fontSize: 'b', textColor: 'c' }),
+        } as any;
+
+        retrieveModelFormatState(model, null, result, 'returnMultiple', domHelper);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            fontName: 'a',
+            fontSize: 'b',
+            textColor: 'c',
         });
     });
 });

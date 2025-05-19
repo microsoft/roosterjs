@@ -25,16 +25,22 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = option.disableCache
-            ? {}
-            : {
-                  domIndexer: new DomIndexerImpl(
-                      option.experimentalFeatures &&
-                          option.experimentalFeatures.indexOf('PersistCache') >= 0
-                  ),
-                  textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
-                  paragraphMap: createParagraphMap(),
-              };
+        this.state = {};
+
+        if (!option.disableCache) {
+            this.state.domIndexer = new DomIndexerImpl(
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf('PersistCache') >= 0
+            );
+            this.state.textMutationObserver = createTextMutationObserver(
+                contentDiv,
+                this.onMutation
+            );
+        }
+
+        if (option.enableParagraphMap) {
+            this.state.paragraphMap = createParagraphMap();
+        }
     }
 
     /**
