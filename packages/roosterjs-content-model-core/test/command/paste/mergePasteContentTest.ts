@@ -2038,4 +2038,40 @@ describe('mergePasteContent', () => {
             includeCachedElement: jasmine.anything(),
         } as any);
     });
+    
+    it('Preserve text color when pasting a link', () => {
+        const html = new DOMParser().parseFromString('<a href="http://www.bing.com">www.bing.com</a>', 'text/html');
+        const fragment = document.createDocumentFragment();
+        moveChildNodes(fragment, html.body);
+
+        spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+        sourceModel = createContentModelDocument({
+            textColor: 'green', // Set document color to green
+        });
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        marker.format = {
+            textColor: 'green',
+        };
+        para.segments.push(marker);
+        addBlock(sourceModel, para);
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                containsBlockElements: false,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
+
+        // Check that the pending format preserves the green text color even when a link is pasted
+        expect(context?.newPendingFormat).toBeDefined();
+        if (context?.newPendingFormat && typeof context.newPendingFormat !== 'string') {
+            expect(context.newPendingFormat.textColor).toBe('green');
+        }
+    });
 });
