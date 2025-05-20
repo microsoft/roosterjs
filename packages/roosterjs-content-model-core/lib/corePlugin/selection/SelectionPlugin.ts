@@ -350,6 +350,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'table':
+                // After a content change event is handled tableSelection state is reset to null
+                // Since we have table selection from DOMSelection, we can use it to re-create the tableSelection state
                 if (this.state.tableSelection == null) {
                     const { table, firstRow, firstColumn, lastRow, lastColumn } = selection;
 
