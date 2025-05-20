@@ -78,11 +78,12 @@ export function mergePasteContent(
                 : mergeModel(model, pasteModel, context, mergeOption);
 
             if (insertPoint) {
+                const modelFormat = model.format || {};
                 context.newPendingFormat = {
                     ...EmptySegmentFormat,
-                    ...model.format,
+                    ...modelFormat,
                     ...(pasteType == 'normal' && !containsBlockElements
-                        ? getLastSegmentFormat(pasteModel)
+                        ? getLastSegmentFormat(pasteModel, modelFormat)
                         : insertPoint.marker.format),
                 };
             }
@@ -134,16 +135,28 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
     return pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table';
 }
 
-function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSegmentFormat {
+function getLastSegmentFormat(
+    pasteModel: ContentModelDocument,
+    originalFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
     if (pasteModel.blocks.length == 1) {
         const [firstBlock] = pasteModel.blocks;
 
         if (firstBlock.blockType == 'Paragraph') {
             const segment = firstBlock.segments[firstBlock.segments.length - 1];
-
-            return {
-                ...segment.format,
-            };
+            const hasLink = segment.segmentType === 'Text' && segment.link;
+            
+            // If the last segment is a link, preserve the original text color
+            if (hasLink && originalFormat.textColor) {
+                return {
+                    ...segment.format,
+                    textColor: originalFormat.textColor,
+                };
+            } else {
+                return {
+                    ...segment.format,
+                };
+            }
         }
     }
 
