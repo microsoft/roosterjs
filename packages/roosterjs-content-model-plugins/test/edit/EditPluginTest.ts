@@ -106,6 +106,20 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
+        it('handleExpandedSelectionOnDelete with options', () => {
+            plugin = new EditPlugin({ shouldHandleEnterKey: true });
+            const rawEvent = { key: 'Delete' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+        });
+
         it('handleExpandedSelectionOnDelete disabled', () => {
             plugin = new EditPlugin({ handleExpandedSelectionOnDelete: false });
             const rawEvent = { key: 'Delete' } as any;
@@ -122,6 +136,25 @@ describe('EditPlugin', () => {
 
         it('Tab', () => {
             plugin = new EditPlugin();
+            const rawEvent = { key: 'Tab' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+        });
+
+        it('Tab - custom options with options', () => {
+            plugin = new EditPlugin({
+                shouldHandleEnterKey: true,
+            });
             const rawEvent = { key: 'Tab' } as any;
 
             plugin.initialize(editor);

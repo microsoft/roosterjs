@@ -6,6 +6,7 @@ import {
     isCharacterValue,
     isCursorMovingKey,
     isNodeOfType,
+    normalizeFontFamily,
     normalizeSegmentFormat,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -54,6 +55,12 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             defaultFormat: { ...option.defaultSegmentFormat },
             pendingFormat: null,
         };
+
+        const defaultFormat = this.state.defaultFormat;
+
+        if (defaultFormat.fontFamily) {
+            defaultFormat.fontFamily = normalizeFontFamily(defaultFormat.fontFamily);
+        }
 
         this.defaultFormatKeys = new Set<keyof CSSStyleDeclaration>();
 

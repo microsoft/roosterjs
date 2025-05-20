@@ -4092,4 +4092,143 @@ describe('handleEnterOnList - keyboardEnter', () => {
         };
         runTest(model, false, expectedModel, false, 1);
     });
+
+    it('Should keep margin left/right and text align of list', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {
+                        marginLeft: '10px',
+                        marginRight: '20px',
+                        textAlign: 'start',
+                    },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        const expectedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {
+                        marginLeft: '10px',
+                        marginRight: '20px',
+                        textAlign: 'start',
+                    },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'one',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: undefined,
+                                listStyleType: 'decimal',
+                                displayForDummyItem: undefined,
+                            },
+                            dataset: {},
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {
+                        marginLeft: '10px',
+                        marginRight: '20px',
+                        textAlign: 'start',
+                    },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+        runTest(model, false, expectedModel, false, 1);
+    });
 });

@@ -77,6 +77,13 @@ export { mergeTextSegments } from './modelApi/common/mergeTextSegments';
 export { normalizeSegmentFormat } from './modelApi/common/normalizeSegmentFormat';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+export {
+    copyFormat,
+    ListFormats,
+    ListFormatsToKeep,
+    ListFormatsToMove,
+    ParagraphFormats,
+} from './modelApi/block/copyFormat';
 export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr';
 export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
@@ -110,6 +117,7 @@ export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
 export { transformColor } from './domUtils/style/transformColor';
+export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export {
