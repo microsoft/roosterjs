@@ -10,5 +10,13 @@ const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
  * @returns
  */
 export const isPowerPointDesktopDocument: GetSourceFunction = props => {
-    return props.htmlAttributes[PastePropertyNames.PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE;
+    const { htmlAttributes, environment, htmlHeadString } = props;
+
+    const rawHtmlContainsPptAttribute =
+        !!environment.isSafari && htmlHeadString.indexOf(POWERPOINT_ATTRIBUTE_VALUE) > -1;
+
+    return (
+        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE ||
+        rawHtmlContainsPptAttribute
+    );
 };

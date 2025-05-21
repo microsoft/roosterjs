@@ -7,7 +7,30 @@ import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
+import type {
+    BeforePasteEvent,
+    ClipboardData,
+    EditorEnvironment,
+} from 'roosterjs-content-model-types';
+
+/**
+ * Extracts the HTML content from the beginning of a string up to and including the </head> closing tag
+ * @param htmlString The HTML string to process
+ * @returns The substring from the beginning to </head> tag, or empty string if not found
+ * @internal
+ */
+export function extractHtmlHeadContent(htmlString?: string | null): string {
+    if (!htmlString) {
+        return '';
+    }
+
+    const headEndIndex = htmlString.toLowerCase().indexOf('</head>');
+    if (headEndIndex >= 0) {
+        return htmlString.substring(0, headEndIndex + 7);
+    }
+
+    return '';
+}
 
 /**
  * @internal
@@ -17,6 +40,8 @@ export type GetSourceInputParams = {
     fragment: DocumentFragment;
     shouldConvertSingleImage: boolean;
     clipboardData: ClipboardData;
+    environment: EditorEnvironment;
+    htmlHeadString: string;
 };
 
 /**
@@ -61,7 +86,8 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
  */
 export function getPasteSource(
     event: BeforePasteEvent,
-    shouldConvertSingleImage: boolean
+    shouldConvertSingleImage: boolean,
+    environment: EditorEnvironment
 ): KnownPasteSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;
 
@@ -71,6 +97,8 @@ export function getPasteSource(
         fragment,
         shouldConvertSingleImage,
         clipboardData,
+        environment,
+        htmlHeadString: extractHtmlHeadContent(clipboardData.rawHtml),
     };
 
     getSourceFunctions.forEach((func, key) => {

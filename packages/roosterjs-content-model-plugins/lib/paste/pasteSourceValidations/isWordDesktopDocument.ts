@@ -12,9 +12,16 @@ const WORD_PROG_ID = 'Word.Document';
  * @returns
  */
 export const isWordDesktopDocument: GetSourceFunction = props => {
-    const { htmlAttributes } = props;
+    const { htmlAttributes, environment, htmlHeadString } = props;
+
+    const rawHtmlContainsWordAttribute =
+        !!environment.isSafari &&
+        (htmlHeadString.indexOf(WORD_ATTRIBUTE_NAME) > -1 ||
+            htmlHeadString.indexOf(WORD_PROG_ID) > -1);
+
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID
+        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID ||
+        rawHtmlContainsWordAttribute
     );
 };

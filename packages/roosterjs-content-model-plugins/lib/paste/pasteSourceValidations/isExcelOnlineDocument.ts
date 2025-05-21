@@ -11,10 +11,15 @@ const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
  * @returns
  */
 export const isExcelOnlineDocument: GetSourceFunction = props => {
-    const { htmlAttributes } = props;
+    const { htmlAttributes, environment, htmlHeadString } = props;
+
+    const rawHtmlContainsExcelAttribute =
+        !!environment.isSafari && htmlHeadString.indexOf(EXCEL_ONLINE_ATTRIBUTE_VALUE) > -1;
+
     // The presence of Excel.Sheet confirms its origin from Excel, the absence of EXCEL_DESKTOP_ATTRIBUTE_NAME confirms it is from the Online version
     return (
-        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE &&
-        htmlAttributes[PastePropertyNames.EXCEL_DESKTOP_ATTRIBUTE_NAME] == undefined
+        (htmlAttributes[PastePropertyNames.PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE &&
+            htmlAttributes[PastePropertyNames.EXCEL_DESKTOP_ATTRIBUTE_NAME] == undefined) ||
+        rawHtmlContainsExcelAttribute
     );
 };

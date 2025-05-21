@@ -123,6 +123,30 @@ function mergeParagraph(
     option?: MergeModelOption
 ) {
     const { paragraph, marker } = markerPosition;
+
+    if (mergeToCurrentParagraph && option?.mergeFormat == 'none') {
+        if (markerPosition.path[0]?.blockGroupType == 'ListItem') {
+            let readonlyListParent = markerPosition.path[1];
+            for (
+                let index = 1;
+                index < markerPosition.path.length &&
+                readonlyListParent.blockGroupType == 'ListItem';
+                index++
+            ) {
+                readonlyListParent = markerPosition.path[index];
+            }
+
+            const listReadonly = markerPosition.path[0];
+            const list = mutateBlock(listReadonly);
+            const listIndex = readonlyListParent.blocks.findIndex(block => block == list);
+
+            const paras = list.blocks.splice(0, list.blocks.length);
+
+            const listParent = mutateBlock(readonlyListParent);
+            listParent.blocks.splice(listIndex, 0, ...paras);
+        }
+    }
+
     const newParagraph = mergeToCurrentParagraph
         ? paragraph
         : splitParagraph(markerPosition, newPara.format);
