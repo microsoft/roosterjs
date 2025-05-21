@@ -19,8 +19,6 @@ describe('Google Sheets E2E', () => {
         paste(editor, googleSheetsHtmlClipboard);
         const model = editor.getContentModelCopy('connected');
 
-        navigator.clipboard.writeText(JSON.stringify(model));
-
         expectEqual(model, {
             blockGroupType: 'Document',
             blocks: [
