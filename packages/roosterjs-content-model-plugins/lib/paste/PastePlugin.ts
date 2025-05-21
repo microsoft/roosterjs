@@ -122,6 +122,17 @@ export class PastePlugin implements EditorPlugin {
                 event.domToModelOption.additionalAllowedTags.push(
                     PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>
                 );
+                
+                // Add a custom parser to preserve row heights when pasting from Google Sheets
+                addParser(event.domToModelOption, 'tableRow', (format, element) => {
+                    if (element.tagName === 'TR' && element.style.height) {
+                        // Extract height value from style to preserve row heights
+                        const heightValue = parseInt(element.style.height);
+                        if (!isNaN(heightValue) && heightValue > 0) {
+                            (format as any).height = heightValue;
+                        }
+                    }
+                });
                 break;
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(event, this.editor.getDOMCreator());

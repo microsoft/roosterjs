@@ -245,11 +245,18 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
                 PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
             ]);
+            
+            // Verify that a parser for tableRow was added
+            expect(addParser.addParser).toHaveBeenCalledWith(
+                event.domToModelOption,
+                'tableRow',
+                jasmine.any(Function)
+            );
         });
 
         it('One Note Desktop', () => {
