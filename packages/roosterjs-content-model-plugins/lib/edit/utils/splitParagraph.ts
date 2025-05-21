@@ -35,13 +35,13 @@ export function splitParagraph(insertPoint: InsertPoint) {
         paragraph.segments.length - markerIndex
     );
 
-    if (paragraph.segments.length == 0) {
-        paragraph.segments.push(createBr(marker.format));
-    }
-
     newParagraph.segments.push(...segments);
 
-    setParagraphNotImplicit(paragraph);
+    if (paragraph.segments.length == 0 && !paragraph.isImplicit) {
+        paragraph.segments.push(createBr(marker.format));
+    } else if (paragraph.segments.length > 0) {
+        setParagraphNotImplicit(paragraph);
+    }
 
     insertPoint.paragraph = newParagraph;
 

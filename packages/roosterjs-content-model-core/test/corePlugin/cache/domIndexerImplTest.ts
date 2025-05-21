@@ -1503,3 +1503,34 @@ describe('domIndexerImpl.reconcileElementId', () => {
         });
     });
 });
+
+describe('domIndexerImpl.clearIndex', () => {
+    it('clear index, no child', () => {
+        const domIndexer = new DomIndexerImpl(true);
+
+        const parent = document.createElement('span');
+
+        ((parent as any) as IndexedSegmentNode).__roosterjsContentModel = {} as any;
+
+        domIndexer.clearIndex(parent);
+
+        expect(((parent as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+    });
+
+    it('clear index, with child', () => {
+        const domIndexer = new DomIndexerImpl(true);
+
+        const parent = document.createElement('span');
+        const node = document.createTextNode('test');
+
+        ((parent as any) as IndexedSegmentNode).__roosterjsContentModel = {} as any;
+        ((node as any) as IndexedSegmentNode).__roosterjsContentModel = {} as any;
+
+        parent.appendChild(node);
+
+        domIndexer.clearIndex(parent);
+
+        expect(((node as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+        expect(((parent as Node) as IndexedSegmentNode).__roosterjsContentModel).toBeUndefined();
+    });
+});
