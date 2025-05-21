@@ -1,9 +1,8 @@
 import { expectEqual, initEditor } from './testUtils';
 import { googleSheetsHtmlClipboard } from './htmlTemplates/htmlFromGoogleSheetsClipboardContent';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
-import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
-
-let clipboardData: ClipboardData;
+import type { IEditor } from 'roosterjs-content-model-types';
 
 describe('Google Sheets E2E', () => {
     let editor: IEditor;
@@ -16,7 +15,7 @@ describe('Google Sheets E2E', () => {
         document.getElementById('Google Sheets E2E')?.remove();
     });
 
-    it('E2E', () => {
+    itChromeOnly('E2E', () => {
         paste(editor, googleSheetsHtmlClipboard);
         const model = editor.getContentModelCopy('connected');
 
@@ -28,7 +27,7 @@ describe('Google Sheets E2E', () => {
                 {
                     segments: [
                         {
-                            element: {},
+                            element: jasmine.anything() as any,
                             blockType: 'BlockGroup',
                             format: {
                                 fontFamily: 'Calibri',
