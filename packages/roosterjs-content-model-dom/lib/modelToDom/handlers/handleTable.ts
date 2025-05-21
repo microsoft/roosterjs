@@ -71,6 +71,11 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
 
             applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
+            
+            // Apply row height directly to TR element to preserve row heights
+            if (tableRow.height > 0) {
+                tr.style.height = tableRow.height + 'px';
+            }
         }
 
         context.onNodeCreated?.(tableRow, tr);

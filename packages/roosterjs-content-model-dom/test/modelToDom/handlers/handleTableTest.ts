@@ -680,4 +680,37 @@ describe('handleTable', () => {
         });
         expect(reuseCachedElementSpy).not.toHaveBeenCalled();
     });
+
+    it('TR applies row height style directly', () => {
+        const table = createTable(2);
+        table.rows[0].height = 50;
+        table.rows[1].height = 100;
+        
+        // Add cells to the table
+        table.rows[0].cells.push(createTableCell(false, false, false, {}));
+        table.rows[1].cells.push(createTableCell(false, false, false, {}));
+        
+        const div = document.createElement('div');
+        handleTable(document, div, table, context, null);
+        
+        const rows = div.querySelectorAll('tr');
+        expect(rows.length).toBe(2);
+        expect(rows[0].style.height).toBe('50px');
+        expect(rows[1].style.height).toBe('100px');
+    });
+
+    it('does not apply row height when height is 0', () => {
+        const table = createTable(1);
+        table.rows[0].height = 0;
+        
+        // Add cell to the table
+        table.rows[0].cells.push(createTableCell(false, false, false, {}));
+        
+        const div = document.createElement('div');
+        handleTable(document, div, table, context, null);
+        
+        const row = div.querySelector('tr');
+        expect(row).not.toBeNull();
+        expect(row!.style.height).toBe('');
+    });
 });
