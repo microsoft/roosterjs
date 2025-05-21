@@ -21,6 +21,7 @@ const initialState: OptionState = {
         imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
+        hintText: true,
         hiddenProperty: true,
     },
     defaultFormat: {

@@ -60,6 +60,7 @@ import {
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
+    HintTextPlugin,
     HiddenPropertyPlugin,
     HyperlinkPlugin,
     ImageEditPlugin,
@@ -540,6 +541,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         : linkTitle
                 ),
             pluginList.customReplace && new CustomReplacePlugin(customReplacements),
+            pluginList.hintText && new HintTextPlugin(),
             pluginList.hiddenProperty &&
                 new HiddenPropertyPlugin({
                     undeletableLinkChecker: undeletableLinkChecker,

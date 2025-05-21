@@ -17,6 +17,12 @@ export interface HiddenProperty {
      * Specify the image state. Example: if the image is in editable state
      */
     imageState?: string;
+
+    /**
+     * Specify the hint text for this element
+     * This is useful for scenarios when we show a SPAN as a hint text
+     */
+    hintText?: string;
 }
 
 interface NodeWithHiddenProperty extends Node {

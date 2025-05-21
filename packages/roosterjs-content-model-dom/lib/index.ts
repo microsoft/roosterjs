@@ -120,10 +120,12 @@ export { transformColor } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
+export { hasHintTextClass, getHintTextElement, setupHintTextNode } from './domUtils/hintText';
 export {
     setParagraphMarker,
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
+export { getHintText, setHintText } from './domUtils/hiddenProperties/hintText';
 export { setImageState, getImageState } from './domUtils/hiddenProperties/imageState';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';

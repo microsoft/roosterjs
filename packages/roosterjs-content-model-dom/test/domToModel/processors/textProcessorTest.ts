@@ -581,6 +581,8 @@ describe('textProcessor', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -619,6 +621,8 @@ describe('textProcessor', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;
@@ -668,6 +672,8 @@ describe('textProcessor', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            onSelectionMarker: null!,
+            reconcileHintText: null!,
         };
 
         context.domIndexer = domIndexer;

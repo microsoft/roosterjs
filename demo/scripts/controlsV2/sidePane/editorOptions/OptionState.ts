@@ -22,6 +22,7 @@ export interface BuildInPluginList {
     hyperlink: boolean;
     imageEditPlugin: boolean;
     customReplace: boolean;
+    hintText: boolean;
     hiddenProperty: boolean;
 }
 

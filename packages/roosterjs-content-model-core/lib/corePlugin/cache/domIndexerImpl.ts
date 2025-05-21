@@ -5,6 +5,7 @@ import {
     createParagraph,
     createSelectionMarker,
     createText,
+    getHintText,
     getObjectKeys,
     isElementOfType,
     isEntityDelimiter,
@@ -39,6 +40,14 @@ export interface SegmentItem {
 /**
  * @internal Export for test only
  */
+export interface HintNodeItem {
+    // Selection marker can be easily removed and recreated during reconciling, so we don't store the selection marker, but only paragraph here
+    paragraph: ContentModelParagraph;
+}
+
+/**
+ * @internal Export for test only
+ */
 export interface TableItem {
     table: ContentModelTable;
 }
@@ -56,6 +65,13 @@ export interface BlockEntityDelimiterItem {
  */
 export interface IndexedSegmentNode extends Node {
     __roosterjsContentModel: SegmentItem;
+}
+
+/**
+ * @internal Export for test only
+ */
+export interface IndexedHintNode extends HTMLElement {
+    __roosterjsContentModel: HintNodeItem;
 }
 
 /**
@@ -114,6 +130,12 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     );
 }
 
+function isIndexedHintNode(node: Node): node is IndexedHintNode {
+    const { paragraph } = (node as IndexedHintNode).__roosterjsContentModel ?? {};
+
+    return paragraph && paragraph.blockType == 'Paragraph' && Array.isArray(paragraph.segments);
+}
+
 function isIndexedDelimiter(node: Node): node is IndexedEntityDelimiter {
     const { entity, parent } = (node as IndexedEntityDelimiter).__roosterjsContentModel ?? {};
 
@@ -163,6 +185,14 @@ export class DomIndexerImpl implements DomIndexer {
         indexedText.__roosterjsContentModel = {
             paragraph,
             segments: segment,
+        };
+    }
+
+    onSelectionMarker(node: HTMLElement, paragraph: ContentModelParagraph) {
+        const indexedMarker = node as IndexedHintNode;
+
+        indexedMarker.__roosterjsContentModel = {
+            paragraph,
         };
     }
 
@@ -223,6 +253,7 @@ export class DomIndexerImpl implements DomIndexer {
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
     ): boolean {
+        let hintText: string | undefined;
         if (oldSelection) {
             let startNode: Node | undefined;
 
@@ -234,6 +265,14 @@ export class DomIndexerImpl implements DomIndexer {
                 isIndexedSegment(startNode) &&
                 startNode.__roosterjsContentModel.segments.length > 0
             ) {
+                const { paragraph } = startNode.__roosterjsContentModel;
+                const marker = paragraph.segments.filter(
+                    (x: ContentModelSegment): x is ContentModelSelectionMarker =>
+                        x.segmentType == 'SelectionMarker' && !!x.hintText
+                )[0];
+
+                hintText = marker?.hintText;
+
                 this.reconcileTextSelection(startNode);
             } else {
                 setSelection(model);
@@ -293,7 +332,8 @@ export class DomIndexerImpl implements DomIndexer {
                         return !!this.reconcileNodeSelection(
                             startContainer,
                             startOffset,
-                            model.format
+                            model.format,
+                            hintText
                         );
                     } else if (
                         startContainer == endContainer &&
@@ -305,7 +345,12 @@ export class DomIndexerImpl implements DomIndexer {
 
                         return (
                             isIndexedSegment(startContainer) &&
-                            !!this.reconcileTextSelection(startContainer, startOffset, endOffset)
+                            !!this.reconcileTextSelection(
+                                startContainer,
+                                startOffset,
+                                endOffset,
+                                hintText
+                            )
                         );
                     } else {
                         const marker1 = this.reconcileNodeSelection(startContainer, startOffset);
@@ -387,6 +432,26 @@ export class DomIndexerImpl implements DomIndexer {
         }
     }
 
+    reconcileHintText(hintNode: HTMLElement) {
+        let hintText: string;
+
+        if (isIndexedHintNode(hintNode) && (hintText = getHintText(hintNode))) {
+            const { paragraph } = hintNode.__roosterjsContentModel;
+            const markers = paragraph.segments.filter(
+                (x: ContentModelSegment): x is ContentModelSelectionMarker =>
+                    x.segmentType == 'SelectionMarker'
+            );
+
+            if (markers.length == 1) {
+                markers[0].hintText = hintText;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private onBlockEntityDelimiter(
         node: Node | null,
         entity: ContentModelEntity,
@@ -408,11 +473,12 @@ export class DomIndexerImpl implements DomIndexer {
     private reconcileNodeSelection(
         node: Node,
         offset: number,
-        defaultFormat?: ContentModelSegmentFormat
+        defaultFormat?: ContentModelSegmentFormat,
+        hintText?: string
     ): Selectable | undefined {
         if (isNodeOfType(node, 'TEXT_NODE')) {
             if (isIndexedSegment(node)) {
-                return this.reconcileTextSelection(node, offset);
+                return this.reconcileTextSelection(node, offset, undefined /*endOffset*/, hintText);
             } else if (isIndexedDelimiter(node)) {
                 return this.reconcileDelimiterSelection(node, defaultFormat);
             } else {
@@ -448,7 +514,8 @@ export class DomIndexerImpl implements DomIndexer {
     private reconcileTextSelection(
         textNode: IndexedSegmentNode,
         startOffset?: number,
-        endOffset?: number
+        endOffset?: number,
+        hintText?: string
     ) {
         const { paragraph, segments } = textNode.__roosterjsContentModel;
         const first = segments[0];
@@ -473,6 +540,8 @@ export class DomIndexerImpl implements DomIndexer {
 
                 if (endOffset === undefined) {
                     const marker = createSelectionMarker(first.format);
+
+                    marker.hintText = hintText;
                     newSegments.push(marker);
 
                     if (startOffset < (textNode.nodeValue ?? '').length) {

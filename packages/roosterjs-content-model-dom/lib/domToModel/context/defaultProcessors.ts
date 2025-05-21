@@ -8,6 +8,7 @@ import { fontProcessor } from '../processors/fontProcessor';
 import { formatContainerProcessor } from '../processors/formatContainerProcessor';
 import { generalProcessor } from '../processors/generalProcessor';
 import { headingProcessor } from '../processors/headingProcessor';
+import { hintTextProcessor } from '../processors/hintTextProcessor';
 import { hrProcessor } from '../processors/hrProcessor';
 import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
@@ -59,6 +60,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
 
     '*': generalProcessor,
     '#text': textProcessor,
+    hintText: hintTextProcessor,
     textWithSelection: textWithSelectionProcessor,
     element: elementProcessor,
     entity: entityProcessor,

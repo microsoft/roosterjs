@@ -1,5 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
+import { hasHintTextClass } from '../../domUtils/hintText';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
@@ -77,7 +79,11 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                         context.modelHandlers.segment(doc, parent, segment, context, newSegments);
 
                         newSegments.forEach(node => {
-                            context.domIndexer?.onSegment(node, paragraph, [segment]);
+                            if (isNodeOfType(node, 'ELEMENT_NODE') && hasHintTextClass(node)) {
+                                context.domIndexer?.onSelectionMarker(node, paragraph);
+                            } else {
+                                context.domIndexer?.onSegment(node, paragraph, [segment]);
+                            }
                         });
                     });
                 }

@@ -951,6 +951,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {},
+                            hintText: undefined,
                         },
                         {
                             segmentType: 'Text',
@@ -1254,6 +1255,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {},
+                            hintText: undefined,
                         },
                     ],
                     segmentFormat: undefined,
@@ -1642,6 +1644,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {},
+                        hintText: undefined,
                     },
                     levels: [
                         {
@@ -1694,6 +1697,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {},
+                            hintText: undefined,
                         },
                     ],
                     segmentFormat: undefined,
@@ -1779,6 +1783,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {},
+                        hintText: undefined,
                     },
                     levels: [
                         {
@@ -1918,6 +1923,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {},
+                        hintText: undefined,
                     },
                     levels: [
                         {
