@@ -122,6 +122,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         context
                     );
 
+                    tableRow.height = parseInt(tr.style.height) || 0;
+
                     for (
                         let sourceCol = 0, targetCol = 0;
                         sourceCol < tr.cells.length;
@@ -131,7 +133,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                         const td = tr.cells[sourceCol];
                         const hasSelectionBeforeCell = context.isInSelection;
-
                         if (recalculateTableSize) {
                             const colEnd = targetCol + td.colSpan;
                             const rowEnd = row + td.rowSpan;
