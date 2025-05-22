@@ -901,7 +901,7 @@ describe('SelectionPlugin handle table selection', () => {
         expect(mouseDispatcher).toBeDefined();
     });
 
-    it('MouseDown - save a table selection when left click', () => {
+    it('MouseDown - only attach event handler once even when double mousedown event', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
         table.setAttribute('contenteditable', 'true');
