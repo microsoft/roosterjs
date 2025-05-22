@@ -1,5 +1,8 @@
+import * as findTableCellElement from '../../../lib/coreApi/setDOMSelection/findTableCellElement';
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
+import * as parseTableCells from 'roosterjs-content-model-dom/lib/domUtils/table/parseTableCells';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
+import { getDOMSelection } from '../../../lib/coreApi/getDOMSelection/getDOMSelection';
 import {
     createSelectionPlugin,
     DEFAULT_SELECTION_BORDER_COLOR,
@@ -2477,6 +2480,164 @@ describe('SelectionPlugin handle table selection', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
             getComputedStyleSpy.and.returnValue({});
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                    shiftKey: true,
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    firstCo: { row: 1, col: 0 },
+                    lastCo: { row: 0, col: 1 },
+                    startNode: td3,
+                },
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'table',
+                table,
+                firstRow: 1,
+                firstColumn: 0,
+                lastRow: 0,
+                lastColumn: 1,
+            });
+            expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
+        });
+
+        it('From Table, Format, Press Shift+Left', () => {
+            (getDOMSelectionSpy as jasmine.Spy<typeof getDOMSelection>).and.returnValue({
+                type: 'table',
+                firstColumn: 1,
+                firstRow: 0,
+                lastColumn: 1,
+                lastRow: 1,
+                table,
+            });
+
+            spyOn(parseTableCells, 'parseTableCells').and.returnValue([
+                [td1, td2],
+                [td3, td4],
+            ]);
+            spyOn(findTableCellElement, 'findTableCellElement').and.returnValue({
+                cell: td2,
+                row: 0,
+                col: 1,
+            });
+
+            plugin.getState().tableSelection = {
+                table,
+                parsedTable: [
+                    [td1, td2],
+                    [td3, td4],
+                ],
+                firstCo: { row: 0, col: 1 },
+                lastCo: { row: 1, col: 1 },
+                startNode: td2,
+            };
+
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            getComputedStyleSpy.and.returnValue({});
+
+            plugin.onPluginEvent!({
+                eventType: 'contentChanged',
+                source: 'Test',
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowLeft',
+                    shiftKey: true,
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 0 },
+                    startNode: td2,
+                },
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'table',
+                table,
+                firstRow: 0,
+                firstColumn: 1,
+                lastRow: 1,
+                lastColumn: 0,
+            });
+            expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
+        });
+
+        it('From Table, Format, Press Shift+Up', () => {
+            (getDOMSelectionSpy as jasmine.Spy<typeof getDOMSelection>).and.returnValue({
+                type: 'table',
+                firstColumn: 0,
+                firstRow: 1,
+                lastColumn: 1,
+                lastRow: 1,
+                table,
+            });
+
+            spyOn(parseTableCells, 'parseTableCells').and.returnValue([
+                [td1, td2],
+                [td3, td4],
+            ]);
+            spyOn(findTableCellElement, 'findTableCellElement').and.returnValue({
+                cell: td3,
+                row: 1,
+                col: 0,
+            } as any);
+
+            plugin.getState().tableSelection = {
+                table,
+                parsedTable: [
+                    [td1, td2],
+                    [td3, td4],
+                ],
+                firstCo: { row: 1, col: 0 },
+                lastCo: { row: 1, col: 1 },
+                startNode: td3,
+            };
+
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            getComputedStyleSpy.and.returnValue({});
+
+            plugin.onPluginEvent!({
+                eventType: 'contentChanged',
+                source: 'Test',
+            });
 
             plugin.onPluginEvent!({
                 eventType: 'keyDown',

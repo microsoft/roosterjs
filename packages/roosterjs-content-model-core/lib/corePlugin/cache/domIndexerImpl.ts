@@ -218,6 +218,10 @@ export class DomIndexerImpl implements DomIndexer {
         }
     }
 
+    clearIndex(container: Node) {
+        internalClearIndex(container);
+    }
+
     reconcileSelection(
         model: ContentModelDocument,
         newSelection: DOMSelection,
@@ -710,4 +714,12 @@ function getFirstLeaf(node: Node | null): Node | null {
     }
 
     return node;
+}
+
+function internalClearIndex(container: Node) {
+    unindex(container as IndexedSegmentNode);
+
+    for (let node = container.firstChild; node; node = node.nextSibling) {
+        internalClearIndex(node);
+    }
 }
