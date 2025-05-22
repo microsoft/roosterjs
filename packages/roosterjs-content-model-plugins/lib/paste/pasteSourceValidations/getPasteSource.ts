@@ -97,7 +97,7 @@ export function getPasteSource(
         fragment,
         shouldConvertSingleImage,
         clipboardData,
-        environment,
+        environment: { ...environment, isSafari: true },
         htmlHeadString: extractHtmlHeadContent(clipboardData.rawHtml),
     };
 

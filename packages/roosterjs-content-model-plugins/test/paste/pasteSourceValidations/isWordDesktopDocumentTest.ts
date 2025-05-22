@@ -10,7 +10,10 @@ describe('isWordDesktopDocument |', () => {
             ProgId: WORD_PROG_ID,
         };
 
-        const result = isWordDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isWordDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
@@ -21,7 +24,10 @@ describe('isWordDesktopDocument |', () => {
             ProgId: WORD_PROG_ID,
         };
 
-        const result = isWordDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isWordDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
@@ -31,13 +37,19 @@ describe('isWordDesktopDocument |', () => {
             'xmlns:w': WORD_ATTRIBUTE_VALUE,
         };
 
-        const result = isWordDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isWordDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
 
     it('Is not a Word Document', () => {
-        const result = isWordDesktopDocument(<GetSourceInputParams>{ htmlAttributes: {} });
+        const result = isWordDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes: {},
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });

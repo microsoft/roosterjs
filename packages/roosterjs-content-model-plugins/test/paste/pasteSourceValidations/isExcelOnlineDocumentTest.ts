@@ -11,7 +11,10 @@ describe('isExcelOnlineDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelOnlineDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isExcelOnlineDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });
@@ -21,13 +24,19 @@ describe('isExcelOnlineDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelOnlineDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isExcelOnlineDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
 
     it('Is not a Excel Document', () => {
-        const result = isExcelOnlineDocument(<GetSourceInputParams>{ htmlAttributes: {} });
+        const result = isExcelOnlineDocument(<GetSourceInputParams>{
+            htmlAttributes: {},
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });

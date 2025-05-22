@@ -10,7 +10,10 @@ describe('isExcelDesktopDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isExcelDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });
@@ -21,7 +24,10 @@ describe('isExcelDesktopDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isExcelDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
@@ -30,13 +36,19 @@ describe('isExcelDesktopDocument |', () => {
         const htmlAttributes: Record<string, string> = {
             'xmlns:x': EXCEL_ATTRIBUTE_VALUE,
         };
-        const result = isExcelDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isExcelDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
 
     it('Is not a Excel Document', () => {
-        const result = isExcelDesktopDocument(<GetSourceInputParams>{ htmlAttributes: {} });
+        const result = isExcelDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes: {},
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });

@@ -16,8 +16,7 @@ export const isWordDesktopDocument: GetSourceFunction = props => {
 
     const rawHtmlContainsWordAttribute =
         !!environment.isSafari &&
-        (htmlHeadString.indexOf(WORD_ATTRIBUTE_NAME) > -1 ||
-            htmlHeadString.indexOf(WORD_PROG_ID) > -1);
+        htmlHeadString.indexOf(`${WORD_ATTRIBUTE_NAME}="${WORD_ATTRIBUTE_VALUE}`) > -1;
 
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||

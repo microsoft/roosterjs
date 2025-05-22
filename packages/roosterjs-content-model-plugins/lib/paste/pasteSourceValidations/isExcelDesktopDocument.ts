@@ -12,7 +12,10 @@ const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 export const isExcelDesktopDocument: GetSourceFunction = props => {
     const { htmlAttributes, htmlHeadString, environment } = props;
     const rawHtmlContainsExcelAttribute =
-        !!environment.isSafari && htmlHeadString.indexOf(EXCEL_ATTRIBUTE_VALUE) > -1;
+        !!environment.isSafari &&
+        htmlHeadString.indexOf(
+            `${PastePropertyNames.EXCEL_DESKTOP_ATTRIBUTE_NAME}="${EXCEL_ATTRIBUTE_VALUE}`
+        ) > -1;
     // The presence of this attribute confirms its origin from Excel Desktop
     return (
         htmlAttributes[PastePropertyNames.EXCEL_DESKTOP_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||

@@ -8,13 +8,19 @@ describe('isPowerPointDesktopDocument |', () => {
             ProgId: POWERPOINT_ATTRIBUTE_VALUE,
         };
 
-        const result = isPowerPointDesktopDocument(<GetSourceInputParams>{ htmlAttributes });
+        const result = isPowerPointDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes,
+            environment: {},
+        });
 
         expect(result).toBeTrue();
     });
 
     it('Is not a PPT Document', () => {
-        const result = isPowerPointDesktopDocument(<GetSourceInputParams>{ htmlAttributes: {} });
+        const result = isPowerPointDesktopDocument(<GetSourceInputParams>{
+            htmlAttributes: {},
+            environment: {},
+        });
 
         expect(result).toBeFalse();
     });

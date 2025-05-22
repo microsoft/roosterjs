@@ -8,7 +8,7 @@ describe('isGoogleSheetDocument |', () => {
         const fragment = document.createDocumentFragment();
         fragment.appendChild(document.createElement(PastePropertyNames.GOOGLE_SHEET_NODE_NAME));
 
-        const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment });
+        const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment, environment: {} });
 
         expect(result).toBeTrue();
     });
@@ -25,7 +25,7 @@ describe('isGoogleSheetDocument |', () => {
         const fragment = document.createDocumentFragment();
         fragment.appendChild(getWacElement());
 
-        const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment });
+        const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment, environment: {} });
 
         expect(result).toBeFalse();
     });

@@ -3,25 +3,38 @@ import type { WordMetadata } from './WordMetadata';
 import type { BeforePasteEvent } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
-const STYLE_TAG = '<style>';
+const STYLE_TAG = '<style';
 const STYLE_TAG_END = '</style>';
+const nonWordCharacterRegex = /\W/;
 
 function extractStyleTagsFromHtml(htmlContent: string): string[] {
     const styles: string[] = [];
-    const lowerCaseHtmlContent = htmlContent.toLowerCase();
 
-    let styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG);
-    while (styleStartIndex >= 0) {
-        const styleEndIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG_END, styleStartIndex);
-        if (styleEndIndex >= 0) {
-            const styleContent = htmlContent.substring(styleStartIndex + STYLE_TAG.length, styleEndIndex).trim();
-            styles.push(styleContent);
-            styleStartIndex = lowerCaseHtmlContent.indexOf(STYLE_TAG, styleEndIndex);
-        } else {
-            break;
-        }
+    let { styleIndex, styleEndIndex } = extractHtmlIndexes(htmlContent);
+    while (styleIndex >= 0 && styleEndIndex >= 0) {
+        const styleContent = htmlContent
+            .substring(styleIndex + STYLE_TAG.length, styleEndIndex)
+            .trim();
+        styles.push(styleContent);
+        ({ styleIndex, styleEndIndex } = extractHtmlIndexes(htmlContent, styleEndIndex + 1));
     }
     return styles;
+}
+
+function extractHtmlIndexes(html: string, startIndex: number = 0) {
+    const htmlLowercase = html.toLowerCase();
+    let styleIndex = htmlLowercase.indexOf(STYLE_TAG, startIndex);
+    let currentIndex = styleIndex + STYLE_TAG.length;
+    let nextChar = html.substring(currentIndex, currentIndex + 1);
+
+    while (!nonWordCharacterRegex.test(nextChar) && styleIndex > -1) {
+        styleIndex = htmlLowercase.indexOf(STYLE_TAG, styleIndex + 1);
+        currentIndex = styleIndex + STYLE_TAG.length;
+        nextChar = html.substring(currentIndex, currentIndex + 1);
+    }
+
+    const styleEndIndex = htmlLowercase.indexOf(STYLE_TAG_END, startIndex);
+    return { styleIndex, styleEndIndex };
 }
 
 /**
@@ -46,7 +59,7 @@ function extractStyleTagsFromHtml(htmlContent: string): string[] {
  */
 export function getStyleMetadata(ev: BeforePasteEvent) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore);
+    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore || ev.clipboardData.rawHtml || '');
 
     headStyles.forEach(text => {
         let index = 0;

@@ -7,6 +7,7 @@ describe('isOneNoteDesktopDocument', () => {
             htmlAttributes: {
                 [PastePropertyNames.PROG_ID_NAME]: 'OneNote.File',
             },
+            environment: {},
         };
 
         const result = isOneNoteDesktopDocument(props);
@@ -18,6 +19,7 @@ describe('isOneNoteDesktopDocument', () => {
             htmlAttributes: {
                 [PastePropertyNames.PROG_ID_NAME]: 'SomeOtherValue',
             },
+            environment: {},
         };
 
         const result = isOneNoteDesktopDocument(props);
@@ -27,6 +29,7 @@ describe('isOneNoteDesktopDocument', () => {
     it('should return false when the PROG_ID_NAME attribute is missing', () => {
         const props: any = {
             htmlAttributes: {},
+            environment: {},
         };
 
         const result = isOneNoteDesktopDocument(props);
