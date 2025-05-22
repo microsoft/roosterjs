@@ -12,9 +12,17 @@ const WORD_PROG_ID = 'Word.Document';
  * @returns
  */
 export const isWordDesktopDocument: GetSourceFunction = props => {
-    const { htmlAttributes } = props;
+    const { htmlAttributes, clipboardData } = props;
+
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID
+        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID ||
+        // Safari removes the metadata from the clipboard html, so we need to do this check.
+        !!(
+            clipboardData.rawHtml &&
+            clipboardData.rawHtml
+                ?.replace(/ /g, '')
+                .indexOf(`${WORD_ATTRIBUTE_NAME}="${WORD_ATTRIBUTE_VALUE}`) > -1
+        )
     );
 };
