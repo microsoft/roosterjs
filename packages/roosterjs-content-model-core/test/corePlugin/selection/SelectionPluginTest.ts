@@ -873,6 +873,14 @@ describe('SelectionPlugin handle table selection', () => {
             } as any,
         });
 
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
         expect(state).toEqual({
             selection: null,
             tableSelection: {
@@ -888,6 +896,76 @@ describe('SelectionPlugin handle table selection', () => {
             tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
+    });
+
+    it('MouseDown - save a table selection when left click', () => {
+        const state = plugin.getState();
+        const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(div);
+
+        spyOn(editor, 'attachDomEvent').and.callThrough();
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: div,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: {
+                table: table,
+                parsedTable: [[td]],
+                firstCo: { row: 0, col: 0 },
+                startNode: td,
+            },
+            mouseDisposer: mouseMoveDisposer,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+        expect(mouseDispatcher).toBeDefined();
+        expect(editor.attachDomEvent).toHaveBeenCalledTimes(1);
     });
 
     it('MouseDown - do not save a table selection when left click, table is not editable', () => {
