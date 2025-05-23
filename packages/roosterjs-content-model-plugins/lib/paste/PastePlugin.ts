@@ -1,10 +1,11 @@
 import { addParser } from './utils/addParser';
-import { addSegment, BorderKeys, createText, getObjectKeys } from 'roosterjs-content-model-dom';
+import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './parsers/linkParser';
+import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
@@ -16,12 +17,9 @@ import type {
     BeforePasteEvent,
     BorderFormat,
     ContentModelBlockFormat,
-    ContentModelBlockGroup,
     ContentModelTableCellFormat,
-    DomToModelContext,
     DomToModelOptionForSanitizing,
     EditorPlugin,
-    ElementProcessor,
     FormatParser,
     IEditor,
     PluginEvent,
@@ -224,15 +222,3 @@ function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLEle
         }
     });
 }
-
-/**
- * @internal exported only for unit test
- */
-export const pasteButtonProcessor: ElementProcessor<HTMLButtonElement> = (
-    group: ContentModelBlockGroup,
-    element: HTMLButtonElement,
-    context: DomToModelContext
-): void => {
-    const text = createText(element.textContent || '', context.segmentFormat);
-    addSegment(group, text);
-};
