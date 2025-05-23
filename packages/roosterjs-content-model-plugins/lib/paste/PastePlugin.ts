@@ -1,5 +1,5 @@
 import { addParser } from './utils/addParser';
-import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
+import { addSegment, BorderKeys, createText, getObjectKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
@@ -11,13 +11,17 @@ import { processPastedContentFromOneNote } from './oneNote/processPastedContentF
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import { setProcessor } from './utils/setProcessor';
 import type {
     BeforePasteEvent,
     BorderFormat,
     ContentModelBlockFormat,
+    ContentModelBlockGroup,
     ContentModelTableCellFormat,
+    DomToModelContext,
     DomToModelOptionForSanitizing,
     EditorPlugin,
+    ElementProcessor,
     FormatParser,
     IEditor,
     PluginEvent,
@@ -136,6 +140,7 @@ export class PastePlugin implements EditorPlugin {
         addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);
         addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
+        setProcessor(event.domToModelOption, 'button', pasteButtonProcessor);
 
         if (pasteType === 'mergeFormat') {
             addParser(event.domToModelOption, 'block', blockElementParser);
@@ -215,3 +220,15 @@ function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLEle
         }
     });
 }
+
+/**
+ * @internal exported only for unit test
+ */
+export const pasteButtonProcessor: ElementProcessor<HTMLButtonElement> = (
+    group: ContentModelBlockGroup,
+    element: HTMLButtonElement,
+    context: DomToModelContext
+): void => {
+    const text = createText(element.textContent || '', context.segmentFormat);
+    addSegment(group, text);
+};

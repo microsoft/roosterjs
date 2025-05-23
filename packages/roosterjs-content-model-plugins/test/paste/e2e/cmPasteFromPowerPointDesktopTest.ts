@@ -36,7 +36,7 @@ describe('PowerPoint', () => {
     it('PowerPoint 1', () => {
         paste(editor!, pptClipboardContent1, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
@@ -1848,7 +1848,7 @@ describe('PowerPoint', () => {
     it('PowerPoint 2', () => {
         paste(editor!, pptClipboardContent2, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
@@ -2169,7 +2169,7 @@ describe('PowerPoint', () => {
     it('PowerPoint 3', () => {
         paste(editor!, pptClipboardContent3, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
@@ -2596,7 +2596,7 @@ describe('PowerPoint', () => {
     it('PowerPoint 4', () => {
         paste(editor!, pptClipboardContent4, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
