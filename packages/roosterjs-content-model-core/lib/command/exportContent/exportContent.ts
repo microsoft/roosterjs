@@ -59,7 +59,7 @@ export function exportContent(
             const body = createClonedRoot();
 
             contentModelToDom(
-                null /*doc*/,
+                body.ownerDocument,
                 body,
                 model,
                 createModelToDomContext(

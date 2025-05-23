@@ -72,8 +72,10 @@ describe('exportContent', () => {
             .createSpy('getContentModelCopy')
             .and.returnValue(mockedModel);
         const mockedHTML = 'HTML';
+        const mockedDoc = 'DOC' as any;
         const mockedDiv = {
             innerHTML: mockedHTML,
+            ownerDocument: mockedDoc,
         } as any;
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
         const editor: IEditor = {
@@ -95,7 +97,7 @@ describe('exportContent', () => {
         1;
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, undefined);
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            null,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -113,8 +115,10 @@ describe('exportContent', () => {
             .createSpy('getContentModelCopy')
             .and.returnValue(mockedModel);
         const mockedHTML = 'HTML';
+        const mockedDoc = 'DOC' as any;
         const mockedDiv = {
             innerHTML: mockedHTML,
+            ownerDocument: mockedDoc,
         } as any;
 
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
@@ -138,7 +142,7 @@ describe('exportContent', () => {
         expect(getContentModelCopySpy).toHaveBeenCalledWith('clean');
         expect(createModelToDomContextSpy).toHaveBeenCalledWith(undefined, mockedOptions);
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            null,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
