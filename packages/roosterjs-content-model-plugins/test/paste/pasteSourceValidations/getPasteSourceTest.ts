@@ -14,47 +14,62 @@ const getWacElement = (): HTMLElement => {
 
 describe('getPasteSourceTest | ', () => {
     it('Is Word', () => {
-        const result = getPasteSource(wordParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(wordParam(), false /* shouldConvertSingleImage */, <any>{});
         expect(result).toBe('wordDesktop');
     });
     it('Is Wac Doc', () => {
-        const result = getPasteSource(wacParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(wacParam(), false /* shouldConvertSingleImage */, <any>{});
         expect(result).toBe('wacComponents');
     });
     it('Is Excel Doc', () => {
-        const result = getPasteSource(excelParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(excelParam(), false /* shouldConvertSingleImage */, <any>{});
         expect(result).toBe('excelDesktop');
     });
     it('Is GoogleSheet Doc', () => {
-        const result = getPasteSource(googleSheetParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(
+            googleSheetParam(),
+            false /* shouldConvertSingleImage */,
+            <any>{}
+        );
         expect(result).toBe('googleSheets');
     });
     it('Is PowerPoint Doc', () => {
-        const result = getPasteSource(powerPointParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(
+            powerPointParam(),
+            false /* shouldConvertSingleImage */,
+            <any>{}
+        );
         expect(result).toBe('powerPointDesktop');
     });
     it('Is SingleImage', () => {
         const result = getPasteSource(
             converSingleImageParam(),
-            true /* shouldConvertSingleImage */
+            true /* shouldConvertSingleImage */,
+            <any>{}
         );
         expect(result).toBe('singleImage');
     });
     it('Is SingleImage, but should not convert single image', () => {
         const result = getPasteSource(
             converSingleImageParam(),
-            false /* shouldConvertSingleImage */
+            false /* shouldConvertSingleImage */,
+            <any>{}
         );
         expect(result).toBe('default');
     });
     it('Is Default', () => {
-        const result = getPasteSource(defaultParam(), false /* shouldConvertSingleImage */);
+        const result = getPasteSource(
+            defaultParam(),
+            false /* shouldConvertSingleImage */,
+            <any>{}
+        );
         expect(result).toBe('default');
     });
     it('Is Excel Non-Native Event', () => {
         const result = getPasteSource(
             excelNonNativeEventParam(),
-            false /* shouldConvertSingleImage */
+            false /* shouldConvertSingleImage */,
+            <any>{}
         );
         expect(result).toBe('excelNonNativeEvent');
     });
@@ -70,7 +85,7 @@ describe('getPasteSourceTest | ', () => {
         };
         const shouldConvertSingleImage = false;
 
-        const result = getPasteSource(mockEvent, shouldConvertSingleImage);
+        const result = getPasteSource(mockEvent, shouldConvertSingleImage, <any>{});
 
         expect(result).toBe('oneNoteDesktop');
     });
