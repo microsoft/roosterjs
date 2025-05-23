@@ -35,6 +35,7 @@ describe('TableEditor', () => {
             tEditor = new TableEditor(
                 editor,
                 table,
+                null,
                 () => {},
                 anchorContainer,
                 contentDiv,
@@ -166,7 +167,7 @@ describe('TableEditor', () => {
             const anchor = editor
                 .getDocument()
                 .getElementsByClassName(ANCHOR_CLASS)[0] as HTMLElement;
-            tEditor = new TableEditor(editor, table, () => {}, anchor, contentDiv, undefined);
+            tEditor = new TableEditor(editor, table, null, () => {}, anchor, contentDiv, undefined);
 
             // Move mouse to the first cell
             const cellRect = getCellRect(editor, 0, 0);
@@ -188,7 +189,7 @@ describe('TableEditor', () => {
             const anchor = editor
                 .getDocument()
                 .getElementsByClassName(ANCHOR_CLASS)[0] as HTMLElement;
-            tEditor = new TableEditor(editor, table, () => {}, anchor, contentDiv, undefined);
+            tEditor = new TableEditor(editor, table, null, () => {}, anchor, contentDiv, undefined);
 
             // Move mouse to the first cell
             const cellRect = getCellRect(editor, 0, 0);
