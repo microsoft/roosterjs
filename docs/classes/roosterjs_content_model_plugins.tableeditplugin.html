@@ -116,13 +116,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Edit<wbr>Plugin<span class="tsd-signature-symbol">(</span>anchorContainerSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onTableEditorCreated<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#ontableeditorcreatedcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnTableEditorCreatedCallback</a>, disableFeatures<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#tableeditfeaturename" class="tsd-signature-type" data-tsd-kind="Type alias">TableEditFeatureName</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Edit<wbr>Plugin<span class="tsd-signature-symbol">(</span>anchorContainerSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onTableEditorCreated<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#ontableeditorcreatedcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnTableEditorCreatedCallback</a>, disableFeatures<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_content_model_plugins.html#tableeditfeaturename" class="tsd-signature-type" data-tsd-kind="Type alias">TableEditFeatureName</a><span class="tsd-signature-symbol">[]</span>, tableSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>domHelper<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.domhelper.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMHelper</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L16">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L23">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -152,6 +152,30 @@
 										<p>An optional array of TableEditFeatures to disable</p>
 									</div>
 								</li>
+								<li>
+									<h5>tableSelector: <span class="tsd-signature-symbol">(</span>domHelper<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.domhelper.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMHelper</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A function to select the tables to be edited. By default, it selects all contentEditable tables.</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>domHelper<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.domhelper.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMHelper</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a><span class="tsd-signature-symbol">[]</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>domHelper: <a href="../interfaces/roosterjs_content_model_types.domhelper.html" class="tsd-signature-type" data-tsd-kind="Interface">DOMHelper</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a><span class="tsd-signature-symbol">[]</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_plugins.tableeditplugin.html" class="tsd-signature-type" data-tsd-kind="Class">TableEditPlugin</a></h4>
 						</li>
@@ -171,7 +195,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L69">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L78">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -194,7 +218,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L35">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L44">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -217,7 +241,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L43">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L52">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -249,7 +273,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L84">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L93">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,13 +295,13 @@
 					<a name="settableeditor" class="tsd-anchor"></a>
 					<h3>set<wbr>Table<wbr>Editor</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Table<wbr>Editor<span class="tsd-signature-symbol">(</span>table<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLTableElement</span>, event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Table<wbr>Editor<span class="tsd-signature-symbol">(</span>entry<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a>, event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4d35703/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L136">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts#L146">roosterjs-content-model-plugins/lib/tableEdit/TableEditPlugin.ts:146</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -290,7 +314,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>table: <span class="tsd-signature-type">HTMLTableElement</span></h5>
+									<h5>entry: <a href="../interfaces/roosterjs_content_model_plugins.tablewithroot.html" class="tsd-signature-type" data-tsd-kind="Interface">TableWithRoot</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Table to use when setting the Editors</p>
 									</div>

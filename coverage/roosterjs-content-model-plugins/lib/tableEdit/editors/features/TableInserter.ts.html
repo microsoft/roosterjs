@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">96.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/62</span>
+                <span class='fraction'>62/64</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.72% </span>
+                <span class="strong">96.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>59/61</span>
+                <span class='fraction'>61/63</span>
             </div>
         
             
@@ -240,7 +240,12 @@
 <a name='L181'></a><a href='#L181'>181</a>
 <a name='L182'></a><a href='#L182'>182</a>
 <a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -271,6 +276,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -319,6 +325,7 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -347,6 +354,7 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -357,9 +365,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -374,6 +382,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -459,7 +469,8 @@ export function createTableInserter(
     table: HTMLTableElement,
     isRTL: boolean,
     isHorizontal: boolean,
-    onInsert: () =&gt; void,
+    onBeforeInsert: () =&gt; void,
+    onAfterInserted: () =&gt; void,
     anchorContainer?: HTMLElement,
     onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
@@ -507,7 +518,8 @@ export function createTableInserter(
             table,
             isHorizontal,
             editor,
-            onInsert,
+            onBeforeInsert,
+            onAfterInserted,
             onTableEditorCreated
         );
 &nbsp;
@@ -529,7 +541,8 @@ export class TableInsertHandler implements Disposable {
         private table: HTMLTableElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: () =&gt; void,
+        private onBeforeInsert: () =&gt; void,
+        private onAfterInsert: () =&gt; void,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
         this.div.addEventListener('click', this.insertTd);
@@ -558,6 +571,8 @@ export class TableInsertHandler implements Disposable {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
 &nbsp;
+        this.onBeforeInsert();
+&nbsp;
         // Insert row or column
         formatTableWithContentModel(
             this.editor,
@@ -577,7 +592,7 @@ export class TableInsertHandler implements Disposable {
             }
         );
 &nbsp;
-        this.onInsert();
+        this.onAfterInsert();
     };
 }
 &nbsp;
@@ -613,7 +628,7 @@ function getInsertElementData(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 23 2025 19:43:42 GMT+0000 (Coordinated Universal Time)
+                at Fri May 23 2025 20:03:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

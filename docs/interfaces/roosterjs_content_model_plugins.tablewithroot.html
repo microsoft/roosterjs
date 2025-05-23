@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DOMEventPluginState | RoosterJs API Reference</title>
+	<title>TableWithRoot | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,13 +53,13 @@
 					<a href="../modules.html">RoosterJs API Reference</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
+					<a href="../modules/roosterjs_content_model_plugins.html">roosterjs-content-model-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.domeventpluginstate.html">DOMEventPluginState</a>
+					<a href="roosterjs_content_model_plugins.tablewithroot.html">TableWithRoot</a>
 				</li>
 			</ul>
-			<h1>Interface DOMEventPluginState</h1>
+			<h1>Interface TableWithRoot</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The state object for DOMEventPlugin</p>
+						<p>Represents a table and its container (logical root)</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DOMEventPluginState</span>
+						<span class="target">TableWithRoot</span>
 					</li>
 				</ul>
 			</section>
@@ -88,11 +88,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domeventpluginstate.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domeventpluginstate.html#mousedownx" class="tsd-kind-icon">mouse<wbr>DownX</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domeventpluginstate.html#mousedowny" class="tsd-kind-icon">mouse<wbr>DownY</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domeventpluginstate.html#mouseupeventlisteradded" class="tsd-kind-icon">mouse<wbr>UpEvent<wbr>Lister<wbr>Added</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.domeventpluginstate.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_plugins.tablewithroot.html#logicalroot" class="tsd-kind-icon">logical<wbr>Root</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_plugins.tablewithroot.html#table" class="tsd-kind-icon">table</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,77 +98,34 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="isinime" class="tsd-anchor"></a>
-					<h3>is<wbr>InIME</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>InIME<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="logicalroot" class="tsd-anchor"></a>
+					<h3>logical<wbr>Root</h3>
+					<div class="tsd-signature tsd-kind-icon">logical<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLDivElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts#L8">roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableWithRoot.ts#L14">roosterjs-content-model-plugins/lib/tableEdit/TableWithRoot.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether editor is in IME input sequence</p>
+							<p>The logical root element of the table
+								This is the element that contains the table and all its ancestors
+							It is used to determine the logical root of the table</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mousedownx" class="tsd-anchor"></a>
-					<h3>mouse<wbr>DownX</h3>
-					<div class="tsd-signature tsd-kind-icon">mouse<wbr>DownX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="table" class="tsd-anchor"></a>
+					<h3>table</h3>
+					<div class="tsd-signature tsd-kind-icon">table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts#L23">roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-plugins/lib/tableEdit/TableWithRoot.ts#L8">roosterjs-content-model-plugins/lib/tableEdit/TableWithRoot.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>X-coordinate when mouse down happens</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mousedowny" class="tsd-anchor"></a>
-					<h3>mouse<wbr>DownY</h3>
-					<div class="tsd-signature tsd-kind-icon">mouse<wbr>DownY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts#L28">roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>X-coordinate when mouse down happens</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mouseupeventlisteradded" class="tsd-anchor"></a>
-					<h3>mouse<wbr>UpEvent<wbr>Lister<wbr>Added</h3>
-					<div class="tsd-signature tsd-kind-icon">mouse<wbr>UpEvent<wbr>Lister<wbr>Added<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts#L18">roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts:18</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether mouse up event handler is added</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="scrollcontainer" class="tsd-anchor"></a>
-					<h3>scroll<wbr>Container</h3>
-					<div class="tsd-signature tsd-kind-icon">scroll<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2272af0/packages/roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts#L13">roosterjs-content-model-types/lib/pluginState/DOMEventPluginState.ts:13</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Scroll container of editor</p>
+							<p>The table element</p>
 						</div>
 					</div>
 				</section>
@@ -201,10 +155,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_markdown.html">roosterjs-<wbr>content-<wbr>model-<wbr>markdown</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_plugins.html">roosterjs-<wbr>content-<wbr>model-<wbr>plugins</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -220,22 +174,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.domeventpluginstate.html" class="tsd-kind-icon">DOMEvent<wbr>Plugin<wbr>State</a>
+						<a href="roosterjs_content_model_plugins.tablewithroot.html" class="tsd-kind-icon">Table<wbr>With<wbr>Root</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domeventpluginstate.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a>
+								<a href="roosterjs_content_model_plugins.tablewithroot.html#logicalroot" class="tsd-kind-icon">logical<wbr>Root</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domeventpluginstate.html#mousedownx" class="tsd-kind-icon">mouse<wbr>DownX</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domeventpluginstate.html#mousedowny" class="tsd-kind-icon">mouse<wbr>DownY</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domeventpluginstate.html#mouseupeventlisteradded" class="tsd-kind-icon">mouse<wbr>UpEvent<wbr>Lister<wbr>Added</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.domeventpluginstate.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a>
+								<a href="roosterjs_content_model_plugins.tablewithroot.html#table" class="tsd-kind-icon">table</a>
 							</li>
 						</ul>
 					</li>

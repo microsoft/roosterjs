@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.14% </span>
+                <span class="strong">76.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>135/175</span>
+                <span class='fraction'>137/180</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70% </span>
+                <span class="strong">67.74% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>21/30</span>
+                <span class='fraction'>21/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.88% </span>
+                <span class="strong">75.84% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>133/173</span>
+                <span class='fraction'>135/178</span>
             </div>
         
             
@@ -491,7 +491,15 @@
 <a name='L432'></a><a href='#L432'>432</a>
 <a name='L433'></a><a href='#L433'>433</a>
 <a name='L434'></a><a href='#L434'>434</a>
-<a name='L435'></a><a href='#L435'>435</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L435'></a><a href='#L435'>435</a>
+<a name='L436'></a><a href='#L436'>436</a>
+<a name='L437'></a><a href='#L437'>437</a>
+<a name='L438'></a><a href='#L438'>438</a>
+<a name='L439'></a><a href='#L439'>439</a>
+<a name='L440'></a><a href='#L440'>440</a>
+<a name='L441'></a><a href='#L441'>441</a>
+<a name='L442'></a><a href='#L442'>442</a>
+<a name='L443'></a><a href='#L443'>443</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -555,6 +563,7 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -784,6 +793,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -859,9 +869,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -876,6 +888,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -992,6 +1008,7 @@ export class TableEditor {
     constructor(
         private editor: IEditor,
         public readonly table: HTMLTableElement,
+        public readonly logicalRoot: HTMLDivElement | null,
         private onChanged: () =&gt; void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null,
@@ -1214,7 +1231,8 @@ export class TableEditor {
                 this.table,
                 this.isRTL,
                 !!isHorizontal,
-                this.onInserted,
+                this.onBeforeEditTable,
+                this.onAfterInsert,
                 this.anchorContainer,
                 this.onEditorCreated
             );
@@ -1289,6 +1307,7 @@ export class TableEditor {
     };
 &nbsp;
     private onStartTableMove = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        this.onBeforeEditTable();</span>
 <span class="cstat-no" title="statement not covered" >        this.isCurrentlyEditing = true;</span>
 <span class="cstat-no" title="statement not covered" >        this.disposeTableResizer();</span>
 <span class="cstat-no" title="statement not covered" >        this.disposeTableInserter();</span>
@@ -1296,6 +1315,7 @@ export class TableEditor {
     };
 &nbsp;
 <span class="fstat-no" title="function not covered" >    private o</span>nStartResize() {
+<span class="cstat-no" title="statement not covered" >        this.onBeforeEditTable();</span>
 <span class="cstat-no" title="statement not covered" >        this.isCurrentlyEditing = true;</span>
         const range = <span class="cstat-no" title="statement not covered" >this.editor.getDOMSelection();</span>
 &nbsp;
@@ -1313,7 +1333,11 @@ export class TableEditor {
 <span class="cstat-no" title="statement not covered" >        return this.onFinishEditing();</span>
     };
 &nbsp;
-    private onInserted = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
+    private onBeforeEditTable = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        this.editor.setLogicalRoot(this.logicalRoot);</span>
+    };
+&nbsp;
+    private onAfterInsert = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        this.disposeTableResizer();</span>
 <span class="cstat-no" title="statement not covered" >        this.onFinishEditing();</span>
     };
@@ -1366,7 +1390,7 @@ export class TableEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 23 2025 19:43:42 GMT+0000 (Coordinated Universal Time)
+                at Fri May 23 2025 20:03:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
