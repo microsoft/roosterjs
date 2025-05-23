@@ -901,7 +901,7 @@ describe('SelectionPlugin handle table selection', () => {
         expect(mouseDispatcher).toBeDefined();
     });
 
-    it('MouseDown - only attach event handler once even when double mousedown event', () => {
+    it('MouseDown - clean and re-attach mouse move event handler if mouseDown event triggered twice', () => {
         const state = plugin.getState();
         const table = document.createElement('table');
         table.setAttribute('contenteditable', 'true');
@@ -968,7 +968,8 @@ describe('SelectionPlugin handle table selection', () => {
             tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
-        expect(editor.attachDomEvent).toHaveBeenCalledTimes(1);
+        expect(mouseMoveDisposer).toHaveBeenCalledTimes(1);
+        expect(editor.attachDomEvent).toHaveBeenCalledTimes(2);
     });
 
     it('MouseDown - do not save a table selection when left click, table is not editable', () => {

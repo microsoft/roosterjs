@@ -219,13 +219,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
-            if (!this.state.mouseDisposer) {
-                this.state.mouseDisposer = editor.attachDomEvent({
-                    mousemove: {
-                        beforeDispatch: this.onMouseMove,
-                    },
-                });
-            }
+            this.state.mouseDisposer?.();
+            this.state.mouseDisposer = editor.attachDomEvent({
+                mousemove: {
+                    beforeDispatch: this.onMouseMove,
+                },
+            });
         }
     }
 
