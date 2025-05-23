@@ -1,7 +1,9 @@
 import {
+    copyFormat,
     createBr,
     createParagraph,
     normalizeParagraph,
+    ParagraphFormats,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -43,9 +45,11 @@ export function splitParagraph(
     const newFormat = createNewFormat(paragraph.format, formatKeys);
     const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
-        newFormat,
+        {},
         paragraph.segmentFormat
     );
+
+    copyFormat(newParagraph.format, paragraph.format, ParagraphFormats);
 
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(
@@ -53,13 +57,13 @@ export function splitParagraph(
         paragraph.segments.length - markerIndex
     );
 
-    if (paragraph.segments.length == 0) {
-        paragraph.segments.push(createBr(marker.format));
-    }
-
     newParagraph.segments.push(...segments);
 
-    setParagraphNotImplicit(paragraph);
+    if (paragraph.segments.length == 0 && !paragraph.isImplicit) {
+        paragraph.segments.push(createBr(marker.format));
+    } else if (paragraph.segments.length > 0) {
+        setParagraphNotImplicit(paragraph);
+    }
 
     insertPoint.paragraph = newParagraph;
 

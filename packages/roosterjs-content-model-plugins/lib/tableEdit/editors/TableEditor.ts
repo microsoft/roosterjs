@@ -65,6 +65,7 @@ export class TableEditor {
     constructor(
         private editor: IEditor,
         public readonly table: HTMLTableElement,
+        public readonly logicalRoot: HTMLDivElement | null,
         private onChanged: () => void,
         private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null,
@@ -287,7 +288,8 @@ export class TableEditor {
                 this.table,
                 this.isRTL,
                 !!isHorizontal,
-                this.onInserted,
+                this.onBeforeEditTable,
+                this.onAfterInsert,
                 this.anchorContainer,
                 this.onEditorCreated
             );
@@ -362,6 +364,7 @@ export class TableEditor {
     };
 
     private onStartTableMove = () => {
+        this.onBeforeEditTable();
         this.isCurrentlyEditing = true;
         this.disposeTableResizer();
         this.disposeTableInserter();
@@ -369,6 +372,7 @@ export class TableEditor {
     };
 
     private onStartResize() {
+        this.onBeforeEditTable();
         this.isCurrentlyEditing = true;
         const range = this.editor.getDOMSelection();
 
@@ -386,7 +390,11 @@ export class TableEditor {
         return this.onFinishEditing();
     };
 
-    private onInserted = () => {
+    private onBeforeEditTable = () => {
+        this.editor.setLogicalRoot(this.logicalRoot);
+    };
+
+    private onAfterInsert = () => {
         this.disposeTableResizer();
         this.onFinishEditing();
     };

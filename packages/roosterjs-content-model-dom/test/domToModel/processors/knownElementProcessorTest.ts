@@ -1,3 +1,4 @@
+import * as blockProcessor from '../../../lib/domToModel/processors/blockProcessor';
 import * as formatContainerProcessor from '../../../lib/domToModel/processors/formatContainerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -634,5 +635,28 @@ describe('knownElementProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Block entity container', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.className = '_E_EBlockEntityContainer';
+
+        spyOn(parseFormat, 'parseFormat');
+        const childProcessorSpy = spyOn(context.elementProcessors, 'child');
+        const blockProcessorSpy = spyOn(blockProcessor, 'blockProcessor').and.callThrough();
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [],
+        });
+
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(0);
+        expect(childProcessorSpy).toHaveBeenCalledWith(group, div, context);
+        expect(blockProcessorSpy).not.toHaveBeenCalled();
     });
 });

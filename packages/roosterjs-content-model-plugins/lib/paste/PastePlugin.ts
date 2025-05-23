@@ -5,12 +5,14 @@ import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { parseLink } from './parsers/linkParser';
+import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import { setProcessor } from './utils/setProcessor';
 import type {
     BeforePasteEvent,
     BorderFormat,
@@ -95,7 +97,11 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const pasteSource = getPasteSource(event, false);
+        const pasteSource = getPasteSource(
+            event,
+            false /* shouldConvertSingleImage */,
+            this.editor.getEnvironment()
+        );
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
@@ -136,6 +142,7 @@ export class PastePlugin implements EditorPlugin {
         addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);
         addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
+        setProcessor(event.domToModelOption, 'button', pasteButtonProcessor);
 
         if (pasteType === 'mergeFormat') {
             addParser(event.domToModelOption, 'block', blockElementParser);

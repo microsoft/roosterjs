@@ -1011,6 +1011,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         wordList: 'l0',
+                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1180,6 +1181,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         wordList: 'l0',
+                                        startNumberOverride: 1,
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',

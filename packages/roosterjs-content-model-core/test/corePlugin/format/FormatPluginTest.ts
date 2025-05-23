@@ -1,5 +1,6 @@
 import * as applyDefaultFormat from '../../../lib/corePlugin/format/applyDefaultFormat';
 import * as applyPendingFormat from '../../../lib/corePlugin/format/applyPendingFormat';
+import * as normalizeFontFamily from 'roosterjs-content-model-dom/lib/domUtils/style/normalizeFontFamily';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createFormatPlugin } from '../../../lib/corePlugin/format/FormatPlugin';
 import { EditorEnvironment, IEditor } from 'roosterjs-content-model-types';
@@ -23,6 +24,26 @@ describe('FormatPlugin', () => {
 
     beforeEach(() => {
         applyPendingFormatSpy = spyOn(applyPendingFormat, 'applyPendingFormat');
+    });
+
+    it('ctor, normalize font family', () => {
+        const normalizeFontFamilySpy = spyOn(
+            normalizeFontFamily,
+            'normalizeFontFamily'
+        ).and.returnValue('Normalized font family');
+        const plugin = createFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial, Helvetica, sans-serif',
+                fontSize: '10px',
+            },
+        });
+        const state = plugin.getState();
+
+        expect(normalizeFontFamilySpy).toHaveBeenCalledWith('Arial, Helvetica, sans-serif');
+        expect(state.defaultFormat).toEqual({
+            fontFamily: 'Normalized font family',
+            fontSize: '10px',
+        });
     });
 
     it('no pending format, trigger key down event', () => {

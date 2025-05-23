@@ -213,20 +213,13 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
 
     switch (key) {
         case 'Enter':
-            if (range.collapsed) {
-                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
-            } else {
-                const helper = editor.getDOMHelper();
-                const entity = findClosestEntityWrapper(range.startContainer, helper);
+            const helper = editor.getDOMHelper();
+            const entity = findClosestEntityWrapper(range.startContainer, helper);
 
-                if (
-                    entity &&
-                    isNodeOfType(entity, 'ELEMENT_NODE') &&
-                    helper.isNodeInEditor(entity)
-                ) {
-                    triggerEntityEventOnEnter(editor, entity, rawEvent);
-                }
+            if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
+                triggerEntityEventOnEnter(editor, entity, rawEvent);
             }
+
             break;
 
         case 'ArrowLeft':

@@ -68,7 +68,29 @@ export class EditPlugin implements EditorPlugin {
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
      * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
      */
-    constructor(private options: EditOptions = DefaultOptions) {}
+    constructor(private options: EditOptions = DefaultOptions) {
+        this.options = { ...DefaultOptions, ...options };
+    }
+
+    private createNormalEnterChecker(result: boolean) {
+        return result ? () => true : () => false;
+    }
+
+    private getHandleNormalEnter(editor: IEditor) {
+        switch (typeof this.options.shouldHandleEnterKey) {
+            case 'function':
+                return this.options.shouldHandleEnterKey;
+                break;
+            case 'boolean':
+                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
+                break;
+            default:
+                return this.createNormalEnterChecker(
+                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
+                );
+                break;
+        }
+    }
 
     private createNormalEnterChecker(result: boolean) {
         return result ? () => true : () => false;

@@ -7,7 +7,11 @@ import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
+import type {
+    BeforePasteEvent,
+    ClipboardData,
+    EditorEnvironment,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -17,6 +21,7 @@ export type GetSourceInputParams = {
     fragment: DocumentFragment;
     shouldConvertSingleImage: boolean;
     clipboardData: ClipboardData;
+    environment: EditorEnvironment;
 };
 
 /**
@@ -61,7 +66,8 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
  */
 export function getPasteSource(
     event: BeforePasteEvent,
-    shouldConvertSingleImage: boolean
+    shouldConvertSingleImage: boolean,
+    environment: EditorEnvironment
 ): KnownPasteSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;
 
@@ -71,6 +77,7 @@ export function getPasteSource(
         fragment,
         shouldConvertSingleImage,
         clipboardData,
+        environment,
     };
 
     getSourceFunctions.forEach((func, key) => {

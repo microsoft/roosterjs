@@ -1,6 +1,7 @@
 export { TableEditPlugin } from './tableEdit/TableEditPlugin';
 export { OnTableEditorCreatedCallback } from './tableEdit/OnTableEditorCreatedCallback';
 export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeatureName';
+export { TableWithRoot } from './tableEdit/TableWithRoot';
 export { PastePlugin } from './paste/PastePlugin';
 export { DefaultSanitizers } from './paste/DefaultSanitizers';
 export { EditPlugin, EditOptions } from './edit/EditPlugin';

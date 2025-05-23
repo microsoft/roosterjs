@@ -22,6 +22,7 @@ describe('Content Model Paste Plugin Test', () => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
             getDOMCreator: () => domCreator,
+            getEnvironment: () => ({}),
         } as any) as IEditor;
         spyOn(addParser, 'addParser').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
@@ -65,7 +66,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Excel | merge format', () => {
@@ -83,7 +84,7 @@ describe('Content Model Paste Plugin Test', () => {
                 true
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Excel | image', () => {
@@ -101,7 +102,7 @@ describe('Content Model Paste Plugin Test', () => {
                 true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
         it('Excel', () => {
@@ -118,7 +119,7 @@ describe('Content Model Paste Plugin Test', () => {
                 true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Excel Online', () => {
@@ -135,7 +136,7 @@ describe('Content Model Paste Plugin Test', () => {
                 true /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Power Point', () => {
@@ -150,7 +151,7 @@ describe('Content Model Paste Plugin Test', () => {
                 domCreator
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Wac', () => {
@@ -162,7 +163,7 @@ describe('Content Model Paste Plugin Test', () => {
 
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(3);
         });
 
         it('Default', () => {
@@ -172,7 +173,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(0);
             expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
             expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
@@ -193,7 +194,7 @@ describe('Content Model Paste Plugin Test', () => {
                 false /* isNativeEvent */
             );
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
         it('Default with customized Sanitizing option', () => {
@@ -216,7 +217,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(3);
             expect(event.domToModelOption.additionalAllowedTags.length).toEqual(3);
             expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(2);
@@ -232,7 +233,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(event.domToModelOption.additionalDisallowedTags.length).toEqual(0);
             expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
             expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
@@ -246,7 +247,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
                 PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
             ]);
@@ -260,7 +261,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.onPluginEvent(event);
 
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(3);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
             expect(oneNoteFile.processPastedContentFromOneNote).toHaveBeenCalledWith(event);
         });
     });
