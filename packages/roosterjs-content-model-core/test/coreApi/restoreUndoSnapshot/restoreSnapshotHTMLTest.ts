@@ -1157,6 +1157,53 @@ describe('restoreSnapshotHTML', () => {
         expect(div.childNodes[1]).toBe(container2);
         expect(div.childNodes[1].firstChild).toBe(entityWrapper2);
     });
+
+    it('HTML with block entity at root level, need to clear index of entity delimiter', () => {
+        const snapshot: Snapshot = {
+            html:
+                '<div class="_E_EBlockEntityContainer"><span class="entityDelimiterBefore">\u200B</span><div class="_Entity _EType_A _EId_B1"><br></div><span class="entityDelimiterAfter">\u200B</span></div>',
+        } as any;
+
+        const entityWrapper1 = document.createElement('DIV');
+        const delimiterBefore = document.createElement('span');
+        const delimiterAfter = document.createElement('span');
+        const wrapper = document.createElement('div');
+
+        delimiterBefore.className = 'entityDelimiterBefore';
+        delimiterBefore.innerHTML = '\u200B';
+        delimiterAfter.className = 'entityDelimiterAfter';
+        delimiterAfter.innerHTML = '\u200B';
+        entityWrapper1.id = 'div1';
+
+        wrapper.className = '_E_EBlockEntityContainer';
+        wrapper.appendChild(delimiterBefore);
+        wrapper.appendChild(entityWrapper1);
+        wrapper.appendChild(delimiterAfter);
+
+        div.appendChild(wrapper);
+
+        core.entity.entityMap.B1 = {
+            element: entityWrapper1,
+            canPersist: true,
+        };
+
+        const clearIndexSpy = jasmine.createSpy('clearIndex');
+        core.cache = {
+            domIndexer: {
+                clearIndex: clearIndexSpy,
+            } as any,
+        };
+
+        restoreSnapshotHTML(core, snapshot);
+
+        expect(div.innerHTML).toBe(
+            '<div class="_E_EBlockEntityContainer"><span class="entityDelimiterBefore">\u200B</span><div id="div1"></div><span class="entityDelimiterAfter">\u200B</span></div>'
+        );
+        expect(div.childNodes[0]).toBe(wrapper);
+        expect(clearIndexSpy).toHaveBeenCalledTimes(2);
+        expect(clearIndexSpy).toHaveBeenCalledWith(delimiterBefore);
+        expect(clearIndexSpy).toHaveBeenCalledWith(delimiterAfter);
+    });
 });
 
 function wrapInContainer(entity: HTMLElement) {

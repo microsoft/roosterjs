@@ -4,6 +4,7 @@ import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
+import { isBlockEntityContainer } from '../../domUtils/entityUtils';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import type {
@@ -45,6 +46,8 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         shouldUseFormatContainer(element, context)
     ) {
         formatContainerProcessor(group, element, context);
+    } else if (isBlockEntityContainer(element)) {
+        context.elementProcessors.child(group, element, context);
     } else if (isBlock) {
         const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;
         const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;

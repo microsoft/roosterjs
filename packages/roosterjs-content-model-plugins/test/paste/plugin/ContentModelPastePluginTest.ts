@@ -22,6 +22,7 @@ describe('Content Model Paste Plugin Test', () => {
         editor = ({
             getTrustedHTMLHandler: () => trustedHTMLHandler,
             getDOMCreator: () => domCreator,
+            getEnvironment: () => ({}),
         } as any) as IEditor;
         spyOn(addParser, 'addParser').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();

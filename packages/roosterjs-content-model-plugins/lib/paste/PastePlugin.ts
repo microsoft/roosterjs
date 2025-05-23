@@ -99,7 +99,11 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const pasteSource = getPasteSource(event, false);
+        const pasteSource = getPasteSource(
+            event,
+            false /* shouldConvertSingleImage */,
+            this.editor.getEnvironment()
+        );
         const pasteType = event.pasteType;
 
         switch (pasteSource) {

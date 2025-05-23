@@ -70,6 +70,7 @@ describe('Paste from Excel non native', () => {
                                         borderBottom: '1px solid rgb(212, 212, 212)',
                                         borderLeft: '1px solid rgb(212, 212, 212)',
                                         width: '50pt',
+                                        height: '14px',
                                     },
                                     dataset: {},
                                 },
