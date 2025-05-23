@@ -1,3 +1,4 @@
+import { createClonedRoot } from './createClonedRoot';
 import {
     contentModelToDom,
     contentModelToText,
@@ -55,12 +56,11 @@ export function exportContent(
                 optionsOrCallbacks as ModelToTextCallbacks
             );
         } else {
-            const doc = editor.getDocument();
-            const div = doc.createElement('div');
+            const body = createClonedRoot();
 
             contentModelToDom(
-                doc,
-                div,
+                null /*doc*/,
+                body,
                 model,
                 createModelToDomContext(
                     undefined /*editorContext*/,
@@ -68,9 +68,9 @@ export function exportContent(
                 )
             );
 
-            editor.triggerEvent('extractContentWithDom', { clonedRoot: div }, true /*broadcast*/);
+            editor.triggerEvent('extractContentWithDom', { clonedRoot: body }, true /*broadcast*/);
 
-            return div.innerHTML;
+            return body.innerHTML;
         }
     }
 }

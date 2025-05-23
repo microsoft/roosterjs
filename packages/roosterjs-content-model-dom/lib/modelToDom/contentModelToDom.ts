@@ -10,7 +10,7 @@ import type {
 
 /**
  * Create DOM tree fragment from Content Model document
- * @param doc Document object of the target DOM tree
+ * @param _doc This parameter is not used in this function, but it is kept for compatibility with other functions
  * @param root Target node that will become the container of new DOM tree.
  * When a DOM node with existing node is passed, it will be merged with content model so that unchanged blocks
  * won't be touched.
@@ -19,11 +19,12 @@ import type {
  * @returns The selection range created in DOM tree from this model, or null when there is no selection
  */
 export function contentModelToDom(
-    doc: Document,
+    _doc: Document | null,
     root: Node,
     model: ContentModelDocument,
     context: ModelToDomContext
 ): DOMSelection | null {
+    const doc = document.implementation.createHTMLDocument('');
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
     const range = extractSelectionRange(doc, context);
