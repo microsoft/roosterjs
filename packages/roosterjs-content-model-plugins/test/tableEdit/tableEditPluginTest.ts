@@ -95,7 +95,7 @@ describe('TableEditPlugin', () => {
 
         spyOn(plugin, 'setTableEditor').and.callThrough();
 
-        plugin.setTableEditor(table);
+        plugin.setTableEditor({ table, logicalRoot: null });
 
         if (mouseOutListener) {
             const boundedListener = mouseOutListener.bind(ele);
@@ -131,7 +131,7 @@ describe('TableEditPlugin', () => {
 
         spyOn(plugin, 'setTableEditor').and.callThrough();
 
-        plugin.setTableEditor(table);
+        plugin.setTableEditor({ table, logicalRoot: null });
 
         if (mouseOutListener) {
             const boundedListener = mouseOutListener.bind(ele);
@@ -199,7 +199,7 @@ describe('TableEditPlugin', () => {
 
         spyOn(plugin, 'setTableEditor').and.callThrough();
 
-        plugin.setTableEditor(table);
+        plugin.setTableEditor({ table, logicalRoot: null });
 
         if (mouseOutListener) {
             const boundedListener = mouseOutListener.bind(ele);
@@ -235,7 +235,7 @@ describe('TableEditPlugin', () => {
 
         spyOn(plugin, 'setTableEditor').and.callThrough();
 
-        plugin.setTableEditor(table);
+        plugin.setTableEditor({ table, logicalRoot: null });
 
         if (mouseOutListener) {
             const boundedListener = mouseOutListener.bind(ele);

@@ -29,7 +29,7 @@ describe('OneNote', () => {
     it('OneNote', () => {
         paste(editor!, oneNoteClipboardContent1, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
 
@@ -1575,7 +1575,7 @@ describe('OneNote', () => {
     it('OneNote 2', () => {
         paste(editor!, oneNoteClipboardContent2, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
 
@@ -3233,7 +3233,7 @@ describe('OneNote', () => {
     it('OneNote 3', () => {
         paste(editor!, oneNoteClipboardContent3, 'normal');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(oneNote.processPastedContentFromOneNote).toHaveBeenCalledTimes(1);
 

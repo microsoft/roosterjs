@@ -1,15 +1,20 @@
 import { splitSelectedParagraphByBr } from '../block/splitSelectedParagraphByBr';
 import {
+    copyFormat,
     createListItem,
     createListLevel,
     getOperationalBlocks,
     isBlockGroupOfType,
+    ListFormats,
+    ListFormatsToKeep,
+    ListFormatsToMove,
     mutateBlock,
     normalizeContentModel,
     setParagraphNotImplicit,
     updateListMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelBlockFormat,
     ContentModelListItem,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
@@ -54,19 +59,9 @@ export function setListType(
             }
 
             if (alreadyInExpectedType) {
-                //if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
+                // if the list item has margins or textAlign, we need to apply them to the block to preserve the indention and alignment
                 block.blocks.forEach(x => {
-                    if (block.format.marginLeft) {
-                        x.format.marginLeft = block.format.marginLeft;
-                    }
-
-                    if (block.format.marginRight) {
-                        x.format.marginRight = block.format.marginRight;
-                    }
-
-                    if (block.format.textAlign) {
-                        x.format.textAlign = block.format.textAlign;
-                    }
+                    copyFormat<ContentModelBlockFormat>(x.format, block.format, ListFormats);
                 });
             }
         } else {
@@ -109,19 +104,17 @@ export function setListType(
 
                     newListItem.blocks.push(mutableBlock);
 
-                    if (mutableBlock.format.marginRight) {
-                        newListItem.format.marginRight = mutableBlock.format.marginRight;
-                        mutableBlock.format.marginRight = undefined;
-                    }
-
-                    if (mutableBlock.format.marginLeft) {
-                        newListItem.format.marginLeft = mutableBlock.format.marginLeft;
-                        mutableBlock.format.marginLeft = undefined;
-                    }
-
-                    if (mutableBlock.format.textAlign) {
-                        newListItem.format.textAlign = mutableBlock.format.textAlign;
-                    }
+                    copyFormat<ContentModelBlockFormat>(
+                        newListItem.format,
+                        mutableBlock.format,
+                        ListFormatsToMove,
+                        true /*deleteOriginalFormat*/
+                    );
+                    copyFormat<ContentModelBlockFormat>(
+                        newListItem.format,
+                        mutableBlock.format,
+                        ListFormatsToKeep
+                    );
 
                     mutateBlock(parent).blocks.splice(index, 1, newListItem);
                     existingListItems.push(newListItem);

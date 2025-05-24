@@ -23,7 +23,7 @@ describe('splitParagraph', () => {
         para.segments.push(marker, br);
         doc.blocks.push(para);
 
-        const result = splitParagraph(ip, ['direction']);
+        const result = splitParagraph(ip);
 
         const expectedResult: ContentModelParagraph = {
             blockType: 'Paragraph',
@@ -140,6 +140,50 @@ describe('splitParagraph', () => {
                     },
                 },
             ],
+        });
+    });
+
+    it('Implicit paragraph with selection marker only', () => {
+        const group = createContentModelDocument();
+        const paragraph = createParagraph(true);
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(marker);
+        group.blocks.push(paragraph);
+
+        const ip: InsertPoint = {
+            marker: marker,
+            paragraph: paragraph,
+            path: [group],
+        };
+
+        const result = splitParagraph(ip);
+
+        expect(result).toEqual({
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+        });
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+        expect(ip).toEqual({
+            marker: marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+            },
+            path: [group],
         });
     });
 });

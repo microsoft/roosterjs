@@ -18,7 +18,7 @@ const space = ' ';
  * @internal
  The handleTabOnParagraph function will handle the tab key in following scenarios:
  * 1. When the selection is collapsed and the cursor is at the end of a paragraph, add 4 spaces.
- * 2. When the selection is collapsed and the cursor is at the start of a paragraph, call setModelIndention function to indent the whole paragraph
+ * 2. When the selection is collapsed and the cursor is at the start of a paragraph, add 4 spaces.
  * 3. When the selection is collapsed and the cursor is at the middle of a paragraph, add 4 spaces.
  * 4. When the selection is not collapsed, replace the selected range with a single space.
  * 5. When the selection is not collapsed, but all segments are selected, call setModelIndention function to indent the whole paragraph
@@ -38,8 +38,11 @@ export function handleTabOnParagraph(
     const selectedSegments = paragraph.segments.filter(segment => segment.isSelected);
     const isCollapsed =
         selectedSegments.length === 1 && selectedSegments[0].segmentType === 'SelectionMarker';
-    const isAllSelected = paragraph.segments.every(segment => segment.isSelected);
-    if ((paragraph.segments[0].segmentType === 'SelectionMarker' && isCollapsed) || isAllSelected) {
+    const isAllSelected = paragraph.segments.every(
+        segment =>
+            segment.isSelected || (segment.segmentType == 'Text' && segment.text.trim().length == 0)
+    );
+    if (isAllSelected) {
         const { marginLeft, marginRight, direction } = paragraph.format;
         const isRtl = direction === 'rtl';
         if (
@@ -96,6 +99,9 @@ export function handleTabOnParagraph(
 
                 mutateBlock(paragraph).segments.splice(markerIndex, 0, tabText);
             } else {
+                if (markerIndex <= 0) {
+                    return false;
+                }
                 const tabText = paragraph.segments[markerIndex - 1];
                 const tabSpacesLength = tabSpaces.length;
 

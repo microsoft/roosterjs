@@ -1,5 +1,7 @@
 import * as getIntersectedRect from '../../lib/pluginUtils/Rect/getIntersectedRect';
+import { ContentModelTable, EditorOptions, IEditor } from 'roosterjs-content-model-types';
 import { Editor } from 'roosterjs-content-model-core';
+import { getCurrentTable, getTableColumns, getTableRows } from './TableEditTestHelper';
 import { getModelTable } from './tableData';
 import {
     HORIZONTAL_INSERTER_ID,
@@ -7,9 +9,6 @@ import {
     VERTICAL_INSERTER_ID,
     createTableInserter,
 } from '../../lib/tableEdit/editors/features/TableInserter';
-import { ContentModelTable, EditorOptions, IEditor } from 'roosterjs-content-model-types';
-
-import { getCurrentTable, getTableColumns, getTableRows } from './TableEditTestHelper';
 
 describe('Table Inserter tests', () => {
     let editor: IEditor;
@@ -78,6 +77,7 @@ describe('Table Inserter tests', () => {
             target as HTMLTableElement,
             inserterType == HORIZONTAL_INSERTER_ID,
             editor,
+            () => {},
             onInsertSpy
         );
 
@@ -141,6 +141,7 @@ describe('Table Inserter tests', () => {
             false,
             false,
             () => {},
+            () => {},
             undefined,
             (editorType, element) => {
                 if (element && editorType == 'VerticalTableInserter') {
@@ -195,6 +196,7 @@ describe('Table Inserter tests', () => {
             },
             false,
             false,
+            () => {},
             () => {},
             undefined,
             (editorType, element) => {
