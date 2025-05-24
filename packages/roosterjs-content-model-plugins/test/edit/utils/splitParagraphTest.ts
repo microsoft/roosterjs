@@ -23,7 +23,7 @@ describe('splitParagraph', () => {
         para.segments.push(marker, br);
         doc.blocks.push(para);
 
-        const result = splitParagraph(ip, ['direction']);
+        const result = splitParagraph(ip);
 
         const expectedResult: ContentModelParagraph = {
             blockType: 'Paragraph',

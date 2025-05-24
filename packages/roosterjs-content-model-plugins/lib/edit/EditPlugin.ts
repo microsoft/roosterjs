@@ -92,26 +92,6 @@ export class EditPlugin implements EditorPlugin {
         }
     }
 
-    private createNormalEnterChecker(result: boolean) {
-        return result ? () => true : () => false;
-    }
-
-    private getHandleNormalEnter(editor: IEditor) {
-        switch (typeof this.options.shouldHandleEnterKey) {
-            case 'function':
-                return this.options.shouldHandleEnterKey;
-                break;
-            case 'boolean':
-                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
-                break;
-            default:
-                return this.createNormalEnterChecker(
-                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
-                );
-                break;
-        }
-    }
-
     /**
      * Get name of this plugin
      */
