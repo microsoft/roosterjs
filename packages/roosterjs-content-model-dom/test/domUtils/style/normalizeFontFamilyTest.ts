@@ -125,4 +125,16 @@ describe('normalizeFontFamily', () => {
     it('font family with dots', () => {
         expect(normalizeFontFamily('A.B')).toBe('"A.B"');
     });
+
+    it('font family has single quote', () => {
+        expect(normalizeFontFamily("'Corbel','Skia',sans-serif")).toBe(
+            "'Corbel', 'Skia', sans-serif"
+        );
+    });
+
+    it('mixed single quoted and double quoted font families', () => {
+        expect(normalizeFontFamily('"Corbel",\'Skia\',sans-serif')).toBe(
+            '"Corbel", \'Skia\', sans-serif'
+        );
+    });
 });
