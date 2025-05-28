@@ -3,6 +3,6 @@
     "main": "9.29.0",
     "legacyAdapter": "8.63.2",
     "overrides": {
-        "roosterjs-content-model-dom": "9.29.1"
+        "roosterjs-content-model-dom": "9.29.2"
     }
 }
