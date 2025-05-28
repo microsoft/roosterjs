@@ -59,6 +59,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         unwrap(li);
     }
 
+    // Add role="presentation" to all generic role elements inside the LI element
+    // This is to make sure the elements are announced correctly by screen readers
+    // when using arrow keys to navigate the list.
     for (let index = 0; index < li.children.length; index++) {
         const element = li.children.item(index);
         if (isGenericRoleElement(element)) {
