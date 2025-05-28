@@ -219,6 +219,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
+            this.state.mouseDisposer?.();
             this.state.mouseDisposer = editor.attachDomEvent({
                 mousemove: {
                     beforeDispatch: this.onMouseMove,
@@ -350,6 +351,26 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'table':
+                // After a content change event is handled tableSelection state is reset to null
+                // Since we have table selection from DOMSelection, we can use it to re-create the tableSelection state
+                if (this.state.tableSelection == null) {
+                    const { table, firstRow, firstColumn, lastRow, lastColumn } = selection;
+
+                    const parsedTable = parseTableCells(table);
+                    if (parsedTable) {
+                        const firstCo = { row: firstRow, col: firstColumn };
+                        const lastCo = { row: lastRow, col: lastColumn };
+
+                        // Create the tableSelection with current table info
+                        this.state.tableSelection = {
+                            table,
+                            parsedTable,
+                            firstCo,
+                            lastCo,
+                            startNode: findTableCellElement(parsedTable, firstCo)?.cell || table,
+                        };
+                    }
+                }
                 if (this.state.tableSelection?.lastCo) {
                     const { shiftKey, key } = rawEvent;
 

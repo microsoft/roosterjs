@@ -167,7 +167,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
@@ -178,7 +178,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
@@ -189,7 +189,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
@@ -200,7 +200,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
@@ -211,7 +211,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
@@ -223,7 +223,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(9);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
@@ -234,7 +234,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
         expect(addParserF.addParser).toHaveBeenCalledTimes(11);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
@@ -245,7 +245,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(0);
     });
@@ -256,7 +256,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.addParser).toHaveBeenCalledTimes(4);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(0);
     });
@@ -267,7 +267,7 @@ describe('paste with content model & paste plugin', () => {
 
         paste(editor!, clipboardData, 'asPlainText');
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
         expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
