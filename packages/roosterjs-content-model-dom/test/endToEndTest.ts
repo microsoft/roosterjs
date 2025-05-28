@@ -186,7 +186,8 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'test',
-            '<ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div role="presentation" style="font-size: 12pt;"><b>test</b></div></li></ul>'
+            '<ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div role="presentation" style="font-size: 12pt;"><b>test</b></div></li></ul>',
+            '<ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div style="font-size: 12pt;" role="presentation"><b>test</b></div></li></ul>'
         );
     });
 
