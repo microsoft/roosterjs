@@ -5,7 +5,7 @@
  * @returns The normalized font family string
  */
 export function normalizeFontFamily(fontFamily: string): string {
-    const existingQuotedFontsRegex = /".*?"/g;
+    const existingQuotedFontsRegex = /(".*?")|('.*?')/g;
     let match = existingQuotedFontsRegex.exec(fontFamily);
     let start = 0;
     const result: string[] = [];

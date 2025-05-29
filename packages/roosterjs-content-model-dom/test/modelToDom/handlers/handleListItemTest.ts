@@ -5,7 +5,7 @@ import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createText } from '../../../lib';
+import { createTable, createTableCell, createText } from '../../../lib';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
 import {
     ContentModelBlockGroup,
@@ -266,7 +266,7 @@ describe('handleListItem without format handler', () => {
         const result = handleListItem(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div>test</div></li></ul></div>'
+            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div role="presentation">test</div></li></ul></div>'
         );
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -312,7 +312,7 @@ describe('handleListItem without format handler', () => {
         const result = handleListItem(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div><span style="font-size: 12pt; color: green;">test</span></div></li></ul></div>'
+            '<div><ul><li style="font-family: Arial; font-size: 10pt; color: red;"><div role="presentation"><span style="font-size: 12pt; color: green;">test</span></div></li></ul></div>'
         );
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -372,5 +372,56 @@ describe('handleListItem without format handler', () => {
             addedBlockElements: [document.createElement('li')],
             removedBlockElements: [],
         });
+    });
+
+    it('Dont apply role=presentation to table inside list', () => {
+        const listLevel0 = createListLevel('OL');
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [],
+            format: {},
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: false,
+            },
+            levels: [listLevel0],
+        };
+
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+        const text4 = createText('test4');
+
+        const table = createTable(2);
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        const para4 = createParagraph();
+        para4.segments.push(text4);
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+
+        listItem.blocks.push(para1);
+        listItem.blocks.push(para2);
+        listItem.blocks.push(para3);
+
+        listItem.blocks.push(table);
+        listItem.blocks.push(para4);
+
+        const parent = document.createElement('div');
+
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.innerHTML).toEqual(
+            '<ol start="1"><li><div role="presentation">test1</div><div role="presentation">test2</div><div role="presentation">test3</div><table><tbody><tr><td></td><td></td></tr></tbody></table><div role="presentation">test4</div></li></ol>'
+        );
     });
 });

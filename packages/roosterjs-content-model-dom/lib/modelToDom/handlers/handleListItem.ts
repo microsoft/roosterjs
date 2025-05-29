@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { isGenericRoleElement } from '../../domUtils/isGenericRoleElement';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
@@ -8,6 +9,9 @@ import type {
     ContentModelListItem,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
+
+const HtmlRoleAttribute = 'role';
+const PresentationRoleValue = 'presentation';
 
 /**
  * @internal
@@ -53,6 +57,16 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
 
         unwrap(li);
+    }
+
+    // Add role="presentation" to all generic role elements inside the LI element
+    // This is to make sure the elements are announced correctly by screen readers
+    // when using arrow keys to navigate the list.
+    for (let index = 0; index < li.children.length; index++) {
+        const element = li.children.item(index);
+        if (isGenericRoleElement(element)) {
+            element.setAttribute(HtmlRoleAttribute, PresentationRoleValue);
+        }
     }
 
     context.onNodeCreated?.(listItem, li);
