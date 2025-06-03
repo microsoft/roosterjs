@@ -1,3 +1,4 @@
+import { getStyles } from '../utils/getStyles';
 import { processAsListItem, setupListFormat } from '../utils/customListUtils';
 import {
     getListStyleTypeFromString,
@@ -21,6 +22,7 @@ const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const WORD_FIRST_LIST = 'l0';
 const TEMPLATE_VALUE_REGEX = /%[0-9a-zA-Z]+/g;
+const BULLET_METADATA = 'bullet';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
@@ -32,7 +34,6 @@ interface WordListFormat extends ContentModelListItemFormat {
     wordList?: string;
 }
 
-const BULLET_METADATA = 'bullet';
 /**
  * @internal
  * @param styles
@@ -95,11 +96,18 @@ export function processWordList(
               }
             : undefined;
 
-        processAsListItem(context, element, group, listFormatMetadata, listItem => {
-            if (listType == 'OL') {
-                setStartNumber(listItem, context, listMetadata, element);
+        processAsListItem(
+            context,
+            element,
+            group,
+            listFormatMetadata,
+            getBulletElement(element),
+            listItem => {
+                if (listType == 'OL') {
+                    setStartNumber(listItem, context, listMetadata, element);
+                }
             }
-        });
+        );
 
         if (
             listFormat.levels.length > 0 &&
@@ -225,4 +233,46 @@ function wordListPaddingParser(
     if (element.style.marginRight && element.style.marginRight != '0in') {
         format.paddingRight = '0px';
     }
+}
+/**
+ * Get the bullet element from word list item.
+ * The first element of the list contains the bullet element, which contains the mso-list:ignore style.
+ * @example
+ *  <p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>
+ *      <![if !supportLists]>
+ *          <span lang=EN-US style='mso-fareast-font-family:Aptos;mso-fareast-theme-font:minor-latin; mso-bidi-font-family:Aptos;mso-bidi-theme-font:minor-latin;color:#C00000; mso-ansi-language:EN-US'>
+ *              <span style='mso-list:Ignore'> <-- This is the bullet element
+ *                  1.
+ *                  <span style='font:7.0pt "Times New Roman"'>
+ *                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ *                  </span>
+ *              </span>
+ *          </span>
+ *      <![endif]>
+ *      <span lang=EN-US style='color:#C00000; mso-ansi-language:EN-US'>
+ *          Content in list<o:p></o:p>
+ *      </span>
+ *  </p>
+ * @returns
+ */
+function getBulletElement(element: HTMLElement): HTMLElement | undefined {
+    const firstChild = element.firstElementChild;
+    let isBulletElement = false;
+
+    if (firstChild) {
+        for (let i = 0; i < firstChild.childNodes.length; i++) {
+            const child = firstChild.childNodes[i];
+            if (isNodeOfType(child, 'ELEMENT_NODE')) {
+                const styles = getStyles(child);
+                const wordListStyle = styles[MSO_LIST] || '';
+
+                if (wordListStyle.toLowerCase() === MSO_LIST_IGNORE) {
+                    isBulletElement = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return firstChild && isBulletElement ? (firstChild as HTMLElement) : undefined;
 }

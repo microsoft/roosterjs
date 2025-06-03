@@ -17,6 +17,7 @@ import type {
     ContentModelListItemLevelFormat,
     ContentModelListItemFormat,
     FormatParser,
+    ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 const removeMargin = (format: ContentModelListItemFormat): void => {
@@ -61,6 +62,7 @@ export function processAsListItem(
     element: HTMLElement,
     group: ContentModelBlockGroup,
     listFormatMetadata: ListMetadataFormat | undefined,
+    bulletElement: HTMLElement | undefined,
     beforeProcessingChildren?: (listItem: ContentModelListItem) => void
 ) {
     const listFormat = context.listFormat;
@@ -80,6 +82,11 @@ export function processAsListItem(
         listItem.format,
         context
     );
+    if (bulletElement) {
+        const format: ContentModelSegmentFormat = { ...context.segmentFormat };
+        parseFormat(bulletElement, context.formatParsers.segmentOnBlock, format, context);
+        listItem.formatHolder.format = format;
+    }
 
     beforeProcessingChildren?.(listItem);
 

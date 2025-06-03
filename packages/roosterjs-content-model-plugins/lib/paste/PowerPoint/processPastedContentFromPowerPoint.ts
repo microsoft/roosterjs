@@ -87,10 +87,7 @@ export function processPastedContentFromPowerPoint(
             };
 
             // Process the Div element as a list item.
-            processAsListItem(context, element, group, listMetadata, listItem => {
-                const currentMarkerSize = listItem.formatHolder.format.fontSize;
-                const bulletElementSize = bulletElement.parentElement?.style.fontSize;
-                listItem.formatHolder.format.fontSize = bulletElementSize || currentMarkerSize;
+            processAsListItem(context, element, group, listMetadata, bulletElement, listItem => {
                 if (isNewList) {
                     listItem.levels[
                         listItem.levels.length - 1
