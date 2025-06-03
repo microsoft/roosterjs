@@ -14,7 +14,7 @@ export function createPasteFragment(
     pasteType: PasteType,
     root: HTMLElement | undefined
 ): DocumentFragment {
-    if (!clipboardData.text && pasteType == 'asPlainText' && root) {
+    if (!clipboardData.text && pasteType === 'asPlainText' && root) {
         clipboardData.text = root.textContent || clipboardData.text;
     }
 
