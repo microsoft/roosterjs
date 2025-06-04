@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.05% </span>
+                <span class="strong">95.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>316/329</span>
+                <span class='fraction'>314/329</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.52% </span>
+                <span class="strong">82.84% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>365/437</span>
+                <span class='fraction'>362/437</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.89% </span>
+                <span class="strong">95.25% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>303/316</span>
+                <span class='fraction'>301/316</span>
             </div>
         
             
@@ -965,11 +965,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">449x</span>
+<span class="cline-any cline-yes">457x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">449x</span>
+<span class="cline-any cline-yes">457x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">19x</span>
@@ -1471,16 +1471,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-yes">63x</span>
-<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1488,17 +1488,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-yes">683x</span>
+<span class="cline-any cline-yes">1054x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1589,8 +1589,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">89x</span>
-<span class="cline-any cline-yes">89x</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-yes">69x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -2252,9 +2252,9 @@ class SelectionPlugin implements PluginWithState&lt;SelectionPluginState&gt; {
             this.setDOMSelection(this.state.selection, this.state.tableSelection);
         }
 &nbsp;
-        if (this.state.selection?.type == 'range' &amp;&amp; !this.isSafari) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (this.state.selection?.type == 'range' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!this.isSafari)</span> {
             // Editor is focused, now we can get live selection. So no need to keep a selection if the selection type is range.
-            this.state.selection = null;
+<span class="cstat-no" title="statement not covered" >            this.state.selection = null;</span>
         }
 &nbsp;
         if (this.scrollTopCache &amp;&amp; this.editor) {
@@ -2266,8 +2266,8 @@ class SelectionPlugin implements PluginWithState&lt;SelectionPluginState&gt; {
 &nbsp;
     private onBlur = () =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
-            if (!this.state.selection) {
-                this.state.selection = this.editor.getDOMSelection();
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.state.selection) {
+<span class="cstat-no" title="statement not covered" >                this.state.selection = this.editor.getDOMSelection();</span>
             }
             const sc = this.editor.getScrollContainer();
             this.scrollTopCache = sc.scrollTop;
@@ -2395,7 +2395,7 @@ export function createSelectionPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 28 2025 18:03:18 GMT+0000 (Coordinated Universal Time)
+                at Wed Jun 04 2025 15:15:55 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
