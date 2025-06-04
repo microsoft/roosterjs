@@ -66,10 +66,9 @@ export function processAsListItem(
     beforeProcessingChildren?: (listItem: ContentModelListItem) => void
 ) {
     const listFormat = context.listFormat;
-    if (listFormatMetadata) {
-        updateListMetadata(listFormat.levels[listFormat.levels.length - 1], metadata =>
-            Object.assign({}, metadata, listFormatMetadata)
-        );
+    const lastLevel = listFormat.levels[listFormat.levels.length - 1];
+    if (listFormatMetadata && lastLevel) {
+        updateListMetadata(lastLevel, metadata => Object.assign({}, metadata, listFormatMetadata));
     }
 
     const listItem = createListItem(listFormat.levels, context.segmentFormat);
