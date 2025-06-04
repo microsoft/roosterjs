@@ -223,6 +223,7 @@ export class DomIndexerImpl implements DomIndexer {
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
     ): boolean {
+        let selectionMarker: ContentModelSelectionMarker | undefined;
         if (oldSelection) {
             if (
                 oldSelection.type == 'range' &&
@@ -232,6 +233,20 @@ export class DomIndexerImpl implements DomIndexer {
             ) {
                 this.reconcileTextSelection(oldSelection.start.node);
             } else {
+                if (
+                    oldSelection.type == 'range' &&
+                    this.isCollapsed(oldSelection) &&
+                    newSelection.type == 'range' &&
+                    newSelection.range.commonAncestorContainer.parentElement ==
+                        oldSelection.start.node &&
+                    isIndexedSegment(newSelection.range.commonAncestorContainer) &&
+                    newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
+                        .segments[0].segmentType == 'SelectionMarker'
+                ) {
+                    selectionMarker =
+                        newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
+                            .segments[0];
+                }
                 setSelection(model);
             }
         }
@@ -301,7 +316,12 @@ export class DomIndexerImpl implements DomIndexer {
 
                         return (
                             isIndexedSegment(startContainer) &&
-                            !!this.reconcileTextSelection(startContainer, startOffset, endOffset)
+                            !!this.reconcileTextSelection(
+                                startContainer,
+                                startOffset,
+                                endOffset,
+                                selectionMarker
+                            )
                         );
                     } else {
                         const marker1 = this.reconcileNodeSelection(startContainer, startOffset);
@@ -444,7 +464,8 @@ export class DomIndexerImpl implements DomIndexer {
     private reconcileTextSelection(
         textNode: IndexedSegmentNode,
         startOffset?: number,
-        endOffset?: number
+        endOffset?: number,
+        selectionMarker?: ContentModelSelectionMarker
     ) {
         const { paragraph, segments } = textNode.__roosterjsContentModel;
         const first = segments[0];
@@ -468,7 +489,7 @@ export class DomIndexerImpl implements DomIndexer {
                 }
 
                 if (endOffset === undefined) {
-                    const marker = createSelectionMarker(first.format);
+                    const marker = createSelectionMarker(selectionMarker?.format ?? first.format);
                     newSegments.push(marker);
 
                     if (startOffset < (textNode.nodeValue ?? '').length) {
@@ -486,7 +507,7 @@ export class DomIndexerImpl implements DomIndexer {
                 } else if (endOffset > startOffset) {
                     const middle = createText(
                         txt.substring(startOffset, endOffset),
-                        first.format,
+                        selectionMarker?.format ?? first.format,
                         first.link,
                         first.code
                     );
@@ -544,7 +565,8 @@ export class DomIndexerImpl implements DomIndexer {
 
             if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
                 const marker = createSelectionMarker(
-                    (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
+                    selectionMarker?.format ??
+                        (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
                 );
 
                 paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
