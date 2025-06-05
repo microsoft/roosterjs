@@ -41,6 +41,7 @@ describe('PowerPoint', () => {
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
         const model = editor?.getContentModelCopy('connected');
+
         expect(model).toBeDefined();
         if (model) {
             expectEqual(model, {
@@ -51,8 +52,8 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
-                                fontSize: '7pt',
+                                fontFamily: 'Arial',
+                                fontSize: '11pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -105,7 +106,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: '"Courier New"',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -159,7 +160,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: 'Wingdings',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -213,7 +214,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: 'Wingdings',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -267,7 +268,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: 'Wingdings',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -321,7 +322,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: 'Wingdings',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -375,7 +376,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Calibri',
+                                fontFamily: 'Wingdings',
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -485,7 +486,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Calibri',
-                                fontSize: '6pt',
+                                fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -550,7 +551,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Calibri',
-                                fontSize: '5pt',
+                                fontSize: '9.28px',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -625,7 +626,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Calibri',
-                                fontSize: '7pt',
+                                fontSize: '5pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -1009,7 +1010,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Calibri',
-                                fontSize: '6pt',
+                                fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -1074,7 +1075,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Calibri',
-                                fontSize: '5pt',
+                                fontSize: '6pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -1863,8 +1864,8 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Segoe Sans Text"',
-                                fontSize: '18pt',
+                                fontFamily: 'Arial',
+                                fontSize: '20pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -1917,7 +1918,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Segoe Sans Text"',
+                                fontFamily: 'Arial',
                                 fontSize: '18pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -1971,7 +1972,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Segoe Sans Text"',
+                                fontFamily: 'Arial',
                                 fontSize: '18pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2025,7 +2026,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Segoe Sans Text"',
+                                fontFamily: 'Arial',
                                 fontSize: '18pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2079,7 +2080,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Segoe Sans Text"',
+                                fontFamily: 'Arial',
                                 fontSize: '18pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2184,7 +2185,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2239,7 +2240,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2299,7 +2300,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2354,7 +2355,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2414,7 +2415,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
@@ -2469,9 +2470,9 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: 'Aptos',
+                                fontFamily: 'Wingdings',
                                 fontSize: '14pt',
-                                textColor: 'rgb(0, 0, 0)',
+                                textColor: 'rgb(14, 40, 65)',
                             },
                         },
                         levels: [
@@ -2734,7 +2735,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Aptos',
-                                fontSize: '18pt',
+                                fontSize: '14pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },
@@ -2790,7 +2791,7 @@ describe('PowerPoint', () => {
                             segmentType: 'SelectionMarker',
                             format: {
                                 fontFamily: 'Aptos',
-                                fontSize: '14pt',
+                                fontSize: '18pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                         },

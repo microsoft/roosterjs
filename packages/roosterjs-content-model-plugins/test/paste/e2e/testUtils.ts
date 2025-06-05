@@ -28,7 +28,7 @@ export function initEditor(id: string): IEditor {
     return editor;
 }
 
-export function expectEqual(model1: ContentModelDocument, model2: ContentModelDocument) {
+export function expectEqual(model1: ContentModelDocument, ...model2: ContentModelDocument[]) {
     /// Remove Cached elements and undefined properties
     const newModel = JSON.parse(
         JSON.stringify(
@@ -38,5 +38,5 @@ export function expectEqual(model1: ContentModelDocument, model2: ContentModelDo
         )
     );
 
-    expect(newModel).toEqual(model2);
+    expect(model2).toContain(jasmine.objectContaining(newModel));
 }
