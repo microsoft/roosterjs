@@ -44,6 +44,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
+    private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
     private scrollTopCache: number = 0;
@@ -120,6 +121,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.disposer = null;
         }
 
+        this.logicalRootDisposer?.();
+        this.logicalRootDisposer = null;
+
         this.detachMouseEvent();
         this.editor = null;
     }
@@ -153,6 +157,22 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case 'scroll':
                 if (!this.editor.hasFocus()) {
                     this.scrollTopCache = event.scrollContainer.scrollTop;
+                }
+                break;
+
+            case 'logicalRootChanged':
+                this.logicalRootDisposer?.();
+                if (this.isSafari) {
+                    this.logicalRootDisposer = this.editor.attachDomEvent({
+                        focus: { beforeDispatch: this.onFocus },
+                        drop: { beforeDispatch: this.onDrop },
+                    });
+                } else {
+                    this.logicalRootDisposer = this.editor.attachDomEvent({
+                        focus: { beforeDispatch: this.onFocus },
+                        blur: { beforeDispatch: this.onBlur },
+                        drop: { beforeDispatch: this.onDrop },
+                    });
                 }
                 break;
         }

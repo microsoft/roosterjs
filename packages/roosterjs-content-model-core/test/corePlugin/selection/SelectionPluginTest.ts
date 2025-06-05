@@ -3133,3 +3133,146 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
+
+describe('SelectionPlugin handle logical root change', () => {
+    let plugin: PluginWithState<SelectionPluginState>;
+    let disposer: jasmine.Spy;
+    let logicalRootDisposer: jasmine.Spy;
+    let attachDomEvent: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let editor: IEditor;
+
+    beforeEach(() => {
+        plugin = createSelectionPlugin({});
+        disposer = jasmine.createSpy('disposer');
+        logicalRootDisposer = jasmine.createSpy('logicalRootDisposer');
+        attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+    });
+
+    it('handles logical root change - non Safari', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: false,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // Reset the spy calls before the logicalRootChanged event
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+
+        // Trigger logicalRootChanged event
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that attachDomEvent was called for logical root with correct events
+        expect(attachDomEvent).toHaveBeenCalledTimes(1);
+        expect(attachDomEvent).toHaveBeenCalledWith({
+            focus: { beforeDispatch: jasmine.any(Function) },
+            blur: { beforeDispatch: jasmine.any(Function) },
+            drop: { beforeDispatch: jasmine.any(Function) },
+        });
+
+        // Dispose should clean up all event listeners including logicalRoot disposers
+        plugin.dispose();
+        expect(logicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
+        expect(removeEventListenerSpy).toHaveBeenCalled();
+    });
+
+    it('handles logical root change - Safari', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // Reset the spy calls before the logicalRootChanged event
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+
+        // Trigger logicalRootChanged event
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that attachDomEvent was called for logical root with correct events
+        expect(attachDomEvent).toHaveBeenCalledTimes(1);
+        expect(attachDomEvent).toHaveBeenCalledWith({
+            focus: { beforeDispatch: jasmine.any(Function) },
+            drop: { beforeDispatch: jasmine.any(Function) },
+        });
+
+        // Dispose should clean up all event listeners including logicalRoot disposers
+        plugin.dispose();
+        expect(logicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
+        expect(removeEventListenerSpy).toHaveBeenCalled();
+    });
+
+    it('calls previous logical root disposer when logicalRootChanged is triggered again', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: false,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // First logical root change
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Second logical root change
+        const newLogicalRootDisposer = jasmine.createSpy('newLogicalRootDisposer');
+        attachDomEvent.and.returnValue(newLogicalRootDisposer);
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that the old logical root disposer was called
+        expect(logicalRootDisposer).toHaveBeenCalled();
+
+        // Dispose should clean up all event listeners including the new logicalRoot disposer
+        plugin.dispose();
+        expect(newLogicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
+    });
+});
