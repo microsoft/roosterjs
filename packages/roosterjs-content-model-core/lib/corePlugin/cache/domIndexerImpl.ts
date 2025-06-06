@@ -156,7 +156,10 @@ function unindex(node: Partial<IndexedSegmentNode>) {
  * Implementation of DomIndexer
  */
 export class DomIndexerImpl implements DomIndexer {
-    constructor(private readonly persistCache?: boolean) {}
+    constructor(
+        private readonly persistCache?: boolean,
+        private readonly keepSelectionMarkerWhenEnteringTextNode?: boolean
+    ) {}
 
     onSegment(segmentNode: Node, paragraph: ContentModelParagraph, segment: ContentModelSegment[]) {
         const indexedText = segmentNode as IndexedSegmentNode;
@@ -718,13 +721,15 @@ export class DomIndexerImpl implements DomIndexer {
     ): ContentModelSelectionMarker | undefined {
         // For CJK keyboard input on mobile, we may have a situation like this:
         // User toggle bold/italic/underline on an empty div, the pending format will be applied on the selection marker
-        // then type some text, the selection move to the text node and the selection marker will be recreated during the reconcile and lose its original formatting
+        // then type some text, the selection move to the text node and the selection marker will be recreated during the reconciliation and lose its original formatting
         // In this case, we need to keep the original formatting of the selection marker to match the pending format
 
         if (
+            this.keepSelectionMarkerWhenEnteringTextNode &&
             oldSelection.type == 'range' &&
             this.isCollapsed(oldSelection) &&
             newSelection.type == 'range' &&
+            isNodeOfType(newSelection.range.commonAncestorContainer, 'TEXT_NODE') &&
             newSelection.range.commonAncestorContainer.parentElement == oldSelection.start.node &&
             isIndexedSegment(newSelection.range.commonAncestorContainer) &&
             newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph.segments[0]
