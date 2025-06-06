@@ -14,6 +14,7 @@ import {
     ContentModelDocument,
     ContentModelLink,
     ContentModelSegment,
+    ContentModelSelectionMarker,
     DOMSelection,
 } from 'roosterjs-content-model-types';
 import {
@@ -1165,6 +1166,69 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(result).toBeFalse();
         expect(setSelectionSpy).not.toHaveBeenCalled();
         expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
+    it("Keeps selection marker's format when moving selection from an empty div to a text node inside", () => {
+        domIndexerImpl = new DomIndexerImpl(undefined, true);
+        const divNode = document.createElement('div');
+        const textNode = document.createTextNode('test') as any;
+        divNode.appendChild(textNode);
+        const oldRangeEx: CacheSelection = {
+            type: 'range',
+            start: {
+                node: divNode,
+                offset: 0,
+            },
+            end: {
+                node: divNode,
+                offset: 0,
+            },
+            isReverted: false,
+        };
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(textNode, 0, textNode, 1),
+            isReverted: false,
+        };
+        const paragraph = createParagraph();
+        const oldSelectionMarker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {
+                fontSize: '10pt',
+                fontFamily: 'Arial',
+            },
+            isSelected: true,
+        };
+        const oldSegment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+
+        paragraph.segments.push(oldSelectionMarker, oldSegment);
+        domIndexerImpl.onSegment(textNode, paragraph, [oldSegment]);
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx, oldRangeEx);
+
+        expect(result).toBeTrue();
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {
+                fontSize: '10pt',
+                fontFamily: 'Arial',
+            },
+            isSelected: true,
+        };
+        expect(textNode.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1],
+        });
     });
 });
 
