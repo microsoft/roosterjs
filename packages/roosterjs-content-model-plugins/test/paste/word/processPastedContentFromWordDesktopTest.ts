@@ -328,7 +328,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: {
+                                fontFamily: 'Symbol',
+                            },
                         },
                         format: {},
                     },
@@ -363,7 +365,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: {
+                                fontSize: '2em',
+                                fontWeight: 'bold',
+                                fontFamily: 'Symbol',
+                            },
                         },
                         format: {},
                     },
@@ -417,7 +423,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: { fontFamily: 'Symbol' },
                         },
                         format: {},
                     },
@@ -461,7 +467,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: {
+                                fontSize: '2em',
+                                fontWeight: 'bold',
+                                fontFamily: 'Symbol',
+                            },
                         },
                         format: {},
                     },
@@ -515,7 +525,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: { fontFamily: 'Symbol' },
                         },
                         format: {},
                     },
@@ -567,7 +577,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: {
+                                fontSize: '2em',
+                                fontWeight: 'bold',
+                                fontFamily: 'Symbol',
+                            },
                         },
                         format: {},
                     },
@@ -620,7 +634,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: { fontFamily: 'Symbol' },
                         },
                         format: {},
                     },
@@ -672,7 +686,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: false,
-                            format: {},
+                            format: { fontSize: '2em', fontWeight: 'bold', fontFamily: 'Symbol' },
                         },
                         format: {},
                     },
@@ -774,7 +788,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
                                                     isSelected: false,
-                                                    format: {},
+                                                    format: { fontFamily: 'Symbol' },
                                                 },
                                                 format: {},
                                             },
@@ -827,7 +841,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
                                                     isSelected: false,
-                                                    format: {},
+                                                    format: { fontFamily: 'Symbol' },
                                                 },
                                                 format: {},
                                             },
@@ -871,7 +885,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
                                                     isSelected: false,
-                                                    format: {},
+                                                    format: { fontFamily: 'Symbol' },
                                                 },
                                                 format: {},
                                             },
@@ -942,7 +956,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 formatHolder: {
                                                     segmentType: 'SelectionMarker',
                                                     isSelected: false,
-                                                    format: {},
+                                                    format: { fontFamily: 'Symbol' },
                                                 },
                                                 format: {},
                                             },
@@ -1316,7 +1330,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: { fontFamily: 'Symbol', fontSize: '12pt' },
                             },
                             format: {
                                 marginTop: '0in',
@@ -1386,7 +1400,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: { fontFamily: 'Arial, sans-serif' },
                             },
                             format: {},
                         },
@@ -1422,7 +1436,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: { fontFamily: 'Arial, sans-serif' },
                             },
                             format: {},
                         },
@@ -2459,7 +2473,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 isSelected: false,
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: {
+                                    fontFamily: 'Aptos, sans-serif',
+                                    fontSize: '12pt',
+                                },
                             },
                             levels: [
                                 {
