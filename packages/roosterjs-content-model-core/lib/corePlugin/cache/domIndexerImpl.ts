@@ -233,20 +233,11 @@ export class DomIndexerImpl implements DomIndexer {
             ) {
                 this.reconcileTextSelection(oldSelection.start.node);
             } else {
-                if (
-                    oldSelection.type == 'range' &&
-                    this.isCollapsed(oldSelection) &&
-                    newSelection.type == 'range' &&
-                    newSelection.range.commonAncestorContainer.parentElement ==
-                        oldSelection.start.node &&
-                    isIndexedSegment(newSelection.range.commonAncestorContainer) &&
-                    newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
-                        .segments[0].segmentType == 'SelectionMarker'
-                ) {
-                    selectionMarker =
-                        newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
-                            .segments[0];
-                }
+                selectionMarker = this.selectionMarkerToKeepWhenEnteringTextNode(
+                    oldSelection,
+                    newSelection
+                );
+
                 setSelection(model);
             }
         }
@@ -521,7 +512,7 @@ export class DomIndexerImpl implements DomIndexer {
                 if (endOffset < txt.length) {
                     const newLast = createText(
                         txt.substring(endOffset),
-                        first.format,
+                        selectionMarker?.format ?? first.format,
                         first.link,
                         first.code
                     );
@@ -711,6 +702,30 @@ export class DomIndexerImpl implements DomIndexer {
 
         paragraph.segments.splice(index, 0, text);
         this.onSegment(textNode, paragraph, [text]);
+    }
+
+    private selectionMarkerToKeepWhenEnteringTextNode(
+        oldSelection: CacheSelection,
+        newSelection: DOMSelection
+    ): ContentModelSelectionMarker | undefined {
+        // For CJK keyboard input on mobile, we may have a situation like this:
+        // User toggle bold/italic/underline on an empty div, the pending format will be applied on the selection marker
+        // then type some text, the selection move to the text node and the selection marker will be recreated during the reconcile and lose its original formatting
+        // In this case, we need to keep the original formatting of the selection marker to match the pending format
+
+        if (
+            oldSelection.type == 'range' &&
+            this.isCollapsed(oldSelection) &&
+            newSelection.type == 'range' &&
+            newSelection.range.commonAncestorContainer.parentElement == oldSelection.start.node &&
+            isIndexedSegment(newSelection.range.commonAncestorContainer) &&
+            newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph.segments[0]
+                .segmentType == 'SelectionMarker'
+        ) {
+            return newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
+                .segments[0];
+        }
+        return undefined;
     }
 }
 
