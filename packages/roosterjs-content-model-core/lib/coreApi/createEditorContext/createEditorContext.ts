@@ -20,6 +20,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
         experimentalFeatures: core.experimentalFeatures ?? [],
+        paragraphMap: core.cache.paragraphMap,
         ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 

@@ -1,5 +1,7 @@
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IEditor } from 'roosterjs-content-model-types';
+
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -17,6 +19,7 @@ describe('formatParagraphWithContentModel', () => {
     let editor: IEditor;
     let model: ContentModelDocument;
     let context: FormatContentModelContext;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
 
     const mockedContainer = 'C' as any;
     const mockedOffset = 'O' as any;
@@ -43,6 +46,11 @@ describe('formatParagraphWithContentModel', () => {
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
             formatContentModel,
         } as any) as IEditor;
+
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
     });
 
     it('empty doc', () => {
@@ -58,6 +66,8 @@ describe('formatParagraphWithContentModel', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 
     it('doc with selection', () => {
@@ -92,6 +102,8 @@ describe('formatParagraphWithContentModel', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 
     it('Preserve pending format', () => {
@@ -117,5 +129,7 @@ describe('formatParagraphWithContentModel', () => {
             rawEvent: undefined,
             newPendingFormat: 'preserve',
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 });

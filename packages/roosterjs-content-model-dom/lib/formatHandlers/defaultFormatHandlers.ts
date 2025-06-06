@@ -14,6 +14,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
+import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
@@ -32,6 +33,7 @@ import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { textIndentFormatHandler } from './block/textIndentFormatHandler';
+import { undeletableLinkFormatHandler } from './segment/undeletableLinkFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -67,6 +69,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     entity: entityFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
+    imageState: imageStateFormatHandler,
     italic: italicFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
@@ -85,6 +88,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     textIndent: textIndentFormatHandler,
+    undeletableLink: undeletableLinkFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -188,6 +192,7 @@ export const defaultFormatKeysPerCategory: {
         'display',
         'float',
         'verticalAlign',
+        'imageState',
     ],
     link: [
         'link',
@@ -200,12 +205,13 @@ export const defaultFormatKeysPerCategory: {
         'border',
         'size',
         'textAlign',
+        'undeletableLink',
     ],
     segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
-    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
+    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],
     entity: ['entity'],
     general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode
 };

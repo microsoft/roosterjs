@@ -8,7 +8,7 @@ import {
     normalizeContentModel,
     runEditSteps,
 } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -35,7 +35,7 @@ export function keyboardEnter(
                     ? []
                     : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 
-                if (handleNormalEnter) {
+                if (handleNormalEnter || hasEnterForEntity(result.insertPoint?.paragraph)) {
                     steps.push(handleEnterOnParagraph);
                 }
 
@@ -61,5 +61,12 @@ export function keyboardEnter(
             getChangeData: () => rawEvent.which,
             apiName: 'handleEnterKey',
         }
+    );
+}
+
+function hasEnterForEntity(paragraph: ReadonlyContentModelParagraph | undefined) {
+    return (
+        paragraph &&
+        (paragraph.isImplicit || paragraph.segments.some(x => x.segmentType == 'SelectionMarker'))
     );
 }

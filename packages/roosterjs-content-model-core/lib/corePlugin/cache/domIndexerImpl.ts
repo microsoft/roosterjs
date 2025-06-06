@@ -218,6 +218,10 @@ export class DomIndexerImpl implements DomIndexer {
         }
     }
 
+    clearIndex(container: Node) {
+        internalClearIndex(container);
+    }
+
     reconcileSelection(
         model: ContentModelDocument,
         newSelection: DOMSelection,
@@ -225,13 +229,17 @@ export class DomIndexerImpl implements DomIndexer {
     ): boolean {
         let selectionMarker: ContentModelSelectionMarker | undefined;
         if (oldSelection) {
+            let startNode: Node | undefined;
+
             if (
                 oldSelection.type == 'range' &&
                 this.isCollapsed(oldSelection) &&
-                isNodeOfType(oldSelection.start.node, 'TEXT_NODE') &&
-                isIndexedSegment(oldSelection.start.node)
+                (startNode = oldSelection.start.node) &&
+                isNodeOfType(startNode, 'TEXT_NODE') &&
+                isIndexedSegment(startNode) &&
+                startNode.__roosterjsContentModel.segments.length > 0
             ) {
-                this.reconcileTextSelection(oldSelection.start.node);
+                this.reconcileTextSelection(startNode);
             } else {
                 selectionMarker = this.selectionMarkerToKeepWhenEnteringTextNode(
                     oldSelection,
@@ -743,4 +751,12 @@ function getFirstLeaf(node: Node | null): Node | null {
     }
 
     return node;
+}
+
+function internalClearIndex(container: Node) {
+    unindex(container as IndexedSegmentNode);
+
+    for (let node = container.firstChild; node; node = node.nextSibling) {
+        internalClearIndex(node);
+    }
 }

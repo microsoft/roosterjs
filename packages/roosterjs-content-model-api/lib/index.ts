@@ -45,6 +45,7 @@ export { insertTableRow } from './modelApi/table/insertTableRow';
 export { insertTableColumn } from './modelApi/table/insertTableColumn';
 export { clearSelectedCells } from './modelApi/table/clearSelectedCells';
 
+export { createEditorContextForEntity } from './publicApi/utils/createEditorContextForEntity';
 export { formatTableWithContentModel } from './publicApi/utils/formatTableWithContentModel';
 export { formatImageWithContentModel } from './publicApi/utils/formatImageWithContentModel';
 export { formatParagraphWithContentModel } from './publicApi/utils/formatParagraphWithContentModel';

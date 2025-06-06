@@ -839,4 +839,26 @@ describe('Move up format', () => {
             format: { whiteSpace: 'pre-wrap' },
         });
     });
+
+    it('Paragraph has empty anchor', () => {
+        const para = createParagraph(false, { whiteSpace: 'pre-wrap' });
+        const text = createText(
+            '',
+            {},
+            {
+                dataset: {},
+                format: { name: 'name' },
+            }
+        );
+
+        para.segments.push(text);
+
+        normalizeParagraph(para);
+
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            segments: [text],
+            format: { whiteSpace: 'pre-wrap' },
+        });
+    });
 });

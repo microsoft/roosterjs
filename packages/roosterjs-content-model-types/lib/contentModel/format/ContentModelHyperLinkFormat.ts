@@ -7,6 +7,7 @@ import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
+import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
 /**
@@ -21,4 +22,5 @@ export type ContentModelHyperLinkFormat = LinkFormat &
     PaddingFormat &
     BorderFormat &
     SizeFormat &
-    TextAlignFormat;
+    TextAlignFormat &
+    UndeletableFormat;

@@ -49,7 +49,8 @@ export class Editor implements IEditor {
     constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         this.core = createEditorCore(contentDiv, options);
 
-        const initialModel = options.initialModel ?? createEmptyModel(options.defaultSegmentFormat);
+        const initialModel =
+            options.initialModel ?? createEmptyModel(this.core.format.defaultFormat);
 
         this.core.api.setContentModel(
             this.core,

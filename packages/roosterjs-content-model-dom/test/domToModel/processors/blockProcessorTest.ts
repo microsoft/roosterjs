@@ -12,22 +12,30 @@ describe('blockProcessor', () => {
     let context: DomToModelContext;
     let group: ContentModelDocument;
     let childSpy: jasmine.Spy;
+    let assignMarkerToModelSpy: jasmine.Spy;
 
     beforeEach(() => {
         group = createContentModelDocument();
         childSpy = jasmine.createSpy('child');
+
+        assignMarkerToModelSpy = jasmine.createSpy('assignMarkerToModel');
 
         context = createDomToModelContext(undefined, {
             processorOverride: {
                 child: childSpy,
             },
         });
+
+        context.paragraphMap = {
+            assignMarkerToModel: assignMarkerToModelSpy,
+        } as any;
     });
 
     function runTest(
         element: HTMLElement,
         expectedModel: ContentModelDocument,
         expectContextFormat: ContentModelBlockFormat,
+        paragraphMapCalledTimes: number,
         segmentFormat?: ContentModelSegmentFormat
     ) {
         blockProcessor(group, element, context, segmentFormat);
@@ -37,6 +45,8 @@ describe('blockProcessor', () => {
 
         expect(childSpy).toHaveBeenCalledTimes(1);
         expect(childSpy).toHaveBeenCalledWith(group, element, context);
+
+        expect(assignMarkerToModelSpy).toHaveBeenCalledTimes(paragraphMapCalledTimes);
     }
 
     it('empty DIV', () => {
@@ -54,7 +64,8 @@ describe('blockProcessor', () => {
                     },
                 ],
             },
-            {}
+            {},
+            1
         );
     });
 
@@ -82,7 +93,8 @@ describe('blockProcessor', () => {
                     },
                 ],
             },
-            {}
+            {},
+            1
         );
     });
 
@@ -105,7 +117,8 @@ describe('blockProcessor', () => {
                     },
                 ],
             },
-            { lineHeight: '2' }
+            { lineHeight: '2' },
+            1
         );
     });
 
@@ -130,7 +143,8 @@ describe('blockProcessor', () => {
                     },
                 ],
             },
-            { lineHeight: '2' }
+            { lineHeight: '2' },
+            1
         );
     });
 
@@ -157,7 +171,8 @@ describe('blockProcessor', () => {
                     },
                 ],
             },
-            { marginLeft: '60px', marginRight: '20px' }
+            { marginLeft: '60px', marginRight: '20px' },
+            1
         );
     });
 
@@ -170,7 +185,8 @@ describe('blockProcessor', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            {}
+            {},
+            0
         );
     });
 
@@ -191,6 +207,7 @@ describe('blockProcessor', () => {
                 ],
             },
             {},
+            1,
             {
                 fontSize: '20px',
             }

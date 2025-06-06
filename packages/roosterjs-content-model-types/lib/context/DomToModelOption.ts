@@ -32,7 +32,17 @@ export interface DomToModelOptionForCreateModel extends DomToModelOption {
     /**
      * When set to true, it will try to reuse cached content model if any
      */
-    tryGetFromCache: boolean;
+    tryGetFromCache?: boolean;
+
+    /**
+     * Whether recalculate table size when parse table
+     * 'all' or true means recalculate all tables in the model
+     * 'selected' means recalculate only selected tables in the model
+     * 'none' or false means do not recalculate any table in the model
+     *
+     * When this option is passed, "tryGetFromCache" will be ignored.
+     */
+    recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
 }
 
 /**

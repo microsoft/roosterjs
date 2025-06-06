@@ -1,5 +1,6 @@
 import { extractBorderValues } from '../../domUtils/style/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getImageMetadata } from '../metadata/updateImageMetadata';
 import { getTableMetadata } from '../metadata/updateTableMetadata';
 import { isBold } from '../../domUtils/style/isBold';
 import { iterateSelections } from '../selection/iterateSelections';
@@ -16,6 +17,7 @@ import type {
     ReadonlyContentModelFormatContainer,
     ReadonlyContentModelListItem,
     ReadonlyContentModelDocument,
+    DOMHelper,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,13 +31,21 @@ export function retrieveModelFormatState(
     model: ReadonlyContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState,
-    conflictSolution: ConflictFormatSolution = 'remove'
+    conflictSolution: ConflictFormatSolution = 'remove',
+    domHelper?: DOMHelper
 ) {
     let firstTableContext: ReadonlyTableSelectionContext | undefined;
     let firstBlock: ReadonlyContentModelBlock | undefined;
     let isFirst = true;
     let isFirstImage = true;
     let isFirstSegment = true;
+    let containerFormat: ContentModelSegmentFormat | undefined = undefined;
+
+    const modelFormat = { ...model.format };
+
+    delete modelFormat.italic;
+    delete modelFormat.underline;
+    delete modelFormat.fontWeight;
 
     iterateSelections(
         model,
@@ -59,29 +69,41 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                        const modelFormat = { ...model.format };
+                        let currentFormat = Object.assign(
+                            {},
+                            block.format,
+                            block.decorator?.format,
+                            segment.format,
+                            segment.code?.format,
+                            segment.link?.format,
+                            pendingFormat
+                        );
 
-                        delete modelFormat.italic;
-                        delete modelFormat.underline;
-                        delete modelFormat.fontWeight;
+                        // Sometimes the content may not specify all required format but just leverage the container format to do so.
+                        // In this case, we need to merge the container format into the current format
+                        // to make sure the current format contains all required format.
+                        if (!hasAllRequiredFormat(currentFormat)) {
+                            if (!containerFormat) {
+                                containerFormat = domHelper?.getContainerFormat() ?? modelFormat;
+                            }
+
+                            currentFormat = Object.assign({}, containerFormat, currentFormat);
+                        }
 
                         retrieveSegmentFormat(
                             formatState,
                             isFirst,
-                            Object.assign(
-                                {},
-                                modelFormat,
-                                block.format,
-                                block.decorator?.format,
-                                segment.format,
-                                segment.code?.format,
-                                segment.link?.format,
-                                pendingFormat
-                            ),
+                            currentFormat,
                             conflictSolution
                         );
 
-                        mergeValue(formatState, 'isCodeInline', !!segment?.code, isFirst, conflictSolution);
+                        mergeValue(
+                            formatState,
+                            'isCodeInline',
+                            !!segment?.code,
+                            isFirst,
+                            conflictSolution
+                        );
                     }
 
                     // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
@@ -103,6 +125,7 @@ export function retrieveModelFormatState(
                             isFirstImage = false;
                         } else {
                             formatState.imageFormat = undefined;
+                            formatState.imageEditingMetadata = undefined;
                         }
                     }
                 });
@@ -236,6 +259,7 @@ function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentMo
     const borderColor = extractedBorder.color;
     const borderWidth = extractedBorder.width;
     const borderStyle = extractedBorder.style;
+
     result.imageFormat = {
         borderColor,
         borderWidth,
@@ -243,6 +267,7 @@ function retrieveImageFormat(image: ReadonlyContentModelImage, result: ContentMo
         boxShadow: format.boxShadow,
         borderRadius: format.borderRadius,
     };
+    result.imageEditingMetadata = getImageMetadata(image);
 }
 
 function mergeValue<K extends keyof ContentModelFormatState>(
@@ -251,7 +276,7 @@ function mergeValue<K extends keyof ContentModelFormatState>(
     newValue: ContentModelFormatState[K] | undefined,
     isFirst: boolean,
     conflictSolution: ConflictFormatSolution = 'remove',
-    parseFn: (val: ContentModelFormatState[K]) => ContentModelFormatState[K] = val => val,
+    parseFn: (val: ContentModelFormatState[K]) => ContentModelFormatState[K] = val => val
 ) {
     if (isFirst) {
         if (newValue !== undefined) {
@@ -276,10 +301,17 @@ function mergeValue<K extends keyof ContentModelFormatState>(
 }
 
 function px2Pt(px: string) {
-    if (px && px.indexOf('px') == px.length - 2) {
-        // Edge may not handle the floating computing well which causes the calculated value is a little less than actual value
-        // So add 0.05 to fix it
-        return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
+    if (px) {
+        const index = px.indexOf('px');
+        if (index !== -1 && index === px.length - 2) {
+            // Edge may not handle the floating computing well which causes the calculated value to be a little less than the actual value
+            // So add 0.05 to fix it
+            return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
+        }
     }
     return px;
+}
+
+function hasAllRequiredFormat(format: ContentModelSegmentFormat) {
+    return !!format.fontFamily && !!format.fontSize && !!format.textColor;
 }

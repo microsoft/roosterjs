@@ -1,4 +1,4 @@
-import { isEmpty } from '../../../lib/modelApi/common/isEmpty';
+import { isEmpty, isSegmentEmpty } from '../../../lib/modelApi/common/isEmpty';
 
 describe('isEmpty', () => {
     it('Empty paragraph', () => {
@@ -323,6 +323,97 @@ describe('isEmpty', () => {
             segmentType: 'Br',
             format: {},
             isSelected: true,
+        });
+
+        expect(result).toBeFalse();
+    });
+});
+
+describe('isSegmentEmpty', () => {
+    it('Empty text', () => {
+        const result = isSegmentEmpty({
+            segmentType: 'Text',
+            format: {},
+            text: '',
+        });
+
+        expect(result).toBeTrue();
+    });
+
+    it('Text has only spaces', () => {
+        const result = isSegmentEmpty({
+            segmentType: 'Text',
+            format: {},
+            text: ' \t \r \n ',
+        });
+
+        expect(result).toBeFalse();
+    });
+
+    it('Text has content', () => {
+        const result = isSegmentEmpty({
+            segmentType: 'Text',
+            format: {},
+            text: '  aa  ',
+        });
+
+        expect(result).toBeFalse();
+    });
+
+    it('Empty anchor with treatAnchorAsNotEmpty = false', () => {
+        const result = isSegmentEmpty(
+            {
+                segmentType: 'Text',
+                format: {},
+                text: '',
+                link: {
+                    format: {
+                        name: 'name',
+                    },
+                    dataset: {},
+                },
+            },
+            false
+        );
+
+        expect(result).toBeTrue();
+    });
+
+    it('Empty anchor with treatAnchorAsNotEmpty = true', () => {
+        const result = isSegmentEmpty(
+            {
+                segmentType: 'Text',
+                format: {},
+                text: '',
+                link: {
+                    format: {
+                        name: 'name',
+                    },
+                    dataset: {},
+                },
+            },
+            true
+        );
+
+        expect(result).toBeFalse();
+    });
+
+    it('Br', () => {
+        const result = isSegmentEmpty({
+            segmentType: 'Br',
+            format: {},
+            isSelected: true,
+        });
+
+        expect(result).toBeFalse();
+    });
+
+    it('Image', () => {
+        const result = isSegmentEmpty({
+            segmentType: 'Image',
+            format: {},
+            dataset: {},
+            src: 'src',
         });
 
         expect(result).toBeFalse();

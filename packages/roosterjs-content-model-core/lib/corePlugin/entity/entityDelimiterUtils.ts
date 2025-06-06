@@ -213,20 +213,13 @@ export function handleDelimiterKeyDownEvent(editor: IEditor, event: KeyDownEvent
 
     switch (key) {
         case 'Enter':
-            if (range.collapsed) {
-                handleInputOnDelimiter(editor, range, getFocusedElement(selection), rawEvent);
-            } else {
-                const helper = editor.getDOMHelper();
-                const entity = findClosestEntityWrapper(range.startContainer, helper);
+            const helper = editor.getDOMHelper();
+            const entity = findClosestEntityWrapper(range.startContainer, helper);
 
-                if (
-                    entity &&
-                    isNodeOfType(entity, 'ELEMENT_NODE') &&
-                    helper.isNodeInEditor(entity)
-                ) {
-                    triggerEntityEventOnEnter(editor, entity, rawEvent);
-                }
+            if (entity && isNodeOfType(entity, 'ELEMENT_NODE') && helper.isNodeInEditor(entity)) {
+                triggerEntityEventOnEnter(editor, entity, rawEvent);
             }
+
             break;
 
         case 'ArrowLeft':
@@ -284,8 +277,15 @@ function handleInputOnDelimiter(
             });
         } else {
             if (isEnter) {
-                rawEvent.preventDefault();
-                editor.formatContentModel(handleEnterInlineEntity);
+                editor.formatContentModel((model, context) => {
+                    const result = handleEnterInlineEntity(model, context);
+
+                    if (result) {
+                        rawEvent.preventDefault();
+                    }
+
+                    return result;
+                });
             } else {
                 editor.takeSnapshot();
                 editor
@@ -331,9 +331,14 @@ export const handleEnterInlineEntity: ContentModelFormatter = model => {
     iterateSelections(model, (path, _tableContext, block) => {
         if (block?.blockType == 'Paragraph') {
             readonlySelectionBlock = block;
-            selectionBlockParent = path[path.length - 1];
+            selectionBlockParent = path[0];
         }
     });
+
+    if (selectionBlockParent?.blockGroupType == 'ListItem') {
+        // No need to handle list item since it will be handled by common enter handler code
+        return false;
+    }
 
     if (readonlySelectionBlock && selectionBlockParent) {
         const markerIndex = readonlySelectionBlock.segments.findIndex(

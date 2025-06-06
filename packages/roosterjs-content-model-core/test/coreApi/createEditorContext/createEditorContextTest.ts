@@ -9,6 +9,7 @@ describe('createEditorContext', () => {
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         const domIndexer = 'DOMINDEXER' as any;
         const isRtlSpy = jasmine.createSpy('isRtl');
+        const mockedParagraphMap = 'PARAMAP' as any;
 
         const div = {
             ownerDocument: {},
@@ -26,6 +27,7 @@ describe('createEditorContext', () => {
             darkColorHandler,
             cache: {
                 domIndexer: domIndexer,
+                paragraphMap: mockedParagraphMap,
             },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
@@ -46,6 +48,7 @@ describe('createEditorContext', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 
@@ -56,6 +59,7 @@ describe('createEditorContext', () => {
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         const isRtlSpy = jasmine.createSpy('isRtl');
         const domIndexer = 'DOMINDEXER' as any;
+        const mockedParagraphMap = 'PARAMAP' as any;
 
         const div = {
             ownerDocument: {},
@@ -73,6 +77,7 @@ describe('createEditorContext', () => {
             darkColorHandler,
             cache: {
                 domIndexer,
+                paragraphMap: mockedParagraphMap,
             },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
@@ -93,6 +98,7 @@ describe('createEditorContext', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 
@@ -102,6 +108,7 @@ describe('createEditorContext', () => {
         const darkColorHandler = 'DARKHANDLER' as any;
         const mockedPendingFormat = 'PENDINGFORMAT' as any;
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
+        const mockedParagraphMap = 'PARAMAP' as any;
 
         const div = {
             ownerDocument: {},
@@ -118,7 +125,7 @@ describe('createEditorContext', () => {
                 pendingFormat: mockedPendingFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: { paragraphMap: mockedParagraphMap },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: jasmine.createSpy('isRtl'),
@@ -138,6 +145,7 @@ describe('createEditorContext', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 
@@ -148,7 +156,7 @@ describe('createEditorContext', () => {
         const mockedPendingFormat = 'PENDINGFORMAT' as any;
         const calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
         const isRtlSpy = jasmine.createSpy('isRtl');
-
+        const mockedParagraphMap = 'PARAMAP' as any;
         const div = {
             ownerDocument: {},
         };
@@ -165,7 +173,9 @@ describe('createEditorContext', () => {
                 pendingFormat: mockedPendingFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: {
+                paragraphMap: mockedParagraphMap,
+            },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
@@ -185,6 +195,7 @@ describe('createEditorContext', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 });
@@ -197,6 +208,7 @@ describe('createEditorContext - checkZoomScale', () => {
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
+    const mockedParagraphMap = 'PARAMAP' as any;
 
     beforeEach(() => {
         calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale');
@@ -215,7 +227,7 @@ describe('createEditorContext - checkZoomScale', () => {
                 defaultFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: { paragraphMap: mockedParagraphMap },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
@@ -239,6 +251,7 @@ describe('createEditorContext - checkZoomScale', () => {
             pendingFormat: undefined,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 });
@@ -251,6 +264,7 @@ describe('createEditorContext - checkRootDir', () => {
     const isDarkMode = 'DARKMODE' as any;
     const defaultFormat = 'DEFAULTFORMAT' as any;
     const darkColorHandler = 'DARKHANDLER' as any;
+    const mockedParagraphMap = 'PARAMAP' as any;
 
     beforeEach(() => {
         calculateZoomScaleSpy = jasmine.createSpy('calculateZoomScale').and.returnValue(1);
@@ -268,7 +282,9 @@ describe('createEditorContext - checkRootDir', () => {
                 defaultFormat,
             },
             darkColorHandler,
-            cache: {},
+            cache: {
+                paragraphMap: mockedParagraphMap,
+            },
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
@@ -291,6 +307,7 @@ describe('createEditorContext - checkRootDir', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 
@@ -310,6 +327,7 @@ describe('createEditorContext - checkRootDir', () => {
             zoomScale: 1,
             rootFontSize: 16,
             experimentalFeatures: [],
+            paragraphMap: mockedParagraphMap,
         });
     });
 });

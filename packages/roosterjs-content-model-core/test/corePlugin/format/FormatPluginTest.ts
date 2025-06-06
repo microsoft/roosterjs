@@ -1,8 +1,13 @@
 import * as applyDefaultFormat from '../../../lib/corePlugin/format/applyDefaultFormat';
 import * as applyPendingFormat from '../../../lib/corePlugin/format/applyPendingFormat';
+import * as normalizeFontFamily from 'roosterjs-content-model-dom/lib/domUtils/style/normalizeFontFamily';
 import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { createFormatPlugin } from '../../../lib/corePlugin/format/FormatPlugin';
-import { IEditor } from 'roosterjs-content-model-types';
+import { EditorEnvironment, IEditor } from 'roosterjs-content-model-types';
+import {
+    createDomToModelSettings,
+    createModelToDomSettings,
+} from '../../../lib/editor/core/createEditorDefaultSettings';
 
 describe('FormatPlugin', () => {
     const mockedFormat = {
@@ -12,16 +17,40 @@ describe('FormatPlugin', () => {
         lineSpace: 2,
     };
     let applyPendingFormatSpy: jasmine.Spy;
+    const mockedEnvironment = {
+        domToModelSettings: createDomToModelSettings({}),
+        modelToDomSettings: createModelToDomSettings({}),
+    } as EditorEnvironment;
 
     beforeEach(() => {
         applyPendingFormatSpy = spyOn(applyPendingFormat, 'applyPendingFormat');
+    });
+
+    it('ctor, normalize font family', () => {
+        const normalizeFontFamilySpy = spyOn(
+            normalizeFontFamily,
+            'normalizeFontFamily'
+        ).and.returnValue('Normalized font family');
+        const plugin = createFormatPlugin({
+            defaultSegmentFormat: {
+                fontFamily: 'Arial, Helvetica, sans-serif',
+                fontSize: '10px',
+            },
+        });
+        const state = plugin.getState();
+
+        expect(normalizeFontFamilySpy).toHaveBeenCalledWith('Arial, Helvetica, sans-serif');
+        expect(state.defaultFormat).toEqual({
+            fontFamily: 'Normalized font family',
+            fontSize: '10px',
+        });
     });
 
     it('no pending format, trigger key down event', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
-            getEnvironment: () => ({}),
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
@@ -43,7 +72,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             isInIME: () => false,
             cacheContentModel: () => {},
-            getEnvironment: () => ({}),
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const model = createContentModelDocument();
@@ -86,6 +115,7 @@ describe('FormatPlugin', () => {
             isDarkMode: () => false,
             triggerEvent,
             getVisibleViewport,
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
@@ -111,7 +141,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
-            getEnvironment: () => ({}),
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
@@ -144,6 +174,7 @@ describe('FormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
@@ -173,6 +204,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
 
@@ -202,7 +234,7 @@ describe('FormatPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             cacheContentModel: () => {},
-            getEnvironment: () => ({}),
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
@@ -236,6 +268,11 @@ describe('FormatPlugin for default format', () => {
     let cacheContentModelSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
 
+    const mockedEnvironment = {
+        domToModelSettings: createDomToModelSettings({}),
+        modelToDomSettings: createModelToDomSettings({}),
+    } as EditorEnvironment;
+
     beforeEach(() => {
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
         getDOMSelection = jasmine.createSpy('getDOMSelection');
@@ -251,7 +288,7 @@ describe('FormatPlugin for default format', () => {
             getPendingFormat: getPendingFormatSpy,
             cacheContentModel: cacheContentModelSpy,
             formatContentModel: formatContentModelSpy,
-            getEnvironment: () => ({}),
+            getEnvironment: () => mockedEnvironment,
         } as any) as IEditor;
     });
 

@@ -192,6 +192,50 @@ describe('insertLink', () => {
         );
     });
 
+    it('Valid url and image selection', () => {
+        const doc = createContentModelDocument();
+        const image = createImage('test');
+
+        image.isSelected = true;
+        addSegment(doc, image);
+
+        runTest(
+            doc,
+            'http://test.com',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Image',
+                                format: {},
+                                src: 'test',
+                                dataset: {},
+                                link: {
+                                    dataset: {},
+                                    format: {
+                                        href: 'http://test.com',
+                                        anchorTitle: 'title',
+                                        target: 'target',
+                                        underline: false,
+                                    },
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            'title',
+            'linkText',
+            'target'
+        );
+    });
+
     it('Valid url on existing multiple text and image, insert link with same display text', () => {
         const doc = createContentModelDocument();
         const text1 = createText('test1');

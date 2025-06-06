@@ -1,4 +1,4 @@
-import { Preset } from './allPresets';
+import { Preset } from './Preset';
 
 export const simpleTable: Preset = {
     buttonName: 'Simple Table',

@@ -21,6 +21,7 @@ const initialState: OptionState = {
         imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
+        hiddenProperty: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -48,6 +49,7 @@ const initialState: OptionState = {
         autoMailto: true,
         autoTel: true,
         removeListMargins: false,
+        autoHorizontalLine: true,
     },
     markdownOptions: {
         bold: true,
@@ -59,7 +61,11 @@ const initialState: OptionState = {
         handleTabKey: true,
     },
     customReplacements: emojiReplacements,
-    experimentalFeatures: new Set<ExperimentalFeature>(['PersistCache', 'HandleEnterKey']),
+    experimentalFeatures: new Set<ExperimentalFeature>([
+        'PersistCache',
+        'HandleEnterKey',
+        'CustomCopyCut',
+    ]),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

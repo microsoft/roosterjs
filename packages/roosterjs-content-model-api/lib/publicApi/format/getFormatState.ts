@@ -1,6 +1,10 @@
 import { reducedModelChildProcessor } from '../../modelApi/common/reducedModelChildProcessor';
 import { retrieveModelFormatState } from 'roosterjs-content-model-dom';
-import type { IEditor, ContentModelFormatState, ConflictFormatSolution } from 'roosterjs-content-model-types';
+import type {
+    IEditor,
+    ContentModelFormatState,
+    ConflictFormatSolution,
+} from 'roosterjs-content-model-types';
 
 /**
  * Get current format state
@@ -21,7 +25,13 @@ export function getFormatState(
 
     editor.formatContentModel(
         model => {
-            retrieveModelFormatState(model, pendingFormat, result, conflictSolution);
+            retrieveModelFormatState(
+                model,
+                pendingFormat,
+                result,
+                conflictSolution,
+                editor.getDOMHelper()
+            );
 
             return false;
         },

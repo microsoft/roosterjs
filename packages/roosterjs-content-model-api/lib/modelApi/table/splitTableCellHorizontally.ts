@@ -30,11 +30,15 @@ export function splitTableCellHorizontally(table: ShallowMutableContentModelTabl
                 table.rows.forEach((row, rowIndex) => {
                     const cell = row.cells[colIndex];
                     if (cell) {
+                        const mutableCell = mutateBlock(cell);
+
+                        delete mutableCell.format.width;
+
                         const newCell = createTableCell(
                             cell.spanLeft,
                             cell.spanAbove,
                             cell.isHeader,
-                            cell.format
+                            mutableCell.format
                         );
 
                         newCell.dataset = { ...cell.dataset };

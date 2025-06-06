@@ -53,6 +53,12 @@ export interface DomIndexer {
     onMergeText: (targetText: Text, sourceText: Text) => void;
 
     /**
+     * Clear index from the given container and all its descendants
+     * @param container The root container to clear index from
+     */
+    clearIndex: (container: Node) => void;
+
+    /**
      * When document content or selection is changed by user, we need to use this function to update the content model
      * to reflect the latest document. This process can fail since the selected node may not have a related model data structure.
      * @param model Current cached content model

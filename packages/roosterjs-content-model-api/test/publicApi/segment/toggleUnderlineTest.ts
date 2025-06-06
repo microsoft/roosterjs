@@ -491,16 +491,10 @@ describe('toggleUnderline', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Test',
+                                text: 'Test    ',
                                 format: {
                                     underline: true,
                                 },
-                                isSelected: true,
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: '    ',
-                                format: {},
                                 isSelected: true,
                             },
                         ],

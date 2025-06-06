@@ -1,6 +1,7 @@
 import {
     getAllEntityWrappers,
     isBlockEntityContainer,
+    isEntityDelimiter,
     isEntityElement,
     isNodeOfType,
     parseEntityFormat,
@@ -25,6 +26,15 @@ export function restoreSnapshotHTML(core: EditorCore, snapshot: Snapshot) {
         const originalEntityElement = tryGetEntityElement(entityMap, currentNode);
 
         if (originalEntityElement) {
+            // After restoring the snapshot, we need to clear the delimiter indexes since cached model will be cleared
+            if (isBlockEntityContainer(originalEntityElement)) {
+                for (let node = originalEntityElement.firstChild; node; node = node.nextSibling) {
+                    if (isNodeOfType(node, 'ELEMENT_NODE') && isEntityDelimiter(node)) {
+                        core.cache.domIndexer?.clearIndex(node);
+                    }
+                }
+            }
+
             refNode = reuseCachedElement(physicalRoot, originalEntityElement, refNode);
         } else {
             physicalRoot.insertBefore(currentNode, refNode);

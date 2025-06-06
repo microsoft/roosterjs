@@ -2,6 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
+import { getSelectionRootNode } from '../../domUtils/selection/getSelectionRootNode';
 import { isElementOfType } from '../../domUtils/isElementOfType';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { parseFormat } from '../utils/parseFormat';
@@ -47,6 +48,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const tableSelection = context.selection?.type == 'table' ? context.selection : null;
             const selectedTable = tableSelection?.table;
             const hasTableSelection = selectedTable == tableElement;
+            const recalculateTableSize = shouldRecalculateTableSize(tableElement, context);
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -120,6 +122,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         context
                     );
 
+                    tableRow.height = parseInt(tr.style.height) || 0;
+
                     for (
                         let sourceCol = 0, targetCol = 0;
                         sourceCol < tr.cells.length;
@@ -129,25 +133,28 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                         const td = tr.cells[sourceCol];
                         const hasSelectionBeforeCell = context.isInSelection;
-                        const colEnd = targetCol + td.colSpan;
-                        const rowEnd = row + td.rowSpan;
-                        const needCalcWidth = columnPositions[colEnd] === undefined;
-                        const needCalcHeight = rowPositions[rowEnd] === undefined;
+                        if (recalculateTableSize) {
+                            const colEnd = targetCol + td.colSpan;
+                            const rowEnd = row + td.rowSpan;
+                            const needCalcWidth = columnPositions[colEnd] === undefined;
+                            const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                        if (needCalcWidth || needCalcHeight) {
-                            const rect = getBoundingClientRect(td);
+                            if (needCalcWidth || needCalcHeight) {
+                                const rect = getBoundingClientRect(td);
 
-                            if (rect.width > 0 || rect.height > 0) {
-                                if (needCalcWidth) {
-                                    const pos = columnPositions[targetCol];
+                                if (rect.width > 0 || rect.height > 0) {
+                                    if (needCalcWidth) {
+                                        const pos = columnPositions[targetCol];
 
-                                    columnPositions[colEnd] =
-                                        (typeof pos == 'number' ? pos : 0) + rect.width / zoomScale;
-                                }
+                                        columnPositions[colEnd] =
+                                            (typeof pos == 'number' ? pos : 0) +
+                                            rect.width / zoomScale;
+                                    }
 
-                                if (needCalcHeight) {
-                                    rowPositions[rowEnd] =
-                                        rowPositions[row] + rect.height / zoomScale;
+                                    if (needCalcHeight) {
+                                        rowPositions[rowEnd] =
+                                            rowPositions[row] + rect.height / zoomScale;
+                                    }
                                 }
                             }
                         }
@@ -339,4 +346,25 @@ function processColGroup(
     }
 
     return hasColGroup;
+}
+
+function shouldRecalculateTableSize(table: HTMLTableElement, context: DomToModelContext): boolean {
+    switch (context.recalculateTableSize) {
+        case true:
+        case 'all':
+            return true;
+
+        case 'selected':
+            const selectionRoot = getSelectionRootNode(context.selection);
+
+            return (
+                !!selectionRoot &&
+                (selectionRoot == table ||
+                    table.contains(selectionRoot) ||
+                    selectionRoot.contains(table))
+            );
+
+        default:
+            return false;
+    }
 }

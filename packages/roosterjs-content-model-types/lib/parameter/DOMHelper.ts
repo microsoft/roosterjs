@@ -1,3 +1,5 @@
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+
 /**
  * A helper class to provide DOM access APIs
  */
@@ -97,4 +99,9 @@ export interface DOMHelper {
      * Get a deep cloned root element
      */
     getClonedRoot(): HTMLElement;
+
+    /**
+     * Get format of the container element
+     */
+    getContainerFormat(): ContentModelSegmentFormat;
 }

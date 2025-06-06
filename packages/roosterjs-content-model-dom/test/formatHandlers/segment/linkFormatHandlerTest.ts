@@ -58,6 +58,18 @@ describe('linkFormatHandler.parse', () => {
             name: 'name',
         });
     });
+
+    it('Anchor', () => {
+        let a = document.createElement('a');
+
+        a.name = 'name';
+
+        linkFormatHandler.parse(format, a, context, defaultHTMLStyleMap.a!);
+
+        expect(format).toEqual({
+            name: 'name',
+        });
+    });
 });
 
 describe('linkFormatHandler.apply', () => {
@@ -106,5 +118,16 @@ describe('linkFormatHandler.apply', () => {
         expect(a.outerHTML).toEqual(
             '<a href="/test" name="name" target="target" id="id" class="class" title="title" rel="rel">test</a>'
         );
+    });
+
+    it('Anchor', () => {
+        format.name = 'name';
+
+        const a = document.createElement('a');
+        a.innerHTML = 'test';
+
+        linkFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toEqual('<a name="name">test</a>');
     });
 });

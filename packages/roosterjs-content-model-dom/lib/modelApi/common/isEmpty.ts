@@ -51,10 +51,13 @@ export function isBlockGroupEmpty(group: ReadonlyContentModelBlockGroup): boolea
 /**
  * @internal
  */
-export function isSegmentEmpty(segment: ReadonlyContentModelSegment): boolean {
+export function isSegmentEmpty(
+    segment: ReadonlyContentModelSegment,
+    treatAnchorAsNotEmpty?: boolean
+): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text;
+            return !segment.text && (!treatAnchorAsNotEmpty || !segment.link?.format.name);
 
         default:
             return false;

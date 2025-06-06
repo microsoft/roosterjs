@@ -14,6 +14,7 @@ import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
+import type { ImageStateFormat } from './formatParts/ImageStateFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { LinkFormat } from './formatParts/LinkFormat';
@@ -29,6 +30,7 @@ import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
+import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
@@ -112,6 +114,11 @@ export interface FormatHandlerTypeMap {
      * Format for IdFormat
      */
     id: IdFormat;
+
+    /**
+     * Format of ImageStateFormat
+     */
+    imageState: ImageStateFormat;
 
     /**
      * Format for ItalicFormat
@@ -202,6 +209,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextIndentFormat
      */
     textIndent: TextIndentFormat;
+
+    /**
+     * Format for Undeletable link
+     */
+    undeletableLink: UndeletableFormat;
 
     /**
      * Format for UnderlineFormat

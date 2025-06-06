@@ -452,7 +452,7 @@ describe('listItemMetadataApplier', () => {
 
         it('Valid input', () => {
             runTest(BulletListType.Disc, '');
-            runTest(BulletListType.Square, '"∎ "');
+            runTest(BulletListType.Square, '');
             runTest(BulletListType.Circle, '');
             runTest(BulletListType.Dash, '"- "');
             runTest(BulletListType.LongArrow, '"➔ "');
@@ -874,7 +874,7 @@ describe('listLevelMetadataApplier', () => {
 
         it('Valid input', () => {
             runTest(BulletListType.Disc, 'disc');
-            runTest(BulletListType.Square, '');
+            runTest(BulletListType.Square, 'square');
             runTest(BulletListType.Circle, 'circle');
             runTest(BulletListType.Dash, '');
             runTest(BulletListType.LongArrow, '');

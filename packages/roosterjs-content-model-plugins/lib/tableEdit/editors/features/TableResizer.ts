@@ -229,6 +229,7 @@ export function onDragging(
 
                 td.style.width = newWidth + 'px';
                 td.style.height = newHeight + 'px';
+                td.style.boxSizing = 'border-box';
             }
         }
         return true;

@@ -44,6 +44,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private editor: IEditor | null = null;
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
+    private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
     private scrollTopCache: number = 0;
@@ -120,6 +121,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             this.disposer = null;
         }
 
+        this.logicalRootDisposer?.();
+        this.logicalRootDisposer = null;
+
         this.detachMouseEvent();
         this.editor = null;
     }
@@ -153,6 +157,22 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case 'scroll':
                 if (!this.editor.hasFocus()) {
                     this.scrollTopCache = event.scrollContainer.scrollTop;
+                }
+                break;
+
+            case 'logicalRootChanged':
+                this.logicalRootDisposer?.();
+                if (this.isSafari) {
+                    this.logicalRootDisposer = this.editor.attachDomEvent({
+                        focus: { beforeDispatch: this.onFocus },
+                        drop: { beforeDispatch: this.onDrop },
+                    });
+                } else {
+                    this.logicalRootDisposer = this.editor.attachDomEvent({
+                        focus: { beforeDispatch: this.onFocus },
+                        blur: { beforeDispatch: this.onBlur },
+                        drop: { beforeDispatch: this.onDrop },
+                    });
                 }
                 break;
         }
@@ -219,6 +239,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 }
             }
 
+            this.state.mouseDisposer?.();
             this.state.mouseDisposer = editor.attachDomEvent({
                 mousemove: {
                     beforeDispatch: this.onMouseMove,
@@ -350,6 +371,26 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'table':
+                // After a content change event is handled tableSelection state is reset to null
+                // Since we have table selection from DOMSelection, we can use it to re-create the tableSelection state
+                if (this.state.tableSelection == null) {
+                    const { table, firstRow, firstColumn, lastRow, lastColumn } = selection;
+
+                    const parsedTable = parseTableCells(table);
+                    if (parsedTable) {
+                        const firstCo = { row: firstRow, col: firstColumn };
+                        const lastCo = { row: lastRow, col: lastColumn };
+
+                        // Create the tableSelection with current table info
+                        this.state.tableSelection = {
+                            table,
+                            parsedTable,
+                            firstCo,
+                            lastCo,
+                            startNode: findTableCellElement(parsedTable, firstCo)?.cell || table,
+                        };
+                    }
+                }
                 if (this.state.tableSelection?.lastCo) {
                     const { shiftKey, key } = rawEvent;
 
@@ -646,21 +687,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
-
-            if (
-                newSelection?.type == 'image' &&
-                selection &&
-                selection.focusNode &&
-                !isSingleImageInSelection(selection)
-            ) {
-                const range = selection.getRangeAt(0);
-                this.editor.setDOMSelection({
-                    type: 'range',
-                    range,
-                    isReverted:
-                        selection.focusNode != range.endContainer ||
-                        selection.focusOffset != range.endOffset,
-                });
+            if (selection && selection.focusNode) {
+                const image = isSingleImageInSelection(selection);
+                if (newSelection?.type == 'image' && !image) {
+                    const range = selection.getRangeAt(0);
+                    this.editor.setDOMSelection({
+                        type: 'range',
+                        range,
+                        isReverted:
+                            selection.focusNode != range.endContainer ||
+                            selection.focusOffset != range.endOffset,
+                    });
+                } else if (newSelection?.type !== 'image' && image) {
+                    this.editor.setDOMSelection({
+                        type: 'image',
+                        image,
+                    });
+                }
             }
 
             // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.

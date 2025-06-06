@@ -4,6 +4,7 @@ import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { darkModeButton } from '../demoButtons/darkModeButton';
+import { defaultDomToModelOption } from '../options/defaultDomToModelOption';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
@@ -15,6 +16,7 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
 import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
+import { MarkdownPanePlugin } from '../sidePane/MarkdownPane/MarkdownPanePlugin';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
@@ -26,6 +28,7 @@ import { SnapshotPlugin } from '../sidePane/snapshot/SnapshotPlugin';
 import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { TitleBar } from '../titleBar/TitleBar';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
+import { undeletableLinkChecker } from '../options/demoUndeletableAnchorParser';
 import { UpdateContentPlugin } from '../plugins/UpdateContentPlugin';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoomButton } from '../demoButtons/zoomButton';
@@ -57,6 +60,7 @@ import {
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
+    HiddenPropertyPlugin,
     HyperlinkPlugin,
     ImageEditPlugin,
     MarkdownPlugin,
@@ -65,6 +69,7 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
 } from 'roosterjs-content-model-plugins';
+import DOMPurify = require('dompurify');
 
 const styles = require('./MainPane.scss');
 
@@ -102,6 +107,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private imageEditPlugin: ImageEditPlugin;
+    private markdownPanePlugin: MarkdownPanePlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -140,6 +146,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.imageEditPlugin = new ImageEditPlugin();
+        this.markdownPanePlugin = new MarkdownPanePlugin();
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -185,7 +192,15 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.updateContentPlugin.update();
 
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
-        win.document.write(trustedHTMLHandler(POPOUT_HTML));
+        win.document.write(
+            (DOMPurify.sanitize(POPOUT_HTML, {
+                ADD_TAGS: ['head', 'meta', 'iframe'],
+                ADD_ATTR: ['name', 'content'],
+                WHOLE_DOCUMENT: true,
+                ALLOW_UNKNOWN_PROTOCOLS: true,
+                RETURN_TRUSTED_TYPE: true,
+            }) as any) as string
+        );
         win.addEventListener('beforeunload', () => {
             this.updateContentPlugin.update();
 
@@ -373,6 +388,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             experimentalFeatures={Array.from(
                                 this.state.initState.experimentalFeatures
                             )}
+                            defaultDomToModelOptions={defaultDomToModelOption}
                         />
                     )}
                 </div>
@@ -481,6 +497,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.snapshotPlugin,
             this.contentModelPanePlugin,
             this.presetPlugin,
+            this.markdownPanePlugin,
         ];
     }
 
@@ -523,6 +540,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         : linkTitle
                 ),
             pluginList.customReplace && new CustomReplacePlugin(customReplacements),
+            pluginList.hiddenProperty &&
+                new HiddenPropertyPlugin({
+                    undeletableLinkChecker: undeletableLinkChecker,
+                }),
         ].filter(x => !!x);
     }
 }

@@ -9,7 +9,6 @@ describe('clearSelectedCells', () => {
         table.rows.forEach(row => {
             row.cells.push(selectedCell, selectedCell), (row.height = 200);
         });
-        table.widths = [100, 100];
 
         clearSelectedCells(table, { firstRow: 0, lastRow: 2, firstColumn: 0, lastColumn: 2 });
         expect(table).toEqual({
@@ -27,7 +26,7 @@ describe('clearSelectedCells', () => {
                     cells: [selectedCell, selectedCell],
                 },
             ],
-            widths: [100, 100],
+            widths: [],
             dataset: {},
         });
     });
@@ -39,7 +38,6 @@ describe('clearSelectedCells', () => {
         table.rows.forEach(row => {
             row.cells.push(unselectedCell, unselectedCell), (row.height = 200);
         });
-        table.widths = [100, 100];
 
         clearSelectedCells(table, { firstRow: 0, lastRow: 1, firstColumn: 0, lastColumn: 1 });
         expect(table).toEqual({
@@ -57,7 +55,7 @@ describe('clearSelectedCells', () => {
                     cells: [unselectedCell, unselectedCell],
                 },
             ],
-            widths: [100, 100],
+            widths: [],
             dataset: {},
         });
     });
@@ -70,7 +68,6 @@ describe('clearSelectedCells', () => {
             row.cells.push(selectedCell, selectedCell, selectedCell, selectedCell),
                 (row.height = 200);
         });
-        table.widths = [100, 100, 100, 100];
 
         const unselectedCell = { ...selectedCell, isSelected: false };
 
@@ -100,7 +97,7 @@ describe('clearSelectedCells', () => {
                     cells: [unselectedCell, unselectedCell, unselectedCell, unselectedCell],
                 },
             ],
-            widths: [100, 100, 100, 100],
+            widths: [],
             dataset: {},
         });
     });
@@ -113,7 +110,6 @@ describe('clearSelectedCells', () => {
             row.cells.push(selectedCell, selectedCell, selectedCell, selectedCell),
                 (row.height = 200);
         });
-        table.widths = [100, 100, 100, 100];
 
         const unselectedCell = { ...selectedCell, isSelected: false };
 
@@ -143,7 +139,7 @@ describe('clearSelectedCells', () => {
                     cells: [selectedCell, selectedCell, selectedCell, selectedCell],
                 },
             ],
-            widths: [100, 100, 100, 100],
+            widths: [],
             dataset: {},
         });
     });
@@ -156,7 +152,6 @@ describe('clearSelectedCells', () => {
             row.cells.push({ ...unselectedCell }, { ...unselectedCell }, { ...unselectedCell }),
                 (row.height = 200);
         });
-        table.widths = [100, 100, 100];
 
         table.rows[1].cells[1].blocks = [
             {
@@ -200,7 +195,7 @@ describe('clearSelectedCells', () => {
                     cells: [unselectedCell, unselectedCell, unselectedCell],
                 },
             ],
-            widths: [100, 100, 100],
+            widths: [],
             dataset: {},
         });
     });

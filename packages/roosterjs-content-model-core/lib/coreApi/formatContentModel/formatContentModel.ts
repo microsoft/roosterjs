@@ -33,6 +33,7 @@ export const formatContentModel: FormatContentModel = (
         deletedEntities: [],
         rawEvent,
         newImages: [],
+        paragraphIndexer: core.cache.paragraphMap,
     };
 
     const hasFocus = core.domHelper.hasFocus();

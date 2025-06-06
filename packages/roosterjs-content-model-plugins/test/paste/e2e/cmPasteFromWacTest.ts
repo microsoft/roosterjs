@@ -153,6 +153,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        height: '20px',
                                                         textIndent: '0px',
                                                     },
                                                     dataset: {
@@ -228,6 +229,7 @@ describe(ID, () => {
                                                         borderLeft: '1px solid',
                                                         verticalAlign: 'top',
                                                         width: '312px',
+                                                        height: '20px',
                                                         textIndent: '0px',
                                                     },
                                                     dataset: {
@@ -301,10 +303,7 @@ describe(ID, () => {
                                 marginLeft: '0px',
                                 textIndent: '0px',
                             },
-                            decorator: {
-                                tagName: 'p',
-                                format: {},
-                            },
+                            decorator: { tagName: 'p', format: {} },
                         },
                     ],
                 },

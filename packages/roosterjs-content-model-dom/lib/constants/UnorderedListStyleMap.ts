@@ -5,7 +5,7 @@ import { BulletListType } from './BulletListType';
  */
 export const UnorderedListStyleMap: Record<number, string> = {
     [BulletListType.Disc]: 'disc',
-    [BulletListType.Square]: '"∎ "',
+    [BulletListType.Square]: 'square',
     [BulletListType.Circle]: 'circle',
     [BulletListType.Dash]: '"- "',
     [BulletListType.LongArrow]: '"➔ "',
@@ -13,4 +13,7 @@ export const UnorderedListStyleMap: Record<number, string> = {
     [BulletListType.ShortArrow]: '"➢ "',
     [BulletListType.UnfilledArrow]: '"➪ "',
     [BulletListType.Hyphen]: '"— "',
+    [BulletListType.CheckMark]: '"✔ "',
+    [BulletListType.Xrhombus]: '"❖ "',
+    [BulletListType.BoxShadow]: '"❑ "',
 };

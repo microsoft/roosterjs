@@ -1,4 +1,5 @@
 import * as getListAnnounceData from '../../../lib/modelApi/list/getListAnnounceData';
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { ContentModelDocument, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
 import {
@@ -12,12 +13,18 @@ import {
 
 describe('indent', () => {
     let getListAnnounceDataSpy: jasmine.Spy;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
     const mockedAnnounceData = 'ANNOUNCE' as any;
 
     beforeEach(() => {
         getListAnnounceDataSpy = spyOn(getListAnnounceData, 'getListAnnounceData').and.returnValue(
             mockedAnnounceData
         );
+
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
     });
 
     it('Empty group', () => {
@@ -41,6 +48,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group without selection', () => {
@@ -66,6 +75,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected paragraph', () => {
@@ -121,6 +132,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected indented paragraph', () => {
@@ -182,6 +195,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected indented paragraph in RTL', () => {
@@ -225,6 +240,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with multiple selected paragraph - 1', () => {
@@ -283,6 +300,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with multiple selected paragraph - 2', () => {
@@ -341,6 +360,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with paragraph under OL', () => {
@@ -398,6 +419,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with paragraph under OL with formats', () => {
@@ -471,6 +494,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with paragraph and multiple OL', () => {
@@ -527,6 +552,8 @@ describe('indent', () => {
         });
         expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
         expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with multiple selected paragraph and multiple OL', () => {
@@ -608,6 +635,8 @@ describe('indent', () => {
         expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(2);
         expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
         expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem3, group]);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with multiple selected paragraph and UL and OL', () => {
@@ -689,6 +718,8 @@ describe('indent', () => {
         });
         expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
         expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem2, group]);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Mixed with paragraph, list item and quote', () => {
@@ -776,6 +807,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected indented paragraph, outdent with different length', () => {
@@ -815,6 +848,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with list with first item selected', () => {
@@ -898,6 +933,8 @@ describe('indent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Indent and follow previous item style', () => {
@@ -991,6 +1028,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 
     it('Indent and follow next item style', () => {
@@ -1108,6 +1147,8 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 
     it('Indent, no style to follow', () => {
@@ -1195,17 +1236,24 @@ describe('indent', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(model);
     });
 });
 
 describe('outdent', () => {
     let getListAnnounceDataSpy: jasmine.Spy;
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
     const mockedAnnounceData = 'ANNOUNCE' as any;
 
     beforeEach(() => {
         getListAnnounceDataSpy = spyOn(getListAnnounceData, 'getListAnnounceData').and.returnValue(
             mockedAnnounceData
         );
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
     });
 
     it('Empty group', () => {
@@ -1229,6 +1277,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group without selection', () => {
@@ -1291,6 +1341,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected single indented paragraph', () => {
@@ -1356,6 +1408,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected 2 indented paragraph', () => {
@@ -1427,6 +1481,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected multiple indented paragraph', () => {
@@ -1487,6 +1543,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected list item', () => {
@@ -1523,6 +1581,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected multiple level list item', () => {
@@ -1583,6 +1643,8 @@ describe('outdent', () => {
         });
         expect(getListAnnounceDataSpy).toHaveBeenCalledTimes(1);
         expect(getListAnnounceDataSpy).toHaveBeenCalledWith([listItem, group]);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with mixed list item, quote and paragraph', () => {
@@ -1645,6 +1707,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with selected indented paragraph in RTL', () => {
@@ -1727,6 +1791,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Group with list with no indention selected', () => {
@@ -1786,6 +1852,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Outdent parent format container, ltr', () => {
@@ -1859,6 +1927,8 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
     it('Outdent parent format container, rtl', () => {
@@ -1941,5 +2011,7 @@ describe('outdent', () => {
             newImages: [],
         });
         expect(getListAnnounceDataSpy).not.toHaveBeenCalled();
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 });

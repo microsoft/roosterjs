@@ -26,6 +26,7 @@
             "../packages/roosterjs-content-model-dom/lib/index.ts",
             "../packages/roosterjs-content-model-core/lib/index.ts",
             "../packages/roosterjs-content-model-api/lib/index.ts",
+            "../packages/roosterjs-content-model-markdown/lib/index.ts",
             "../packages/roosterjs-content-model-plugins/lib/index.ts",
             "../packages/roosterjs-editor-adapter/lib/index.ts",
             "../packages/roosterjs/lib/index.ts"

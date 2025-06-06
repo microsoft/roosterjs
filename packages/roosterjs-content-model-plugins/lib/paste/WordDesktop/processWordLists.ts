@@ -1,12 +1,10 @@
-import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
+import { getStyles } from '../utils/getStyles';
+import { processAsListItem, setupListFormat } from '../utils/customListUtils';
 import {
-    addBlock,
-    createListItem,
-    createListLevel,
     getListStyleTypeFromString,
+    isElementOfType,
     isEmpty,
-    parseFormat,
-    updateListMetadata,
+    isNodeOfType,
 } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -24,6 +22,7 @@ const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const WORD_FIRST_LIST = 'l0';
 const TEMPLATE_VALUE_REGEX = /%[0-9a-zA-Z]+/g;
+const BULLET_METADATA = 'bullet';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
@@ -35,7 +34,6 @@ interface WordListFormat extends ContentModelListItemFormat {
     wordList?: string;
 }
 
-const BULLET_METADATA = 'bullet';
 /**
  * @internal
  * @param styles
@@ -67,8 +65,8 @@ export function processWordList(
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = level && parseInt(level.substr('level'.length));
-
     listFormat.wordList = lNumber || WORD_FIRST_LIST;
+
     if (listFormat.levels.length == 0) {
         listFormat.levels =
             (listFormat.wordList && listFormat.wordKnownLevels.get(listFormat.wordList)) || [];
@@ -84,30 +82,32 @@ export function processWordList(
                 : 'UL';
 
         // Create the new level of the list item and parse the format
-        const newLevel: ContentModelListLevel = createListLevel(listType);
-        parseFormat(
-            element,
-            [...context.formatParsers.listLevel, wordListPaddingParser],
-            newLevel.format,
-            context
-        );
-
-        // If the list format is in a different level, update the array so we get the new item
-        // To be in the same level as the provided level metadata.
-        if (wordLevel > listFormat.levels.length) {
-            while (wordLevel != listFormat.levels.length) {
-                listFormat.levels.push(newLevel);
-            }
-        } else {
-            listFormat.levels.splice(wordLevel, listFormat.levels.length - 1);
-            listFormat.levels[wordLevel - 1] = newLevel;
-        }
+        setupListFormat(listType, element, context, wordLevel, listFormat, group, [
+            wordListPaddingParser,
+        ]);
         (listFormat.levels[listFormat.levels.length - 1]
             .format as WordListFormat).wordList = wordList;
 
-        listFormat.listParent = group;
+        const bullet = getBulletFromMetadata(listMetadata, listType);
+        const listFormatMetadata = bullet
+            ? {
+                  unorderedStyleType: listType == 'UL' ? bullet : undefined,
+                  orderedStyleType: listType == 'OL' ? bullet : undefined,
+              }
+            : undefined;
 
-        processAsListItem(listFormat, context, element, group, listMetadata);
+        processAsListItem(
+            context,
+            element,
+            group,
+            listFormatMetadata,
+            getBulletElement(element),
+            listItem => {
+                if (listType == 'OL') {
+                    setStartNumber(listItem, context, listMetadata, element);
+                }
+            }
+        );
 
         if (
             listFormat.levels.length > 0 &&
@@ -119,39 +119,6 @@ export function processWordList(
     }
 
     return false;
-}
-
-function processAsListItem(
-    listFormat: WordDesktopListFormat,
-    context: DomToModelContext,
-    element: HTMLElement,
-    group: ContentModelBlockGroup,
-    listMetadata: WordMetadata | undefined
-) {
-    const listLevel = listFormat.levels[listFormat.levels.length - 1];
-    const { listType } = listLevel;
-    const bullet = getBulletFromMetadata(listMetadata, listType);
-    if (bullet) {
-        updateListMetadata(listFormat.levels[listFormat.levels.length - 1], metadata =>
-            Object.assign({}, metadata, {
-                unorderedStyleType: listType == 'UL' ? bullet : undefined,
-                orderedStyleType: listType == 'OL' ? bullet : undefined,
-            })
-        );
-    }
-
-    const listItem = createListItem(listFormat.levels, context.segmentFormat);
-
-    parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
-    parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
-    parseFormat(element, [removeNegativeTextIndentParser], listItem.format, context);
-
-    if (listType == 'OL') {
-        setStartNumber(listItem, context, listMetadata);
-    }
-
-    context.elementProcessors.child(listItem, element, context);
-    addBlock(group, listItem);
 }
 
 function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {
@@ -203,22 +170,11 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
     return getListStyleTypeFromString(listType, templateFinal);
 }
 
-function wordListPaddingParser(
-    format: ContentModelListItemLevelFormat,
-    element: HTMLElement
-): void {
-    if (element.style.marginLeft && element.style.marginLeft != '0in') {
-        format.paddingLeft = '0px';
-    }
-    if (element.style.marginRight && element.style.marginRight != '0in') {
-        format.paddingRight = '0px';
-    }
-}
-
 function setStartNumber(
     listItem: ContentModelListItem,
     context: DomToModelContext,
-    listMetadata: WordMetadata | undefined
+    listMetadata: WordMetadata | undefined,
+    element: HTMLElement
 ) {
     const {
         listParent,
@@ -243,6 +199,15 @@ function setStartNumber(
 
         if (start != undefined && !isNaN(start) && knownLevel.length != levels.length) {
             listItem.levels[listItem.levels.length - 1].format.startNumberOverride = start;
+        } else if (
+            isElementOfType(element, 'li') &&
+            isNodeOfType(element.parentElement, 'ELEMENT_NODE') &&
+            isElementOfType(element.parentElement, 'ol') &&
+            element.parentElement.firstElementChild == element &&
+            knownLevel.length != element.parentElement.start
+        ) {
+            listItem.levels[listItem.levels.length - 1].format.startNumberOverride =
+                element.parentElement.start;
         }
     }
 }
@@ -256,4 +221,58 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
     }
 
     return undefined;
+}
+
+function wordListPaddingParser(
+    format: ContentModelListItemLevelFormat,
+    element: HTMLElement
+): void {
+    if (element.style.marginLeft && element.style.marginLeft != '0in') {
+        format.paddingLeft = '0px';
+    }
+    if (element.style.marginRight && element.style.marginRight != '0in') {
+        format.paddingRight = '0px';
+    }
+}
+/**
+ * Get the bullet element from word list item.
+ * The first element of the list contains the bullet element, which contains the mso-list:ignore style.
+ * @example
+ *  <p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>
+ *      <![if !supportLists]>
+ *          <span lang=EN-US style='mso-fareast-font-family:Aptos;mso-fareast-theme-font:minor-latin; mso-bidi-font-family:Aptos;mso-bidi-theme-font:minor-latin;color:#C00000; mso-ansi-language:EN-US'>
+ *              <span style='mso-list:Ignore'> <-- This is the bullet element
+ *                  1.
+ *                  <span style='font:7.0pt "Times New Roman"'>
+ *                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ *                  </span>
+ *              </span>
+ *          </span>
+ *      <![endif]>
+ *      <span lang=EN-US style='color:#C00000; mso-ansi-language:EN-US'>
+ *          Content in list<o:p></o:p>
+ *      </span>
+ *  </p>
+ * @returns
+ */
+function getBulletElement(element: HTMLElement): HTMLElement | undefined {
+    const firstChild = element.firstElementChild;
+    let isBulletElement = false;
+
+    if (firstChild) {
+        for (let i = 0; i < firstChild.childNodes.length; i++) {
+            const child = firstChild.childNodes[i];
+            if (isNodeOfType(child, 'ELEMENT_NODE')) {
+                const styles = getStyles(child);
+                const wordListStyle = styles[MSO_LIST] || '';
+
+                if (wordListStyle.toLowerCase() === MSO_LIST_IGNORE) {
+                    isBulletElement = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return firstChild && isBulletElement ? (firstChild as HTMLElement) : undefined;
 }

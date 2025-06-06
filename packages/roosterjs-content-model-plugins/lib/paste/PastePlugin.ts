@@ -2,14 +2,17 @@ import { addParser } from './utils/addParser';
 import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
-import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
+import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getPasteSource } from './pasteSourceValidations/getPasteSource';
-import { parseLink } from './utils/linkParser';
+import { parseLink } from './parsers/linkParser';
+import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
+import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import { setProcessor } from './utils/setProcessor';
 import type {
     BeforePasteEvent,
     BorderFormat,
@@ -94,24 +97,30 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const pasteSource = getPasteSource(event, false);
+        const pasteSource = getPasteSource(
+            event,
+            false /* shouldConvertSingleImage */,
+            this.editor.getEnvironment()
+        );
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event, this.editor.getDOMCreator());
+                processPastedContentFromWordDesktop(event);
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
                 break;
             case 'excelOnline':
             case 'excelDesktop':
+            case 'excelNonNativeEvent':
                 if (pasteType === 'normal' || pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(
                         event,
                         this.editor.getDOMCreator(),
-                        this.allowExcelNoBorderTable
+                        !!this.allowExcelNoBorderTable,
+                        pasteSource != 'excelNonNativeEvent' /* isNativeEvent */
                     );
                 }
                 break;
@@ -123,12 +132,17 @@ export class PastePlugin implements EditorPlugin {
             case 'powerPointDesktop':
                 processPastedContentFromPowerPoint(event, this.editor.getDOMCreator());
                 break;
+
+            case 'oneNoteDesktop':
+                processPastedContentFromOneNote(event);
+                break;
         }
 
         addParser(event.domToModelOption, 'link', parseLink);
         addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);
         addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
+        setProcessor(event.domToModelOption, 'button', pasteButtonProcessor);
 
         if (pasteType === 'mergeFormat') {
             addParser(event.domToModelOption, 'block', blockElementParser);

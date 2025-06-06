@@ -51,6 +51,9 @@ There are also some extension packages to provide additional functionalities.
 1. [roosterjs-color-utils](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_color_utils.html):
    Provide color transformation utility to make editor work under dark mode.
 
+2. [roosterjs-content-model-markdown](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_content_model_types.html):
+   Defines public APIs to enable conversions between Markdown and ContentModel
+
 To be compatible with old (8.\*) versions, you can use `EditorAdapter` class from the following package which can act as a 8.\* Editor:
 
 1. [roosterjs-editor-adapter](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_adapter.html):
@@ -87,6 +90,8 @@ API overrides in Editor options when creating the editor.
 
 `roosterjs-content-model-api` provides APIs for scenario-based operations triggered by
 user interaction.
+
+`roosterjs-content-model-markdown` provides API to transform Markdown language in Content Model objects.
 
 ## Plugins
 

@@ -1,7 +1,7 @@
 import type {
-    ContentModelBlockGroup,
-    ContentModelDocument,
     ModelToTextCallbacks,
+    ReadonlyContentModelBlockGroup,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const TextForHR = '________________________________________';
@@ -24,7 +24,7 @@ const defaultCallbacks: Required<ModelToTextCallbacks> = {
  * @param callbacks  Callbacks to customize the behavior of contentModelToText function
  */
 export function contentModelToText(
-    model: ContentModelDocument,
+    model: ReadonlyContentModelDocument,
     separator: string = '\r\n',
     callbacks?: ModelToTextCallbacks
 ): string {
@@ -37,7 +37,7 @@ export function contentModelToText(
 }
 
 function contentModelToTextArray(
-    group: ContentModelBlockGroup,
+    group: ReadonlyContentModelBlockGroup,
     textArray: string[],
     callbacks: Required<ModelToTextCallbacks>
 ) {

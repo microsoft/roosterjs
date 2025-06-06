@@ -451,116 +451,6 @@ describe('EntityDelimiterUtils |', () => {
             );
         });
 
-        it('Handle, range selection & delimiter before wrapped in block entity | Enter Key', () => {
-            const div = document.createElement('div');
-            const parent = document.createElement('span');
-            const el = document.createElement('span');
-            const text = document.createTextNode('span');
-            el.appendChild(text);
-            parent.appendChild(el);
-            el.classList.add('entityDelimiterBefore');
-            div.classList.add(BlockEntityContainer);
-            div.appendChild(parent);
-
-            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
-            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
-            const collapseSpy = jasmine.createSpy('collapseSpy');
-            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
-
-            mockedSelection = {
-                type: 'range',
-                range: <any>{
-                    endContainer: text,
-                    endOffset: 0,
-                    collapsed: true,
-                    setStartAfter: setStartAfterSpy,
-                    setStartBefore: setStartBeforeSpy,
-                    collapse: collapseSpy,
-                },
-                isReverted: false,
-            };
-            spyOn(entityUtils, 'isEntityDelimiter').and.returnValue(true);
-            spyOn(entityUtils, 'isEntityElement').and.returnValue(false);
-
-            handleDelimiterKeyDownEvent(mockedEditor, {
-                eventType: 'keyDown',
-                rawEvent: <any>{
-                    ctrlKey: false,
-                    altKey: false,
-                    metaKey: false,
-                    key: 'Enter',
-                    preventDefault: preventDefaultSpy,
-                },
-            });
-
-            expect(rafSpy).not.toHaveBeenCalled();
-            expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(setStartAfterSpy).not.toHaveBeenCalled();
-            expect(setStartBeforeSpy).toHaveBeenCalled();
-            expect(collapseSpy).toHaveBeenCalled();
-            expect(formatContentModelSpy).toHaveBeenCalledWith(
-                DelimiterFile.handleKeyDownInBlockDelimiter,
-                {
-                    selectionOverride: mockedSelection,
-                }
-            );
-        });
-
-        it('Handle, range selection & delimiter after wrapped in block entity | Enter key', () => {
-            const div = document.createElement('div');
-            const parent = document.createElement('span');
-            const el = document.createElement('span');
-            const text = document.createTextNode('span');
-            el.appendChild(text);
-            parent.appendChild(el);
-            el.classList.add('entityDelimiterAfter');
-            div.classList.add(BlockEntityContainer);
-            div.appendChild(parent);
-
-            const setStartBeforeSpy = jasmine.createSpy('setStartBeforeSpy');
-            const setStartAfterSpy = jasmine.createSpy('setStartAfterSpy');
-            const collapseSpy = jasmine.createSpy('collapseSpy');
-            const preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
-
-            mockedSelection = {
-                type: 'range',
-                range: <any>{
-                    endContainer: text,
-                    endOffset: 0,
-                    collapsed: true,
-                    setStartAfter: setStartAfterSpy,
-                    setStartBefore: setStartBeforeSpy,
-                    collapse: collapseSpy,
-                },
-                isReverted: false,
-            };
-            spyOn(entityUtils, 'isEntityDelimiter').and.returnValue(true);
-            spyOn(entityUtils, 'isEntityElement').and.returnValue(false);
-
-            handleDelimiterKeyDownEvent(mockedEditor, {
-                eventType: 'keyDown',
-                rawEvent: <any>{
-                    ctrlKey: false,
-                    altKey: false,
-                    metaKey: false,
-                    key: 'Enter',
-                    preventDefault: preventDefaultSpy,
-                },
-            });
-
-            expect(rafSpy).not.toHaveBeenCalled();
-            expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(setStartAfterSpy).toHaveBeenCalled();
-            expect(setStartBeforeSpy).not.toHaveBeenCalled();
-            expect(collapseSpy).toHaveBeenCalled();
-            expect(formatContentModelSpy).toHaveBeenCalledWith(
-                DelimiterFile.handleKeyDownInBlockDelimiter,
-                {
-                    selectionOverride: mockedSelection,
-                }
-            );
-        });
-
         it('Handle, range expanded selection | EnterKey', () => {
             const div = document.createElement('div');
             const parent = document.createElement('span');
@@ -1148,8 +1038,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1195,6 +1086,123 @@ describe('handleEnterInlineEntity', () => {
         });
     });
 
+    it('handle after entity under list item', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {},
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [
+                        {
+                            dataset: {},
+                            listType: 'UL',
+                            format: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Entity',
+                                    blockType: 'Entity',
+                                    format: {},
+                                    entityFormat: {
+                                        entityType: '',
+                                        isReadonly: true,
+                                    },
+                                    wrapper: <any>{},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        };
+
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
+
+        expect(result).toBeFalse();
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {},
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [
+                        {
+                            dataset: {},
+                            listType: 'UL',
+                            format: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Entity',
+                                    blockType: 'Entity',
+                                    format: {},
+                                    entityFormat: {
+                                        entityType: '',
+                                        isReadonly: true,
+                                    },
+                                    wrapper: <any>{},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: '_',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+        });
+    });
+
     it('handle before entity', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -1234,8 +1242,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1315,8 +1324,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -1394,8 +1404,9 @@ describe('handleEnterInlineEntity', () => {
             format: {},
         };
 
-        DelimiterFile.handleEnterInlineEntity(model, <any>{});
+        const result = DelimiterFile.handleEnterInlineEntity(model, <any>{});
 
+        expect(result).toBeTrue();
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [

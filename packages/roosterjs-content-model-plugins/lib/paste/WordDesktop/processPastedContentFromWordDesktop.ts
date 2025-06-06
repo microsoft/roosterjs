@@ -3,7 +3,7 @@ import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
-import { removeNegativeTextIndentParser } from './removeNegativeTextIndentParser';
+import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -11,7 +11,6 @@ import type {
     ContentModelBlockFormat,
     ContentModelListItemLevelFormat,
     ContentModelTableFormat,
-    DOMCreator,
     DomToModelContext,
     ElementProcessor,
     FormatParser,
@@ -26,8 +25,8 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  * Handles Pasted content when source is Word Desktop
  * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: BeforePasteEvent, domCreator: DOMCreator) {
-    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev, domCreator);
+export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
@@ -68,18 +67,18 @@ function adjustPercentileLineHeight(format: ContentModelBlockFormat, element: HT
     }
 }
 
-function listLevelParser(
+const listLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format: ContentModelListItemLevelFormat,
     element: HTMLElement,
-    context: DomToModelContext,
+    _context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
-): void {
+) => {
     if (element.style.marginLeft != '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
     format.marginBottom = undefined;
-}
+};
 
 const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
     if (format.marginLeft?.startsWith('-')) {

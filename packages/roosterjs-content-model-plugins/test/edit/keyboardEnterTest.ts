@@ -1,3 +1,5 @@
+import * as runEditSteps from 'roosterjs-content-model-dom/lib/modelApi/editing/runEditSteps';
+import { handleEnterOnParagraph } from '../../lib/edit/inputSteps/handleEnterOnParagraph';
 import { keyboardEnter } from '../../lib/edit/keyboardEnter';
 import {
     createBr,
@@ -1365,54 +1367,43 @@ describe('keyboardEnter', () => {
     });
 
     it('selection cover table', () => {
-        const para1 = createParagraph();
-        const para2 = createParagraph();
-        const para3 = createParagraph();
-        const text1 = createText('test1');
-        const text2 = createText('test2');
-        const text3 = createText('test3');
-        const text4 = createText('test4');
-        const text5 = createText('test5');
-        const td = createTableCell();
-        const table = createTable(1);
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Entity',
+                            format: {},
+                        } as any,
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
 
-        table.rows[0].cells.push(td);
-        td.blocks.push(para2);
-        para1.segments.push(text1, text2);
-        para2.segments.push(text3);
-        para3.segments.push(text4, text5);
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback(model, context);
+        });
 
-        text2.isSelected = true;
-        text3.isSelected = true;
-        text4.isSelected = true;
-        td.isSelected = true;
+        const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
 
-        runTest(
-            {
-                blockGroupType: 'Document',
-                blocks: [para1, table, para3],
-            },
-            false,
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        segments: [text1],
-                        format: {},
-                    },
-                    {
-                        blockType: 'Paragraph',
-                        segments: [
-                            { segmentType: 'SelectionMarker', isSelected: true, format: {} },
-                            text5,
-                        ],
-                        format: {},
-                    },
-                ],
-            },
-            true,
-            {}
-        );
+        keyboardEnter(editor, {} as any, false);
+
+        expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
+        expect(runEditStepsSpy.calls.argsFor(1)[0].includes(handleEnterOnParagraph)).toBe(true);
     });
+
+    it('Selected paragraph has entity', () => {});
 });

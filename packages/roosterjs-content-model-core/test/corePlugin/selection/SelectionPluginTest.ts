@@ -1,5 +1,8 @@
+import * as findTableCellElement from '../../../lib/coreApi/setDOMSelection/findTableCellElement';
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
+import * as parseTableCells from 'roosterjs-content-model-dom/lib/domUtils/table/parseTableCells';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
+import { getDOMSelection } from '../../../lib/coreApi/getDOMSelection/getDOMSelection';
 import {
     createSelectionPlugin,
     DEFAULT_SELECTION_BORDER_COLOR,
@@ -873,6 +876,14 @@ describe('SelectionPlugin handle table selection', () => {
             } as any,
         });
 
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
         expect(state).toEqual({
             selection: null,
             tableSelection: {
@@ -888,6 +899,77 @@ describe('SelectionPlugin handle table selection', () => {
             tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
+    });
+
+    it('MouseDown - clean and re-attach mouse move event handler if mouseDown event triggered twice', () => {
+        const state = plugin.getState();
+        const table = document.createElement('table');
+        table.setAttribute('contenteditable', 'true');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(div);
+
+        spyOn(editor, 'attachDomEvent').and.callThrough();
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: div,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: null,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: td,
+            } as any,
+        });
+
+        expect(state).toEqual({
+            selection: null,
+            tableSelection: {
+                table: table,
+                parsedTable: [[td]],
+                firstCo: { row: 0, col: 0 },
+                startNode: td,
+            },
+            mouseDisposer: mouseMoveDisposer,
+            imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+            imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+            tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+        });
+        expect(mouseDispatcher).toBeDefined();
+        expect(mouseMoveDisposer).toHaveBeenCalledTimes(1);
+        expect(editor.attachDomEvent).toHaveBeenCalledTimes(2);
     });
 
     it('MouseDown - do not save a table selection when left click, table is not editable', () => {
@@ -2438,6 +2520,164 @@ describe('SelectionPlugin handle table selection', () => {
             expect(preventDefaultSpy).toHaveBeenCalled();
             expect(announceSpy).not.toHaveBeenCalled();
         });
+
+        it('From Table, Format, Press Shift+Left', () => {
+            (getDOMSelectionSpy as jasmine.Spy<typeof getDOMSelection>).and.returnValue({
+                type: 'table',
+                firstColumn: 1,
+                firstRow: 0,
+                lastColumn: 1,
+                lastRow: 1,
+                table,
+            });
+
+            spyOn(parseTableCells, 'parseTableCells').and.returnValue([
+                [td1, td2],
+                [td3, td4],
+            ]);
+            spyOn(findTableCellElement, 'findTableCellElement').and.returnValue({
+                cell: td2,
+                row: 0,
+                col: 1,
+            });
+
+            plugin.getState().tableSelection = {
+                table,
+                parsedTable: [
+                    [td1, td2],
+                    [td3, td4],
+                ],
+                firstCo: { row: 0, col: 1 },
+                lastCo: { row: 1, col: 1 },
+                startNode: td2,
+            };
+
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            getComputedStyleSpy.and.returnValue({});
+
+            plugin.onPluginEvent!({
+                eventType: 'contentChanged',
+                source: 'Test',
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowLeft',
+                    shiftKey: true,
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 0 },
+                    startNode: td2,
+                },
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'table',
+                table,
+                firstRow: 0,
+                firstColumn: 1,
+                lastRow: 1,
+                lastColumn: 0,
+            });
+            expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
+        });
+
+        it('From Table, Format, Press Shift+Up', () => {
+            (getDOMSelectionSpy as jasmine.Spy<typeof getDOMSelection>).and.returnValue({
+                type: 'table',
+                firstColumn: 0,
+                firstRow: 1,
+                lastColumn: 1,
+                lastRow: 1,
+                table,
+            });
+
+            spyOn(parseTableCells, 'parseTableCells').and.returnValue([
+                [td1, td2],
+                [td3, td4],
+            ]);
+            spyOn(findTableCellElement, 'findTableCellElement').and.returnValue({
+                cell: td3,
+                row: 1,
+                col: 0,
+            } as any);
+
+            plugin.getState().tableSelection = {
+                table,
+                parsedTable: [
+                    [td1, td2],
+                    [td3, td4],
+                ],
+                firstCo: { row: 1, col: 0 },
+                lastCo: { row: 1, col: 1 },
+                startNode: td3,
+            };
+
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            getComputedStyleSpy.and.returnValue({});
+
+            plugin.onPluginEvent!({
+                eventType: 'contentChanged',
+                source: 'Test',
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                    shiftKey: true,
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(plugin.getState()).toEqual({
+                selection: null,
+                tableSelection: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    firstCo: { row: 1, col: 0 },
+                    lastCo: { row: 0, col: 1 },
+                    startNode: td3,
+                },
+                imageSelectionBorderColor: DEFAULT_SELECTION_BORDER_COLOR,
+                imageSelectionBorderColorDark: DEFAULT_SELECTION_BORDER_COLOR,
+                tableCellSelectionBackgroundColor: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
+            });
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'table',
+                table,
+                firstRow: 1,
+                firstColumn: 0,
+                lastRow: 0,
+                lastColumn: 1,
+            });
+            expect(preventDefaultSpy).toHaveBeenCalled();
+            expect(announceSpy).not.toHaveBeenCalled();
+        });
     });
 });
 
@@ -2856,5 +3096,183 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image | 4', () => {
+        const image = document.createElement('img');
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'range',
+            range: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+        getRangeAtSpy.and.returnValue({ startContainer: {} });
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'image',
+            image,
+        });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('SelectionPlugin handle logical root change', () => {
+    let plugin: PluginWithState<SelectionPluginState>;
+    let disposer: jasmine.Spy;
+    let logicalRootDisposer: jasmine.Spy;
+    let attachDomEvent: jasmine.Spy;
+    let removeEventListenerSpy: jasmine.Spy;
+    let addEventListenerSpy: jasmine.Spy;
+    let getDocumentSpy: jasmine.Spy;
+    let editor: IEditor;
+
+    beforeEach(() => {
+        plugin = createSelectionPlugin({});
+        disposer = jasmine.createSpy('disposer');
+        logicalRootDisposer = jasmine.createSpy('logicalRootDisposer');
+        attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
+        removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+        getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
+            removeEventListener: removeEventListenerSpy,
+            addEventListener: addEventListenerSpy,
+        });
+    });
+
+    it('handles logical root change - non Safari', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: false,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // Reset the spy calls before the logicalRootChanged event
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+
+        // Trigger logicalRootChanged event
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that attachDomEvent was called for logical root with correct events
+        expect(attachDomEvent).toHaveBeenCalledTimes(1);
+        expect(attachDomEvent).toHaveBeenCalledWith({
+            focus: { beforeDispatch: jasmine.any(Function) },
+            blur: { beforeDispatch: jasmine.any(Function) },
+            drop: { beforeDispatch: jasmine.any(Function) },
+        });
+
+        // Dispose should clean up all event listeners including logicalRoot disposers
+        plugin.dispose();
+        expect(logicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
+        expect(removeEventListenerSpy).toHaveBeenCalled();
+    });
+
+    it('handles logical root change - Safari', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: true,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // Reset the spy calls before the logicalRootChanged event
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+
+        // Trigger logicalRootChanged event
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that attachDomEvent was called for logical root with correct events
+        expect(attachDomEvent).toHaveBeenCalledTimes(1);
+        expect(attachDomEvent).toHaveBeenCalledWith({
+            focus: { beforeDispatch: jasmine.any(Function) },
+            drop: { beforeDispatch: jasmine.any(Function) },
+        });
+
+        // Dispose should clean up all event listeners including logicalRoot disposers
+        plugin.dispose();
+        expect(logicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
+        expect(removeEventListenerSpy).toHaveBeenCalled();
+    });
+
+    it('calls previous logical root disposer when logicalRootChanged is triggered again', () => {
+        // Setup
+        editor = ({
+            getDocument: getDocumentSpy,
+            attachDomEvent,
+            getEnvironment: () => ({
+                isSafari: false,
+            }),
+            getColorManager: () => ({
+                getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
+            }),
+        } as any) as IEditor;
+
+        plugin.initialize(editor);
+
+        // First logical root change
+        attachDomEvent.calls.reset();
+        attachDomEvent.and.returnValue(logicalRootDisposer);
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Second logical root change
+        const newLogicalRootDisposer = jasmine.createSpy('newLogicalRootDisposer');
+        attachDomEvent.and.returnValue(newLogicalRootDisposer);
+        plugin.onPluginEvent?.({
+            eventType: 'logicalRootChanged',
+            logicalRoot: document.createElement('div'), // Mock logical root element
+        });
+
+        // Verify that the old logical root disposer was called
+        expect(logicalRootDisposer).toHaveBeenCalled();
+
+        // Dispose should clean up all event listeners including the new logicalRoot disposer
+        plugin.dispose();
+        expect(newLogicalRootDisposer).toHaveBeenCalled();
+        expect(disposer).toHaveBeenCalled();
     });
 });

@@ -19,6 +19,9 @@
             "roosterjs-content-model-api": ["packages/roosterjs-content-model-api/lib/index"],
             "roosterjs-content-model-plugins": [
                 "packages/roosterjs-content-model-plugins/lib/index"
+            ],
+            "roosterjs-content-model-markdown": [
+                "packages/roosterjs-content-model-markdown/lib/index"
             ]
         }
     },

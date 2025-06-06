@@ -240,7 +240,7 @@ describe('Table Mover Tests', () => {
     it('On click event', () => {
         const table = document.getElementById(targetId) as HTMLTableElement;
 
-        const tableEditor = new TableEditor(editor, table, () => true);
+        const tableEditor = new TableEditor(editor, table, null, () => true);
 
         tableEditor.onSelect(table);
 

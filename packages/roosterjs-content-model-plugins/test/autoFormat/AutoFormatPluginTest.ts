@@ -889,7 +889,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             });
         });
 
-        it('should not  call createLink - autolink disabled', () => {
+        it('should not  call createLink - autoLink disabled', () => {
             const event: ContentChangedEvent = {
                 eventType: 'contentChanged',
                 source: 'Paste',
@@ -1050,7 +1050,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 true,
                 {
                     changeSource: ChangeSource.AutoLink,
-                    apiName: '',
+                    apiName: 'autoLink',
                     getChangeData: () => link,
                 }
             );
@@ -1124,7 +1124,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 true,
                 {
                     changeSource: ChangeSource.AutoLink,
-                    apiName: '',
+                    apiName: 'autoLink',
                     getChangeData: () => link,
                 }
             );
@@ -1197,7 +1197,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 true,
                 {
                     changeSource: ChangeSource.AutoLink,
-                    apiName: '',
+                    apiName: 'autoLink',
                     getChangeData: () => link,
                 }
             );
@@ -1241,6 +1241,556 @@ describe('Content Model Auto Format Plugin Test', () => {
                     data: 'Backspace',
                     preventDefault: () => {},
                     inputType: 'insertText',
+                } as any,
+            };
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoLink: true,
+                },
+                false,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: undefined,
+                }
+            );
+        });
+    });
+
+    describe('onPluginEvent [TAB/Enter] - promoteLink', () => {
+        function runTest(
+            event: KeyDownEvent,
+            text: string,
+            expectResult: ContentModelParagraph,
+            options: AutoFormatOptions,
+            shouldCallFormat: boolean,
+            expectedOptions: FormatContentModelOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options as AutoFormatOptions);
+            plugin.initialize(editor);
+
+            const segment: ContentModelText = {
+                segmentType: 'Text',
+                text,
+                format: {},
+            };
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [segment],
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                callback(
+                    null!,
+                    segment,
+                    paragraph,
+                    {},
+                    { deletedEntities: [], newEntities: [], newImages: [] }
+                );
+
+                expect(options?.changeSource).toEqual(expectedOptions.changeSource);
+                expect(options?.apiName).toEqual(expectedOptions.apiName);
+                expect(JSON.stringify(options?.getChangeData?.())).toEqual(
+                    JSON.stringify(expectedOptions.getChangeData?.())
+                );
+
+                return true;
+            });
+
+            plugin.onPluginEvent(event);
+
+            expect(formatTextSegmentBeforeSelectionMarkerSpy).toHaveBeenCalledTimes(
+                shouldCallFormat ? 1 : 0
+            );
+            expect(paragraph).toEqual(expectResult);
+        }
+
+        it('[TAB] should call promoteLink ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'www.test.com';
+            link.textContent = 'www.test.com';
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                format: {
+                                    href: 'http://www.test.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoLink: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('[TAB] should call promoteLink | autoTel', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoTel: true,
+                },
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('[TAB] should call promoteLink with telephone | autoTel', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'tel:9999999';
+            link.textContent = 'tel:9999999';
+            runTest(
+                event,
+                'tel:9999999',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tel:9999999',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'tel:9999999',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoTel: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('[TAB] should call promoteLink | autoMailto', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoMailto: true,
+                },
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('[TAB] should call promoteLink with mailto | autoMailto', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'mailto:test@mail.com';
+            link.textContent = 'mailto:test@mail.com';
+            runTest(
+                event,
+                'mailto:test@mail.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'mailto:test@mail.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'mailto:test@mail.com',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoMailto: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('[Enter] should call promoteLink ', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'www.test.com';
+            link.textContent = 'www.test.com';
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                format: {
+                                    href: 'http://www.test.com',
+                                    underline: true,
+                                },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoLink: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('[Enter] should call promoteLink | autoTel', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoTel: true,
+                },
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('[Enter] should call promoteLink with telephone | autoTel', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'tel:9999999';
+            link.textContent = 'tel:9999999';
+            runTest(
+                event,
+                'tel:9999999',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tel:9999999',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'tel:9999999',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoTel: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('[Enter] should call promoteLink | autoMailto', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoMailto: true,
+                },
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('[Enter] should call promoteLink with mailto | autoMailto', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            const link = document.createElement('a');
+            link.href = 'mailto:test@mail.com';
+            link.textContent = 'mailto:test@mail.com';
+            runTest(
+                event,
+                'mailto:test@mail.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'mailto:test@mail.com',
+                            format: {},
+                            isSelected: undefined,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'mailto:test@mail.com',
+                                    underline: true,
+                                },
+                            },
+                        },
+                    ],
+                },
+                {
+                    autoMailto: true,
+                },
+                true,
+                {
+                    changeSource: ChangeSource.AutoLink,
+                    apiName: 'autoLink',
+                    getChangeData: () => link,
+                }
+            );
+        });
+
+        it('should not call promoteLink - disable options', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                'www.test.com',
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'www.test.com',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    autoLink: false,
+                },
+                true,
+                {
+                    changeSource: '',
+                    apiName: '',
+                    getChangeData: undefined,
+                }
+            );
+        });
+
+        it('should not call promoteLink - not ENTER OR TAB', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'k',
+                    defaultPrevented: false,
+                    handledByEditFeature: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
                 } as any,
             };
             runTest(
@@ -1653,6 +2203,283 @@ describe('Content Model Auto Format Plugin Test', () => {
                     autoOrdinals: false,
                 },
                 true
+            );
+        });
+    });
+
+    describe('onPluginEvent - [Enter] - autoHorizontalLine', () => {
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: {},
+        };
+        function runTest(
+            event: KeyDownEvent,
+            stringInSegment: string,
+            expectResult: ContentModelDocument,
+            options: AutoFormatOptions
+        ) {
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+
+            const textSegment: ContentModelText = {
+                segmentType: 'Text',
+                text: stringInSegment,
+                format: {},
+            };
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [textSegment, marker],
+                format: {},
+            };
+            const inputModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [paragraph],
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                callback(
+                    inputModel,
+                    textSegment,
+                    paragraph,
+                    {},
+                    { newEntities: [], newImages: [], deletedEntities: [] }
+                );
+
+                return true;
+            });
+
+            plugin.onPluginEvent(event);
+
+            expect(inputModel).toEqual(expectResult);
+        }
+
+        it('Add divider ---', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '---',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '1px none',
+                                borderRight: '1px none',
+                                borderBottom: '1px solid',
+                                borderLeft: '1px none',
+                                width: '98%',
+                                display: 'inline-block',
+                            },
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Add divider ===', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '===',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '3pt double',
+                                borderRight: '3pt none',
+                                borderBottom: '3pt none',
+                                borderLeft: '3pt none',
+                                width: '98%',
+                                display: 'inline-block',
+                            },
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Add divider ___', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '___',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Divider',
+                            tagName: 'hr',
+                            format: {
+                                borderTop: '1px solid',
+                                borderRight: '1px none',
+                                borderBottom: '1px solid',
+                                borderLeft: '1px none',
+                                width: '98%',
+                                display: 'inline-block',
+                            },
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                                { segmentType: 'Br', format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider _-_', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '_-_',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '_-_',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider __', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '__',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '__',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: true }
+            );
+        });
+
+        it('Dont add divider ___, option disabled', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+            runTest(
+                event,
+                '___',
+                {
+                    blockGroupType: 'Document',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: '___',
+                                    format: {},
+                                },
+                                { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                { autoHorizontalLine: false }
             );
         });
     });

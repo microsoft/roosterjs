@@ -799,7 +799,7 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(mockedTable.id).toBe(expectedId || 'table_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(6);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -821,6 +821,12 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelectionHideCursor',
                 'caret-color: transparent'
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
             );
         }
 
@@ -966,7 +972,7 @@ describe('setDOMSelection', () => {
                 true
             );
             expect(table.id).toBe('table_0');
-            expect(setEditorStyleSpy).toHaveBeenCalledTimes(5);
+            expect(setEditorStyleSpy).toHaveBeenCalledTimes(6);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelection', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(core, '_DOMSelectionHideCursor', null);
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
@@ -984,6 +990,12 @@ describe('setDOMSelection', () => {
                 core,
                 '_DOMSelectionHideCursor',
                 'caret-color: transparent'
+            );
+            expect(setEditorStyleSpy).toHaveBeenCalledWith(
+                core,
+                '_DOMSelectionHideSelection',
+                'background-color: transparent !important;',
+                ['*::selection']
             );
         });
 

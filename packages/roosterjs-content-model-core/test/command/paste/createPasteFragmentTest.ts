@@ -126,7 +126,7 @@ describe('createPasteFragment', () => {
                 imageDataUri: 'test',
             },
             'asPlainText',
-            '',
+            'HTML',
             false
         );
     });

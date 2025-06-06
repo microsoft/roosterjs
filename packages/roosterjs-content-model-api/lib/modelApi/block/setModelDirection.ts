@@ -1,4 +1,5 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
+import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import {
     applyTableFormat,
     getOperationalBlocks,
@@ -19,6 +20,8 @@ import type {
  * @internal
  */
 export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl') {
+    splitSelectedParagraphByBr(model);
+
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],

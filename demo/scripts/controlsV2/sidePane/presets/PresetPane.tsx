@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { allPresets, Preset } from './allPresets/allPresets';
+import { allPresets } from './allPresets/allPresets';
 import { IEditor } from 'roosterjs-content-model-types';
+import { Preset } from './allPresets/Preset';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./PresetPane.scss');

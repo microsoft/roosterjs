@@ -18,7 +18,6 @@ export function transformHyphen(
     if (dashes === '--') {
         const textIndex = previousSegment.text.lastIndexOf('--');
         const textSegment = splitTextSegment(previousSegment, paragraph, textIndex, textIndex + 2);
-
         textSegment.text = textSegment.text.replace('--', '—');
         context.canUndoByBackspace = true;
         return true;

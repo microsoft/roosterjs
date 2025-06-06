@@ -99,4 +99,71 @@ describe('handleEnterOnParagraph', () => {
             path: [doc],
         });
     });
+
+    it('Not deleted, split current paragraph with id', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph();
+        para.format.id = 'ID';
+        const marker = createSelectionMarker();
+        const mockedCache = {} as any;
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        para.segments.push(text1, marker, text2);
+        doc.blocks.push(para);
+        doc.cachedElement = mockedCache;
+
+        const context: ValidDeleteSelectionContext = {
+            deleteResult: 'notDeleted',
+            insertPoint: {
+                paragraph: para,
+                marker: marker,
+                path: [doc],
+            },
+        };
+
+        handleEnterOnParagraph(context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1],
+                    format: {
+                        id: 'ID',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        text2,
+                    ],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(context.insertPoint).toEqual({
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    text2,
+                ],
+                format: {},
+            },
+            marker: marker,
+            path: [doc],
+        });
+    });
 });

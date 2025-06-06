@@ -1,8 +1,41 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent, DOMCreator } from 'roosterjs-content-model-types';
+import type { BeforePasteEvent } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
+const STYLE_TAG = '<style';
+const STYLE_TAG_END = '</style>';
+const nonWordCharacterRegex = /\W/;
+
+function extractStyleTagsFromHtml(htmlContent: string): string[] {
+    const styles: string[] = [];
+
+    let { styleIndex, styleEndIndex } = extractHtmlIndexes(htmlContent);
+    while (styleIndex >= 0 && styleEndIndex >= 0) {
+        const styleContent = htmlContent
+            .substring(styleIndex + STYLE_TAG.length, styleEndIndex)
+            .trim();
+        styles.push(styleContent);
+        ({ styleIndex, styleEndIndex } = extractHtmlIndexes(htmlContent, styleEndIndex + 1));
+    }
+    return styles;
+}
+
+function extractHtmlIndexes(html: string, startIndex: number = 0) {
+    const htmlLowercase = html.toLowerCase();
+    let styleIndex = htmlLowercase.indexOf(STYLE_TAG, startIndex);
+    let currentIndex = styleIndex + STYLE_TAG.length;
+    let nextChar = html.substring(currentIndex, currentIndex + 1);
+
+    while (!nonWordCharacterRegex.test(nextChar) && styleIndex > -1) {
+        styleIndex = htmlLowercase.indexOf(STYLE_TAG, styleIndex + 1);
+        currentIndex = styleIndex + STYLE_TAG.length;
+        nextChar = html.substring(currentIndex, currentIndex + 1);
+    }
+
+    const styleEndIndex = htmlLowercase.indexOf(STYLE_TAG_END, startIndex);
+    return { styleIndex, styleEndIndex };
+}
 
 /**
  * @internal
@@ -24,14 +57,11 @@ const FORMATING_REGEX = /[\n\t'{}"]+/g;
  * 5. Save data in record and only use the required information.
  *
  */
-export function getStyleMetadata(ev: BeforePasteEvent, domCreator: DOMCreator) {
+export function getStyleMetadata(ev: BeforePasteEvent) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const doc = domCreator.htmlToDOM(ev.htmlBefore);
-    const styles = doc.querySelectorAll('style');
+    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore || ev.clipboardData.rawHtml || '');
 
-    styles.forEach(style => {
-        const text = style?.innerHTML.trim() || '';
-
+    headStyles.forEach(text => {
         let index = 0;
         while (index >= 0) {
             const indexAt = text.indexOf('@', index + 1);
@@ -77,5 +107,6 @@ export function getStyleMetadata(ev: BeforePasteEvent, domCreator: DOMCreator) {
             }
         }
     });
+
     return metadataMap;
 }

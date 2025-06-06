@@ -205,4 +205,233 @@ describe('linkProcessor', () => {
             ],
         });
     });
+
+    it('undeletable link', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        (a as any).__roosterjsHiddenProperty = {
+            undeletable: true,
+        };
+
+        a.href = '/test';
+        a.textContent = 'test';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { href: '/test', underline: true, undeletable: true },
+                                dataset: {},
+                            },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('anchor with child', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+        a.textContent = 'test';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('anchor without child', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('undeletable anchor', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        (a as any).__roosterjsHiddenProperty = {
+            undeletable: true,
+        };
+
+        a.name = 'name';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { name: 'name', undeletable: true },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('empty anchor', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('selected empty anchor', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.name = 'name';
+
+        context.isInSelection = true;
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            isSelected: true,
+                            link: {
+                                format: { name: 'name' },
+                                dataset: {},
+                            },
+                            text: '',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({
+            format: {},
+            dataset: {},
+        });
+    });
 });

@@ -153,9 +153,11 @@ class RibbonPluginImpl implements RibbonPlugin {
     private updateFormat() {
         if (this.editor && this.onFormatChanged) {
             const newFormatState = getFormatState(this.editor);
+            const newFormatKeys = getObjectKeys(newFormatState);
 
             if (
                 !this.formatState ||
+                newFormatKeys.length != getObjectKeys(this.formatState).length ||
                 getObjectKeys(newFormatState).some(
                     key => newFormatState[key] != this.formatState?.[key]
                 )

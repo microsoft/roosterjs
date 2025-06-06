@@ -100,6 +100,43 @@ describe('addLink', () => {
             },
         });
     });
+
+    it('has anchor', () => {
+        const segment = createSelectionMarker();
+        const link: ContentModelLink = {
+            format: {
+                name: 'name',
+            },
+            dataset: {},
+        };
+        addLink(segment, link);
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            link: {
+                format: {
+                    name: 'name',
+                },
+                dataset: {},
+            },
+        });
+
+        link.format.name = 'name2';
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            link: {
+                format: {
+                    name: 'name',
+                },
+                dataset: {},
+            },
+        });
+    });
 });
 
 describe('addCode', () => {

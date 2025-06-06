@@ -8,6 +8,7 @@ const ContentHandlers: {
     ['text/plain']: (data, value) => (data.text = value),
     ['text/*']: (data, value, type?) => !!type && (data.customValues[type] = value),
     ['text/link-preview']: tryParseLinkPreview,
+    ['text/uri-list']: (data, value) => (data.text = value),
 };
 
 /**

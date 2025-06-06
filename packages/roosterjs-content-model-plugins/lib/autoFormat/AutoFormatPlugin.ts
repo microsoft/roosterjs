@@ -1,4 +1,5 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
+import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
 import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
@@ -9,13 +10,32 @@ import { unlink } from './link/unlink';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
+    ContentModelText,
     EditorInputEvent,
     EditorPlugin,
+    FormatContentModelContext,
     FormatContentModelOptions,
     IEditor,
     KeyDownEvent,
     PluginEvent,
+    ReadonlyContentModelDocument,
+    ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ */
+interface Feature {
+    enabled: boolean;
+    transformFunction: (
+        model: ReadonlyContentModelDocument,
+        previousSegment: ContentModelText,
+        paragraph: ShallowMutableContentModelParagraph,
+        context: FormatContentModelContext
+    ) => boolean | HTMLElement;
+    changeSource: string;
+    apiName: string;
+}
 
 /**
  * @internal
@@ -29,6 +49,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoFraction: false,
     autoOrdinals: false,
     removeListMargins: false,
+    autoHorizontalLine: false,
 };
 
 /**
@@ -49,6 +70,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoUnlink: A boolean that enables or disables automatic hyperlink removal when pressing backspace. Defaults to false.
      *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
      *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
+     *  - autoHorizontalLine: A boolean that enables or disables automatic horizontal line creation. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -100,6 +122,120 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 
+    private autoLink: Feature = {
+        enabled: !!(this.options.autoLink || this.options.autoTel || this.options.autoMailto),
+        transformFunction: (_model, previousSegment, paragraph, context) => {
+            const { autoLink, autoTel, autoMailto } = this.options;
+            const linkSegment = promoteLink(previousSegment, paragraph, {
+                autoLink,
+                autoTel,
+                autoMailto,
+            });
+
+            if (linkSegment) {
+                return createAnchor(linkSegment.link?.format.href || '', linkSegment.text);
+            }
+            return false;
+        },
+        apiName: 'autoLink',
+        changeSource: ChangeSource.AutoLink,
+    };
+
+    private tabFeatures: Feature[] = [
+        {
+            enabled: !!(this.options.autoBullet || this.options.autoNumbering),
+            transformFunction: (model, _previousSegment, paragraph, context) =>
+                keyboardListTrigger(
+                    model,
+                    paragraph,
+                    context,
+                    this.options.autoBullet,
+                    this.options.autoNumbering,
+                    this.options.removeListMargins
+                ),
+            apiName: 'autoToggleList',
+            changeSource: ChangeSource.AutoFormat,
+        },
+        this.autoLink,
+    ];
+
+    private features: Feature[] = [
+        ...this.tabFeatures,
+        {
+            enabled: !!this.options.autoHyphen,
+            apiName: 'autoHyphen',
+            changeSource: ChangeSource.Format,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformHyphen(previousSegment, paragraph, context),
+        },
+        {
+            enabled: !!this.options.autoFraction,
+            apiName: 'autoFraction',
+            changeSource: ChangeSource.Format,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformFraction(previousSegment, paragraph, context),
+        },
+        {
+            enabled: !!this.options.autoOrdinals,
+            apiName: 'autoOrdinal',
+            changeSource: ChangeSource.Format,
+            transformFunction: (_model, previousSegment, paragraph, context) =>
+                transformOrdinals(previousSegment, paragraph, context),
+        },
+    ];
+
+    private enterFeatures: Feature[] = [
+        {
+            enabled: !!this.options.autoHorizontalLine,
+            transformFunction: (model, _previousSegment, paragraph, context) =>
+                checkAndInsertHorizontalLine(model, paragraph, context),
+            apiName: 'autoHorizontalLine',
+            changeSource: ChangeSource.AutoFormat,
+        },
+        this.autoLink,
+    ];
+
+    private handleKeyboardEvents(editor: IEditor, features: Feature[]): FormatContentModelOptions {
+        const formatOptions: FormatContentModelOptions = {
+            changeSource: '',
+            apiName: '',
+            getChangeData: undefined,
+        };
+
+        formatTextSegmentBeforeSelectionMarker(
+            editor,
+            (model, previousSegment, paragraph, _markerFormat, context) => {
+                let featureApplied: Feature | undefined = undefined;
+                for (const feature of features) {
+                    if (feature.enabled) {
+                        const result = feature.transformFunction(
+                            model,
+                            previousSegment,
+                            paragraph,
+                            context
+                        );
+                        if (result) {
+                            if (typeof result !== 'boolean') {
+                                formatOptions.getChangeData = () => result;
+                            }
+                            featureApplied = feature;
+                            break;
+                        }
+                    }
+                }
+
+                if (featureApplied) {
+                    formatOptions.changeSource = featureApplied.changeSource;
+                    formatOptions.apiName = featureApplied.apiName;
+                }
+
+                return !!featureApplied;
+            },
+            formatOptions
+        );
+        return formatOptions;
+    }
+
     private handleEditorInputEvent(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
         const selection = editor.getDOMSelection();
@@ -111,99 +247,7 @@ export class AutoFormatPlugin implements EditorPlugin {
         ) {
             switch (rawEvent.data) {
                 case ' ':
-                    const formatOptions: FormatContentModelOptions = {
-                        changeSource: '',
-                        apiName: '',
-                        getChangeData: undefined,
-                    };
-                    formatTextSegmentBeforeSelectionMarker(
-                        editor,
-                        (model, previousSegment, paragraph, _markerFormat, context) => {
-                            const {
-                                autoBullet,
-                                autoNumbering,
-                                autoLink,
-                                autoHyphen,
-                                autoFraction,
-                                autoOrdinals,
-                                autoMailto,
-                                autoTel,
-                                removeListMargins,
-                            } = this.options;
-                            let shouldHyphen = false;
-                            let shouldLink = false;
-                            let shouldList = false;
-                            let shouldFraction = false;
-                            let shouldOrdinals = false;
-
-                            if (autoBullet || autoNumbering) {
-                                shouldList = keyboardListTrigger(
-                                    model,
-                                    paragraph,
-                                    context,
-                                    autoBullet,
-                                    autoNumbering,
-                                    removeListMargins
-                                );
-                            }
-
-                            if (autoLink || autoTel || autoMailto) {
-                                const linkSegment = promoteLink(previousSegment, paragraph, {
-                                    autoLink,
-                                    autoTel,
-                                    autoMailto,
-                                });
-
-                                if (linkSegment) {
-                                    const anchor = createAnchor(
-                                        linkSegment.link?.format.href || '',
-                                        linkSegment.text
-                                    );
-                                    formatOptions.getChangeData = () => anchor;
-
-                                    shouldLink = true;
-                                    context.canUndoByBackspace = true;
-                                }
-                            }
-
-                            if (autoHyphen) {
-                                shouldHyphen = transformHyphen(previousSegment, paragraph, context);
-                            }
-
-                            if (autoFraction) {
-                                shouldFraction = transformFraction(
-                                    previousSegment,
-                                    paragraph,
-                                    context
-                                );
-                            }
-
-                            if (autoOrdinals) {
-                                shouldOrdinals = transformOrdinals(
-                                    previousSegment,
-                                    paragraph,
-                                    context
-                                );
-                            }
-
-                            formatOptions.apiName = getApiName(shouldList, shouldHyphen);
-                            formatOptions.changeSource = getChangeSource(
-                                shouldList,
-                                shouldHyphen,
-                                shouldLink
-                            );
-
-                            return (
-                                shouldList ||
-                                shouldHyphen ||
-                                shouldLink ||
-                                shouldFraction ||
-                                shouldOrdinals
-                            );
-                        },
-                        formatOptions
-                    );
-
+                    this.handleKeyboardEvents(editor, this.features);
                     break;
             }
         }
@@ -220,37 +264,18 @@ export class AutoFormatPlugin implements EditorPlugin {
                     break;
                 case 'Tab':
                     if (!rawEvent.shiftKey) {
-                        formatTextSegmentBeforeSelectionMarker(
-                            editor,
-                            (model, _previousSegment, paragraph, _markerFormat, context) => {
-                                const {
-                                    autoBullet,
-                                    autoNumbering,
-                                    removeListMargins,
-                                } = this.options;
-                                let shouldList = false;
-                                if (autoBullet || autoNumbering) {
-                                    shouldList = keyboardListTrigger(
-                                        model,
-                                        paragraph,
-                                        context,
-                                        autoBullet,
-                                        autoNumbering,
-                                        removeListMargins
-                                    );
-                                    context.canUndoByBackspace = shouldList;
-                                }
-                                if (shouldList) {
-                                    event.rawEvent.preventDefault();
-                                }
-                                return shouldList;
-                            },
-                            {
-                                changeSource: ChangeSource.AutoFormat,
-                                apiName: 'autoToggleList',
-                            }
-                        );
+                        const eventHandled = this.handleKeyboardEvents(editor, this.tabFeatures);
+                        if (eventHandled.apiName == 'autoToggleList') {
+                            event.rawEvent.preventDefault();
+                        }
                     }
+                    break;
+                case 'Enter':
+                    const eventHandled = this.handleKeyboardEvents(editor, this.enterFeatures);
+                    if (eventHandled.apiName == 'autoHorizontalLine') {
+                        event.rawEvent.preventDefault();
+                    }
+                    break;
             }
         }
     }
@@ -266,18 +291,6 @@ export class AutoFormatPlugin implements EditorPlugin {
         }
     }
 }
-
-const getApiName = (shouldList: boolean, shouldHyphen: boolean) => {
-    return shouldList ? 'autoToggleList' : shouldHyphen ? 'autoHyphen' : '';
-};
-
-const getChangeSource = (shouldList: boolean, shouldHyphen: boolean, shouldLink: boolean) => {
-    return shouldList || shouldHyphen
-        ? ChangeSource.AutoFormat
-        : shouldLink
-        ? ChangeSource.AutoLink
-        : '';
-};
 
 const createAnchor = (url: string, text: string) => {
     const anchor = document.createElement('a');

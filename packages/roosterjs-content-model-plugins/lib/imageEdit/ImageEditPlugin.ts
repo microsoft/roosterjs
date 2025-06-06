@@ -3,7 +3,7 @@ import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
-import { findEditingImage } from './utils/findEditingImage';
+import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -22,6 +22,7 @@ import {
     isNodeOfType,
     mutateBlock,
     mutateSegment,
+    setImageState,
     unwrap,
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHelper } from '../pluginUtils/DragAndDrop/DragAndDropHelper';
@@ -104,7 +105,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.disposer = editor.attachDomEvent({
             blur: {
                 beforeDispatch: () => {
-                    if (this.editor) {
+                    if (this.isEditing && this.editor && !this.editor.isDisposed()) {
                         this.applyFormatWithContentModel(
                             this.editor,
                             this.isCropMode,
@@ -142,13 +143,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * called, plugin should not call to any editor method since it will result in error.
      */
     dispose() {
-        this.editor = null;
-        this.isEditing = false;
-        this.cleanInfo();
         if (this.disposer) {
             this.disposer();
             this.disposer = null;
         }
+        this.isEditing = false;
+        this.cleanInfo();
+        this.editor = null;
     }
 
     /**
@@ -183,9 +184,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private removeImageEditing(clonedRoot: HTMLElement) {
         const images = clonedRoot.querySelectorAll('img');
         images.forEach(image => {
-            if (image.dataset.isEditing) {
-                delete image.dataset.isEditing;
-            }
             if (image.dataset.editingInfo) {
                 delete image.dataset.editingInfo;
             }
@@ -219,7 +217,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (
             this.isEditing &&
             this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton
+            event.rawEvent.button !== MouseRightButton &&
+            !this.isCropMode
         ) {
             this.applyFormatWithContentModel(
                 editor,
@@ -269,6 +268,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 }
                 this.cleanInfo();
             } else {
+                if (event.rawEvent.key == 'Enter' && this.isCropMode) {
+                    event.rawEvent.preventDefault();
+                }
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,
@@ -281,8 +283,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private setContentHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
-        if (selection?.type == 'image' && selection.image.dataset.isEditing && !this.isEditing) {
-            delete selection.image.dataset.isEditing;
+        if (selection?.type == 'image') {
+            this.cleanInfo();
+            setImageState(selection.image, '');
+            this.isEditing = false;
+            this.isCropMode = false;
         }
     }
 
@@ -331,7 +336,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
-                    previousSelectedImage?.image.dataset.isEditing ||
+                    previousSelectedImage?.image.format.imageState == EDITING_MARKER ||
                     isApiOperation
                 ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
@@ -359,7 +364,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
-                                delete image.dataset.isEditing;
+                                image.format.imageState = undefined;
 
                                 if (selection?.type == 'range' && !selection.range.collapsed) {
                                     const selectedParagraphs = getSelectedParagraphs(model, true);
@@ -395,7 +400,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
-                            image.dataset.isEditing = 'true';
+                            image.format.imageState = 'isEditing';
                         });
 
                         result = true;
@@ -410,7 +415,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         !isApiOperation &&
                         editingImageModel &&
                         editingImageModel == model &&
-                        editingImageModel.dataset.isEditing &&
+                        editingImageModel.format.imageState == EDITING_MARKER &&
                         isNodeOfType(node, 'ELEMENT_NODE') &&
                         isElementOfType(node, 'img')
                     ) {

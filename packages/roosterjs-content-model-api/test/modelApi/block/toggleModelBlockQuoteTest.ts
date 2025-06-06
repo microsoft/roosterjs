@@ -1,3 +1,4 @@
+import * as splitSelectedParagraphByBrModule from '../../../lib/modelApi/block/splitSelectedParagraphByBr';
 import { toggleModelBlockQuote } from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import {
     createContentModelDocument,
@@ -8,6 +9,15 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('toggleModelBlockQuote', () => {
+    let splitSelectedParagraphByBrSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        splitSelectedParagraphByBrSpy = spyOn(
+            splitSelectedParagraphByBrModule,
+            'splitSelectedParagraphByBr'
+        ).and.callThrough();
+    });
+
     it('empty model', () => {
         const doc = createContentModelDocument();
 
@@ -17,6 +27,8 @@ describe('toggleModelBlockQuote', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('no selection', () => {
@@ -45,6 +57,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has single selection, wrap', () => {
@@ -83,6 +97,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has multiple selection, wrap together', () => {
@@ -138,6 +154,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has multiple selection, with RTL, do not merge', () => {
@@ -231,6 +249,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has single selection, merge before', () => {
@@ -286,6 +306,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has single selection, merge after', () => {
@@ -341,6 +363,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has single selection, merge both', () => {
@@ -413,6 +437,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has single selection, cannot merge', () => {
@@ -501,6 +527,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has mixed selection', () => {
@@ -591,6 +619,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Has selection under list', () => {
@@ -645,6 +675,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Unwrap', () => {
@@ -712,6 +744,8 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 
     it('Unwrap quote with multiple paragraphs', () => {
@@ -760,5 +794,7 @@ describe('toggleModelBlockQuote', () => {
                 },
             ],
         });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
 });

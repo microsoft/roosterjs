@@ -1,5 +1,5 @@
 import { isNodeOfType, parseValueWithUnit, toArray } from 'roosterjs-content-model-dom';
-import type { DOMHelper } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat, DOMHelper } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
     constructor(private contentDiv: HTMLElement) {}
@@ -87,6 +87,31 @@ class DOMHelperImpl implements DOMHelper {
      */
     getClonedRoot(): HTMLElement {
         return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+    }
+
+    /**
+     * Get format of the container element
+     */
+    getContainerFormat(): ContentModelSegmentFormat {
+        const window = this.contentDiv.ownerDocument.defaultView;
+
+        const style = window?.getComputedStyle(this.contentDiv);
+
+        return style
+            ? {
+                  fontSize: style.fontSize,
+                  fontFamily: style.fontFamily,
+                  fontWeight: style.fontWeight,
+                  textColor: style.color,
+                  backgroundColor: style.backgroundColor,
+                  italic: style.fontStyle == 'italic',
+                  letterSpacing: style.letterSpacing,
+                  lineHeight: style.lineHeight,
+                  strikethrough: style.textDecoration?.includes('line-through'),
+                  superOrSubScriptSequence: style.verticalAlign,
+                  underline: style.textDecoration?.includes('underline'),
+              }
+            : {};
     }
 }
 

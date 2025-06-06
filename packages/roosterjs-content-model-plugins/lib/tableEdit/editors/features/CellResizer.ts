@@ -181,6 +181,7 @@ export function onDraggingHorizontal(
         for (let col = 0; col < tableRow.cells.length; col++) {
             const td = tableRow.cells[col];
             td.style.height = newHeight + 'px';
+            td.style.boxSizing = 'border-box';
         }
 
         return true;
@@ -236,7 +237,10 @@ export function onDraggingVertical(
         for (let row = 0; row < table.rows.length; row++) {
             const tableRow = table.rows[row];
             for (let col = 0; col < tableRow.cells.length; col++) {
-                tableRow.cells[col].style.width = cmTable.widths[col] + 'px';
+                const td = tableRow.cells[col];
+
+                td.style.width = cmTable.widths[col] + 'px';
+                td.style.boxSizing = 'border-box';
             }
         }
 

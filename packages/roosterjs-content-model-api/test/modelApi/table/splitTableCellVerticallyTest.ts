@@ -365,4 +365,46 @@ describe('splitTableCellVertically', () => {
         expect(table.rows[1].cells[0].dataset).toEqual({ editingInfo: '{"bgColorOverride":true}' });
         expect(table.rows[1].cells[0].format).toEqual({ backgroundColor: '1' });
     });
+
+    it('cell already has height', () => {
+        const table = createTable(1);
+        const cells = [createTableCell(false, false, false, { height: '100px' })];
+
+        table.rows[0].cells = cells;
+        table.rows[0].height = 100;
+
+        cells[0].isSelected = true;
+
+        splitTableCellVertically(table);
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [
+                {
+                    cells: [cells[0]],
+                    format: {},
+                    height: 50,
+                },
+                {
+                    cells: [cells[0]],
+                    format: {},
+                    height: 50,
+                },
+            ],
+            widths: [],
+            dataset: {},
+            cachedElement: mockedCachedElement,
+        });
+        expect(cells[0]).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            format: {},
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            dataset: {},
+            isSelected: true,
+        });
+    });
 });

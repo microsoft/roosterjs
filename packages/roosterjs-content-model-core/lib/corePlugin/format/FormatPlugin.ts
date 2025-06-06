@@ -6,6 +6,8 @@ import {
     isCharacterValue,
     isCursorMovingKey,
     isNodeOfType,
+    normalizeFontFamily,
+    normalizeSegmentFormat,
 } from 'roosterjs-content-model-dom';
 import type {
     BackgroundColorFormat,
@@ -54,6 +56,12 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
             pendingFormat: null,
         };
 
+        const defaultFormat = this.state.defaultFormat;
+
+        if (defaultFormat.fontFamily) {
+            defaultFormat.fontFamily = normalizeFontFamily(defaultFormat.fontFamily);
+        }
+
         this.defaultFormatKeys = new Set<keyof CSSStyleDeclaration>();
 
         getObjectKeys(DefaultStyleKeyMap).forEach(key => {
@@ -78,6 +86,11 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        this.state.defaultFormat = normalizeSegmentFormat(
+            this.state.defaultFormat,
+            editor.getEnvironment()
+        );
     }
 
     /**

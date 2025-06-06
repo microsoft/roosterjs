@@ -14,6 +14,10 @@ export function createPasteFragment(
     pasteType: PasteType,
     root: HTMLElement | undefined
 ): DocumentFragment {
+    if (!clipboardData.text && pasteType === 'asPlainText' && root) {
+        clipboardData.text = root.textContent || clipboardData.text;
+    }
+
     const { imageDataUri, text } = clipboardData;
     const fragment = document.createDocumentFragment();
 

@@ -34,7 +34,8 @@ export function createTableInserter(
     table: HTMLTableElement,
     isRTL: boolean,
     isHorizontal: boolean,
-    onInsert: () => void,
+    onBeforeInsert: () => void,
+    onAfterInserted: () => void,
     anchorContainer?: HTMLElement,
     onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
@@ -82,7 +83,8 @@ export function createTableInserter(
             table,
             isHorizontal,
             editor,
-            onInsert,
+            onBeforeInsert,
+            onAfterInserted,
             onTableEditorCreated
         );
 
@@ -104,7 +106,8 @@ export class TableInsertHandler implements Disposable {
         private table: HTMLTableElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: () => void,
+        private onBeforeInsert: () => void,
+        private onAfterInsert: () => void,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
         this.div.addEventListener('click', this.insertTd);
@@ -133,6 +136,8 @@ export class TableInsertHandler implements Disposable {
             return;
         }
 
+        this.onBeforeInsert();
+
         // Insert row or column
         formatTableWithContentModel(
             this.editor,
@@ -152,7 +157,7 @@ export class TableInsertHandler implements Disposable {
             }
         );
 
-        this.onInsert();
+        this.onAfterInsert();
     };
 }
 

@@ -1,6 +1,7 @@
 export { TableEditPlugin } from './tableEdit/TableEditPlugin';
 export { OnTableEditorCreatedCallback } from './tableEdit/OnTableEditorCreatedCallback';
 export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeatureName';
+export { TableWithRoot } from './tableEdit/TableWithRoot';
 export { PastePlugin } from './paste/PastePlugin';
 export { DefaultSanitizers } from './paste/DefaultSanitizers';
 export { EditPlugin, EditOptions } from './edit/EditPlugin';
@@ -39,3 +40,5 @@ export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './pick
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
+export { HiddenPropertyPlugin } from './hiddenProperty/HiddenPropertyPlugin';
+export { HiddenPropertyOptions } from './hiddenProperty/HiddenPropertyOptions';

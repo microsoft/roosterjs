@@ -1,8 +1,15 @@
 import { isNodeOfType, normalizeRect } from 'roosterjs-content-model-dom';
 import { TableEditor } from './editors/TableEditor';
+import type { TableWithRoot } from './TableWithRoot';
 import type { TableEditFeatureName } from './editors/features/TableEditFeatureName';
 import type { OnTableEditorCreatedCallback } from './OnTableEditorCreatedCallback';
-import type { EditorPlugin, IEditor, PluginEvent, Rect } from 'roosterjs-content-model-types';
+import type {
+    DOMHelper,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    Rect,
+} from 'roosterjs-content-model-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 
@@ -12,7 +19,7 @@ const TABLE_RESIZER_LENGTH = 12;
 export class TableEditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private onMouseMoveDisposer: (() => void) | null = null;
-    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] | null = null;
+    private tableRectMap: (TableWithRoot & { rect: Rect })[] | null = null;
     private tableEditor: TableEditor | null = null;
 
     /**
@@ -22,11 +29,13 @@ export class TableEditPlugin implements EditorPlugin {
      * If not specified, the plugin will be inserted in document.body
      * @param onTableEditorCreated An optional callback to customize the Table Editors elements when created.
      * @param disableFeatures An optional array of TableEditFeatures to disable
+     * @param tableSelector A function to select the tables to be edited. By default, it selects all contentEditable tables.
      */
     constructor(
         private anchorContainerSelector?: string,
         private onTableEditorCreated?: OnTableEditorCreatedCallback,
-        private disableFeatures?: TableEditFeatureName[]
+        private disableFeatures?: TableEditFeatureName[],
+        private tableSelector: (domHelper: DOMHelper) => TableWithRoot[] = defaultTableSelector
     ) {}
 
     /**
@@ -105,12 +114,13 @@ export class TableEditPlugin implements EditorPlugin {
         const editorWindow = this.editor.getDocument().defaultView || window;
         const x = e.pageX - editorWindow.scrollX;
         const y = e.pageY - editorWindow.scrollY;
-        let currentTable: HTMLTableElement | null = null;
+        let currentTable: TableWithRoot | null = null;
 
         //Find table in range of mouse
         if (this.tableRectMap) {
             for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
-                const { table, rect } = this.tableRectMap[i];
+                const entry = this.tableRectMap[i];
+                const { rect } = entry;
 
                 if (
                     x >= rect.left - TABLE_RESIZER_LENGTH &&
@@ -118,7 +128,7 @@ export class TableEditPlugin implements EditorPlugin {
                     y >= rect.top - TABLE_RESIZER_LENGTH &&
                     y <= rect.bottom + TABLE_RESIZER_LENGTH
                 ) {
-                    currentTable = table;
+                    currentTable = entry;
                     break;
                 }
             }
@@ -130,15 +140,19 @@ export class TableEditPlugin implements EditorPlugin {
 
     /**
      * @internal Public only for unit test
-     * @param table Table to use when setting the Editors
+     * @param entry Table to use when setting the Editors
      * @param event (Optional) Mouse event
      */
-    public setTableEditor(table: HTMLTableElement | null, event?: MouseEvent) {
-        if (this.tableEditor && !this.tableEditor.isEditing() && table != this.tableEditor.table) {
+    public setTableEditor(entry: TableWithRoot | null, event?: MouseEvent) {
+        if (
+            this.tableEditor &&
+            !this.tableEditor.isEditing() &&
+            entry?.table != this.tableEditor.table
+        ) {
             this.disposeTableEditor();
         }
 
-        if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
+        if (!this.tableEditor && entry && this.editor && entry.table.rows.length > 0) {
             // anchorContainerSelector is used to specify the container to host the plugin, which can be outside of the editor's div
             const container = this.anchorContainerSelector
                 ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
@@ -146,7 +160,8 @@ export class TableEditPlugin implements EditorPlugin {
 
             this.tableEditor = new TableEditor(
                 this.editor,
-                table,
+                entry.table,
+                entry.logicalRoot,
                 this.invalidateTableRects,
                 isNodeOfType(container, 'ELEMENT_NODE') ? container : undefined,
                 event?.currentTarget,
@@ -169,18 +184,27 @@ export class TableEditPlugin implements EditorPlugin {
         if (!this.tableRectMap && this.editor) {
             this.tableRectMap = [];
 
-            const tables = this.editor.getDOMHelper().queryElements('table');
+            const tables = this.tableSelector(this.editor.getDOMHelper());
             tables.forEach(table => {
-                if (table.isContentEditable) {
-                    const rect = normalizeRect(table.getBoundingClientRect());
-                    if (rect && this.tableRectMap) {
-                        this.tableRectMap.push({
-                            table,
-                            rect,
-                        });
-                    }
+                const rect = normalizeRect(table.table.getBoundingClientRect());
+
+                if (rect && this.tableRectMap) {
+                    this.tableRectMap.push({
+                        ...table,
+                        rect,
+                    });
                 }
             });
         }
     }
+}
+
+function defaultTableSelector(domHelper: DOMHelper): TableWithRoot[] {
+    return domHelper
+        .queryElements('table')
+        .filter(table => table.isContentEditable)
+        .map(table => ({
+            table,
+            logicalRoot: null,
+        }));
 }

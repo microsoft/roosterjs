@@ -96,4 +96,94 @@ describe('splitParagraph', () => {
             ],
         });
     });
+
+    it('Paragraph with more segments with format', () => {
+        const doc = createContentModelDocument();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const para = createParagraph(false);
+        para.format.id = 'ID';
+        para.format.borderLeft = '5px';
+        const ip: InsertPoint = {
+            marker: marker,
+            paragraph: para,
+            path: [doc],
+        };
+
+        para.segments.push(text1, marker, text2);
+        doc.blocks.push(para);
+
+        const result = splitParagraph(ip);
+
+        const expectedResult: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker, text2],
+            format: {},
+        };
+
+        expect(result).toEqual(expectedResult);
+        expect(ip).toEqual({
+            marker: marker,
+            paragraph: expectedResult,
+            path: [doc],
+        });
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1],
+                    format: {
+                        id: 'ID',
+                        borderLeft: '5px',
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Implicit paragraph with selection marker only', () => {
+        const group = createContentModelDocument();
+        const paragraph = createParagraph(true);
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(marker);
+        group.blocks.push(paragraph);
+
+        const ip: InsertPoint = {
+            marker: marker,
+            paragraph: paragraph,
+            path: [group],
+        };
+
+        const result = splitParagraph(ip);
+
+        expect(result).toEqual({
+            blockType: 'Paragraph',
+            segments: [marker],
+            format: {},
+        });
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+        expect(ip).toEqual({
+            marker: marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+            },
+            path: [group],
+        });
+    });
 });

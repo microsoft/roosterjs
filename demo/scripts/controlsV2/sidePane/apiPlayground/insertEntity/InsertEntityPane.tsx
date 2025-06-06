@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ApiPaneProps } from '../ApiPaneProps';
 import { insertEntity } from 'roosterjs-content-model-api';
+import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 import {
     ContentModelEntity,
@@ -98,7 +99,8 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     private insertEntity = () => {
         const entityType = this.entityType.current.value;
         const node = document.createElement('span');
-        node.innerHTML = trustedHTMLHandler(this.html.current.value);
+
+        moveChildNodes(node, trustedHTMLHandler.htmlToDOM(this.html.current.value).body);
         const isBlock = this.styleBlock.current.checked;
         const focusAfterEntity = this.focusAfterEntity.current.checked;
         const insertAtTop = this.posTop.current.checked;

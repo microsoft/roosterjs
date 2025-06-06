@@ -42,6 +42,8 @@ export function blockProcessor(
             decorator
         );
 
+        context.paragraphMap?.assignMarkerToModel(element, paragraph);
+
         addBlock(group, paragraph);
     }
 

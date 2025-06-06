@@ -263,6 +263,7 @@ describe('entityProcessor', () => {
             onBlockEntity: null!,
             reconcileElementId: null!,
             onMergeText: null!,
+            clearIndex: null!,
         };
 
         context.domIndexer = domIndexer;

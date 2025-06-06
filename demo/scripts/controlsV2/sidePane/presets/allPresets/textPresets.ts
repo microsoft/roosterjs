@@ -1,4 +1,4 @@
-import { Preset } from './allPresets';
+import { Preset } from './Preset';
 
 export const allTextFormats: Preset = {
     buttonName: 'All Text Formats',

@@ -12,6 +12,7 @@ import {
     ContentModelDocument,
     ContentModelEntity,
     EditorCore,
+    EditorOptions,
     Rect,
 } from 'roosterjs-content-model-types';
 
@@ -40,7 +41,7 @@ describe('Editor', () => {
         expect(editor.getDocument()).toBe(document);
         expect(editor.isDarkMode()).toBeFalse();
         expect(editor.isInShadowEdit()).toBeFalse();
-        expect(createEmptyModelSpy).toHaveBeenCalledWith(undefined);
+        expect(createEmptyModelSpy).toHaveBeenCalledWith({});
 
         editor.dispose();
 
@@ -67,7 +68,7 @@ describe('Editor', () => {
         const setContentModelSpy = jasmine.createSpy('setContentModel');
         const disposeErrorHandlerSpy = jasmine.createSpy('disposeErrorHandler');
         const mockedInitialModel = 'INITMODEL' as any;
-        const options = {
+        const options: EditorOptions = {
             plugins: [mockedPlugin1, mockedPlugin2],
             disposeErrorHandler: disposeErrorHandlerSpy,
             inDarkMode: true,
@@ -131,6 +132,9 @@ describe('Editor', () => {
                 createContentModel: createContentModelSpy,
                 setContentModel: setContentModelSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -162,6 +166,9 @@ describe('Editor', () => {
             api: {
                 createContentModel: createContentModelSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -259,6 +266,9 @@ describe('Editor', () => {
                 domToModelSettings: {
                     calculated: undefined,
                 },
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -373,6 +383,9 @@ describe('Editor', () => {
             },
             environment: mockedEnvironment,
             api: { setContentModel: setContentModelSpy },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -405,6 +418,9 @@ describe('Editor', () => {
                 getDOMSelection: getDOMSelectionSpy,
                 setContentModel: setContentModelSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -435,6 +451,9 @@ describe('Editor', () => {
             api: {
                 setDOMSelection: setDOMSelectionSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -470,6 +489,9 @@ describe('Editor', () => {
             api: {
                 formatContentModel: formatContentModelSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -553,6 +575,9 @@ describe('Editor', () => {
                 addUndoSnapshot: addUndoSnapshotSpy,
                 setContentModel: setContentModelSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -581,6 +606,9 @@ describe('Editor', () => {
                 reset: resetSpy,
             },
             api: { setContentModel: setContentModelSpy },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -609,6 +637,9 @@ describe('Editor', () => {
                 reset: resetSpy,
             },
             api: { addUndoSnapshot: addUndoSnapshotSpy, setContentModel: setContentModelSpy },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -642,6 +673,9 @@ describe('Editor', () => {
                 restoreUndoSnapshot: restoreUndoSnapshotSpy,
                 setContentModel: setContentModelSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -670,6 +704,9 @@ describe('Editor', () => {
             api: {
                 focus: focusSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -701,6 +738,9 @@ describe('Editor', () => {
             },
             domHelper: {
                 hasFocus: hasFocusSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -736,6 +776,9 @@ describe('Editor', () => {
             api: {
                 triggerEvent: triggerEventSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -783,6 +826,9 @@ describe('Editor', () => {
                 attachDomEvent: attachDomEventSpy,
                 setContentModel: setContentModelSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -815,6 +861,9 @@ describe('Editor', () => {
                 setContentModel: setContentModelSpy,
             },
             api: { setContentModel: setContentModelSpy },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -848,6 +897,9 @@ describe('Editor', () => {
             api: {
                 switchShadowEdit: switchShadowEditSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -887,6 +939,9 @@ describe('Editor', () => {
             plugins: [],
             darkColorHandler: mockedColorHandler,
             api: { setContentModel: setContentModelSpy },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -926,6 +981,9 @@ describe('Editor', () => {
             api: {
                 triggerEvent: triggerEventSpy,
                 setContentModel: setContentModelSpy,
+            },
+            format: {
+                defaultFormat: {},
             },
         } as any;
 
@@ -1001,6 +1059,9 @@ describe('Editor', () => {
             },
             api: { setContentModel: setContentModelSpy },
             domEvent: { scrollContainer: mockedScrollContainer },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -1033,6 +1094,9 @@ describe('Editor', () => {
                 },
             },
             domEvent: { scrollContainer: mockedScrollContainer },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -1064,6 +1128,9 @@ describe('Editor', () => {
                 setEditorStyle: setEditorStyleSpy,
             },
             domEvent: { scrollContainer: mockedScrollContainer },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -1096,6 +1163,9 @@ describe('Editor', () => {
                 setContentModel: setContentModelSpy,
                 announce: announceSpy,
             },
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -1126,6 +1196,9 @@ describe('Editor', () => {
                 setContentModel: setContentModelSpy,
             },
             experimentalFeatures: ['Feature1', 'Feature2'],
+            format: {
+                defaultFormat: {},
+            },
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);

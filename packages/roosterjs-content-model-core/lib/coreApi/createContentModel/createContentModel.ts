@@ -17,8 +17,10 @@ import type { CreateContentModel } from 'roosterjs-content-model-types';
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
     // Flush all mutations if any, so that we can get an up-to-date Content Model
     core.cache.textMutationObserver?.flushMutations();
+    const tryGetFromCache =
+        !option || (option.tryGetFromCache && typeof option.recalculateTableSize === 'undefined');
 
-    if (!selectionOverride && (!option || option.tryGetFromCache)) {
+    if (!selectionOverride && tryGetFromCache) {
         const cachedModel = core.cache.cachedModel;
 
         if (cachedModel) {
@@ -35,6 +37,9 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
             : selectionOverride || core.api.getDOMSelection(core) || undefined;
     const saveIndex = !option && !selectionOverride;
     const editorContext = core.api.createEditorContext(core, saveIndex);
+
+    editorContext.recalculateTableSize = option?.recalculateTableSize;
+
     const settings = core.environment.domToModelSettings;
     const domToModelContext = option
         ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
