@@ -156,7 +156,10 @@ function unindex(node: Partial<IndexedSegmentNode>) {
  * Implementation of DomIndexer
  */
 export class DomIndexerImpl implements DomIndexer {
-    constructor(private readonly persistCache?: boolean) {}
+    constructor(
+        private readonly persistCache?: boolean,
+        private readonly keepSelectionMarkerWhenEnteringTextNode?: boolean
+    ) {}
 
     onSegment(segmentNode: Node, paragraph: ContentModelParagraph, segment: ContentModelSegment[]) {
         const indexedText = segmentNode as IndexedSegmentNode;
@@ -227,6 +230,7 @@ export class DomIndexerImpl implements DomIndexer {
         newSelection: DOMSelection,
         oldSelection?: CacheSelection
     ): boolean {
+        let selectionMarker: ContentModelSelectionMarker | undefined;
         if (oldSelection) {
             let startNode: Node | undefined;
 
@@ -240,6 +244,11 @@ export class DomIndexerImpl implements DomIndexer {
             ) {
                 this.reconcileTextSelection(startNode);
             } else {
+                selectionMarker = this.selectionMarkerToKeepWhenEnteringTextNode(
+                    oldSelection,
+                    newSelection
+                );
+
                 setSelection(model);
             }
         }
@@ -309,7 +318,12 @@ export class DomIndexerImpl implements DomIndexer {
 
                         return (
                             isIndexedSegment(startContainer) &&
-                            !!this.reconcileTextSelection(startContainer, startOffset, endOffset)
+                            !!this.reconcileTextSelection(
+                                startContainer,
+                                startOffset,
+                                endOffset,
+                                selectionMarker
+                            )
                         );
                     } else {
                         const marker1 = this.reconcileNodeSelection(startContainer, startOffset);
@@ -452,7 +466,8 @@ export class DomIndexerImpl implements DomIndexer {
     private reconcileTextSelection(
         textNode: IndexedSegmentNode,
         startOffset?: number,
-        endOffset?: number
+        endOffset?: number,
+        selectionMarker?: ContentModelSelectionMarker
     ) {
         const { paragraph, segments } = textNode.__roosterjsContentModel;
         const first = segments[0];
@@ -476,7 +491,7 @@ export class DomIndexerImpl implements DomIndexer {
                 }
 
                 if (endOffset === undefined) {
-                    const marker = createSelectionMarker(first.format);
+                    const marker = createSelectionMarker(selectionMarker?.format ?? first.format);
                     newSegments.push(marker);
 
                     if (startOffset < (textNode.nodeValue ?? '').length) {
@@ -494,7 +509,7 @@ export class DomIndexerImpl implements DomIndexer {
                 } else if (endOffset > startOffset) {
                     const middle = createText(
                         txt.substring(startOffset, endOffset),
-                        first.format,
+                        selectionMarker?.format ?? first.format,
                         first.link,
                         first.code
                     );
@@ -508,7 +523,7 @@ export class DomIndexerImpl implements DomIndexer {
                 if (endOffset < txt.length) {
                     const newLast = createText(
                         txt.substring(endOffset),
-                        first.format,
+                        selectionMarker?.format ?? first.format,
                         first.link,
                         first.code
                     );
@@ -552,7 +567,8 @@ export class DomIndexerImpl implements DomIndexer {
 
             if (index >= 0 && delimiter && isEntityDelimiter(delimiter) && (isBefore || isAfter)) {
                 const marker = createSelectionMarker(
-                    (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
+                    selectionMarker?.format ??
+                        (paragraph.segments[isAfter ? index + 1 : index - 1] ?? first).format
                 );
 
                 paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
@@ -697,6 +713,32 @@ export class DomIndexerImpl implements DomIndexer {
 
         paragraph.segments.splice(index, 0, text);
         this.onSegment(textNode, paragraph, [text]);
+    }
+
+    private selectionMarkerToKeepWhenEnteringTextNode(
+        oldSelection: CacheSelection,
+        newSelection: DOMSelection
+    ): ContentModelSelectionMarker | undefined {
+        // For CJK keyboard input on mobile, we may have a situation like this:
+        // User toggle bold/italic/underline on an empty div, the pending format will be applied on the selection marker
+        // then type some text, the selection move to the text node and the selection marker will be recreated during the reconciliation and lose its original formatting
+        // In this case, we need to keep the original formatting of the selection marker to match the pending format
+
+        if (
+            this.keepSelectionMarkerWhenEnteringTextNode &&
+            oldSelection.type == 'range' &&
+            this.isCollapsed(oldSelection) &&
+            newSelection.type == 'range' &&
+            isNodeOfType(newSelection.range.commonAncestorContainer, 'TEXT_NODE') &&
+            newSelection.range.commonAncestorContainer.parentElement == oldSelection.start.node &&
+            isIndexedSegment(newSelection.range.commonAncestorContainer) &&
+            newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph.segments[0]
+                .segmentType == 'SelectionMarker'
+        ) {
+            return newSelection.range.commonAncestorContainer.__roosterjsContentModel.paragraph
+                .segments[0];
+        }
+        return undefined;
     }
 }
 

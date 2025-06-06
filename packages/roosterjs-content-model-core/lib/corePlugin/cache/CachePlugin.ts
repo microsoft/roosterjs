@@ -30,7 +30,11 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         if (!option.disableCache) {
             this.state.domIndexer = new DomIndexerImpl(
                 option.experimentalFeatures &&
-                    option.experimentalFeatures.indexOf('PersistCache') >= 0
+                    option.experimentalFeatures.indexOf('PersistCache') >= 0,
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf(
+                        'KeepSelectionMarkerWhenEnteringTextNode'
+                    ) >= 0
             );
             this.state.textMutationObserver = createTextMutationObserver(
                 contentDiv,
