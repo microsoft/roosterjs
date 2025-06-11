@@ -1,5 +1,6 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { convertContentModelToMarkdown } from '../../lib/modelToMarkdown/convertContentModelToMarkdown';
+import { createModelFromHtml } from '../../../roosterjs-content-model-core';
 import {
     createContentModelDocument,
     createFormatContainer,
@@ -105,5 +106,12 @@ describe('convertContentModelToMarkdown', () => {
 
 `
         );
+    });
+
+    it('should convert simple html to markdown', () => {
+        const markdown = 'hello **world** how are you?';
+        const model = createModelFromHtml('<p>hello <b>world</b> how are you?</p>');
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual(markdown);
     });
 });
