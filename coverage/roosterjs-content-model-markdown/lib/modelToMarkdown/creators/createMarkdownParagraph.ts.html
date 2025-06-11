@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.67% </span>
+                <span class="strong">96.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/30</span>
+                <span class='fraction'>30/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.89% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>16/18</span>
+                <span class='fraction'>20/22</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.3% </span>
+                <span class="strong">96.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/27</span>
+                <span class='fraction'>27/28</span>
             </div>
         
             
@@ -116,7 +116,9 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,16 +135,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">81x</span>
-<span class="cline-any cline-yes">81x</span>
-<span class="cline-any cline-yes">103x</span>
-<span class="cline-any cline-yes">103x</span>
+<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">107x</span>
+<span class="cline-any cline-yes">107x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">95x</span>
-<span class="cline-any cline-yes">95x</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -153,27 +155,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">81x</span>
+<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">81x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">95x</span>
-<span class="cline-any cline-yes">95x</span>
+<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">95x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">95x</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">95x</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MarkdownHeadings } from '../../constants/headings';
 import type { ContentModelParagraph, ContentModelText } from 'roosterjs-content-model-types';
@@ -200,7 +204,7 @@ export function createMarkdownParagraph(
                 markdownString += textProcessor(segment);
                 break;
             case 'Image':
-                markdownString += `![${segment.alt}](${segment.src})`;
+                markdownString += `![${segment.alt || 'image'}](${segment.src})`;
                 break;
             case 'Br':
                 if (!context<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>gnoreLineBreaks) {
@@ -215,7 +219,9 @@ export function createMarkdownParagraph(
     if (paragraph.decorator) {
         const { tagName } = paragraph.decorator;
         const prefix = MarkdownHeadings[tagName];
-        markdownString = `${prefix}${markdownString}`;
+        if (prefix) {
+            markdownString = `${prefix}${markdownString}`;
+        }
     }
 &nbsp;
     return markdownString;
@@ -241,7 +247,7 @@ function textProcessor(text: ContentModelText): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jun 11 2025 14:04:09 GMT+0000 (Coordinated Universal Time)
+                at Wed Jun 11 2025 16:55:15 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
