@@ -23,7 +23,7 @@ export function createMarkdownParagraph(
                 markdownString += textProcessor(segment);
                 break;
             case 'Image':
-                markdownString += `![${segment.alt}](${segment.src})`;
+                markdownString += `![${segment.alt || 'image'}](${segment.src})`;
                 break;
             case 'Br':
                 if (!context?.ignoreLineBreaks) {

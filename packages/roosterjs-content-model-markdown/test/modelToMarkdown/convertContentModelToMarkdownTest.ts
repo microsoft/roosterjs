@@ -114,4 +114,12 @@ describe('convertContentModelToMarkdown', () => {
         const md = convertContentModelToMarkdown(model).trim();
         expect(md).toEqual(markdown);
     });
+
+    it('should set a default alt to images', () => {
+        const markdown = '![image](https://www.example.com/image)';
+        const model = createModelFromHtml("<img src='https://www.example.com/image'>");
+        console.log(model);
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual(markdown);
+    });
 });
