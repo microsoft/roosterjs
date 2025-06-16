@@ -23,7 +23,7 @@ export function createMarkdownParagraph(
                 markdownString += textProcessor(segment);
                 break;
             case 'Image':
-                markdownString += `![${segment.alt}](${segment.src})`;
+                markdownString += `![${segment.alt || 'image'}](${segment.src})`;
                 break;
             case 'Br':
                 if (!context?.ignoreLineBreaks) {
@@ -38,7 +38,9 @@ export function createMarkdownParagraph(
     if (paragraph.decorator) {
         const { tagName } = paragraph.decorator;
         const prefix = MarkdownHeadings[tagName];
-        markdownString = `${prefix}${markdownString}`;
+        if (prefix) {
+            markdownString = `${prefix}${markdownString}`;
+        }
     }
 
     return markdownString;
