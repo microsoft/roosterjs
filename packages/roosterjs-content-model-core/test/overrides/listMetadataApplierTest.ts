@@ -462,6 +462,33 @@ describe('listItemMetadataApplier', () => {
             runTest(BulletListType.Hyphen, '"— "');
         });
     });
+
+    describe('invalid scenarios - no thread counts', () => {
+        function runTest(formatNum: number) {
+            context.listFormat.nodeStack = [
+                {
+                    node: {} as Node,
+                },
+                {
+                    node: {} as Node,
+                },
+            ];
+            context.listFormat.threadItemCounts = [];
+
+            listItemMetadataApplier.applierFunction(
+                {
+                    orderedStyleType: formatNum,
+                },
+                format,
+                context
+            );
+
+            expect(format).toEqual({});
+        }
+        it('Roman Numbers', () => {
+            runTest(NumberingListType.UpperRoman);
+        });
+    });
 });
 
 describe('listLevelMetadataApplier', () => {
