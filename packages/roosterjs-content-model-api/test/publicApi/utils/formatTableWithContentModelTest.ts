@@ -13,6 +13,7 @@ import {
 describe('formatTableWithContentModel', () => {
     let editor: IEditor;
     let formatContentModelSpy: jasmine.Spy;
+    let focusSpy: jasmine.Spy;
     let model: ContentModelDocument;
     let formatResult: boolean | undefined;
 
@@ -31,8 +32,11 @@ describe('formatTableWithContentModel', () => {
             .and.callFake((callback: Function) => {
                 formatResult = callback(model);
             });
+        focusSpy = jasmine.createSpy('focus').and.callFake(() => {});
+
         editor = {
             formatContentModel: formatContentModelSpy,
+            focus: focusSpy,
         } as any;
     });
 
@@ -54,6 +58,7 @@ describe('formatTableWithContentModel', () => {
             }
         );
         expect(formatResult).toBeFalse();
+        expect(focusSpy).toHaveBeenCalled();
     });
 
     it('Model with table but not selected', () => {
@@ -81,6 +86,7 @@ describe('formatTableWithContentModel', () => {
         );
         expect(formatResult).toBeFalse();
         expect(table.cachedElement).toBeDefined();
+        expect(focusSpy).toHaveBeenCalled();
     });
 
     it('Model with selected table, has selection in block, no metadata', () => {
@@ -120,6 +126,7 @@ describe('formatTableWithContentModel', () => {
         expect(applyTableFormat.applyTableFormat).not.toHaveBeenCalled();
         expect(formatResult).toBeTrue();
         expect(table.cachedElement).toBeUndefined();
+        expect(focusSpy).toHaveBeenCalled();
     });
 
     it('Model with selected table, no selection in block, no metadata', () => {
@@ -187,6 +194,7 @@ describe('formatTableWithContentModel', () => {
             dataset: {},
         });
         expect(table.cachedElement).toBeUndefined();
+        expect(focusSpy).toHaveBeenCalled();
     });
 
     it('Model with selected table, no selection in block, has metadata', () => {
@@ -255,6 +263,7 @@ describe('formatTableWithContentModel', () => {
             dataset: {},
         });
         expect(table.cachedElement).toBeUndefined();
+        expect(focusSpy).toHaveBeenCalled();
     });
 
     it('With default format and additional parameters', () => {
@@ -329,5 +338,6 @@ describe('formatTableWithContentModel', () => {
             dataset: {},
         });
         expect(table.cachedElement).toBeUndefined();
+        expect(focusSpy).toHaveBeenCalled();
     });
 });
