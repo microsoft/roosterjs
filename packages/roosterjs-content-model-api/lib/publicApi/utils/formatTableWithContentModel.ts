@@ -29,6 +29,7 @@ export function formatTableWithContentModel(
     callback: (tableModel: ShallowMutableContentModelTable) => void,
     selectionOverride?: TableSelection
 ) {
+    editor.focus();
     editor.formatContentModel(
         model => {
             const [readonlyTableModel, path] = getFirstSelectedTable(model);
