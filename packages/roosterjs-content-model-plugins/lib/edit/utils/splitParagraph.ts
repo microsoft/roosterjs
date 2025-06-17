@@ -16,10 +16,15 @@ import type {
  * Split the given paragraph from insert point into two paragraphs,
  * and move the selection marker to the beginning of the second paragraph
  * @param insertPoint The input insert point which includes the paragraph and selection marker
- * @param formatKeys The format that needs to be copied from the splitted paragraph, if not specified,  some default format will be copied
+ * @param removeImplicitParagraph Whether to remove the implicit paragraph if it becomes empty after split
+ * * If set to false, the implicit paragraph will be preserved even if it becomes empty
+ * * If set to true, the implicit paragraph will be removed if it becomes empty
  * @returns The new paragraph it created
  */
-export function splitParagraph(insertPoint: InsertPoint) {
+export function splitParagraph(
+    insertPoint: InsertPoint,
+    removeImplicitParagraph: boolean = true
+): ShallowMutableContentModelParagraph {
     const { paragraph, marker } = insertPoint;
     const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
         false /*isImplicit*/,
@@ -37,7 +42,7 @@ export function splitParagraph(insertPoint: InsertPoint) {
 
     newParagraph.segments.push(...segments);
 
-    if (paragraph.segments.length == 0 && !paragraph.isImplicit) {
+    if (paragraph.segments.length == 0 && (!paragraph.isImplicit || !removeImplicitParagraph)) {
         paragraph.segments.push(createBr(marker.format));
     } else if (paragraph.segments.length > 0) {
         setParagraphNotImplicit(paragraph);
