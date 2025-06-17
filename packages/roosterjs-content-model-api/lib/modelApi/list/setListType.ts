@@ -183,7 +183,7 @@ function countSpacesBeforeText(str: string) {
     const space = ' ';
     let count = 0;
 
-    for (let char of str) {
+    for (const char of str) {
         if (char === space) {
             count++;
         } else {
