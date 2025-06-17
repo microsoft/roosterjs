@@ -9,6 +9,7 @@ import {
     ListFormatsToKeep,
     ListFormatsToMove,
     mutateBlock,
+    mutateSegment,
     normalizeContentModel,
     setParagraphNotImplicit,
     updateListMetadata,
@@ -104,6 +105,8 @@ export function setListType(
 
                     newListItem.blocks.push(mutableBlock);
 
+                    adjustIndentation(newListItem);
+
                     copyFormat<ContentModelBlockFormat>(
                         newListItem.format,
                         mutableBlock.format,
@@ -155,4 +158,38 @@ function shouldIgnoreBlock(block: ReadonlyContentModelBlock) {
         default:
             return true;
     }
+}
+
+function adjustIndentation(listItem: ShallowMutableContentModelListItem) {
+    const block = listItem.blocks[0];
+    if (
+        block.blockType == 'Paragraph' &&
+        block.segments.length > 0 &&
+        block.segments[0].segmentType == 'Text'
+    ) {
+        const spaces = countSpacesBeforeText(block.segments[0].text);
+        const tabSpaces = Math.floor(spaces / 4);
+        mutateSegment(block, block.segments[0], textSegment => {
+            textSegment.text = textSegment.text.substring(tabSpaces * 4);
+        });
+
+        if (tabSpaces) {
+            listItem.levels[0].format.marginLeft = tabSpaces * 40 + 'px';
+        }
+    }
+}
+
+function countSpacesBeforeText(str: string) {
+    const space = ' ';
+    let count = 0;
+
+    for (let char of str) {
+        if (char === space) {
+            count++;
+        } else {
+            break;
+        }
+    }
+
+    return count;
 }
