@@ -42,9 +42,12 @@ export function splitParagraph(
 
     newParagraph.segments.push(...segments);
 
-    if (paragraph.segments.length == 0 && (!paragraph.isImplicit || !removeImplicitParagraph)) {
+    const isEmptyParagraph = paragraph.segments.length == 0;
+    const shouldPreserveImplicitParagraph = !paragraph.isImplicit || !removeImplicitParagraph;
+
+    if (isEmptyParagraph && shouldPreserveImplicitParagraph) {
         paragraph.segments.push(createBr(marker.format));
-    } else if (paragraph.segments.length > 0) {
+    } else if (!isEmptyParagraph) {
         setParagraphNotImplicit(paragraph);
     }
 
