@@ -1050,4 +1050,48 @@ describe('indent', () => {
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(2);
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
+
+    it('turn on list on spaced segment', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+        para1.segments.push(marker, createText('  test1'));
+        group.blocks.push(para1);
+        setListType(group, 'UL');
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                marginBottom: undefined,
+                                marginTop: undefined,
+                                textAlign: undefined,
+                            },
+                            dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(2);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
+    });
 });

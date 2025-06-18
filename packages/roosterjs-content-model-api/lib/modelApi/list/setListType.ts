@@ -24,6 +24,9 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const SPACE = ' ';
+/**
+ * @see handleTabKey uses the default space length defined in @see setModelIndentation
+ */
 const IndentStepInPixel = 40;
 
 /**
@@ -172,12 +175,13 @@ function adjustIndentation(listItem: ShallowMutableContentModelListItem) {
     ) {
         const spaces = countSpacesBeforeText(block.segments[0].text);
         const tabSpaces = Math.floor(spaces / 4);
-        mutateSegment(block, block.segments[0], textSegment => {
-            textSegment.text = textSegment.text.substring(tabSpaces * 4);
-        });
-
-        if (tabSpaces) {
-            listItem.levels[0].format.marginLeft = tabSpaces * IndentStepInPixel + 'px';
+        if (tabSpaces > 0) {
+            mutateSegment(block, block.segments[0], textSegment => {
+                textSegment.text = textSegment.text.substring(tabSpaces * 4);
+            });
+            if (tabSpaces) {
+                listItem.levels[0].format.marginLeft = tabSpaces * IndentStepInPixel + 'px';
+            }
         }
     }
 }
