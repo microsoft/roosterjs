@@ -23,6 +23,8 @@ import type {
     ShallowMutableContentModelListItem,
 } from 'roosterjs-content-model-types';
 
+const SPACE = ' ';
+
 /**
  * Set a list type to content model
  * @param model the model document
@@ -180,11 +182,10 @@ function adjustIndentation(listItem: ShallowMutableContentModelListItem) {
 }
 
 function countSpacesBeforeText(str: string) {
-    const space = ' ';
     let count = 0;
 
     for (const char of str) {
-        if (char === space) {
+        if (char === SPACE) {
             count++;
         } else {
             break;
