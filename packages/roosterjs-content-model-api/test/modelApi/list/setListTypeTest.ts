@@ -1091,7 +1091,7 @@ describe('indent', () => {
                 },
             ],
         });
-        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(2);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 });
