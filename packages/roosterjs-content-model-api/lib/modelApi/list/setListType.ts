@@ -24,6 +24,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const SPACE = ' ';
+const IndentStepInPixel = 40;
 
 /**
  * Set a list type to content model
@@ -176,7 +177,7 @@ function adjustIndentation(listItem: ShallowMutableContentModelListItem) {
         });
 
         if (tabSpaces) {
-            listItem.levels[0].format.marginLeft = tabSpaces * 40 + 'px';
+            listItem.levels[0].format.marginLeft = tabSpaces * IndentStepInPixel + 'px';
         }
     }
 }
