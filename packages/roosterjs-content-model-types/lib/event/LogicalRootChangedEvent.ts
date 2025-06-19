@@ -9,3 +9,13 @@ export interface LogicalRootChangedEvent extends BasePluginEvent<'logicalRootCha
      */
     logicalRoot: HTMLDivElement;
 }
+
+/**
+ * Fired when the logical root is above to be changed
+ */
+export interface BeforeLogicalRootChangeEvent extends BasePluginEvent<'beforeLogicalRootChanged'> {
+    /**
+     * The logical root element that will no longer be the logical root
+     */
+    logicalRoot: HTMLDivElement;
+}

@@ -779,6 +779,48 @@ describe('ImageEditPlugin', () => {
         expect(cleanInfoSpy).toHaveBeenCalled();
         plugin.dispose();
     });
+
+    it('should call applyFormatWithContentModel and clean up on beforeLogicalRootChanged when editing', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        // Simulate editing state
+        plugin['isEditing'] = true;
+        plugin['editor'] = editor;
+        spyOn(plugin as any, 'applyFormatWithContentModel');
+        spyOn(plugin as any, 'removeImageWrapper');
+        spyOn(plugin as any, 'cleanInfo');
+        editor.isDisposed = () => false; // Simulate editor not disposed
+
+        // Act: simulate the event
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChanged' } as any);
+
+        // Assert
+        expect((plugin as any).applyFormatWithContentModel).toHaveBeenCalledWith(
+            editor,
+            plugin['isCropMode'],
+            false
+        );
+        expect((plugin as any).removeImageWrapper).toHaveBeenCalled();
+        expect((plugin as any).cleanInfo).toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('should do nothing on beforeLogicalRootChanged if not editing', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        plugin['isEditing'] = false;
+        plugin['editor'] = editor;
+        spyOn(plugin as any, 'applyFormatWithContentModel');
+        spyOn(plugin as any, 'removeImageWrapper');
+        spyOn(plugin as any, 'cleanInfo');
+
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChanged' } as any);
+
+        expect((plugin as any).applyFormatWithContentModel).not.toHaveBeenCalled();
+        expect((plugin as any).removeImageWrapper).not.toHaveBeenCalled();
+        expect((plugin as any).cleanInfo).not.toHaveBeenCalled();
+        plugin.dispose();
+    });
 });
 
 class TestPlugin extends ImageEditPlugin {
@@ -1903,7 +1945,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             isSelected: true,
                         },
                     ],
-                    segmentFormat: {},
+                    segmentFormat: undefined,
                     blockType: 'Paragraph',
                     format: {},
                 },
