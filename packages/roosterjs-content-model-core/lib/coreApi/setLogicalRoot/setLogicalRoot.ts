@@ -1,4 +1,8 @@
-import type { LogicalRootChangedEvent, SetLogicalRoot } from 'roosterjs-content-model-types';
+import type {
+    BeforeLogicalRootChangeEvent,
+    LogicalRootChangedEvent,
+    SetLogicalRoot,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -16,6 +20,13 @@ export const setLogicalRoot: SetLogicalRoot = (core, logicalRoot) => {
 
         // if the logical root changed
         if (logicalRoot !== core.logicalRoot) {
+            // tell plugins that the logical root is about to change, so they can clean up listeners or caches
+            const beforeLogicalRootEvent: BeforeLogicalRootChangeEvent = {
+                eventType: 'beforeLogicalRootChange',
+                logicalRoot: core.logicalRoot,
+            };
+            core.api.triggerEvent(core, beforeLogicalRootEvent, false /*broadcast*/);
+
             // make sure the old logical root is not content editable and the new one is
             core.logicalRoot.contentEditable = 'false';
             logicalRoot.contentEditable = 'true';
