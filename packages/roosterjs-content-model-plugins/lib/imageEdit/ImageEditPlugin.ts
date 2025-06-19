@@ -178,13 +178,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             case 'extractContentWithDom':
                 this.removeImageEditing(event.clonedRoot);
                 break;
-            case 'beforeLogicalRootChanged':
-                this.handleBeforeLogicalRootChanged();
+            case 'beforeLogicalRootChange':
+                this.handleBeforeLogicalRootChange();
                 break;
         }
     }
 
-    private handleBeforeLogicalRootChanged() {
+    private handleBeforeLogicalRootChange() {
         if (this.isEditing && this.editor && !this.editor.isDisposed()) {
             this.applyFormatWithContentModel(
                 this.editor,

@@ -140,4 +140,4 @@ export type PluginEventType =
      * This event is used to clean up any features from the old logical root
      * before the new logical root is set.
      */
-    | 'beforeLogicalRootChanged';
+    | 'beforeLogicalRootChange';

@@ -22,7 +22,7 @@ export const setLogicalRoot: SetLogicalRoot = (core, logicalRoot) => {
         if (logicalRoot !== core.logicalRoot) {
             // tell plugins that the logical root is about to change, so they can clean up listeners or caches
             const beforeLogicalRootEvent: BeforeLogicalRootChangeEvent = {
-                eventType: 'beforeLogicalRootChanged',
+                eventType: 'beforeLogicalRootChange',
                 logicalRoot: core.logicalRoot,
             };
             core.api.triggerEvent(core, beforeLogicalRootEvent, false /*broadcast*/);

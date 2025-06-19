@@ -780,7 +780,7 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
-    it('should call applyFormatWithContentModel and clean up on beforeLogicalRootChanged when editing', () => {
+    it('should call applyFormatWithContentModel and clean up on beforeLogicalRootChange when editing', () => {
         const plugin = new ImageEditPlugin();
         plugin.initialize(editor);
         // Simulate editing state
@@ -792,7 +792,7 @@ describe('ImageEditPlugin', () => {
         editor.isDisposed = () => false; // Simulate editor not disposed
 
         // Act: simulate the event
-        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChanged' } as any);
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChange' } as any);
 
         // Assert
         expect((plugin as any).applyFormatWithContentModel).toHaveBeenCalledWith(
@@ -805,7 +805,7 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
-    it('should do nothing on beforeLogicalRootChanged if not editing', () => {
+    it('should do nothing on beforeLogicalRootChange if not editing', () => {
         const plugin = new ImageEditPlugin();
         plugin.initialize(editor);
         plugin['isEditing'] = false;
@@ -814,7 +814,7 @@ describe('ImageEditPlugin', () => {
         spyOn(plugin as any, 'removeImageWrapper');
         spyOn(plugin as any, 'cleanInfo');
 
-        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChanged' } as any);
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChange' } as any);
 
         expect((plugin as any).applyFormatWithContentModel).not.toHaveBeenCalled();
         expect((plugin as any).removeImageWrapper).not.toHaveBeenCalled();

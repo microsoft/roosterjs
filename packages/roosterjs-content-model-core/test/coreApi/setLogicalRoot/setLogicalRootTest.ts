@@ -68,7 +68,7 @@ describe('setLogicalRoot', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'beforeLogicalRootChanged',
+                    eventType: 'beforeLogicalRootChange',
                     logicalRoot: physicalRoot,
                 },
                 false
@@ -113,7 +113,7 @@ describe('setLogicalRoot', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'beforeLogicalRootChanged',
+                    eventType: 'beforeLogicalRootChange',
                     logicalRoot: insideElement1,
                 },
                 false
@@ -150,7 +150,7 @@ describe('setLogicalRoot', () => {
             expect(triggerEventSpy).toHaveBeenCalledWith(
                 core,
                 {
-                    eventType: 'beforeLogicalRootChanged',
+                    eventType: 'beforeLogicalRootChange',
                     logicalRoot: insideElement1,
                 },
                 false
