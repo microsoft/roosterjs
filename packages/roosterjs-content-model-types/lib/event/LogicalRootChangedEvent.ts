@@ -11,7 +11,7 @@ export interface LogicalRootChangedEvent extends BasePluginEvent<'logicalRootCha
 }
 
 /**
- * Fired when the logical root is above to be changed
+ * Fired when the logical root is about to be changed
  */
 export interface BeforeLogicalRootChangeEvent extends BasePluginEvent<'beforeLogicalRootChange'> {
     /**
