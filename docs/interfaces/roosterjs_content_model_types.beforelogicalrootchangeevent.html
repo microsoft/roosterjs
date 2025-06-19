@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelTextCommon | RoosterJs API Reference</title>
+	<title>BeforeLogicalRootChangeEvent | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.contentmodeltextcommon.html">ContentModelTextCommon</a>
+					<a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html">BeforeLogicalRootChangeEvent</a>
 				</li>
 			</ul>
-			<h1>Interface ContentModelTextCommon</h1>
+			<h1>Interface BeforeLogicalRootChangeEvent</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Common port of Content Model for Text</p>
+						<p>Fired when the logical root is about to be changed</p>
 					</div>
 				</div>
 			</section>
@@ -77,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentModelTextCommon</span>
+						<a href="roosterjs_content_model_types.basepluginevent.html" class="tsd-signature-type" data-tsd-kind="Interface">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;beforeLogicalRootChange&quot;</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="roosterjs_content_model_types.contentmodeltext.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelText</a>
+								<span class="target">BeforeLogicalRootChangeEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -93,7 +93,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodeltextcommon.html#text" class="tsd-kind-icon">text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#logicalroot" class="tsd-kind-icon">logical<wbr>Root</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,18 +103,60 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="text" class="tsd-anchor"></a>
-					<h3>text</h3>
-					<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventdatacache" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Data<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Data<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_content_model_types.basepluginevent.html#eventdatacache">eventDataCache</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/184c018/packages/roosterjs-content-model-types/lib/contentModel/segment/ContentModelText.ts#L13">roosterjs-content-model-types/lib/contentModel/segment/ContentModelText.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/184c018/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L17">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Text content of this segment</p>
+							<p>An optional event cache.
+								This will be consumed by event cache API to store some expensive calculation result.
+							So that for the same event across plugins, the result doesn&#39;t need to be calculated again</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventtype" class="tsd-anchor"></a>
+					<h3>event<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;beforeLogicalRootChange&quot;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_content_model_types.basepluginevent.html#eventtype">eventType</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/184c018/packages/roosterjs-content-model-types/lib/event/BasePluginEvent.ts#L10">roosterjs-content-model-types/lib/event/BasePluginEvent.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Type of this event</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="logicalroot" class="tsd-anchor"></a>
+					<h3>logical<wbr>Root</h3>
+					<div class="tsd-signature tsd-kind-icon">logical<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLDivElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/184c018/packages/roosterjs-content-model-types/lib/event/LogicalRootChangedEvent.ts#L20">roosterjs-content-model-types/lib/event/LogicalRootChangedEvent.ts:20</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The logical root element that will no longer be the logical root</p>
 						</div>
 					</div>
 				</section>
@@ -161,10 +205,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.contentmodeltextcommon.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Text<wbr>Common</a>
+						<a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html" class="tsd-kind-icon">Before<wbr>Logical<wbr>Root<wbr>Change<wbr>Event</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodeltextcommon.html#text" class="tsd-kind-icon">text</a>
+								<a href="roosterjs_content_model_types.beforelogicalrootchangeevent.html#logicalroot" class="tsd-kind-icon">logical<wbr>Root</a>
 							</li>
 						</ul>
 					</li>
