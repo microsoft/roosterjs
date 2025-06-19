@@ -12,7 +12,10 @@ import type { EditorReadyEvent } from './EditorReadyEvent';
 import type { EntityOperationEvent } from './EntityOperationEvent';
 import type { ExtractContentWithDomEvent } from './ExtractContentWithDomEvent';
 import type { CompositionEndEvent, KeyDownEvent, KeyPressEvent, KeyUpEvent } from './KeyboardEvent';
-import type { LogicalRootChangedEvent } from './LogicalRootChangedEvent';
+import type {
+    BeforeLogicalRootChangeEvent,
+    LogicalRootChangedEvent,
+} from './LogicalRootChangedEvent';
 import type { MouseDownEvent, MouseUpEvent } from './MouseEvent';
 import type { ScrollEvent } from './ScrollEvent';
 import type { SelectionChangedEvent } from './SelectionChangedEvent';
@@ -26,6 +29,7 @@ export type PluginEvent =
     | BeforeCutCopyEvent
     | BeforeDisposeEvent
     | BeforeKeyboardEditingEvent
+    | BeforeLogicalRootChangeEvent
     | BeforePasteEvent
     | BeforeSetContentEvent
     | CompositionEndEvent
