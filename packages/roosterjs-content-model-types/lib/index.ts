@@ -477,7 +477,10 @@ export {
     KeyUpEvent,
     CompositionEndEvent,
 } from './event/KeyboardEvent';
-export { LogicalRootChangedEvent } from './event/LogicalRootChangedEvent';
+export {
+    BeforeLogicalRootChangeEvent,
+    LogicalRootChangedEvent,
+} from './event/LogicalRootChangedEvent';
 export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
 export { PluginEvent } from './event/PluginEvent';
 export {
