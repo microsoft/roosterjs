@@ -94,6 +94,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     let eventMap: Record<string, any>;
     let plugin: PluginWithState<DOMEventPluginState>;
     let triggerEventSpy: jasmine.Spy;
+    let getEnvironmentSpy: jasmine.Spy;
 
     beforeEach(() => {
         const div = <any>{
@@ -102,6 +103,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         };
 
         triggerEventSpy = jasmine.createSpy('triggerEvent');
+        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({});
 
         plugin = createDOMEventPlugin({}, div);
         plugin.initialize(<IEditor>(<any>{
@@ -110,7 +112,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
-            getEnvironment: () => ({}),
+            getEnvironment: getEnvironmentSpy,
             triggerEvent: triggerEventSpy,
         }));
     });
@@ -188,6 +190,26 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(triggerEventSpy).not.toHaveBeenCalled();
     });
 
+    it('verify keydown event within Android IME', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+            type: 'keydown',
+        } as any;
+
+        getEnvironmentSpy.and.returnValue({
+            isAndroid: true,
+        });
+
+        eventMap.keydown.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalled();
+    });
+
+
     it('verify input event for non-character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
@@ -242,6 +264,25 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(stopPropagation).toHaveBeenCalled();
         expect(triggerEventSpy).not.toHaveBeenCalled();
     });
+
+    it('verify input event for character value in Android IME', () => {
+        spyOn(eventUtils, 'isCharacterValue').and.returnValue(true);
+        const stopPropagation = jasmine.createSpy();
+        const mockedEvent = {
+            stopPropagation,
+            isComposing: true,
+        } as any;
+
+        getEnvironmentSpy.and.returnValue({
+            isAndroid: true,
+        });
+
+        eventMap.input.beforeDispatch(mockedEvent);
+
+        expect(stopPropagation).toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalled();
+    });
+
 });
 
 describe('DOMEventPlugin handle mouse down and mouse up event', () => {
