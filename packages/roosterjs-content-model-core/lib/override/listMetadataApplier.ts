@@ -85,10 +85,14 @@ export const listLevelMetadataApplier: MetadataApplier<
 
             if (listStyleType !== undefined) {
                 if (!shouldApplyToItem(listStyleType, listType)) {
+                    const listNumber =
+                        context.listFormat.threadItemCounts[depth] > 0
+                            ? context.listFormat.threadItemCounts[depth]
+                            : 1;
                     const listStyleTypeFormat = getListStyleValue(
                         listType,
                         listStyleType,
-                        context.listFormat.threadItemCounts[depth]
+                        listNumber
                     );
 
                     if (listStyleTypeFormat) {
