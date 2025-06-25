@@ -122,14 +122,15 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
  * @param core The EditorCore object
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  * @param entityStates @optional Entity states related to this snapshot.
+ * @param additionalState @optional Additional state to be added to the snapshot.
  * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
  * when undo/redo to this snapshot
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
     canUndoByBackspace: boolean,
-    additionalState?: string[],
-    entityStates?: EntityState[]
+    entityStates?: EntityState[],
+    additionalState?: string[]
 ) => Snapshot | null;
 
 /**

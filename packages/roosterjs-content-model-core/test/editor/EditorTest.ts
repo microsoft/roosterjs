@@ -586,7 +586,7 @@ describe('Editor', () => {
 
         const snapshot = editor.takeSnapshot();
 
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined, undefined);
         expect(snapshot).toBe(mockedSnapshot);
 
         editor.dispose();
@@ -649,13 +649,18 @@ describe('Editor', () => {
 
         expect(snapshot).toEqual(mockedSnapshot);
         expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, undefined, undefined);
 
         const mockedState = 'STATE' as any;
 
         editor.takeSnapshot(mockedState);
         expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(2);
-        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(mockedCore, false, [mockedState]);
+        expect(addUndoSnapshotSpy).toHaveBeenCalledWith(
+            mockedCore,
+            false,
+            [mockedState],
+            undefined
+        );
     });
 
     it('restoreSnapshot', () => {

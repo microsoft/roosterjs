@@ -1,4 +1,4 @@
-import { EditorCore, SnapshotsManager, BasePluginEvent } from 'roosterjs-content-model-types';
+import { EditorCore, SnapshotsManager } from 'roosterjs-content-model-types';
 import { addUndoSnapshot } from '../../../lib/coreApi/addUndoSnapshot/addUndoSnapshot';
 import * as createSnapshotSelection from '../../../lib/coreApi/addUndoSnapshot/createSnapshotSelection';
 import { setLogicalRoot } from '../../../lib/coreApi/setLogicalRoot/setLogicalRoot';
@@ -156,7 +156,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        const result = addUndoSnapshot(core, false, undefined, mockedEntityStates);
+        const result = addUndoSnapshot(core, false, mockedEntityStates);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -193,7 +193,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        const result = addUndoSnapshot(core, false, mockedAdditionalState);
+        const result = addUndoSnapshot(core, false, undefined, mockedAdditionalState);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -289,7 +289,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        const result = addUndoSnapshot(core, false, undefined, mockedEntityStates);
+        const result = addUndoSnapshot(core, false, mockedEntityStates);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
