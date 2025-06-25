@@ -3,6 +3,7 @@ import type {
     AddUndoSnapshot,
     EntityOperationEvent,
     Snapshot,
+    BeforeAddUndoSnapshotEvent,
 } from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from './createSnapshotSelection';
 import { getPath } from './getPath';
@@ -12,15 +13,28 @@ import { getPath } from './getPath';
  * Add an undo snapshot to current undo snapshot stack
  * @param core The EditorCore object
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+ * @param additionalState @optional Additional state to be added to the snapshot.
  * @param entityStates @optional Entity states related to this snapshot.
  * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
  * when undo/redo to this snapshot
  */
-export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
+export const addUndoSnapshot: AddUndoSnapshot = (
+    core,
+    canUndoByBackspace,
+    additionalState,
+    entityStates
+) => {
     const { lifecycle, physicalRoot, logicalRoot, undo } = core;
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
+        // Give plugins the chance to add additional state to the snapshot
+        const beforeAddUndoSnapshotEvent: BeforeAddUndoSnapshotEvent = {
+            eventType: 'beforeAddUndoSnapshot',
+            additionalState: additionalState ?? [],
+        };
+        core.api.triggerEvent(core, beforeAddUndoSnapshotEvent, false);
+
         // Need to create snapshot selection before retrieve innerHTML since HTML can be changed during creating selection when normalize table
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
@@ -61,6 +75,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
 
         snapshot = {
             html,
+            additionalState: beforeAddUndoSnapshotEvent.additionalState,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection,

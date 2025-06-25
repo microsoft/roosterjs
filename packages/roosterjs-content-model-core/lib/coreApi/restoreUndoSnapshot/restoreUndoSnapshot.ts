@@ -31,6 +31,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core, snapshot) => {
 
         const event: ContentChangedEvent = {
             eventType: 'contentChanged',
+            additionalState: snapshot.additionalState,
             entityStates: snapshot.entityStates,
             source: ChangeSource.SetContent,
         };

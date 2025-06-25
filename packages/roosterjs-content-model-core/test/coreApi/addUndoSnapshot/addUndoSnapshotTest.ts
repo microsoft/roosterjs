@@ -1,4 +1,4 @@
-import { EditorCore, SnapshotsManager } from 'roosterjs-content-model-types';
+import { EditorCore, SnapshotsManager, BasePluginEvent } from 'roosterjs-content-model-types';
 import { addUndoSnapshot } from '../../../lib/coreApi/addUndoSnapshot/addUndoSnapshot';
 import * as createSnapshotSelection from '../../../lib/coreApi/addUndoSnapshot/createSnapshotSelection';
 import { setLogicalRoot } from '../../../lib/coreApi/setLogicalRoot/setLogicalRoot';
@@ -77,15 +77,24 @@ describe('addUndoSnapshot', () => {
         expect(addSnapshotSpy).toHaveBeenCalledWith(
             {
                 html: mockedHTML,
+                additionalState: [],
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
             },
             false
         );
-        expect(triggerEventSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'beforeAddUndoSnapshot',
+                additionalState: [],
+            },
+            false
+        );
         expect(result).toEqual({
             html: mockedHTML,
+            additionalState: [],
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
@@ -112,15 +121,24 @@ describe('addUndoSnapshot', () => {
         expect(addSnapshotSpy).toHaveBeenCalledWith(
             {
                 html: mockedHTML,
+                additionalState: [],
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
             },
             true
         );
-        expect(triggerEventSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'beforeAddUndoSnapshot',
+                additionalState: [],
+            },
+            false
+        );
         expect(result).toEqual({
             html: mockedHTML,
+            additionalState: [],
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
@@ -138,7 +156,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        const result = addUndoSnapshot(core, false, mockedEntityStates);
+        const result = addUndoSnapshot(core, false, undefined, mockedEntityStates);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -148,6 +166,7 @@ describe('addUndoSnapshot', () => {
         expect(addSnapshotSpy).toHaveBeenCalledWith(
             {
                 html: mockedHTML,
+                additionalState: [],
                 entityStates: mockedEntityStates,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
@@ -156,7 +175,53 @@ describe('addUndoSnapshot', () => {
         );
         expect(result).toEqual({
             html: mockedHTML,
+            additionalState: [],
             entityStates: mockedEntityStates,
+            isDarkMode: false,
+            selection: mockedSnapshotSelection,
+        });
+    });
+
+    it('Has additional state', () => {
+        const mockedColors = 'COLORS' as any;
+        const mockedHTML = 'HTML' as any;
+        const mockedSnapshotSelection = 'SNAPSHOTSELECTION' as any;
+        const mockedAdditionalState = ['STATE1', 'STATE2'];
+
+        contentDiv.innerHTML = mockedHTML;
+
+        getKnownColorsCopySpy.and.returnValue(mockedColors);
+        createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
+
+        const result = addUndoSnapshot(core, false, mockedAdditionalState);
+
+        expect(core.undo).toEqual({
+            snapshotsManager: snapshotsManager,
+        } as any);
+        expect(snapshotsManager.hasNewContent).toBeFalse();
+        expect(createSnapshotSelectionSpy).toHaveBeenCalledWith(core);
+        expect(addSnapshotSpy).toHaveBeenCalledWith(
+            {
+                html: mockedHTML,
+                additionalState: mockedAdditionalState,
+                entityStates: undefined,
+                isDarkMode: false,
+                selection: mockedSnapshotSelection,
+            },
+            false
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'beforeAddUndoSnapshot',
+                additionalState: mockedAdditionalState,
+            },
+            false
+        );
+        expect(result).toEqual({
+            html: mockedHTML,
+            additionalState: mockedAdditionalState,
+            entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
         });
@@ -186,15 +251,24 @@ describe('addUndoSnapshot', () => {
         expect(addSnapshotSpy).toHaveBeenCalledWith(
             {
                 html: mockedHTML2,
+                additionalState: [],
                 entityStates: undefined,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
             },
             false
         );
-        expect(triggerEventSpy).not.toHaveBeenCalled();
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'beforeAddUndoSnapshot',
+                additionalState: [],
+            },
+            false
+        );
         expect(result).toEqual({
             html: mockedHTML2,
+            additionalState: [],
             entityStates: undefined,
             isDarkMode: false,
             selection: mockedSnapshotSelection,
@@ -215,7 +289,7 @@ describe('addUndoSnapshot', () => {
         getKnownColorsCopySpy.and.returnValue(mockedColors);
         createSnapshotSelectionSpy.and.returnValue(mockedSnapshotSelection);
 
-        const result = addUndoSnapshot(core, false, mockedEntityStates);
+        const result = addUndoSnapshot(core, false, undefined, mockedEntityStates);
 
         expect(core.undo).toEqual({
             snapshotsManager: snapshotsManager,
@@ -225,6 +299,7 @@ describe('addUndoSnapshot', () => {
         expect(addSnapshotSpy).toHaveBeenCalledWith(
             {
                 html: mockedHTML,
+                additionalState: [],
                 entityStates: mockedEntityStates,
                 isDarkMode: false,
                 selection: mockedSnapshotSelection,
@@ -234,6 +309,7 @@ describe('addUndoSnapshot', () => {
         );
         expect(result).toEqual({
             html: mockedHTML,
+            additionalState: [],
             entityStates: mockedEntityStates,
             isDarkMode: false,
             selection: mockedSnapshotSelection,

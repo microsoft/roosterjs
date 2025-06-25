@@ -71,6 +71,12 @@ export interface Snapshot {
     html: string;
 
     /**
+     * Additional state supplied by plugins. When doing an undo/redo to this snapshot, this state will be added to the
+     * content model context as additional state.
+     */
+    additionalState?: string[];
+
+    /**
      * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
      * an EntityOperation event with operation = EntityOperation.UpdateEntityState
      */

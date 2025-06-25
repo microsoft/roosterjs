@@ -46,6 +46,11 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly changedEntities?: ChangedEntity[];
 
     /**
+     * Additional state added to the snapshot by plugins
+     */
+    readonly additionalState?: string[];
+
+    /**
      * Entity states related to this event
      */
     readonly entityStates?: EntityState[];

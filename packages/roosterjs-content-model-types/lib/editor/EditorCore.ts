@@ -128,6 +128,7 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
 export type AddUndoSnapshot = (
     core: EditorCore,
     canUndoByBackspace: boolean,
+    additionalState?: string[],
     entityStates?: EntityState[]
 ) => Snapshot | null;
 
