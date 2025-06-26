@@ -466,7 +466,7 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
     });
 
     it('Add snapshot with additional state', () => {
-        const mockedAdditionalState = 'ADDITIONALSTATE' as any;
+        const mockedAdditionalState = { state: 'custom' } as any;
 
         service.addSnapshot(
             {

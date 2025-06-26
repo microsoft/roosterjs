@@ -14,16 +14,10 @@ import { getPath } from './getPath';
  * @param core The EditorCore object
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  * @param entityStates @optional Entity states related to this snapshot.
- * @param additionalState @optional Additional state to be added to the snapshot.
  * Each entity state will cause an EntityOperation event with operation = EntityOperation.UpdateEntityState
  * when undo/redo to this snapshot
  */
-export const addUndoSnapshot: AddUndoSnapshot = (
-    core,
-    canUndoByBackspace,
-    entityStates,
-    additionalState
-) => {
+export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entityStates) => {
     const { lifecycle, physicalRoot, logicalRoot, undo } = core;
     let snapshot: Snapshot | null = null;
 
@@ -31,7 +25,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
         // Give plugins the chance to add additional state to the snapshot
         const beforeAddUndoSnapshotEvent: BeforeAddUndoSnapshotEvent = {
             eventType: 'beforeAddUndoSnapshot',
-            additionalState: additionalState ?? [],
+            additionalState: {},
         };
         core.api.triggerEvent(core, beforeAddUndoSnapshotEvent, false);
 

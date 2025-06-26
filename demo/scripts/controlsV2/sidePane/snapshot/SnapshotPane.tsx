@@ -132,7 +132,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
 
                     this.setSnapshot({
                         html: html,
-                        additionalState: [],
+                        additionalState: {},
                         entityStates: [],
                         isDarkMode,
                         selection: metadata as SnapshotSelection,

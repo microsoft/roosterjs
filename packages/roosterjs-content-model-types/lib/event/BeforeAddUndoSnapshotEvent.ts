@@ -7,5 +7,5 @@ export interface BeforeAddUndoSnapshotEvent extends BasePluginEvent<'beforeAddUn
     /**
      * Additional state to be added to the snapshot
      */
-    additionalState: string[];
+    additionalState: { [key: string]: string };
 }

@@ -104,7 +104,7 @@ describe('restoreUndoSnapshot', () => {
 
     it('restore snapshot, with additional state', () => {
         const mockedHTML = 'HTML' as any;
-        const mockedAdditionalState = ['STATE1', 'STATE2'] as any;
+        const mockedAdditionalState = { state: 'custom' } as any;
         const snapshot: Snapshot = {
             html: mockedHTML,
             additionalState: mockedAdditionalState,

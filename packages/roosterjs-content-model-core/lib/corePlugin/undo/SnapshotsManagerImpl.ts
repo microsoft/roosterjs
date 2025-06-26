@@ -138,7 +138,8 @@ function shouldAddSnapshot(currentSnapshot: Snapshot, snapshot: Snapshot) {
         currentSnapshot.html !== snapshot.html ||
         (currentSnapshot.additionalState &&
             snapshot.additionalState &&
-            currentSnapshot.additionalState !== snapshot.additionalState) ||
+            JSON.stringify(currentSnapshot.additionalState) !==
+                JSON.stringify(snapshot.additionalState)) ||
         (!currentSnapshot.additionalState && snapshot.additionalState) ||
         (currentSnapshot.entityStates &&
             snapshot.entityStates &&
