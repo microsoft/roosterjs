@@ -14,12 +14,16 @@ import type {
     PaddingFormat,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
+    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl' | 'auto') {
+export function setModelDirection(
+    model: ReadonlyContentModelDocument,
+    direction: 'ltr' | 'rtl' | 'auto'
+) {
     splitSelectedParagraphByBr(model);
 
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
@@ -31,7 +35,7 @@ export function setModelDirection(model: ReadonlyContentModelDocument, direction
     paragraphOrListItemOrTable.forEach(({ block }) => {
         let calcDirection: 'ltr' | 'rtl';
         if (direction === 'auto') {
-            calcDirection = determineTextDirection(block)
+            calcDirection = determineTextDirection(block);
         } else {
             calcDirection = direction;
         }
@@ -108,27 +112,37 @@ function setProperty(
 
 // Designed to match browser's 'auto' detection, by scanning over the inner text until it hits a strong LTR/RTL character
 function determineTextDirection(block: ReadonlyContentModelBlock): 'ltr' | 'rtl' {
-    let innerText = block.cachedElement?.innerText;
-
-    if (!!innerText) {
-        // Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
-        const rtlPattern = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
-
-        // Remove links
-        innerText = innerText.replace(
-            /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g,
-            ""
+    if (block.blockType === 'Paragraph') {
+        const findTextSegements: ReadonlyContentModelText[] = block.segments.filter(
+            (seg): seg is ReadonlyContentModelText => seg.segmentType === 'Text'
         );
+        let innerText =
+            findTextSegements.length > 0
+                ? findTextSegements.reduce((prev, seg) => prev + seg.text, '')
+                : undefined;
+        if (!!innerText) {
+            // Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
+            const rtlPattern = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
 
-        const rtlMatches = innerText.match(rtlPattern);
-        const rtlCount = rtlMatches ? rtlMatches.length : 0;
+            // Remove links
+            innerText = innerText.replace(
+                /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g,
+                ''
+            );
 
-        const ltrCount = innerText.length - rtlCount;
+            // Remove whitespace
+            innerText = innerText.replace(/\s/g, '');
 
-        return rtlCount > ltrCount ? "rtl" : "ltr";
+            const rtlMatches = innerText.match(rtlPattern);
+            const rtlCount = rtlMatches ? rtlMatches.length : 0;
+
+            const ltrCount = innerText.length - rtlCount;
+
+            return rtlCount > ltrCount ? 'rtl' : 'ltr';
+        } else {
+            return 'ltr'; // Default to LTR if no text is found
+        }
     } else {
-        return 'ltr'; // Default to LTR if no text is found
-    };
+        return 'ltr';
+    }
 }
-
-

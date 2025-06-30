@@ -545,9 +545,7 @@ describe('setDirection', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {
-                            direction: 'ltr',
-                        },
+                        format: {},
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -674,9 +672,7 @@ describe('setDirection', () => {
                 blocks: [
                     {
                         blockType: 'Paragraph',
-                        format: {
-                            direction: 'ltr',
-                        },
+                        format: {},
                         segments: [
                             {
                                 segmentType: 'Text',
