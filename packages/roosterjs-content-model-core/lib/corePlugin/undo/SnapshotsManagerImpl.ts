@@ -50,6 +50,8 @@ class SnapshotsManagerImpl implements SnapshotsManager {
         const isSameSnapshot =
             currentSnapshot &&
             currentSnapshot.html == snapshot.html &&
+            !currentSnapshot.additionalState &&
+            !snapshot.additionalState &&
             !currentSnapshot.entityStates &&
             !snapshot.entityStates;
         const addSnapshot = !currentSnapshot || shouldAddSnapshot(currentSnapshot, snapshot);
@@ -134,6 +136,11 @@ export function createSnapshotsManager(snapshots?: Snapshots): SnapshotsManager 
 function shouldAddSnapshot(currentSnapshot: Snapshot, snapshot: Snapshot) {
     return (
         currentSnapshot.html !== snapshot.html ||
+        (currentSnapshot.additionalState &&
+            snapshot.additionalState &&
+            JSON.stringify(currentSnapshot.additionalState) !==
+                JSON.stringify(snapshot.additionalState)) ||
+        (!currentSnapshot.additionalState && snapshot.additionalState) ||
         (currentSnapshot.entityStates &&
             snapshot.entityStates &&
             currentSnapshot.entityStates !== snapshot.entityStates) ||

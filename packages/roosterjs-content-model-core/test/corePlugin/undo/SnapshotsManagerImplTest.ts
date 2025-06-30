@@ -465,6 +465,102 @@ describe('SnapshotsManagerImpl.addSnapshot', () => {
         ]);
     });
 
+    it('Add snapshot with additional state', () => {
+        const mockedAdditionalState = { state: 'custom' } as any;
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            false
+        );
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+            false
+        );
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+        ]);
+    });
+
+    it('Add snapshot with additional state with equal additional state', () => {
+        const mockedAdditionalState = 'ADDITIONALSTATE' as any;
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            false
+        );
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+            false
+        );
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+        ]);
+
+        service.addSnapshot(
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+            false
+        );
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                isDarkMode: false,
+            },
+            {
+                html: 'test',
+                isDarkMode: false,
+                additionalState: mockedAdditionalState,
+            },
+        ]);
+    });
+
     it('Has onChanged', () => {
         const onChanged = jasmine.createSpy('onChanged');
         snapshots.onChanged = onChanged;
