@@ -19,7 +19,7 @@ import type {
 /**
  * @internal
  */
-export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl') {
+export function setModelDirection(model: ReadonlyContentModelDocument, direction: 'ltr' | 'rtl' | 'auto') {
     splitSelectedParagraphByBr(model);
 
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
@@ -29,6 +29,12 @@ export function setModelDirection(model: ReadonlyContentModelDocument, direction
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
+        let calcDirection: 'ltr' | 'rtl';
+        if (direction === 'auto') {
+            calcDirection = determineTextDirection(block)
+        } else {
+            calcDirection = direction;
+        }
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             const items = findListItemsInSameThread(model, block);
 
@@ -36,13 +42,13 @@ export function setModelDirection(model: ReadonlyContentModelDocument, direction
                 const item = mutateBlock(readonlyItem);
 
                 item.levels.forEach(level => {
-                    level.format.direction = direction;
+                    level.format.direction = calcDirection;
                 });
 
-                item.blocks.forEach(block => internalSetDirection(block, direction));
+                item.blocks.forEach(block => internalSetDirection(block, calcDirection));
             });
         } else if (block) {
-            internalSetDirection(block, direction);
+            internalSetDirection(block, calcDirection);
         }
     });
 
@@ -99,3 +105,30 @@ function setProperty(
         delete format[key];
     }
 }
+
+// Designed to match browser's 'auto' detection, by scanning over the inner text until it hits a strong LTR/RTL character
+function determineTextDirection(block: ReadonlyContentModelBlock): 'ltr' | 'rtl' {
+    let innerText = block.cachedElement?.innerText;
+
+    if (!!innerText) {
+        // Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
+        const rtlPattern = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
+
+        // Remove links
+        innerText = innerText.replace(
+            /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g,
+            ""
+        );
+
+        const rtlMatches = innerText.match(rtlPattern);
+        const rtlCount = rtlMatches ? rtlMatches.length : 0;
+
+        const ltrCount = innerText.length - rtlCount;
+
+        return rtlCount > ltrCount ? "rtl" : "ltr";
+    } else {
+        return 'ltr'; // Default to LTR if no text is found
+    };
+}
+
+
