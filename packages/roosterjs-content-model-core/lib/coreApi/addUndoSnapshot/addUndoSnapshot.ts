@@ -3,6 +3,7 @@ import type {
     AddUndoSnapshot,
     EntityOperationEvent,
     Snapshot,
+    BeforeAddUndoSnapshotEvent,
 } from 'roosterjs-content-model-types';
 import { createSnapshotSelection } from './createSnapshotSelection';
 import { getPath } from './getPath';
@@ -21,6 +22,13 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
     let snapshot: Snapshot | null = null;
 
     if (!lifecycle.shadowEditFragment) {
+        // Give plugins the chance to add additional state to the snapshot
+        const beforeAddUndoSnapshotEvent: BeforeAddUndoSnapshotEvent = {
+            eventType: 'beforeAddUndoSnapshot',
+            additionalState: {},
+        };
+        core.api.triggerEvent(core, beforeAddUndoSnapshotEvent, false);
+
         // Need to create snapshot selection before retrieve innerHTML since HTML can be changed during creating selection when normalize table
         const selection = createSnapshotSelection(core);
         const html = physicalRoot.innerHTML;
@@ -61,6 +69,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (core, canUndoByBackspace, entit
 
         snapshot = {
             html,
+            additionalState: beforeAddUndoSnapshotEvent.additionalState,
             entityStates,
             isDarkMode: !!lifecycle.isDarkMode,
             selection,

@@ -17,6 +17,7 @@ export interface SnapshotPaneState {
 
 export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPaneState> {
     private html = React.createRef<HTMLTextAreaElement>();
+    private additionalState = React.createRef<HTMLTextAreaElement>();
     private entityStates = React.createRef<HTMLTextAreaElement>();
     private isDarkColor = React.createRef<HTMLInputElement>();
     private selection = React.createRef<HTMLTextAreaElement>();
@@ -49,6 +50,12 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
                 <textarea ref={this.html} className={styles.textarea} spellCheck={false} />
                 <div>Selection:</div>
                 <textarea ref={this.selection} className={styles.textarea} spellCheck={false} />
+                <div>Additional state:</div>
+                <textarea
+                    ref={this.additionalState}
+                    className={styles.textarea}
+                    spellCheck={false}
+                />
                 <div>Entity states:</div>
                 <textarea ref={this.entityStates} className={styles.textarea} spellCheck={false} />
                 <div>Logical root path:</div>
@@ -66,6 +73,9 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
         const selection = this.selection.current.value
             ? (JSON.parse(this.selection.current.value) as SnapshotSelection)
             : undefined;
+        const additionalState = this.additionalState.current.value
+            ? JSON.parse(this.additionalState.current.value)
+            : undefined;
         const entityStates = this.entityStates.current.value
             ? (JSON.parse(this.entityStates.current.value) as EntityState[])
             : undefined;
@@ -76,6 +86,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
 
         return {
             html,
+            additionalState,
             entityStates,
             isDarkMode,
             selection,
@@ -121,6 +132,7 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
 
                     this.setSnapshot({
                         html: html,
+                        additionalState: {},
                         entityStates: [],
                         isDarkMode,
                         selection: metadata as SnapshotSelection,
@@ -155,6 +167,9 @@ export class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPan
 
     private setSnapshot = (snapshot: Snapshot) => {
         this.html.current.value = snapshot.html;
+        this.additionalState.current.value = snapshot.additionalState
+            ? JSON.stringify(snapshot.additionalState)
+            : '';
         this.entityStates.current.value = snapshot.entityStates
             ? JSON.stringify(snapshot.entityStates)
             : '';
