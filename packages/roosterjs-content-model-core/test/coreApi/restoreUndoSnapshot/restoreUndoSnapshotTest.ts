@@ -55,6 +55,7 @@ describe('restoreUndoSnapshot', () => {
             core,
             {
                 eventType: 'contentChanged',
+                additionalState: undefined,
                 entityStates: undefined,
                 source: ChangeSource.SetContent,
             },
@@ -89,7 +90,43 @@ describe('restoreUndoSnapshot', () => {
             core,
             {
                 eventType: 'contentChanged',
+                additionalState: undefined,
                 entityStates: mockedEntityState,
+                source: ChangeSource.SetContent,
+            },
+            false
+        );
+        expect(setLogicalRootSpy).toHaveBeenCalledWith(core, null);
+        expect(restoreSnapshotColorsSpy).toHaveBeenCalledWith(core, snapshot);
+        expect(restoreSnapshotHTMLSpy).toHaveBeenCalledWith(core, snapshot);
+        expect(restoreSnapshotSelectionSpy).toHaveBeenCalledWith(core, snapshot);
+    });
+
+    it('restore snapshot, with additional state', () => {
+        const mockedHTML = 'HTML' as any;
+        const mockedAdditionalState = { state: 'custom' } as any;
+        const snapshot: Snapshot = {
+            html: mockedHTML,
+            additionalState: mockedAdditionalState,
+        } as any;
+
+        restoreUndoSnapshot(core, snapshot);
+
+        expect(triggerEventSpy).toHaveBeenCalledTimes(2);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'beforeSetContent',
+                newContent: mockedHTML,
+            },
+            true
+        );
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: 'contentChanged',
+                additionalState: mockedAdditionalState,
+                entityStates: undefined,
                 source: ChangeSource.SetContent,
             },
             false
