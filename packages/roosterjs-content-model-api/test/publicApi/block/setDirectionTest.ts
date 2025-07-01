@@ -6,11 +6,12 @@ describe('setDirection', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
-        calledTimes: number
+        calledTimes: number,
+        overrideDirection?: 'ltr' | 'rtl' | 'auto'
     ) {
         paragraphTestCommon(
             'setDirection',
-            editor => setDirection(editor, 'rtl'),
+            editor => setDirection(editor, overrideDirection ?? 'rtl'),
             model,
             result,
             calledTimes
@@ -517,6 +518,217 @@ describe('setDirection', () => {
                 ],
             },
             1
+        );
+    });
+
+    it('Properly detects ltr', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'auto'
+        );
+    });
+
+    it('Properly detects rtl', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'rtl',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'auto'
+        );
+    });
+
+    it('Properly detects rtl, even with some ltr characters', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال hello',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'rtl',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال hello',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'auto'
+        );
+    });
+
+    it('Properly detects ltr, even with some rtl characters', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'hello world كلمة',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'hello world كلمة',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'auto'
+        );
+    });
+
+    it('Properly detects rtl, even with a url', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال https://www.contoso.com',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'rtl',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'هذه جملة مثال https://www.contoso.com',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'auto'
         );
     });
 });
