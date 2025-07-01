@@ -17,6 +17,12 @@ import type {
     ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
+// Regexes for character direction detection
+// Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
+const RTL_CHAR_REGEX = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
+const URL_CHAR_REGEX = /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g;
+const WHITESPACE_REGEX = /\s/g;
+
 /**
  * @internal
  */
@@ -121,19 +127,13 @@ function determineTextDirection(block: ReadonlyContentModelBlock): 'ltr' | 'rtl'
                 ? findTextSegements.reduce((prev, seg) => prev + seg.text, '')
                 : undefined;
         if (!!innerText) {
-            // Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
-            const rtlPattern = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
-
             // Remove links
-            innerText = innerText.replace(
-                /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g,
-                ''
-            );
+            innerText = innerText.replace(URL_CHAR_REGEX, '');
 
             // Remove whitespace
-            innerText = innerText.replace(/\s/g, '');
+            innerText = innerText.replace(WHITESPACE_REGEX, '');
 
-            const rtlMatches = innerText.match(rtlPattern);
+            const rtlMatches = innerText.match(RTL_CHAR_REGEX);
             const rtlCount = rtlMatches ? rtlMatches.length : 0;
 
             const ltrCount = innerText.length - rtlCount;
