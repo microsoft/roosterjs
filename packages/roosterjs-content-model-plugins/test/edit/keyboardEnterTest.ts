@@ -1366,7 +1366,7 @@ describe('keyboardEnter', () => {
         );
     });
 
-    it('selection cover table', () => {
+    it('Handle enter when there is entity', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -1405,5 +1405,38 @@ describe('keyboardEnter', () => {
         expect(runEditStepsSpy.calls.argsFor(1)[0].includes(handleEnterOnParagraph)).toBe(true);
     });
 
-    it('Selected paragraph has entity', () => {});
+    it('Do not handle enter when there is only selection marker', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const context: FormatContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        formatContentModelSpy.and.callFake((callback: Function) => {
+            callback(model, context);
+        });
+
+        const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
+
+        keyboardEnter(editor, {} as any, false);
+
+        expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
+        expect(runEditStepsSpy.calls.argsFor(1)[0].includes(handleEnterOnParagraph)).toBe(false);
+    });
 });
