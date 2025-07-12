@@ -1,4 +1,5 @@
 import { createEditorCore } from './core/createEditorCore';
+import { tryAddSelectionMarker } from '../utils/tryAddSelectionMarker';
 import {
     createEmptyModel,
     ChangeSource,
@@ -51,6 +52,8 @@ export class Editor implements IEditor {
 
         const initialModel =
             options.initialModel ?? createEmptyModel(this.core.format.defaultFormat);
+
+        tryAddSelectionMarker(initialModel, this.core.format.defaultFormat);
 
         this.core.api.setContentModel(
             this.core,
