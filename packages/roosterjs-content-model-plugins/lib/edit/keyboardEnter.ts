@@ -35,7 +35,7 @@ export function keyboardEnter(
                     ? []
                     : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 
-                if (handleNormalEnter || hasEnterForEntity(result.insertPoint?.paragraph)) {
+                if (handleNormalEnter || handleEnterForEntity(result.insertPoint?.paragraph)) {
                     steps.push(handleEnterOnParagraph);
                 }
 
@@ -64,9 +64,9 @@ export function keyboardEnter(
     );
 }
 
-function hasEnterForEntity(paragraph: ReadonlyContentModelParagraph | undefined) {
+function handleEnterForEntity(paragraph: ReadonlyContentModelParagraph | undefined) {
     return (
         paragraph &&
-        (paragraph.isImplicit || paragraph.segments.some(x => x.segmentType == 'SelectionMarker'))
+        (paragraph.isImplicit || paragraph.segments.some(x => x.segmentType == 'Entity'))
     );
 }
