@@ -23,7 +23,7 @@ import type {
     ShallowMutableContentModelListItem,
 } from 'roosterjs-content-model-types';
 
-const SPACE = ' ';
+const SPACE = '\u2002';
 /**
  * @see handleTabKey uses the default space length defined in @see setModelIndentation
  */
