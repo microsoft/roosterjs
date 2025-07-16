@@ -12,13 +12,11 @@ import type {
  * @param group The parent block group
  * @param parent Parent DOM node to process
  * @param context DOM to Content Model context
- * @param processNonVisibleElements If true elements that has display:none style will be processed @default false
  */
-export const childProcessor: ElementProcessor<ParentNode, boolean> = (
+export const childProcessor: ElementProcessor<ParentNode> = (
     group: ContentModelBlockGroup,
     parent: ParentNode,
-    context: DomToModelContext,
-    processNonVisibleElements: boolean = false
+    context: DomToModelContext
 ) => {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
@@ -26,7 +24,7 @@ export const childProcessor: ElementProcessor<ParentNode, boolean> = (
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
 
-        processChildNode(group, child, context, processNonVisibleElements);
+        processChildNode(group, child, context, context.processNonVisibleElements);
 
         index++;
     }

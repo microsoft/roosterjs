@@ -555,8 +555,9 @@ describe('childProcessor', () => {
             } as any,
             isReverted: false,
         };
+        context.processNonVisibleElements = false;
 
-        childProcessor(doc, div, context, false /* processNonVisibleElements */);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -592,7 +593,9 @@ describe('childProcessor', () => {
             isReverted: false,
         };
 
-        childProcessor(doc, div, context, true /* processNonVisibleElements */);
+        context.processNonVisibleElements = true;
+
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
