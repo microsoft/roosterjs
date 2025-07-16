@@ -538,4 +538,72 @@ describe('childProcessor', () => {
             threadItemCounts: [1],
         });
     });
+
+    it('Do not process DIV with non visible elements ', () => {
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML =
+            '<span>test1</span><span style="display: none">test2</span><span>test3</span>';
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 1,
+                endContainer: div,
+                endOffset: 2,
+                collapsed: false,
+            } as any,
+            isReverted: false,
+        };
+
+        childProcessor(doc, div, context, false /* processNonVisibleElements */);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'Text', text: 'test1', format: {} },
+                { segmentType: 'Text', text: 'test3', format: {} },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
+
+    it('Process DIV with non visible elements ', () => {
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML =
+            '<span>test1</span><span style="display: none">test2</span><span>test3</span>';
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 1,
+                endContainer: div,
+                endOffset: 2,
+                collapsed: false,
+            } as any,
+            isReverted: false,
+        };
+
+        childProcessor(doc, div, context, true /* processNonVisibleElements */);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
 });

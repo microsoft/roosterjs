@@ -12,11 +12,13 @@ import type {
  * @param group The parent block group
  * @param parent Parent DOM node to process
  * @param context DOM to Content Model context
+ * @param processNonVisibleElements If true elements that has display:none style will be processed @default false
  */
-export const childProcessor: ElementProcessor<ParentNode> = (
+export const childProcessor: ElementProcessor<ParentNode, boolean> = (
     group: ContentModelBlockGroup,
     parent: ParentNode,
-    context: DomToModelContext
+    context: DomToModelContext,
+    processNonVisibleElements: boolean = false
 ) => {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
@@ -24,7 +26,7 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
 
-        processChildNode(group, child, context);
+        processChildNode(group, child, context, processNonVisibleElements);
 
         index++;
     }
@@ -37,14 +39,19 @@ export const childProcessor: ElementProcessor<ParentNode> = (
  * @param group The parent block group
  * @param parent Parent DOM node to process
  * @param context DOM to Content Model context
+ * @param processNonVisibleElements If true elements that has display:none style will be processed @default false
  *
  */
 export function processChildNode(
     group: ContentModelBlockGroup,
     child: Node,
-    context: DomToModelContext
+    context: DomToModelContext,
+    processNonVisibleElements: boolean = false
 ) {
-    if (isNodeOfType(child, 'ELEMENT_NODE') && child.style.display != 'none') {
+    if (
+        isNodeOfType(child, 'ELEMENT_NODE') &&
+        (child.style.display != 'none' || processNonVisibleElements)
+    ) {
         context.elementProcessors.element(group, child, context);
     } else if (isNodeOfType(child, 'TEXT_NODE')) {
         context.elementProcessors['#text'](group, child, context);
