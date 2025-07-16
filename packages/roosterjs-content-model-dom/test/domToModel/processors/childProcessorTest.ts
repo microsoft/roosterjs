@@ -563,6 +563,11 @@ describe('childProcessor', () => {
             blockType: 'Paragraph',
             segments: [
                 { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
