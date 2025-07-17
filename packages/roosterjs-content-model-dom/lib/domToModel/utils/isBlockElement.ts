@@ -1,6 +1,6 @@
 import { getDefaultStyle } from './getDefaultStyle';
 
-const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table', 'table-cell', 'flex'];
+const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table', 'table-cell', 'flex', 'none'];
 
 /**
  * Check if the given element will be layout as a block

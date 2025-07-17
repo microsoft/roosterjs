@@ -24,7 +24,7 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset, parent);
 
-        processChildNode(group, child, context, context.processNonVisibleElements);
+        processChildNode(group, child, context);
 
         index++;
     }
@@ -37,18 +37,15 @@ export const childProcessor: ElementProcessor<ParentNode> = (
  * @param group The parent block group
  * @param parent Parent DOM node to process
  * @param context DOM to Content Model context
- * @param processNonVisibleElements If true elements that has display:none style will be processed @default false
- *
  */
 export function processChildNode(
     group: ContentModelBlockGroup,
     child: Node,
-    context: DomToModelContext,
-    processNonVisibleElements: boolean = false
+    context: DomToModelContext
 ) {
     if (
         isNodeOfType(child, 'ELEMENT_NODE') &&
-        (child.style.display != 'none' || processNonVisibleElements)
+        (child.style.display != 'none' || context.processNonVisibleElements)
     ) {
         context.elementProcessors.element(group, child, context);
     } else if (isNodeOfType(child, 'TEXT_NODE')) {
