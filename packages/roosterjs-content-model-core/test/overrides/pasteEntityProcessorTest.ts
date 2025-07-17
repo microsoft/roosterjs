@@ -34,6 +34,7 @@ describe('pasteEntityProcessor', () => {
             additionalDisallowedTags: [],
             styleSanitizers: {},
             attributeSanitizers: {},
+            processNonVisibleElements: false,
         } as any);
 
         sanitizeElementSpy.and.returnValue(element);

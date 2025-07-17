@@ -74,6 +74,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 processorOverride: {},
                 styleSanitizers: {},
                 attributeSanitizers: {},
+                processNonVisibleElements: false,
             },
             containsBlockElements: false,
         });
@@ -213,6 +214,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 processorOverride: {},
                 styleSanitizers: {},
                 attributeSanitizers: {},
+                processNonVisibleElements: false,
             },
             containsBlockElements: false,
         });

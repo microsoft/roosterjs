@@ -55,6 +55,7 @@ describe('Content Model Paste Plugin Test', () => {
                     processorOverride: {},
                     styleSanitizers: {},
                     attributeSanitizers: {},
+                    processNonVisibleElements: false,
                 } as any,
             };
         });
