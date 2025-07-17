@@ -20,6 +20,7 @@ export function createBeforePasteEventMock(
             formatParserOverride: {},
             processorOverride: {},
             styleSanitizers: {},
+            processNonVisibleElements: false,
         },
     };
 }
