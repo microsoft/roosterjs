@@ -33,7 +33,6 @@ describe('pasteGeneralProcessor', () => {
             additionalDisallowedTags: [],
             styleSanitizers: {},
             attributeSanitizers: {},
-            processNonVisibleElements: false,
         } as any);
 
         createSanitizedElementSpy.and.returnValue(element);
@@ -82,7 +81,6 @@ describe('pasteGeneralProcessor', () => {
             additionalDisallowedTags: [],
             styleSanitizers: {},
             attributeSanitizers: {},
-            processNonVisibleElements: false,
         } as any);
 
         createSanitizedElementSpy.and.returnValue(element);
@@ -166,7 +164,6 @@ describe('pasteGeneralProcessor', () => {
             additionalDisallowedTags: ['test'],
             styleSanitizers: {},
             attributeSanitizers: {},
-            processNonVisibleElements: false,
         } as any);
 
         createSanitizedElementSpy.and.callThrough();
