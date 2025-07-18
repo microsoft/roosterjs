@@ -23,6 +23,11 @@ export interface DomToModelOption {
      * Provide additional format parsers for each format type
      */
     additionalFormatParsers?: Partial<FormatParsersPerCategory>;
+
+    /**
+     * If true elements that has display:none style will be processed
+     */
+    processNonVisibleElements?: boolean;
 }
 
 /**

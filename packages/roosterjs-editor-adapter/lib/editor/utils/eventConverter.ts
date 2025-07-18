@@ -152,6 +152,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                         processorOverride: {},
                         styleSanitizers: {},
                         attributeSanitizers: {},
+                        processNonVisibleElements: false,
                     },
                 eventDataCache: input.eventDataCache,
                 fragment: input.fragment,

@@ -538,4 +538,71 @@ describe('childProcessor', () => {
             threadItemCounts: [1],
         });
     });
+
+    it('Do not process DIV with non visible elements ', () => {
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML =
+            '<span>test1</span><span style="display: none">test2</span><span>test3</span>';
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 1,
+                endContainer: div,
+                endOffset: 2,
+                collapsed: false,
+            } as any,
+            isReverted: false,
+        };
+        context.processNonVisibleElements = false;
+
+        childProcessor(doc, div, context);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
+});
+
+describe('childProcessor', () => {
+    let doc: ContentModelDocument;
+    let contextWithNonVisible: DomToModelContext;
+
+    beforeEach(() => {
+        doc = createContentModelDocument();
+        contextWithNonVisible = createDomToModelContext(undefined, {
+            processNonVisibleElements: true,
+        });
+    });
+
+    it('Process DIV with non visible Divs ', () => {
+        const div = document.createElement('div');
+        div.innerHTML = '<div style="display: none" id="test" ></div>';
+        contextWithNonVisible.processNonVisibleElements = true;
+        childProcessor(doc, div, contextWithNonVisible);
+
+        expect(doc.blocks[0]).toEqual({
+            tagName: 'div',
+            blockType: 'BlockGroup',
+            format: {
+                display: 'none',
+                id: 'test',
+            },
+            blockGroupType: 'FormatContainer',
+            blocks: [],
+        });
+    });
 });

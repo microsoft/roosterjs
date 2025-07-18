@@ -19,6 +19,7 @@ const getPasteEvent = (): BeforePasteEvent => {
             processorOverride: {},
             styleSanitizers: {},
             attributeSanitizers: {},
+            processNonVisibleElements: false,
         },
     };
 };

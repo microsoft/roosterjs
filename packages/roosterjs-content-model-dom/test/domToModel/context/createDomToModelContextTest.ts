@@ -33,6 +33,7 @@ describe('createDomToModelContext', () => {
             formatParsers: buildFormatParsers(),
             defaultElementProcessors: defaultProcessorMap,
             defaultFormatParsers,
+            processNonVisibleElements: false,
         });
     });
 
@@ -67,6 +68,7 @@ describe('createDomToModelContext', () => {
             formatParsers: buildFormatParsers(),
             defaultElementProcessors: defaultProcessorMap,
             defaultFormatParsers,
+            processNonVisibleElements: false,
         });
     });
 
@@ -95,6 +97,7 @@ describe('createDomToModelContext', () => {
                 additionalFormatParsers: {
                     text: [mockedTextParser2],
                 },
+                processNonVisibleElements: true,
             }
         );
 
@@ -133,6 +136,7 @@ describe('createDomToModelContext', () => {
             formatParsers: parsers,
             defaultElementProcessors: defaultProcessorMap,
             defaultFormatParsers,
+            processNonVisibleElements: true,
         });
     });
 });

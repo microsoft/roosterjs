@@ -113,6 +113,7 @@ describe('oldEventToNewEvent', () => {
                     processorOverride: {},
                     styleSanitizers: {},
                     attributeSanitizers: {},
+                    processNonVisibleElements: false,
                 },
                 eventDataCache: mockedDataCache,
                 fragment: mockedFragment,

@@ -25,6 +25,7 @@ export function generatePasteOptionFromPlugins(
         processorOverride: {},
         styleSanitizers: {},
         attributeSanitizers: {},
+        processNonVisibleElements: false,
     };
 
     const event: BeforePasteEvent = {

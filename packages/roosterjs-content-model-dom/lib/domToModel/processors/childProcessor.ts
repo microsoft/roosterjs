@@ -37,14 +37,16 @@ export const childProcessor: ElementProcessor<ParentNode> = (
  * @param group The parent block group
  * @param parent Parent DOM node to process
  * @param context DOM to Content Model context
- *
  */
 export function processChildNode(
     group: ContentModelBlockGroup,
     child: Node,
     context: DomToModelContext
 ) {
-    if (isNodeOfType(child, 'ELEMENT_NODE') && child.style.display != 'none') {
+    if (
+        isNodeOfType(child, 'ELEMENT_NODE') &&
+        (child.style.display != 'none' || context.processNonVisibleElements)
+    ) {
         context.elementProcessors.element(group, child, context);
     } else if (isNodeOfType(child, 'TEXT_NODE')) {
         context.elementProcessors['#text'](group, child, context);

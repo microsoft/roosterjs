@@ -22,6 +22,7 @@ const DefaultSanitizingOption: DomToModelOptionForSanitizing = {
     additionalDisallowedTags: [],
     styleSanitizers: {},
     attributeSanitizers: {},
+    processNonVisibleElements: false,
 };
 
 /**

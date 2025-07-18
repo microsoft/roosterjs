@@ -21,6 +21,7 @@ describe('createDomToModelContextForSanitizing', () => {
         additionalDisallowedTags: [],
         styleSanitizers: {},
         attributeSanitizers: {},
+        processNonVisibleElements: false,
     };
     let createDomToModelContextSpy: jasmine.Spy;
 
