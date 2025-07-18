@@ -462,7 +462,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             (this.imageEditInfo.widthPx == 0 || this.imageEditInfo.heightPx == 0) &&
             !image.complete
         ) {
-            // width and height not being set means the image is not loaded yet.
+            // Image dimensions are zero and loading is incomplete, wait for image to load.
             image.onload = () => {
                 this.imageEditInfo = {
                     ...this.imageEditInfo,
