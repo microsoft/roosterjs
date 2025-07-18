@@ -457,8 +457,46 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
-        this.lastSrc = image.getAttribute('src');
+
+        if (
+            (this.imageEditInfo.widthPx == 0 || this.imageEditInfo.heightPx == 0) &&
+            !image.complete
+        ) {
+            // width and height not being set means the image is not loaded yet.
+            image.onload = () => {
+                this.imageEditInfo = {
+                    ...this.imageEditInfo,
+                    widthPx: image.clientWidth,
+                    heightPx: image.clientHeight,
+                    naturalWidth: image.naturalWidth,
+                    naturalHeight: image.naturalHeight,
+                };
+                image.style.width = this.imageEditInfo.widthPx + 'px';
+                image.style.height = this.imageEditInfo.heightPx + 'px';
+                this.startEditingInternal(editor, image, apiOperation);
+                image.onload = null;
+                image.onerror = null;
+            };
+            image.onerror = () => {
+                image.onload = null;
+                image.onerror = null;
+            };
+        } else {
+            this.startEditingInternal(editor, image, apiOperation);
+        }
+    }
+
+    private startEditingInternal(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation: ImageEditOperation[]
+    ) {
+        if (!this.imageEditInfo) {
+            this.imageEditInfo = getSelectedImageMetadata(editor, image);
+        }
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+        this.lastSrc = image.getAttribute('src');
+
         const {
             resizers,
             rotators,
