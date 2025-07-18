@@ -53,7 +53,7 @@ export interface DomToModelOptionForCreateModel extends DomToModelOption {
 /**
  * Options for DOM to Content Model conversion for paste only
  */
-export interface DomToModelOptionForSanitizing extends Partial<DomToModelOption> {
+export interface DomToModelOptionForSanitizing extends Required<DomToModelOption> {
     /**
      * Additional allowed HTML tags in lower case. Element with these tags will be preserved
      */
