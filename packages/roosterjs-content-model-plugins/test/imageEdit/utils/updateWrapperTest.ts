@@ -46,15 +46,18 @@ describe('updateWrapper', () => {
         editInfo.heightPx = 12;
         updateWrapper(editInfo, options, image, imageClone, wrapper, resizers);
 
-        expect(wrapper.style.margin).toBe('0px');
+        expect(wrapper.style.marginLeft).toBe('0px');
+        expect(wrapper.style.marginRight).toBe('0px');
+        expect(wrapper.style.marginTop).toBe('0px');
+        expect(wrapper.style.marginBottom).toBe('5px');
         expect(wrapper.style.transform).toBe(`rotate(0rad)`);
+        expect(wrapper.style.verticalAlign).toBe(`text-bottom`);
 
         expect(wrapper.style.width).toBe('20px');
         expect(wrapper.style.height).toBe('12px');
 
         expect(imageClone.style.width).toBe('20px');
         expect(imageClone.style.height).toBe('13.3333px');
-        expect(imageClone.style.verticalAlign).toBe('bottom');
         expect(imageClone.style.position).toBe('absolute');
         image.remove();
     });
