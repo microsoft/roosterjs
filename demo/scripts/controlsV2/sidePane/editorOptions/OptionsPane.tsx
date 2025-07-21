@@ -141,6 +141,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             customReplacements: this.state.customReplacements,
             experimentalFeatures: this.state.experimentalFeatures,
             editPluginOptions: { ...this.state.editPluginOptions },
+            disableSideResize: this.state.disableSideResize,
         };
 
         if (callback) {
