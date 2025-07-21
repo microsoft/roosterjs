@@ -58,9 +58,14 @@ export function updateWrapper(
     const cropBottomPx = originalHeight * (bottomPercent || 0);
 
     // Update size and margin of the wrapper
-    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
+    wrapper.style.marginTop = `${marginVertical}px`;
+    wrapper.style.marginBottom = `${marginVertical + 5}px `; // 5px to adjust the image on top of the handles
+    wrapper.style.marginLeft = `${marginHorizontal}px`;
+    wrapper.style.marginRight = `${marginHorizontal}px`;
+
     wrapper.style.transform = `rotate(${angleRad}rad)`;
     setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
+    wrapper.style.verticalAlign = 'text-bottom';
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
     // or if the direction is Right To Left
@@ -77,7 +82,6 @@ export function updateWrapper(
     // Update size of the image
     clonedImage.style.width = getPx(originalWidth);
     clonedImage.style.height = getPx(originalHeight);
-    clonedImage.style.verticalAlign = 'bottom';
     clonedImage.style.position = 'absolute';
 
     //Update flip direction
