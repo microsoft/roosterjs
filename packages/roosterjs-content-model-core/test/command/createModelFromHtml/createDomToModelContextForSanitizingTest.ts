@@ -2,6 +2,7 @@ import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToM
 import * as createPasteEntityProcessor from '../../../lib/override/pasteEntityProcessor';
 import * as createPasteGeneralProcessor from '../../../lib/override/pasteGeneralProcessor';
 import { containerSizeFormatParser } from '../../../lib/override/containerSizeFormatParser';
+import { createDefaultDomToModelContext } from '../../testUtils';
 import { createDomToModelContextForSanitizing } from '../../../lib/command/createModelFromHtml/createDomToModelContextForSanitizing';
 import { DomToModelOptionForSanitizing } from 'roosterjs-content-model-types';
 import { pasteBlockEntityParser } from '../../../lib/override/pasteCopyBlockEntityParser';
@@ -13,15 +14,7 @@ describe('createDomToModelContextForSanitizing', () => {
     const mockedPasteGeneralProcessor = 'GENERALPROCESSOR' as any;
     const mockedPasteEntityProcessor = 'ENTITYPROCESSOR' as any;
     const mockedResult = 'CONTEXT' as any;
-    const defaultOptions: DomToModelOptionForSanitizing = {
-        processorOverride: {},
-        formatParserOverride: {},
-        additionalFormatParsers: {},
-        additionalAllowedTags: [],
-        additionalDisallowedTags: [],
-        styleSanitizers: {},
-        attributeSanitizers: {},
-    };
+    const defaultOptions: DomToModelOptionForSanitizing = createDefaultDomToModelContext();
     let createDomToModelContextSpy: jasmine.Spy;
 
     let createPasteGeneralProcessorSpy: jasmine.Spy;
