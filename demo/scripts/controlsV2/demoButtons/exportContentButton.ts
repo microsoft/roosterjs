@@ -1,6 +1,6 @@
+import * as DOMPurify from 'dompurify';
 import { exportContent } from 'roosterjs-content-model-core';
 import { ModelToTextCallbacks } from 'roosterjs-content-model-types';
-import DOMPurify = require('dompurify');
 import type { RibbonButton } from 'roosterjs-react';
 
 /**
