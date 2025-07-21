@@ -60,22 +60,6 @@ export const htmlParagraphs: Preset = {
                     format: {},
                 },
             },
-            {
-                isImplicit: true,
-                segments: [
-                    {
-                        isSelected: true,
-                        segmentType: 'SelectionMarker',
-                        format: {
-                            fontFamily: 'Calibri',
-                            fontSize: '11pt',
-                            textColor: 'rgb(0, 0, 0)',
-                        },
-                    },
-                ],
-                blockType: 'Paragraph',
-                format: {},
-            },
         ],
     },
 };
