@@ -1,3 +1,5 @@
+import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
+import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
 import type {
     ContentModelHandlerMap,
     FormatAppliers,
@@ -33,4 +35,8 @@ export interface ModelToDomOption {
      * When set to true, selection from content model will not be applied
      */
     ignoreSelection?: boolean;
+
+    defaultContentModelFormatOverride?: {
+        [tagName: string]: ContentModelSegmentFormat & ContentModelBlockFormat;
+    };
 }

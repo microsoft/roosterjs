@@ -5,6 +5,7 @@ import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlug
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
 import { darkModeButton } from '../demoButtons/darkModeButton';
 import { defaultDomToModelOption } from '../options/defaultDomToModelOption';
+import { defaultModelToDomOption } from '../options/defaultModelToDomOption';
 import { Editor } from 'roosterjs-content-model-core';
 import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlugin';
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
@@ -389,6 +390,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                                 this.state.initState.experimentalFeatures
                             )}
                             defaultDomToModelOptions={defaultDomToModelOption}
+                            defaultModelToDomOptions={defaultModelToDomOption}
                         />
                     )}
                 </div>

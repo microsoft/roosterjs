@@ -248,6 +248,13 @@ export interface ModelToDomSettings {
     metadataAppliers: MetadataAppliers;
 
     /**
+     * Default format for each tag name used for generating DOM tree from content model
+     */
+    defaultContentModelFormatMap: {
+        [tagName: string]: ContentModelSegmentFormat & ContentModelBlockFormat;
+    };
+
+    /**
      * Default Content Model to DOM handlers before overriding.
      * This provides a way to call original handler from an overridden handler function
      */
