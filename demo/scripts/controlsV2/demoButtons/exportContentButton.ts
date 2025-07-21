@@ -34,14 +34,17 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
         let html = '';
 
         if (key == 'menuNameExportHTML') {
-            html = exportContent(editor, 'HTML', {
-                defaultContentModelFormatOverride: {
-                    p: {
-                        marginTop: '0',
-                        marginBottom: '0',
+            html =
+                '<html><head><style>p{margin-top:0;margin-bottom:0;}</style></head><body>' +
+                exportContent(editor, 'HTML', {
+                    defaultContentModelFormatOverride: {
+                        p: {
+                            marginTop: '0',
+                            marginBottom: '0',
+                        },
                     },
-                },
-            });
+                }) +
+                '</body></html>';
         } else if (key == 'menuNameExportText') {
             html = `<pre>${exportContent(editor, 'PlainText', callbacks)}</pre>`;
         }
