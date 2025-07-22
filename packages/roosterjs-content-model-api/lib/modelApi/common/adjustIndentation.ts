@@ -1,5 +1,5 @@
-import { mutateSegment } from 'roosterjs-content-model-dom/lib';
-import {
+import { mutateSegment } from 'roosterjs-content-model-dom';
+import type {
     ContentModelTable,
     InsertPoint,
     ShallowMutableContentModelListItem,
@@ -10,6 +10,9 @@ const EN_SPACE = '\u2002';
 const REGULAR_SPACE = '\u0020';
 const NON_BREAK_SPACES = '\u00A0';
 
+/**
+ * @internal
+ */
 export const IndentStepInPixel = 40;
 
 function countTabsSpaces(text: string) {
@@ -27,7 +30,6 @@ function countSpacesBeforeText(str: string) {
             break;
         }
     }
-
     return count;
 }
 
@@ -42,13 +44,12 @@ export function adjustListIndentation(listItem: ShallowMutableContentModelListIt
         block.segments[0].segmentType == 'Text'
     ) {
         const tabSpaces = countTabsSpaces(block.segments[0].text);
+
         if (tabSpaces > 0) {
             mutateSegment(block, block.segments[0], textSegment => {
                 textSegment.text = textSegment.text.substring(tabSpaces * 4);
             });
-            if (tabSpaces) {
-                listItem.levels[0].format.marginLeft = tabSpaces * IndentStepInPixel + 'px';
-            }
+            listItem.levels[0].format.marginLeft = tabSpaces * IndentStepInPixel + 'px';
         }
     }
 }
@@ -59,29 +60,39 @@ export function adjustListIndentation(listItem: ShallowMutableContentModelListIt
 export function adjustTableIndentation(insertPoint: InsertPoint, table: ContentModelTable) {
     const { paragraph, marker } = insertPoint;
     const indentationMargin = getTableIndentation(paragraph);
+
     if (indentationMargin) {
         insertPoint.paragraph.segments = [marker];
-    }
-    if (insertPoint.paragraph.format.direction == 'rtl') {
-        table.format.marginRight = indentationMargin * IndentStepInPixel + 'px';
-    } else {
-        table.format.marginLeft = indentationMargin * IndentStepInPixel + 'px';
+        if (insertPoint.paragraph.format.direction == 'rtl') {
+            table.format.marginRight = indentationMargin * IndentStepInPixel + 'px';
+        } else {
+            table.format.marginLeft = indentationMargin * IndentStepInPixel + 'px';
+        }
     }
 }
 
 const getTableIndentation = (paragraph: ShallowMutableContentModelParagraph) => {
     let margin = 0;
     const segments = paragraph.segments;
-
     if (segments.length < 2) {
-        return 0;
+        return;
     }
 
-    const lastSegment = segments[segments.length - 1];
-    const secondLastSegment = segments[segments.length - 2];
+    const isEmptyLine = paragraph.segments.every(
+        s => s.segmentType == 'Text' || s.segmentType == 'SelectionMarker' || s.segmentType == 'Br'
+    );
+    if (!isEmptyLine) {
+        return;
+    }
+    const lastSegment = paragraph.segments[paragraph.segments.length - 1];
+    const secondLastSegment = paragraph.segments[paragraph.segments.length - 2];
 
-    if (lastSegment.segmentType !== 'SelectionMarker' && lastSegment.segmentType !== 'Br') {
-        return 0;
+    if (
+        lastSegment.segmentType !== 'SelectionMarker' &&
+        lastSegment.segmentType !== 'Br' &&
+        lastSegment.segmentType !== 'Text'
+    ) {
+        return;
     }
 
     const endIndex =

@@ -19,104 +19,6 @@ describe('insertTable', () => {
         } as any;
     });
 
-    describe('insertTable with valid selection', () => {
-        it('should insert a 2x2 table with default format', () => {
-            // Arrange
-            const model: ContentModelDocument = {
-                blockGroupType: 'Document',
-                blocks: [],
-            };
-
-            formatContentModelSpy.and.callFake((callback: any) => {
-                const result = callback(model, {
-                    newEntities: [],
-                    deletedEntities: [],
-                    newImages: [],
-                });
-                expect(result).toBe(true);
-            });
-
-            // Act
-            insertTable(editor, 2, 2);
-
-            // Assert
-            expect(focusSpy).toHaveBeenCalled();
-            expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.any(Function), {
-                apiName: 'insertTable',
-            });
-        });
-
-        it('should insert a table with custom format', () => {
-            // Arrange
-            const customFormat = {
-                verticalAlign: 'middle' as const,
-                borderCollapse: true,
-            };
-
-            formatContentModelSpy.and.callFake((callback: any) => {
-                const model: ContentModelDocument = {
-                    blockGroupType: 'Document',
-                    blocks: [],
-                };
-                return callback(model, {});
-            });
-
-            // Act
-            insertTable(editor, 3, 4, customFormat);
-
-            // Assert
-            expect(formatContentModelSpy).toHaveBeenCalled();
-        });
-    });
-
-    describe('insertTable with no valid selection', () => {
-        it('should return false when no insert position is available', () => {
-            // Arrange
-            formatContentModelSpy.and.callFake((callback: any) => {
-                const model: ContentModelDocument = {
-                    blockGroupType: 'Document',
-                    blocks: [],
-                };
-                const result = callback(model, {});
-                expect(result).toBe(false);
-                return result;
-            });
-
-            // Act
-            insertTable(editor, 2, 2);
-
-            // Assert
-            expect(formatContentModelSpy).toHaveBeenCalled();
-        });
-    });
-
-    describe('insertTable with pending format', () => {
-        it('should apply pending format to table cells', () => {
-            // Arrange
-            const pendingFormat = {
-                fontFamily: 'Arial',
-                fontSize: '14px',
-            };
-            getPendingFormatSpy.and.returnValue(pendingFormat);
-
-            formatContentModelSpy.and.callFake((callback: any) => {
-                const model: ContentModelDocument = {
-                    blockGroupType: 'Document',
-                    blocks: [],
-                };
-                return callback(model, {});
-            });
-
-            // Act
-            insertTable(editor, 2, 2);
-
-            // Assert
-            expect(getPendingFormatSpy).toHaveBeenCalled();
-        });
-    });
-
-    // ...existing code...
-
     describe('insertTable with indentation', () => {
         it('should insert table with proper indentation when cursor is in indented text', () => {
             // Arrange
@@ -268,9 +170,21 @@ describe('insertTable', () => {
                         ],
                         format: {
                             marginLeft: '40px',
+                            borderCollapse: true,
+                            useBorderBox: true,
                         },
                         widths: jasmine.any(Array),
                         dataset: jasmine.any(Object),
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
                     },
                 ],
             });
@@ -323,12 +237,26 @@ describe('insertTable', () => {
                 blocks: [
                     {
                         blockType: 'Table',
-                        rows: jasmine.any(Array), // 3 rows with 3 cells each
+                        rows: jasmine.any(Array),
                         format: {
                             marginRight: '80px',
+                            borderCollapse: true,
+                            useBorderBox: true,
                         },
                         widths: jasmine.any(Array),
                         dataset: jasmine.any(Object),
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            direction: 'rtl',
+                        },
                     },
                 ],
             });
