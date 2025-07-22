@@ -9,7 +9,7 @@ import {
 
 describe('createImageResizer', () => {
     it('should create the croppers', () => {
-        const result = createImageResizer(document);
+        const result = createImageResizer(document, false);
         const resizers = [...createCorners(), ...createSides()].filter(element => !!element);
         expect(result).toEqual(resizers);
 

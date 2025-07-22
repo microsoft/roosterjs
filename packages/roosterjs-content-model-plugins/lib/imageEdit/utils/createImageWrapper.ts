@@ -45,7 +45,7 @@ export function createImageWrapper(
     }
     let resizers: HTMLDivElement[] = [];
     if (operation.indexOf('resize') > -1) {
-        resizers = createImageResizer(doc);
+        resizers = createImageResizer(doc, !!options.disableSideResize);
     }
 
     let croppers: HTMLDivElement[] = [];
