@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.52% </span>
+                <span class="strong">70.97% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/31</span>
+                <span class='fraction'>22/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.69% </span>
+                <span class="strong">60.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/26</span>
+                <span class='fraction'>17/28</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.52% </span>
+                <span class="strong">70.97% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/31</span>
+                <span class='fraction'>22/31</span>
             </div>
         
             
@@ -120,7 +120,9 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,6 +138,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -151,23 +154,23 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,6 +181,7 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -197,7 +201,8 @@ export function updateRotateHandle(
     wrapper: HTMLElement,
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement,
-    isSmallImage: boolean
+    isSmallImage: boolean,
+    disableSideResize: boolean
 ) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (isSmallImage) {
 <span class="cstat-no" title="statement not covered" >        rotateCenter.style.display = 'none';</span>
@@ -213,9 +218,9 @@ export function updateRotateHandle(
             let adjustedDistance = Number.MAX_SAFE_INTEGER;
             const angle = angleRad * DEG_PER_RAD;
 &nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (angle &lt; 45 &amp;&amp; angle &gt; -45 &amp;&amp; wrapperRect.top - editorRect.top &lt; ROTATOR_HEIGHT) {
-                const top = <span class="cstat-no" title="statement not covered" >rotateCenterRect.top - editorRect.top;</span>
-<span class="cstat-no" title="statement not covered" >                adjustedDistance = top;</span>
+            if (angle &lt; 45 &amp;&amp; angle &gt; -45 &amp;&amp; wrapperRect.top - editorRect.top &lt; ROTATOR_HEIGHT) {
+                const top = rotateCenterRect.top - editorRect.top;
+                adjustedDistance = top;
             } else <span class="missing-if-branch" title="if path not taken" >I</span>if (
                 angle &lt;= -80 &amp;&amp;
 <span class="branch-1 cbranch-no" title="branch not covered" >                angle &gt;= -100 </span>&amp;&amp;
@@ -240,7 +245,8 @@ export function updateRotateHandle(
 &nbsp;
             const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
             const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-            rotateCenter.style.top = -rotateGap - RESIZE_HANDLE_MARGIN + 'px';
+            rotateCenter.style.top =
+                -rotateGap - (disableSideResize ? <span class="branch-0 cbranch-no" title="branch not covered" >0 </span>: RESIZE_HANDLE_MARGIN) + 'px';
             rotateCenter.style.height = rotateGap + 'px';
             rotateHandle.style.top = -rotateTop + 'px';
         }
@@ -253,7 +259,7 @@ export function updateRotateHandle(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 22 2025 00:08:41 GMT+0000 (Coordinated Universal Time)
+                at Tue Jul 22 2025 17:11:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

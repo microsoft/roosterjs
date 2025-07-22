@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.97% </span>
+                <span class="strong">85.93% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>288/335</span>
+                <span class='fraction'>287/334</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.79% </span>
+                <span class="strong">63.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>185/290</span>
+                <span class='fraction'>187/296</span>
             </div>
         
             
@@ -891,7 +891,14 @@
 <a name='L832'></a><a href='#L832'>832</a>
 <a name='L833'></a><a href='#L833'>833</a>
 <a name='L834'></a><a href='#L834'>834</a>
-<a name='L835'></a><a href='#L835'>835</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L835'></a><a href='#L835'>835</a>
+<a name='L836'></a><a href='#L836'>836</a>
+<a name='L837'></a><a href='#L837'>837</a>
+<a name='L838'></a><a href='#L838'>838</a>
+<a name='L839'></a><a href='#L839'>839</a>
+<a name='L840'></a><a href='#L840'>840</a>
+<a name='L841'></a><a href='#L841'>841</a>
+<a name='L842'></a><a href='#L842'>842</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -978,7 +985,10 @@
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1489,16 +1499,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1516,6 +1528,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -1526,6 +1539,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1811,8 +1825,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() =&gt; void) | null = null;
     protected isEditing = false;
+    protected options: ImageEditOptions;
 &nbsp;
-    constructor(protected <span class="missing-if-branch" title="else path not taken" >E</span>options: ImageEditOptions = DefaultOptions) {}
+    constructor(options?: ImageEditOptions) {
+        this.options = { ...DefaultOptions, ...options };
+    }
 &nbsp;
     /**
      * Get name of this plugin
@@ -2314,7 +2331,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.wrapper,
                                     this.rotators,
-                                    this.imageEditInfo?.angleRad
+                                    this.imageEditInfo?.angleRad,
+                                    !!this.options?.disableSideResize
                                 );
                             }
                         },
@@ -2337,7 +2355,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.wrapper,
                     this.rotators,
-                    this.imageEditInfo<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ngleRad
+                    this.imageEditInfo<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ngleRad,
+                    !!this.options<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>isableSideResize
                 );
             }
         }
@@ -2348,7 +2367,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         wrapper: HTMLSpanElement,
         rotators: HTMLDivElement[],
-        angleRad: number | undefined
+        angleRad: number | undefined,
+        disableSideResize: boolean
     ) {
         const viewport = editor.getVisibleViewport();
         const smallImage = isASmallImage(image.width, image.height);
@@ -2365,7 +2385,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     wrapper,
                     rotator,
                     rotatorHandle,
-                    smallImage
+                    smallImage,
+                    disableSideResize
                 );
             }
         }
@@ -2566,7 +2587,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 22 2025 00:08:41 GMT+0000 (Coordinated Universal Time)
+                at Tue Jul 22 2025 17:11:45 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
