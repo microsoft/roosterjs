@@ -17,4 +17,9 @@ export interface ImageHtmlOptions {
      * Verify if the area of the image is less than 10000px, if yes, don't insert the side handles
      */
     isSmallImage: boolean;
+
+    /**
+     * Whether side resize handles should be disabled
+     */
+    disableSideResize: boolean;
 }
