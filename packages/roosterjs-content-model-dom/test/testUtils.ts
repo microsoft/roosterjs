@@ -41,5 +41,6 @@ export const createDefaultDomToModelContext = (): DomToModelOptionForSanitizing 
         processorOverride: {},
         styleSanitizers: {},
         attributeSanitizers: {},
+        processNonVisibleElements: false,
     };
 };
