@@ -1,4 +1,5 @@
 import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
+import { createDefaultDomToModelContext } from '../../TestHelper';
 import { processPastedContentFromPowerPoint } from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import type { BeforePasteEvent, ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
 
@@ -11,16 +12,7 @@ const getPasteEvent = (): BeforePasteEvent => {
         htmlAfter: '',
         htmlAttributes: {},
         pasteType: 'normal',
-        domToModelOption: {
-            additionalAllowedTags: [],
-            additionalDisallowedTags: [],
-            additionalFormatParsers: {},
-            formatParserOverride: {},
-            processorOverride: {},
-            styleSanitizers: {},
-            attributeSanitizers: {},
-            processNonVisibleElements: false,
-        },
+        domToModelOption: createDefaultDomToModelContext(),
     };
 };
 

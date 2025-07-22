@@ -1,4 +1,5 @@
 import * as selectionConvert from '../../../lib/editor/utils/selectionConverter';
+import { createDefaultDomToModelContext } from '../../testUtils';
 import { newEventToOldEvent, oldEventToNewEvent } from '../../../lib/editor/utils/eventConverter';
 import {
     EntityOperation,
@@ -105,16 +106,7 @@ describe('oldEventToNewEvent', () => {
                 eventType: 'beforePaste',
                 clipboardData: mockedClipboardData,
                 customizedMerge: undefined,
-                domToModelOption: {
-                    additionalAllowedTags: [],
-                    additionalDisallowedTags: [],
-                    additionalFormatParsers: {},
-                    formatParserOverride: {},
-                    processorOverride: {},
-                    styleSanitizers: {},
-                    attributeSanitizers: {},
-                    processNonVisibleElements: false,
-                },
+                domToModelOption: createDefaultDomToModelContext(),
                 eventDataCache: mockedDataCache,
                 fragment: mockedFragment,
                 htmlAfter: mockedHtmlAfter,

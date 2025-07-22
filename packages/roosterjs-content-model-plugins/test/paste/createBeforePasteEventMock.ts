@@ -1,3 +1,4 @@
+import { createDefaultDomToModelContext } from '../TestHelper';
 import type { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
 
 export function createBeforePasteEventMock(
@@ -12,15 +13,6 @@ export function createBeforePasteEventMock(
         htmlAfter: '',
         htmlAttributes: {},
         pasteType: 'normal',
-        domToModelOption: {
-            additionalAllowedTags: [],
-            additionalDisallowedTags: [],
-            additionalFormatParsers: {},
-            attributeSanitizers: {},
-            formatParserOverride: {},
-            processorOverride: {},
-            styleSanitizers: {},
-            processNonVisibleElements: false,
-        },
+        domToModelOption: createDefaultDomToModelContext(),
     };
 }

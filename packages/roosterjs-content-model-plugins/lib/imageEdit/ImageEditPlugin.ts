@@ -84,8 +84,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
     protected isEditing = false;
+    protected options: ImageEditOptions;
 
-    constructor(protected options: ImageEditOptions = DefaultOptions) {}
+    constructor(options?: ImageEditOptions) {
+        this.options = { ...DefaultOptions, ...options };
+    }
 
     /**
      * Get name of this plugin
@@ -457,8 +460,46 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
-        this.lastSrc = image.getAttribute('src');
+
+        if (
+            (this.imageEditInfo.widthPx == 0 || this.imageEditInfo.heightPx == 0) &&
+            !image.complete
+        ) {
+            // Image dimensions are zero and loading is incomplete, wait for image to load.
+            image.onload = () => {
+                this.imageEditInfo = {
+                    ...this.imageEditInfo,
+                    widthPx: image.clientWidth,
+                    heightPx: image.clientHeight,
+                    naturalWidth: image.naturalWidth,
+                    naturalHeight: image.naturalHeight,
+                };
+                image.style.width = this.imageEditInfo.widthPx + 'px';
+                image.style.height = this.imageEditInfo.heightPx + 'px';
+                this.startEditingInternal(editor, image, apiOperation);
+                image.onload = null;
+                image.onerror = null;
+            };
+            image.onerror = () => {
+                image.onload = null;
+                image.onerror = null;
+            };
+        } else {
+            this.startEditingInternal(editor, image, apiOperation);
+        }
+    }
+
+    private startEditingInternal(
+        editor: IEditor,
+        image: HTMLImageElement,
+        apiOperation: ImageEditOperation[]
+    ) {
+        if (!this.imageEditInfo) {
+            this.imageEditInfo = getSelectedImageMetadata(editor, image);
+        }
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
+        this.lastSrc = image.getAttribute('src');
+
         const {
             resizers,
             rotators,
@@ -549,7 +590,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.wrapper,
                                     this.rotators,
-                                    this.imageEditInfo?.angleRad
+                                    this.imageEditInfo?.angleRad,
+                                    !!this.options?.disableSideResize
                                 );
                             }
                         },
@@ -572,7 +614,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.wrapper,
                     this.rotators,
-                    this.imageEditInfo?.angleRad
+                    this.imageEditInfo?.angleRad,
+                    !!this.options?.disableSideResize
                 );
             }
         }
@@ -583,7 +626,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         wrapper: HTMLSpanElement,
         rotators: HTMLDivElement[],
-        angleRad: number | undefined
+        angleRad: number | undefined,
+        disableSideResize: boolean
     ) {
         const viewport = editor.getVisibleViewport();
         const smallImage = isASmallImage(image.width, image.height);
@@ -600,7 +644,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     wrapper,
                     rotator,
                     rotatorHandle,
-                    smallImage
+                    smallImage,
+                    disableSideResize
                 );
             }
         }
