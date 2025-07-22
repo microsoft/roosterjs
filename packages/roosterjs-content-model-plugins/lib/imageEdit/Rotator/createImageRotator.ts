@@ -6,6 +6,7 @@ import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 import {
     ROTATE_GAP,
     ROTATE_HANDLE_TOP,
+    ROTATE_HANDLE_TOP_NO_SIDE_RESIZE,
     ROTATE_ICON_MARGIN,
     ROTATE_SIZE,
     ROTATE_WIDTH,
@@ -34,13 +35,16 @@ export function createImageRotator(doc: Document, htmlOptions: ImageHtmlOptions)
 function getRotateHTML({
     borderColor,
     rotateHandleBackColor,
+    disableSideResize,
 }: ImageHtmlOptions): CreateElementData[] {
     const handleLeft = ROTATE_SIZE / 2;
     return [
         {
             tag: 'div',
             className: ImageEditElementClass.RotateCenter,
-            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_HANDLE_TOP}px;height:${ROTATE_GAP}px;margin-left:${-ROTATE_WIDTH}px;`,
+            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${
+                disableSideResize ? -ROTATE_HANDLE_TOP_NO_SIDE_RESIZE : -ROTATE_HANDLE_TOP
+            }px;height:${ROTATE_GAP}px;margin-left:${-ROTATE_WIDTH}px;`,
             children: [
                 {
                     tag: 'div',

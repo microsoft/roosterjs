@@ -30,6 +30,7 @@ describe('updateWrapper', () => {
         borderColor: '#DB626C',
         rotateHandleBackColor: 'white',
         isSmallImage: false,
+        disableSideResize: false,
     };
     const image = document.createElement('img');
     document.body.appendChild(image);

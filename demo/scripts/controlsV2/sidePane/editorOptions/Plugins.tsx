@@ -120,6 +120,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
     private markdownCode = React.createRef<HTMLInputElement>();
     private linkTitle = React.createRef<HTMLInputElement>();
+    private disableSideResize = React.createRef<HTMLInputElement>();
 
     render(): JSX.Element {
         return (
@@ -314,7 +315,18 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                         )
                     )}
                     {this.renderPluginItem('customReplace', 'Custom Replace')}
-                    {this.renderPluginItem('imageEditPlugin', 'ImageEditPlugin')}
+                    {this.renderPluginItem(
+                        'imageEditPlugin',
+                        'ImageEditPlugin',
+                        <>
+                            {this.renderCheckBox(
+                                'Disable side resize',
+                                this.disableSideResize,
+                                this.props.state.disableSideResize,
+                                (state, value) => (state.disableSideResize = value)
+                            )}
+                        </>
+                    )}
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
                 </tbody>
             </table>
