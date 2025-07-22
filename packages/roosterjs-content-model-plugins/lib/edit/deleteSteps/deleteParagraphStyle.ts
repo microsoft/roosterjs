@@ -12,7 +12,7 @@ export const deleteParagraphStyle: DeleteSelectionStep = context => {
         // This is to ensure the paragraph style is reset to default when there is no content in the paragraph
         if (
             paragraph.segments.every(
-                s => s.segmentType == 'SelectionMarker' || s.segmentType == 'Br'
+                s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
             ) &&
             paragraph.segments.filter(s => s.segmentType == 'Br').length <= 1 &&
             Object.keys(paragraph.format).length > 0
