@@ -1,10 +1,11 @@
+import { Editor } from 'roosterjs-content-model-core';
 import {
     ContentModelDocument,
     CoreApiMap,
+    DomToModelOptionForSanitizing,
     EditorPlugin,
     IEditor,
 } from 'roosterjs-content-model-types';
-import { Editor } from 'roosterjs-content-model-core';
 
 export function initEditor(
     id: string,
@@ -39,3 +40,15 @@ export function removeElement(id: string) {
         node.parentNode.removeChild(node);
     }
 }
+
+export const createDefaultDomToModelContext = (): DomToModelOptionForSanitizing => {
+    return {
+        additionalAllowedTags: [],
+        additionalDisallowedTags: [],
+        additionalFormatParsers: {},
+        formatParserOverride: {},
+        processorOverride: {},
+        styleSanitizers: {},
+        attributeSanitizers: {},
+    };
+};

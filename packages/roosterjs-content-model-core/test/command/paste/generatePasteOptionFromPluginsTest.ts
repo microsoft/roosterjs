@@ -1,3 +1,4 @@
+import { createDefaultDomToModelContext } from '../../testUtils';
 import { generatePasteOptionFromPlugins } from '../../../lib/command/paste/generatePasteOptionFromPlugins';
 import { IEditor } from 'roosterjs-content-model-types';
 
@@ -66,15 +67,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: htmlAfter,
             htmlAttributes: mockedMetadata,
             pasteType: 'normal',
-            domToModelOption: {
-                additionalAllowedTags: [],
-                additionalDisallowedTags: [],
-                additionalFormatParsers: {},
-                formatParserOverride: {},
-                processorOverride: {},
-                styleSanitizers: {},
-                attributeSanitizers: {},
-            },
+            domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -205,15 +198,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
             pasteType: 'mergeFormat',
-            domToModelOption: {
-                additionalAllowedTags: [],
-                additionalDisallowedTags: [],
-                additionalFormatParsers: {},
-                formatParserOverride: {},
-                processorOverride: {},
-                styleSanitizers: {},
-                attributeSanitizers: {},
-            },
+            domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
         });
     });
