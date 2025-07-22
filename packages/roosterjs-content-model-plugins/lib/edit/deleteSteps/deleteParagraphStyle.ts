@@ -14,7 +14,7 @@ export const deleteParagraphStyle: DeleteSelectionStep = context => {
             paragraph.segments.every(
                 s => s.segmentType === 'SelectionMarker' || s.segmentType === 'Br'
             ) &&
-            paragraph.segments.filter(s => s.segmentType == 'Br').length <= 1 &&
+            paragraph.segments.filter(s => s.segmentType === 'Br').length <= 1 &&
             Object.keys(paragraph.format).length > 0
         ) {
             paragraph.format = {};
