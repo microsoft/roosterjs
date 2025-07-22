@@ -4,7 +4,7 @@ import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
  * @internal
  */
 export const deleteParagraphStyle: DeleteSelectionStep = context => {
-    if (context.deleteResult == 'nothingToDelete') {
+    if (context.deleteResult === 'nothingToDelete') {
         const { insertPoint } = context;
         const { paragraph } = insertPoint;
 
