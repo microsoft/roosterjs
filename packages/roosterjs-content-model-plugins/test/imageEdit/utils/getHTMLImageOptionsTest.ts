@@ -47,6 +47,7 @@ describe('getHTMLImageOptions', () => {
                 borderColor: '#DB626C',
                 rotateHandleBackColor: 'white',
                 isSmallImage: false,
+                disableSideResize: false,
             }
         );
     });
@@ -79,6 +80,7 @@ describe('getHTMLImageOptions', () => {
                 borderColor: '#DB626C',
                 rotateHandleBackColor: '#333',
                 isSmallImage: true,
+                disableSideResize: false,
             }
         );
     });
