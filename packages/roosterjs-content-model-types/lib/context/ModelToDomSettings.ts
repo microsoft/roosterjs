@@ -249,12 +249,12 @@ export interface ModelToDomSettings {
 
     /**
      * Default format for each tag name used for generating DOM tree from content model.
-     * 
+     *
      * This map defines the default implicit formats for specific HTML tag names. It is used during
      * the conversion of a content model to a DOM tree to ensure that elements are styled correctly
-     * based on their tag name. Each entry in the map associates a tag name (in lowercase) with a 
+     * based on their tag name. Each entry in the map associates a tag name (in lowercase) with a
      * combination of segment and block formats.
-     * 
+     *
      * Example:
      * {
      *     "p": {

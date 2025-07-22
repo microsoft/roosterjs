@@ -38,11 +38,11 @@ export interface ModelToDomOption {
 
     /**
      * Overrides the default content model formats for specific HTML tags.
-     * 
+     *
      * This property allows you to specify custom formats for both segment and block-level
      * content models for specific tags. The key is the tag name (e.g., 'div', 'span'),
      * and the value is an object containing both segment and block format overrides.
-     * 
+     *
      * Example:
      * ```
      * defaultContentModelFormatOverride: {
