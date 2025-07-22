@@ -197,7 +197,6 @@ const createShadowSpan = (wrapper: HTMLSpanElement) => {
         mode: 'open',
     });
     span.id = 'IMAGE_EDIT_SHADOW_ROOT';
-    wrapper.style.verticalAlign = 'bottom';
     shadowRoot.append(wrapper);
     return span;
 };
