@@ -12,7 +12,8 @@ export function updateRotateHandle(
     wrapper: HTMLElement,
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement,
-    isSmallImage: boolean
+    isSmallImage: boolean,
+    disableSideResize: boolean
 ) {
     if (isSmallImage) {
         rotateCenter.style.display = 'none';
@@ -55,7 +56,8 @@ export function updateRotateHandle(
 
             const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
             const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-            rotateCenter.style.top = -rotateGap - RESIZE_HANDLE_MARGIN + 'px';
+            rotateCenter.style.top =
+                -rotateGap - (disableSideResize ? 0 : RESIZE_HANDLE_MARGIN) + 'px';
             rotateCenter.style.height = rotateGap + 'px';
             rotateHandle.style.top = -rotateTop + 'px';
         }
