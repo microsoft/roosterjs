@@ -1,5 +1,6 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as contentModelToText from 'roosterjs-content-model-dom/lib/modelToText/contentModelToText';
+import * as createClonedRoot from '../../../lib/command/exportContent/createClonedRoot';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import { exportContent } from '../../../lib/command/exportContent/exportContent';
 import { IEditor } from 'roosterjs-content-model-types';
@@ -71,16 +72,14 @@ describe('exportContent', () => {
             .createSpy('getContentModelCopy')
             .and.returnValue(mockedModel);
         const mockedHTML = 'HTML';
+        const mockedDoc = 'DOC' as any;
         const mockedDiv = {
             innerHTML: mockedHTML,
-        } as any;
-        const mockedDoc = {
-            createElement: () => mockedDiv,
+            ownerDocument: mockedDoc,
         } as any;
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
         const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
-            getDocument: () => mockedDoc,
             triggerEvent: triggerEventSpy,
         } as any;
         const contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -89,6 +88,7 @@ describe('exportContent', () => {
             createModelToDomContext,
             'createModelToDomContext'
         ).and.returnValue(mockedContext);
+        spyOn(createClonedRoot, 'createClonedRoot').and.returnValue(mockedDiv);
 
         const html = exportContent(editor, 'HTML');
 
@@ -115,16 +115,15 @@ describe('exportContent', () => {
             .createSpy('getContentModelCopy')
             .and.returnValue(mockedModel);
         const mockedHTML = 'HTML';
+        const mockedDoc = 'DOC' as any;
         const mockedDiv = {
             innerHTML: mockedHTML,
+            ownerDocument: mockedDoc,
         } as any;
-        const mockedDoc = {
-            createElement: () => mockedDiv,
-        } as any;
+
         const triggerEventSpy = jasmine.createSpy('triggerEvent');
         const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
-            getDocument: () => mockedDoc,
             triggerEvent: triggerEventSpy,
         } as any;
         const contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
@@ -134,6 +133,8 @@ describe('exportContent', () => {
             'createModelToDomContext'
         ).and.returnValue(mockedContext);
         const mockedOptions = 'OPTIONS' as any;
+
+        spyOn(createClonedRoot, 'createClonedRoot').and.returnValue(mockedDiv);
 
         const html = exportContent(editor, 'HTML', mockedOptions);
 
