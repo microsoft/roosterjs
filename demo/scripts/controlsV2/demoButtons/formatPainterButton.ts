@@ -12,8 +12,9 @@ export function createFormatPainterButton(
         key: 'formatPainter',
         unlocalizedText: 'Format painter',
         iconName: 'Brush',
-        onClick: () => {
+        onClick: editor => {
             handler.startFormatPainter();
+            editor.focus();
         },
     };
 }
