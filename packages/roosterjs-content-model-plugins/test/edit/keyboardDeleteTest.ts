@@ -5,6 +5,7 @@ import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-m
 import { deleteAllSegmentBefore } from '../../lib/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from '../../lib/edit/deleteSteps/deleteEmptyQuote';
 import { deleteList } from '../../lib/edit/deleteSteps/deleteList';
+import { deleteParagraphStyle } from '../../lib/edit/deleteSteps/deleteParagraphStyle';
 import { DeleteResult, DeleteSelectionStep } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
 import { keyboardDelete } from '../../lib/edit/keyboardDelete';
@@ -90,7 +91,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, null!, forwardDeleteCollapsedSelection, null!, deleteParagraphStyle],
             'notDeleted',
             true,
             0
@@ -108,7 +109,14 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, deleteList, backwardDeleteCollapsedSelection, deleteEmptyQuote],
+            [
+                null!,
+                null!,
+                deleteList,
+                backwardDeleteCollapsedSelection,
+                deleteEmptyQuote,
+                deleteParagraphStyle,
+            ],
             'notDeleted',
             true,
             0
@@ -128,7 +136,14 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, forwardDeleteWordSelection, null!, forwardDeleteCollapsedSelection, null!],
+            [
+                null!,
+                forwardDeleteWordSelection,
+                null!,
+                forwardDeleteCollapsedSelection,
+                null!,
+                deleteParagraphStyle,
+            ],
             'notDeleted',
             true,
             0
@@ -154,6 +169,7 @@ describe('keyboardDelete', () => {
                 deleteList,
                 backwardDeleteCollapsedSelection,
                 deleteEmptyQuote,
+                deleteParagraphStyle,
             ],
             'notDeleted',
             true,
@@ -174,7 +190,7 @@ describe('keyboardDelete', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [null!, null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, null!, forwardDeleteCollapsedSelection, null!, deleteParagraphStyle],
             'notDeleted',
             true,
             0
@@ -200,6 +216,7 @@ describe('keyboardDelete', () => {
                 deleteList,
                 backwardDeleteCollapsedSelection,
                 deleteEmptyQuote,
+                deleteParagraphStyle,
             ],
             'notDeleted',
             true,
@@ -242,7 +259,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, null!, forwardDeleteCollapsedSelection, null!, deleteParagraphStyle],
             'notDeleted',
             true,
             0
@@ -284,7 +301,14 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, deleteList, backwardDeleteCollapsedSelection, deleteEmptyQuote],
+            [
+                null!,
+                null!,
+                deleteList,
+                backwardDeleteCollapsedSelection,
+                deleteEmptyQuote,
+                deleteParagraphStyle,
+            ],
             'notDeleted',
             true,
             0
@@ -336,7 +360,7 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, null!, forwardDeleteCollapsedSelection, null!],
+            [null!, null!, null!, forwardDeleteCollapsedSelection, null!, deleteParagraphStyle],
             'singleChar',
             false,
             1
@@ -388,7 +412,14 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, deleteList, backwardDeleteCollapsedSelection, deleteEmptyQuote],
+            [
+                null!,
+                null!,
+                deleteList,
+                backwardDeleteCollapsedSelection,
+                deleteEmptyQuote,
+                deleteParagraphStyle,
+            ],
             'singleChar',
             false,
             1
@@ -482,7 +513,14 @@ describe('keyboardDelete', () => {
                     },
                 ],
             },
-            [null!, null!, deleteList, backwardDeleteCollapsedSelection, deleteEmptyQuote],
+            [
+                null!,
+                null!,
+                deleteList,
+                backwardDeleteCollapsedSelection,
+                deleteEmptyQuote,
+                deleteParagraphStyle,
+            ],
             'singleChar',
             false,
             1
