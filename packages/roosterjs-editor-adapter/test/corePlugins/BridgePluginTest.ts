@@ -72,6 +72,13 @@ describe('BridgePlugin', () => {
                 calculateZoomScale: calculateZoomScaleSpy,
             }),
             getColorManager: () => mockedInnerDarkColorHandler,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -166,6 +173,13 @@ describe('BridgePlugin', () => {
                 calculateZoomScale: calculateZoomScaleSpy,
             }),
             getColorManager: () => mockedInnerDarkColorHandler,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -334,7 +348,8 @@ describe('BridgePlugin', () => {
                     __ExclusivelyHandleEventPlugin: null,
                     __OldEventFromNewEvent: { eventType: 'old_newEvent', data: 'plugin2' },
                 },
-            }
+            },
+            undefined
         );
 
         expect(mockedEvent).toEqual({
@@ -457,6 +472,13 @@ describe('BridgePlugin', () => {
                 calculateZoomScale: calculateZoomScaleSpy,
             }),
             getColorManager: () => mockedColorManager,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
         const createDarkColorHandlerSpy = spyOn(
@@ -550,11 +572,19 @@ describe('BridgePlugin', () => {
             .and.returnValue(mockedZoomScale);
         const mockedColorManager = 'COLOR' as any;
         const mockedInnerDarkColorHandler = 'INNERCOLOR' as any;
+
         const mockedInnerEditor = {
             getDOMHelper: () => ({
                 calculateZoomScale: calculateZoomScaleSpy,
             }),
             getColorManager: () => mockedInnerDarkColorHandler,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -652,6 +682,13 @@ describe('BridgePlugin', () => {
                 calculateZoomScale: calculateZoomScaleSpy,
             }),
             getColorManager: () => mockedInnerDarkColorHandler,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
