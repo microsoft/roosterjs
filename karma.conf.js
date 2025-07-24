@@ -9,7 +9,7 @@ const rootPath = __dirname;
 const failedTestsReporter = function (baseReporterDecorator) {
     baseReporterDecorator(this);
 
-    const failedTests = [];
+    let failedTests = [];
 
     const RED = '\x1b[31m';
     const RESET = '\x1b[0m';
@@ -37,6 +37,7 @@ const failedTestsReporter = function (baseReporterDecorator) {
         } else {
             console.log(`${GREEN}✅ All tests passed successfully${RESET}`);
         }
+        failedTests = [];
     };
 };
 

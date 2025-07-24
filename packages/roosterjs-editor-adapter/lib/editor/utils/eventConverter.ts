@@ -18,6 +18,7 @@ import type {
     KnownAnnounceStrings as NewKnownAnnounceStrings,
     EntityOperation as NewEntityOperation,
     PluginEventType as NewPluginEventType,
+    DomToModelSettings,
 } from 'roosterjs-content-model-types';
 
 const PasteTypeNewToOld: Record<NewPasteType, OldPasteType> = {
@@ -108,7 +109,8 @@ export const OldEventTypeToNewEventType: Record<PluginEventType, NewPluginEventT
  */
 export function oldEventToNewEvent<TOldEvent extends OldEvent>(
     input: TOldEvent,
-    refEvent?: NewEvent
+    refEvent?: NewEvent,
+    domToModelSettings?: DomToModelSettings
 ): NewEvent | undefined {
     switch (input.eventType) {
         case PluginEventType.BeforeCutCopy:
@@ -152,7 +154,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                         processorOverride: {},
                         styleSanitizers: {},
                         attributeSanitizers: {},
-                        processNonVisibleElements: false,
+                        processNonVisibleElements: !!domToModelSettings?.processNonVisibleElements,
                     },
                 eventDataCache: input.eventDataCache,
                 fragment: input.fragment,

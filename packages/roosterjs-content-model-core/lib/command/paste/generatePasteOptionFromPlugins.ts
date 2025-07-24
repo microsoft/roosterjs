@@ -25,7 +25,8 @@ export function generatePasteOptionFromPlugins(
         processorOverride: {},
         styleSanitizers: {},
         attributeSanitizers: {},
-        processNonVisibleElements: false,
+        processNonVisibleElements: !!editor.getEnvironment().domToModelSettings.customized
+            .processNonVisibleElements,
     };
 
     const event: BeforePasteEvent = {
