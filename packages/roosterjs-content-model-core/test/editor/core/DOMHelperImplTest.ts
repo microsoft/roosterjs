@@ -450,5 +450,92 @@ describe('DOMHelperImpl', () => {
                 underline: true,
             });
         });
+
+        it('getContainerFormat use style color in dark mode', () => {
+            const mockedDiv: HTMLDivElement = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: () => ({
+                            fontSize: '12px',
+                            fontFamily: 'Arial',
+                            fontWeight: 'bold',
+                            color: 'red',
+                            backgroundColor: 'blue',
+                            fontStyle: 'italic',
+                            letterSpacing: '1px',
+                            lineHeight: '1.5',
+                            textDecoration: 'line-through underline',
+                            verticalAlign: 'super',
+                        }),
+                    },
+                },
+                style: {
+                    color: 'var(--darkColor, lightColor)',
+                    backgroundColor: 'var(--darkBgColor, lightBgColor)',
+                },
+                getAttribute: (): null => null,
+            } as any;
+            const mockDarkHandler = {} as any;
+
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.getContainerFormat(true, mockDarkHandler);
+
+            expect(result).toEqual({
+                fontSize: '12px',
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+                textColor: 'lightColor',
+                backgroundColor: 'lightBgColor',
+                italic: true,
+                letterSpacing: '1px',
+                lineHeight: '1.5',
+                strikethrough: true,
+                superOrSubScriptSequence: 'super',
+                underline: true,
+            });
+        });
+
+        it('getContainerFormat use runtime color in dark mode', () => {
+            const mockedDiv: HTMLDivElement = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: () => ({
+                            fontSize: '12px',
+                            fontFamily: 'Arial',
+                            fontWeight: 'bold',
+                            color: 'var(--darkColor, lightColor)',
+                            backgroundColor: 'var(--darkBgColor, lightBgColor)',
+                            fontStyle: 'italic',
+                            letterSpacing: '1px',
+                            lineHeight: '1.5',
+                            textDecoration: 'line-through underline',
+                            verticalAlign: 'super',
+                        }),
+                    },
+                },
+                style: {},
+                getAttribute: (): null => null,
+            } as any;
+            const mockDarkHandler = {} as any;
+
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.getContainerFormat(true, mockDarkHandler);
+
+            expect(result).toEqual({
+                fontSize: '12px',
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+                textColor: 'lightColor',
+                backgroundColor: 'lightBgColor',
+                italic: true,
+                letterSpacing: '1px',
+                lineHeight: '1.5',
+                strikethrough: true,
+                superOrSubScriptSequence: 'super',
+                underline: true,
+            });
+        });
     });
 });
