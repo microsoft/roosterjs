@@ -72,47 +72,35 @@ export function adjustTableIndentation(insertPoint: InsertPoint, table: ContentM
 }
 
 const getTableIndentation = (paragraph: ShallowMutableContentModelParagraph) => {
-    let margin = 0;
+    let tabsNumber = 0;
     const segments = paragraph.segments;
-    if (segments.length < 2) {
-        return;
-    }
 
     const isEmptyLine = paragraph.segments.every(
-        s => s.segmentType == 'Text' || s.segmentType == 'SelectionMarker' || s.segmentType == 'Br'
+        s =>
+            (s.segmentType == 'Text' && s.text.trim().length == 0) ||
+            s.segmentType == 'SelectionMarker' ||
+            s.segmentType == 'Br'
     );
+
     if (!isEmptyLine) {
         return;
     }
-    const lastSegment = paragraph.segments[paragraph.segments.length - 1];
-    const secondLastSegment = paragraph.segments[paragraph.segments.length - 2];
 
-    if (
-        lastSegment.segmentType !== 'SelectionMarker' &&
-        lastSegment.segmentType !== 'Br' &&
-        lastSegment.segmentType !== 'Text'
-    ) {
-        return;
-    }
-
-    const endIndex =
-        secondLastSegment.segmentType === 'SelectionMarker'
-            ? segments.length - 2
-            : segments.length - 1;
-
-    for (let i = 0; i < endIndex; i++) {
-        const seg = segments[i];
-
+    let numberOfSegments = 0;
+    for (const seg of segments) {
         if (seg.segmentType === 'Text') {
-            if (seg.text.trim().length === 0) {
-                margin += countTabsSpaces(seg.text);
-            } else {
-                return 0;
-            }
-        } else if (seg.segmentType !== 'Br') {
-            return 0;
+            tabsNumber = tabsNumber + countTabsSpaces(seg.text);
+            numberOfSegments++;
+        } else {
+            break;
         }
     }
 
-    return margin;
+    // Text segments must be >= (total segments - 2) to apply margin.
+    // If not, the selection marker is likely between  texts segment, so skip margin adjustment.
+    if (segments.length - 2 <= numberOfSegments) {
+        return tabsNumber;
+    }
+
+    return;
 };
