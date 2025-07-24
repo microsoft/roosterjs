@@ -21,9 +21,11 @@ describe('generatePasteOptionFromPlugins', () => {
 
     beforeEach(() => {
         triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
-        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValues({
-            customized: {
-                processNonVisibleElements: false,
+        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
+            domToModelSettings: {
+                customized: {
+                    processNonVisibleElements: false,
+                },
             },
         });
         editor = {
