@@ -84,8 +84,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
     protected isEditing = false;
+    protected options: ImageEditOptions;
 
-    constructor(protected options: ImageEditOptions = DefaultOptions) {}
+    constructor(options?: ImageEditOptions) {
+        this.options = { ...DefaultOptions, ...options };
+    }
 
     /**
      * Get name of this plugin
@@ -587,7 +590,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.wrapper,
                                     this.rotators,
-                                    this.imageEditInfo?.angleRad
+                                    this.imageEditInfo?.angleRad,
+                                    !!this.options?.disableSideResize
                                 );
                             }
                         },
@@ -610,7 +614,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.wrapper,
                     this.rotators,
-                    this.imageEditInfo?.angleRad
+                    this.imageEditInfo?.angleRad,
+                    !!this.options?.disableSideResize
                 );
             }
         }
@@ -621,7 +626,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         wrapper: HTMLSpanElement,
         rotators: HTMLDivElement[],
-        angleRad: number | undefined
+        angleRad: number | undefined,
+        disableSideResize: boolean
     ) {
         const viewport = editor.getVisibleViewport();
         const smallImage = isASmallImage(image.width, image.height);
@@ -638,7 +644,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     wrapper,
                     rotator,
                     rotatorHandle,
-                    smallImage
+                    smallImage,
+                    disableSideResize
                 );
             }
         }

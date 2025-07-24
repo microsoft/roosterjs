@@ -6,49 +6,12 @@ const runChrome = typeof argv.chrome !== 'undefined';
 
 const rootPath = __dirname;
 
-const failedTestsReporter = function (baseReporterDecorator) {
-    baseReporterDecorator(this);
-
-    const failedTests = [];
-
-    const RED = '\x1b[31m';
-    const RESET = '\x1b[0m';
-    const BOLD = '\x1b[1m';
-    const GREEN = '\x1b[32m';
-
-    this.onSpecComplete = function (browser, result) {
-        if (!result.success) {
-            failedTests.push({
-                description: result.description,
-                suite: result.suite.join(' > '),
-                log: result.log,
-            });
-        }
-    };
-
-    this.onRunComplete = function () {
-        if (failedTests.length > 0) {
-            console.log(`\n\n${RED}${BOLD}=== ❌ Failed Tests Summary ===${RESET}\n`);
-            failedTests.forEach((test, index) => {
-                console.log(`${index + 1}. ${test.suite} > ${test.description}`);
-                test.log.forEach(log => console.log(`   ${log}`));
-                console.log('');
-            });
-        } else {
-            console.log(`${GREEN}✅ All tests passed successfully${RESET}`);
-        }
-    };
-};
-
-failedTestsReporter.$inject = ['baseReporterDecorator'];
-
 module.exports = function (config) {
     const plugins = [
         'karma-webpack',
         'karma-phantomjs-launcher',
         'karma-jasmine',
         'karma-sourcemap-loader',
-        { 'reporter:failed-summary': ['type', failedTestsReporter] },
     ];
     const launcher = [];
 
@@ -156,11 +119,10 @@ module.exports = function (config) {
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity,
-        reporters: ['failed-summary'],
     };
 
     if (runCoverage) {
-        settings.reporters = ['coverage-istanbul', 'failed-summary'];
+        settings.reporters = ['coverage-istanbul'];
         settings.coverageIstanbulReporter = {
             reports: ['html', 'lcovonly', 'text-summary'],
             dir: './dist/deploy/coverage',

@@ -38,6 +38,7 @@ export interface OptionState {
     markdownOptions: MarkdownOptions;
     customReplacements: CustomReplace[];
     editPluginOptions: EditOptions;
+    disableSideResize: boolean;
 
     // Legacy plugin options
     defaultFormat: ContentModelSegmentFormat;

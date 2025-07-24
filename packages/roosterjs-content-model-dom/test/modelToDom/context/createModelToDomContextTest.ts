@@ -1,3 +1,4 @@
+import { defaultContentModelFormatMap } from '../../../lib/config/defaultContentModelFormatMap';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
 import { defaultFormatAppliers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { EditorContext } from 'roosterjs-content-model-types';
@@ -31,6 +32,7 @@ describe('createModelToDomContext', () => {
                 addedBlockElements: [],
                 removedBlockElements: [],
             },
+            defaultContentModelFormatMap: defaultContentModelFormatMap,
         });
     });
 
@@ -63,6 +65,7 @@ describe('createModelToDomContext', () => {
                 addedBlockElements: [],
                 removedBlockElements: [],
             },
+            defaultContentModelFormatMap: defaultContentModelFormatMap,
         });
     });
 
@@ -89,6 +92,13 @@ describe('createModelToDomContext', () => {
             {
                 additionalFormatAppliers: {
                     text: [mockedTextApplier2],
+                },
+            },
+            {
+                defaultContentModelFormatOverride: {
+                    p: {
+                        marginTop: '10px',
+                    },
                 },
             }
         );
@@ -125,6 +135,12 @@ describe('createModelToDomContext', () => {
             rewriteFromModel: {
                 addedBlockElements: [],
                 removedBlockElements: [],
+            },
+            defaultContentModelFormatMap: {
+                ...defaultContentModelFormatMap,
+                p: {
+                    marginTop: '10px',
+                },
             },
         });
     });

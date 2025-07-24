@@ -1,5 +1,69 @@
 import { Preset } from './Preset';
 
+export const htmlParagraphs: Preset = {
+    buttonName: 'HTML Paragraphs with margins',
+    id: 'htmlParagraphs',
+    content: {
+        blockGroupType: 'Document',
+        blocks: [
+            {
+                segments: [
+                    {
+                        text: 'line 1',
+                        segmentType: 'Text',
+                        format: {},
+                    },
+                ],
+                blockType: 'Paragraph',
+                format: {
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                },
+                decorator: {
+                    tagName: 'p',
+                    format: {},
+                },
+            },
+            {
+                segments: [
+                    {
+                        text: 'line 2',
+                        segmentType: 'Text',
+                        format: {},
+                    },
+                ],
+                blockType: 'Paragraph',
+                format: {
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                },
+                decorator: {
+                    tagName: 'p',
+                    format: {},
+                },
+            },
+            {
+                segments: [
+                    {
+                        text: 'line 3',
+                        segmentType: 'Text',
+                        format: {},
+                    },
+                ],
+                blockType: 'Paragraph',
+                format: {
+                    marginTop: '1em',
+                    marginBottom: '1em',
+                },
+                decorator: {
+                    tagName: 'p',
+                    format: {},
+                },
+            },
+        ],
+    },
+};
+
 export const mixedParagraphs: Preset = {
     buttonName: 'Mixed Paragraphs',
     id: 'mixedParagraphs',
