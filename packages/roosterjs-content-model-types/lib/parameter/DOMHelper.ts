@@ -1,5 +1,5 @@
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
-import type { DarkColorHandler } from 'roosterjs-content-model-types';
+import type { DarkColorHandler } from '../context/DarkColorHandler';
 
 /**
  * A helper class to provide DOM access APIs
