@@ -12,7 +12,6 @@ module.exports = function (config) {
         'karma-phantomjs-launcher',
         'karma-jasmine',
         'karma-sourcemap-loader',
-        { 'reporter:failed-summary': ['type'] },
     ];
     const launcher = [];
 
