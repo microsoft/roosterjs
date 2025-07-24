@@ -386,6 +386,8 @@ describe('DOMHelperImpl', () => {
                         }),
                     },
                 },
+                style: {},
+                getAttribute: (): null => null,
             } as any;
             const domHelper = createDOMHelper(mockedDiv);
 
@@ -397,6 +399,49 @@ describe('DOMHelperImpl', () => {
                 fontWeight: 'bold',
                 textColor: 'red',
                 backgroundColor: 'blue',
+                italic: true,
+                letterSpacing: '1px',
+                lineHeight: '1.5',
+                strikethrough: true,
+                superOrSubScriptSequence: 'super',
+                underline: true,
+            });
+        });
+
+        it('getContainerFormat use style color', () => {
+            const mockedDiv: HTMLDivElement = {
+                ownerDocument: {
+                    defaultView: {
+                        getComputedStyle: () => ({
+                            fontSize: '12px',
+                            fontFamily: 'Arial',
+                            fontWeight: 'bold',
+                            color: 'red',
+                            backgroundColor: 'blue',
+                            fontStyle: 'italic',
+                            letterSpacing: '1px',
+                            lineHeight: '1.5',
+                            textDecoration: 'line-through underline',
+                            verticalAlign: 'super',
+                        }),
+                    },
+                },
+                style: {
+                    color: 'style-color',
+                    backgroundColor: 'style-bg-color',
+                },
+                getAttribute: (): null => null,
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv);
+
+            const result = domHelper.getContainerFormat();
+
+            expect(result).toEqual({
+                fontSize: '12px',
+                fontFamily: 'Arial',
+                fontWeight: 'bold',
+                textColor: 'style-color',
+                backgroundColor: 'style-bg-color',
                 italic: true,
                 letterSpacing: '1px',
                 lineHeight: '1.5',

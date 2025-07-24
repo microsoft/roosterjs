@@ -1,4 +1,5 @@
 import type { ContentModelSegmentFormat } from '../contentModel/format/ContentModelSegmentFormat';
+import type { DarkColorHandler } from 'roosterjs-content-model-types';
 
 /**
  * A helper class to provide DOM access APIs
@@ -102,6 +103,11 @@ export interface DOMHelper {
 
     /**
      * Get format of the container element
+     * @param isInDarkMode Optional flag to indicate if the environment is in dark mode
+     * @param darkColorHandler Optional DarkColorHandler to retrieve dark mode colors
      */
-    getContainerFormat(): ContentModelSegmentFormat;
+    getContainerFormat(
+        isInDarkMode?: boolean,
+        darkColorHandler?: DarkColorHandler
+    ): ContentModelSegmentFormat;
 }
