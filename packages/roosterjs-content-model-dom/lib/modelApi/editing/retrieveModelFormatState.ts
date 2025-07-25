@@ -18,6 +18,7 @@ import type {
     ReadonlyContentModelListItem,
     ReadonlyContentModelDocument,
     DOMHelper,
+    DarkColorHandler,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -26,13 +27,19 @@ import type {
  * @param pendingFormat Existing pending format, if any
  * @param formatState Existing format state object, used for receiving the result
  * @param conflictSolution The strategy for handling format conflicts
+ * @param domHelper Optional DOMHelper to retrieve container format
+ * @param isInDarkMode Optional flag to indicate if the environment is in dark mode
+ * @param colorHandler Optional DarkColorHandler to handle dark mode colors
+ *
  */
 export function retrieveModelFormatState(
     model: ReadonlyContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: ContentModelFormatState,
     conflictSolution: ConflictFormatSolution = 'remove',
-    domHelper?: DOMHelper
+    domHelper?: DOMHelper,
+    isInDarkMode?: boolean,
+    colorHandler?: DarkColorHandler
 ) {
     let firstTableContext: ReadonlyTableSelectionContext | undefined;
     let firstBlock: ReadonlyContentModelBlock | undefined;
@@ -84,7 +91,9 @@ export function retrieveModelFormatState(
                         // to make sure the current format contains all required format.
                         if (!hasAllRequiredFormat(currentFormat)) {
                             if (!containerFormat) {
-                                containerFormat = domHelper?.getContainerFormat() ?? modelFormat;
+                                containerFormat =
+                                    domHelper?.getContainerFormat(isInDarkMode, colorHandler) ??
+                                    modelFormat;
                             }
 
                             currentFormat = Object.assign({}, containerFormat, currentFormat);

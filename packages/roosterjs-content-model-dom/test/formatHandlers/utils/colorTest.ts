@@ -274,6 +274,20 @@ describe('getColor with darkColorHandler', () => {
         expect(backDark).toBeUndefined();
         expect(textDark).toBe('rgb(0, 0, 0)');
     });
+
+    it('has fallback color', () => {
+        const div = document.createElement('div');
+
+        const backLight = getColor(div, true, false, darkColorHandler, 'fallbackBack');
+        const textLight = getColor(div, false, false, darkColorHandler, 'fallbackText');
+        const backDark = getColor(div, true, true, darkColorHandler, 'fallbackBack');
+        const textDark = getColor(div, false, true, darkColorHandler, 'fallbackText');
+
+        expect(backLight).toBe('fallbackBack');
+        expect(textLight).toBe('fallbackText');
+        expect(backDark).toBe('');
+        expect(textDark).toBe('');
+    });
 });
 
 describe('setColor without darkColorHandler', () => {
