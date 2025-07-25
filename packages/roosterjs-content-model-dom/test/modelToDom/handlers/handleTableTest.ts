@@ -534,7 +534,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
+            '<table style="direction: rtl; justify-self: flex-end; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
         );
     });
 

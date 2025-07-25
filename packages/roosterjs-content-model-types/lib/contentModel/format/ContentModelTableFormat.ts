@@ -8,6 +8,7 @@ import type { MarginFormat } from './formatParts/MarginFormat';
 import type { SpacingFormat } from './formatParts/SpacingFormat';
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
+import type { DirectionFormat } from './formatParts/DirectionFormat';
 
 /**
  * Format of Table
@@ -17,6 +18,7 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     AriaFormat &
     BorderFormat &
     BorderBoxFormat &
+    DirectionFormat &
     SpacingFormat &
     MarginFormat &
     DisplayFormat &
