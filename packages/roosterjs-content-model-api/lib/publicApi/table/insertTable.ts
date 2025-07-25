@@ -1,3 +1,4 @@
+import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import {
     createContentModelDocument,
@@ -36,6 +37,9 @@ export function insertTable(
                 const table = createTableStructure(doc, columns, rows);
 
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
+
+                adjustTableIndentation(insertPosition, table);
+
                 // Assign default vertical align
                 format = format || { verticalAlign: 'top' };
                 applyTableFormat(table, format);
