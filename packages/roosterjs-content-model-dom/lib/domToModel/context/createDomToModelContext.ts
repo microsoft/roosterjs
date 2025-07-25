@@ -103,6 +103,7 @@ export function createDomToModelConfig(
         ),
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers,
+        processNonVisibleElements: options.some(x => !!x?.processNonVisibleElements),
     };
 }
 

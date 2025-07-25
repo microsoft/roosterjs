@@ -5,6 +5,7 @@ import { IEditor } from 'roosterjs-content-model-types';
 describe('generatePasteOptionFromPlugins', () => {
     let editor: IEditor;
     let triggerPluginEventSpy: jasmine.Spy;
+    let getEnvironmentSpy: jasmine.Spy;
 
     const mockedClipboardData = 'CLIPBOARDDATA' as any;
     const mockedFragment = 'FRAGMENT' as any;
@@ -20,8 +21,16 @@ describe('generatePasteOptionFromPlugins', () => {
 
     beforeEach(() => {
         triggerPluginEventSpy = jasmine.createSpy('triggerEvent');
+        getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
+            domToModelSettings: {
+                customized: {
+                    processNonVisibleElements: false,
+                },
+            },
+        });
         editor = {
             triggerEvent: triggerPluginEventSpy,
+            getEnvironment: getEnvironmentSpy,
         } as any;
     });
 
