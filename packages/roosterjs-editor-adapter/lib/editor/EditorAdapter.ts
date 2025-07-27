@@ -662,8 +662,12 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
             eventType,
             ...data,
         } as PluginEvent;
-        const newEvent = oldEventToNewEvent(oldEvent);
         const core = this.getCore();
+        const newEvent = oldEventToNewEvent(
+            oldEvent,
+            undefined /*refEvent */,
+            core.environment.domToModelSettings
+        );
 
         if (newEvent) {
             core.api.triggerEvent(core, newEvent, broadcast);

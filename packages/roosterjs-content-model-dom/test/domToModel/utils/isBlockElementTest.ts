@@ -66,4 +66,12 @@ describe('isBlockElement', () => {
         const result = isBlockElement(div);
         expect(result).toBeTrue();
     });
+
+    it('display = none', () => {
+        const div = document.createElement('div');
+        div.style.display = 'none';
+
+        const result = isBlockElement(div);
+        expect(result).toBeTrue();
+    });
 });

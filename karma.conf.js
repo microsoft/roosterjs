@@ -73,6 +73,7 @@ module.exports = function (config) {
         client: {
             components: components,
             clearContext: false,
+            captureConsole: true,
         },
         browsers: launcher,
         files: ['tools/karma.test.all.js'],
@@ -89,6 +90,11 @@ module.exports = function (config) {
         browserDisconnectTimeout: 10000, // default 2000
         browserDisconnectTolerance: 1, // default 0
         browserNoActivityTimeout: 60000, //default 10000
+        browserConsoleLogOptions: {
+            level: 'log',
+            format: '%b %T: %m',
+            terminal: true,
+        },
 
         singleRun: true,
         captureTimeout: 60000,
