@@ -1,3 +1,4 @@
+import { isElementOfType } from '../../domUtils/isElementOfType';
 import type { DirectionFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
@@ -15,6 +16,10 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
     apply: (format, element) => {
         if (format.direction) {
             element.style.direction = format.direction;
+        }
+
+        if (format.direction == 'rtl' && isElementOfType(element, 'table')) {
+            element.style.justifySelf = 'flex-end';
         }
     },
 };
