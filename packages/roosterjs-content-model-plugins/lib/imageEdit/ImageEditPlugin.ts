@@ -4,6 +4,7 @@ import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
+import { filterInnerResizerHandles } from './utils/filterInnerResizerHandles';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -12,6 +13,7 @@ import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
+import { updateHandleCursor } from './utils/updateHandleCursor';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
@@ -593,6 +595,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.imageEditInfo?.angleRad,
                                     !!this.options?.disableSideResize
                                 );
+                                this.updateResizeHandleDirection(
+                                    this.resizers,
+                                    this.imageEditInfo.angleRad
+                                );
                             }
                         },
                         this.zoomScale,
@@ -618,6 +624,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     !!this.options?.disableSideResize
                 );
             }
+        }
+    }
+
+    private updateResizeHandleDirection(resizers: HTMLDivElement[], angleRad: number | undefined) {
+        const resizeHandles = filterInnerResizerHandles(resizers);
+        if (angleRad !== undefined) {
+            updateHandleCursor(resizeHandles, angleRad);
         }
     }
 

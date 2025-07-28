@@ -1,7 +1,8 @@
 import { doubleCheckResize } from './doubleCheckResize';
+import { filterInnerResizerHandles } from './filterInnerResizerHandles';
 import { getGeneratedImageSize } from './generateImageSize';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { toArray } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
@@ -127,17 +128,7 @@ export function updateWrapper(
 
         doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
 
-        const resizeHandles = resizers
-            .map(resizer => {
-                const resizeHandle = resizer.firstElementChild;
-                if (
-                    isNodeOfType(resizeHandle, 'ELEMENT_NODE') &&
-                    isElementOfType(resizeHandle, 'div')
-                ) {
-                    return resizeHandle;
-                }
-            })
-            .filter(handle => !!handle) as HTMLDivElement[];
+        const resizeHandles = filterInnerResizerHandles(resizers);
 
         if (angleRad !== undefined) {
             updateHandleCursor(resizeHandles, angleRad);
