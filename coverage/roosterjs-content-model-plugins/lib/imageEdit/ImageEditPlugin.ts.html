@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.93% </span>
+                <span class="strong">85.04% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>287/334</span>
+                <span class='fraction'>290/341</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.18% </span>
+                <span class="strong">62.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>187/296</span>
+                <span class='fraction'>187/298</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.51% </span>
+                <span class="strong">74% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>37/49</span>
+                <span class='fraction'>37/50</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.76% </span>
+                <span class="strong">84.85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>277/323</span>
+                <span class='fraction'>280/330</span>
             </div>
         
             
@@ -898,7 +898,22 @@
 <a name='L839'></a><a href='#L839'>839</a>
 <a name='L840'></a><a href='#L840'>840</a>
 <a name='L841'></a><a href='#L841'>841</a>
-<a name='L842'></a><a href='#L842'>842</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L842'></a><a href='#L842'>842</a>
+<a name='L843'></a><a href='#L843'>843</a>
+<a name='L844'></a><a href='#L844'>844</a>
+<a name='L845'></a><a href='#L845'>845</a>
+<a name='L846'></a><a href='#L846'>846</a>
+<a name='L847'></a><a href='#L847'>847</a>
+<a name='L848'></a><a href='#L848'>848</a>
+<a name='L849'></a><a href='#L849'>849</a>
+<a name='L850'></a><a href='#L850'>850</a>
+<a name='L851'></a><a href='#L851'>851</a>
+<a name='L852'></a><a href='#L852'>852</a>
+<a name='L853'></a><a href='#L853'>853</a>
+<a name='L854'></a><a href='#L854'>854</a>
+<a name='L855'></a><a href='#L855'>855</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1493,14 +1508,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1518,6 +1528,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1745,6 +1771,7 @@ import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
+import { filterInnerResizerHandles } from './utils/filterInnerResizerHandles';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -1753,6 +1780,7 @@ import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
+import { updateHandleCursor } from './utils/updateHandleCursor';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
@@ -2334,6 +2362,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.imageEditInfo?.angleRad,
                                     !!this.options?.disableSideResize
                                 );
+<span class="cstat-no" title="statement not covered" >                                this.updateResizeHandleDirection(</span>
+                                    this.resizers,
+                                    this.imageEditInfo.angleRad
+                                );
                             }
                         },
                         this.zoomScale,
@@ -2359,6 +2391,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     !!this.options<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>isableSideResize
                 );
             }
+        }
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    private u</span>pdateResizeHandleDirection(resizers: HTMLDivElement[], angleRad: number | undefined) {
+        const resizeHandles = <span class="cstat-no" title="statement not covered" >filterInnerResizerHandles(resizers);</span>
+<span class="cstat-no" title="statement not covered" >        if (angleRad !== undefined) {</span>
+<span class="cstat-no" title="statement not covered" >            updateHandleCursor(resizeHandles, angleRad);</span>
         }
     }
 &nbsp;
@@ -2587,7 +2626,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jul 28 2025 19:04:55 GMT+0000 (Coordinated Universal Time)
+                at Mon Jul 28 2025 19:15:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
