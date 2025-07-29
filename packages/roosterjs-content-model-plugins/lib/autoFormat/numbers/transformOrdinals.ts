@@ -72,7 +72,8 @@ function getNumericValue(text: string, checkFullText: boolean = false): number |
     const number = checkFullText ? text : text.substring(0, text.length - ORDINAL_LENGTH);
     const isNumber = /^-?\d+$/.test(number);
     if (isNumber) {
-        return parseInt(text);
+        const numericValue = parseInt(number);
+        return numericValue < 20 ? numericValue : parseInt(number.substring(number.length - 1));
     }
     return null;
 }

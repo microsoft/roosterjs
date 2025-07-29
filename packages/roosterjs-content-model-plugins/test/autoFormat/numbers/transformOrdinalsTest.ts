@@ -97,7 +97,133 @@ describe('transformOrdinals', () => {
             segments: [segment],
             format: {},
         };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with 21st', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '21st',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 22nd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '22nd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 23rd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '23rd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 11th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '11th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 12th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '12th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 13th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '13th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 11st', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '11st',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with 12nd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '12nd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
+    it('with 13rd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '13rd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
 
     it('with 2th', () => {
@@ -284,7 +410,7 @@ describe('transformOrdinals', () => {
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
     });
 
-    it('link - 123th', () => {
+    it('link - 123rd', () => {
         const link: ContentModelText = {
             segmentType: 'Text',
             text: '123',
@@ -298,7 +424,7 @@ describe('transformOrdinals', () => {
         };
         const segment: ContentModelText = {
             segmentType: 'Text',
-            text: 'th',
+            text: 'rd',
             format: {},
         };
         const paragraph: ContentModelParagraph = {
