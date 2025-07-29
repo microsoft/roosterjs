@@ -212,6 +212,20 @@ describe('transformOrdinals', () => {
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
     });
 
+    it('with -12nd', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '-12nd',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, false);
+    });
+
     it('with 13rd', () => {
         const segment: ContentModelText = {
             segmentType: 'Text',
