@@ -28,6 +28,7 @@ describe('getFormatState', () => {
         expectedFormat: ContentModelFormatState
     ) {
         const mockedDOMHelper: DOMHelper = {} as any;
+        const mockedColorManager = {} as any;
         const editor = ({
             getSnapshotsManager: () => ({
                 hasNewContent: false,
@@ -66,6 +67,7 @@ describe('getFormatState', () => {
 
                 callback(model);
             },
+            getColorManager: () => mockedColorManager,
         } as any) as IEditor;
 
         const result = getFormatState(editor);
@@ -80,7 +82,9 @@ describe('getFormatState', () => {
                 isDarkMode: false,
             },
             'remove',
-            mockedDOMHelper
+            mockedDOMHelper,
+            false,
+            mockedColorManager
         );
         expect(result).toEqual(expectedFormat);
     }

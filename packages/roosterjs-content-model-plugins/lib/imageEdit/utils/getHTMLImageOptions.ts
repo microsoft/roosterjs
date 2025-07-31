@@ -22,5 +22,6 @@ export const getHTMLImageOptions = (
             options.borderColor || (editor.isDarkMode() ? DARK_MODE_BGCOLOR : LIGHT_MODE_BGCOLOR),
         rotateHandleBackColor: editor.isDarkMode() ? DARK_MODE_BGCOLOR : LIGHT_MODE_BGCOLOR,
         isSmallImage: isASmallImage(editInfo.widthPx ?? 0, editInfo.heightPx ?? 0),
+        disableSideResize: !!options.disableSideResize,
     };
 };

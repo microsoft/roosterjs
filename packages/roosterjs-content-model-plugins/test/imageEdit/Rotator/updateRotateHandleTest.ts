@@ -31,6 +31,7 @@ xdescribe('updateRotateHandlePosition', () => {
         borderColor: 'blue',
         rotateHandleBackColor: 'blue',
         isSmallImage: false,
+        disableSideResize: false,
     };
 
     function runTest(
@@ -71,7 +72,7 @@ xdescribe('updateRotateHandlePosition', () => {
         editorGetVisibleViewport.and.returnValue(viewport);
         const angleRad = angle / DEG_PER_RAD;
 
-        updateRotateHandle(viewport, angleRad, wrapper, rotateCenter, rotateHandle, false);
+        updateRotateHandle(viewport, angleRad, wrapper, rotateCenter, rotateHandle, false, false);
 
         expect(rotateCenter.style.top).toBe(rotateCenterTop);
         expect(rotateCenter.style.height).toBe(rotateCenterHeight);

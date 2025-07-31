@@ -61,6 +61,7 @@ const initialState: OptionState = {
         handleTabKey: true,
     },
     customReplacements: emojiReplacements,
+    disableSideResize: false,
     experimentalFeatures: new Set<ExperimentalFeature>([
         'PersistCache',
         'HandleEnterKey',

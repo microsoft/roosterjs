@@ -248,6 +248,34 @@ export interface ModelToDomSettings {
     metadataAppliers: MetadataAppliers;
 
     /**
+     * Default format for each tag name used for generating DOM tree from content model.
+     *
+     * This map defines the default implicit formats for specific HTML tag names. It is used during
+     * the conversion of a content model to a DOM tree to ensure that elements are styled correctly
+     * based on their tag name. Each entry in the map associates a tag name (in lowercase) with a
+     * combination of segment and block formats.
+     *
+     * Example:
+     * {
+     *     "p": {
+     *         fontSize: "12px",
+     *         lineHeight: "1.5",
+     *         marginTop: "10px",
+     *         marginBottom: "10px"
+     *     },
+     *     "h1": {
+     *         fontSize: "24px",
+     *         fontWeight: "bold",
+     *         marginTop: "20px",
+     *         marginBottom: "20px"
+     *     }
+     * }
+     */
+    defaultContentModelFormatMap: {
+        [tagName: string]: ContentModelSegmentFormat & ContentModelBlockFormat;
+    };
+
+    /**
      * Default Content Model to DOM handlers before overriding.
      * This provides a way to call original handler from an overridden handler function
      */

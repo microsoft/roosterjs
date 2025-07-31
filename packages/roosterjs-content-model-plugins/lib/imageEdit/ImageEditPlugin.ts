@@ -4,6 +4,7 @@ import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
+import { filterInnerResizerHandles } from './utils/filterInnerResizerHandles';
 import { getDropAndDragHelpers } from './utils/getDropAndDragHelpers';
 import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
@@ -12,6 +13,7 @@ import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
+import { updateHandleCursor } from './utils/updateHandleCursor';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
@@ -84,8 +86,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
     protected isEditing = false;
+    protected options: ImageEditOptions;
 
-    constructor(protected options: ImageEditOptions = DefaultOptions) {}
+    constructor(options?: ImageEditOptions) {
+        this.options = { ...DefaultOptions, ...options };
+    }
 
     /**
      * Get name of this plugin
@@ -587,7 +592,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.wrapper,
                                     this.rotators,
-                                    this.imageEditInfo?.angleRad
+                                    this.imageEditInfo?.angleRad,
+                                    !!this.options?.disableSideResize
+                                );
+                                this.updateResizeHandleDirection(
+                                    this.resizers,
+                                    this.imageEditInfo.angleRad
                                 );
                             }
                         },
@@ -610,9 +620,17 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.wrapper,
                     this.rotators,
-                    this.imageEditInfo?.angleRad
+                    this.imageEditInfo?.angleRad,
+                    !!this.options?.disableSideResize
                 );
             }
+        }
+    }
+
+    private updateResizeHandleDirection(resizers: HTMLDivElement[], angleRad: number | undefined) {
+        const resizeHandles = filterInnerResizerHandles(resizers);
+        if (angleRad !== undefined) {
+            updateHandleCursor(resizeHandles, angleRad);
         }
     }
 
@@ -621,7 +639,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         image: HTMLImageElement,
         wrapper: HTMLSpanElement,
         rotators: HTMLDivElement[],
-        angleRad: number | undefined
+        angleRad: number | undefined,
+        disableSideResize: boolean
     ) {
         const viewport = editor.getVisibleViewport();
         const smallImage = isASmallImage(image.width, image.height);
@@ -638,7 +657,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     wrapper,
                     rotator,
                     rotatorHandle,
-                    smallImage
+                    smallImage,
+                    disableSideResize
                 );
             }
         }

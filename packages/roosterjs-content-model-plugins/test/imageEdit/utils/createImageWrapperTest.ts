@@ -54,8 +54,9 @@ describe('createImageWrapper', () => {
             borderColor: '#DB626C',
             rotateHandleBackColor: 'white',
             isSmallImage: false,
+            disableSideResize: false,
         };
-        const resizers = createImageResizer(document);
+        const resizers = createImageResizer(document, false);
         const wrapper = createWrapper(editor, image, options, editInfo, resizers);
         const shadowSpan = createShadowSpan(wrapper);
         const imageClone = cloneImage(image, editInfo);
@@ -101,6 +102,7 @@ describe('createImageWrapper', () => {
             borderColor: '#DB626C',
             rotateHandleBackColor: 'white',
             isSmallImage: false,
+            disableSideResize: false,
         };
         const rotator = createImageRotator(document, htmlOptions);
         const wrapper = createWrapper(editor, image, options, editInfo, undefined, rotator);
@@ -148,6 +150,7 @@ describe('createImageWrapper', () => {
             borderColor: '#DB626C',
             rotateHandleBackColor: 'white',
             isSmallImage: false,
+            disableSideResize: false,
         };
         const cropper = createImageCropper(document);
         const wrapper = createWrapper(
@@ -194,7 +197,6 @@ const createShadowSpan = (wrapper: HTMLSpanElement) => {
         mode: 'open',
     });
     span.id = 'IMAGE_EDIT_SHADOW_ROOT';
-    wrapper.style.verticalAlign = 'bottom';
     shadowRoot.append(wrapper);
     return span;
 };

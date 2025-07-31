@@ -1,5 +1,6 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import { getListAnnounceData } from '../list/getListAnnounceData';
+import { IndentStepInPixel } from '../common/adjustIndentation';
 import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import {
     createListLevel,
@@ -19,8 +20,6 @@ import type {
     ReadonlyContentModelDocument,
     ReadonlyContentModelListItem,
 } from 'roosterjs-content-model-types';
-
-const IndentStepInPixel = 40;
 
 /**
  * @param model The content model to set indentation

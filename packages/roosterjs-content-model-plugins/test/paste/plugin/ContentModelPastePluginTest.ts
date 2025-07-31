@@ -6,6 +6,7 @@ import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedCont
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
+import { createDefaultDomToModelContext } from '../../TestHelper';
 import { PastePlugin } from '../../../lib/paste/PastePlugin';
 import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
 
@@ -47,15 +48,7 @@ describe('Content Model Paste Plugin Test', () => {
                 htmlAfter: '',
                 htmlAttributes: {},
                 pasteType: 'normal',
-                domToModelOption: {
-                    additionalAllowedTags: [],
-                    additionalDisallowedTags: [],
-                    additionalFormatParsers: {},
-                    formatParserOverride: {},
-                    processorOverride: {},
-                    styleSanitizers: {},
-                    attributeSanitizers: {},
-                } as any,
+                domToModelOption: createDefaultDomToModelContext(),
             };
         });
 
