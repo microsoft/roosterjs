@@ -1,7 +1,7 @@
 import { allTextFormats } from './textPresets';
+import { htmlParagraphs, mixedParagraphs } from './paragraphPresets';
 import { image64x64Black, image64x64Gradient, image64x64White } from './imagePresets';
 import { mergedTableNoText, simpleTable, simpleTableWithHeader } from './tablePresets';
-import { mixedParagraphs } from './paragraphPresets';
 import { numberedList, simpleList } from './listPresets';
 import { Preset } from './Preset';
 import { undeleteableText } from './undeleteablePresets';
@@ -24,6 +24,7 @@ export const allPresets: Preset[] = [
     simpleList,
     numberedList,
     mixedParagraphs,
+    htmlParagraphs,
     allTextFormats,
     image64x64Gradient,
     image64x64Black,

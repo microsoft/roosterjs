@@ -30,7 +30,9 @@ export function getFormatState(
                 pendingFormat,
                 result,
                 conflictSolution,
-                editor.getDOMHelper()
+                editor.getDOMHelper(),
+                editor.isDarkMode(),
+                editor.getColorManager()
             );
 
             return false;

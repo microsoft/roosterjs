@@ -62,6 +62,7 @@ export interface EditorAdapterCore {
  * Act as a bridge between Standalone editor and Content Model editor, translate Standalone editor event type to legacy event type
  */
 export class BridgePlugin implements ContextMenuProvider<any> {
+    private editor: IEditor | null = null;
     private legacyPlugins: LegacyEditorPlugin[];
     private edit: EditPluginState;
     private contextMenuProviders: LegacyContextMenuProvider<any>[];
@@ -98,7 +99,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
      */
     initialize(editor: IEditor) {
         const outerEditor = this.onInitialize(this.createEditorCore(editor));
-
+        this.editor = editor;
         this.legacyPlugins.forEach(plugin => {
             plugin.initialize(outerEditor);
 
@@ -117,6 +118,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 
             plugin.dispose();
         }
+        this.editor = null;
     }
 
     willHandleEventExclusively(event: PluginEvent) {
@@ -135,7 +137,14 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         }
 
         if (oldEvent) {
-            Object.assign(event, oldEventToNewEvent(oldEvent, event));
+            Object.assign(
+                event,
+                oldEventToNewEvent(
+                    oldEvent,
+                    event,
+                    this.editor?.getEnvironment().domToModelSettings
+                )
+            );
         }
     }
 

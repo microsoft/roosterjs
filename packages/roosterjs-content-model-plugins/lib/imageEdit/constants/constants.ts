@@ -68,6 +68,11 @@ export const ROTATE_HANDLE_TOP = ROTATE_GAP + RESIZE_HANDLE_MARGIN;
 /**
  * @internal
  */
+export const ROTATE_HANDLE_TOP_NO_SIDE_RESIZE = ROTATE_GAP;
+
+/**
+ * @internal
+ */
 export const CROP_HANDLE_SIZE = 22;
 
 /**

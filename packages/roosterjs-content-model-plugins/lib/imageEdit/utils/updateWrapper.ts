@@ -1,7 +1,8 @@
 import { doubleCheckResize } from './doubleCheckResize';
+import { filterInnerResizerHandles } from './filterInnerResizerHandles';
 import { getGeneratedImageSize } from './generateImageSize';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { isElementOfType, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
+import { toArray } from 'roosterjs-content-model-dom';
 import { updateHandleCursor } from './updateHandleCursor';
 import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibility';
 import type { ImageEditOptions } from '../types/ImageEditOptions';
@@ -58,9 +59,14 @@ export function updateWrapper(
     const cropBottomPx = originalHeight * (bottomPercent || 0);
 
     // Update size and margin of the wrapper
-    wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
+    wrapper.style.marginTop = `${marginVertical}px`;
+    wrapper.style.marginBottom = `${marginVertical + 5}px `; // 5px to adjust the image on top of the handles
+    wrapper.style.marginLeft = `${marginHorizontal}px`;
+    wrapper.style.marginRight = `${marginHorizontal}px`;
+
     wrapper.style.transform = `rotate(${angleRad}rad)`;
     setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
+    wrapper.style.verticalAlign = 'text-bottom';
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
     // or if the direction is Right To Left
@@ -77,7 +83,6 @@ export function updateWrapper(
     // Update size of the image
     clonedImage.style.width = getPx(originalWidth);
     clonedImage.style.height = getPx(originalHeight);
-    clonedImage.style.verticalAlign = 'bottom';
     clonedImage.style.position = 'absolute';
 
     //Update flip direction
@@ -123,17 +128,7 @@ export function updateWrapper(
 
         doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
 
-        const resizeHandles = resizers
-            .map(resizer => {
-                const resizeHandle = resizer.firstElementChild;
-                if (
-                    isNodeOfType(resizeHandle, 'ELEMENT_NODE') &&
-                    isElementOfType(resizeHandle, 'div')
-                ) {
-                    return resizeHandle;
-                }
-            })
-            .filter(handle => !!handle) as HTMLDivElement[];
+        const resizeHandles = filterInnerResizerHandles(resizers);
 
         if (angleRad !== undefined) {
             updateHandleCursor(resizeHandles, angleRad);

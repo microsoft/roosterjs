@@ -1,3 +1,4 @@
+import { adjustListIndentation } from '../common/adjustIndentation';
 import { splitSelectedParagraphByBr } from '../block/splitSelectedParagraphByBr';
 import {
     copyFormat,
@@ -103,6 +104,8 @@ export function setListType(
                     const mutableBlock = mutateBlock(block);
 
                     newListItem.blocks.push(mutableBlock);
+
+                    adjustListIndentation(newListItem);
 
                     copyFormat<ContentModelBlockFormat>(
                         newListItem.format,

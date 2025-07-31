@@ -1,3 +1,4 @@
+import { defaultContentModelFormatMap } from '../../config/defaultContentModelFormatMap';
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import {
@@ -99,6 +100,11 @@ export function createModelToDomConfig(
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers,
         metadataAppliers: Object.assign({}, ...options.map(x => x?.metadataAppliers)),
+        defaultContentModelFormatMap: Object.assign(
+            {},
+            defaultContentModelFormatMap,
+            ...options.map(x => x?.defaultContentModelFormatOverride)
+        ),
     };
 }
 
