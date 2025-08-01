@@ -8,6 +8,12 @@ export type ExportContentMode =
     | 'HTML'
 
     /**
+     * Export to clean HTML in light color mode with dehydrated entities.
+     * This is a fast version, it retrieve HTML content directly from editor without going through content model conversion.
+     */
+    | 'HTMLFast'
+
+    /**
      * Export to plain text
      */
     | 'PlainText'

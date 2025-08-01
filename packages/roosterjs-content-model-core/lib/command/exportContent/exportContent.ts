@@ -2,8 +2,10 @@ import {
     contentModelToDom,
     contentModelToText,
     createModelToDomContext,
+    transformColor,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelDocument,
     ExportContentMode,
     IEditor,
     ModelToDomOption,
@@ -17,6 +19,14 @@ import type {
  * @param options @optional Options for Model to DOM conversion
  */
 export function exportContent(editor: IEditor, mode?: 'HTML', options?: ModelToDomOption): string;
+
+/**
+ * Export HTML content. If there are entities, this will cause EntityOperation event with option = 'replaceTemporaryContent' to get a dehydrated entity.
+ * This is a fast version, it retrieve HTML content directly from editor without going through content model conversion.
+ * @param editor The editor to get content from
+ * @param mode Specify HTML to get plain text result. This is the default option
+ */
+export function exportContent(editor: IEditor, mode: 'HTMLFast'): string;
 
 /**
  * Export plain text content
@@ -43,18 +53,23 @@ export function exportContent(
     mode: ExportContentMode = 'HTML',
     optionsOrCallbacks?: ModelToDomOption | ModelToTextCallbacks
 ): string {
-    if (mode == 'PlainTextFast') {
-        return editor.getDOMHelper().getTextContent();
-    } else {
-        const model = editor.getContentModelCopy('clean');
+    let model: ContentModelDocument;
 
-        if (mode == 'PlainText') {
+    switch (mode) {
+        case 'PlainTextFast':
+            return editor.getDOMHelper().getTextContent();
+        case 'PlainText':
+            model = editor.getContentModelCopy('clean');
+
             return contentModelToText(
                 model,
                 undefined /*separator*/,
                 optionsOrCallbacks as ModelToTextCallbacks
             );
-        } else {
+
+        case 'HTML':
+            model = editor.getContentModelCopy('clean');
+
             const doc = editor.getDocument();
             const div = doc.createElement('div');
 
@@ -68,9 +83,25 @@ export function exportContent(
                 )
             );
 
-            editor.triggerEvent('extractContentWithDom', { clonedRoot: div }, true /*broadcast*/);
+            return getHTMLFromDOM(editor, div);
+        case 'HTMLFast':
+            const clonedRoot = editor.getDOMHelper().getClonedRoot();
 
-            return div.innerHTML;
-        }
+            if (editor.isDarkMode()) {
+                transformColor(
+                    clonedRoot,
+                    false /*includeSelf*/,
+                    'darkToLight',
+                    editor.getColorManager()
+                );
+            }
+
+            return getHTMLFromDOM(editor, clonedRoot);
     }
+}
+
+function getHTMLFromDOM(editor: IEditor, root: HTMLElement): string {
+    editor.triggerEvent('extractContentWithDom', { clonedRoot: root }, true /*broadcast*/);
+
+    return root.innerHTML;
 }
