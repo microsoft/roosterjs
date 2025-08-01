@@ -9,6 +9,7 @@ import type { RibbonButton } from 'roosterjs-react';
 export type ExportButtonStringKey =
     | 'buttonNameExport'
     | 'menuNameExportHTML'
+    | 'menuNameExportHTMLFast'
     | 'menuNameExportText';
 
 const callbacks: ModelToTextCallbacks = {
@@ -26,6 +27,7 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
     dropDownMenu: {
         items: {
             menuNameExportHTML: 'as HTML',
+            menuNameExportHTMLFast: 'as HTML (fast version)',
             menuNameExportText: 'as Plain Text',
         },
     },
@@ -45,6 +47,8 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
                     },
                 }) +
                 '</body></html>';
+        } else if (key == 'menuNameExportHTMLFast') {
+            html = exportContent(editor, 'HTMLFast');
         } else if (key == 'menuNameExportText') {
             html = `<pre>${exportContent(editor, 'PlainText', callbacks)}</pre>`;
         }
