@@ -54,6 +54,13 @@ export function setListType(
 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
+
+                updateListMetadata(level, metadata =>
+                    Object.assign({}, metadata, {
+                        applyListStyleFromLevel: true,
+                    })
+                );
+
                 block.levels.push(level);
             } else if (block.blocks.length == 1) {
                 setParagraphNotImplicit(block.blocks[0]);
