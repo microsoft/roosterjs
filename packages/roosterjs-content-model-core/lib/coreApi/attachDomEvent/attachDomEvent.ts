@@ -11,7 +11,7 @@ import type { AttachDomEvent, PluginEvent } from 'roosterjs-content-model-types'
  */
 export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
     const disposers = getObjectKeys(eventMap || {}).map(key => {
-        const { pluginEventType, beforeDispatch } = eventMap[key];
+        const { pluginEventType, beforeDispatch, capture } = eventMap[key];
         const eventName = key as keyof HTMLElementEventMap;
         const onEvent = (event: HTMLElementEventMap[typeof eventName]) => {
             if (beforeDispatch) {
@@ -30,10 +30,12 @@ export const attachDomEvent: AttachDomEvent = (core, eventMap) => {
             }
         };
 
-        core.logicalRoot.addEventListener(eventName, onEvent);
+        core.logicalRoot.addEventListener(eventName, onEvent, { capture });
 
         return () => {
-            core.logicalRoot.removeEventListener(eventName, onEvent);
+            core.logicalRoot.removeEventListener(eventName, onEvent, {
+                capture,
+            });
         };
     });
 

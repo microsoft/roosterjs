@@ -19,4 +19,9 @@ export interface DOMEventRecord<E = Event> {
      * when correlated DOM event is fired
      */
     beforeDispatch?: DOMEventHandlerFunction<E> | null;
+
+    /**
+     * Whether the event should be captured in the capturing phase.
+     */
+    capture?: boolean;
 }

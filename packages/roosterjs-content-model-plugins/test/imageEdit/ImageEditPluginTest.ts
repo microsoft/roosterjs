@@ -2174,6 +2174,109 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
         expect(mockedImage.onerror).toBeNull();
     });
 
+    it('Image not loaded 2', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    src: 'test',
+                                    segmentType: 'Image',
+                                    format: {
+                                        imageState: 'isEditing',
+                                    },
+                                    dataset: {},
+                                    isSelectedAsImageSelection: undefined,
+                                    isSelected: undefined,
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            src: 'test',
+                            segmentType: 'Image',
+                            format: {},
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    segmentFormat: undefined,
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const plugin = new TestPlugin();
+        spyOn(plugin as any, 'startEditingInternal').and.callFake(() => {});
+        let editor: IEditor | null = initEditor('image_edit', [plugin], model);
+
+        plugin.initialize(editor!);
+
+        const mockedImage = {} as any;
+        mockedImage.src = 'Test';
+        mockedImage.getAttribute = (name: string) => {
+            if (name == 'src') {
+                return 'Test';
+            }
+            return null;
+        };
+        mockedImage.complete = true;
+        mockedImage.clientWidth = 0;
+        mockedImage.clientHeight = 0;
+        mockedImage.naturalWidth = 0;
+        mockedImage.naturalHeight = 0;
+
+        plugin.setEditingInfo(mockedImage);
+
+        mockedImage.clientWidth = 500;
+        mockedImage.clientHeight = 500;
+        mockedImage.naturalWidth = 500;
+        mockedImage.naturalHeight = 500;
+
+        (plugin as any).startEditing(editor!, mockedImage, ['resize', 'rotate']);
+
+        expect((plugin as any).imageEditInfo.widthPx).toBe(500);
+        expect((plugin as any).imageEditInfo.heightPx).toBe(500);
+        expect((plugin as any).startEditingInternal).toHaveBeenCalled();
+        expect((plugin as any).startEditingInternal).toHaveBeenCalledWith(editor, mockedImage, [
+            'resize',
+            'rotate',
+        ]);
+    });
+
     it('Image not loaded but size defined.', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',

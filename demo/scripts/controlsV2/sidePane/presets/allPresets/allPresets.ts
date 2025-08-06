@@ -1,3 +1,4 @@
+import logicalRootPreset from './logicalRootPreset';
 import { allTextFormats } from './textPresets';
 import { htmlParagraphs, mixedParagraphs } from './paragraphPresets';
 import { image64x64Black, image64x64Gradient, image64x64White } from './imagePresets';
@@ -30,6 +31,7 @@ export const allPresets: Preset[] = [
     image64x64Black,
     image64x64White,
     undeleteableText,
+    logicalRootPreset,
 ];
 
 export function getPresetModelById(id: string) {

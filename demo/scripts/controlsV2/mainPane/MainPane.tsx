@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import SampleEntityPlugin from '../plugins/SampleEntityPlugin';
 import { ApiPlaygroundPlugin } from '../sidePane/apiPlayground/ApiPlaygroundPlugin';
 import { ContentModelPanePlugin } from '../sidePane/contentModel/ContentModelPanePlugin';
+import { createLogicalRootPlugin } from '../plugins/createLogicalRootPlugin';
 import { darkModeButton } from '../demoButtons/darkModeButton';
 import { defaultDomToModelOption } from '../options/defaultDomToModelOption';
 import { defaultModelToDomOption } from '../options/defaultModelToDomOption';
@@ -371,6 +372,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         if (this.state.showSidePane || this.state.popoutWindow) {
             plugins.push(...this.getSidePanePlugins());
         }
+
+        plugins.push(createLogicalRootPlugin());
 
         this.updateContentPlugin.update();
 

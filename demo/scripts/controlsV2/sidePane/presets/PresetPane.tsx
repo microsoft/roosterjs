@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { allPresets } from './allPresets/allPresets';
-import { IEditor } from 'roosterjs-content-model-types';
+import { ContentModelEntity, IEditor } from 'roosterjs-content-model-types';
+import { mutateBlock } from 'roosterjs-content-model-dom';
 import { Preset } from './allPresets/Preset';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -39,10 +40,21 @@ export default class PresetPane extends React.Component<PresetPaneProps, PresetP
     }
 
     setPreset(editor: IEditor, preset: Preset) {
-        editor?.formatContentModel(model => {
-            model.blocks = preset.content.blocks;
-            return true;
-        });
+        editor?.formatContentModel(
+            (model, ctx) => {
+                model.blocks = preset.content.blocks;
+                // Get the entity blocks
+                const entityBlocks = (model.blocks.filter(
+                    block => block.blockType === 'Entity'
+                ) as ContentModelEntity[]).map(mutateBlock);
+                ctx.newEntities.push(...entityBlocks);
+
+                return true;
+            },
+            {
+                apiName: 'setPreset',
+            }
+        );
 
         const url = new URL(window.location.href);
         url.searchParams.set('preset', preset.id);

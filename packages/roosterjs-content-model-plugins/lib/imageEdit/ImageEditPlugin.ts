@@ -469,15 +469,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         ) {
             // Image dimensions are zero and loading is incomplete, wait for image to load.
             image.onload = () => {
-                this.imageEditInfo = {
-                    ...this.imageEditInfo,
-                    widthPx: image.clientWidth,
-                    heightPx: image.clientHeight,
-                    naturalWidth: image.naturalWidth,
-                    naturalHeight: image.naturalHeight,
-                };
-                image.style.width = this.imageEditInfo.widthPx + 'px';
-                image.style.height = this.imageEditInfo.heightPx + 'px';
+                this.updateImageDimensionsIfZero(image);
                 this.startEditingInternal(editor, image, apiOperation);
                 image.onload = null;
                 image.onerror = null;
@@ -487,7 +479,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 image.onerror = null;
             };
         } else {
+            this.updateImageDimensionsIfZero(image);
             this.startEditingInternal(editor, image, apiOperation);
+        }
+    }
+
+    private updateImageDimensionsIfZero(image: HTMLImageElement) {
+        if (this.imageEditInfo?.widthPx === 0 || this.imageEditInfo?.heightPx === 0) {
+            this.imageEditInfo.widthPx = image.clientWidth;
+            this.imageEditInfo.heightPx = image.clientHeight;
         }
     }
 
