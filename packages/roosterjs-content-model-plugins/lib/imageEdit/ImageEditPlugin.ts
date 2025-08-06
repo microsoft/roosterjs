@@ -485,7 +485,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private updateImageDimensionsIfZero(image: HTMLImageElement) {
-        if (this.imageEditInfo?.widthPx == 0 || this.imageEditInfo?.heightPx == 0) {
+        if (this.imageEditInfo?.widthPx === 0 || this.imageEditInfo?.heightPx === 0) {
             this.imageEditInfo.widthPx = image.clientWidth;
             this.imageEditInfo.heightPx = image.clientHeight;
         }
