@@ -45,7 +45,7 @@ export default class PresetPane extends React.Component<PresetPaneProps, PresetP
                 model.blocks = preset.content.blocks;
                 // Get the entity blocks
                 const entityBlocks = (model.blocks.filter(
-                    block => block.blockType === 'Entity' && block
+                    block => block.blockType === 'Entity'
                 ) as ContentModelEntity[]).map(mutateBlock);
                 ctx.newEntities.push(...entityBlocks);
 
