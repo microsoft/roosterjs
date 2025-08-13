@@ -43,7 +43,6 @@ function createFormattedSegment(
     } else if (text.startsWith('~~') && text.endsWith('~~')) {
         format = { ...format, strikethrough: true };
         text = text.replace(/\~\~/g, '');
-        text = text + ' ';
     }
 
     return createText(text, format, link);
