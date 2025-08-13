@@ -74,6 +74,35 @@ describe('attachDomEvent', () => {
         disposer();
     });
 
+    it('Check event dispatched with capture', () => {
+        const triggerEventSpy = jasmine.createSpy();
+        const beforeDispatch = jasmine.createSpy();
+        core.api.triggerEvent = triggerEventSpy;
+        core.logicalRoot = <any>{
+            addEventListener: jasmine.createSpy('addEventListener'),
+            removeEventListener: jasmine.createSpy('removeEventListener'),
+        };
+
+        const disposer = attachDomEvent(core, {
+            keydown: { pluginEventType: 'keyDown', capture: true, beforeDispatch },
+        });
+        const event = document.createEvent('KeyboardEvent');
+        event.initEvent('keydown');
+        div.dispatchEvent(event);
+
+        disposer();
+        expect(core.logicalRoot.addEventListener).toHaveBeenCalledWith(
+            'keydown',
+            jasmine.any(Function),
+            { capture: true }
+        );
+        expect(core.logicalRoot.removeEventListener).toHaveBeenCalledWith(
+            'keydown',
+            jasmine.any(Function),
+            { capture: true }
+        );
+    });
+
     it('Check event dispatched via triggerEvent and callback', () => {
         const triggerEventSpy = jasmine.createSpy();
         const callback = jasmine.createSpy();
