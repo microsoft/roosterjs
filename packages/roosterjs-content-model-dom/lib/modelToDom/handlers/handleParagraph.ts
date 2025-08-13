@@ -1,9 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
-import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
+import { optimize } from '../optimizers/optimize';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
@@ -41,8 +41,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 : {};
 
             container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
-
-            parent.insertBefore(container, refNode);
 
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
@@ -83,6 +81,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 }
             };
 
+            parent.insertBefore(container, refNode);
+
             if (needParagraphWrapper) {
                 stackFormat(context, formatOnWrapper, handleSegments);
 
@@ -102,6 +102,11 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
             optimize(container, context);
 
+            if (container) {
+                context.onNodeCreated?.(paragraph, container);
+                context.domIndexer?.onParagraph(container);
+            }
+
             // It is possible the next sibling node is changed during processing child segments
             // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment
             // The segment will be appended to container as child then the container will be removed
@@ -109,11 +114,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             // inline entity's next sibling. So reset refNode to its real next sibling (after change) here
             // to make sure the value is correct.
             refNode = container.nextSibling;
-
-            if (container) {
-                context.onNodeCreated?.(paragraph, container);
-                context.domIndexer?.onParagraph(container);
-            }
 
             if (needParagraphWrapper) {
                 if (context.allowCacheElement) {
