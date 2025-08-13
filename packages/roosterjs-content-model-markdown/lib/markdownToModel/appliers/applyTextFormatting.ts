@@ -5,7 +5,7 @@ import type {
     ContentModelText,
 } from 'roosterjs-content-model-types';
 
-const SPLIT_PATTERN = /(\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*)/;
+const SPLIT_PATTERN = /(\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*|\~\~.*?\~\~)/;
 
 /**
  * @internal
@@ -39,6 +39,10 @@ function createFormattedSegment(
     } else if (text.startsWith('*') && text.endsWith('*')) {
         format = { ...format, italic: true };
         text = text.replace(/\*/g, '');
+        text = text + ' ';
+    } else if (text.startsWith('~~') && text.endsWith('~~')) {
+        format = { ...format, strikethrough: true };
+        text = text.replace(/\~\~/g, '');
         text = text + ' ';
     }
 
