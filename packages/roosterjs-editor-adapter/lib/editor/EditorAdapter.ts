@@ -30,7 +30,7 @@ import {
     QueryScope,
     RegionType,
 } from 'roosterjs-editor-types';
-import type {
+import {
     BlockElement,
     ClipboardData,
     ContentChangedData,
@@ -354,11 +354,13 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
         switch (exportMode) {
             case 'HTML':
-                return exportContent(
-                    this,
-                    'HTML',
-                    this.getCore().environment.modelToDomSettings.customized
-                );
+                return this.isExperimentalFeatureEnabled('ExportHTMLFast')
+                    ? exportContent(this, 'HTMLFast')
+                    : exportContent(
+                          this,
+                          'HTML',
+                          this.getCore().environment.modelToDomSettings.customized
+                      );
 
             case 'PlainText':
                 return exportContent(this, 'PlainText');
