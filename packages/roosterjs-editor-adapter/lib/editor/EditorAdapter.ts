@@ -30,7 +30,7 @@ import {
     QueryScope,
     RegionType,
 } from 'roosterjs-editor-types';
-import {
+import type {
     BlockElement,
     ClipboardData,
     ContentChangedData,
