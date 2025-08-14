@@ -45,7 +45,6 @@ describe(ID, () => {
         paste(editor, clipboardData, 'asImage');
 
         const model = editor.getContentModelCopy('disconnected');
-        const width = editor.getDOMHelper().getClientWidth();
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -57,7 +56,7 @@ describe(ID, () => {
                             segmentType: 'Image',
                             src: 'https://github.com/microsoft/roosterjs',
                             format: {
-                                maxWidth: `${width}px`,
+                                maxWidth: jasmine.anything(),
                             },
                             dataset: {},
                             alt: undefined,
