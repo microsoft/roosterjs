@@ -9,18 +9,18 @@ const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginLeft',
 ];
 
-const AlternativeKeyLtr: Partial<Record<
-    keyof MarginFormat,
-    keyof CSSStyleDeclaration | undefined
->> = {
-    marginLeft: 'marginInlineStart',
-};
-
-const AlternativeKeyRtl: Partial<Record<
-    keyof MarginFormat,
-    keyof CSSStyleDeclaration | undefined
->> = {
-    marginRight: 'marginInlineStart',
+const DefaultMarginKey: Record<
+    'ltr' | 'rtl',
+    Partial<Record<keyof MarginFormat, keyof CSSStyleDeclaration>>
+> = {
+    ltr: {
+        marginRight: 'marginInlineEnd',
+        marginLeft: 'marginInlineStart',
+    },
+    rtl: {
+        marginRight: 'marginInlineStart',
+        marginLeft: 'marginInlineEnd',
+    },
 };
 
 const LTR: Record<keyof MarginFormat, keyof MarginFormat> = {
@@ -36,17 +36,11 @@ const LTR: Record<keyof MarginFormat, keyof MarginFormat> = {
 export const marginFormatHandler: FormatHandler<MarginFormat & DirectionFormat> = {
     parse: (format, element, _, defaultStyle) => {
         MarginKeys.forEach(key => {
-            let value = element.style[key];
-
-            if (!value) {
-                const alterativeKey = (format.direction == 'rtl'
-                    ? AlternativeKeyRtl
-                    : AlternativeKeyLtr)[key];
-
-                value =
-                    defaultStyle[key] ??
-                    ((alterativeKey ? defaultStyle[alterativeKey] : '') as string);
-            }
+            const alternativeKey = DefaultMarginKey[format.direction ?? 'ltr'][key];
+            const value =
+                element.style[key] ??
+                defaultStyle[key] ??
+                (alternativeKey ? defaultStyle[alternativeKey] : '');
 
             if (value) {
                 switch (key) {
