@@ -22,9 +22,9 @@ interface FormatMarker {
 export function applyTextFormatting(textSegment: ContentModelText) {
     const text = textSegment.text;
     const textSegments: ContentModelText[] = [];
+    const currentState: FormattingState = { bold: false, italic: false, strikethrough: false };
 
     let currentText = '';
-    let currentState: FormattingState = { bold: false, italic: false, strikethrough: false };
     let i = 0;
 
     while (i < text.length) {
