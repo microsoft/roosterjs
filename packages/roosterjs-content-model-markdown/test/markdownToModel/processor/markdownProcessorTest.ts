@@ -95,7 +95,7 @@ describe('markdownProcessor', () => {
                 },
             ],
         };
-        runTest('text [link](https://www.example.com) ', document);
+        runTest('text [link](https://www.example.com)', document);
     });
 
     it('should return document with paragraph for text and bold', () => {
@@ -111,10 +111,15 @@ describe('markdownProcessor', () => {
                             segmentType: 'Text',
                         },
                         {
-                            text: 'bold ',
+                            text: 'bold',
                             format: {
                                 fontWeight: 'bold',
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                     ],
@@ -139,10 +144,15 @@ describe('markdownProcessor', () => {
                             segmentType: 'Text',
                         },
                         {
-                            text: 'italic ',
+                            text: 'italic',
                             format: {
                                 italic: true,
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                     ],
@@ -192,7 +202,7 @@ describe('markdownProcessor', () => {
             ],
         };
         runTest(
-            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) ',
+            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image)',
             document
         );
     });
