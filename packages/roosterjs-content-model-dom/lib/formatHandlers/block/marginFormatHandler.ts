@@ -1,6 +1,6 @@
 import { parseValueWithUnit } from '../utils/parseValueWithUnit';
 import type { FormatHandler } from '../FormatHandler';
-import type { MarginFormat } from 'roosterjs-content-model-types';
+import type { DirectionFormat, MarginFormat } from 'roosterjs-content-model-types';
 
 const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginTop',
@@ -9,13 +9,38 @@ const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginLeft',
 ];
 
+const DefaultMarginKey: Record<
+    'ltr' | 'rtl',
+    Partial<Record<keyof MarginFormat, keyof CSSStyleDeclaration>>
+> = {
+    ltr: {
+        marginRight: 'marginInlineEnd',
+        marginLeft: 'marginInlineStart',
+    },
+    rtl: {
+        marginRight: 'marginInlineStart',
+        marginLeft: 'marginInlineEnd',
+    },
+};
+
+const LTR: Record<keyof MarginFormat, keyof MarginFormat> = {
+    marginLeft: 'marginRight',
+    marginRight: 'marginLeft',
+    marginTop: 'marginTop',
+    marginBottom: 'marginBottom',
+};
+
 /**
  * @internal
  */
-export const marginFormatHandler: FormatHandler<MarginFormat> = {
+export const marginFormatHandler: FormatHandler<MarginFormat & DirectionFormat> = {
     parse: (format, element, _, defaultStyle) => {
         MarginKeys.forEach(key => {
-            const value = element.style[key] || defaultStyle[key];
+            const alternativeKey = DefaultMarginKey[format.direction ?? 'ltr'][key];
+            const value: string | undefined =
+                element.style[key] ||
+                defaultStyle[key] ||
+                (alternativeKey ? defaultStyle[alternativeKey]?.toString() : '');
 
             if (value) {
                 switch (key) {
@@ -39,8 +64,9 @@ export const marginFormatHandler: FormatHandler<MarginFormat> = {
     apply: (format, element, context) => {
         MarginKeys.forEach(key => {
             const value = format[key];
+            const ltrKey = format.direction == 'rtl' ? LTR[key] : key;
 
-            if (value != context.implicitFormat[key]) {
+            if (value != context.implicitFormat[ltrKey]) {
                 element.style[key] = value || '0';
             }
         });
