@@ -33,6 +33,13 @@ describe('applyTextFormatting', () => {
         ]);
     });
 
+    it('Strikethrough', () => {
+        runTest('text in ~~strikethrough~~', [
+            createText('text in '),
+            createText('strikethrough', { strikethrough: true }),
+        ]);
+    });
+
     it('Bold and Italic', () => {
         runTest('text in ***bold and italic***', [
             createText('text in '),
@@ -40,7 +47,7 @@ describe('applyTextFormatting', () => {
         ]);
     });
 
-    it('Multiple Bold and Italic', () => {
+    it('Multiple Bold and Italic and Strikethrough', () => {
         runTest('text in ***bold and italic*** and **bold** and *italic*', [
             createText('text in '),
             createText('bold and italic ', { fontWeight: 'bold', italic: true }),

@@ -92,6 +92,20 @@ describe('modelProcessor', () => {
         runTest(model, 'text *italic*\n\n');
     });
 
+    it('should return paragraph with text and strikethrough', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        const text = createText('text ');
+        const strikethrough = createText('strikethrough');
+        strikethrough.format = {
+            strikethrough: true,
+        };
+        paragraph.segments.push(text);
+        paragraph.segments.push(strikethrough);
+        model.blocks.push(paragraph);
+        runTest(model, 'text ~~strikethrough~~\n\n');
+    });
+
     it('should return a list item', () => {
         const model = createContentModelDocument();
         const listItem = createListItem([createListLevel('OL')]);
