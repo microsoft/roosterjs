@@ -54,6 +54,9 @@ function textProcessor(text: ContentModelText): string {
     if (text.format.fontWeight == 'bold') {
         markdownString = `**${markdownString}**`;
     }
+    if (text.format.strikethrough) {
+        markdownString = `~~${markdownString}~~`;
+    }
     if (text.format.italic) {
         markdownString = `*${markdownString}*`;
     }

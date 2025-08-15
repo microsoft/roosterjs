@@ -1,11 +1,16 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DomToModelContext, MarginFormat, ModelToDomContext } from 'roosterjs-content-model-types';
 import { marginFormatHandler } from '../../../lib/formatHandlers/block/marginFormatHandler';
+import {
+    DirectionFormat,
+    DomToModelContext,
+    MarginFormat,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 describe('marginFormatHandler.parse', () => {
     let div: HTMLElement;
-    let format: MarginFormat;
+    let format: MarginFormat & DirectionFormat;
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -71,11 +76,62 @@ describe('marginFormatHandler.parse', () => {
             marginLeft: '4px',
         });
     });
+
+    it('Default margin left in ltr', () => {
+        marginFormatHandler.parse(format, div, context, {
+            marginInlineStart: '20px',
+        });
+
+        expect(format).toEqual({
+            marginLeft: '20px',
+        });
+    });
+
+    it('Default margin left in rtl', () => {
+        format.direction = 'rtl';
+
+        marginFormatHandler.parse(format, div, context, {
+            marginInlineStart: '20px',
+        });
+
+        expect(format).toEqual({
+            marginRight: '20px',
+            direction: 'rtl',
+        });
+    });
+
+    it('Already has margin left in ltr', () => {
+        div.style.marginLeft = '40px';
+
+        marginFormatHandler.parse(format, div, context, {
+            marginInlineStart: '20px',
+        });
+
+        expect(format).toEqual({
+            marginLeft: '40px',
+        });
+    });
+
+    it('Already has margin left in rtl', () => {
+        div.style.marginLeft = '30px';
+        div.style.marginRight = '40px';
+        format.direction = 'rtl';
+
+        marginFormatHandler.parse(format, div, context, {
+            marginInlineStart: '20px',
+        });
+
+        expect(format).toEqual({
+            marginLeft: '30px',
+            marginRight: '40px',
+            direction: 'rtl',
+        });
+    });
 });
 
 describe('marginFormatHandler.apply', () => {
     let div: HTMLElement;
-    let format: MarginFormat;
+    let format: MarginFormat & DirectionFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
@@ -128,6 +184,48 @@ describe('marginFormatHandler.apply', () => {
         };
         format.marginTop = '1em';
         format.marginBottom = '1em';
+
+        marginFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div></div>');
+    });
+
+    it('Has implicit format and different value in CSS in ltr', () => {
+        context.implicitFormat = {
+            marginLeft: '1em',
+        };
+        format.marginLeft = '2em';
+
+        marginFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="margin-left: 2em;"></div>');
+    });
+
+    it('Has implicit format and same value in CSS in ltr', () => {
+        context.implicitFormat = {
+            marginLeft: '1em',
+        };
+        format.marginLeft = '1em';
+
+        marginFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div></div>');
+    });
+
+    it('Has implicit format and different value in CSS in rtl', () => {
+        context.implicitFormat = {
+            marginLeft: '1em',
+        };
+        format.marginRight = '2em';
+        format.direction = 'rtl';
+
+        marginFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="margin-right: 2em;"></div>');
+    });
+
+    it('Has implicit format and same value in CSS in rtl', () => {
+        context.implicitFormat = {
+            marginLeft: '1em',
+        };
+        format.marginRight = '1em';
+        format.direction = 'rtl';
 
         marginFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div></div>');
