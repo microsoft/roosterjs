@@ -1,8 +1,9 @@
-import { normalizeContentModel } from 'roosterjs-content-model-dom';
+import { mutateBlock, normalizeContentModel } from 'roosterjs-content-model-dom';
 import type {
     DeleteResult,
     FormatContentModelContext,
     IEditor,
+    ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 
@@ -38,6 +39,7 @@ export function handleKeyboardEventResult(
             // We have deleted what we need from content model, no need to let browser keep handling the event
             rawEvent.preventDefault();
             normalizeContentModel(model);
+            deleteEmptyBlockGroups(model);
 
             if (result == 'range') {
                 // A range is about to be deleted, so add an undo snapshot immediately
@@ -69,4 +71,18 @@ export function shouldDeleteWord(rawEvent: KeyboardEvent, isMac: boolean) {
  */
 export function shouldDeleteAllSegmentsBefore(rawEvent: KeyboardEvent) {
     return rawEvent.metaKey && !rawEvent.altKey;
+}
+
+function deleteEmptyBlockGroups(group: ReadonlyContentModelBlockGroup) {
+    for (let i = group.blocks.length - 1; i >= 0; i--) {
+        const block = group.blocks[i];
+
+        if (block.blockType == 'BlockGroup') {
+            deleteEmptyBlockGroups(block);
+
+            if (block.blocks.length == 0) {
+                mutateBlock(group).blocks.splice(i, 1);
+            }
+        }
+    }
 }
