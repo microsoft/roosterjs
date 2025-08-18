@@ -1,4 +1,8 @@
-import { mutateBlock, normalizeContentModel } from 'roosterjs-content-model-dom';
+import {
+    mutateBlock,
+    normalizeContentModel,
+    setParagraphNotImplicit,
+} from 'roosterjs-content-model-dom';
 import type {
     DeleteResult,
     FormatContentModelContext,
@@ -83,6 +87,8 @@ function deleteEmptyBlockGroups(group: ReadonlyContentModelBlockGroup) {
             if (block.blocks.length == 0) {
                 mutateBlock(group).blocks.splice(i, 1);
             }
+
+            group.blocks.forEach(setParagraphNotImplicit);
         }
     }
 }

@@ -213,6 +213,7 @@ describe('handleKeyboardEventResult', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
                 {
                     blockType: 'BlockGroup',
@@ -289,6 +290,7 @@ describe('handleKeyboardEventResult', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: false,
                 },
                 {
                     blockType: 'BlockGroup',
