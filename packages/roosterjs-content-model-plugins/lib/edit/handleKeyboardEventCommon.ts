@@ -78,6 +78,8 @@ export function shouldDeleteAllSegmentsBefore(rawEvent: KeyboardEvent) {
 }
 
 function deleteEmptyBlockGroups(group: ReadonlyContentModelBlockGroup) {
+    let modified = false;
+
     for (let i = group.blocks.length - 1; i >= 0; i--) {
         const block = group.blocks[i];
 
@@ -86,9 +88,12 @@ function deleteEmptyBlockGroups(group: ReadonlyContentModelBlockGroup) {
 
             if (block.blocks.length == 0) {
                 mutateBlock(group).blocks.splice(i, 1);
+                modified = true;
             }
-
-            group.blocks.forEach(setParagraphNotImplicit);
         }
+    }
+
+    if (modified) {
+        group.blocks.forEach(setParagraphNotImplicit);
     }
 }

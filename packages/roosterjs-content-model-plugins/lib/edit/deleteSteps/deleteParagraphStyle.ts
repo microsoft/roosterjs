@@ -26,8 +26,9 @@ export const deleteParagraphStyle: DeleteSelectionStep = context => {
                 group.blocks.length == 1 &&
                 group.blocks[0] == paragraph &&
                 parentGroup &&
-                group.blockGroupType != 'Document' &&
-                group.blockGroupType != 'TableCell'
+                (group.blockGroupType == 'FormatContainer' ||
+                    group.blockGroupType == 'ListItem' ||
+                    group.blockGroupType == 'General')
             ) {
                 // Still has nothing to delete, try to unwrap parent container
                 unwrapBlock(parentGroup, group);
