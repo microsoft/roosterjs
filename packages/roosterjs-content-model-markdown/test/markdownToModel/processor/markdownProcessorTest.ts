@@ -56,6 +56,11 @@ describe('markdownProcessor', () => {
                             segmentType: 'Image',
                             dataset: {},
                         },
+                        {
+                            text: ' ',
+                            format: {},
+                            segmentType: 'Text',
+                        },
                     ],
 
                     format: {},
@@ -186,6 +191,11 @@ describe('markdownProcessor', () => {
                                     underline: true,
                                 },
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                         {

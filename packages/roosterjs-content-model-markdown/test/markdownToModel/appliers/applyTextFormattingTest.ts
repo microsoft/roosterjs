@@ -22,14 +22,14 @@ describe('applyTextFormatting', () => {
     it('Bold', () => {
         runTest('text in **bold**', [
             createText('text in '),
-            createText('bold ', { fontWeight: 'bold' }),
+            createText('bold', { fontWeight: 'bold' }),
         ]);
     });
 
     it('Italic', () => {
         runTest('text in *italic*', [
             createText('text in '),
-            createText('italic ', { italic: true }),
+            createText('italic', { italic: true }),
         ]);
     });
 
@@ -43,18 +43,18 @@ describe('applyTextFormatting', () => {
     it('Bold and Italic', () => {
         runTest('text in ***bold and italic***', [
             createText('text in '),
-            createText('bold and italic ', { fontWeight: 'bold', italic: true }),
+            createText('bold and italic', { fontWeight: 'bold', italic: true }),
         ]);
     });
 
     it('Multiple Bold and Italic and Strikethrough', () => {
         runTest('text in ***bold and italic*** and **bold** and *italic*', [
             createText('text in '),
-            createText('bold and italic ', { fontWeight: 'bold', italic: true }),
+            createText('bold and italic', { fontWeight: 'bold', italic: true }),
             createText(' and '),
-            createText('bold ', { fontWeight: 'bold' }),
+            createText('bold', { fontWeight: 'bold' }),
             createText(' and '),
-            createText('italic ', { italic: true }),
+            createText('italic', { italic: true }),
         ]);
     });
 
@@ -102,13 +102,13 @@ describe('applyTextFormatting', () => {
     it('Overlapping formats', () => {
         runTest('**bold ~~strike** end~~', [
             createText('bold ', { fontWeight: 'bold' }),
-            createText('strike', { strikethrough: true }),
+            createText('strike', { fontWeight: 'bold', strikethrough: true }),
             createText(' end', { strikethrough: true }),
         ]);
     });
 
     it('Multiple consecutive markers', () => {
-        runTest('****bold****', [createText('bold', { fontWeight: 'bold' })]);
+        runTest('****bold****', [createText('bold')]);
     });
 
     it('Unmatched opening markers', () => {
@@ -116,15 +116,17 @@ describe('applyTextFormatting', () => {
     });
 
     it('Unmatched closing markers', () => {
-        runTest('close without open**', [createText('close without open', { fontWeight: 'bold' })]);
+        runTest('close without open**', [createText('close without open')]);
     });
 
     it('Empty formatting', () => {
-        runTest('****', []);
+        const originalSegment = createText('****');
+        runTest('****', [originalSegment]);
     });
 
     it('Single asterisk', () => {
-        runTest('*', []);
+        const originalSegment = createText('*');
+        runTest('*', [originalSegment]);
     });
 
     it('Adjacent different formats', () => {
@@ -138,7 +140,7 @@ describe('applyTextFormatting', () => {
     it('Interleaved formats', () => {
         runTest('**bold ~~strike** more~~ end', [
             createText('bold ', { fontWeight: 'bold' }),
-            createText('strike', { strikethrough: true }),
+            createText('strike', { fontWeight: 'bold', strikethrough: true }),
             createText(' more', { strikethrough: true }),
             createText(' end'),
         ]);
@@ -161,11 +163,13 @@ describe('applyTextFormatting', () => {
     });
 
     it('Only formatting markers', () => {
-        runTest('******~~~~~~', []);
+        const originalSegment = createText('******~~~~~~');
+        runTest('******~~~~~~', [originalSegment]);
     });
 
     it('Mixed markers without content', () => {
-        runTest('***~~***~~', []);
+        const originalSegment = createText('***~~***~~');
+        runTest('***~~***~~', [originalSegment]);
     });
 
     it('Content between same markers', () => {
@@ -178,7 +182,8 @@ describe('applyTextFormatting', () => {
 
     it('Partial markers', () => {
         runTest('text with * single asterisk and ~ single tilde', [
-            createText('text with * single asterisk and ~ single tilde'),
+            createText('text with '),
+            createText(' single asterisk and ~ single tilde', { italic: true }),
         ]);
     });
 

@@ -63,7 +63,21 @@ export function applyTextFormatting(textSegment: ContentModelText) {
         );
     }
 
-    return textSegments.length > 0 ? textSegments : [textSegment];
+    // If we only have one segment and it's identical to the original (no formatting applied),
+    // If no segments were created (e.g., only formatting markers with no content),
+    // return the original segment to preserve all properties
+    if (
+        (textSegments.length === 1 &&
+            textSegments[0].text === textSegment.text &&
+            !currentState.bold &&
+            !currentState.italic &&
+            !currentState.strikethrough) ||
+        textSegments.length === 0
+    ) {
+        return [textSegment];
+    }
+
+    return textSegments;
 }
 
 function parseMarkerAt(text: string, index: number): FormatMarker | null {
