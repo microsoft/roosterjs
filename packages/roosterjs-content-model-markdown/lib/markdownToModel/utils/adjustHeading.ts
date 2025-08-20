@@ -11,7 +11,6 @@ export function adjustHeading(
     textSegment: ContentModelText,
     decorator?: ContentModelParagraphDecorator
 ): ContentModelText | null {
-    console.log(textSegment);
     const markdownToBeRemoved = MarkdownHeadings[decorator?.tagName || ''];
     if (markdownToBeRemoved) {
         textSegment.text = textSegment.text.replace(markdownToBeRemoved, '');
