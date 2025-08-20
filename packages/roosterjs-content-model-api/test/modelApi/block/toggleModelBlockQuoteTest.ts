@@ -797,4 +797,85 @@ describe('toggleModelBlockQuote', () => {
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
     });
+
+    it('Quote only selected segments in a FormatContainer', () => {
+        const doc = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const para2 = createParagraph();
+        const text2 = createText('test2');
+        const container = createFormatContainer('div', {
+            id: 'TestId',
+        });
+        text1.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        container.blocks.push(para1);
+        container.blocks.push(para2);
+        doc.blocks.push(container);
+
+        text2.isSelected = true;
+
+        toggleModelBlockQuote(doc, {}, {});
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    tagName: 'div',
+                    blockType: 'BlockGroup',
+                    format: {
+                        id: 'TestId',
+                    },
+                    blockGroupType: 'FormatContainer',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            tagName: 'blockquote',
+                            blockType: 'BlockGroup',
+                            format: {
+                                marginTop: '1em',
+                                marginBottom: '1em',
+                                marginLeft: '40px',
+                                marginRight: '40px',
+                                paddingLeft: '10px',
+                                borderLeft: '3px solid rgb(200, 200, 200)',
+                                textColor: 'rgb(102, 102, 102)',
+                            },
+                            blockGroupType: 'FormatContainer',
+                            blocks: [
+                                {
+                                    segments: [
+                                        {
+                                            text: 'test2',
+                                            segmentType: 'Text',
+                                            isSelected: true,
+                                            format: {},
+                                        },
+                                    ],
+                                    segmentFormat: {},
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
+    });
 });

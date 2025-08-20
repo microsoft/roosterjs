@@ -50,19 +50,40 @@ export function toggleModelBlockQuote(
             current?: ContentModelFormatContainer
         ): target is ContentModelFormatContainer =>
             canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
-
-        paragraphOfQuote.forEach(({ block, parent }) => {
-            if (isQuote(block)) {
-                // Already in quote, no op
-            } else {
-                wrapBlockStep1(step1Results, parent, block, creator, canMerge);
+        if (isCustomContainer(paragraphOfQuote)) {
+            const container = paragraphOfQuote[0].block;
+            if (isBlockGroupOfType<ContentModelFormatContainer>(container, 'FormatContainer')) {
+                for (const block of container.blocks) {
+                    if (block.blockType == 'Paragraph' && block.segments.some(s => s.isSelected)) {
+                        wrapBlockStep1(step1Results, container, block, creator, canMerge);
+                    }
+                }
             }
-        });
+        } else {
+            paragraphOfQuote.forEach(({ block, parent }) => {
+                if (isQuote(block)) {
+                    // Already in quote, no op
+                } else {
+                    wrapBlockStep1(step1Results, parent, block, creator, canMerge);
+                }
+            });
+        }
 
         wrapBlockStep2(step1Results, canMerge);
     }
 
     return paragraphOfQuote.length > 0;
+}
+
+function isCustomContainer(
+    blocks: ReadonlyOperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
+): blocks is ReadonlyOperationalBlocks<ContentModelFormatContainer>[] {
+    return (
+        blocks.length == 1 &&
+        isBlockGroupOfType<ContentModelFormatContainer>(blocks[0].block, 'FormatContainer') &&
+        blocks[0].block.tagName !== 'blockquote' &&
+        !!blocks[0].block.format.id
+    );
 }
 
 function canMergeQuote(
