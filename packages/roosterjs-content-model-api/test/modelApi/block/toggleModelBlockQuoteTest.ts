@@ -807,7 +807,6 @@ describe('toggleModelBlockQuote', () => {
         const container = createFormatContainer('div', {
             id: 'TestId',
         });
-        text1.isSelected = true;
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -838,22 +837,13 @@ describe('toggleModelBlockQuote', () => {
                                     format: {},
                                 },
                             ],
-                            segmentFormat: {},
                             blockType: 'Paragraph',
                             format: {},
                         },
                         {
                             tagName: 'blockquote',
                             blockType: 'BlockGroup',
-                            format: {
-                                marginTop: '1em',
-                                marginBottom: '1em',
-                                marginLeft: '40px',
-                                marginRight: '40px',
-                                paddingLeft: '10px',
-                                borderLeft: '3px solid rgb(200, 200, 200)',
-                                textColor: 'rgb(102, 102, 102)',
-                            },
+                            format: {},
                             blockGroupType: 'FormatContainer',
                             blocks: [
                                 {
@@ -861,11 +851,116 @@ describe('toggleModelBlockQuote', () => {
                                         {
                                             text: 'test2',
                                             segmentType: 'Text',
-                                            isSelected: true,
                                             format: {},
+                                            isSelected: true,
                                         },
                                     ],
-                                    segmentFormat: {},
+
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(doc);
+    });
+
+    it('Quote only selected segments in a FormatContainer - multi selected segments', () => {
+        const doc = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const para2 = createParagraph();
+        const text2 = createText('test2');
+        const para3 = createParagraph();
+        const text3 = createText('test3');
+        const para4 = createParagraph();
+        const text4 = createText('test4');
+
+        const container = createFormatContainer('div', {
+            id: 'TestId',
+        });
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+        para4.segments.push(text4);
+        container.blocks.push(para1);
+        container.blocks.push(para2);
+        container.blocks.push(para3);
+        container.blocks.push(para4);
+        doc.blocks.push(container);
+
+        text2.isSelected = true;
+        text3.isSelected = true;
+        text4.isSelected = true;
+
+        toggleModelBlockQuote(doc, {}, {});
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    tagName: 'div',
+                    blockType: 'BlockGroup',
+                    format: {
+                        id: 'TestId',
+                    },
+                    blockGroupType: 'FormatContainer',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    text: 'test1',
+                                    segmentType: 'Text',
+                                    format: {},
+                                },
+                            ],
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                        {
+                            tagName: 'blockquote',
+                            blockType: 'BlockGroup',
+                            format: {},
+                            blockGroupType: 'FormatContainer',
+                            blocks: [
+                                {
+                                    segments: [
+                                        {
+                                            text: 'test2',
+                                            segmentType: 'Text',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                    ],
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                },
+                                {
+                                    segments: [
+                                        {
+                                            text: 'test3',
+                                            segmentType: 'Text',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                    ],
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                },
+                                {
+                                    segments: [
+                                        {
+                                            text: 'test4',
+                                            segmentType: 'Text',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                    ],
                                     blockType: 'Paragraph',
                                     format: {},
                                 },

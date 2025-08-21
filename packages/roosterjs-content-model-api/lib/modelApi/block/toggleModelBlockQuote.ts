@@ -50,40 +50,29 @@ export function toggleModelBlockQuote(
             current?: ContentModelFormatContainer
         ): target is ContentModelFormatContainer =>
             canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
-        if (isCustomContainer(paragraphOfQuote)) {
-            const container = paragraphOfQuote[0].block;
-            if (isBlockGroupOfType<ContentModelFormatContainer>(container, 'FormatContainer')) {
-                for (const block of container.blocks) {
-                    if (block.blockType == 'Paragraph' && block.segments.some(s => s.isSelected)) {
-                        wrapBlockStep1(step1Results, container, block, creator, canMerge);
-                    }
-                }
-            }
-        } else {
-            paragraphOfQuote.forEach(({ block, parent }) => {
-                if (isQuote(block)) {
-                    // Already in quote, no op
-                } else {
+
+        paragraphOfQuote.forEach(({ block, parent }) => {
+            if (isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer')) {
+                if (block.tagName !== 'blockquote' && !!block.format.id) {
+                    const paragraphsToWrap = block.blocks.filter(
+                        b => b.blockType == 'Paragraph' && b.segments.some(s => s.isSelected)
+                    );
+
+                    paragraphsToWrap.forEach(b => {
+                        wrapBlockStep1(step1Results, block, b, creator, canMerge);
+                    });
+                } else if (block.tagName !== 'blockquote') {
                     wrapBlockStep1(step1Results, parent, block, creator, canMerge);
                 }
-            });
-        }
+            } else {
+                wrapBlockStep1(step1Results, parent, block, creator, canMerge);
+            }
+        });
 
         wrapBlockStep2(step1Results, canMerge);
     }
 
     return paragraphOfQuote.length > 0;
-}
-
-function isCustomContainer(
-    blocks: ReadonlyOperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
-): blocks is ReadonlyOperationalBlocks<ContentModelFormatContainer>[] {
-    return (
-        blocks.length == 1 &&
-        isBlockGroupOfType<ContentModelFormatContainer>(blocks[0].block, 'FormatContainer') &&
-        blocks[0].block.tagName !== 'blockquote' &&
-        !!blocks[0].block.format.id
-    );
 }
 
 function canMergeQuote(
