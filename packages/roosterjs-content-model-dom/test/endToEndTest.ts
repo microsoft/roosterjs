@@ -2475,4 +2475,68 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<div id="test"><div>test1</div><div>test2</div></div>'
         );
     });
+
+    it('dl, dt, dd', () => {
+        runTest(
+            '<dl><dt>term</dt><dd>definition</dd></dl>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'dl',
+                        blocks: [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'FormatContainer',
+                                tagName: 'dt',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                text: 'term',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: {},
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'FormatContainer',
+                                tagName: 'dd',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                text: 'definition',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: { marginLeft: '40px' },
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                    },
+                ],
+            },
+            'term\r\ndefinition',
+            '<dl><dt>term</dt><dd>definition</dd></dl>'
+        );
+    });
 });
