@@ -206,4 +206,187 @@ describe('applyTextFormatting', () => {
             createText('all bold italic', { fontWeight: 'bold', italic: true }),
         ]);
     });
+
+    // Whitespace validation tests for proper Markdown compliance
+    describe('Whitespace validation tests', () => {
+        it('Opening marker followed by space should not format - asterisk', () => {
+            const originalSegment = createText('* hello*');
+            runTest('* hello*', [originalSegment]);
+        });
+
+        it('Opening marker followed by space should not format - double asterisk', () => {
+            const originalSegment = createText('** hello**');
+            runTest('** hello**', [originalSegment]);
+        });
+
+        it('Opening marker followed by space should not format - strikethrough', () => {
+            const originalSegment = createText('~~ hello~~');
+            runTest('~~ hello~~', [originalSegment]);
+        });
+
+        it('Closing marker preceded by space should still format - asterisk', () => {
+            runTest('*hello *', [createText('hello ', { italic: true })]);
+        });
+
+        it('Closing marker preceded by space should still format - double asterisk', () => {
+            runTest('**hello **', [createText('hello ', { fontWeight: 'bold' })]);
+        });
+
+        it('Closing marker preceded by space should still format - strikethrough', () => {
+            runTest('~~hello ~~', [createText('hello ', { strikethrough: true })]);
+        });
+
+        it('Both markers surrounded by spaces - should not format due to invalid opening', () => {
+            const originalSegment = createText('** hello **');
+            runTest('** hello **', [originalSegment]);
+        });
+
+        it('Mixed valid and invalid markers due to spaces', () => {
+            runTest('**valid** but ** invalid ** and *also valid*', [
+                createText('valid', { fontWeight: 'bold' }),
+                createText(' but ** invalid ** and '),
+                createText('also valid', { italic: true }),
+            ]);
+        });
+
+        it('Tab character should be treated as whitespace', () => {
+            const originalSegment = createText('**\thello**');
+            runTest('**\thello**', [originalSegment]);
+        });
+
+        it('Newline character should be treated as whitespace', () => {
+            const originalSegment = createText('**\nhello**');
+            runTest('**\nhello**', [originalSegment]);
+        });
+
+        it('Multiple whitespace characters - opening invalid', () => {
+            const originalSegment = createText('**  hello  **');
+            runTest('**  hello  **', [originalSegment]);
+        });
+
+        it('Valid formatting with no spaces', () => {
+            runTest('**bold**and*italic*and~~strike~~', [
+                createText('bold', { fontWeight: 'bold' }),
+                createText('and'),
+                createText('italic', { italic: true }),
+                createText('and'),
+                createText('strike', { strikethrough: true }),
+            ]);
+        });
+
+        it('Valid formatting with punctuation but no spaces', () => {
+            runTest('**bold!** and *italic,* and ~~strike.~~', [
+                createText('bold!', { fontWeight: 'bold' }),
+                createText(' and '),
+                createText('italic,', { italic: true }),
+                createText(' and '),
+                createText('strike.', { strikethrough: true }),
+            ]);
+        });
+
+        it('Partial valid formatting - opening valid, closing with space still valid', () => {
+            runTest('**hello ** world', [
+                createText('hello ', { fontWeight: 'bold' }),
+                createText(' world'),
+            ]);
+        });
+
+        it('Partial valid formatting - opening invalid, closing valid', () => {
+            const originalSegment = createText('** hello** world');
+            runTest('** hello** world', [originalSegment]);
+        });
+
+        it('Nested formatting with space validation', () => {
+            runTest('**bold *italic* bold**', [
+                createText('bold ', { fontWeight: 'bold' }),
+                createText('italic', { fontWeight: 'bold', italic: true }),
+                createText(' bold', { fontWeight: 'bold' }),
+            ]);
+        });
+
+        it('Nested formatting with invalid inner due to opening spaces', () => {
+            runTest('**bold * invalid * bold**', [
+                createText('bold * invalid * bold', { fontWeight: 'bold' }),
+            ]);
+        });
+
+        it('Multiple consecutive spaces around markers - opening invalid', () => {
+            const originalSegment = createText('**   hello   **');
+            runTest('**   hello   **', [originalSegment]);
+        });
+
+        it('Mixed whitespace types - opening invalid', () => {
+            const originalSegment = createText('** \t\nhello\t \n**');
+            runTest('** \t\nhello\t \n**', [originalSegment]);
+        });
+
+        it('Valid opening with space in middle but valid closing', () => {
+            runTest('**hello world**', [createText('hello world', { fontWeight: 'bold' })]);
+        });
+
+        it('Unicode whitespace should prevent opening', () => {
+            const originalSegment = createText('**\u00A0hello**'); // Non-breaking space
+            runTest('**\u00A0hello**', [originalSegment]);
+        });
+
+        it('Zero-width space should prevent opening', () => {
+            const originalSegment = createText('**\u200Bhello**'); // Zero-width space
+            runTest('**\u200Bhello**', [originalSegment]);
+        });
+
+        it('Em space should prevent opening', () => {
+            const originalSegment = createText('**\u2003hello**'); // Em space
+            runTest('**\u2003hello**', [originalSegment]);
+        });
+
+        it('Complex scenario with mixed valid and invalid patterns', () => {
+            runTest('Start **valid** then ** invalid ** then *good* and * bad * end', [
+                createText('Start '),
+                createText('valid', { fontWeight: 'bold' }),
+                createText(' then ** invalid ** then '),
+                createText('good', { italic: true }),
+                createText(' and * bad * end'),
+            ]);
+        });
+
+        it('Strikethrough with space validation edge cases', () => {
+            runTest('~~valid~~ but ~~ invalid ~~ text', [
+                createText('valid', { strikethrough: true }),
+                createText(' but ~~ invalid ~~ text'),
+            ]);
+        });
+
+        it('All three formats with space validation', () => {
+            runTest('**b** ~~ i ~~ *t* and ** bad ** ~~bad ~~ * bad *', [
+                createText('b', { fontWeight: 'bold' }),
+                createText(' ~~ i ~~ '),
+                createText('t', { italic: true }),
+                createText(' and ** bad ** ~~bad ~~ * bad *'),
+            ]);
+        });
+
+        // Additional edge cases for closing behavior
+        it('Valid opening followed by space in closing should still work', () => {
+            runTest('**hello **', [createText('hello ', { fontWeight: 'bold' })]);
+        });
+
+        it('Mixed scenarios with spaces affecting only opening', () => {
+            runTest('*valid* but * invalid opening but valid closing *', [
+                createText('valid', { italic: true }),
+                createText(' but '),
+                createText(' invalid opening but valid closing ', { italic: true }),
+            ]);
+        });
+
+        it('Comprehensive whitespace rule test', () => {
+            // Opening markers followed by space = invalid
+            // Closing markers preceded by space = still valid
+            runTest('** invalid** but **valid ** and * invalid* but *valid *', [
+                createText('** invalid** but '),
+                createText('valid ', { fontWeight: 'bold' }),
+                createText(' and * invalid* but '),
+                createText('valid ', { italic: true }),
+            ]);
+        });
+    });
 });

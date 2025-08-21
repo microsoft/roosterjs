@@ -31,24 +31,43 @@ export function applyTextFormatting(textSegment: ContentModelText) {
         const marker = parseMarkerAt(text, i);
 
         if (marker) {
-            // If we have accumulated text, create a segment for it
-            if (currentText.length > 0) {
-                textSegments.push(
-                    createFormattedSegment(
-                        currentText,
-                        textSegment.format,
-                        currentState,
-                        textSegment.link
-                    )
-                );
-                currentText = '';
+            // Check if this marker can open or close based on context
+            const nextChar = i + marker.length < text.length ? text.charAt(i + marker.length) : '';
+            const prevChar = i > 0 ? text.charAt(i - 1) : '';
+
+            // Opening markers: must be followed by non-whitespace
+            const canOpen = nextChar.length > 0 && !isWhitespace(nextChar);
+            // Closing markers: can always close if there's preceding content (whitespace is allowed)
+            const canClose = prevChar.length > 0;
+
+            // Determine if we should toggle based on current state and context
+            const currentlyActive = getCurrentFormatState(currentState, marker.type);
+            const shouldToggle = (canOpen && !currentlyActive) || (canClose && currentlyActive);
+
+            if (shouldToggle) {
+                // If we have accumulated text, create a segment for it
+                if (currentText.length > 0) {
+                    textSegments.push(
+                        createFormattedSegment(
+                            currentText,
+                            textSegment.format,
+                            currentState,
+                            textSegment.link
+                        )
+                    );
+                    currentText = '';
+                }
+
+                // Toggle the formatting state
+                toggleFormatting(currentState, marker.type);
+
+                // Skip the marker characters
+                i += marker.length;
+            } else {
+                // Treat as regular text if marker is not valid in this context
+                currentText += text[i];
+                i++;
             }
-
-            // Toggle the formatting state
-            toggleFormatting(currentState, marker.type);
-
-            // Skip the marker characters
-            i += marker.length;
         } else {
             // Regular character, add to current text
             currentText += text[i];
@@ -83,22 +102,23 @@ export function applyTextFormatting(textSegment: ContentModelText) {
 function parseMarkerAt(text: string, index: number): FormatMarker | null {
     const remaining = text.substring(index);
 
-    // Check for strikethrough (~~)
     if (remaining.startsWith('~~')) {
         return { type: 'strikethrough', length: 2 };
     }
 
-    // Check for bold (**)
     if (remaining.startsWith('**')) {
         return { type: 'bold', length: 2 };
     }
 
-    // Check for italic (*)
     if (remaining.startsWith('*')) {
         return { type: 'italic', length: 1 };
     }
 
     return null;
+}
+
+function isWhitespace(char: string): boolean {
+    return /\s/.test(char);
 }
 
 function toggleFormatting(state: FormattingState, type: 'bold' | 'italic' | 'strikethrough'): void {
@@ -112,6 +132,20 @@ function toggleFormatting(state: FormattingState, type: 'bold' | 'italic' | 'str
         case 'strikethrough':
             state.strikethrough = !state.strikethrough;
             break;
+    }
+}
+
+function getCurrentFormatState(
+    state: FormattingState,
+    type: 'bold' | 'italic' | 'strikethrough'
+): boolean {
+    switch (type) {
+        case 'bold':
+            return state.bold;
+        case 'italic':
+            return state.italic;
+        case 'strikethrough':
+            return state.strikethrough;
     }
 }
 
