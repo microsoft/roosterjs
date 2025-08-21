@@ -53,7 +53,7 @@ export function toggleModelBlockQuote(
 
         paragraphOfQuote.forEach(({ block, parent }) => {
             if (isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer')) {
-                if (block.tagName !== 'blockquote' && !!block.format.id) {
+                if (block.tagName !== 'blockquote') {
                     const paragraphsToWrap = block.blocks.filter(
                         b => b.blockType == 'Paragraph' && b.segments.some(s => s.isSelected)
                     );
@@ -61,8 +61,6 @@ export function toggleModelBlockQuote(
                     paragraphsToWrap.forEach(b => {
                         wrapBlockStep1(step1Results, block, b, creator, canMerge);
                     });
-                } else if (block.tagName !== 'blockquote') {
-                    wrapBlockStep1(step1Results, parent, block, creator, canMerge);
                 }
             } else {
                 wrapBlockStep1(step1Results, parent, block, creator, canMerge);
