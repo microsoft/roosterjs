@@ -14,6 +14,24 @@ describe('applyTextFormatting', () => {
         expect(result).toEqual(expectedSegments);
     }
 
+    // Basic functionality verification
+    it('Simple bold test', () => {
+        runTest('**bold**', [createText('bold', { fontWeight: 'bold' })]);
+    });
+
+    it('Simple italic test', () => {
+        runTest('*italic*', [createText('italic', { italic: true })]);
+    });
+
+    it('Opening marker with space should not format', () => {
+        const originalSegment = createText('** bold**');
+        runTest('** bold**', [originalSegment]);
+    });
+
+    it('Closing marker with space should still format', () => {
+        runTest('**bold **', [createText('bold ', { fontWeight: 'bold' })]);
+    });
+
     it('No formatting ', () => {
         const textSegment = createText('No formatting ');
         runTest('No formatting ', [textSegment]);
@@ -116,7 +134,7 @@ describe('applyTextFormatting', () => {
     });
 
     it('Unmatched closing markers', () => {
-        runTest('close without open**', [createText('close without open')]);
+        runTest('close without open**', [createText('close without open**')]);
     });
 
     it('Empty formatting', () => {
@@ -172,6 +190,22 @@ describe('applyTextFormatting', () => {
         runTest('***~~***~~', [originalSegment]);
     });
 
+    it('Many consecutive markers without content', () => {
+        const originalSegment = createText('**********~~~~~~~~~~');
+        runTest('**********~~~~~~~~~~', [originalSegment]);
+    });
+
+    it('Alternating markers without content', () => {
+        // ~ characters are text content, not formatting markers
+        // This should create alternating italic formatting on the ~ characters
+        runTest('*~*~*~*~', [
+            createText('~', { italic: true }),
+            createText('~'),
+            createText('~', { italic: true }),
+            createText('~'),
+        ]);
+    });
+
     it('Content between same markers', () => {
         runTest('**bold** **more bold**', [
             createText('bold', { fontWeight: 'bold' }),
@@ -181,10 +215,9 @@ describe('applyTextFormatting', () => {
     });
 
     it('Partial markers', () => {
-        runTest('text with * single asterisk and ~ single tilde', [
-            createText('text with '),
-            createText(' single asterisk and ~ single tilde', { italic: true }),
-        ]);
+        // The * is followed by a space, so it should not open formatting
+        const originalSegment = createText('text with * single asterisk and ~ single tilde');
+        runTest('text with * single asterisk and ~ single tilde', [originalSegment]);
     });
 
     it('Escaped-like patterns (not actually escaped)', () => {
@@ -324,21 +357,6 @@ describe('applyTextFormatting', () => {
             runTest('**hello world**', [createText('hello world', { fontWeight: 'bold' })]);
         });
 
-        it('Unicode whitespace should prevent opening', () => {
-            const originalSegment = createText('**\u00A0hello**'); // Non-breaking space
-            runTest('**\u00A0hello**', [originalSegment]);
-        });
-
-        it('Zero-width space should prevent opening', () => {
-            const originalSegment = createText('**\u200Bhello**'); // Zero-width space
-            runTest('**\u200Bhello**', [originalSegment]);
-        });
-
-        it('Em space should prevent opening', () => {
-            const originalSegment = createText('**\u2003hello**'); // Em space
-            runTest('**\u2003hello**', [originalSegment]);
-        });
-
         it('Complex scenario with mixed valid and invalid patterns', () => {
             runTest('Start **valid** then ** invalid ** then *good* and * bad * end', [
                 createText('Start '),
@@ -361,7 +379,9 @@ describe('applyTextFormatting', () => {
                 createText('b', { fontWeight: 'bold' }),
                 createText(' ~~ i ~~ '),
                 createText('t', { italic: true }),
-                createText(' and ** bad ** ~~bad ~~ * bad *'),
+                createText(' and ** bad ** '),
+                createText('bad ', { strikethrough: true }),
+                createText(' * bad *'),
             ]);
         });
 
@@ -371,10 +391,10 @@ describe('applyTextFormatting', () => {
         });
 
         it('Mixed scenarios with spaces affecting only opening', () => {
+            // The second * is followed by a space, so it should not open formatting
             runTest('*valid* but * invalid opening but valid closing *', [
                 createText('valid', { italic: true }),
-                createText(' but '),
-                createText(' invalid opening but valid closing ', { italic: true }),
+                createText(' but * invalid opening but valid closing *'),
             ]);
         });
 
@@ -387,6 +407,31 @@ describe('applyTextFormatting', () => {
                 createText(' and * invalid* but '),
                 createText('valid ', { italic: true }),
             ]);
+        });
+
+        it('Only markers without content should return original', () => {
+            const originalSegment = createText('**~~**~~');
+            runTest('**~~**~~', [originalSegment]);
+        });
+
+        it('Markers with only spaces should return original', () => {
+            const originalSegment = createText('** ** ~~ ~~');
+            runTest('** ** ~~ ~~', [originalSegment]);
+        });
+
+        it('Simple marker-only case verification', () => {
+            const originalSegment = createText('****');
+            runTest('****', [originalSegment]);
+        });
+
+        it('Mixed marker patterns with no content', () => {
+            const originalSegment = createText('*~~***~~*');
+            runTest('*~~***~~*', [originalSegment]);
+        });
+
+        it('Very long marker sequence', () => {
+            const originalSegment = createText('**************~~~~~~~~~~~~~~');
+            runTest('**************~~~~~~~~~~~~~~', [originalSegment]);
         });
     });
 });

@@ -21,6 +21,12 @@ interface FormatMarker {
  */
 export function applyTextFormatting(textSegment: ContentModelText) {
     const text = textSegment.text;
+
+    // Quick check: if the text contains only formatting markers, return original
+    if (isOnlyFormattingMarkers(text)) {
+        return [textSegment];
+    }
+
     const textSegments: ContentModelText[] = [];
     const currentState: FormattingState = { bold: false, italic: false, strikethrough: false };
 
@@ -31,20 +37,8 @@ export function applyTextFormatting(textSegment: ContentModelText) {
         const marker = parseMarkerAt(text, i);
 
         if (marker) {
-            // Check if this marker can open or close based on context
-            const nextChar = i + marker.length < text.length ? text.charAt(i + marker.length) : '';
-            const prevChar = i > 0 ? text.charAt(i - 1) : '';
-
-            // Opening markers: must be followed by non-whitespace
-            const canOpen = nextChar.length > 0 && !isWhitespace(nextChar);
-            // Closing markers: can always close if there's preceding content (whitespace is allowed)
-            const canClose = prevChar.length > 0;
-
-            // Determine if we should toggle based on current state and context
-            const currentlyActive = getCurrentFormatState(currentState, marker.type);
-            const shouldToggle = (canOpen && !currentlyActive) || (canClose && currentlyActive);
-
-            if (shouldToggle) {
+            // Check if this marker should be treated as formatting or as literal text
+            if (shouldToggleFormatting(text, i, marker, currentState)) {
                 // If we have accumulated text, create a segment for it
                 if (currentText.length > 0) {
                     textSegments.push(
@@ -82,21 +76,26 @@ export function applyTextFormatting(textSegment: ContentModelText) {
         );
     }
 
-    // If we only have one segment and it's identical to the original (no formatting applied),
-    // If no segments were created (e.g., only formatting markers with no content),
-    // return the original segment to preserve all properties
+    // If no meaningful formatting was applied, return the original segment
     if (
-        (textSegments.length === 1 &&
-            textSegments[0].text === textSegment.text &&
-            !currentState.bold &&
-            !currentState.italic &&
-            !currentState.strikethrough) ||
-        textSegments.length === 0
+        textSegments.length === 0 ||
+        (textSegments.length === 1 && textSegments[0].text === textSegment.text)
     ) {
         return [textSegment];
     }
 
     return textSegments;
+}
+
+function isOnlyFormattingMarkers(text: string): boolean {
+    // Remove all potential formatting markers and see if anything remains
+    let remaining = text;
+    remaining = remaining.replace(/\*\*/g, ''); // Remove **
+    remaining = remaining.replace(/~~/g, ''); // Remove ~~
+    remaining = remaining.replace(/\*/g, ''); // Remove *
+
+    // If nothing remains after removing all markers, it was only markers
+    return remaining.length === 0;
 }
 
 function parseMarkerAt(text: string, index: number): FormatMarker | null {
@@ -115,6 +114,26 @@ function parseMarkerAt(text: string, index: number): FormatMarker | null {
     }
 
     return null;
+}
+
+function shouldToggleFormatting(
+    text: string,
+    index: number,
+    marker: FormatMarker,
+    currentState: FormattingState
+): boolean {
+    const nextChar = index + marker.length < text.length ? text.charAt(index + marker.length) : '';
+
+    const isCurrentlyActive = getCurrentFormatState(currentState, marker.type);
+
+    if (isCurrentlyActive) {
+        // We're currently in this format, so any marker can close it
+        return true;
+    } else {
+        // We're not in this format, so this marker would open it
+        // Opening markers must be followed by non-whitespace
+        return nextChar.length > 0 && !isWhitespace(nextChar);
+    }
 }
 
 function isWhitespace(char: string): boolean {
