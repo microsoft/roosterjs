@@ -1,5 +1,6 @@
 import { applyChange } from './utils/applyChange';
 import { canRegenerateImage } from './utils/canRegenerateImage';
+import { checkEditInfoState } from './utils/checkEditInfoState';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
@@ -74,6 +75,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
     protected imageEditInfo: ImageMetadataFormat | null = null;
+    private initialEditingInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
     private clonedImage: HTMLImageElement | null = null;
@@ -353,6 +355,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     : findEditingImage(model);
                 let result = false;
 
+                // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
+                context.skipUndoSnapshot = 'SkipAll';
+
                 if (
                     shouldSelectImage ||
                     previousSelectedImage?.image != editingImage?.image ||
@@ -402,6 +407,18 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             normalizeImageSelection(previousSelectedImage);
                         }
 
+                        if (this.initialEditingInfo && this.imageEditInfo) {
+                            // Finish editing, check if image is changed and skip undo snapshot if not
+                            const changeState = checkEditInfoState(
+                                this.initialEditingInfo,
+                                this.imageEditInfo
+                            );
+
+                            if (this.wasImageResized || changeState == 'FullyChanged') {
+                                context.skipUndoSnapshot = false;
+                            }
+                        }
+
                         this.cleanInfo();
                         result = true;
                     }
@@ -426,9 +443,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         result = true;
                     }
                 }
-
-                // Skip adding undo snapshot since image wrapper change should not be treated as user's action
-                context.skipUndoSnapshot = 'SkipAll';
 
                 return result;
             },
@@ -502,6 +516,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
+
+        this.initialEditingInfo = { ...this.imageEditInfo };
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         this.lastSrc = image.getAttribute('src');
 
@@ -783,6 +799,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.shadowSpan = null;
         this.wrapper = null;
         this.imageEditInfo = null;
+        this.initialEditingInfo = null;
         this.imageHTMLOptions = null;
         this.dndHelpers.forEach(helper => helper.dispose());
         this.dndHelpers = [];
