@@ -887,7 +887,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Italic text ',
+                            text: 'Italic text',
                             segmentType: 'Text',
 
                             format: {
@@ -909,7 +909,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Bold text ',
+                            text: 'Bold text',
                             segmentType: 'Text',
 
                             format: {
@@ -931,7 +931,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Bold and italic ',
+                            text: 'Bold and italic',
                             segmentType: 'Text',
 
                             format: {

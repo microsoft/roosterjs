@@ -31,7 +31,7 @@ describe('applySegmentFormatting', () => {
     it('Bold', () => {
         const paragraph = createParagraph();
         const segment = createText('text in ');
-        const bold = createText('bold ', { fontWeight: 'bold' });
+        const bold = createText('bold', { fontWeight: 'bold' });
         paragraph.segments.push(segment);
         paragraph.segments.push(bold);
         runTest('text in **bold**', paragraph);
@@ -40,7 +40,7 @@ describe('applySegmentFormatting', () => {
     it('Italic', () => {
         const paragraph = createParagraph();
         const segment = createText('text in ');
-        const italic = createText('italic ', { italic: true });
+        const italic = createText('italic', { italic: true });
         paragraph.segments.push(segment);
         paragraph.segments.push(italic);
         runTest('text in *italic*', paragraph);
@@ -49,7 +49,7 @@ describe('applySegmentFormatting', () => {
     it('Bold and Italic', () => {
         const paragraph = createParagraph();
         const segment = createText('text in ');
-        const boldItalic = createText('bold and italic ', { fontWeight: 'bold', italic: true });
+        const boldItalic = createText('bold and italic', { fontWeight: 'bold', italic: true });
         paragraph.segments.push(segment);
         paragraph.segments.push(boldItalic);
         runTest('text in ***bold and italic***', paragraph);
@@ -74,11 +74,11 @@ describe('applySegmentFormatting', () => {
     it('Multiple Bold and Italic', () => {
         const paragraph = createParagraph();
         const segment1 = createText('text in ');
-        const boldItalic = createText('bold and italic ', { fontWeight: 'bold', italic: true });
+        const boldItalic = createText('bold and italic', { fontWeight: 'bold', italic: true });
         const segment2 = createText(' and ');
-        const bold = createText('bold ', { fontWeight: 'bold' });
+        const bold = createText('bold', { fontWeight: 'bold' });
         const segment3 = createText(' and ');
-        const italic = createText('italic ', { italic: true });
+        const italic = createText('italic', { italic: true });
         paragraph.segments.push(segment1);
         paragraph.segments.push(boldItalic);
         paragraph.segments.push(segment2);
@@ -113,11 +113,11 @@ describe('applySegmentFormatting', () => {
             },
         };
         const segment3 = createText(' and ');
-        const boldItalic = createText('bold and italic ', { fontWeight: 'bold', italic: true });
+        const boldItalic = createText('bold and italic', { fontWeight: 'bold', italic: true });
         const segment4 = createText(' and ');
-        const bold = createText('bold ', { fontWeight: 'bold' });
+        const bold = createText('bold', { fontWeight: 'bold' });
         const segment5 = createText(' and ');
-        const italic = createText('italic ', { italic: true });
+        const italic = createText('italic', { italic: true });
         paragraph.segments.push(segment1);
         paragraph.segments.push(image);
         paragraph.segments.push(segment2);
