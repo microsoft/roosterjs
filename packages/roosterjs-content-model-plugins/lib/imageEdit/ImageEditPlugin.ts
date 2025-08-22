@@ -346,7 +346,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         const selection = editor.getDOMSelection();
 
         editor.formatContentModel(
-            model => {
+            (model, context) => {
                 const editingImage = getSelectedImage(model);
                 const previousSelectedImage = isApiOperation
                     ? editingImage
@@ -426,6 +426,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         result = true;
                     }
                 }
+
+                // Skip adding undo snapshot since image wrapper change should not be treated as user's action
+                context.skipUndoSnapshot = 'SkipAll';
 
                 return result;
             },
