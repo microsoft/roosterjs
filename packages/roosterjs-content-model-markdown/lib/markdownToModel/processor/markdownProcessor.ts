@@ -4,6 +4,7 @@ import { createParagraphFromMarkdown } from '../creators/createParagraphFromMark
 import { createTableFromMarkdown } from '../creators/createTableFromMarkdown';
 import { isMarkdownTable } from '../utils/isMarkdownTable';
 
+import type { MarkdownOptions } from '../types/MarkdownOptions';
 import type {
     ContentModelBlockType,
     ContentModelDocument,
@@ -15,6 +16,7 @@ import type {
 interface MarkdownContext {
     lastQuote?: ContentModelFormatContainer;
     lastList?: ContentModelListItem;
+    emptyLineState?: 'notEmpty' | 'lineEnded' | 'empty';
     tableLines: string[];
 }
 
@@ -48,14 +50,27 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
  * @returns The ContentModelDocument
  */
 
-export function markdownProcessor(
-    text: string,
-    splitLinesPattern: string | RegExp
-): ContentModelDocument {
+export function markdownProcessor(text: string, options: MarkdownOptions): ContentModelDocument {
+    const splitLinesPattern = options.splitLinesPattern || /\r\n|\r|\\n|\n/;
+    const emptyLine = options.emptyLine ?? 'merge';
     const markdownText = text.split(splitLinesPattern);
+
     markdownText.push(''); // Add an empty line to make sure the last block is processed
+
     const doc = createContentModelDocument();
-    return convertMarkdownText(doc, markdownText);
+    const model = convertMarkdownText(doc, markdownText, options);
+    const lastBlock = model.blocks[model.blocks.length - 1];
+
+    if (
+        emptyLine != 'remove' &&
+        lastBlock &&
+        lastBlock.blockType == 'Paragraph' &&
+        lastBlock.segments.every(x => x.segmentType == 'Br')
+    ) {
+        model.blocks.pop();
+    }
+
+    return model;
 }
 
 function addMarkdownBlockToModel(
@@ -63,7 +78,8 @@ function addMarkdownBlockToModel(
     blockType: ContentModelBlockType,
     markdown: string,
     patternName: string,
-    markdownContext: MarkdownContext
+    markdownContext: MarkdownContext,
+    options: MarkdownOptions
 ) {
     if (
         blockType !== 'Table' &&
@@ -88,10 +104,49 @@ function addMarkdownBlockToModel(
     }
 
     if (patternName == 'space') {
-        markdownContext.tableLines = [];
-        markdownContext.lastQuote = undefined;
-        markdownContext.lastList = undefined;
-        return;
+        if (
+            markdownContext.tableLines.length > 0 ||
+            markdownContext.lastQuote ||
+            markdownContext.lastList
+        ) {
+            markdownContext.tableLines = [];
+            markdownContext.lastQuote = undefined;
+            markdownContext.lastList = undefined;
+
+            return;
+        }
+
+        switch (options.emptyLine) {
+            case 'remove':
+                // no op, ignore this line
+                return;
+            case 'merge':
+                switch (markdownContext.emptyLineState) {
+                    case 'notEmpty':
+                    default:
+                        // Last line is not empty line, so this empty line is treated as the line end of last paragraph
+                        markdownContext.emptyLineState = 'lineEnded';
+                        return;
+
+                    case 'lineEnded':
+                        // We already see an empty line for paragraph ends, so this line is treated as a real empty line
+                        markdownContext.emptyLineState = 'empty';
+
+                        // Keep going, process as a normal paragraph
+                        break;
+
+                    case 'empty':
+                        // Already processed empty line, so this one should be ignored
+                        return;
+                }
+                break;
+            case 'preserve':
+            default:
+                // no op, treat it as paragraph
+                break;
+        }
+    } else {
+        markdownContext.emptyLineState = 'notEmpty';
     }
 
     if (blockType == 'Paragraph' && (markdownContext.lastList || markdownContext.lastQuote)) {
@@ -138,7 +193,11 @@ function addMarkdownBlockToModel(
     }
 }
 
-function convertMarkdownText(model: ContentModelDocument, lines: string[]): ContentModelDocument {
+function convertMarkdownText(
+    model: ContentModelDocument,
+    lines: string[],
+    options: MarkdownOptions
+): ContentModelDocument {
     const markdownContext: MarkdownContext = {
         lastQuote: undefined,
         lastList: undefined,
@@ -155,7 +214,8 @@ function convertMarkdownText(model: ContentModelDocument, lines: string[]): Cont
                         MarkdownBlockType[patternName],
                         line,
                         patternName,
-                        markdownContext
+                        markdownContext,
+                        options
                     );
                     matched = true;
                     break;
@@ -164,7 +224,14 @@ function convertMarkdownText(model: ContentModelDocument, lines: string[]): Cont
         }
 
         if (!matched) {
-            addMarkdownBlockToModel(model, 'Paragraph', line, 'paragraph', markdownContext);
+            addMarkdownBlockToModel(
+                model,
+                'Paragraph',
+                line,
+                'paragraph',
+                markdownContext,
+                options
+            );
         }
     }
     return model;

@@ -1,30 +1,40 @@
 import * as React from 'react';
+import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { MarkdownPaneProps } from './MarkdownPanePlugin';
 import {
     convertMarkdownToContentModel,
     convertContentModelToMarkdown,
 } from 'roosterjs-content-model-markdown';
-import {
-    createBr,
-    createParagraph,
-    createSelectionMarker,
-    mergeModel,
-} from 'roosterjs-content-model-dom';
 
 const styles = require('./MarkdownPane.scss');
 
-export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
+export default class MarkdownPane extends React.Component<
+    MarkdownPaneProps,
+    { emptyLine: 'preserve' | 'remove' | 'merge' }
+> {
     private html = React.createRef<HTMLTextAreaElement>();
+    private emptyLinePreserve = React.createRef<HTMLInputElement>();
+    private emptyLineRemove = React.createRef<HTMLInputElement>();
+    private emptyLineMerge = React.createRef<HTMLInputElement>();
 
     constructor(props: MarkdownPaneProps) {
         super(props);
+
+        this.state = { emptyLine: 'merge' };
     }
 
     private convert = () => {
         const editor = this.props.getEditor();
         editor.formatContentModel((model, context) => {
-            const markdownModel = convertMarkdownToContentModel(this.html.current.value);
-            mergeModel(model, markdownModel, context);
+            const markdownModel = convertMarkdownToContentModel(this.html.current.value, {
+                emptyLine: this.emptyLinePreserve.current.checked
+                    ? 'preserve'
+                    : this.emptyLineRemove.current.checked
+                    ? 'remove'
+                    : 'merge',
+            });
+
+            model.blocks = markdownModel.blocks;
             return true;
         });
     };
@@ -55,10 +65,57 @@ export default class MarkdownPane extends React.Component<MarkdownPaneProps> {
         }
     };
 
+    private onEmptyLineChange = (e: React.MouseEvent<HTMLInputElement>) => {
+        switch (e.currentTarget.value) {
+            case 'preserve':
+                this.setState({ emptyLine: 'preserve' });
+                break;
+            case 'remove':
+                this.setState({ emptyLine: 'remove' });
+                break;
+            case 'merge':
+                this.setState({ emptyLine: 'merge' });
+                break;
+        }
+    };
+
     render() {
         return (
             <div className={styles.container}>
                 <p>Convert Markdown to content model</p>
+                <div>
+                    Empty line:
+                    <input
+                        type="radio"
+                        name="emptyLine"
+                        id="emptyLinePreserve"
+                        value="preserve"
+                        checked={this.state.emptyLine == 'preserve'}
+                        ref={this.emptyLinePreserve}
+                        onClick={this.onEmptyLineChange}
+                    />{' '}
+                    <label htmlFor="emptyLinePreserve">Preserve</label>
+                    <input
+                        type="radio"
+                        name="emptyLine"
+                        id="emptyLineRemove"
+                        value="remove"
+                        checked={this.state.emptyLine == 'remove'}
+                        ref={this.emptyLineRemove}
+                        onClick={this.onEmptyLineChange}
+                    />{' '}
+                    <label htmlFor="emptyLineRemove">Remove</label>
+                    <input
+                        type="radio"
+                        name="emptyLine"
+                        id="emptyLineMerge"
+                        value="merge"
+                        checked={this.state.emptyLine == 'merge'}
+                        ref={this.emptyLineMerge}
+                        onClick={this.onEmptyLineChange}
+                    />{' '}
+                    <label htmlFor="emptyLineMerge">Merge</label>
+                </div>
                 <textarea
                     className={styles.textArea}
                     title="Plain Text Editor"

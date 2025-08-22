@@ -3,8 +3,7 @@ import { convertMarkdownToContentModel } from '../../lib/markdownToModel/convert
 
 describe('convertMarkdownToContentModel', () => {
     function runTest(markdown: string, expectedContentModel: ContentModelDocument) {
-        convertMarkdownToContentModel(markdown);
-        const actualContentModel = convertMarkdownToContentModel(markdown);
+        const actualContentModel = convertMarkdownToContentModel(markdown, { emptyLine: 'remove' });
         expect(actualContentModel).toEqual(expectedContentModel);
     }
 
