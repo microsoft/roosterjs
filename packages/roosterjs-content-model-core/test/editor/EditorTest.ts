@@ -1016,6 +1016,7 @@ describe('Editor', () => {
             {
                 eventType: 'contentChanged',
                 source: ChangeSource.SwitchToDarkMode,
+                skipUndo: true,
             },
             true
         );
@@ -1036,6 +1037,7 @@ describe('Editor', () => {
             {
                 eventType: 'contentChanged',
                 source: ChangeSource.SwitchToLightMode,
+                skipUndo: true,
             },
             true
         );

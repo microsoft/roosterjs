@@ -1,5 +1,5 @@
-import { ChangeSource, isCursorMovingKey } from 'roosterjs-content-model-dom';
 import { createSnapshotsManager } from './SnapshotsManagerImpl';
+import { isCursorMovingKey } from 'roosterjs-content-model-dom';
 import { undo } from '../../command/undo/undo';
 import type {
     ContentChangedEvent,
@@ -211,14 +211,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private onContentChanged(event: ContentChangedEvent) {
-        if (
-            !(
-                this.state.isRestoring ||
-                event.source == ChangeSource.SwitchToDarkMode ||
-                event.source == ChangeSource.SwitchToLightMode ||
-                event.source == ChangeSource.Keyboard
-            )
-        ) {
+        if (!this.state.isRestoring && !event.skipUndo) {
             this.clearRedoForInput();
         }
     }
