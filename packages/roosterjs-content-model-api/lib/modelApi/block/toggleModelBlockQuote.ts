@@ -52,8 +52,16 @@ export function toggleModelBlockQuote(
             canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
 
         paragraphOfQuote.forEach(({ block, parent }) => {
-            if (isQuote(block)) {
-                // Already in quote, no op
+            if (isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer')) {
+                if (block.tagName !== 'blockquote') {
+                    const paragraphsToWrap = block.blocks.filter(
+                        b => b.blockType == 'Paragraph' && b.segments.some(s => s.isSelected)
+                    );
+
+                    paragraphsToWrap.forEach(b => {
+                        wrapBlockStep1(step1Results, block, b, creator, canMerge);
+                    });
+                }
             } else {
                 wrapBlockStep1(step1Results, parent, block, creator, canMerge);
             }
