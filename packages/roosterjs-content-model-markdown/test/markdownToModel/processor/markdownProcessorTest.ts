@@ -62,7 +62,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text and image ![image of a dog](https://www.example.com/image) ', document);
+        runTest('text and image ![image of a dog](https://www.example.com/image)', document);
     });
 
     it('should return document with paragraph for text and link', () => {
@@ -95,7 +95,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text [link](https://www.example.com) ', document);
+        runTest('text [link](https://www.example.com)', document);
     });
 
     it('should return document with paragraph for text and bold', () => {
@@ -123,7 +123,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text **bold** ', document);
+        runTest('text **bold**', document);
     });
 
     it('should return document with paragraph for text and italic', () => {
@@ -151,7 +151,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text *italic* ', document);
+        runTest('text *italic*', document);
     });
 
     it('should return document with paragraph for text, link and image', () => {
@@ -192,7 +192,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
             ],
         };
         runTest(
-            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) ',
+            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image)',
             document
         );
     });
@@ -947,7 +947,7 @@ describe('markdownProcessor: mergeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text and image ![image of a dog](https://www.example.com/image) ', document);
+        runTest('text and image ![image of a dog](https://www.example.com/image)', document);
     });
 
     it('should return document with paragraph for text and link', () => {
@@ -980,7 +980,7 @@ describe('markdownProcessor: mergeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text [link](https://www.example.com) ', document);
+        runTest('text [link](https://www.example.com)', document);
     });
 
     it('should return document with paragraph for text and bold', () => {
@@ -1036,7 +1036,7 @@ describe('markdownProcessor: mergeEmptyLines', () => {
                 },
             ],
         };
-        runTest('text *italic* ', document);
+        runTest('text *italic*', document);
     });
 
     it('should return document with paragraph for text, link and image', () => {
@@ -1077,7 +1077,7 @@ describe('markdownProcessor: mergeEmptyLines', () => {
             ],
         };
         runTest(
-            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) ',
+            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image)',
             document
         );
     });
@@ -1832,7 +1832,7 @@ describe('markdownProcessor: preserveEmptyLines', () => {
                 },
             ],
         };
-        runTest('text and image ![image of a dog](https://www.example.com/image) ', document);
+        runTest('text and image ![image of a dog](https://www.example.com/image)', document);
     });
 
     it('should return document with paragraph for text and link', () => {
@@ -1865,7 +1865,7 @@ describe('markdownProcessor: preserveEmptyLines', () => {
                 },
             ],
         };
-        runTest('text [link](https://www.example.com) ', document);
+        runTest('text [link](https://www.example.com)', document);
     });
 
     it('should return document with paragraph for text and bold', () => {
@@ -1893,7 +1893,7 @@ describe('markdownProcessor: preserveEmptyLines', () => {
                 },
             ],
         };
-        runTest('text **bold** ', document);
+        runTest('text **bold**', document);
     });
 
     it('should return document with paragraph for text and italic', () => {
@@ -1921,7 +1921,7 @@ describe('markdownProcessor: preserveEmptyLines', () => {
                 },
             ],
         };
-        runTest('text *italic* ', document);
+        runTest('text *italic*', document);
     });
 
     it('should return document with paragraph for text, link and image', () => {
@@ -1962,7 +1962,7 @@ describe('markdownProcessor: preserveEmptyLines', () => {
             ],
         };
         runTest(
-            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) ',
+            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image)',
             document
         );
     });
