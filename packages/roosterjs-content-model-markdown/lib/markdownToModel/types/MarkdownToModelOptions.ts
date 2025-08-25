@@ -1,7 +1,7 @@
 /**
  * Options for processing markdown text.
  */
-export interface MarkdownOptions {
+export interface MarkdownToModelOptions {
     /**
      * The pattern to split lines in the markdown text.
      */

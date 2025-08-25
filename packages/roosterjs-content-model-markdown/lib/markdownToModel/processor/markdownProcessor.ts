@@ -4,7 +4,7 @@ import { createParagraphFromMarkdown } from '../creators/createParagraphFromMark
 import { createTableFromMarkdown } from '../creators/createTableFromMarkdown';
 import { isMarkdownTable } from '../utils/isMarkdownTable';
 
-import type { MarkdownOptions } from '../types/MarkdownOptions';
+import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
 import type {
     ContentModelBlockType,
     ContentModelDocument,
@@ -50,7 +50,10 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
  * @returns The ContentModelDocument
  */
 
-export function markdownProcessor(text: string, options: MarkdownOptions): ContentModelDocument {
+export function markdownProcessor(
+    text: string,
+    options: MarkdownToModelOptions
+): ContentModelDocument {
     const splitLinesPattern = options.splitLinesPattern || /\r\n|\r|\\n|\n/;
     const emptyLine = options.emptyLine ?? 'merge';
     const markdownText = text.split(splitLinesPattern);
@@ -79,7 +82,7 @@ function addMarkdownBlockToModel(
     markdown: string,
     patternName: string,
     markdownContext: MarkdownContext,
-    options: MarkdownOptions
+    options: MarkdownToModelOptions
 ) {
     if (
         blockType !== 'Table' &&
@@ -196,7 +199,7 @@ function addMarkdownBlockToModel(
 function convertMarkdownText(
     model: ContentModelDocument,
     lines: string[],
-    options: MarkdownOptions
+    options: MarkdownToModelOptions
 ): ContentModelDocument {
     const markdownContext: MarkdownContext = {
         lastQuote: undefined,

@@ -1,5 +1,5 @@
 import { markdownProcessor } from './processor/markdownProcessor';
-import type { MarkdownOptions } from './types/MarkdownOptions';
+import type { MarkdownToModelOptions } from './types/MarkdownToModelOptions';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
 
 /**
@@ -21,14 +21,14 @@ export function convertMarkdownToContentModel(
  */
 export function convertMarkdownToContentModel(
     text: string,
-    options?: MarkdownOptions
+    options?: MarkdownToModelOptions
 ): ContentModelDocument;
 
 export function convertMarkdownToContentModel(
     text: string,
-    splitLinesPatternOrOptions?: string | MarkdownOptions
+    splitLinesPatternOrOptions?: string | MarkdownToModelOptions
 ): ContentModelDocument {
-    const options: MarkdownOptions =
+    const options: MarkdownToModelOptions =
         (typeof splitLinesPatternOrOptions === 'string'
             ? {
                   splitLinesPattern: splitLinesPatternOrOptions,
