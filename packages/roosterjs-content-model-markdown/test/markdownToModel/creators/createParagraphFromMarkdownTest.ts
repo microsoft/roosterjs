@@ -25,7 +25,7 @@ describe('createParagraphFromMarkdown', () => {
         image.alt = 'image of a dog';
         paragraph.segments.push(text);
         paragraph.segments.push(image);
-        runTest('text and image ![image of a dog](https://www.example.com/image) ', paragraph);
+        runTest('text and image ![image of a dog](https://www.example.com/image)', paragraph);
     });
 
     it('should return paragraph with text and link', () => {
@@ -41,30 +41,34 @@ describe('createParagraphFromMarkdown', () => {
         };
         paragraph.segments.push(text);
         paragraph.segments.push(link);
-        runTest('text [link](https://www.example.com) ', paragraph);
+        runTest('text [link](https://www.example.com)', paragraph);
     });
 
     it('should return paragraph with text and bold', () => {
         const paragraph = createParagraph();
         const text = createText('text ');
-        const bold = createText('bold ');
+        const bold = createText('bold');
+        const space = createText(' ');
         bold.format = {
             fontWeight: 'bold',
         };
         paragraph.segments.push(text);
         paragraph.segments.push(bold);
+        paragraph.segments.push(space);
         runTest('text **bold** ', paragraph);
     });
 
     it('should return paragraph with text and italic', () => {
         const paragraph = createParagraph();
         const text = createText('text ');
-        const italic = createText('italic ');
+        const italic = createText('italic');
+        const space = createText(' ');
         italic.format = {
             italic: true,
         };
         paragraph.segments.push(text);
         paragraph.segments.push(italic);
+        paragraph.segments.push(space);
         runTest('text *italic* ', paragraph);
     });
 
@@ -72,6 +76,7 @@ describe('createParagraphFromMarkdown', () => {
         const paragraph = createParagraph();
         const text = createText('text ');
         const link = createText('link');
+        const space = createText(' ');
         link.link = {
             dataset: {},
             format: {
@@ -83,9 +88,10 @@ describe('createParagraphFromMarkdown', () => {
         image.alt = 'image of a dog';
         paragraph.segments.push(text);
         paragraph.segments.push(link);
+        paragraph.segments.push(space);
         paragraph.segments.push(image);
         runTest(
-            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) ',
+            'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image)',
             paragraph
         );
     });
@@ -94,6 +100,10 @@ describe('createParagraphFromMarkdown', () => {
         const paragraph = createParagraph();
         const text = createText('text ');
         const link = createText('link');
+        const space = createText(' ');
+        const space2 = createText(' ');
+        const space3 = createText(' ');
+        const space4 = createText(' ');
         link.link = {
             dataset: {},
             format: {
@@ -103,19 +113,23 @@ describe('createParagraphFromMarkdown', () => {
         };
         const image = createImage('https://www.example.com/image');
         image.alt = 'image of a dog';
-        const bold = createText('bold ');
+        const bold = createText('bold');
         bold.format = {
             fontWeight: 'bold',
         };
-        const italic = createText('italic ');
+        const italic = createText('italic');
         italic.format = {
             italic: true,
         };
         paragraph.segments.push(text);
         paragraph.segments.push(link);
+        paragraph.segments.push(space);
         paragraph.segments.push(image);
+        paragraph.segments.push(space2);
         paragraph.segments.push(bold);
+        paragraph.segments.push(space3);
         paragraph.segments.push(italic);
+        paragraph.segments.push(space4);
         runTest(
             'text [link](https://www.example.com) ![image of a dog](https://www.example.com/image) **bold** *italic* ',
             paragraph
@@ -224,6 +238,7 @@ describe('createParagraphFromMarkdown', () => {
                 fontWeight: 'bold',
             },
         };
+        console.log(createParagraphFromMarkdown('# [link](https://www.example.com)').segments[0]);
         runTest('# [link](https://www.example.com)', paragraph);
     });
 });

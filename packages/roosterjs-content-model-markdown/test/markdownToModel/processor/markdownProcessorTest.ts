@@ -56,6 +56,11 @@ describe('markdownProcessor: removeEmptyLines', () => {
                             segmentType: 'Image',
                             dataset: {},
                         },
+                        {
+                            text: ' ',
+                            format: {},
+                            segmentType: 'Text',
+                        },
                     ],
 
                     format: {},
@@ -111,10 +116,15 @@ describe('markdownProcessor: removeEmptyLines', () => {
                             segmentType: 'Text',
                         },
                         {
-                            text: 'bold ',
+                            text: 'bold',
                             format: {
                                 fontWeight: 'bold',
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                     ],
@@ -139,10 +149,15 @@ describe('markdownProcessor: removeEmptyLines', () => {
                             segmentType: 'Text',
                         },
                         {
-                            text: 'italic ',
+                            text: 'italic',
                             format: {
                                 italic: true,
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                     ],
@@ -176,6 +191,11 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     underline: true,
                                 },
                             },
+                            segmentType: 'Text',
+                        },
+                        {
+                            text: ' ',
+                            format: {},
                             segmentType: 'Text',
                         },
                         {
