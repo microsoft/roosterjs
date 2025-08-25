@@ -2,6 +2,7 @@ import { checkEditInfoState } from './checkEditInfoState';
 import { generateDataURL } from './generateDataURL';
 import { getGeneratedImageSize } from './generateImageSize';
 import { updateImageEditInfo } from './updateImageEditInfo';
+import type { ImageEditInfoState } from './checkEditInfoState';
 import type {
     ContentModelImage,
     IEditor,
@@ -26,7 +27,7 @@ export function applyChange(
     previousSrc: string,
     wasResizedOrCropped: boolean,
     editingImage?: HTMLImageElement
-) {
+): ImageEditInfoState {
     let newSrc = '';
     const imageEditing = editingImage ?? image;
     const initEditInfo = updateImageEditInfo(contentModelImage, imageEditing) ?? undefined;
@@ -74,14 +75,15 @@ export function applyChange(
 
     // Write back the change to image, and set its new size
     const generatedImageSize = getGeneratedImageSize(editInfo);
-    if (!generatedImageSize) {
-        return;
+
+    if (generatedImageSize) {
+        contentModelImage.src = newSrc;
+
+        if (wasResizedOrCropped || state == 'FullyChanged') {
+            contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
+            contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
+        }
     }
 
-    contentModelImage.src = newSrc;
-
-    if (wasResizedOrCropped || state == 'FullyChanged') {
-        contentModelImage.format.width = generatedImageSize.targetWidth + 'px';
-        contentModelImage.format.height = generatedImageSize.targetHeight + 'px';
-    }
+    return state;
 }

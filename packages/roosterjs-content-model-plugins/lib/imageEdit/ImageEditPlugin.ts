@@ -1,6 +1,5 @@
 import { applyChange } from './utils/applyChange';
 import { canRegenerateImage } from './utils/canRegenerateImage';
-import { checkEditInfoState } from './utils/checkEditInfoState';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
 import { createImageWrapper } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
@@ -75,7 +74,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
     protected imageEditInfo: ImageMetadataFormat | null = null;
-    private initialEditingInfo: ImageMetadataFormat | null = null;
     private imageHTMLOptions: ImageHtmlOptions | null = null;
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
     private clonedImage: HTMLImageElement | null = null;
@@ -377,7 +375,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             previousSelectedImage.paragraph,
                             previousSelectedImage.image,
                             image => {
-                                applyChange(
+                                const changeState = applyChange(
                                     editor,
                                     selectedImage,
                                     image,
@@ -386,6 +384,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wasImageResized || this.isCropMode,
                                     clonedImage
                                 );
+
+                                if (this.wasImageResized || changeState == 'FullyChanged') {
+                                    context.skipUndoSnapshot = false;
+                                }
 
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
@@ -405,18 +407,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                         if (shouldSelectImage) {
                             normalizeImageSelection(previousSelectedImage);
-                        }
-
-                        if (this.initialEditingInfo && this.imageEditInfo) {
-                            // Finish editing, check if image is changed and skip undo snapshot if not
-                            const changeState = checkEditInfoState(
-                                this.initialEditingInfo,
-                                this.imageEditInfo
-                            );
-
-                            if (this.wasImageResized || changeState == 'FullyChanged') {
-                                context.skipUndoSnapshot = false;
-                            }
                         }
 
                         this.cleanInfo();
@@ -517,7 +507,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
 
-        this.initialEditingInfo = { ...this.imageEditInfo };
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         this.lastSrc = image.getAttribute('src');
 
@@ -799,7 +788,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.shadowSpan = null;
         this.wrapper = null;
         this.imageEditInfo = null;
-        this.initialEditingInfo = null;
         this.imageHTMLOptions = null;
         this.dndHelpers.forEach(helper => helper.dispose());
         this.dndHelpers = [];
