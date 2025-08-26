@@ -73,6 +73,27 @@ describe('promoteLink', () => {
         };
         runTest(segment, paragraph, null);
     });
+
+    it('with  link segment after link ', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'http://bing.com',
+            format: {},
+            link: {
+                format: {
+                    href: 'http://www.bing.com',
+                    underline: true,
+                },
+                dataset: {},
+            },
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, null);
+    });
 });
 
 describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => {
