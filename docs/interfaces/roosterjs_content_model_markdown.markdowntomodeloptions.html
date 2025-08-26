@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentModelBlockGroupBaseCommon | RoosterJs API Reference</title>
+	<title>MarkdownToModelOptions | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,13 +53,13 @@
 					<a href="../modules.html">RoosterJs API Reference</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
+					<a href="../modules/roosterjs_content_model_markdown.html">roosterjs-content-model-markdown</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html">ContentModelBlockGroupBaseCommon</a>
+					<a href="roosterjs_content_model_markdown.markdowntomodeloptions.html">MarkdownToModelOptions</a>
 				</li>
 			</ul>
-			<h1>Interface ContentModelBlockGroupBaseCommon&lt;T, TElement&gt;</h1>
+			<h1>Interface MarkdownToModelOptions</h1>
 		</div>
 	</div>
 </header>
@@ -69,42 +69,15 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Common part of base type of Content Model Block Group</p>
+						<p>Options for processing markdown text.</p>
 					</div>
 				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#contentmodelblockgrouptype" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelBlockGroupType</a></h4>
-					</li>
-					<li>
-						<h4>TElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span> = <span class="tsd-signature-type">HTMLElement</span></h4>
-					</li>
-				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_content_model_types.contentmodelblockwithcache.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelBlockWithCache</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">ContentModelBlockGroupBaseCommon</span>
-								<ul class="tsd-hierarchy">
-									<li>
-										<a href="roosterjs_content_model_types.contentmodelblockgroupbase.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelBlockGroupBase</a>
-									</li>
-									<li>
-										<a href="roosterjs_content_model_types.readonlycontentmodelblockgroupbase.html" class="tsd-signature-type" data-tsd-kind="Interface">ReadonlyContentModelBlockGroupBase</a>
-									</li>
-									<li>
-										<a href="roosterjs_content_model_types.shallowmutablecontentmodelblockgroupbase.html" class="tsd-signature-type" data-tsd-kind="Interface">ShallowMutableContentModelBlockGroupBase</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<span class="target">MarkdownToModelOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -115,8 +88,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html#blockgrouptype" class="tsd-kind-icon">block<wbr>Group<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html#cachedelement" class="tsd-kind-icon">cached<wbr>Element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_markdown.markdowntomodeloptions.html#emptyline" class="tsd-kind-icon">empty<wbr>Line</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_markdown.markdowntomodeloptions.html#splitlinespattern" class="tsd-kind-icon">split<wbr>Lines<wbr>Pattern</a></li>
 							</ul>
 						</section>
 					</div>
@@ -125,33 +98,42 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="blockgrouptype" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> block<wbr>Group<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">block<wbr>Group<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
+					<a name="emptyline" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> empty<wbr>Line</h3>
+					<div class="tsd-signature tsd-kind-icon">empty<wbr>Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;preserve&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;remove&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;merge&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/62dafa5/packages/roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelBlockGroupBase.ts#L16">roosterjs-content-model-types/lib/contentModel/blockGroup/ContentModelBlockGroupBase.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/62dafa5/packages/roosterjs-content-model-markdown/lib/markdownToModel/types/MarkdownToModelOptions.ts#L17">roosterjs-content-model-markdown/lib/markdownToModel/types/MarkdownToModelOptions.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Type of this block group</p>
+							<p>Specify how should we process empty lines in the markdown text.</p>
+							<ul>
+								<li>&#39;preserve&#39;: Keep empty lines as they are.</li>
+								<li>&#39;remove&#39;: Remove empty lines.</li>
+								<li>&#39;merge&#39;: Merge empty lines with adjacent paragraphs.</li>
+							</ul>
 						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>&#39;merge&#39;</p>
+							</dd>
+						</dl>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="cachedelement" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cached<wbr>Element</h3>
-					<div class="tsd-signature tsd-kind-icon">cached<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TElement</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="splitlinespattern" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> split<wbr>Lines<wbr>Pattern</h3>
+					<div class="tsd-signature tsd-kind-icon">split<wbr>Lines<wbr>Pattern<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_content_model_types.contentmodelblockwithcache.html">ContentModelBlockWithCache</a>.<a href="roosterjs_content_model_types.contentmodelblockwithcache.html#cachedelement">cachedElement</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/62dafa5/packages/roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts#L8">roosterjs-content-model-types/lib/contentModel/common/ContentModelBlockWithCache.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/62dafa5/packages/roosterjs-content-model-markdown/lib/markdownToModel/types/MarkdownToModelOptions.ts#L8">roosterjs-content-model-markdown/lib/markdownToModel/types/MarkdownToModelOptions.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Cached element for reuse</p>
+							<p>The pattern to split lines in the markdown text.</p>
 						</div>
 					</div>
 				</section>
@@ -178,13 +160,13 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_dom.html">roosterjs-<wbr>content-<wbr>model-<wbr>dom</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_markdown.html">roosterjs-<wbr>content-<wbr>model-<wbr>markdown</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_plugins.html">roosterjs-<wbr>content-<wbr>model-<wbr>plugins</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_content_model_types.html">roosterjs-<wbr>content-<wbr>model-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -197,21 +179,30 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_markdown.markdownlinebreaks.html" class="tsd-kind-icon">Markdown<wbr>Line<wbr>Breaks</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html" class="tsd-kind-icon">Content<wbr>Model<wbr>Block<wbr>Group<wbr>Base<wbr>Common</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_markdown.markdowntomodeloptions.html" class="tsd-kind-icon">Markdown<wbr>ToModel<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html#blockgrouptype" class="tsd-kind-icon">block<wbr>Group<wbr>Type</a>
+								<a href="roosterjs_content_model_markdown.markdowntomodeloptions.html#emptyline" class="tsd-kind-icon">empty<wbr>Line</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.contentmodelblockgroupbasecommon.html#cachedelement" class="tsd-kind-icon">cached<wbr>Element</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_markdown.markdowntomodeloptions.html#splitlinespattern" class="tsd-kind-icon">split<wbr>Lines<wbr>Pattern</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_content_model_markdown.html#convertcontentmodeltomarkdown" class="tsd-kind-icon">convert<wbr>Content<wbr>Model<wbr>ToMarkdown</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_content_model_markdown.html#convertmarkdowntocontentmodel" class="tsd-kind-icon">convert<wbr>Markdown<wbr>ToContent<wbr>Model</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
