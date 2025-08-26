@@ -247,7 +247,7 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
             format: {},
         };
 
-        runTest(input, input, true);
+        runTest(input, input, false);
     });
 
     it('link with text', () => {
