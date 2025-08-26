@@ -71,7 +71,12 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly formatApiName?: string;
 
     /**
-     * @deprecated Call editor.announce(announceData) directly insteaad
+     * When set to true, the change will not be added to the undo stack
+     */
+    readonly skipUndo?: boolean;
+
+    /**
+     * @deprecated Call editor.announce(announceData) directly instead
      */
     readonly announceData?: AnnounceData;
 }
