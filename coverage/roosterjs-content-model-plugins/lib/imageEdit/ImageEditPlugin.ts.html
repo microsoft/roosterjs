@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.17% </span>
+                <span class="strong">85.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>293/344</span>
+                <span class='fraction'>296/347</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.55% </span>
+                <span class="strong">64.01% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>197/310</span>
+                <span class='fraction'>201/314</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.98% </span>
+                <span class="strong">85.12% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>283/333</span>
+                <span class='fraction'>286/336</span>
             </div>
         
             
@@ -911,7 +911,15 @@
 <a name='L852'></a><a href='#L852'>852</a>
 <a name='L853'></a><a href='#L853'>853</a>
 <a name='L854'></a><a href='#L854'>854</a>
-<a name='L855'></a><a href='#L855'>855</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L855'></a><a href='#L855'>855</a>
+<a name='L856'></a><a href='#L856'>856</a>
+<a name='L857'></a><a href='#L857'>857</a>
+<a name='L858'></a><a href='#L858'>858</a>
+<a name='L859'></a><a href='#L859'>859</a>
+<a name='L860'></a><a href='#L860'>860</a>
+<a name='L861'></a><a href='#L861'>861</a>
+<a name='L862'></a><a href='#L862'>862</a>
+<a name='L863'></a><a href='#L863'>863</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1077,10 +1085,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">141x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">117x</span>
+<span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -1266,6 +1274,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1293,6 +1304,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
@@ -1411,6 +1426,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
@@ -2113,12 +2129,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         const selection = editor.getDOMSelection();
 &nbsp;
         editor.formatContentModel(
-            model =&gt; {
+            (model, context) =&gt; {
                 const editingImage = getSelectedImage(model);
                 const previousSelectedImage = isApiOperation
                     ? editingImage
                     : findEditingImage(model);
                 let result = false;
+&nbsp;
+                // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
+                context.skipUndoSnapshot = 'SkipAll';
 &nbsp;
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (
                     shouldSelectImage ||
@@ -2139,7 +2158,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             previousSelectedImage.paragraph,
                             previousSelectedImage.image,
                             image =&gt; {
-                                applyChange(
+                                const changeState = applyChange(
                                     editor,
                                     selectedImage,
                                     image,
@@ -2148,6 +2167,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wasImageResized || this.isCropMode,
                                     clonedImage
                                 );
+&nbsp;
+                                if (this.wasImageResized || changeState == 'FullyChanged') {
+                                    context.skipUndoSnapshot = false;
+                                }
 &nbsp;
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
@@ -2266,6 +2289,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.imageEditInfo) {
 <span class="cstat-no" title="statement not covered" >            this.imageEditInfo = getSelectedImageMetadata(editor, image);</span>
         }
+&nbsp;
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         this.lastSrc = image.getAttribute('src');
 &nbsp;
@@ -2626,7 +2650,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Aug 22 2025 18:15:58 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 26 2025 17:44:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
