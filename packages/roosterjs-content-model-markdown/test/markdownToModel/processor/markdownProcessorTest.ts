@@ -7,10 +7,10 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('markdownProcessor', () => {
+describe('markdownProcessor: removeEmptyLines', () => {
     function runTest(test: string, expected: ContentModelDocument) {
         // Act
-        const result = markdownProcessor(test, /\r\n|\r|\\n|\n/);
+        const result = markdownProcessor(test, { emptyLine: 'remove' });
 
         // Assert
         expect(result).toEqual(expected);
@@ -909,5 +909,477 @@ describe('markdownProcessor', () => {
             ],
         };
         runTest('|text1|text2|\n|:----:|----:|\n|text3|text4|', document);
+    });
+});
+
+describe('markdownProcessor: mergeEmptyLines', () => {
+    function runTest(test: string, expected: ContentModelDocument) {
+        // Act
+        const result = markdownProcessor(test, { emptyLine: 'merge' });
+
+        // Assert
+        expect(result).toEqual(expected);
+    }
+
+    it('Single empty line', () => {
+        runTest('\n', {
+            blockGroupType: 'Document',
+            blocks: [],
+        });
+    });
+
+    it('Single empty line with text', () => {
+        runTest('a\nb', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            text: 'a',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            text: 'b',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Multiple empty lines with text', () => {
+        runTest('a\n\n\nb', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            text: 'a',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            text: 'b',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Empty lines with spaces', () => {
+        runTest('\n   \n  \n', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: '   ', format: {} }],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Empty line right after list', () => {
+        runTest('\n- item 1\n- item 2\n\n', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 1', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 2', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Multiple empty lines right after list', () => {
+        runTest('\n- item 1\n- item 2\n\n\na', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 1', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 2', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'a', format: {} }],
+                    format: {},
+                },
+            ],
+        });
+    });
+});
+
+describe('markdownProcessor: preserveEmptyLines', () => {
+    function runTest(test: string, expected: ContentModelDocument) {
+        // Act
+        const result = markdownProcessor(test, { emptyLine: 'preserve' });
+
+        // Assert
+        expect(result).toEqual(expected);
+    }
+
+    it('Single empty line', () => {
+        runTest('\n', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {} }],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Br', format: {} }],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Single empty line with text', () => {
+        runTest('a\nb', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            text: 'a',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            text: 'b',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Multiple empty lines with text', () => {
+        runTest('a\n\n\nb', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            text: 'a',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    segments: [
+                        {
+                            text: 'b',
+                            format: {},
+                            segmentType: 'Text',
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Empty lines with spaces', () => {
+        runTest('\n   \n  \n', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: '   ', format: {} }],
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: '  ', format: {} }],
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Empty line right after list', () => {
+        runTest('\n- item 1\n- item 2\n\n', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 1', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 2', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+            ],
+        });
+    });
+
+    it('Multiple empty lines right after list', () => {
+        runTest('\n- item 1\n- item 2\n\n\na', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 1', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'item 2', format: {} }],
+                            format: {},
+                        },
+                    ],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    blockType: 'Paragraph',
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'a', format: {} }],
+                    format: {},
+                },
+            ],
+        });
     });
 });
