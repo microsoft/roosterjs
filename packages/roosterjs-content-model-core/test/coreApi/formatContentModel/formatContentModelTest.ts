@@ -119,6 +119,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -156,6 +157,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -194,6 +196,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -232,6 +235,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -270,6 +274,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -308,6 +313,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: true,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -342,6 +348,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'TEST',
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -384,6 +391,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'TEST',
+                    skipUndo: false,
                     data: returnData,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -423,6 +431,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -475,6 +484,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [
@@ -536,6 +546,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: mockedData,
                     formatApiName: apiName,
                     changedEntities: [
@@ -580,6 +591,7 @@ describe('formatContentModel', () => {
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
+                    skipUndo: false,
                 },
                 true
             );
@@ -610,6 +622,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -647,6 +660,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -679,6 +693,7 @@ describe('formatContentModel', () => {
                     contentModel: undefined,
                     selection: undefined,
                     source: ChangeSource.Format,
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: apiName,
                     changedEntities: [],
@@ -1100,6 +1115,20 @@ describe('formatContentModel', () => {
                 },
                 isNested: false,
             } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: false,
+                },
+                true
+            );
         });
 
         it('trigger addUndoSnapshot when has entityStates', () => {
@@ -1123,6 +1152,20 @@ describe('formatContentModel', () => {
                 isNested: false,
                 snapshotsManager: {},
             } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: false,
+                },
+                true
+            );
         });
 
         it('trigger addUndoSnapshot when has canUndoByBackspace', () => {
@@ -1145,6 +1188,20 @@ describe('formatContentModel', () => {
                 isNested: false,
                 snapshotsManager: {},
             } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: false,
+                },
+                true
+            );
         });
 
         it('trigger addUndoSnapshot when has canUndoByBackspace and has valid range selection', () => {
@@ -1154,14 +1211,15 @@ describe('formatContentModel', () => {
                     context.canUndoByBackspace = true;
                     return true;
                 });
-
-            setContentModel.and.returnValue({
+            const newSelection = {
                 type: 'range',
                 range: {
                     startContainer: mockedContainer,
                     startOffset: mockedOffset,
                 },
-            });
+            };
+
+            setContentModel.and.returnValue(newSelection);
 
             formatContentModel(core, callback);
 
@@ -1178,6 +1236,20 @@ describe('formatContentModel', () => {
                     offset: mockedOffset,
                 },
             } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: newSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: false,
+                },
+                true
+            );
         });
 
         it('Do not trigger addUndoSnapshot when isNested', () => {
@@ -1195,6 +1267,53 @@ describe('formatContentModel', () => {
                 isNested: true,
                 snapshotsManager: {},
             } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Format,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: true,
+                },
+                true
+            );
+        });
+
+        it('Do not trigger addUndoSnapshot when change from Keyboard', () => {
+            core.undo.isNested = true;
+
+            const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+            formatContentModel(core, callback, {
+                changeSource: ChangeSource.Keyboard,
+            });
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(core.undo).toEqual({
+                isNested: true,
+                snapshotsManager: {},
+            } as any);
+            expect(triggerEvent).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'contentChanged',
+                    contentModel: mockedModel,
+                    selection: mockedSelection,
+                    source: ChangeSource.Keyboard,
+                    data: undefined,
+                    formatApiName: undefined,
+                    changedEntities: [],
+                    skipUndo: true,
+                },
+                true
+            );
         });
     });
 
@@ -1257,6 +1376,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'Format',
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: 'mockedApi',
                     changedEntities: [],
@@ -1308,6 +1428,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'Format',
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: 'mockedApi',
                     changedEntities: [
@@ -1360,6 +1481,7 @@ describe('formatContentModel', () => {
                     contentModel: mockedModel,
                     selection: mockedSelection,
                     source: 'Format',
+                    skipUndo: false,
                     data: undefined,
                     formatApiName: 'mockedApi',
                     changedEntities: undefined,
