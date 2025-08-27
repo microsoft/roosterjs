@@ -145,11 +145,11 @@ describe('createLink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'www.bing.com',
+                            text: 'www.test.com',
                             format: {},
                             link: {
                                 format: {
-                                    href: 'www.bing.com',
+                                    href: 'www.test.com',
                                     underline: true,
                                 },
                                 dataset: {},
