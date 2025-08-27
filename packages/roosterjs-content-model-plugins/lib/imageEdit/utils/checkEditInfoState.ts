@@ -77,8 +77,7 @@ export function checkEditInfoState(
         return 'ResizeOnly';
     } else if (
         compareTo &&
-        ROTATE_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
-        ROTATE_KEYS.every(key => areSameNumber(compareTo[key], 0)) &&
+        ROTATE_KEYS.every(key => areSameNumber(editInfo[key], compareTo[key])) &&
         CROP_KEYS.every(key => areSameNumber(editInfo[key], compareTo[key])) &&
         compareTo.flippedHorizontal === editInfo.flippedHorizontal &&
         compareTo.flippedVertical === editInfo.flippedVertical

@@ -5,4 +5,5 @@ export const defaultDomToModelOption: DomToModelOption = {
     additionalFormatParsers: {
         link: [demoUndeletableAnchorParser],
     },
+    processNonVisibleElements: true,
 };

@@ -26,9 +26,13 @@ export const defaultHTMLStyleMap: DefaultStyleMap = {
         display: 'block',
         textAlign: 'center',
     },
-    dd: blockElement,
+    dd: { display: 'block', marginInlineStart: '40px' },
     div: blockElement,
-    dl: blockElement,
+    dl: {
+        display: 'block',
+        marginTop: '1em',
+        marginBottom: '1em',
+    },
     dt: blockElement,
     em: {
         fontStyle: 'italic',

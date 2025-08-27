@@ -2,6 +2,7 @@ import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/c
 import * as contentModelToText from 'roosterjs-content-model-dom/lib/modelToText/contentModelToText';
 import * as createClonedRoot from '../../../lib/command/exportContent/createClonedRoot';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
+import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { exportContent } from '../../../lib/command/exportContent/exportContent';
 import { IEditor } from 'roosterjs-content-model-types';
 
@@ -151,6 +152,84 @@ describe('exportContent', () => {
             'extractContentWithDom',
             { clonedRoot: mockedDiv },
             true
+        );
+    });
+
+    it('HTMLFast in light mode', () => {
+        const mockedHTML = 'HTML';
+        const mockedClonedRoot = {
+            innerHTML: mockedHTML,
+        };
+        const mockedDOMHelper = {
+            getClonedRoot: () => mockedClonedRoot,
+        } as any;
+        const getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue(mockedDOMHelper);
+        const mockedDiv = {} as any;
+        const mockedDoc = {
+            createElement: () => mockedDiv,
+        } as any;
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+        const editor: IEditor = {
+            getDocument: () => mockedDoc,
+            triggerEvent: triggerEventSpy,
+            getDOMHelper: getDOMHelperSpy,
+            isDarkMode: () => false,
+        } as any;
+
+        const html = exportContent(editor, 'HTMLFast');
+
+        expect(html).toBe(mockedHTML);
+        expect(getDOMHelperSpy).toHaveBeenCalledWith();
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            'extractContentWithDom',
+            { clonedRoot: mockedClonedRoot },
+            true
+        );
+    });
+
+    it('HTMLFast in dark mode', () => {
+        const mockedColorManager = 'COLOR_MANAGER' as any;
+        const transformedHTML = 'Transformed HTML';
+        const transformColorSpy = spyOn(transformColor, 'transformColor').and.callFake(
+            (rootNode: any) => {
+                rootNode.innerHTML = transformedHTML;
+            }
+        );
+        const mockedHTML = 'HTML';
+        const mockedClonedRoot = {
+            innerHTML: mockedHTML,
+        } as any;
+        const mockedDOMHelper = {
+            getClonedRoot: () => mockedClonedRoot,
+        } as any;
+        const getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue(mockedDOMHelper);
+        const mockedDiv = {} as any;
+        const mockedDoc = {
+            createElement: () => mockedDiv,
+        } as any;
+        const triggerEventSpy = jasmine.createSpy('triggerEvent');
+        const editor: IEditor = {
+            getDocument: () => mockedDoc,
+            triggerEvent: triggerEventSpy,
+            getDOMHelper: getDOMHelperSpy,
+            isDarkMode: () => true,
+            getColorManager: () => mockedColorManager,
+        } as any;
+
+        const html = exportContent(editor, 'HTMLFast');
+
+        expect(html).toBe(transformedHTML);
+        expect(getDOMHelperSpy).toHaveBeenCalledWith();
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            'extractContentWithDom',
+            { clonedRoot: mockedClonedRoot },
+            true
+        );
+        expect(transformColorSpy).toHaveBeenCalledWith(
+            mockedClonedRoot,
+            false,
+            'darkToLight',
+            mockedColorManager
         );
     });
 });

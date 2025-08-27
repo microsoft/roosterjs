@@ -133,4 +133,17 @@ export type PluginEventType =
      * Editor content is about to be changed by keyboard event.
      * This is only used by Content Model editing
      */
-    | 'beforeKeyboardEditing';
+    | 'beforeKeyboardEditing'
+
+    /**
+     * The logical root is about to change
+     * This event is used to clean up any features from the old logical root
+     * before the new logical root is set.
+     */
+    | 'beforeLogicalRootChange'
+
+    /**
+     * Before an undo snapshot is added to the undo stack.
+     * This event is used to give plugins a chance to add additional state to the snapshot.
+     */
+    | 'beforeAddUndoSnapshot';

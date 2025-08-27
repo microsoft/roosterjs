@@ -19,11 +19,14 @@ const RESIZE_HANDLE_SIZE = 10;
  */
 export function createImageResizer(
     doc: Document,
+    disableSideResize: boolean,
     onShowResizeHandle?: OnShowResizeHandle
 ): HTMLDivElement[] {
     const cornerElements = getCornerResizeHTML(onShowResizeHandle);
     const sideElements = getSideResizeHTML(onShowResizeHandle);
-    const handles = [...cornerElements, ...sideElements]
+    const handles = disableSideResize ? cornerElements : cornerElements.concat(sideElements);
+
+    return handles
         .map(element => {
             const handle = createElement(element, doc);
             if (isNodeOfType(handle, 'ELEMENT_NODE') && isElementOfType(handle, 'div')) {
@@ -31,7 +34,6 @@ export function createImageResizer(
             }
         })
         .filter(element => !!element) as HTMLDivElement[];
-    return handles;
 }
 
 /**

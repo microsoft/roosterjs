@@ -1,6 +1,7 @@
 import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteList } from './deleteSteps/deleteList';
+import { deleteParagraphStyle } from './deleteSteps/deleteParagraphStyle';
 import {
     ChangeSource,
     deleteSelection,
@@ -84,6 +85,7 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
         isForward ? null : deleteList,
         deleteCollapsedSelection,
         deleteQuote,
+        deleteParagraphStyle,
     ];
 }
 

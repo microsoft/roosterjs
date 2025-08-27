@@ -10,8 +10,11 @@ describe('setLogicalRoot', () => {
 
     beforeEach(() => {
         physicalRoot = document.createElement('div');
+        physicalRoot.id = 'physicalRoot';
         insideElement1 = document.createElement('div');
+        insideElement1.id = 'insideElement1';
         insideElement2 = document.createElement('div');
+        insideElement2.id = 'insideElement2';
         physicalRoot.appendChild(insideElement1);
         physicalRoot.appendChild(insideElement2);
         physicalRoot.contentEditable = 'true';
@@ -62,6 +65,14 @@ describe('setLogicalRoot', () => {
                 },
                 false
             );
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'beforeLogicalRootChange',
+                    logicalRoot: physicalRoot,
+                },
+                false
+            );
         });
 
         it('is called with unrelated, non-nested element', () => {
@@ -99,6 +110,14 @@ describe('setLogicalRoot', () => {
                 },
                 false
             );
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'beforeLogicalRootChange',
+                    logicalRoot: insideElement1,
+                },
+                false
+            );
         });
 
         it('is called with same nested element', () => {
@@ -125,6 +144,14 @@ describe('setLogicalRoot', () => {
                 {
                     eventType: 'logicalRootChanged',
                     logicalRoot: insideElement2,
+                },
+                false
+            );
+            expect(triggerEventSpy).toHaveBeenCalledWith(
+                core,
+                {
+                    eventType: 'beforeLogicalRootChange',
+                    logicalRoot: insideElement1,
                 },
                 false
             );

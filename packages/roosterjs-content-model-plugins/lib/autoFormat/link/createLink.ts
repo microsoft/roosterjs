@@ -20,9 +20,7 @@ export function createLink(editor: IEditor, autoLinkOptions: AutoLinkOptions) {
             let promotedSegment: ContentModelText | null = null;
 
             if (segment.link) {
-                links.push(segment.link);
-
-                return true;
+                return false;
             } else if (
                 (promotedSegment = promoteLink(segment, paragraph, autoLinkOptions)) &&
                 promotedSegment.link

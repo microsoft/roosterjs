@@ -18,6 +18,13 @@ export const defaultContentModelFormatMap: DefaultImplicitFormatMap = {
     code: {
         fontFamily: 'monospace',
     },
+    dd: {
+        marginLeft: '40px',
+    },
+    dl: {
+        marginTop: '1em',
+        marginBottom: '1em',
+    },
     h1: {
         fontWeight: 'bold',
         fontSize: '2em',

@@ -1,3 +1,5 @@
+import { DomToModelOptionForSanitizing } from 'roosterjs-content-model-types';
+
 export function expectHtml(actualHtml: string, expectedHtml: string | string[]) {
     expectedHtml = Array.isArray(expectedHtml) ? expectedHtml : [expectedHtml];
     expect(expectedHtml.indexOf(actualHtml)).toBeGreaterThanOrEqual(0, actualHtml);
@@ -29,3 +31,16 @@ export function itChromeOnly(
     const func = __karma__.config.browser == 'Chrome' ? it : xit;
     return func(expectation, assertion, timeout);
 }
+
+export const createDefaultDomToModelContext = (): DomToModelOptionForSanitizing => {
+    return {
+        additionalAllowedTags: [],
+        additionalDisallowedTags: [],
+        additionalFormatParsers: {},
+        formatParserOverride: {},
+        processorOverride: {},
+        styleSanitizers: {},
+        attributeSanitizers: {},
+        processNonVisibleElements: false,
+    };
+};

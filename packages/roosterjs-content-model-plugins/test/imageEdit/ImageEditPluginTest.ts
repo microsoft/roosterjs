@@ -396,8 +396,11 @@ describe('ImageEditPlugin', () => {
                                 textColor: 'rgb(0, 0, 0)',
                                 id: '0',
                                 maxWidth: '1800px',
+                                maxHeight: '1800px',
                             },
-                            dataset: {},
+                            dataset: {
+                                editingInfo: '{"widthPx":100,"heightPx":100}',
+                            },
                             isSelectedAsImageSelection: true,
                             isSelected: true,
                         },
@@ -419,6 +422,18 @@ describe('ImageEditPlugin', () => {
         const plugin = new ImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], modelWithUnsupportedId);
         spyOn(editor, 'setEditorStyle').and.callThrough();
+        (plugin as any).imageEditInfo = {
+            src: 'test',
+            widthPx: 100,
+            heightPx: 100,
+            naturalWidth: 200,
+            naturalHeight: 200,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
 
         plugin.initialize(editor);
         plugin.flipImage('horizontal');
@@ -691,6 +706,18 @@ describe('ImageEditPlugin', () => {
         spyOn(editor, 'setEditorStyle').and.callThrough();
 
         plugin.initialize(editor);
+        (plugin as any).imageEditInfo = {
+            src: 'test',
+            widthPx: 100,
+            heightPx: 100,
+            naturalWidth: 200,
+            naturalHeight: 200,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
         plugin.flipImage('horizontal');
         plugin.dispose();
 
@@ -779,6 +806,48 @@ describe('ImageEditPlugin', () => {
         expect(cleanInfoSpy).toHaveBeenCalled();
         plugin.dispose();
     });
+
+    it('should call applyFormatWithContentModel and clean up on beforeLogicalRootChange when editing', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        // Simulate editing state
+        plugin['isEditing'] = true;
+        plugin['editor'] = editor;
+        spyOn(plugin as any, 'applyFormatWithContentModel');
+        spyOn(plugin as any, 'removeImageWrapper');
+        spyOn(plugin as any, 'cleanInfo');
+        editor.isDisposed = () => false; // Simulate editor not disposed
+
+        // Act: simulate the event
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChange' } as any);
+
+        // Assert
+        expect((plugin as any).applyFormatWithContentModel).toHaveBeenCalledWith(
+            editor,
+            plugin['isCropMode'],
+            false
+        );
+        expect((plugin as any).removeImageWrapper).toHaveBeenCalled();
+        expect((plugin as any).cleanInfo).toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('should do nothing on beforeLogicalRootChange if not editing', () => {
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        plugin['isEditing'] = false;
+        plugin['editor'] = editor;
+        spyOn(plugin as any, 'applyFormatWithContentModel');
+        spyOn(plugin as any, 'removeImageWrapper');
+        spyOn(plugin as any, 'cleanInfo');
+
+        plugin.onPluginEvent({ eventType: 'beforeLogicalRootChange' } as any);
+
+        expect((plugin as any).applyFormatWithContentModel).not.toHaveBeenCalled();
+        expect((plugin as any).removeImageWrapper).not.toHaveBeenCalled();
+        expect((plugin as any).cleanInfo).not.toHaveBeenCalled();
+        plugin.dispose();
+    });
 });
 
 class TestPlugin extends ImageEditPlugin {
@@ -843,7 +912,14 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
         const mockedImage = document.createElement('img');
         document.body.appendChild(mockedImage);
         mockedImage.src = 'test';
-        plugin.setEditingInfo(mockedImage);
+        const mockImageWithWidth: any = {
+            clientWidth: 100,
+            clientHeight: 100,
+            naturalWidth: 200,
+            naturalHeight: 200,
+            getAttribute: () => 'test',
+        };
+        plugin.setEditingInfo(mockImageWithWidth);
         plugin.startRotateAndResize(editor, mockedImage);
         plugin.setIsEditing(isEditing);
         plugin.applyFormatWithContentModel(editor, isCropMode, shouldSelectImage, isApiOperation);
@@ -1903,7 +1979,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             isSelected: true,
                         },
                     ],
-                    segmentFormat: {},
+                    segmentFormat: undefined,
                     blockType: 'Paragraph',
                     format: {},
                 },
@@ -1988,5 +2064,315 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             setImageStyle: true,
             removeImageStyle: true,
         });
+    });
+
+    it('Image not loaded', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    src: 'test',
+                                    segmentType: 'Image',
+                                    format: {
+                                        imageState: 'isEditing',
+                                    },
+                                    dataset: {},
+                                    isSelectedAsImageSelection: undefined,
+                                    isSelected: undefined,
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            src: 'test',
+                            segmentType: 'Image',
+                            format: {},
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    segmentFormat: undefined,
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const plugin = new TestPlugin();
+        spyOn(plugin as any, 'startEditingInternal').and.callFake(() => {});
+        let editor: IEditor | null = initEditor('image_edit', [plugin], model);
+
+        plugin.initialize(editor!);
+
+        const mockedImage = {} as any;
+        mockedImage.src = 'Test';
+        mockedImage.getAttribute = (name: string) => {
+            if (name == 'src') {
+                return 'Test';
+            }
+            return null;
+        };
+        mockedImage.complete = false;
+        mockedImage.clientWidth = 0;
+        mockedImage.clientHeight = 0;
+        mockedImage.naturalWidth = 0;
+        mockedImage.naturalHeight = 0;
+
+        plugin.setEditingInfo(mockedImage);
+        (plugin as any).startEditing(editor!, mockedImage, ['resize', 'rotate']);
+
+        expect(mockedImage.onload).toBeDefined('onload');
+        expect(mockedImage.onerror).toBeDefined('onError');
+
+        expect((plugin as any).startEditingInternal).not.toHaveBeenCalled();
+
+        mockedImage.clientWidth = 100;
+        mockedImage.clientHeight = 100;
+        mockedImage.naturalWidth = 100;
+        mockedImage.naturalHeight = 100;
+        mockedImage.style = {};
+
+        mockedImage.onload();
+        expect((plugin as any).startEditingInternal).toHaveBeenCalledWith(editor, mockedImage, [
+            'resize',
+            'rotate',
+        ]);
+        expect(mockedImage.onload).toBeNull();
+        expect(mockedImage.onerror).toBeNull();
+    });
+
+    it('Image not loaded 2', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    src: 'test',
+                                    segmentType: 'Image',
+                                    format: {
+                                        imageState: 'isEditing',
+                                    },
+                                    dataset: {},
+                                    isSelectedAsImageSelection: undefined,
+                                    isSelected: undefined,
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            src: 'test',
+                            segmentType: 'Image',
+                            format: {},
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    segmentFormat: undefined,
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const plugin = new TestPlugin();
+        spyOn(plugin as any, 'startEditingInternal').and.callFake(() => {});
+        let editor: IEditor | null = initEditor('image_edit', [plugin], model);
+
+        plugin.initialize(editor!);
+
+        const mockedImage = {} as any;
+        mockedImage.src = 'Test';
+        mockedImage.getAttribute = (name: string) => {
+            if (name == 'src') {
+                return 'Test';
+            }
+            return null;
+        };
+        mockedImage.complete = true;
+        mockedImage.clientWidth = 0;
+        mockedImage.clientHeight = 0;
+        mockedImage.naturalWidth = 0;
+        mockedImage.naturalHeight = 0;
+
+        plugin.setEditingInfo(mockedImage);
+
+        mockedImage.clientWidth = 500;
+        mockedImage.clientHeight = 500;
+        mockedImage.naturalWidth = 500;
+        mockedImage.naturalHeight = 500;
+
+        (plugin as any).startEditing(editor!, mockedImage, ['resize', 'rotate']);
+
+        expect((plugin as any).imageEditInfo.widthPx).toBe(500);
+        expect((plugin as any).imageEditInfo.heightPx).toBe(500);
+        expect((plugin as any).startEditingInternal).toHaveBeenCalled();
+        expect((plugin as any).startEditingInternal).toHaveBeenCalledWith(editor, mockedImage, [
+            'resize',
+            'rotate',
+        ]);
+    });
+
+    it('Image not loaded but size defined.', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: {
+                                startNumberOverride: 1,
+                                listStyleType: 'decimal',
+                            },
+                            dataset: {
+                                editingInfo:
+                                    '{"applyListStyleFromLevel":false,"orderedStyleType":1}',
+                            },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    src: 'test',
+                                    segmentType: 'Image',
+                                    format: {
+                                        imageState: 'isEditing',
+                                    },
+                                    dataset: {},
+                                    isSelectedAsImageSelection: undefined,
+                                    isSelected: undefined,
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            src: 'test',
+                            segmentType: 'Image',
+                            format: {},
+                            dataset: {},
+                            isSelectedAsImageSelection: true,
+                            isSelected: true,
+                        },
+                    ],
+                    segmentFormat: undefined,
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        const plugin = new TestPlugin();
+        spyOn(plugin as any, 'startEditingInternal').and.callFake(() => {});
+        let editor: IEditor | null = initEditor('image_edit', [plugin], model);
+
+        plugin.initialize(editor!);
+
+        const mockedImage = {} as any;
+        mockedImage.getAttribute = (name: string) => {
+            if (name == 'src') {
+                return 'Test';
+            }
+            return null;
+        };
+        mockedImage.src = 'Test';
+        mockedImage.complete = false; // Simulate image not loaded
+        mockedImage.clientWidth = 200;
+        mockedImage.clientHeight = 200;
+        mockedImage.naturalWidth = 200;
+        mockedImage.naturalHeight = 200;
+        mockedImage.onload = null;
+        mockedImage.onerror = null;
+        mockedImage.style = {};
+
+        plugin.setEditingInfo(mockedImage);
+        (plugin as any).startEditing(editor!, mockedImage, ['resize', 'rotate']);
+
+        expect(mockedImage.onload).toBeNull();
+        expect(mockedImage.onerror).toBeNull();
+
+        expect((plugin as any).startEditingInternal).toHaveBeenCalled();
+        expect(mockedImage.onload).toBeNull();
+        expect(mockedImage.onerror).toBeNull();
     });
 });

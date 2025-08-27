@@ -46,6 +46,11 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly changedEntities?: ChangedEntity[];
 
     /**
+     * Additional state added to the snapshot by plugins
+     */
+    readonly additionalState?: { [key: string]: string };
+
+    /**
      * Entity states related to this event
      */
     readonly entityStates?: EntityState[];
@@ -66,7 +71,12 @@ export interface ContentChangedEvent extends BasePluginEvent<'contentChanged'> {
     readonly formatApiName?: string;
 
     /**
-     * @deprecated Call editor.announce(announceData) directly insteaad
+     * When set to true, the change will not be added to the undo stack
+     */
+    readonly skipUndo?: boolean;
+
+    /**
+     * @deprecated Call editor.announce(announceData) directly instead
      */
     readonly announceData?: AnnounceData;
 }

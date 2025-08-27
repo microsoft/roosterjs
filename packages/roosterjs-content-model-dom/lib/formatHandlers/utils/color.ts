@@ -50,17 +50,19 @@ const COLOR_VAR_PREFIX = '--darkColor';
  * @param isBackground True to get background color, false to get text color
  * @param isDarkMode Whether element is in dark mode now
  * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
+ * @param fallback @optional Fallback color to use if no color is found from the element
  */
 export function getColor(
     element: HTMLElement,
     isBackground: boolean,
     isDarkMode: boolean,
-    darkColorHandler?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler,
+    fallback?: string
 ): string | undefined {
     let color =
         (isBackground ? element.style.backgroundColor : element.style.color) ||
         element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
-        undefined;
+        fallback;
 
     if (color && DeprecatedColors.indexOf(color) > -1) {
         color = isBackground ? undefined : BlackColor;

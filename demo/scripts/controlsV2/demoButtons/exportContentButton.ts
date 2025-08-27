@@ -1,3 +1,4 @@
+import * as DOMPurify from 'dompurify';
 import { exportContent } from 'roosterjs-content-model-core';
 import { ModelToTextCallbacks } from 'roosterjs-content-model-types';
 import DOMPurify = require('dompurify');
@@ -9,6 +10,7 @@ import type { RibbonButton } from 'roosterjs-react';
 export type ExportButtonStringKey =
     | 'buttonNameExport'
     | 'menuNameExportHTML'
+    | 'menuNameExportHTMLFast'
     | 'menuNameExportText';
 
 const callbacks: ModelToTextCallbacks = {
@@ -26,6 +28,7 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
     dropDownMenu: {
         items: {
             menuNameExportHTML: 'as HTML',
+            menuNameExportHTMLFast: 'as HTML (fast version)',
             menuNameExportText: 'as Plain Text',
         },
     },
@@ -34,7 +37,19 @@ export const exportContentButton: RibbonButton<ExportButtonStringKey> = {
         let html = '';
 
         if (key == 'menuNameExportHTML') {
-            html = exportContent(editor);
+            html =
+                '<html><head><style>p{margin-top:0;margin-bottom:0;}</style></head><body>' +
+                exportContent(editor, 'HTML', {
+                    defaultContentModelFormatOverride: {
+                        p: {
+                            marginTop: '0',
+                            marginBottom: '0',
+                        },
+                    },
+                }) +
+                '</body></html>';
+        } else if (key == 'menuNameExportHTMLFast') {
+            html = exportContent(editor, 'HTMLFast');
         } else if (key == 'menuNameExportText') {
             html = `<pre>${exportContent(editor, 'PlainText', callbacks)}</pre>`;
         }

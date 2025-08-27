@@ -256,7 +256,7 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
 
     const { path, paragraph } = markerPosition;
 
-    const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem']);
+    const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], ['TableCell']);
     const listItem = path[listItemIndex] as ContentModelListItem;
     const listParent = path[listItemIndex + 1]; // It is ok here when index is -1, that means there is no list and we just insert a new paragraph and use path[0] as its parent
     const blockIndex = listParent.blocks.indexOf(listItem || paragraph);
