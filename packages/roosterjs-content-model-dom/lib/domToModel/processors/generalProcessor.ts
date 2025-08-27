@@ -12,8 +12,6 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
     const block = createGeneralBlock(element);
     const isSelectedBefore = context.isInSelection;
 
-    console.log(element.nodeName, block);
-
     stackFormat(
         context,
         {
