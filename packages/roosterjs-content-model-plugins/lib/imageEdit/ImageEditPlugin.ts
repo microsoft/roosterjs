@@ -346,12 +346,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         const selection = editor.getDOMSelection();
 
         editor.formatContentModel(
-            model => {
+            (model, context) => {
                 const editingImage = getSelectedImage(model);
                 const previousSelectedImage = isApiOperation
                     ? editingImage
                     : findEditingImage(model);
                 let result = false;
+
+                // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
+                context.skipUndoSnapshot = 'SkipAll';
 
                 if (
                     shouldSelectImage ||
@@ -372,7 +375,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             previousSelectedImage.paragraph,
                             previousSelectedImage.image,
                             image => {
-                                applyChange(
+                                const changeState = applyChange(
                                     editor,
                                     selectedImage,
                                     image,
@@ -381,6 +384,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wasImageResized || this.isCropMode,
                                     clonedImage
                                 );
+
+                                if (this.wasImageResized || changeState == 'FullyChanged') {
+                                    context.skipUndoSnapshot = false;
+                                }
 
                                 image.isSelected = shouldSelectImage;
                                 image.isSelectedAsImageSelection = shouldSelectImage;
@@ -499,6 +506,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
+
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         this.lastSrc = image.getAttribute('src');
 

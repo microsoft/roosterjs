@@ -80,6 +80,9 @@ export const formatContentModel: FormatContentModel = (
                 data: options?.getChangeData?.(),
                 formatApiName: options?.apiName,
                 changedEntities: getChangedEntities(context, rawEvent),
+                skipUndo:
+                    !(shouldMarkNewContent || shouldAddSnapshot) ||
+                    options?.changeSource == ChangeSource.Keyboard, // Keyboard changes will be handled separately in undo plugin, so we need to skip handling it again
             };
 
             core.api.triggerEvent(core, eventData, true /*broadcast*/);

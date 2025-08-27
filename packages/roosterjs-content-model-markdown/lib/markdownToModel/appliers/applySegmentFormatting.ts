@@ -32,9 +32,11 @@ export function applySegmentFormatting(
                 if (segment.type === 'link') {
                     applyLink(formattedSegment, segment.text, segment.url);
                 }
-                adjustHeading(formattedSegment, decorator);
-                const formattedSegments = applyTextFormatting(formattedSegment);
-                paragraph.segments.push(...formattedSegments);
+                const segmentWithAdjustedHeading = adjustHeading(formattedSegment, decorator);
+                if (segmentWithAdjustedHeading) {
+                    const formattedSegments = applyTextFormatting(formattedSegment);
+                    paragraph.segments.push(...formattedSegments);
+                }
             }
         }
     }

@@ -30,4 +30,9 @@ export type ExperimentalFeature =
      * selection marker may be recreated during reconciliation, potentially losing its original formatting. This feature ensures
      * the original formatting of the selection marker is kept to match the pending format.
      */
-    | 'KeepSelectionMarkerWhenEnteringTextNode';
+    | 'KeepSelectionMarkerWhenEnteringTextNode'
+
+    /**
+     * Export editor content as HTML using HTMLFast option
+     */
+    | 'ExportHTMLFast';

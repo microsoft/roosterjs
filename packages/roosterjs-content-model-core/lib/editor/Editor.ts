@@ -319,6 +319,7 @@ export class Editor implements IEditor {
                     source: isDarkMode
                         ? ChangeSource.SwitchToDarkMode
                         : ChangeSource.SwitchToLightMode,
+                    skipUndo: true,
                 },
                 true
             );
