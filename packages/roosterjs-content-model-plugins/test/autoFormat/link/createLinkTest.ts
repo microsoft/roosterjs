@@ -167,7 +167,7 @@ describe('createLink', () => {
             format: {},
         };
 
-        runTest(input, input, true);
+        runTest(input, input, false);
     });
 
     it('telephone link', () => {
