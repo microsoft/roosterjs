@@ -22,6 +22,9 @@ export function promoteLink(
     paragraph: ShallowMutableContentModelParagraph,
     autoLinkOptions: AutoLinkOptions
 ): ContentModelText | null {
+    if (segment.link) {
+        return null;
+    }
     const link = segment.text.split(' ').pop();
     const url = link?.trim();
     let linkUrl: string | undefined = undefined;
