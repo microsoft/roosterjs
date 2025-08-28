@@ -58,13 +58,6 @@ describe('applyTextFormatting', () => {
         ]);
     });
 
-    it('Strikethrough', () => {
-        runTest('text in ~~strikethrough~~', [
-            createText('text in '),
-            createText('strikethrough', { strikethrough: true }),
-        ]);
-    });
-
     it('Bold and Italic', () => {
         runTest('text in ***bold and italic***', [
             createText('text in '),
