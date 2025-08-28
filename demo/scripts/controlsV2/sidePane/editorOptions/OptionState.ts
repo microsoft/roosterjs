@@ -48,7 +48,6 @@ export interface OptionState {
 
     // Editor options
     isRtl: boolean;
-    disableCache: boolean;
     experimentalFeatures: Set<ExperimentalFeature>;
 }
 

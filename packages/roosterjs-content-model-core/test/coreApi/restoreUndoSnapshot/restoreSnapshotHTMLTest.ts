@@ -1189,6 +1189,7 @@ describe('restoreSnapshotHTML', () => {
 
         const clearIndexSpy = jasmine.createSpy('clearIndex');
         core.cache = {
+            textMutationObserver: null!,
             domIndexer: {
                 clearIndex: clearIndexSpy,
             } as any,
