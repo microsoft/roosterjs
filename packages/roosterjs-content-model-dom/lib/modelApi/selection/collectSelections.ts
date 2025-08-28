@@ -237,12 +237,14 @@ export function getSelectedParagraphs(
  * @param blockGroupTypes The expected block group types
  * @param stopTypes Block group types that will stop searching when hit
  * @param deepFirst True means search in deep first, otherwise wide first
+ * @param isValidTarget @optional An additional callback to validate whether a matching block group is a valid target
  */
 export function getOperationalBlocks<T extends ContentModelBlockGroup>(
     group: ContentModelBlockGroup,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[],
-    deepFirst?: boolean
+    deepFirst?: boolean,
+    isValidTarget?: (block: ReadonlyContentModelBlockGroup) => boolean
 ): OperationalBlocks<T>[];
 
 /**
@@ -251,19 +253,22 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
  * @param blockGroupTypes The expected block group types
  * @param stopTypes Block group types that will stop searching when hit
  * @param deepFirst True means search in deep first, otherwise wide first
+ * @param isValidTarget @optional An additional callback to validate whether a matching block group is a valid target
  */
 export function getOperationalBlocks<T extends ReadonlyContentModelBlockGroup>(
     group: ReadonlyContentModelBlockGroup,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[],
-    deepFirst?: boolean
+    deepFirst?: boolean,
+    isValidTarget?: (block: ReadonlyContentModelBlockGroup) => boolean
 ): ReadonlyOperationalBlocks<T>[];
 
 export function getOperationalBlocks<T extends ContentModelBlockGroup>(
     group: ReadonlyContentModelBlockGroup,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[],
-    deepFirst?: boolean
+    deepFirst?: boolean,
+    isValidTarget?: (block: ReadonlyContentModelBlockGroup) => boolean
 ): ReadonlyOperationalBlocks<T>[] {
     const result: ReadonlyOperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
@@ -276,7 +281,12 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 
     selections.forEach(({ path, block }) => {
         for (let i = 0; i < findSequence.length; i++) {
-            const groupIndex = getClosestAncestorBlockGroupIndex(path, findSequence[i], stopTypes);
+            const groupIndex = getClosestAncestorBlockGroupIndex(
+                path,
+                findSequence[i],
+                stopTypes,
+                isValidTarget
+            );
 
             if (groupIndex >= 0) {
                 if (result.filter(x => x.block == path[groupIndex]).length <= 0) {

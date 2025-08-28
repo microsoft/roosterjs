@@ -33,7 +33,9 @@ export function toggleModelBlockQuote(
 
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
-    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/);
+    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/, block => {
+        return block.blockGroupType == 'FormatContainer' ? block.tagName == 'blockquote' : true;
+    });
 
     if (areAllBlockQuotes(paragraphOfQuote)) {
         // All selections are already in quote, we need to unquote them

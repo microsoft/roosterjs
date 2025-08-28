@@ -29,7 +29,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private rtl = React.createRef<HTMLInputElement>();
-    private disableCache = React.createRef<HTMLInputElement>();
 
     constructor(props: OptionPaneProps) {
         super(props);
@@ -74,16 +73,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
                         ref={this.rtl}
                     />
                     <label htmlFor="pageRtl">Show controls from right to left</label>
-                </div>
-                <div>
-                    <input
-                        id="disableCache"
-                        type="checkbox"
-                        checked={this.state.disableCache}
-                        onChange={this.onToggleCacheModel}
-                        ref={this.disableCache}
-                    />
-                    <label htmlFor="disableCache">Disable Content Model Cache</label>
                 </div>
                 <hr />
                 <div>
@@ -130,7 +119,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             forcePreserveRatio: this.state.forcePreserveRatio,
 
             isRtl: this.state.isRtl,
-            disableCache: this.state.disableCache,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
             allowExcelNoBorderTable: this.state.allowExcelNoBorderTable,
             listMenu: this.state.listMenu,
@@ -174,12 +162,6 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             isRtl: isRtl,
         });
         MainPane.getInstance().setPageDirection(isRtl);
-    };
-
-    private onToggleCacheModel = () => {
-        this.resetState(state => {
-            state.disableCache = this.disableCache.current.checked;
-        }, true);
     };
 
     private getHtml() {

@@ -1,6 +1,5 @@
 import * as SnapshotsManagerImpl from '../../../lib/corePlugin/undo/SnapshotsManagerImpl';
 import * as undo from '../../../lib/command/undo/undo';
-import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createUndoPlugin } from '../../../lib/corePlugin/undo/UndoPlugin';
 import {
     IEditor,
@@ -102,7 +101,7 @@ describe('UndoPlugin', () => {
         });
 
         it('Not handled exclusively for EditorReady event', () => {
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'editorReady',
                 addedBlockElements: [],
                 removedBlockElements: [],
@@ -114,7 +113,7 @@ describe('UndoPlugin', () => {
         });
 
         it('Not handled exclusively for ContentChanged event', () => {
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'contentChanged',
             } as any);
 
@@ -124,7 +123,7 @@ describe('UndoPlugin', () => {
         });
 
         it('Not handled exclusively for MouseDown event', () => {
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'mouseDown',
             } as any);
 
@@ -134,7 +133,7 @@ describe('UndoPlugin', () => {
         });
 
         it('Not handled exclusively for KeyDown event with Enter key', () => {
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Enter',
@@ -147,7 +146,7 @@ describe('UndoPlugin', () => {
         });
 
         it('Not handled exclusively for KeyDown event with Ctrl key', () => {
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -163,7 +162,7 @@ describe('UndoPlugin', () => {
         it('Not handled exclusively for KeyDown event, canUndoAutoComplete returns false', () => {
             canUndoAutoCompleteSpy.and.returnValue(false);
 
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -181,7 +180,7 @@ describe('UndoPlugin', () => {
                 type: 'image',
             });
 
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -202,7 +201,7 @@ describe('UndoPlugin', () => {
                 },
             });
 
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -229,7 +228,7 @@ describe('UndoPlugin', () => {
                 },
             });
 
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -256,7 +255,7 @@ describe('UndoPlugin', () => {
                 },
             });
 
-            const result = plugin.willHandleEventExclusively({
+            const result = plugin.willHandleEventExclusively!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -285,7 +284,7 @@ describe('UndoPlugin', () => {
             canMoveSpy.and.returnValue(false);
             plugin.getState().snapshotsManager.hasNewContent = false;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'editorReady',
                 addedBlockElements: [],
                 removedBlockElements: [],
@@ -308,7 +307,7 @@ describe('UndoPlugin', () => {
             canMoveSpy.and.callFake((step: number) => step < 0);
             plugin.getState().snapshotsManager.hasNewContent = false;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'editorReady',
                 addedBlockElements: [],
                 removedBlockElements: [],
@@ -331,7 +330,7 @@ describe('UndoPlugin', () => {
             canMoveSpy.and.callFake((step: number) => step > 0);
             plugin.getState().snapshotsManager.hasNewContent = false;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'editorReady',
                 addedBlockElements: [],
                 removedBlockElements: [],
@@ -367,7 +366,7 @@ describe('UndoPlugin', () => {
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -400,7 +399,7 @@ describe('UndoPlugin', () => {
                 type: 'image',
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Backspace',
@@ -429,7 +428,7 @@ describe('UndoPlugin', () => {
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Delete',
@@ -458,7 +457,7 @@ describe('UndoPlugin', () => {
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Up',
@@ -490,7 +489,7 @@ describe('UndoPlugin', () => {
 
             state.snapshotsManager.hasNewContent = true;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'Up',
@@ -523,7 +522,7 @@ describe('UndoPlugin', () => {
             state.snapshotsManager.hasNewContent = true;
             state.lastKeyPress = 'Backspace';
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'A',
@@ -552,7 +551,7 @@ describe('UndoPlugin', () => {
 
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyDown',
                 rawEvent: {
                     key: 'A',
@@ -587,7 +586,7 @@ describe('UndoPlugin', () => {
                 },
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: 'Enter',
@@ -621,7 +620,7 @@ describe('UndoPlugin', () => {
                 },
             });
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: 'A',
@@ -651,7 +650,7 @@ describe('UndoPlugin', () => {
 
             state.lastKeyPress = 'A';
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: ' ',
@@ -681,7 +680,7 @@ describe('UndoPlugin', () => {
 
             state.lastKeyPress = ' ';
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: ' ',
@@ -708,7 +707,7 @@ describe('UndoPlugin', () => {
         it('KeyPress event, Enter key', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: 'Enter',
@@ -735,7 +734,7 @@ describe('UndoPlugin', () => {
         it('KeyPress event, other key', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'keyPress',
                 rawEvent: {
                     key: 'A',
@@ -762,7 +761,7 @@ describe('UndoPlugin', () => {
         it('CompositionEnd event', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'compositionEnd',
                 rawEvent: {
                     key: 'Test',
@@ -789,7 +788,7 @@ describe('UndoPlugin', () => {
 
             state.isRestoring = true;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'contentChanged',
                 source: 'Test',
             } as any);
@@ -808,56 +807,13 @@ describe('UndoPlugin', () => {
             expect(clearRedoSpy).toHaveBeenCalledTimes(0);
         });
 
-        it('onContentChanged event, SwitchToDarkMode', () => {
+        it('onContentChanged event, skip undo', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'contentChanged',
-                source: ChangeSource.SwitchToDarkMode,
-            } as any);
-
-            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
-            expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
-            expect(undoSpy).toHaveBeenCalledTimes(0);
-            expect(plugin.getState()).toEqual({
-                snapshotsManager: mockedSnapshotsManager,
-                isRestoring: false,
-                isNested: false,
-                autoCompleteInsertPoint: null,
-                lastKeyPress: null,
-            });
-            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
-            expect(clearRedoSpy).toHaveBeenCalledTimes(0);
-        });
-
-        it('onContentChanged event, SwitchToLightMode', () => {
-            const preventDefaultSpy = jasmine.createSpy('preventDefault');
-
-            plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.SwitchToLightMode,
-            } as any);
-
-            expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
-            expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
-            expect(undoSpy).toHaveBeenCalledTimes(0);
-            expect(plugin.getState()).toEqual({
-                snapshotsManager: mockedSnapshotsManager,
-                isRestoring: false,
-                isNested: false,
-                autoCompleteInsertPoint: null,
-                lastKeyPress: null,
-            });
-            expect(mockedSnapshotsManager.hasNewContent).toBeFalsy();
-            expect(clearRedoSpy).toHaveBeenCalledTimes(0);
-        });
-
-        it('onContentChanged event, Keyboard', () => {
-            const preventDefaultSpy = jasmine.createSpy('preventDefault');
-
-            plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Keyboard,
+                source: 'Test',
+                skipUndo: true,
             } as any);
 
             expect(takeSnapshotSpy).toHaveBeenCalledTimes(0);
@@ -877,7 +833,7 @@ describe('UndoPlugin', () => {
         it('onContentChanged event, other source', () => {
             const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'contentChanged',
                 source: 'Test',
             } as any);
@@ -902,7 +858,7 @@ describe('UndoPlugin', () => {
 
             state.lastKeyPress = 'A';
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'beforeKeyboardEditing',
                 rawEvent: {
                     key: 'B',
@@ -929,7 +885,7 @@ describe('UndoPlugin', () => {
 
             state.lastKeyPress = 'A';
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'beforeKeyboardEditing',
                 rawEvent: {
                     key: 'A',
@@ -953,7 +909,7 @@ describe('UndoPlugin', () => {
         it('MouseDown addUndoSnapshot if there is new content', () => {
             const state = plugin.getState();
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'mouseDown',
             } as any);
 
@@ -961,7 +917,7 @@ describe('UndoPlugin', () => {
 
             state.snapshotsManager.hasNewContent = true;
 
-            plugin.onPluginEvent({
+            plugin.onPluginEvent!({
                 eventType: 'mouseDown',
             } as any);
 

@@ -56,12 +56,12 @@ export interface CachePluginState {
     paragraphMap?: ParagraphMap & ParagraphIndexer;
 
     /**
-     * @optional Indexer for CachePlugin, to help build backward relationship from DOM node to Content Model
+     * Indexer for CachePlugin, to help build backward relationship from DOM node to Content Model
      */
-    domIndexer?: DomIndexer;
+    domIndexer: DomIndexer;
 
     /**
-     * @optional A wrapper of MutationObserver to help detect text changes in editor
+     * A wrapper of MutationObserver to help detect text changes in editor
      */
-    textMutationObserver?: TextMutationObserver;
+    textMutationObserver: TextMutationObserver;
 }
