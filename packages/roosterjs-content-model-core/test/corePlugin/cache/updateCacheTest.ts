@@ -5,18 +5,20 @@ describe('updateCache', () => {
     const mockedModel = 'MODEL' as any;
 
     it('Update to undefined', () => {
-        const state: CachePluginState = {};
+        const state: CachePluginState = { domIndexer: null!, textMutationObserver: null! };
 
         updateCache(state, mockedModel, undefined);
 
         expect(state).toEqual({
+            domIndexer: null!,
+            textMutationObserver: null!,
             cachedSelection: undefined,
             cachedModel: mockedModel,
         });
     });
 
     it('Update to table selection', () => {
-        const state: CachePluginState = {};
+        const state: CachePluginState = { domIndexer: null!, textMutationObserver: null! };
         const mockedSelection = {
             type: 'table',
         } as any;
@@ -24,13 +26,15 @@ describe('updateCache', () => {
         updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
+            domIndexer: null!,
+            textMutationObserver: null!,
             cachedSelection: mockedSelection,
             cachedModel: mockedModel,
         });
     });
 
     it('Update to image selection', () => {
-        const state: CachePluginState = {};
+        const state: CachePluginState = { domIndexer: null!, textMutationObserver: null! };
         const mockedSelection = {
             type: 'image',
         } as any;
@@ -38,13 +42,18 @@ describe('updateCache', () => {
         updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
+            domIndexer: null!,
+            textMutationObserver: null!,
             cachedSelection: mockedSelection,
             cachedModel: mockedModel,
         });
     });
 
     it('Update to range selection', () => {
-        const state: CachePluginState = {};
+        const state: CachePluginState = {
+            domIndexer: null!,
+            textMutationObserver: null!,
+        };
         const mockedSelection = {
             type: 'range',
             range: {
@@ -59,6 +68,8 @@ describe('updateCache', () => {
         updateCache(state, mockedModel, mockedSelection);
 
         expect(state).toEqual({
+            domIndexer: null!,
+            textMutationObserver: null!,
             cachedSelection: {
                 type: 'range',
                 start: {
