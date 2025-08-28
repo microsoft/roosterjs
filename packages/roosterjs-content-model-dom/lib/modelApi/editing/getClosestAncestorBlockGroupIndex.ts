@@ -10,16 +10,21 @@ import type {
  * @param path The block group path, from the closest one to root
  * @param blockGroupTypes The expected block group types
  * @param stopTypes @optional Block group types that will cause stop searching
+ * @param isValidTarget @optional An additional callback to validate whether a matching block group is a valid target
  */
 export function getClosestAncestorBlockGroupIndex<T extends ContentModelBlockGroup>(
     path: ReadonlyContentModelBlockGroup[],
     blockGroupTypes: TypeOfBlockGroup<T>[],
-    stopTypes: ContentModelBlockGroupType[] = []
+    stopTypes: ContentModelBlockGroupType[] = [],
+    isValidTarget?: (block: ReadonlyContentModelBlockGroup) => boolean
 ): number {
     for (let i = 0; i < path.length; i++) {
         const group = path[i];
 
-        if ((blockGroupTypes as string[]).indexOf(group.blockGroupType) >= 0) {
+        if (
+            (blockGroupTypes as string[]).indexOf(group.blockGroupType) >= 0 &&
+            (!isValidTarget || isValidTarget(group))
+        ) {
             return i;
         } else if (stopTypes.indexOf(group.blockGroupType) >= 0) {
             // Do not go across boundary specified by stopTypes.

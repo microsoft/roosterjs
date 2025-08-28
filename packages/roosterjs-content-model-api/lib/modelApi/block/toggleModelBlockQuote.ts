@@ -33,7 +33,9 @@ export function toggleModelBlockQuote(
 
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
-    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/);
+    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/, block => {
+        return block.blockGroupType == 'FormatContainer' ? block.tagName == 'blockquote' : true;
+    });
 
     if (areAllBlockQuotes(paragraphOfQuote)) {
         // All selections are already in quote, we need to unquote them
@@ -52,16 +54,8 @@ export function toggleModelBlockQuote(
             canMergeQuote(target, current?.format || (isRtl ? formatRtl : formatLtr));
 
         paragraphOfQuote.forEach(({ block, parent }) => {
-            if (isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer')) {
-                if (block.tagName !== 'blockquote') {
-                    const paragraphsToWrap = block.blocks.filter(
-                        b => b.blockType == 'Paragraph' && b.segments.some(s => s.isSelected)
-                    );
-
-                    paragraphsToWrap.forEach(b => {
-                        wrapBlockStep1(step1Results, block, b, creator, canMerge);
-                    });
-                }
+            if (isQuote(block)) {
+                // Already in quote, no op
             } else {
                 wrapBlockStep1(step1Results, parent, block, creator, canMerge);
             }
