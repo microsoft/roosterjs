@@ -41,7 +41,7 @@ export function keyboardDelete(
     let handled = false;
     const selection = editor.getDOMSelection();
 
-    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection)) {
+    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection, editor)) {
         editor.formatContentModel(
             (model, context) => {
                 const result = deleteSelection(
@@ -92,7 +92,8 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
 function shouldDeleteWithContentModel(
     selection: DOMSelection | null,
     rawEvent: KeyboardEvent,
-    handleExpandedSelection: boolean
+    handleExpandedSelection: boolean,
+    editor: IEditor
 ) {
     if (!selection) {
         return false; // Nothing to delete
@@ -121,15 +122,20 @@ function shouldDeleteWithContentModel(
         return !(
             isNodeOfType(startContainer, 'TEXT_NODE') &&
             !isModifierKey(rawEvent) &&
-            (canDeleteBefore(rawEvent, startContainer, startOffset) ||
+            (canDeleteBefore(rawEvent, startContainer, startOffset, editor) ||
                 canDeleteAfter(rawEvent, startContainer, startOffset))
         );
     }
 }
 
-function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number) {
-    if (rawEvent.key != 'Backspace' || offset <= 1) {
+function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number, editor: IEditor) {
+    if (rawEvent.key != 'Backspace') {
         return false;
+    }
+    if (offset <= 1) {
+        const { isAndroid, isMobileOrTablet } = editor.getEnvironment();
+        // For iOS, allow browser to handle deletion of first character on iOS to preserve auto-capitalization
+        return offset === 1 && isMobileOrTablet && !isAndroid;
     }
 
     const length = text.nodeValue?.length ?? 0;
