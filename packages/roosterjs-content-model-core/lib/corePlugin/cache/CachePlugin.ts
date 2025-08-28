@@ -135,7 +135,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                             mutation.removedNodes
                         )
                     ) {
-                        this.invalidateCache();
+                        this.onUnknownMutation(mutation);
                     }
                     break;
 
@@ -147,17 +147,21 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     const element = mutation.element;
 
                     if (!this.state.domIndexer.reconcileElementId(element)) {
-                        this.invalidateCache();
+                        this.onUnknownMutation(mutation);
                     }
 
                     break;
 
                 case 'unknown':
-                    this.invalidateCache();
+                    this.onUnknownMutation(mutation);
                     break;
             }
         }
     };
+
+    private onUnknownMutation(mutation: Mutation) {
+        this.invalidateCache();
+    }
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {

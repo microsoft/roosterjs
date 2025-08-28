@@ -77,7 +77,11 @@ class TextMutationObserverImpl implements TextMutationObserver {
                             mutation.attributeName == 'id' &&
                             isNodeOfType(target, 'ELEMENT_NODE')
                         ) {
-                            this.onMutation({ type: 'elementId', element: target });
+                            this.onMutation({
+                                type: 'elementId',
+                                element: target,
+                                records: mutations,
+                            });
                         } else {
                             // We cannot handle attributes changes on editor content for now
                             canHandle = false;
@@ -117,14 +121,15 @@ class TextMutationObserverImpl implements TextMutationObserver {
                     type: 'childList',
                     addedNodes,
                     removedNodes,
+                    records: mutations,
                 });
             }
 
             if (reconcileText) {
-                this.onMutation({ type: 'text' });
+                this.onMutation({ type: 'text', records: mutations });
             }
         } else {
-            this.onMutation({ type: 'unknown' });
+            this.onMutation({ type: 'unknown', records: mutations });
         }
     };
 }

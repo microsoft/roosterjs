@@ -24,6 +24,7 @@ export type MutationType =
  */
 export interface MutationBase<T extends MutationType> {
     type: T;
+    records: MutationRecord[];
 }
 
 /**

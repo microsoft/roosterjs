@@ -612,7 +612,7 @@ describe('CachePlugin', () => {
             state.cachedSelection = 'SELECTION' as any;
             state.domIndexer = mockedIndexer;
 
-            onMutation({ type: 'unknown' });
+            onMutation({ type: 'unknown', records: [] });
 
             expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
             expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
@@ -638,7 +638,7 @@ describe('CachePlugin', () => {
 
             getDOMSelectionSpy.and.returnValue(mockedSelection);
 
-            onMutation({ type: 'text' });
+            onMutation({ type: 'text', records: [] });
 
             expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
             expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
@@ -664,7 +664,7 @@ describe('CachePlugin', () => {
 
             getDOMSelectionSpy.and.returnValue(mockedSelection);
 
-            onMutation({ type: 'text' });
+            onMutation({ type: 'text', records: [] });
 
             expect(reconcileSelectionSpy).toHaveBeenCalledTimes(1);
             expect(reconcileChildListSpy).toHaveBeenCalledTimes(0);
@@ -694,6 +694,7 @@ describe('CachePlugin', () => {
                 type: 'childList',
                 addedNodes: 'ADDED' as any,
                 removedNodes: 'REMOVED' as any,
+                records: [],
             });
 
             expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
@@ -725,6 +726,7 @@ describe('CachePlugin', () => {
                 type: 'childList',
                 addedNodes: 'ADDED' as any,
                 removedNodes: 'REMOVED' as any,
+                records: [],
             });
 
             expect(reconcileSelectionSpy).toHaveBeenCalledTimes(0);
@@ -753,6 +755,7 @@ describe('CachePlugin', () => {
             onMutation({
                 type: 'elementId',
                 element: mockedElement,
+                records: [],
             });
 
             expect(reconcileElementIdSpy).toHaveBeenCalledTimes(1);
@@ -780,6 +783,7 @@ describe('CachePlugin', () => {
             onMutation({
                 type: 'elementId',
                 element: mockedElement,
+                records: [],
             });
 
             expect(reconcileElementIdSpy).toHaveBeenCalledTimes(1);

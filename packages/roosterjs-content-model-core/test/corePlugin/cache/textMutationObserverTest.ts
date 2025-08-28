@@ -37,6 +37,7 @@ describe('TextMutationObserverImpl', () => {
             type: 'childList',
             addedNodes: [br],
             removedNodes: [],
+            records: jasmine.any(Array),
         });
     });
 
@@ -58,7 +59,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text', records: jasmine.any(Array) });
     });
 
     it('text change in deeper node', async () => {
@@ -82,7 +83,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text', records: jasmine.any(Array) });
     });
 
     it('text and non-text change', async () => {
@@ -111,8 +112,9 @@ describe('TextMutationObserverImpl', () => {
             type: 'childList',
             addedNodes: [br],
             removedNodes: [],
+            records: jasmine.any(Array),
         });
-        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text', records: jasmine.any(Array) });
     });
 
     it('flush mutation', async () => {
@@ -135,6 +137,7 @@ describe('TextMutationObserverImpl', () => {
 
         expect(onMutation).toHaveBeenCalledWith({
             type: 'text',
+            records: jasmine.any(Array),
         });
     });
 
@@ -205,6 +208,7 @@ describe('TextMutationObserverImpl', () => {
             type: 'childList',
             addedNodes: [text],
             removedNodes: [br],
+            records: jasmine.any(Array),
         });
     });
 
@@ -235,8 +239,9 @@ describe('TextMutationObserverImpl', () => {
             type: 'childList',
             addedNodes: [text],
             removedNodes: [br],
+            records: jasmine.any(Array),
         });
-        expect(onMutation).toHaveBeenCalledWith({ type: 'text' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'text', records: jasmine.any(Array) });
     });
 
     it('flush mutation when type in new line, fail to reconcile', async () => {
@@ -264,6 +269,7 @@ describe('TextMutationObserverImpl', () => {
             type: 'childList',
             addedNodes: [text],
             removedNodes: [br],
+            records: jasmine.any(Array),
         });
     });
 
@@ -293,7 +299,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown', records: jasmine.any(Array) });
     });
 
     it('id change', async () => {
@@ -316,7 +322,11 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'elementId', element: div1 });
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'elementId',
+            element: div1,
+            records: jasmine.any(Array),
+        });
     });
 
     it('unknown attribute change', async () => {
@@ -339,7 +349,7 @@ describe('TextMutationObserverImpl', () => {
         });
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown', records: jasmine.any(Array) });
     });
 
     it('Ignore changes under entity', () => {
@@ -382,6 +392,6 @@ describe('TextMutationObserverImpl', () => {
         expect(findClosestBlockEntityContainer).toHaveBeenCalledWith(span2, jasmine.anything());
 
         expect(onMutation).toHaveBeenCalledTimes(1);
-        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
+        expect(onMutation).toHaveBeenCalledWith({ type: 'unknown', records: jasmine.any(Array) });
     });
 });
