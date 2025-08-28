@@ -854,6 +854,240 @@ describe('mergeModel', () => {
         });
     });
 
+    it('list to list with table', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const br = createBr();
+        const marker = createSelectionMarker();
+        const para = createParagraph();
+
+        para.segments.push(marker, br);
+
+        const td = createTableCell();
+
+        td.blocks.push(para);
+
+        const table = createTable(1);
+        table.rows[0].cells.push(td);
+
+        const list1 = createListItem([createListLevel('OL')]);
+
+        list1.blocks.push(table);
+
+        majorModel.blocks.push(list1);
+
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newPara2 = createParagraph();
+        const newText2 = createText('newText2');
+        const newList1 = createListItem([
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
+        ]);
+        const newList2 = createListItem([
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 5, unorderedStyleType: 6 }) }
+            ),
+        ]);
+
+        newPara1.segments.push(newText1);
+        newPara2.segments.push(newText2);
+
+        newList1.blocks.push(newPara1);
+        newList2.blocks.push(newPara2);
+
+        sourceModel.blocks.push(newList1);
+        sourceModel.blocks.push(newList2);
+
+        const result = mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [table],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: {},
+                            format: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Table',
+                            rows: [
+                                {
+                                    height: 0,
+                                    format: {},
+                                    cells: [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            blocks: [
+                                                {
+                                                    blockType: 'BlockGroup',
+                                                    blockGroupType: 'ListItem',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'Paragraph',
+                                                            segments: [
+                                                                {
+                                                                    segmentType: 'Text',
+                                                                    text: 'newText1',
+                                                                    format: {},
+                                                                },
+                                                            ],
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    levels: [
+                                                        {
+                                                            listType: 'UL',
+                                                            format: {},
+                                                            dataset: {
+                                                                editingInfo:
+                                                                    '{"startNumberOverride":3,"unorderedStyleType":4}',
+                                                            },
+                                                        },
+                                                    ],
+                                                    formatHolder: {
+                                                        segmentType: 'SelectionMarker',
+                                                        isSelected: false,
+                                                        format: {},
+                                                    },
+                                                    format: {},
+                                                },
+                                                {
+                                                    blockType: 'BlockGroup',
+                                                    blockGroupType: 'ListItem',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'Paragraph',
+                                                            segments: [
+                                                                {
+                                                                    segmentType: 'Text',
+                                                                    text: 'newText2',
+                                                                    format: {},
+                                                                },
+                                                            ],
+                                                            format: {},
+                                                        },
+                                                    ],
+                                                    levels: [
+                                                        {
+                                                            listType: 'UL',
+                                                            format: {},
+                                                            dataset: {
+                                                                editingInfo:
+                                                                    '{"startNumberOverride":3,"unorderedStyleType":4}',
+                                                            },
+                                                        },
+                                                        {
+                                                            listType: 'UL',
+                                                            format: {},
+                                                            dataset: {
+                                                                editingInfo:
+                                                                    '{"startNumberOverride":5,"unorderedStyleType":6}',
+                                                            },
+                                                        },
+                                                    ],
+                                                    formatHolder: {
+                                                        segmentType: 'SelectionMarker',
+                                                        isSelected: false,
+                                                        format: {},
+                                                    },
+                                                    format: {},
+                                                },
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'SelectionMarker',
+                                                            isSelected: true,
+                                                            format: {},
+                                                        },
+                                                        { segmentType: 'Br', format: {} },
+                                                    ],
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            spanLeft: false,
+                                            spanAbove: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                        },
+                                    ],
+                                },
+                            ],
+                            format: {},
+                            widths: [],
+                            dataset: {},
+                        },
+                    ],
+                    levels: [{ listType: 'OL', format: {}, dataset: {} }],
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: false, format: {} },
+                    format: {},
+                },
+            ],
+        });
+
+        expect(result).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    { segmentType: 'Br', format: {} },
+                ],
+                format: {},
+            },
+            path: [td, list1, majorModel],
+            tableContext: {
+                table,
+                rowIndex: 0,
+                colIndex: 0,
+                isWholeTableSelected: false,
+            },
+        });
+    });
+
     it('table to text', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

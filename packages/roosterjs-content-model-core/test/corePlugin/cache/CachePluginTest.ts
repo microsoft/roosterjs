@@ -11,6 +11,7 @@ import {
     EditorOptions,
     ParagraphIndexer,
     ParagraphMap,
+    TextMutationObserver,
 } from 'roosterjs-content-model-types';
 
 describe('CachePlugin', () => {
@@ -71,9 +72,25 @@ describe('CachePlugin', () => {
         });
 
         it('initialize', () => {
-            init({ disableCache: true });
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            const mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+
+            init({});
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
-            expect(plugin.getState()).toEqual({});
+            expect(plugin.getState()).toEqual({
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+            });
+            expect(startObservingSpy).toHaveBeenCalledTimes(1);
         });
 
         it('initialize without paragraph map', () => {
@@ -86,9 +103,7 @@ describe('CachePlugin', () => {
             spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
                 mockedObserver
             );
-            init({
-                disableCache: false,
-            });
+            init({});
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
             expect(plugin.getState()).toEqual({
                 domIndexer: new DomIndexerImpl(),
@@ -109,7 +124,6 @@ describe('CachePlugin', () => {
                 mockedObserver
             );
             init({
-                disableCache: false,
                 enableParagraphMap: true,
             });
             expect(addEventListenerSpy).toHaveBeenCalledWith('selectionchange', jasmine.anything());
@@ -174,8 +188,22 @@ describe('CachePlugin', () => {
     });
 
     describe('KeyDown event', () => {
+        let mockedObserver: TextMutationObserver;
+
         beforeEach(() => {
-            init({ disableCache: true });
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+
+            init({});
         });
         afterEach(() => {
             plugin.dispose();
@@ -190,8 +218,8 @@ describe('CachePlugin', () => {
             });
 
             expect(plugin.getState()).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
             });
             expect(resetMapSpy).not.toHaveBeenCalled();
         });
@@ -205,8 +233,8 @@ describe('CachePlugin', () => {
             });
 
             expect(plugin.getState()).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
             });
             expect(resetMapSpy).not.toHaveBeenCalled();
         });
@@ -230,8 +258,14 @@ describe('CachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+                cachedSelection: {
+                    type: 'range',
+                    start: { node, offset },
+                    end: { node, offset },
+                    isReverted: false,
+                },
             });
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
         });
@@ -254,8 +288,14 @@ describe('CachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+                cachedSelection: {
+                    type: 'range',
+                    start: { node, offset: 0 },
+                    end: { node, offset: 1 },
+                    isReverted: false,
+                },
             });
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
         });
@@ -271,16 +311,31 @@ describe('CachePlugin', () => {
                 } as any,
             });
 
-            expect(state).toEqual({});
+            expect(state).toEqual({
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
+            });
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
         });
     });
 
     describe('Input event', () => {
+        let mockedObserver: TextMutationObserver;
+
         beforeEach(() => {
-            init({
-                disableCache: true,
-            });
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+
+            init({});
         });
         afterEach(() => {
             plugin.dispose();
@@ -298,16 +353,30 @@ describe('CachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
             });
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
         });
     });
 
     describe('SelectionChanged', () => {
+        let mockedObserver: TextMutationObserver;
+
         beforeEach(() => {
-            init({ disableCache: true });
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+
+            init({});
         });
         afterEach(() => {
             plugin.dispose();
@@ -334,6 +403,7 @@ describe('CachePlugin', () => {
                 cachedModel: model,
                 cachedSelection: selection,
                 domIndexer,
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
@@ -361,6 +431,7 @@ describe('CachePlugin', () => {
                 cachedModel: model,
                 cachedSelection: newRangeEx,
                 domIndexer,
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
@@ -388,6 +459,7 @@ describe('CachePlugin', () => {
                 cachedModel: undefined,
                 cachedSelection: undefined,
                 domIndexer,
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
             expect(resetMapSpy).toHaveBeenCalledTimes(0);
@@ -395,8 +467,22 @@ describe('CachePlugin', () => {
     });
 
     describe('ContentChanged', () => {
+        let mockedObserver: TextMutationObserver;
+
         beforeEach(() => {
-            init({ disableCache: true, enableParagraphMap: true });
+            const startObservingSpy = jasmine.createSpy('startObserving');
+            const stopObservingSpy = jasmine.createSpy('stopObserving');
+
+            mockedObserver = {
+                startObserving: startObservingSpy,
+                stopObserving: stopObservingSpy,
+            } as any;
+
+            spyOn(textMutationObserver, 'createTextMutationObserver').and.returnValue(
+                mockedObserver
+            );
+
+            init({ enableParagraphMap: true });
         });
         afterEach(() => {
             plugin.dispose();
@@ -418,6 +504,8 @@ describe('CachePlugin', () => {
                 cachedModel: undefined,
                 cachedSelection: undefined,
                 paragraphMap: mockedParagraphMap,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
             expect(resetMapSpy).toHaveBeenCalledTimes(1);
@@ -442,12 +530,13 @@ describe('CachePlugin', () => {
             } as any);
 
             expect(state).toEqual({
-                cachedModel: undefined,
-                cachedSelection: undefined,
+                cachedModel: model,
+                cachedSelection: newRangeEx,
                 paragraphMap: mockedParagraphMap,
+                domIndexer: new DomIndexerImpl(),
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
-            expect(resetMapSpy).toHaveBeenCalledTimes(1);
         });
 
         it('Has domIndexer, has model in event', () => {
@@ -474,6 +563,7 @@ describe('CachePlugin', () => {
                 cachedSelection: newRangeEx,
                 domIndexer,
                 paragraphMap: mockedParagraphMap,
+                textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
             expect(resetMapSpy).toHaveBeenCalledTimes(0);

@@ -1,5 +1,9 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
-import { FormatContentModelContext, IEditor } from 'roosterjs-content-model-types';
+import {
+    ContentModelDocument,
+    FormatContentModelContext,
+    IEditor,
+} from 'roosterjs-content-model-types';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -36,7 +40,10 @@ describe('handleKeyboardEventResult', () => {
     });
 
     it('singleChar', () => {
-        const mockedModel = 'MODEL' as any;
+        const mockedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
         const context: FormatContentModelContext = {
@@ -90,7 +97,10 @@ describe('handleKeyboardEventResult', () => {
     });
 
     it('range', () => {
-        const mockedModel = 'MODEL' as any;
+        const mockedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
         const context: FormatContentModelContext = {
             newEntities: [],
             deletedEntities: [],
@@ -114,6 +124,197 @@ describe('handleKeyboardEventResult', () => {
         });
         expect(context.skipUndoSnapshot).toBeFalse();
         expect(context.clearModelCache).toBeFalsy();
+    });
+
+    it('range with empty block group', () => {
+        const mockedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [],
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'span',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [],
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const context: FormatContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            'range',
+            context
+        );
+
+        expect(result).toBeTrue();
+        expect(preventDefault).toHaveBeenCalled();
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
+        expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
+        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerEvent).toHaveBeenCalledWith('beforeKeyboardEditing', {
+            rawEvent: mockedEvent,
+        });
+        expect(context.skipUndoSnapshot).toBeFalse();
+        expect(context.clearModelCache).toBeFalsy();
+        expect(mockedModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'span',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [],
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('range with recursive empty block group', () => {
+        const mockedModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'FormatContainer',
+                            tagName: 'div',
+                            blocks: [],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'span',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'FormatContainer',
+                            tagName: 'div',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                    segments: [],
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'FormatContainer',
+                            tagName: 'div',
+                            blocks: [],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const context: FormatContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            'range',
+            context
+        );
+
+        expect(result).toBeTrue();
+        expect(preventDefault).toHaveBeenCalled();
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
+        expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
+        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerEvent).toHaveBeenCalledWith('beforeKeyboardEditing', {
+            rawEvent: mockedEvent,
+        });
+        expect(context.skipUndoSnapshot).toBeFalse();
+        expect(context.clearModelCache).toBeFalsy();
+        expect(mockedModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: false,
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'span',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'FormatContainer',
+                            tagName: 'div',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                    segments: [],
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
     });
 
     it('nothingToDelete', () => {
