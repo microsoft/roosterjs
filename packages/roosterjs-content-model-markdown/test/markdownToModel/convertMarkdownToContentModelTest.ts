@@ -3,8 +3,7 @@ import { convertMarkdownToContentModel } from '../../lib/markdownToModel/convert
 
 describe('convertMarkdownToContentModel', () => {
     function runTest(markdown: string, expectedContentModel: ContentModelDocument) {
-        convertMarkdownToContentModel(markdown);
-        const actualContentModel = convertMarkdownToContentModel(markdown);
+        const actualContentModel = convertMarkdownToContentModel(markdown, { emptyLine: 'remove' });
         expect(actualContentModel).toEqual(expectedContentModel);
     }
 
@@ -887,7 +886,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Italic text ',
+                            text: 'Italic text',
                             segmentType: 'Text',
 
                             format: {
@@ -909,7 +908,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Bold text ',
+                            text: 'Bold text',
                             segmentType: 'Text',
 
                             format: {
@@ -931,7 +930,7 @@ describe('convertMarkdownToContentModel', () => {
                 {
                     segments: [
                         {
-                            text: 'Bold and italic ',
+                            text: 'Bold and italic',
                             segmentType: 'Text',
 
                             format: {

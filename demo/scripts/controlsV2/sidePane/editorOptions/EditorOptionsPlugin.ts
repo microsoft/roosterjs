@@ -32,7 +32,6 @@ const initialState: OptionState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     isRtl: false,
-    disableCache: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
     allowExcelNoBorderTable: false,
     imageMenu: true,
