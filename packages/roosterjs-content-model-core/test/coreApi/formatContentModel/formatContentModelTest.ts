@@ -58,6 +58,8 @@ describe('formatContentModel', () => {
             },
             lifecycle: {},
             cache: {
+                domIndexer: null!,
+                textMutationObserver: null!,
                 paragraphMap: mockedParagraphMap,
             },
             undo: {
@@ -722,6 +724,8 @@ describe('formatContentModel', () => {
             expect(setContentModel).not.toHaveBeenCalled();
             expect(triggerEvent).not.toHaveBeenCalled();
             expect(core.cache).toEqual({
+                domIndexer: null!,
+                textMutationObserver: null!,
                 cachedModel: undefined,
                 cachedSelection: undefined,
                 paragraphMap: mockedParagraphMap,
@@ -782,6 +786,8 @@ describe('formatContentModel', () => {
             );
             expect(triggerEvent).toHaveBeenCalled();
             expect(core.cache).toEqual({
+                domIndexer: null!,
+                textMutationObserver: null!,
                 paragraphMap: mockedParagraphMap,
             });
         });

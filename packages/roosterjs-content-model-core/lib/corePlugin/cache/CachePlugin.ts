@@ -25,14 +25,17 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * @param contentDiv The editor content DIV
      */
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = {};
-
-        this.state.domIndexer = new DomIndexerImpl(
-            option.experimentalFeatures && option.experimentalFeatures.indexOf('PersistCache') >= 0,
-            option.experimentalFeatures &&
-                option.experimentalFeatures.indexOf('KeepSelectionMarkerWhenEnteringTextNode') >= 0
-        );
-        this.state.textMutationObserver = createTextMutationObserver(contentDiv, this.onMutation);
+        this.state = {
+            domIndexer: new DomIndexerImpl(
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf('PersistCache') >= 0,
+                option.experimentalFeatures &&
+                    option.experimentalFeatures.indexOf(
+                        'KeepSelectionMarkerWhenEnteringTextNode'
+                    ) >= 0
+            ),
+            textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+        };
 
         if (option.enableParagraphMap) {
             this.state.paragraphMap = createParagraphMap();
@@ -56,7 +59,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.editor = editor;
         this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
 
-        this.state.textMutationObserver?.startObserving();
+        this.state.textMutationObserver.startObserving();
     }
 
     /**
@@ -65,7 +68,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      * called, plugin should not call to any editor method since it will result in error.
      */
     dispose() {
-        this.state.textMutationObserver?.stopObserving();
+        this.state.textMutationObserver.stopObserving();
 
         if (this.editor) {
             this.editor
@@ -97,22 +100,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             case 'logicalRootChanged':
                 this.invalidateCache();
 
-                if (this.state.textMutationObserver) {
-                    this.state.textMutationObserver.stopObserving();
-                    this.state.textMutationObserver = createTextMutationObserver(
-                        event.logicalRoot,
-                        this.onMutation
-                    );
-                    this.state.textMutationObserver.startObserving();
-                }
-                break;
-
-            case 'keyDown':
-            case 'input':
-                if (!this.state.textMutationObserver) {
-                    // When updating cache is not enabled, need to clear the cache to make sure other plugins can get an up-to-date content model
-                    this.invalidateCache();
-                }
+                this.state.textMutationObserver.stopObserving();
+                this.state.textMutationObserver = createTextMutationObserver(
+                    event.logicalRoot,
+                    this.onMutation
+                );
+                this.state.textMutationObserver.startObserving();
                 break;
 
             case 'selectionChanged':
@@ -122,7 +115,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             case 'contentChanged':
                 const { contentModel, selection } = event;
 
-                if (contentModel && this.state.domIndexer) {
+                if (contentModel) {
                     updateCache(this.state, contentModel, selection);
                 } else {
                     this.invalidateCache();
@@ -137,7 +130,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             switch (mutation.type) {
                 case 'childList':
                     if (
-                        !this.state.domIndexer?.reconcileChildList(
+                        !this.state.domIndexer.reconcileChildList(
                             mutation.addedNodes,
                             mutation.removedNodes
                         )
@@ -153,7 +146,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 case 'elementId':
                     const element = mutation.element;
 
-                    if (!this.state.domIndexer?.reconcileElementId(element)) {
+                    if (!this.state.domIndexer.reconcileElementId(element)) {
                         this.invalidateCache();
                     }
 
@@ -203,7 +196,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             if (
                 !model ||
                 !newRangeEx ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
+                !this.state.domIndexer.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
                 this.invalidateCache();
             } else {
