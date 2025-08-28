@@ -238,7 +238,6 @@ describe('createParagraphFromMarkdown', () => {
                 fontWeight: 'bold',
             },
         };
-        console.log(createParagraphFromMarkdown('# [link](https://www.example.com)').segments[0]);
         runTest('# [link](https://www.example.com)', paragraph);
     });
 });
