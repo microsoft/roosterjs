@@ -27,20 +27,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
     constructor(option: EditorOptions, contentDiv: HTMLDivElement) {
         this.state = {};
 
-        if (!option.disableCache) {
-            this.state.domIndexer = new DomIndexerImpl(
-                option.experimentalFeatures &&
-                    option.experimentalFeatures.indexOf('PersistCache') >= 0,
-                option.experimentalFeatures &&
-                    option.experimentalFeatures.indexOf(
-                        'KeepSelectionMarkerWhenEnteringTextNode'
-                    ) >= 0
-            );
-            this.state.textMutationObserver = createTextMutationObserver(
-                contentDiv,
-                this.onMutation
-            );
-        }
+        this.state.domIndexer = new DomIndexerImpl(
+            option.experimentalFeatures && option.experimentalFeatures.indexOf('PersistCache') >= 0,
+            option.experimentalFeatures &&
+                option.experimentalFeatures.indexOf('KeepSelectionMarkerWhenEnteringTextNode') >= 0
+        );
+        this.state.textMutationObserver = createTextMutationObserver(contentDiv, this.onMutation);
 
         if (option.enableParagraphMap) {
             this.state.paragraphMap = createParagraphMap();

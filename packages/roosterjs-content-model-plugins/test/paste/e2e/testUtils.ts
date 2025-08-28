@@ -10,7 +10,6 @@ export function initEditor(id: string): IEditor {
 
     let options: EditorOptions = {
         plugins: [new PastePlugin()],
-        disableCache: true,
         coreApiOverride: {
             getVisibleViewport: () => {
                 return {
