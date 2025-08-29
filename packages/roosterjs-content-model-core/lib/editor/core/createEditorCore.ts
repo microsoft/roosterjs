@@ -71,7 +71,7 @@ function createEditorEnvironment(
         modelToDomSettings: createModelToDomSettings(options),
         isMac: appVersion.indexOf('Mac') != -1,
         isAndroid: /android/i.test(userAgent),
-        isIOS: /iPad|iPhone|iPod/.test(userAgent),
+        isIOS: /iPad|iPhone/.test(userAgent),
         isSafari:
             userAgent.indexOf('Safari') >= 0 &&
             userAgent.indexOf('Chrome') < 0 &&
