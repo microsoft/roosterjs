@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.08% </span>
+                <span class="strong">96.23% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/51</span>
+                <span class='fraction'>51/53</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.04% </span>
+                <span class="strong">87.34% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>65/73</span>
+                <span class='fraction'>69/79</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.92% </span>
+                <span class="strong">96.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/49</span>
+                <span class='fraction'>49/51</span>
             </div>
         
             
@@ -214,7 +214,19 @@
 <a name='L155'></a><a href='#L155'>155</a>
 <a name='L156'></a><a href='#L156'>156</a>
 <a name='L157'></a><a href='#L157'>157</a>
-<a name='L158'></a><a href='#L158'>158</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -258,6 +270,13 @@
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
@@ -310,6 +329,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
@@ -345,7 +365,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -414,7 +438,14 @@ export function keyboardDelete(
     let handled = false;
     const selection = editor.getDOMSelection();
 &nbsp;
-    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection)) {
+    if (
+        shouldDeleteWithContentModel(
+            selection,
+            rawEvent,
+            handleExpandedSelection,
+            editor.getEnvironment().isIOS<span class="branch-0 cbranch-no" title="branch not covered" > ?? f</span>alse
+        )
+    ) {
         editor.formatContentModel(
             (model, context) =&gt; {
                 const result = deleteSelection(
@@ -465,7 +496,8 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
 function shouldDeleteWithContentModel(
     selection: DOMSelection | null,
     rawEvent: KeyboardEvent,
-    handleExpandedSelection: boolean
+    handleExpandedSelection: boolean,
+    isIOS: boolean
 ) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!selection) {
 <span class="cstat-no" title="statement not covered" >        return false; </span>// Nothing to delete
@@ -494,15 +526,19 @@ function shouldDeleteWithContentModel(
         return !(
             isNodeOfType(startContainer, 'TEXT_NODE') &amp;&amp;
             !isModifierKey(rawEvent) &amp;&amp;
-            (canDeleteBefore(rawEvent, startContainer, startOffset) ||
+            (canDeleteBefore(rawEvent, startContainer, startOffset, isIOS) ||
                 canDeleteAfter(rawEvent, startContainer, startOffset))
         );
     }
 }
 &nbsp;
-function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number) {
-    if (rawEvent.key != 'Backspace' || offset &lt;= 1) {
+function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number, isIOS: boolean) {
+    if (rawEvent.key != 'Backspace') {
         return false;
+    }
+    if (offset &lt;= 1) {
+        // For iOS, allow browser to handle deletion of first character on iOS to preserve auto-capitalization
+        return offset === 1 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >isIOS;</span>
     }
 &nbsp;
     const length = text.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength ?? <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
@@ -535,7 +571,7 @@ function canDeleteAfter(rawEvent: KeyboardEvent, text: Text, offset: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Aug 28 2025 21:37:31 GMT+0000 (Coordinated Universal Time)
+                at Sat Aug 30 2025 06:50:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
