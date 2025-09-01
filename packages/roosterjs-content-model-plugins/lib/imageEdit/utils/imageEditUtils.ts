@@ -107,13 +107,6 @@ export function checkIfImageWasResized(image: HTMLImageElement): boolean {
     }
 }
 
-/**
- * @internal
- */
-export function isRTL(image: HTMLImageElement): boolean {
-    return window.getComputedStyle(image).direction === 'rtl';
-}
-
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;
     return !isNaN(numberValue);
