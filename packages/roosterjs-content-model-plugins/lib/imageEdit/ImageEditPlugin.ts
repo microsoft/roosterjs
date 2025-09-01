@@ -718,7 +718,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.clonedImage,
                                     this.wrapper,
-                                    undefined,
+                                    undefined /* resizers */,
                                     this.croppers,
                                     isRTL
                                 );
@@ -735,7 +735,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.clonedImage,
                     this.wrapper,
-                    undefined,
+                    undefined /* resizers */,
                     this.croppers,
                     isRTL
                 );
