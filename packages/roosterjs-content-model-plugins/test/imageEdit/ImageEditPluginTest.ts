@@ -920,7 +920,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             getAttribute: () => 'test',
         };
         plugin.setEditingInfo(mockImageWithWidth);
-        plugin.startRotateAndResize(editor, mockedImage);
+        plugin.startRotateAndResize(editor, mockedImage, false);
         plugin.setIsEditing(isEditing);
         plugin.applyFormatWithContentModel(editor, isCropMode, shouldSelectImage, isApiOperation);
         const newModel = editor.getContentModelCopy('disconnected');

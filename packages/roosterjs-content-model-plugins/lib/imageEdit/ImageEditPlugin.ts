@@ -344,6 +344,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     ) {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
+        let isRTL: boolean = false;
 
         editor.formatContentModel(
             (model, context) => {
@@ -426,6 +427,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         this.isCropMode = isCropMode;
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
+                            isRTL = editingImage.paragraph.format.direction == 'rtl';
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
                             image.format.imageState = 'isEditing';
                         });
@@ -447,9 +449,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         isElementOfType(node, 'img')
                     ) {
                         if (isCropMode) {
-                            this.startCropMode(editor, node);
+                            this.startCropMode(editor, node, isRTL);
                         } else {
-                            this.startRotateAndResize(editor, node);
+                            this.startRotateAndResize(editor, node, isRTL);
                         }
                     }
                 },
@@ -542,7 +544,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         editor.setEditorStyle(IMAGE_EDIT_CLASS_CARET, `caret-color: transparent;`);
     }
 
-    public startRotateAndResize(editor: IEditor, image: HTMLImageElement) {
+    public startRotateAndResize(editor: IEditor, image: HTMLImageElement, isRTL: boolean) {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
@@ -567,7 +569,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.clonedImage,
                                     this.wrapper,
-                                    this.resizers
+                                    this.resizers,
+                                    undefined /* croppers */,
+                                    isRTL
                                 );
                                 this.wasImageResized = true;
                             }
@@ -593,7 +597,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.options,
                                     this.selectedImage,
                                     this.clonedImage,
-                                    this.wrapper
+                                    this.wrapper,
+                                    undefined /* resizers */,
+                                    undefined /* croppers */,
+                                    isRTL
                                 );
                                 this.updateRotateHandleState(
                                     editor,
@@ -620,7 +627,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.clonedImage,
                     this.wrapper,
-                    this.resizers
+                    this.resizers,
+                    undefined /* croppers */,
+                    isRTL
                 );
 
                 this.updateRotateHandleState(
@@ -685,7 +694,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         return canRegenerateImage(image);
     }
 
-    private startCropMode(editor: IEditor, image: HTMLImageElement) {
+    private startCropMode(editor: IEditor, image: HTMLImageElement, isRTL: boolean) {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['crop']);
             if (this.imageEditInfo && this.selectedImage && this.wrapper && this.clonedImage) {
@@ -709,8 +718,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.selectedImage,
                                     this.clonedImage,
                                     this.wrapper,
-                                    undefined,
-                                    this.croppers
+                                    undefined /* resizers */,
+                                    this.croppers,
+                                    isRTL
                                 );
                                 this.isCropMode = true;
                             }
@@ -725,8 +735,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.selectedImage,
                     this.clonedImage,
                     this.wrapper,
-                    undefined,
-                    this.croppers
+                    undefined /* resizers */,
+                    this.croppers,
+                    isRTL
                 );
             }
         }
