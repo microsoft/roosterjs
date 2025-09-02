@@ -41,7 +41,7 @@ export const setContentModel: SetContentModel = (
     core.onFixUpModel?.(model);
 
     const selection = contentModelToDom(
-        core.logicalRoot.ownerDocument.implementation.createHTMLDocument(),
+        core.logicalRoot.ownerDocument,
         core.logicalRoot,
         model,
         modelToDomContext
