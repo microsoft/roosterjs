@@ -39,9 +39,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                       ...paragraph.segmentFormat,
                   }
                 : {};
-            const prevRefNode = refNode?.previousSibling;
 
             container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+
+            parent.insertBefore(container, refNode);
 
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
@@ -107,14 +108,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             // since this paragraph it is implicit. In that case container.nextSibling will become original
             // inline entity's next sibling. So reset refNode to its real next sibling (after change) here
             // to make sure the value is correct.
-            refNode =
-                prevRefNode === undefined // When refNode is not passed in
-                    ? null
-                    : prevRefNode === null // When refNode is the first child of parent
-                    ? parent.firstChild
-                    : prevRefNode.nextSibling; // Normal case
-
-            parent.insertBefore(container, refNode);
+            refNode = container.nextSibling;
 
             if (container) {
                 context.onNodeCreated?.(paragraph, container);
