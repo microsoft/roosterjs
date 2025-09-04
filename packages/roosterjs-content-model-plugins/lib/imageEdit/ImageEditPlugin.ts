@@ -92,6 +92,16 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.options = { ...DefaultOptions, ...options };
     }
 
+    private setIsEditing(isEditing: boolean) {
+        if (this.isEditing != isEditing) {
+            this.isEditing = isEditing;
+
+            console.log(
+                `ImageEditPlugin: isEditing = ${this.isEditing} callstack=${new Error().stack}`
+            );
+        }
+    }
+
     /**
      * Get name of this plugin
      */
@@ -152,7 +162,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
-        this.isEditing = false;
+        this.setIsEditing(false);
         this.cleanInfo();
         this.editor = null;
     }
@@ -306,7 +316,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (selection?.type == 'image') {
             this.cleanInfo();
             setImageState(selection.image, '');
-            this.isEditing = false;
+            this.setIsEditing(false);
             this.isCropMode = false;
         }
     }
@@ -314,7 +324,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private formatEventHandler(event: ContentChangedEvent) {
         if (this.isEditing && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
             this.cleanInfo();
-            this.isEditing = false;
+            this.setIsEditing(false);
             this.isCropMode = false;
         }
     }
@@ -414,7 +424,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         result = true;
                     }
 
-                    this.isEditing = false;
+                    this.setIsEditing(false);
                     this.isCropMode = false;
 
                     if (
@@ -423,7 +433,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         !shouldSelectImage &&
                         !isApiOperation
                     ) {
-                        this.isEditing = true;
+                        this.setIsEditing(true);
                         this.isCropMode = isCropMode;
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
