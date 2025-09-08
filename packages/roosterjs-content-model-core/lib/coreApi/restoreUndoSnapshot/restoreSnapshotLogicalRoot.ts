@@ -1,5 +1,5 @@
-import { getPositionFromPath } from './getPositionFromPath';
 import type { EditorCore, Snapshot } from 'roosterjs-content-model-types';
+import { getPositionFromPath } from './getPositionFromPath';
 
 /**
  * @internal
