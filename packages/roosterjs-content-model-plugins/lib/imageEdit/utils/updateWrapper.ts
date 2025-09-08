@@ -10,7 +10,6 @@ import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     getPx,
     isASmallImage,
-    isRTL,
     setFlipped,
     setSize,
     setWrapperSizeDimensions,
@@ -26,7 +25,8 @@ export function updateWrapper(
     clonedImage: HTMLImageElement,
     wrapper: HTMLSpanElement,
     resizers?: HTMLDivElement[],
-    croppers?: HTMLDivElement[]
+    croppers?: HTMLDivElement[],
+    isRTL?: boolean
 ) {
     const {
         angleRad,
@@ -70,7 +70,7 @@ export function updateWrapper(
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
     // or if the direction is Right To Left
-    if (isRTL(clonedImage)) {
+    if (isRTL) {
         wrapper.style.textAlign = 'right';
         if (!croppers) {
             clonedImage.style.left = getPx(cropLeftPx);

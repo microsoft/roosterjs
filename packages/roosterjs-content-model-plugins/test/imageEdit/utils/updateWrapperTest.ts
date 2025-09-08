@@ -32,10 +32,10 @@ describe('updateWrapper', () => {
         isSmallImage: false,
         disableSideResize: false,
     };
-    const image = document.createElement('img');
-    document.body.appendChild(image);
 
     it('should update size', () => {
+        const image = document.createElement('img');
+        document.body.appendChild(image);
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
@@ -56,9 +56,42 @@ describe('updateWrapper', () => {
 
         expect(wrapper.style.width).toBe('20px');
         expect(wrapper.style.height).toBe('12px');
+        expect(wrapper.style.textAlign).toBe('left');
 
         expect(imageClone.style.width).toBe('20px');
         expect(imageClone.style.height).toBe('13.3333px');
+        expect(imageClone.style.position).toBe('absolute');
+        image.remove();
+    });
+
+    it('RTL - should update size', () => {
+        const image = document.createElement('img');
+        document.body.appendChild(image);
+        const { wrapper, imageClone, resizers } = createImageWrapper(
+            editor,
+            image,
+            options,
+            editInfo,
+            htmlOptions,
+            ['resize']
+        );
+        editInfo.heightPx = 12;
+        updateWrapper(editInfo, options, image, imageClone, wrapper, resizers, undefined, true);
+
+        expect(wrapper.style.marginLeft).toBe('0px');
+        expect(wrapper.style.marginRight).toBe('0px');
+        expect(wrapper.style.marginTop).toBe('0px');
+        expect(wrapper.style.marginBottom).toBe('5px');
+        expect(wrapper.style.transform).toBe(`rotate(0rad)`);
+        expect(wrapper.style.verticalAlign).toBe(`text-bottom`);
+
+        expect(wrapper.style.width).toBe('20px');
+        expect(wrapper.style.height).toBe('12px');
+        expect(wrapper.style.textAlign).toBe('right');
+
+        expect(imageClone.style.width).toBe('20px');
+        expect(imageClone.style.height).toBe('13.3333px');
+        expect(imageClone.style.position).toBe('absolute');
         expect(imageClone.style.position).toBe('absolute');
         image.remove();
     });
