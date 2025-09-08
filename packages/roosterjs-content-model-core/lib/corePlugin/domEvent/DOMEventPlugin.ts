@@ -27,6 +27,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
  * 5. Focus and blur event
  * 6. Input event
  * 7. Scroll event
+ * 8. Pointer event
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
@@ -83,6 +84,9 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
+
+            // 5. Pointer event
+            pointerdown: { beforeDispatch: this.onPointerDown },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -172,7 +176,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             event.stopPropagation();
 
             const isAndroid = this.editor?.getEnvironment()?.isAndroid ?? false;
-            const isComposing = !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
+            const isComposing =
+                !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
 
             if (this.editor && !isComposing) {
                 this.editor.triggerEvent('input', {
@@ -207,6 +212,14 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 isClicking:
                     this.state.mouseDownX == rawEvent.pageX &&
                     this.state.mouseDownY == rawEvent.pageY,
+            });
+        }
+    };
+
+    private onPointerDown = (rawEvent: PointerEvent) => {
+        if (this.editor) {
+            this.editor.triggerEvent('pointerDown', {
+                rawEvent,
             });
         }
     };
