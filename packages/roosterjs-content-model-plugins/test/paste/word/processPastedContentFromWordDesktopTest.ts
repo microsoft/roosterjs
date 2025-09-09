@@ -3924,8 +3924,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     ],
                 },
                 true,
-                htmlBefore,
-                true
+                htmlBefore
             );
         });
 
