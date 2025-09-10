@@ -23,7 +23,6 @@ export interface BuildInPluginList {
     imageEditPlugin: boolean;
     customReplace: boolean;
     hiddenProperty: boolean;
-    touch: boolean;
 }
 
 export interface OptionState {

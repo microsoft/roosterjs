@@ -27,7 +27,6 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
  * 5. Focus and blur event
  * 6. Input event
  * 7. Scroll event
- * 8. Pointer event
  * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
