@@ -146,5 +146,4 @@ export type PluginEventType =
      * Before an undo snapshot is added to the undo stack.
      * This event is used to give plugins a chance to add additional state to the snapshot.
      */
-    | 'beforeAddUndoSnapshot'
-    | 'pointerDown';
+    | 'beforeAddUndoSnapshot';
