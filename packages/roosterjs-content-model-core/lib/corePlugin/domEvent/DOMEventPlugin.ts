@@ -84,9 +84,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
-
-            // 5. Pointer event
-            pointerdown: { beforeDispatch: this.onPointerDown },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -212,14 +209,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 isClicking:
                     this.state.mouseDownX == rawEvent.pageX &&
                     this.state.mouseDownY == rawEvent.pageY,
-            });
-        }
-    };
-
-    private onPointerDown = (rawEvent: PointerEvent) => {
-        if (this.editor) {
-            this.editor.triggerEvent('pointerDown', {
-                rawEvent,
             });
         }
     };

@@ -70,7 +70,6 @@ import {
     ShortcutPlugin,
     TableEditPlugin,
     WatermarkPlugin,
-    TouchPlugin,
 } from 'roosterjs-content-model-plugins';
 import DOMPurify = require('dompurify');
 
@@ -560,7 +559,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                 new HiddenPropertyPlugin({
                     undeletableLinkChecker: undeletableLinkChecker,
                 }),
-            pluginList.touch && new TouchPlugin(),
         ].filter(x => !!x);
     }
 }
