@@ -69,7 +69,11 @@ export function keyboardInput(editor: IEditor, rawEvent: KeyboardEvent) {
 function shouldInputWithContentModel(selection: DOMSelection | null, rawEvent: KeyboardEvent) {
     if (!selection) {
         return false; // Nothing to delete
-    } else if (!isModifierKey(rawEvent) && (rawEvent.key == 'Space' || rawEvent.key.length == 1)) {
+    } else if (
+        !isModifierKey(rawEvent) &&
+        rawEvent.key &&
+        (rawEvent.key == 'Space' || rawEvent.key.length == 1)
+    ) {
         return selection.type != 'range' || !selection.range.collapsed;
     } else {
         return false;
