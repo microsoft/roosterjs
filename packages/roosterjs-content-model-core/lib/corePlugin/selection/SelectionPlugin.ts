@@ -317,22 +317,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             requestAnimationFrame(() => {
                 if (this.editor && this.pointerEvent) {
                     // Handle touch selection here since the cursor position is updated
-                    // Introduce quick testing on first iteration
                     // Work-in-progress
-                    const selection = this.editor.getDOMSelection();
-                    const range = selection?.type == 'range' ? selection.range : null;
-                    if (range) {
-                        // test: move cursor to 5 offset after if it is still within node
-                        const sampleRangeToMoveCursorTo = range.startOffset + 5;
-                        range.startContainer.nodeValue &&
-                            sampleRangeToMoveCursorTo < range.startContainer.nodeValue.length &&
-                            range.setStart(range.startContainer, sampleRangeToMoveCursorTo);
-                        this.editor.setDOMSelection({
-                            type: 'range',
-                            range,
-                            isReverted: false,
-                        });
-                    }
                 }
                 this.pointerEvent = null;
             });
