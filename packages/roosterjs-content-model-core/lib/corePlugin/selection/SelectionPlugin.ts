@@ -316,28 +316,23 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         if (this.pointerEvent && this.pointerEvent.pointerType === 'touch') {
             requestAnimationFrame(() => {
                 if (this.editor && this.pointerEvent) {
+                    // Handle touch selection here since the cursor position is updated
+                    // Introduce quick testing on first iteration
+                    // Work-in-progress
                     const selection = this.editor.getDOMSelection();
                     const range = selection?.type == 'range' ? selection.range : null;
-                    console.log('range', range);
                     if (range) {
+                        // test: move cursor to 5 offset after if it is still within node
+                        const sampleRangeToMoveCursorTo = range.startOffset + 5;
                         range.startContainer.nodeValue &&
-                            range.startContainer.nodeValue.length > range.startOffset + 10 &&
-                            range.setStart(range.startContainer, range.startOffset + 10);
-                        console.log(
-                            'range.startContainer.length',
-                            range.startContainer.nodeValue?.length
-                        );
-                        console.log('range1', range);
-
+                            sampleRangeToMoveCursorTo < range.startContainer.nodeValue.length &&
+                            range.setStart(range.startContainer, sampleRangeToMoveCursorTo);
                         // handle selection
-                        this.setDOMSelection(
-                            {
-                                type: 'range',
-                                range,
-                                isReverted: false,
-                            },
-                            this.state.tableSelection
-                        );
+                        this.editor.setDOMSelection({
+                            type: 'range',
+                            range,
+                            isReverted: false,
+                        });
                     }
                 }
                 this.pointerEvent = null;
