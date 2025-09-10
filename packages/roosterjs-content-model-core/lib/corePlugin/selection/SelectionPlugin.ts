@@ -327,7 +327,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         range.startContainer.nodeValue &&
                             sampleRangeToMoveCursorTo < range.startContainer.nodeValue.length &&
                             range.setStart(range.startContainer, sampleRangeToMoveCursorTo);
-                        // handle selection
                         this.editor.setDOMSelection({
                             type: 'range',
                             range,
