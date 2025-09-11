@@ -52,7 +52,6 @@ export function getListTypeStyle(
             return { listType: 'UL', styleType: bulletType };
         } else if (shouldSearchForNumbering) {
             const { previousList, hasSpaceBetween } = getPreviousListLevel(model, paragraph);
-
             const previousIndex = getPreviousListIndex(model, previousList);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(

@@ -1408,7 +1408,7 @@ describe('getListTypeStyle', () => {
         runTest(model, {
             listType: 'OL',
             styleType: NumberingListType.Decimal,
-            index: 1,
+            index: undefined,
         });
     });
 });
