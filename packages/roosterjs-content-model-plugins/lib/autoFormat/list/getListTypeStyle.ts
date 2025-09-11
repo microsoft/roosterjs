@@ -52,6 +52,7 @@ export function getListTypeStyle(
             return { listType: 'UL', styleType: bulletType };
         } else if (shouldSearchForNumbering) {
             const { previousList, hasSpaceBetween } = getPreviousListLevel(model, paragraph);
+
             const previousIndex = getPreviousListIndex(model, previousList);
             const previousListStyle = getPreviousListStyle(previousList);
             const numberingType = getNumberingListStyle(
@@ -131,9 +132,10 @@ const getPreviousListLevel = (
 };
 
 const getPreviousListStyle = (list?: ContentModelListItem) => {
-    if (list?.levels[0].dataset) {
-        return updateListMetadata(list.levels[0])?.orderedStyleType;
+    if (!list || list.levels.length < 1) {
+        return undefined;
     }
+    return updateListMetadata(list.levels[0])?.orderedStyleType;
 };
 
 const bulletListType: Map<string, number> = new Map<string, number>([
