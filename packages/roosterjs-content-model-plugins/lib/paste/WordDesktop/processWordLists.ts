@@ -227,10 +227,10 @@ function wordListPaddingParser(
     format: ContentModelListItemLevelFormat,
     element: HTMLElement
 ): void {
-    if (element.style.marginLeft && element.style.marginLeft != '0in') {
+    if (element.style.marginLeft && parseInt(element.style.marginLeft) != 0) {
         format.paddingLeft = '0px';
     }
-    if (element.style.marginRight && element.style.marginRight != '0in') {
+    if (element.style.marginRight && parseInt(element.style.marginRight) != 0) {
         format.paddingRight = '0px';
     }
 }
