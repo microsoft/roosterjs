@@ -131,9 +131,10 @@ const getPreviousListLevel = (
 };
 
 const getPreviousListStyle = (list?: ContentModelListItem) => {
-    if (list?.levels[0].dataset) {
-        return updateListMetadata(list.levels[0])?.orderedStyleType;
+    if (!list || list.levels.length < 1) {
+        return undefined;
     }
+    return updateListMetadata(list.levels[0])?.orderedStyleType;
 };
 
 const bulletListType: Map<string, number> = new Map<string, number>([
