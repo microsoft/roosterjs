@@ -11,7 +11,5 @@ export function restoreSnapshotLogicalRoot(core: EditorCore, snapshot: Snapshot)
         if (restoredLogicalRoot !== core.logicalRoot) {
             core.api.setLogicalRoot(core, restoredLogicalRoot);
         }
-    } else {
-        core.api.setLogicalRoot(core, null);
     }
 }
