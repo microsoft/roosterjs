@@ -1356,4 +1356,59 @@ describe('getListTypeStyle', () => {
             index: 3,
         });
     });
+
+    it('should create a new list', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                    },
+                    levels: [],
+                    blockType: 'BlockGroup',
+                    format: {},
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            segments: [
+                                {
+                                    segmentType: 'Br',
+                                    format: {},
+                                },
+                            ],
+                            segmentFormat: {},
+                            blockType: 'Paragraph',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            text: '1.',
+                            segmentType: 'Text',
+                            format: {},
+                        },
+                        {
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                        },
+                    ],
+                    segmentFormat: {},
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        runTest(model, {
+            listType: 'OL',
+            styleType: NumberingListType.Decimal,
+            index: undefined,
+        });
+    });
 });

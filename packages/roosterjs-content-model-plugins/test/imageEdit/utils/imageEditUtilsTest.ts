@@ -3,7 +3,6 @@ import {
     checkIfImageWasResized,
     getPx,
     isASmallImage,
-    isRTL,
     rotateCoordinate,
     setFlipped,
     setSize,
@@ -102,14 +101,6 @@ describe('imageEditUtils', () => {
         it('was resized', () => {
             const image = document.createElement('img');
             const result = checkIfImageWasResized(image);
-            expect(result).toBeFalsy();
-        });
-    });
-
-    describe('isRTL', () => {
-        it(' not isRTL', () => {
-            const image = document.createElement('img');
-            const result = isRTL(image);
             expect(result).toBeFalsy();
         });
     });

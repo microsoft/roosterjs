@@ -40,6 +40,11 @@ export interface EditorEnvironment {
     readonly isAndroid?: boolean;
 
     /**
+     * Whether editor is running on iOS
+     */
+    readonly isIOS?: boolean;
+
+    /**
      * Whether editor is running on Safari browser
      */
     readonly isSafari?: boolean;

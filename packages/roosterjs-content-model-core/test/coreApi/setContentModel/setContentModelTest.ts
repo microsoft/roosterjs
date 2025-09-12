@@ -4,9 +4,11 @@ import * as updateCache from '../../../lib/corePlugin/cache/updateCache';
 import { ContentModelDocument, EditorCore, ModelToDomContext } from 'roosterjs-content-model-types';
 import { setContentModel } from '../../../lib/coreApi/setContentModel/setContentModel';
 
+const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedContext = { name: 'CONTEXT', rewriteFromModel: {} } as any;
+const mockedDiv = { ownerDocument: mockedDoc } as any;
 const mockedConfig = 'CONFIG' as any;
 
 describe('setContentModel', () => {
@@ -20,19 +22,8 @@ describe('setContentModel', () => {
     let flushMutationsSpy: jasmine.Spy;
     let updateCacheSpy: jasmine.Spy;
     let triggerEventSpy: jasmine.Spy;
-    let mockedDiv: HTMLElement;
-    let doc: Document;
 
     beforeEach(() => {
-        doc = document.implementation.createHTMLDocument('test');
-
-        mockedDiv = {
-            ownerDocument: {
-                implementation: {
-                    createHTMLDocument: () => doc,
-                },
-            },
-        } as any;
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom');
         createEditorContext = jasmine
             .createSpy('createEditorContext')
@@ -88,7 +79,7 @@ describe('setContentModel', () => {
             mockedEditorContext
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            jasmine.anything(),
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -112,7 +103,7 @@ describe('setContentModel', () => {
             mockedEditorContext
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -142,7 +133,7 @@ describe('setContentModel', () => {
             additionalOption
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -167,7 +158,7 @@ describe('setContentModel', () => {
             mockedEditorContext
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -199,7 +190,7 @@ describe('setContentModel', () => {
             }
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -233,7 +224,7 @@ describe('setContentModel', () => {
             }
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext
@@ -262,7 +253,7 @@ describe('setContentModel', () => {
             }
         );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
-            doc,
+            mockedDoc,
             mockedDiv,
             mockedModel,
             mockedContext

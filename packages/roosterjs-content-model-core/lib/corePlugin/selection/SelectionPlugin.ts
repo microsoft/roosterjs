@@ -333,7 +333,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     };
 
     private onPointerDown = (e: PointerEvent) => {
-        if (e.pointerType == 'touch' || e.pointerType == 'pen') {
+        if (e.pointerType === 'touch' || e.pointerType === 'pen') {
             this.pointerEvent = e;
         }
     };
