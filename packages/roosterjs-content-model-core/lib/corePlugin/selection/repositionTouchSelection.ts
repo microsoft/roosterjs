@@ -1,4 +1,4 @@
-import type { IEditor, ShallowMutableContentModelSegment } from 'roosterjs-content-model-types';
+import type { IEditor, ContentModelText } from 'roosterjs-content-model-types';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { adjustWordSelection } from 'roosterjs-content-model-api';
 
@@ -33,7 +33,7 @@ export function repositionTouchSelection(editor: IEditor) {
                 ).map(x => [x, para, path]);
 
                 // 2. Collect all text segments in selection
-                const segments: ShallowMutableContentModelSegment[] | null = [];
+                const segments: ContentModelText[] | null = [];
                 segmentAndParagraphs.forEach(item => {
                     if (item[0].segmentType == 'Text') {
                         segments.push(item[0]);
@@ -44,10 +44,8 @@ export function repositionTouchSelection(editor: IEditor) {
                 // before selection marker + after selection marker
                 if (segments.length === 2) {
                     // 3. Calculate the offset to move cursor to the nearest edge of the word if within 6 characters
-                    const leftCursorWordLength =
-                        segments[0].segmentType === 'Text' ? segments[0].text.length : 0;
-                    const rightCursorWordLength =
-                        segments[1].segmentType === 'Text' ? segments[1].text.length : 0;
+                    const leftCursorWordLength = segments[0].text.length;
+                    const rightCursorWordLength = segments[1].text.length;
                     let movingOffset: number =
                         leftCursorWordLength > rightCursorWordLength
                             ? rightCursorWordLength
