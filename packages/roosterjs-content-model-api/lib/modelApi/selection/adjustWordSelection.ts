@@ -12,6 +12,10 @@ import type {
     ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
+/*
+ * Return specific word segment where the selection marker is located
+ * @param model The model document
+ */
 export function adjustWordSelection(
     model: ReadonlyContentModelDocument,
     marker: ShallowMutableContentModelSegment
