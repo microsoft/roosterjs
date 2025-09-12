@@ -21,9 +21,7 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
-    DOMEventRecord,
 } from 'roosterjs-content-model-types';
-import { repositionTouchSelection } from './repositionTouchSelection';
 
 const MouseLeftButton = 0;
 const MouseRightButton = 2;
@@ -32,7 +30,6 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
-const Touch_Selection_Delay_Update_Time = 200; // the time to wait before reposition (wait for selection is updated properly)
 
 /**
  * @internal
@@ -51,7 +48,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private isSafari = false;
     private isMac = false;
     private scrollTopCache: number = 0;
-    private pointerEvent: PointerEvent | null = null;
 
     constructor(options: EditorOptions) {
         this.state = {
@@ -103,15 +99,18 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
         document.addEventListener('selectionchange', this.onSelectionChange);
-        const eventHandlers: Partial<
-            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
-        > = {
-            focus: { beforeDispatch: this.onFocus },
-            drop: { beforeDispatch: this.onDrop },
-            blur: this.isSafari ? undefined : { beforeDispatch: this.onBlur },
-            pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
-        };
-        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
+        if (this.isSafari) {
+            this.disposer = this.editor.attachDomEvent({
+                focus: { beforeDispatch: this.onFocus },
+                drop: { beforeDispatch: this.onDrop },
+            });
+        } else {
+            this.disposer = this.editor.attachDomEvent({
+                focus: { beforeDispatch: this.onFocus },
+                blur: { beforeDispatch: this.onBlur },
+                drop: { beforeDispatch: this.onDrop },
+            });
+        }
     }
 
     dispose() {
@@ -247,10 +246,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 },
             });
         }
-
-        if (rawEvent.defaultPrevented) {
-            this.pointerEvent = null;
-        }
     }
 
     private onMouseMove = (event: Event) => {
@@ -315,27 +310,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private onMouseUp() {
         this.detachMouseEvent();
-        if (this.pointerEvent && this.pointerEvent.pointerType === 'touch') {
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    // Handle touch selection here since the cursor position is updated
-                    if (this.editor && this.pointerEvent) {
-                        repositionTouchSelection(this.editor);
-                    }
-                    this.pointerEvent = null;
-                }, Touch_Selection_Delay_Update_Time);
-            });
-        }
     }
 
     private onDrop = () => {
         this.detachMouseEvent();
-    };
-
-    private onPointerDown = (e: PointerEvent) => {
-        if (e.pointerType == 'touch' || e.pointerType == 'pen') {
-            this.pointerEvent = e;
-        }
     };
 
     private onKeyDown(editor: IEditor, rawEvent: KeyboardEvent) {
