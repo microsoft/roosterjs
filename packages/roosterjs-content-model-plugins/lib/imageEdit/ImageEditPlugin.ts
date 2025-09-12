@@ -240,11 +240,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             event.rawEvent.button !== MouseRightButton &&
             !this.isCropMode
         ) {
-            this.applyFormatWithContentModel(
-                editor,
-                this.isCropMode,
-                this.shadowSpan === event.rawEvent.target
-            );
+            this.applyFormatWithContentModel(editor, this.isCropMode);
         }
     }
 
@@ -339,7 +335,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     protected applyFormatWithContentModel(
         editor: IEditor,
         isCropMode: boolean,
-        shouldSelectImage: boolean,
+        shouldSelectImage?: boolean,
         isApiOperation?: boolean
     ) {
         let editingImageModel: ContentModelImage | undefined;
@@ -389,9 +385,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 if (this.wasImageResized || changeState == 'FullyChanged') {
                                     context.skipUndoSnapshot = false;
                                 }
-
-                                image.isSelected = shouldSelectImage;
-                                image.isSelectedAsImageSelection = shouldSelectImage;
+                                const isSameImage =
+                                    previousSelectedImage?.image === editingImage?.image;
+                                image.isSelected = isSameImage || shouldSelectImage;
+                                image.isSelectedAsImageSelection = isSameImage || shouldSelectImage;
                                 image.format.imageState = undefined;
 
                                 if (selection?.type == 'range' && !selection.range.collapsed) {
@@ -508,6 +505,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (!this.imageEditInfo) {
             this.imageEditInfo = getSelectedImageMetadata(editor, image);
         }
+
         this.imageHTMLOptions = getHTMLImageOptions(editor, this.options, this.imageEditInfo);
         this.lastSrc = image.getAttribute('src');
 

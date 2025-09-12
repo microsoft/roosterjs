@@ -172,7 +172,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             event.stopPropagation();
 
             const isAndroid = this.editor?.getEnvironment()?.isAndroid ?? false;
-            const isComposing = !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
+            const isComposing =
+                !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
 
             if (this.editor && !isComposing) {
                 this.editor.triggerEvent('input', {

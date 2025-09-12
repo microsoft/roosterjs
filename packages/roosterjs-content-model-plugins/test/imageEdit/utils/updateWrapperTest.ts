@@ -92,6 +92,7 @@ describe('updateWrapper', () => {
         expect(imageClone.style.width).toBe('20px');
         expect(imageClone.style.height).toBe('13.3333px');
         expect(imageClone.style.position).toBe('absolute');
+        expect(imageClone.style.position).toBe('absolute');
         image.remove();
     });
 });
