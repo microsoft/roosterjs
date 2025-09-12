@@ -1,4 +1,5 @@
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { repositionTouchSelection } from './repositionTouchSelection';
 
 /**
  * Touch plugin to manage touch behaviors
@@ -48,7 +49,7 @@ export class TouchPlugin implements EditorPlugin {
         }
         switch (event.eventType) {
             case 'pointerUp':
-                console.log('Pointer up event: ', event.rawEvent);
+                repositionTouchSelection(this.editor);
                 break;
         }
     }
