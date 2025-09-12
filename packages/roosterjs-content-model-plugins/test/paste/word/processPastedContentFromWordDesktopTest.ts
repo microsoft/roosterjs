@@ -1249,10 +1249,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     segmentType: 'Text',
                                     text: 'Test',
-                                    format: {
-                                        fontFamily: 'Calibri, sans-serif',
-                                        fontSize: '12pt',
-                                    },
+                                    format: { fontFamily: 'Calibri, sans-serif', fontSize: '12pt' },
                                 },
                             ],
                             format: {
@@ -1261,10 +1258,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '0in',
                             },
-                            segmentFormat: {
-                                fontFamily: 'Calibri, sans-serif',
-                                fontSize: '12pt',
-                            },
+                            segmentFormat: { fontFamily: 'Calibri, sans-serif', fontSize: '12pt' },
                             decorator: { tagName: 'p', format: {} },
                         },
                         {
@@ -1273,10 +1267,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     segmentType: 'Text',
                                     text: 'Test',
-                                    format: {
-                                        fontFamily: 'Calibri, sans-serif',
-                                        fontSize: '12pt',
-                                    },
+                                    format: { fontFamily: 'Calibri, sans-serif', fontSize: '12pt' },
                                 },
                             ],
                             format: {
@@ -1285,10 +1276,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '0in',
                             },
-                            segmentFormat: {
-                                fontFamily: 'Calibri, sans-serif',
-                                fontSize: '12pt',
-                            },
+                            segmentFormat: { fontFamily: 'Calibri, sans-serif', fontSize: '12pt' },
                             decorator: { tagName: 'p', format: {} },
                         },
                         {
@@ -1321,7 +1309,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
                                     dataset: {},
@@ -2470,30 +2457,46 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     blockGroupType: 'Document',
                     blocks: [
                         {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: '123',
+                                            format: {
+                                                fontFamily: 'Aptos, sans-serif',
+                                                fontSize: '12pt',
+                                            },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                    segmentFormat: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                    },
                                 },
-                            },
+                            ],
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                         startNumberOverride: 100,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2501,50 +2504,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '0.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2555,12 +2548,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l1',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2568,50 +2563,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '1in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2621,9 +2606,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2634,12 +2617,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l2',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2647,50 +2632,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '1.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2700,9 +2675,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2712,9 +2685,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2725,12 +2696,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2738,50 +2711,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '2in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '213',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2791,9 +2754,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2803,9 +2764,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2815,9 +2774,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2828,12 +2785,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2841,50 +2800,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '2.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '213',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2894,9 +2843,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2906,9 +2853,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2918,9 +2863,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2930,9 +2873,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -2943,12 +2884,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -2956,50 +2899,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '3in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3009,9 +2942,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3021,9 +2952,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3033,9 +2962,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3045,9 +2972,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3057,9 +2982,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3070,12 +2993,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 1,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3083,50 +3008,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '3.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '213',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3136,9 +3051,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3148,9 +3061,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3160,9 +3071,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3172,9 +3081,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3184,9 +3091,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3196,9 +3101,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3209,12 +3112,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 500,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3222,50 +3127,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '4in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '213',
                                             segmentType: 'Text',
+                                            text: '213',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3275,9 +3170,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3287,9 +3180,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3299,9 +3190,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3311,9 +3200,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3323,9 +3210,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3335,9 +3220,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3347,9 +3230,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3360,12 +3241,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         wordList: 'l3',
                                         startNumberOverride: 6,
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3373,50 +3256,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '4.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '213',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3426,9 +3299,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3438,9 +3309,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3450,9 +3319,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3462,9 +3329,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3474,9 +3339,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3486,9 +3349,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3498,12 +3359,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3511,50 +3374,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '4in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3564,9 +3417,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3576,9 +3427,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3588,9 +3437,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3600,9 +3447,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3612,9 +3457,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3624,12 +3467,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3637,50 +3482,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '3.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3690,9 +3525,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3702,9 +3535,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3714,9 +3545,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3726,9 +3555,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3738,12 +3565,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3751,50 +3580,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '3in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3804,9 +3623,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3816,9 +3633,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3828,9 +3643,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3840,12 +3653,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":3}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3853,50 +3668,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '2.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3906,9 +3711,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3918,9 +3721,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l2',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3930,12 +3731,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -3943,50 +3746,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '2in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -3996,9 +3789,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l1',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -4008,12 +3799,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":13}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -4021,50 +3814,40 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '1.5in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l0',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                                 {
                                     listType: 'OL',
@@ -4074,12 +3857,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":5}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -4087,53 +3872,47 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '0in',
                                 marginLeft: '1in',
                             },
+                        },
+                        {
+                            blockType: 'BlockGroup',
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
-                                    isImplicit: true,
+                                    blockType: 'Paragraph',
                                     segments: [
                                         {
-                                            text: '123',
                                             segmentType: 'Text',
+                                            text: '123',
                                             format: {
                                                 fontFamily: 'Aptos, sans-serif',
                                                 fontSize: '12pt',
                                             },
                                         },
                                     ],
-                                    blockType: 'Paragraph',
                                     format: {},
+                                    isImplicit: true,
                                     segmentFormat: {
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                     },
                                 },
                             ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                },
-                            },
                             levels: [
                                 {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        paddingLeft: '0px',
                                         wordList: 'l3',
                                     },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
+                                    dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
                             ],
-                            blockType: 'BlockGroup',
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
+                            },
                             format: {
                                 lineHeight: '116%',
                                 marginTop: '0in',
@@ -4141,28 +3920,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginBottom: '8pt',
                                 marginLeft: '0.5in',
                             },
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    isImplicit: true,
-                                    segments: [
-                                        {
-                                            text: '123',
-                                            segmentType: 'Text',
-                                            format: {
-                                                fontFamily: 'Aptos, sans-serif',
-                                                fontSize: '12pt',
-                                            },
-                                        },
-                                    ],
-                                    blockType: 'Paragraph',
-                                    format: {},
-                                    segmentFormat: {
-                                        fontFamily: 'Aptos, sans-serif',
-                                        fontSize: '12pt',
-                                    },
-                                },
-                            ],
                         },
                     ],
                 },
