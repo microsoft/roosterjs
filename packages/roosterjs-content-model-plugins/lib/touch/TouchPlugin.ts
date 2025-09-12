@@ -6,7 +6,6 @@ import { repositionTouchSelection } from './repositionTouchSelection';
  */
 export class TouchPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-    private disposer: (() => void) | null = null;
 
     /**
      * Create an instance of Touch plugin
@@ -26,16 +25,12 @@ export class TouchPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.attachDomEvent({});
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.disposer?.();
-        this.disposer = null;
-
         this.editor = null;
     }
 

@@ -560,7 +560,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                 new HiddenPropertyPlugin({
                     undeletableLinkChecker: undeletableLinkChecker,
                 }),
-            new TouchPlugin(),
+            pluginList.touch && new TouchPlugin(),
         ].filter(x => !!x);
     }
 }

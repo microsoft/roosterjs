@@ -12,9 +12,6 @@ import type {
     ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
 
-/**
- * @internal
- */
 export function adjustWordSelection(
     model: ReadonlyContentModelDocument,
     marker: ShallowMutableContentModelSegment
