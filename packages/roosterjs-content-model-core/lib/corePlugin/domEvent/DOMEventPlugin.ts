@@ -219,7 +219,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                     this.state.mouseDownY == rawEvent.pageY,
             });
 
-            if (this.pointerEvent && this.pointerEvent.pointerType === 'touch') {
+            if (this.pointerEvent) {
                 this.editor.triggerEvent('pointerUp', {
                     rawEvent: this.pointerEvent,
                 });
