@@ -33,7 +33,7 @@ export function repositionTouchSelection(editor: IEditor) {
                 ).map(x => [x, para, path]);
 
                 // 2. Collect all text segments in selection
-                const segments: ContentModelText[] | null = [];
+                const segments: ContentModelText[] = [];
                 segmentAndParagraphs.forEach(item => {
                     if (item[0].segmentType == 'Text') {
                         segments.push(item[0]);
