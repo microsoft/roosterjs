@@ -32,6 +32,7 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+const Touch_Selection_Delay_Update_Time = 200; // the time to wait before reposition (wait for selection is updated properly)
 
 /**
  * @internal
@@ -322,7 +323,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         repositionTouchSelection(this.editor);
                     }
                     this.pointerEvent = null;
-                }, 200);
+                }, Touch_Selection_Delay_Update_Time);
             });
         }
     }

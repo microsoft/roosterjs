@@ -2,6 +2,8 @@ import type { IEditor, ShallowMutableContentModelSegment } from 'roosterjs-conte
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
 import { adjustWordSelection } from 'roosterjs-content-model-api';
 
+const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
+
 /**
  * @internal
  * Touch selection, if tap within 6 characters of the beginning/end. Find the nearest edge of the word and move cursor there.
@@ -50,7 +52,8 @@ export function repositionTouchSelection(editor: IEditor) {
                         leftCursorWordLength > rightCursorWordLength
                             ? rightCursorWordLength
                             : -leftCursorWordLength;
-                    movingOffset = Math.abs(movingOffset) > 6 ? 0 : movingOffset;
+                    movingOffset =
+                        Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE ? 0 : movingOffset;
 
                     // 4. Move cursor to the calculated offset
                     const selection = editor.getDOMSelection();
