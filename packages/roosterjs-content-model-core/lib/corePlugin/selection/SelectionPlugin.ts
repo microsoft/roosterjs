@@ -316,6 +316,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.detachMouseEvent();
     };
 
+    private onPointerDown = (e: PointerEvent) => {
+        if (e.pointerType == 'touch' || e.pointerType == 'pen') {
+            this.pointerEvent = e;
+        }
+    };
+
     private onKeyDown(editor: IEditor, rawEvent: KeyboardEvent) {
         const key = rawEvent.key;
         const selection = editor.getDOMSelection();
