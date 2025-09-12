@@ -23,6 +23,7 @@ import type {
     TableCellCoordinate,
     DOMEventRecord,
 } from 'roosterjs-content-model-types';
+import { repositionTouchSelection } from './repositionTouchSelection';
 
 const MouseLeftButton = 0;
 const MouseRightButton = 2;
@@ -315,11 +316,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         this.detachMouseEvent();
         if (this.pointerEvent && this.pointerEvent.pointerType === 'touch') {
             requestAnimationFrame(() => {
-                if (this.editor && this.pointerEvent) {
+                setTimeout(() => {
                     // Handle touch selection here since the cursor position is updated
-                    // Work-in-progress
-                }
-                this.pointerEvent = null;
+                    if (this.editor && this.pointerEvent) {
+                        repositionTouchSelection(this.editor);
+                    }
+                    this.pointerEvent = null;
+                }, 200);
             });
         }
     }
