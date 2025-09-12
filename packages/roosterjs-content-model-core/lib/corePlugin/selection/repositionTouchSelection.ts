@@ -16,7 +16,7 @@ export function repositionTouchSelection(editor: IEditor) {
                 true /*mutate*/
             );
 
-            let isCollapsedSelection =
+            const isCollapsedSelection =
                 segmentAndParagraphs.length >= 1 &&
                 segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
 
