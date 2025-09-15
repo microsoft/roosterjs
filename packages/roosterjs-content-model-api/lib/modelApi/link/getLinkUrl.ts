@@ -28,8 +28,8 @@ function matchMailTo(text: string) {
         return text.toLocaleLowerCase();
     }
 
-    // Only add 'mailto:' if text matches COMMON_REGEX and EMAIlADDRESS_REGEX
-    if (text.match(COMMON_REGEX) && text.match(EMAIlADDRESS_REGEX)) {
+    // Only add 'mailto:' if text matches EMAIlADDRESS_REGEX
+    if (text.match(EMAIlADDRESS_REGEX)) {
         const prefixed = 'mailto:' + text;
         if (prefixed.match(MAILTO_REGEX)) {
             return prefixed.toLocaleLowerCase();
