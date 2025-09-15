@@ -20,7 +20,7 @@ export const tableBorderWidthButton: RibbonButton<'buttonNameTableBorderWidth'> 
         allowLivePreview: true,
     },
     onClick: (editor, width) => {
-        MainPane.getInstance().setTableBorderWidth(width);
+        MainPane.getInstance(editor.getOwner()).setTableBorderWidth(width);
         editor.focus();
 
         return true;

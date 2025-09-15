@@ -26,7 +26,7 @@ export const tableBorderStyleButton: RibbonButton<'buttonNameTableBorderStyle'> 
         allowLivePreview: true,
     },
     onClick: (editor, style) => {
-        MainPane.getInstance().setTableBorderStyle(style);
+        MainPane.getInstance(editor.getOwner()).setTableBorderStyle(style);
         editor.focus();
 
         return true;

@@ -24,4 +24,7 @@ export interface CloneModelOptions {
      * For General Model and Entity, the callback must return a valid element, otherwise there will be exception thrown.
      */
     includeCachedElement?: boolean | CachedElementHandler;
+
+    existingOwner?: string;
+    newOwner?: string;
 }

@@ -138,7 +138,7 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         }
 
         if (resetEditor) {
-            MainPane.getInstance().resetEditorPlugin(state);
+            MainPane.getInstance(this.props.owner).resetEditorPlugin(state);
         }
     };
 
@@ -161,7 +161,8 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
         this.setState({
             isRtl: isRtl,
         });
-        MainPane.getInstance().setPageDirection(isRtl);
+
+        MainPane.getInstance(this.props.owner).setPageDirection(isRtl);
     };
 
     private getHtml() {

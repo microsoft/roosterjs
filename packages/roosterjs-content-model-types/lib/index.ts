@@ -340,6 +340,7 @@ export {
     SelectionOptions,
     PasteOptions,
     EditorBaseOptions,
+    CoauthoringOptions,
 } from './editor/EditorOptions';
 export {
     CreateContentModel,
@@ -456,6 +457,8 @@ export {
 } from './parameter/ModelToTextCallbacks';
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
+export { ICoauthoringClient } from './parameter/ICoauthoringClient';
+export { ICoauthoringAgent } from './parameter/ICoauthoringAgent';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';

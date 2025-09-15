@@ -11,6 +11,7 @@ import { handleListItem } from '../handlers/handleListItem';
 import { handleParagraph } from '../handlers/handleParagraph';
 import { handleSegment } from '../handlers/handleSegment';
 import { handleSegmentDecorator } from '../handlers/handleSegmentDecorator';
+import { handleSelectionMarker } from '../handlers/handleSelectionMarker';
 import { handleTable } from '../handlers/handleTable';
 import { handleText } from '../handlers/handleText';
 import type { ContentModelHandlerMap } from 'roosterjs-content-model-types';
@@ -36,4 +37,5 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     segmentDecorator: handleSegmentDecorator,
     table: handleTable,
     text: handleText,
+    selectionMarker: handleSelectionMarker,
 };

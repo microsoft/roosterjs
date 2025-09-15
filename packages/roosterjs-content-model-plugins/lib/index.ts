@@ -42,3 +42,4 @@ export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
 export { HiddenPropertyPlugin } from './hiddenProperty/HiddenPropertyPlugin';
 export { HiddenPropertyOptions } from './hiddenProperty/HiddenPropertyOptions';
+export { CoauthoringAgent } from './coauthoring/CoauthoringAgent';

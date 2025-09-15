@@ -35,6 +35,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     ) >= 0
             ),
             textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
+            coauthoringClient: {
+                owner: option.owner ?? '',
+                onRemoteUpdate: () => {},
+                onLocalUpdate: () => {},
+                dispose: () => {},
+            },
         };
 
         if (option.enableParagraphMap) {
@@ -110,6 +116,9 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
+
+                this.state.coauthoringClient.onLocalUpdate();
+
                 break;
 
             case 'contentChanged':
@@ -120,6 +129,8 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 } else {
                     this.invalidateCache();
                 }
+
+                this.state.coauthoringClient.onLocalUpdate();
 
                 break;
         }
@@ -157,6 +168,9 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     break;
             }
         }
+
+        this.state.coauthoringClient.onLocalUpdate();
+        this.state.textMutationObserver.flushMutations(true /*ignoreIfNeeded*/);
     };
 
     private onNativeSelectionChange = () => {

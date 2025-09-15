@@ -73,4 +73,9 @@ export interface EditorContext {
      * When set to true, size of table will be recalculated when converting from DOM to Content Model.
      */
     recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
+
+    /**
+     * Owner of the current editor instance, used to identify different editor instances in the same page
+     */
+    owner?: string;
 }

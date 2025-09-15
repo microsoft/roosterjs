@@ -1,4 +1,5 @@
 export interface SidePaneElementProps {
+    owner: string;
     updateHash: (pluginName?: string, path?: string[]) => void;
 }
 

@@ -10,6 +10,8 @@ import type {
     EditorCore,
     EditorCorePlugins,
     EditorOptions,
+    ICoauthoringClient,
+    ICoauthoringAgent,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -21,7 +23,7 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
     const corePlugins = createEditorCorePlugins(options, contentDiv);
     const domCreator = createDOMCreator(options.trustedHTMLHandler);
 
-    return {
+    const result = {
         physicalRoot: contentDiv,
         logicalRoot: contentDiv,
         api: { ...coreApiMap, ...options.coreApiOverride },
@@ -56,6 +58,49 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
         onFixUpModel: options.onFixUpModel,
         experimentalFeatures: options.experimentalFeatures ? [...options.experimentalFeatures] : [],
     };
+
+    if (options.coauthoringAgent) {
+        result.cache.coauthoringClient = createCoauthoringClient(
+            result,
+            options.owner ?? '',
+            options.coauthoringAgent
+        );
+    }
+
+    return result;
+}
+
+function createCoauthoringClient(
+    core: EditorCore,
+    owner: string,
+    agent: ICoauthoringAgent
+): ICoauthoringClient {
+    let ignoreLocal = false;
+    const client: ICoauthoringClient = {
+        owner,
+        dispose: () => agent.unregister(owner),
+        onRemoteUpdate: model => {
+            ignoreLocal = true;
+            try {
+                core.api.setContentModel(core, model, {
+                    ignoreSelection: true,
+                });
+            } finally {
+                ignoreLocal = false;
+            }
+        },
+        onLocalUpdate: () => {
+            if (!ignoreLocal) {
+                const model = core.api.createContentModel(core);
+
+                agent.onUpdate(owner, model);
+            }
+        },
+    };
+
+    agent.register(client);
+
+    return client;
 }
 
 function createEditorEnvironment(

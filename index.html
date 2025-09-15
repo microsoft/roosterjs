@@ -3,12 +3,26 @@
     <head>
         <title>RoosterJs Demo Site</title>
         <style>
-            #mainPane {
+            #mainPane1,
+            #mainPane2,
+            #mainPane3 {
+                border: 1px solid black;
                 position: absolute;
-                left: 10px;
-                right: 10px;
                 top: 10px;
                 bottom: 10px;
+            }
+
+            #mainPane1 {
+                left: 10px;
+                right: 66%;
+            }
+            #mainPane2 {
+                left: 34%;
+                right: 34%;
+            }
+            #mainPane3 {
+                left: 66%;
+                right: 10px;
             }
         </style>
         <meta
@@ -17,7 +31,9 @@
         />
     </head>
     <body>
-        <div id="mainPane"></div>
+        <div id="mainPane1"></div>
+        <div id="mainPane2"></div>
+        <div id="mainPane3"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.14.0/umd/react.production.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.14.0/umd/react-dom.production.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fluentui-react/8.122.3/fluentui-react.min.js"></script>

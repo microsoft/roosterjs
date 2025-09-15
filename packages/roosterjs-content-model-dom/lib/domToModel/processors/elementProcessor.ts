@@ -13,7 +13,8 @@ import type {
  */
 export const elementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const tagName = element.tagName.toLowerCase() as keyof ElementProcessorMap;
-    const processor = (tryGetProcessorForEntity(element, context) ||
+    const processor = (tryGetProcessorForCoauthoringMarker(element, context) ||
+        tryGetProcessorForEntity(element, context) ||
         tryGetProcessorForDelimiter(element, context) ||
         context.elementProcessors[tagName] ||
         (tagName.indexOf(':') >= 0 && context.elementProcessors.child) ||
@@ -29,4 +30,14 @@ function tryGetProcessorForEntity(element: HTMLElement, context: DomToModelConte
 
 function tryGetProcessorForDelimiter(element: HTMLElement, context: DomToModelContext) {
     return isEntityDelimiter(element) ? context.elementProcessors.delimiter : null;
+}
+
+function tryGetProcessorForCoauthoringMarker(element: HTMLElement, context: DomToModelContext) {
+    return element.classList.contains('roosterjs-coauthoring-marker')
+        ? processCoauthoringMarker
+        : null;
+}
+
+function processCoauthoringMarker(group: any, element: HTMLElement, context: DomToModelContext) {
+    // no op
 }

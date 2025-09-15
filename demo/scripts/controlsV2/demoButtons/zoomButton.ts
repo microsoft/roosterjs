@@ -37,7 +37,7 @@ export const zoomButton: RibbonButton<ZoomButtonStringKey> = {
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in
-        MainPane.getInstance().setScale(zoomScale);
+        MainPane.getInstance(editor.getOwner()).setScale(zoomScale);
 
         editor.triggerEvent('zoomChanged', { newZoomScale: zoomScale });
     },

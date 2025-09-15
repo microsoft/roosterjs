@@ -1,5 +1,12 @@
+import { CoauthoringAgent } from 'roosterjs-content-model-plugins';
 import { mount as mountV2 } from './controlsV2/mainPane/MainPane';
 
-const mainPaneDiv = document.getElementById('mainPane');
+const mainPaneDiv1 = document.getElementById('mainPane1');
+const mainPaneDiv2 = document.getElementById('mainPane2');
+const mainPaneDiv3 = document.getElementById('mainPane3');
 
-mountV2(mainPaneDiv);
+const coauthoringAgent = new CoauthoringAgent();
+
+mountV2(mainPaneDiv1, 'Alice', coauthoringAgent);
+mountV2(mainPaneDiv2, 'Bob', coauthoringAgent);
+mountV2(mainPaneDiv3, 'Charlie', coauthoringAgent);

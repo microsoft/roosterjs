@@ -36,7 +36,7 @@ export class FormatStatePane extends React.Component<FormatStatePaneProps, Forma
     render() {
         const { format, x, y } = this.state;
         const { isMac, isAndroid, isSafari, isMobileOrTablet } = this.props.env ?? {};
-        const mpState = MainPane.getInstance();
+        const mpState = MainPane.getInstance(this.props.owner);
 
         const TableFormat = () => {
             const tableFormat = format.tableFormat;

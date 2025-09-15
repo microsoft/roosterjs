@@ -4,6 +4,7 @@ const styles = require('./TitleBar.scss');
 const github = require('./iconmonstr-github-1.svg');
 
 export interface TitleBarProps {
+    owner: string;
     className?: string;
 }
 
@@ -17,6 +18,7 @@ export class TitleBar extends React.Component<TitleBarProps, {}> {
             <div className={className}>
                 <div className={styles.title}>
                     <span className={styles.titleText}>{titleText}</span>
+                    <span className={styles.ownerText}>({this.props.owner})</span>
                 </div>
                 <div className={styles.version}></div>
                 <div className={styles.links}>

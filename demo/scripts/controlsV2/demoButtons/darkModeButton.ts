@@ -18,7 +18,7 @@ export const darkModeButton: RibbonButton<DarkModeButtonStringKey> = {
         editor.focus();
 
         // Let main pane know this state change so that it can be persisted when pop out/pop in
-        MainPane.getInstance().toggleDarkMode();
+        MainPane.getInstance(editor.getOwner()).toggleDarkMode();
         return true;
     },
     commandBarProperties: {

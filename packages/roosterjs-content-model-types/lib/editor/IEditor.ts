@@ -243,4 +243,9 @@ export interface IEditor {
      * @param featureName The name of feature to check
      */
     isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean;
+
+    /**
+     * Get the owner of this editor. The owner is usually the user id of current user
+     */
+    getOwner(): string;
 }

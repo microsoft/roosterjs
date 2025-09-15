@@ -68,6 +68,8 @@ export class Editor implements IEditor {
     dispose() {
         const core = this.getCore();
 
+        core.cache.coauthoringClient.dispose();
+
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             const plugin = core.plugins[i];
 
@@ -429,6 +431,14 @@ export class Editor implements IEditor {
      */
     isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean {
         return this.getCore().experimentalFeatures.indexOf(featureName) >= 0;
+    }
+
+    /**
+     * Get the owner of this editor.
+     * @returns the owner string of this editor
+     */
+    getOwner(): string {
+        return this.getCore().cache.coauthoringClient.owner || '';
     }
 
     /**

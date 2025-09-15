@@ -106,7 +106,7 @@ function cloneSegment(
         case 'Image':
             return cloneImage(segment);
         case 'SelectionMarker':
-            return cloneSelectionMarker(segment);
+            return cloneSelectionMarker(segment, options);
         case 'Text':
             return cloneText(segment);
     }
@@ -297,7 +297,7 @@ function cloneListItem(
 
     return Object.assign(
         {
-            formatHolder: cloneSelectionMarker(formatHolder),
+            formatHolder: cloneSelectionMarker(formatHolder, options),
             levels: levels.map(cloneListLevel),
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
         },
@@ -343,9 +343,24 @@ function cloneGeneralBlock(
 }
 
 function cloneSelectionMarker(
-    marker: ReadonlyContentModelSelectionMarker
+    marker: ReadonlyContentModelSelectionMarker,
+    options: CloneModelOptions
 ): ContentModelSelectionMarker {
-    return Object.assign({ isSelected: marker.isSelected }, cloneSegmentBase(marker));
+    const result: ContentModelSelectionMarker = Object.assign(
+        { isSelected: marker.isSelected },
+        cloneSegmentBase(marker)
+    );
+
+    if (options.existingOwner != options.newOwner) {
+        if (marker.isSelected && (!marker.owner || options.existingOwner == marker.owner)) {
+            result.owner = options.existingOwner;
+            result.isSelected = false;
+        } else if (options.newOwner == marker.owner && !marker.isSelected) {
+            result.isSelected = true;
+        }
+    }
+
+    return result;
 }
 
 function cloneImage(image: ReadonlyContentModelImage): ContentModelImage {

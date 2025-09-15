@@ -32,7 +32,7 @@ export const tableBorderApplyButton: RibbonButton<'ribbonButtonTableBorder'> = {
         },
     },
     onClick: (editor, key) => {
-        const border = MainPane.getInstance().getTableBorder();
+        const border = MainPane.getInstance(editor.getOwner()).getTableBorder();
         applyTableBorderFormat(editor, border, TABLE_OPERATIONS[key]);
     },
 };

@@ -1,3 +1,4 @@
+import type { ICoauthoringAgent } from '../parameter/ICoauthoringAgent';
 import type { PasteTypeOrGetter } from '../parameter/PasteTypeOrGetter';
 import type { ExperimentalFeature } from './ExperimentalFeature';
 import type { KnownAnnounceStrings } from '../parameter/AnnounceData';
@@ -182,6 +183,18 @@ export interface EditorBaseOptions {
     enableParagraphMap?: boolean;
 }
 
+export interface CoauthoringOptions {
+    /**
+     * Owner of the current editor instance, used to identify different editor instances in the same page
+     */
+    owner?: string;
+
+    /**
+     * Coauthoring agent that helps to coordinate different editor instances in the same page
+     */
+    coauthoringAgent?: ICoauthoringAgent;
+}
+
 /**
  * Options for editor
  */
@@ -190,4 +203,5 @@ export interface EditorOptions
         ColorOptions,
         ContentModelOptions,
         SelectionOptions,
-        PasteOptions {}
+        PasteOptions,
+        CoauthoringOptions {}

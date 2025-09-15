@@ -42,8 +42,8 @@ export function getTabs() {
             key: tab.key,
             unlocalizedText: tab.unlocalizedText,
             iconName: '',
-            onClick: () => {
-                MainPane.getInstance().changeRibbon(tab.name);
+            onClick: editor => {
+                MainPane.getInstance(editor.getOwner()).changeRibbon(tab.name);
             },
             commandBarProperties: {
                 buttonStyles: {

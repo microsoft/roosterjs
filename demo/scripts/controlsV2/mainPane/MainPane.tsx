@@ -54,6 +54,7 @@ import {
     ContentModelDocument,
     EditorOptions,
     EditorPlugin,
+    ICoauthoringAgent,
     IEditor,
     KnownAnnounceStrings,
     Snapshots,
@@ -93,9 +94,14 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
-export class MainPane extends React.Component<{}, MainPaneState> {
+interface MainPaneProps {
+    owner: string;
+    coauthoringAgent?: ICoauthoringAgent;
+}
+
+export class MainPane extends React.Component<MainPaneProps, MainPaneState> {
     private mouseX: number;
-    private static instance: MainPane;
+    private static instances: Record<string, MainPane> = {};
     private popoutRoot: HTMLElement;
     private formatStatePlugin: FormatStatePlugin;
     private editorOptionPlugin: EditorOptionsPlugin;
@@ -116,16 +122,16 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private knownColors: Record<string, Colors> = {};
     protected themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
-    static getInstance() {
-        return this.instance;
+    static getInstance(owner: string) {
+        return this.instances[owner];
     }
 
     static readonly editorDivId = 'RoosterJsContentDiv';
 
-    constructor(props: {}) {
+    constructor(props: MainPaneProps) {
         super(props);
 
-        MainPane.instance = this;
+        MainPane.instances[props.owner] = this;
         this.updateContentPlugin = new UpdateContentPlugin(this.onUpdate);
 
         this.snapshots = {
@@ -287,7 +293,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private renderTitleBar() {
-        return <TitleBar className={styles.noGrow} />;
+        return <TitleBar className={styles.noGrow} owner={this.props.owner} />;
     }
 
     private renderTabs() {
@@ -400,6 +406,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             )}
                             defaultDomToModelOptions={defaultDomToModelOption}
                             defaultModelToDomOptions={defaultModelToDomOption}
+                            owner={this.props.owner}
+                            coauthoringAgent={this.props.coauthoringAgent}
                         />
                     )}
                 </div>
@@ -573,6 +581,6 @@ function getAnnouncingString(key: KnownAnnounceStrings) {
     return AnnounceStringMap[key];
 }
 
-export function mount(parent: HTMLElement) {
-    ReactDOM.render(<MainPane />, parent);
+export function mount(parent: HTMLElement, owner: string, coauthoringAgent?: ICoauthoringAgent) {
+    ReactDOM.render(<MainPane owner={owner} coauthoringAgent={coauthoringAgent} />, parent);
 }

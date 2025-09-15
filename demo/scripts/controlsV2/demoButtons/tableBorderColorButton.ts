@@ -15,7 +15,9 @@ export const tableBorderColorButton: RibbonButton<'buttonNameTableBorderColor'> 
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameTableBorderColor') {
-            MainPane.getInstance().setTableBorderColor(getTextColorValue(key).lightModeColor);
+            MainPane.getInstance(editor.getOwner()).setTableBorderColor(
+                getTextColorValue(key).lightModeColor
+            );
             editor.focus();
         }
     },

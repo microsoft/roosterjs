@@ -47,6 +47,12 @@
     vertical-align: middle;
 }
 
+.ownerText {
+    font-size: 14pt;
+    font-style: normal;
+    color: #d0e1f9;
+}
+
 @media (prefers-color-scheme: dark) {
     .titleBar {
         background-color: $primaryColorDark;

@@ -21,6 +21,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         zoomScale: domHelper.calculateZoomScale(),
         experimentalFeatures: core.experimentalFeatures ?? [],
         paragraphMap: core.cache.paragraphMap,
+        owner: core.cache.coauthoringClient.owner,
         ...getRootComputedStyleForContext(logicalRoot.ownerDocument),
     };
 
