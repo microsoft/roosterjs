@@ -4,6 +4,7 @@ import type { AutoLinkOptions } from 'roosterjs-content-model-types';
 const COMMON_REGEX = `[\s]*[a-zA-Z0-9+][\s]*`;
 const TELEPHONE_REGEX = `(T|t)el:${COMMON_REGEX}`;
 const MAILTO_REGEX = `(M|m)ailto:${COMMON_REGEX}`;
+const EMAIlADDRESS_REGEX = /^[\w.%+-]+@/i;
 
 /**
  * @internal
@@ -27,8 +28,8 @@ function matchMailTo(text: string) {
         return text.toLocaleLowerCase();
     }
 
-    // Only add 'mailto:' if text matches COMMON_REGEX
-    if (text.match(COMMON_REGEX)) {
+    // Only add 'mailto:' if text matches COMMON_REGEX and EMAIlADDRESS_REGEX
+    if (text.match(COMMON_REGEX) && text.match(EMAIlADDRESS_REGEX)) {
         const prefixed = 'mailto:' + text;
         if (prefixed.match(MAILTO_REGEX)) {
             return prefixed.toLocaleLowerCase();

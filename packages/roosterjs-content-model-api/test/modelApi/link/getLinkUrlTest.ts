@@ -50,4 +50,12 @@ describe('getLinkUrl', () => {
     it('invalid mailto', () => {
         runTest('mailtos:test', { autoMailto: true }, undefined);
     });
+
+    it('valid mailto', () => {
+        runTest('test@test.com', { autoMailto: true }, 'mailto:test@test.com');
+    });
+
+    it('Invalid email address', () => {
+        runTest('test@test', { autoMailto: true }, undefined);
+    });
 });
