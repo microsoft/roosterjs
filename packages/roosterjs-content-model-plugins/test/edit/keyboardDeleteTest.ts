@@ -536,7 +536,6 @@ describe('keyboardDelete', () => {
                 type: 'range',
                 range: { collapsed: false },
             }),
-            getEnvironment: () => ({}),
         } as any) as IEditor;
         const event = {
             which: Delete,
@@ -560,7 +559,6 @@ describe('keyboardDelete', () => {
                 type: 'range',
                 range: { collapsed: false },
             }),
-            getEnvironment: () => ({}),
         } as any;
         const which = Backspace;
         const event = {
@@ -591,7 +589,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent);
@@ -614,7 +611,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent);
@@ -640,7 +636,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
@@ -664,7 +659,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent);
@@ -688,7 +682,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent);
@@ -714,7 +707,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
@@ -748,7 +740,6 @@ describe('keyboardDelete', () => {
         const editor = {
             formatContentModel: formatWithContentModelSpy,
             getDOMSelection: () => range,
-            getEnvironment: () => ({}),
         } as any;
 
         keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);

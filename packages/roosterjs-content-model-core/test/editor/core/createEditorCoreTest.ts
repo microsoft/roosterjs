@@ -85,7 +85,6 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: false,
-                isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
                 domToModelSettings: mockedDomToModelSettings,
@@ -219,7 +218,6 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: true,
-                isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: true,
                 domToModelSettings: mockedDomToModelSettings,
@@ -254,7 +252,6 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: true,
-                isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: true,
                 domToModelSettings: mockedDomToModelSettings,
@@ -289,7 +286,6 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: true,
                 isAndroid: false,
-                isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
                 domToModelSettings: mockedDomToModelSettings,
@@ -324,7 +320,6 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: false,
-                isIOS: false,
                 isSafari: true,
                 isMobileOrTablet: false,
                 domToModelSettings: mockedDomToModelSettings,
@@ -359,45 +354,8 @@ describe('createEditorCore', () => {
             environment: {
                 isMac: false,
                 isAndroid: false,
-                isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
-                domToModelSettings: mockedDomToModelSettings,
-                modelToDomSettings: mockedModelToDomSettings,
-            },
-        });
-
-        expect(DarkColorHandlerImpl.createDarkColorHandler).toHaveBeenCalledWith(
-            mockedDiv,
-            getDarkColorFallback,
-            undefined,
-            undefined
-        );
-    });
-
-    it('iOS iPhone Safari', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent:
-                            'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
-                    },
-                },
-            },
-            attributes: {
-                a: 'b',
-            },
-        } as any;
-        const mockedOptions = {} as any;
-
-        runTest(mockedDiv, mockedOptions, {
-            environment: {
-                isMac: false,
-                isAndroid: false,
-                isIOS: true,
-                isSafari: false,
-                isMobileOrTablet: true,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
