@@ -22,5 +22,17 @@ function matchTel(text: string) {
 }
 
 function matchMailTo(text: string) {
-    return text.match(MAILTO_REGEX) ? text.toLocaleLowerCase() : undefined;
+    // Check if text matches MAILTO_REGEX directly
+    if (text.match(MAILTO_REGEX)) {
+        return text.toLocaleLowerCase();
+    }
+
+    // Only add 'mailto:' if text matches COMMON_REGEX
+    if (text.match(COMMON_REGEX)) {
+        const prefixed = 'mailto:' + text;
+        if (prefixed.match(MAILTO_REGEX)) {
+            return prefixed.toLocaleLowerCase();
+        }
+    }
+    return undefined;
 }
