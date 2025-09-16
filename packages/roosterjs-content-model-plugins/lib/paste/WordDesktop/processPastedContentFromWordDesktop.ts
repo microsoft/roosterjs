@@ -80,8 +80,11 @@ const listLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format.marginBottom = undefined;
 };
 
-const wordTableParser: FormatParser<ContentModelTableFormat> = (format): void => {
+const wordTableParser: FormatParser<ContentModelTableFormat> = (format, element): void => {
     if (format.marginLeft?.startsWith('-')) {
         delete format.marginLeft;
+    }
+    if (format.htmlAlign) {
+        delete format.htmlAlign;
     }
 };

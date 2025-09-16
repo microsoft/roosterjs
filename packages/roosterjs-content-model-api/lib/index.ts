@@ -62,3 +62,4 @@ export { matchLink } from './modelApi/link/matchLink';
 export { promoteLink } from './modelApi/link/promoteLink';
 export { getListAnnounceData } from './modelApi/list/getListAnnounceData';
 export { queryContentModelBlocks } from './modelApi/common/queryContentModelBlocks';
+export { adjustWordSelection } from './modelApi/selection/adjustWordSelection';
