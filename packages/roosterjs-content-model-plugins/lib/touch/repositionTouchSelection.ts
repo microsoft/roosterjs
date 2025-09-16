@@ -44,10 +44,11 @@ export function repositionTouchSelection(editor: IEditor) {
                 // before selection marker + after selection marker
                 if (segments.length === 2) {
                     // 3. Calculate the offset to move cursor to the nearest edge of the word if within 6 characters
+                    // default to end of the word if user tapped in the middle
                     const leftCursorWordLength = segments[0].text.length;
                     const rightCursorWordLength = segments[1].text.length;
                     let movingOffset: number =
-                        leftCursorWordLength > rightCursorWordLength
+                        leftCursorWordLength >= rightCursorWordLength
                             ? rightCursorWordLength
                             : -leftCursorWordLength;
                     movingOffset =
