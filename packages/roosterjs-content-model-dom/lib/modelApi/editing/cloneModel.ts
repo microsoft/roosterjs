@@ -80,6 +80,7 @@ function cloneBlock(
                 case 'ListItem':
                     return cloneListItem(block, options);
             }
+            break;
         case 'Divider':
             return cloneDivider(block, options);
         case 'Entity':

@@ -3,6 +3,9 @@ import type {
     ReadonlyContentModelSegmentBase,
 } from './ContentModelSegmentBase';
 
+/**
+ * Common properties of Selection Marker
+ */
 export interface SelectionMarkerCommon {
     /**
      * The owner of this selection marker. It can be a block or segment
