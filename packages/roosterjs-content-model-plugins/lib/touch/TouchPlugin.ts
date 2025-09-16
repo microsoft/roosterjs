@@ -80,7 +80,7 @@ export class TouchPlugin implements EditorPlugin {
                         rightSideOfChar.length > 0 && !/\S/.test(rightSideOfChar);
                     if (isRightSideAllSpaces) {
                         // select the first space only
-                        let start = offset - 1;
+                        let start = offset;
                         while (start > 0 && /\s/.test(text.charAt(start - 1))) {
                             start--;
                         }
