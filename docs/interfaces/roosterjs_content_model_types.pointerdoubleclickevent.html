@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MouseDownEvent | RoosterJs API Reference</title>
+	<title>PointerDoubleClickEvent | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.mousedownevent.html">MouseDownEvent</a>
+					<a href="roosterjs_content_model_types.pointerdoubleclickevent.html">PointerDoubleClickEvent</a>
 				</li>
 			</ul>
-			<h1>Interface MouseDownEvent</h1>
+			<h1>Interface PointerDoubleClickEvent</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>This interface represents a PluginEvent wrapping native MouseDown event</p>
+						<p>This interface represents a PluginEvent wrapping native double-click event with pointer information</p>
 					</div>
 				</div>
 			</section>
@@ -77,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_content_model_types.baseplugindomevent.html" class="tsd-signature-type" data-tsd-kind="Interface">BasePluginDomEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;mouseDown&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="roosterjs_content_model_types.baseplugindomevent.html" class="tsd-signature-type" data-tsd-kind="Interface">BasePluginDomEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;pointerDoubleClick&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">PointerEvent</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">MouseDownEvent</span>
+								<span class="target">PointerDoubleClickEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -93,9 +93,9 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.mousedownevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.mousedownevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.mousedownevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.pointerdoubleclickevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.pointerdoubleclickevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.pointerdoubleclickevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -132,7 +132,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventtype" class="tsd-anchor"></a>
 					<h3>event<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;mouseDown&quot;</span></div>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;pointerDoubleClick&quot;</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.baseplugindomevent.html">BasePluginDomEvent</a>.<a href="roosterjs_content_model_types.baseplugindomevent.html#eventtype">eventType</a></p>
 						<ul>
@@ -148,7 +148,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="rawevent" class="tsd-anchor"></a>
 					<h3>raw<wbr>Event</h3>
-					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MouseEvent</span></div>
+					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PointerEvent</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_content_model_types.baseplugindomevent.html">BasePluginDomEvent</a>.<a href="roosterjs_content_model_types.baseplugindomevent.html#rawevent">rawEvent</a></p>
 						<ul>
@@ -206,16 +206,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.mousedownevent.html" class="tsd-kind-icon">Mouse<wbr>Down<wbr>Event</a>
+						<a href="roosterjs_content_model_types.pointerdoubleclickevent.html" class="tsd-kind-icon">Pointer<wbr>Double<wbr>Click<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.mousedownevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+								<a href="roosterjs_content_model_types.pointerdoubleclickevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.mousedownevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+								<a href="roosterjs_content_model_types.pointerdoubleclickevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_content_model_types.mousedownevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
+								<a href="roosterjs_content_model_types.pointerdoubleclickevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
