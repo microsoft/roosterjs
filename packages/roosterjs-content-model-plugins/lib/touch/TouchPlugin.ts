@@ -44,12 +44,9 @@ export class TouchPlugin implements EditorPlugin {
         }
         switch (event.eventType) {
             case 'pointerUp':
-                console.log('pointerUp');
                 repositionTouchSelection(this.editor);
                 break;
             case 'pointerDoubleClick':
-                console.log('pointerDoubleClick');
-
                 const selection = this.editor.getDocument()?.getSelection();
                 if (!selection) {
                     return;
