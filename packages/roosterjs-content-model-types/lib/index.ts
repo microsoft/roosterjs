@@ -196,6 +196,7 @@ export {
     ReadonlyContentModelText,
 } from './contentModel/segment/ContentModelText';
 export {
+    SelectionMarkerCommon,
     ContentModelSelectionMarker,
     ReadonlyContentModelSelectionMarker,
 } from './contentModel/segment/ContentModelSelectionMarker';

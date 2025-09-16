@@ -4,6 +4,9 @@ import type {
     ICoauthoringClient,
 } from 'roosterjs-content-model-types';
 
+/**
+ * Implementation of ICoauthoringAgent
+ */
 export class CoauthoringAgent implements ICoauthoringAgent {
     private clients: ICoauthoringClient[] = [];
 

@@ -183,6 +183,9 @@ export interface EditorBaseOptions {
     enableParagraphMap?: boolean;
 }
 
+/**
+ * Options for coauthoring
+ */
 export interface CoauthoringOptions {
     /**
      * Owner of the current editor instance, used to identify different editor instances in the same page
