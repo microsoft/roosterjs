@@ -57,7 +57,7 @@ export class TouchPlugin implements EditorPlugin {
                     return;
                 }
 
-                const offset = selection.anchorOffset;
+                const offset = selection.focusOffset;
                 const text = node.nodeValue || '';
                 const char = text.charAt(offset);
 

@@ -11,7 +11,7 @@ export interface PointerDownEvent extends BasePluginDomEvent<'pointerDown', Poin
 export interface PointerUpEvent extends BasePluginDomEvent<'pointerUp', PointerEvent> {}
 
 /**
- * This interface represents a PluginEvent wrapping native PointerUp event
+ * This interface represents a PluginEvent wrapping native double-click event with pointer information
  */
 export interface PointerDoubleClickEvent
     extends BasePluginDomEvent<'pointerDoubleClick', PointerEvent> {}

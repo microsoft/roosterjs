@@ -17,7 +17,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keyup: 'keyUp',
     keypress: 'keyPress',
 };
-const DELAY_UPDATE_TIME = 150;
+const POINTER_DETECTION_DELAY = 200; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -253,7 +253,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                     }
                     this.pointerEvent = null;
                     this.isDblClicked = false;
-                }, DELAY_UPDATE_TIME);
+                }, POINTER_DETECTION_DELAY);
             }
         }
     };
