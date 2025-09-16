@@ -76,6 +76,28 @@ export class TouchPlugin implements EditorPlugin {
                             isReverted: false,
                         });
                     }
+                } else if (/\s/.test(char)) {
+                    // If the clicked character is an open space with no word of right side
+                    const rightSideOfChar = text.substring(offset, text.length);
+                    const isRightSideAllSpaces =
+                        rightSideOfChar.length > 0 && !/\S/.test(rightSideOfChar);
+                    if (isRightSideAllSpaces) {
+                        // select the first space only
+                        let start = offset - 1;
+                        while (start > 0 && /\s/.test(text.charAt(start - 1))) {
+                            start--;
+                        }
+                        const newRange = this.editor.getDocument()?.createRange();
+                        if (newRange) {
+                            newRange.setStart(node, start);
+                            newRange.setEnd(node, start + 1);
+                            this.editor.setDOMSelection({
+                                type: 'range',
+                                range: newRange,
+                                isReverted: false,
+                            });
+                        }
+                    }
                 }
                 break;
         }
