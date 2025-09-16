@@ -17,6 +17,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keyup: 'keyUp',
     keypress: 'keyPress',
 };
+const DELAY_UPDATE_TIME = 150;
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -34,6 +35,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
+    private timer = 0;
+    private isDblClicked: boolean = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -87,6 +90,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 5. Pointer event
             pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
+            dblclick: { beforeDispatch: () => this.onDoubleClick() },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -220,12 +224,38 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             });
 
             if (this.pointerEvent) {
-                this.editor.triggerEvent('pointerUp', {
-                    rawEvent: this.pointerEvent,
-                });
-                this.pointerEvent = null;
+                const window = this.editor?.getDocument().defaultView;
+
+                if (!window) {
+                    return;
+                }
+
+                if (this.timer) {
+                    window.clearTimeout(this.timer);
+                }
+
+                this.timer = window.setTimeout(() => {
+                    this.timer = 0;
+                    if (this.editor && this.pointerEvent) {
+                        if (this.isDblClicked) {
+                            this.editor.triggerEvent('pointerDoubleClick', {
+                                rawEvent: this.pointerEvent,
+                            });
+                        } else {
+                            this.editor.triggerEvent('pointerUp', {
+                                rawEvent: this.pointerEvent,
+                            });
+                        }
+                    }
+                    this.pointerEvent = null;
+                    this.isDblClicked = false;
+                }, DELAY_UPDATE_TIME);
             }
         }
+    };
+
+    private onDoubleClick = () => {
+        this.isDblClicked = true;
     };
 
     private onCompositionStart = () => {

@@ -1,14 +1,11 @@
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { repositionTouchSelection } from './repositionTouchSelection';
 
-const DELAY_UPDATE_TIME = 100;
-
 /**
  * Touch plugin to manage touch behaviors
  */
 export class TouchPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-    private timer = 0;
 
     /**
      * Create an instance of Touch plugin
@@ -47,27 +44,40 @@ export class TouchPlugin implements EditorPlugin {
         }
         switch (event.eventType) {
             case 'pointerUp':
-                this.delayUpdate();
+                console.log('pointerUp');
+                repositionTouchSelection(this.editor);
+                break;
+            case 'pointerDoubleClick':
+                console.log('pointerDoubleClick');
+
+                const selection = this.editor.getDocument()?.getSelection();
+                if (!selection) {
+                    return;
+                }
+
+                const node = selection.focusNode;
+                if (node?.nodeType !== Node.TEXT_NODE) {
+                    return;
+                }
+
+                const offset = selection.anchorOffset;
+                const text = node.nodeValue || '';
+                const char = text.charAt(offset);
+
+                // Check if the clicked character is a punctuation mark, then highlight that character only
+                if (/[.,;:]/.test(char)) {
+                    const newRange = this.editor.getDocument()?.createRange();
+                    if (newRange) {
+                        newRange.setStart(node, offset);
+                        newRange.setEnd(node, offset + 1);
+                        this.editor.setDOMSelection({
+                            type: 'range',
+                            range: newRange,
+                            isReverted: false,
+                        });
+                    }
+                }
                 break;
         }
-    }
-
-    private delayUpdate() {
-        const window = this.editor?.getDocument().defaultView;
-
-        if (!window) {
-            return;
-        }
-
-        if (this.timer) {
-            window.clearTimeout(this.timer);
-        }
-
-        this.timer = window.setTimeout(() => {
-            this.timer = 0;
-            if (this.editor) {
-                repositionTouchSelection(this.editor);
-            }
-        }, DELAY_UPDATE_TIME);
     }
 }
