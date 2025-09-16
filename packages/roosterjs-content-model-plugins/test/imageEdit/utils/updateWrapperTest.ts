@@ -325,7 +325,7 @@ describe('updateWrapper', () => {
 
         // When not rotating, cloned image size should be updated to original dimensions
         expect(imageClone.style.width).toBe('20px'); // Should be originalWidth
-        expect(imageClone.style.height).toBe('22.22px'); // Should be originalHeight
+        expect(imageClone.style.height).toBe('22.2222px'); // Should be originalHeight
         expect(imageClone.style.position).toBe('absolute');
 
         image.remove();
@@ -346,7 +346,6 @@ describe('updateWrapper', () => {
 
         // Set a flag to track if resize processing happens
         let resizeProcessed = false;
-        const originalClientWidth = Object.getOwnPropertyDescriptor(wrapper, 'clientWidth');
 
         // Mock clientWidth to detect access
         Object.defineProperty(wrapper, 'clientWidth', {
@@ -541,7 +540,7 @@ describe('updateWrapper', () => {
         // Verify both conditions worked:
         // 1. Image size was updated (because !isRotating is true)
         expect(imageClone.style.width).toBe('20px'); // Should be originalWidth
-        expect(imageClone.style.height).toBe('22.22px'); // Should be originalHeight
+        expect(imageClone.style.height).toBe('22.2222px'); // Should be originalHeight
         // 2. Resize processing happened (because && !isRotating is true)
         expect(clientWidthAccessed).toBe(true);
 
