@@ -223,6 +223,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 this.editor.triggerEvent('pointerUp', {
                     rawEvent: this.pointerEvent,
                 });
+                this.pointerEvent = null;
             }
         }
     };

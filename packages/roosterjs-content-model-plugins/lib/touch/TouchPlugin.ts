@@ -1,11 +1,14 @@
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { repositionTouchSelection } from './repositionTouchSelection';
 
+const DELAY_UPDATE_TIME = 100;
+
 /**
  * Touch plugin to manage touch behaviors
  */
 export class TouchPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private timer = 0;
 
     /**
      * Create an instance of Touch plugin
@@ -44,8 +47,27 @@ export class TouchPlugin implements EditorPlugin {
         }
         switch (event.eventType) {
             case 'pointerUp':
-                repositionTouchSelection(this.editor);
+                this.delayUpdate();
                 break;
         }
+    }
+
+    private delayUpdate() {
+        const window = this.editor?.getDocument().defaultView;
+
+        if (!window) {
+            return;
+        }
+
+        if (this.timer) {
+            window.clearTimeout(this.timer);
+        }
+
+        this.timer = window.setTimeout(() => {
+            this.timer = 0;
+            if (this.editor) {
+                repositionTouchSelection(this.editor);
+            }
+        }, DELAY_UPDATE_TIME);
     }
 }
