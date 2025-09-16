@@ -37,14 +37,18 @@ export abstract class SidePanePluginImpl<
     }
 
     renderSidePane(updateHash: (pluginName?: string, path?: string[]) => void) {
-        const owner = this.editor?.getOwner() ?? '';
-        return React.createElement<P>(this.componentCtor, {
-            ...this.getComponentProps({
-                updateHash,
-                owner,
-            }),
-            ref: this.component,
-        });
+        if (this.editor) {
+            const owner = this.editor.getOwner();
+            return React.createElement<P>(this.componentCtor, {
+                ...this.getComponentProps({
+                    updateHash,
+                    owner,
+                }),
+                ref: this.component,
+            });
+        } else {
+            return null;
+        }
     }
 
     setHashPath(path: string[]) {

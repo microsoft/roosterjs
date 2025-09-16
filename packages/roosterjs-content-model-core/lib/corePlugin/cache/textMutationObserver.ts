@@ -121,7 +121,7 @@ class TextMutationObserverImpl implements TextMutationObserver {
             }
 
             if (reconcileText) {
-                this.onMutation({ type: 'text' });
+                this.onMutation({ type: 'text', node: lastTextChangeNode });
             }
         } else {
             this.onMutation({ type: 'unknown' });

@@ -28,6 +28,14 @@ export interface ParagraphMap {
      * Clear cached marker map
      */
     clear(): void;
+
+    /**
+     * Copy marker from source paragraph to target paragraph
+     */
+    copyParagraphMarker(
+        targetParagraph: ContentModelParagraph,
+        sourceParagraph: ReadonlyContentModelParagraph
+    ): void;
 }
 
 /**

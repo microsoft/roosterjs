@@ -1,12 +1,16 @@
 import { cloneModel } from 'roosterjs-content-model-dom';
 import { ContentModelPane, ContentModelPaneProps } from './ContentModelPane';
+import { ContentModelParagraphCommon, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { createRibbonPlugin } from 'roosterjs-react';
 import { getRefreshButton } from './buttons/refreshButton';
-import { IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
 import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
+
+interface ParagraphWithMarker extends ContentModelParagraphCommon {
+    _marker?: string;
+}
 
 export class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
@@ -72,7 +76,14 @@ export class ContentModelPanePlugin extends SidePanePluginImpl<
         this.getComponent(component => {
             this.editor.formatContentModel(
                 model => {
-                    const clonedModel = cloneModel(model);
+                    const clonedModel = cloneModel(model, {
+                        paragraphCloner: (target, source) => {
+                            const sourceWithMarker = source as ParagraphWithMarker;
+                            const targetWithMarker = target as ParagraphWithMarker;
+
+                            targetWithMarker._marker = sourceWithMarker._marker;
+                        },
+                    });
                     component.setContentModel(clonedModel);
                     setCurrentContentModel(clonedModel);
 

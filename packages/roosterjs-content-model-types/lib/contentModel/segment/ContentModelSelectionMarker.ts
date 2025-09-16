@@ -14,8 +14,8 @@ export interface SelectionMarkerCommon {
  * Content Model of Selection Marker
  */
 export interface ContentModelSelectionMarker
-    extends ContentModelSegmentBase<'SelectionMarker'>,
-        SelectionMarkerCommon {}
+    extends SelectionMarkerCommon,
+        ContentModelSegmentBase<'SelectionMarker'> {}
 
 /**
  * Content Model of Selection Marker (Readonly)

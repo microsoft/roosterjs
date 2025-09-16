@@ -457,7 +457,14 @@ export {
 } from './parameter/ModelToTextCallbacks';
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
-export { ICoauthoringClient } from './parameter/ICoauthoringClient';
+export {
+    ICoauthoringClient,
+    CoauthoringUpdate,
+    CoauthoringUpdateBase,
+    CoauthoringUpdateParagraph,
+    CoauthoringUpdateModel,
+    CoauthoringUpdateType,
+} from './parameter/ICoauthoringClient';
 export { ICoauthoringAgent } from './parameter/ICoauthoringAgent';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';

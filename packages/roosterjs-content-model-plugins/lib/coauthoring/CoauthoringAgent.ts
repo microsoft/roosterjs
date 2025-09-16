@@ -1,6 +1,5 @@
-import { cloneModel } from 'roosterjs-content-model-dom';
 import type {
-    ContentModelDocument,
+    CoauthoringUpdate,
     ICoauthoringAgent,
     ICoauthoringClient,
 } from 'roosterjs-content-model-types';
@@ -16,15 +15,10 @@ export class CoauthoringAgent implements ICoauthoringAgent {
         this.clients = this.clients.filter(client => client.owner !== owner);
     }
 
-    onUpdate(owner: string, model: ContentModelDocument) {
+    onClientUpdate(update: CoauthoringUpdate, owner: string) {
         for (const client of this.clients) {
             if (client.owner != owner) {
-                const targetModel = cloneModel(model, {
-                    existingOwner: owner,
-                    newOwner: client.owner,
-                });
-
-                client.onRemoteUpdate(targetModel);
+                client.onRemoteUpdate(update, owner);
             }
         }
     }

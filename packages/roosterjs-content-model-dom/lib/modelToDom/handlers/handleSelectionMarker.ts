@@ -25,10 +25,11 @@ function createCoauthoringMarker(doc: Document, owner: string) {
     element.style.height = '1em';
     element.style.backgroundColor = 'blue';
     element.style.border = '1px solid white';
-    element.style.margin = '0 -2.5px';
+    element.style.margin = '0 -2px';
     element.style.verticalAlign = 'bottom';
     element.contentEditable = 'false';
     element.className = 'roosterjs-coauthoring-marker';
+    element.dataset.owner = owner;
 
     const ownerTag = doc.createElement('span');
 

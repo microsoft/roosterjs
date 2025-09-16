@@ -80,7 +80,6 @@ function cloneBlock(
                 case 'ListItem':
                     return cloneListItem(block, options);
             }
-            break;
         case 'Divider':
             return cloneDivider(block, options);
         case 'Entity':
@@ -189,7 +188,7 @@ function cloneEntity(entity: ContentModelEntity, options: CloneModelOptions): Co
     );
 }
 
-function cloneParagraph(
+export function cloneParagraph(
     paragraph: ReadonlyContentModelParagraph,
     options: CloneModelOptions
 ): ContentModelParagraph {
@@ -205,6 +204,8 @@ function cloneParagraph(
         cloneBlockBase(paragraph),
         cloneModelWithFormat(paragraph)
     );
+
+    options.paragraphCloner?.(newParagraph, paragraph);
 
     if (decorator) {
         newParagraph.decorator = Object.assign(
@@ -347,18 +348,11 @@ function cloneSelectionMarker(
     options: CloneModelOptions
 ): ContentModelSelectionMarker {
     const result: ContentModelSelectionMarker = Object.assign(
-        { isSelected: marker.isSelected },
+        { isSelected: marker.isSelected, owner: marker.owner },
         cloneSegmentBase(marker)
     );
 
-    if (options.existingOwner != options.newOwner) {
-        if (marker.isSelected && (!marker.owner || options.existingOwner == marker.owner)) {
-            result.owner = options.existingOwner;
-            result.isSelected = false;
-        } else if (options.newOwner == marker.owner && !marker.isSelected) {
-            result.isSelected = true;
-        }
-    }
+    options.selectionMarkerCloner?.(result, marker);
 
     return result;
 }

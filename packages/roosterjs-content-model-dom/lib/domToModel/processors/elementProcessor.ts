@@ -1,3 +1,5 @@
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
+import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
 import { isEntityDelimiter, isEntityElement } from '../../domUtils/entityUtils';
 import type {
     DomToModelContext,
@@ -34,10 +36,20 @@ function tryGetProcessorForDelimiter(element: HTMLElement, context: DomToModelCo
 
 function tryGetProcessorForCoauthoringMarker(element: HTMLElement, context: DomToModelContext) {
     return element.classList.contains('roosterjs-coauthoring-marker')
-        ? processCoauthoringMarker
+        ? coauthoringMarkerProcessor
         : null;
 }
 
-function processCoauthoringMarker(group: any, element: HTMLElement, context: DomToModelContext) {
-    // no op
-}
+const coauthoringMarkerProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
+    const owner = element.dataset.owner;
+
+    if (owner && owner != context.owner) {
+        const paragraph = ensureParagraph(group, context.blockFormat, context.segmentFormat);
+        const marker = createSelectionMarker(context.segmentFormat);
+
+        marker.isSelected = false;
+        marker.owner = owner;
+
+        paragraph.segments.push(marker);
+    }
+};

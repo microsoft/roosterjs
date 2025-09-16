@@ -10,6 +10,7 @@ import type {
     PluginEvent,
     PluginWithState,
     EditorOptions,
+    ContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -40,10 +41,11 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 onRemoteUpdate: () => {},
                 onLocalUpdate: () => {},
                 dispose: () => {},
+                isCoauthoring: false,
             },
         };
 
-        if (option.enableParagraphMap) {
+        if (option.enableParagraphMap || option.coauthoringAgent) {
             this.state.paragraphMap = createParagraphMap();
         }
     }
@@ -117,7 +119,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
 
-                this.state.coauthoringClient.onLocalUpdate();
+                this.updateCoauthoringModel();
 
                 break;
 
@@ -130,7 +132,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     this.invalidateCache();
                 }
 
-                this.state.coauthoringClient.onLocalUpdate();
+                this.updateCoauthoringModel();
 
                 break;
         }
@@ -148,10 +150,26 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     ) {
                         this.invalidateCache();
                     }
+
+                    this.updateCoauthoringModel();
+
                     break;
 
                 case 'text':
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
+
+                    const paragraph =
+                        mutation.node &&
+                        this.state.domIndexer.findParagraphFromIndex(mutation.node);
+
+                    if (paragraph) {
+                        this.state.coauthoringClient.onLocalUpdate({
+                            type: 'paragraph',
+                            paragraph,
+                        });
+                    } else {
+                        this.updateCoauthoringModel();
+                    }
                     break;
 
                 case 'elementId':
@@ -161,23 +179,66 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                         this.invalidateCache();
                     }
 
+                    this.updateCoauthoringModel();
+
                     break;
 
                 case 'unknown':
                     this.invalidateCache();
+
+                    this.updateCoauthoringModel();
+
                     break;
             }
         }
-
-        this.state.coauthoringClient.onLocalUpdate();
-        this.state.textMutationObserver.flushMutations(true /*ignoreIfNeeded*/);
     };
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
+            const paragraphs = new Set<ContentModelParagraph | null>();
+
+            if (this.state.coauthoringClient.isCoauthoring) {
+                this.addModifiedParagraphs(paragraphs);
+            }
+
             this.updateCachedModel(this.editor);
+
+            if (this.state.coauthoringClient.isCoauthoring) {
+                this.addModifiedParagraphs(paragraphs);
+
+                paragraphs.forEach(paragraph => {
+                    if (paragraph) {
+                        this.state.coauthoringClient.onLocalUpdate({
+                            type: 'paragraph',
+                            paragraph,
+                        });
+                    }
+                });
+            }
         }
     };
+
+    private addModifiedParagraphs(paragraphs: Set<ContentModelParagraph | null>) {
+        const oldSelection = this.state.cachedSelection;
+        const start = oldSelection?.type == 'range' ? oldSelection.start.node : null;
+        const end = oldSelection?.type == 'range' ? oldSelection.end.node : null;
+
+        paragraphs.add(start ? this.state.domIndexer.findParagraphFromIndex(start) : null);
+        paragraphs.add(end ? this.state.domIndexer.findParagraphFromIndex(end) : null);
+    }
+
+    private updateCoauthoringModel() {
+        if (this.state.coauthoringClient.isCoauthoring && this.editor) {
+            this.editor.formatContentModel(model => {
+                this.state.coauthoringClient.onLocalUpdate({
+                    type: 'model',
+                    model,
+                });
+
+                return false;
+            });
+        }
+    }
 
     private invalidateCache() {
         if (!this.editor?.isInShadowEdit()) {

@@ -1,4 +1,5 @@
 import { coreApiMap } from '../../coreApi/coreApiMap';
+import { createCoauthoringClient } from './createCoauthoringClient';
 import { createDarkColorHandler } from './DarkColorHandlerImpl';
 import { createDOMCreator, createTrustedHTMLHandler, isDOMCreator } from '../../utils/domCreator';
 import { createDOMHelper } from './DOMHelperImpl';
@@ -10,8 +11,6 @@ import type {
     EditorCore,
     EditorCorePlugins,
     EditorOptions,
-    ICoauthoringClient,
-    ICoauthoringAgent,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -68,39 +67,6 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
     }
 
     return result;
-}
-
-function createCoauthoringClient(
-    core: EditorCore,
-    owner: string,
-    agent: ICoauthoringAgent
-): ICoauthoringClient {
-    let ignoreLocal = false;
-    const client: ICoauthoringClient = {
-        owner,
-        dispose: () => agent.unregister(owner),
-        onRemoteUpdate: model => {
-            ignoreLocal = true;
-            try {
-                core.api.setContentModel(core, model, {
-                    ignoreSelection: true,
-                });
-            } finally {
-                ignoreLocal = false;
-            }
-        },
-        onLocalUpdate: () => {
-            if (!ignoreLocal) {
-                const model = core.api.createContentModel(core);
-
-                agent.onUpdate(owner, model);
-            }
-        },
-    };
-
-    agent.register(client);
-
-    return client;
 }
 
 function createEditorEnvironment(

@@ -89,4 +89,6 @@ export interface DomIndexer {
      * @returns True if the changed nodes are successfully reconciled, otherwise false
      */
     reconcileChildList: (addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>) => boolean;
+
+    findParagraphFromIndex: (node: Node) => ContentModelParagraph | null;
 }

@@ -405,6 +405,11 @@ export class DomIndexerImpl implements DomIndexer {
         }
     }
 
+    findParagraphFromIndex(node: Node): ContentModelParagraph | null {
+        const segmentItem = getIndexedSegmentItem(node);
+        return segmentItem?.paragraph || null;
+    }
+
     private onBlockEntityDelimiter(
         node: Node | null,
         entity: ContentModelEntity,
@@ -536,16 +541,22 @@ export class DomIndexerImpl implements DomIndexer {
             let lastIndex = paragraph.segments.indexOf(last);
 
             if (firstIndex >= 0 && lastIndex >= 0) {
+                let segment: ContentModelSegment;
+
                 while (
                     firstIndex > 0 &&
-                    paragraph.segments[firstIndex - 1].segmentType == 'SelectionMarker'
+                    (segment = paragraph.segments[firstIndex - 1]) &&
+                    segment.segmentType == 'SelectionMarker' &&
+                    segment.isSelected
                 ) {
                     firstIndex--;
                 }
 
                 while (
                     lastIndex < paragraph.segments.length - 1 &&
-                    paragraph.segments[lastIndex + 1].segmentType == 'SelectionMarker'
+                    (segment = paragraph.segments[lastIndex + 1]) &&
+                    segment.segmentType == 'SelectionMarker' &&
+                    segment.isSelected
                 ) {
                     lastIndex++;
                 }

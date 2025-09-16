@@ -41,7 +41,9 @@ export interface ElementIdMutation extends MutationBase<'elementId'> {
 /**
  * @internal
  */
-export interface TextMutation extends MutationBase<'text'> {}
+export interface TextMutation extends MutationBase<'text'> {
+    node: Node | null;
+}
 
 /**
  * @internal

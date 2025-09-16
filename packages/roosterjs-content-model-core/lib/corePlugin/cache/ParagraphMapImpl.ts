@@ -22,12 +22,13 @@ export interface ParagraphMapReset {
 const idPrefix = 'paragraph';
 
 class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapReset {
-    private static prefixNum = 0;
+    private static lastPrefixNum = 0;
+    private prefixNum: number;
     private nextId = 0;
     private paragraphMap: { [key: string]: ReadonlyContentModelParagraph } = {};
 
     constructor() {
-        ParagraphMapImpl.prefixNum++;
+        this.prefixNum = ParagraphMapImpl.lastPrefixNum++;
     }
 
     assignMarkerToModel(element: HTMLElement, paragraph: ContentModelParagraph): void {
@@ -77,9 +78,19 @@ class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapRe
         this.paragraphMap = {};
     }
 
+    copyParagraphMarker(
+        targetParagraph: ContentModelParagraph,
+        sourceParagraph: ReadonlyContentModelParagraph
+    ) {
+        const sourceWithMarker = sourceParagraph as ParagraphWithMarker;
+        const targetWithMarker = targetParagraph as ParagraphWithMarker;
+
+        targetWithMarker._marker = sourceWithMarker._marker;
+    }
+
     //#region For test code only
     _reset() {
-        ParagraphMapImpl.prefixNum = 0;
+        ParagraphMapImpl.lastPrefixNum = 0;
         this.nextId = 0;
     }
 
@@ -89,7 +100,7 @@ class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapRe
     //#endregion
 
     private generateId() {
-        return `${idPrefix}_${ParagraphMapImpl.prefixNum}_${this.nextId++}`;
+        return `${idPrefix}_${this.prefixNum}_${this.nextId++}`;
     }
 }
 

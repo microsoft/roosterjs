@@ -1,3 +1,12 @@
+import type {
+    ContentModelSelectionMarker,
+    ReadonlyContentModelSelectionMarker,
+} from '../contentModel/segment/ContentModelSelectionMarker';
+import type {
+    ContentModelParagraph,
+    ReadonlyContentModelParagraph,
+} from '../contentModel/block/ContentModelParagraph';
+
 /**
  * Function type used for cloneModel API to specify how to handle cached element when clone a model
  * @param node The cached node
@@ -25,6 +34,12 @@ export interface CloneModelOptions {
      */
     includeCachedElement?: boolean | CachedElementHandler;
 
-    existingOwner?: string;
-    newOwner?: string;
+    paragraphCloner?: (
+        target: ContentModelParagraph,
+        source: ReadonlyContentModelParagraph
+    ) => void;
+    selectionMarkerCloner?: (
+        target: ContentModelSelectionMarker,
+        source: ReadonlyContentModelSelectionMarker
+    ) => void;
 }
