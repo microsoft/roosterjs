@@ -33,6 +33,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
+    private pointerEvent: PointerEvent | null = null;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -83,6 +84,9 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
             drop: { beforeDispatch: this.onDrop },
+
+            // 5. Pointer event
+            pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -107,6 +111,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.disposer?.();
         this.disposer = null;
         this.editor = null;
+        this.pointerEvent = null;
     }
 
     /**
@@ -172,7 +177,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             event.stopPropagation();
 
             const isAndroid = this.editor?.getEnvironment()?.isAndroid ?? false;
-            const isComposing = !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
+            const isComposing =
+                !isAndroid && ((event as InputEvent).isComposing || this.state.isInIME);
 
             if (this.editor && !isComposing) {
                 this.editor.triggerEvent('input', {
@@ -196,6 +202,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             this.editor.triggerEvent('mouseDown', {
                 rawEvent: event,
             });
+
+            if (event.defaultPrevented) {
+                this.pointerEvent = null;
+            }
         }
     };
 
@@ -208,6 +218,12 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                     this.state.mouseDownX == rawEvent.pageX &&
                     this.state.mouseDownY == rawEvent.pageY,
             });
+
+            if (this.pointerEvent) {
+                this.editor.triggerEvent('pointerUp', {
+                    rawEvent: this.pointerEvent,
+                });
+            }
         }
     };
 
@@ -228,6 +244,12 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
     }
+
+    private onPointerDown = (e: PointerEvent) => {
+        if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+            this.pointerEvent = e;
+        }
+    };
 }
 
 /**
