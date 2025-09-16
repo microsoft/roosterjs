@@ -3,6 +3,14 @@ import { MIN_HEIGHT_WIDTH } from '../constants/constants';
 /**
  * @internal
  */
+interface WrapperDimensions {
+    height: number;
+    width: number;
+}
+
+/**
+ * @internal
+ */
 export function getPx(value: number): string {
     return value + 'px';
 }
@@ -95,33 +103,6 @@ export function setSize(
 
 /**
  * @internal
- * Get the actual image dimensions by subtracting border width from wrapper dimensions
- * @param image The image element to check for borders
- * @param wrapperWidth The wrapper's client width
- * @param wrapperHeight The wrapper's client height
- * @returns Object containing actual image width and height without borders
- */
-export function getActualWrapperDimensions(
-    image: HTMLImageElement,
-    wrapperWidth: number,
-    wrapperHeight: number
-): { width: number; height: number } {
-    const hasBorder = image.style.borderStyle;
-    const borderWidth =
-        hasBorder && image.style.borderWidth
-            ? 2 * parseInt(image.style.borderWidth)
-            : hasBorder
-            ? 2
-            : 0;
-
-    return {
-        width: wrapperWidth - borderWidth,
-        height: wrapperHeight - borderWidth,
-    };
-}
-
-/**
- * @internal
  * Check if the current image was resized by the user
  * @param image the current image
  * @returns if the user resized the image, returns true, otherwise, returns false
@@ -143,4 +124,26 @@ export function checkIfImageWasResized(image: HTMLImageElement): boolean {
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;
     return !isNaN(numberValue);
+}
+
+/**
+ * @internal
+ */
+export function getActualWrapperDimensions(
+    image: HTMLImageElement,
+    wrapperWidth: number,
+    wrapperHeight: number
+): WrapperDimensions {
+    const hasBorder = image.style.borderStyle;
+    const borderWidth =
+        hasBorder && image.style.borderWidth
+            ? 2 * parseInt(image.style.borderWidth)
+            : hasBorder
+            ? 2
+            : 0;
+
+    return {
+        width: wrapperWidth - borderWidth,
+        height: wrapperHeight - borderWidth,
+    };
 }

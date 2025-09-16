@@ -8,12 +8,12 @@ import { updateSideHandlesVisibility } from '../Resizer/updateSideHandlesVisibil
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
+    getActualWrapperDimensions,
     getPx,
     isASmallImage,
     setFlipped,
     setSize,
     setWrapperSizeDimensions,
-    getActualWrapperDimensions,
 } from './imageEditUtils';
 
 /**
@@ -131,7 +131,6 @@ export function updateWrapper(
         const clientWidth = wrapper.clientWidth;
         const clientHeight = wrapper.clientHeight;
 
-        // Get actual image dimensions without borders for doubleCheckResize
         const actualDimensions = getActualWrapperDimensions(image, clientWidth, clientHeight);
 
         doubleCheckResize(

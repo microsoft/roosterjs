@@ -14,7 +14,9 @@ describe('updateWrapper', () => {
         disableSideResize: false,
         onSelectState: ['resize'],
     };
-    const editInfo = {
+
+    // Base template - should not be mutated directly
+    const baseEditInfo = {
         src: 'test',
         widthPx: 20,
         heightPx: 20,
@@ -26,6 +28,14 @@ describe('updateWrapper', () => {
         bottomPercent: 0,
         angleRad: 0,
     };
+
+    // Working copy that gets reset before each test
+    let editInfo = { ...baseEditInfo };
+
+    beforeEach(() => {
+        // Reset editInfo to a fresh copy before each test
+        editInfo = { ...baseEditInfo };
+    });
     const htmlOptions = {
         borderColor: '#DB626C',
         rotateHandleBackColor: 'white',
@@ -36,16 +46,28 @@ describe('updateWrapper', () => {
     it('should update size', () => {
         const image = document.createElement('img');
         document.body.appendChild(image);
+
+        const testEditInfo = { ...editInfo, heightPx: 12 }; // Create a copy with modified height
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
         );
-        editInfo.heightPx = 12;
-        updateWrapper(editInfo, options, image, imageClone, wrapper, resizers);
+        updateWrapper(
+            testEditInfo,
+            options,
+            image,
+            imageClone,
+            wrapper,
+            resizers,
+            undefined,
+            false,
+            false
+        );
 
         expect(wrapper.style.marginLeft).toBe('0px');
         expect(wrapper.style.marginRight).toBe('0px');
@@ -67,16 +89,18 @@ describe('updateWrapper', () => {
     it('RTL - should update size', () => {
         const image = document.createElement('img');
         document.body.appendChild(image);
+
+        const testEditInfo = { ...editInfo, heightPx: 12 }; // Create a copy with modified height
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
         );
-        editInfo.heightPx = 12;
-        updateWrapper(editInfo, options, image, imageClone, wrapper, resizers, undefined, true);
+        updateWrapper(testEditInfo, options, image, imageClone, wrapper, resizers, undefined, true);
 
         expect(wrapper.style.marginLeft).toBe('0px');
         expect(wrapper.style.marginRight).toBe('0px');
@@ -102,16 +126,16 @@ describe('updateWrapper', () => {
         image.style.borderWidth = '2px';
         document.body.appendChild(image);
 
+        const testEditInfo = { ...editInfo }; // Create a copy to avoid mutation
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
-        );
-
-        // Set wrapper size to simulate clientWidth/clientHeight including borders
+        ); // Set wrapper size to simulate clientWidth/clientHeight including borders
         wrapper.style.width = '24px'; // 20px image + 4px border (2px on each side)
         wrapper.style.height = '24px'; // 20px image + 4px border (2px on each side)
 
@@ -125,11 +149,21 @@ describe('updateWrapper', () => {
             configurable: true,
         });
 
-        updateWrapper(editInfo, options, image, imageClone, wrapper, resizers);
+        updateWrapper(
+            testEditInfo,
+            options,
+            image,
+            imageClone,
+            wrapper,
+            resizers,
+            undefined,
+            false,
+            false
+        );
 
         // The wrapper size should include borders (set by setWrapperSizeDimensions)
-        expect(wrapper.style.width).toBe('22px'); // visibleWidth (20) + borderWidth (2)
-        expect(wrapper.style.height).toBe('22px'); // visibleHeight (20) + borderWidth (2)
+        expect(wrapper.style.width).toBe('24px'); // visibleWidth (20) + borderWidth (4: 2*2px)
+        expect(wrapper.style.height).toBe('24px'); // visibleHeight (20) + borderWidth (4: 2*2px)
 
         image.remove();
     });
@@ -138,16 +172,16 @@ describe('updateWrapper', () => {
         const image = document.createElement('img');
         document.body.appendChild(image);
 
+        const testEditInfo = { ...editInfo }; // Create a copy to avoid mutation
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
-        );
-
-        // Mock clientWidth and clientHeight
+        ); // Mock clientWidth and clientHeight
         Object.defineProperty(wrapper, 'clientWidth', {
             value: 20,
             configurable: true,
@@ -157,7 +191,17 @@ describe('updateWrapper', () => {
             configurable: true,
         });
 
-        updateWrapper(editInfo, options, image, imageClone, wrapper, resizers);
+        updateWrapper(
+            editInfo,
+            options,
+            image,
+            imageClone,
+            wrapper,
+            resizers,
+            undefined,
+            false,
+            false
+        );
 
         // The wrapper size should match visible dimensions exactly
         expect(wrapper.style.width).toBe('20px');
@@ -211,11 +255,13 @@ describe('updateWrapper', () => {
         const image = document.createElement('img');
         document.body.appendChild(image);
 
+        const testEditInfo = { ...editInfo }; // Create a copy to avoid mutation
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
         );
@@ -226,7 +272,7 @@ describe('updateWrapper', () => {
 
         // Call updateWrapper with isRotating = true
         updateWrapper(
-            editInfo,
+            testEditInfo,
             options,
             image,
             imageClone,
@@ -249,11 +295,13 @@ describe('updateWrapper', () => {
         const image = document.createElement('img');
         document.body.appendChild(image);
 
+        const testEditInfo = { ...editInfo }; // Create a copy to avoid mutation
+
         const { wrapper, imageClone, resizers } = createImageWrapper(
             editor,
             image,
             options,
-            editInfo,
+            testEditInfo,
             htmlOptions,
             ['resize']
         );
@@ -264,7 +312,7 @@ describe('updateWrapper', () => {
 
         // Call updateWrapper with isRotating = false
         updateWrapper(
-            editInfo,
+            testEditInfo,
             options,
             image,
             imageClone,
@@ -309,28 +357,20 @@ describe('updateWrapper', () => {
             configurable: true,
         });
 
-        try {
-            // Call updateWrapper with isRotating = true
-            updateWrapper(
-                editInfo,
-                options,
-                image,
-                imageClone,
-                wrapper,
-                resizers,
-                undefined,
-                false,
-                true
-            );
+        updateWrapper(
+            editInfo,
+            options,
+            image,
+            imageClone,
+            wrapper,
+            resizers,
+            undefined,
+            false,
+            true
+        );
 
-            // During rotation, resizer logic should not execute, so clientWidth shouldn't be accessed
-            expect(resizeProcessed).toBe(false);
-        } finally {
-            // Restore original property
-            if (originalClientWidth) {
-                Object.defineProperty(wrapper, 'clientWidth', originalClientWidth);
-            }
-        }
+        // During rotation, resizer logic should not execute, so clientWidth shouldn't be accessed
+        expect(resizeProcessed).toBe(false);
 
         image.remove();
     });
