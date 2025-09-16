@@ -108,7 +108,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.removeMouseUpEventListener();
 
         const document = this.editor?.getDocument();
-
         document?.defaultView?.removeEventListener('resize', this.onScroll);
         document?.defaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
@@ -116,6 +115,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.disposer = null;
         this.editor = null;
         this.pointerEvent = null;
+
+        if (this.timer) {
+            document?.defaultView?.clearTimeout(this.timer);
+            this.timer = 0;
+        }
     }
 
     /**
