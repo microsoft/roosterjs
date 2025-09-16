@@ -54,11 +54,17 @@ export function setWrapperSizeDimensions(
     wrapper: HTMLElement,
     image: HTMLImageElement,
     width: number,
-    height: number
+    height: number,
+    isRotating: boolean
 ) {
     const hasBorder = image.style.borderStyle;
     if (hasBorder) {
         const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
+        if (isRotating) {
+            wrapper.style.width = getPx(parseInt(image.style.width) + borderWidth);
+            wrapper.style.height = getPx(parseInt(image.style.height) + borderWidth);
+            return;
+        }
         wrapper.style.width = getPx(width + borderWidth);
         wrapper.style.height = getPx(height + borderWidth);
         return;
@@ -85,6 +91,33 @@ export function setSize(
     element.style.bottom = bottom !== undefined ? getPx(bottom) : element.style.bottom;
     element.style.width = width !== undefined ? getPx(width) : element.style.width;
     element.style.height = height !== undefined ? getPx(height) : element.style.height;
+}
+
+/**
+ * @internal
+ * Get the actual image dimensions by subtracting border width from wrapper dimensions
+ * @param image The image element to check for borders
+ * @param wrapperWidth The wrapper's client width
+ * @param wrapperHeight The wrapper's client height
+ * @returns Object containing actual image width and height without borders
+ */
+export function getActualWrapperDimensions(
+    image: HTMLImageElement,
+    wrapperWidth: number,
+    wrapperHeight: number
+): { width: number; height: number } {
+    const hasBorder = image.style.borderStyle;
+    const borderWidth =
+        hasBorder && image.style.borderWidth
+            ? 2 * parseInt(image.style.borderWidth)
+            : hasBorder
+            ? 2
+            : 0;
+
+    return {
+        width: wrapperWidth - borderWidth,
+        height: wrapperHeight - borderWidth,
+    };
 }
 
 /**

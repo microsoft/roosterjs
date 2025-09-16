@@ -13,6 +13,7 @@ import {
     setFlipped,
     setSize,
     setWrapperSizeDimensions,
+    getActualWrapperDimensions,
 } from './imageEditUtils';
 
 /**
@@ -26,7 +27,8 @@ export function updateWrapper(
     wrapper: HTMLSpanElement,
     resizers?: HTMLDivElement[],
     croppers?: HTMLDivElement[],
-    isRTL?: boolean
+    isRTL?: boolean,
+    isRotating?: boolean
 ) {
     const {
         angleRad,
@@ -65,7 +67,7 @@ export function updateWrapper(
     wrapper.style.marginRight = `${marginHorizontal}px`;
 
     wrapper.style.transform = `rotate(${angleRad}rad)`;
-    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
+    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight, !!isRotating);
     wrapper.style.verticalAlign = 'text-bottom';
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
@@ -80,9 +82,12 @@ export function updateWrapper(
         wrapper.style.textAlign = 'left';
     }
 
-    // Update size of the image
-    clonedImage.style.width = getPx(originalWidth);
-    clonedImage.style.height = getPx(originalHeight);
+    if (!isRotating) {
+        // Update size of the image
+        clonedImage.style.width = getPx(originalWidth);
+        clonedImage.style.height = getPx(originalHeight);
+    }
+
     clonedImage.style.position = 'absolute';
 
     //Update flip direction
@@ -122,11 +127,19 @@ export function updateWrapper(
         }
     }
 
-    if (resizers) {
+    if (resizers && !isRotating) {
         const clientWidth = wrapper.clientWidth;
         const clientHeight = wrapper.clientHeight;
 
-        doubleCheckResize(editInfo, options.preserveRatio || false, clientWidth, clientHeight);
+        // Get actual image dimensions without borders for doubleCheckResize
+        const actualDimensions = getActualWrapperDimensions(image, clientWidth, clientHeight);
+
+        doubleCheckResize(
+            editInfo,
+            options.preserveRatio || false,
+            actualDimensions.width,
+            actualDimensions.height
+        );
 
         const resizeHandles = filterInnerResizerHandles(resizers);
 

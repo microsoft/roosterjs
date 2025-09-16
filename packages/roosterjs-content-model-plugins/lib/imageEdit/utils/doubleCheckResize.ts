@@ -22,13 +22,13 @@ export function doubleCheckResize(
     }
     const ratio = heightPx > 0 ? widthPx / heightPx : 0;
 
+    editInfo.widthPx = actualWidth;
+    editInfo.heightPx = actualHeight;
+
     actualWidth = Math.floor(actualWidth);
     actualHeight = Math.floor(actualHeight);
     widthPx = Math.floor(widthPx);
     heightPx = Math.floor(heightPx);
-
-    editInfo.widthPx = actualWidth;
-    editInfo.heightPx = actualHeight;
 
     if (preserveRatio && ratio > 0 && (widthPx !== actualWidth || heightPx !== actualHeight)) {
         if (actualWidth < widthPx) {
