@@ -134,76 +134,76 @@ export class TouchPlugin implements EditorPlugin {
                     event.rawEvent.preventDefault();
 
                     this.isDblClicked = true;
-                    if ('caretPositionFromPoint' in doc) {
-                        const caretPosition = (doc as any).caretPositionFromPoint(
-                            event.rawEvent.x,
-                            event.rawEvent.y
-                        );
-                        if (caretPosition) {
-                            const { offsetNode, offset } = caretPosition;
+                    const caretPosition = getNodePositionFromEvent(
+                        this.editor,
+                        event.rawEvent.x,
+                        event.rawEvent.y
+                    );
 
-                            if (offsetNode.nodeType !== Node.TEXT_NODE) {
-                                return;
+                    if (caretPosition) {
+                        const { node, offset } = caretPosition;
+
+                        if (node.nodeType !== Node.TEXT_NODE) {
+                            return;
+                        }
+
+                        const nodeTextContent = node.nodeValue || '';
+                        const char = nodeTextContent.charAt(offset);
+
+                        // Check if the clicked character is a punctuation mark, then highlight that character only
+                        if (PUNCTUATION_MATCHING_REGEX.test(char)) {
+                            const newRange = this.editor.getDocument()?.createRange();
+                            if (newRange) {
+                                newRange.setStart(node, offset);
+                                newRange.setEnd(node, offset + 1);
+                                this.editor.setDOMSelection({
+                                    type: 'range',
+                                    range: newRange,
+                                    isReverted: false,
+                                });
                             }
-
-                            const nodeTextContent = offsetNode.nodeValue || '';
-                            const char = nodeTextContent.charAt(offset);
-
-                            // Check if the clicked character is a punctuation mark, then highlight that character only
-                            if (PUNCTUATION_MATCHING_REGEX.test(char)) {
+                        } else if (SPACE_MATCHING_REGEX.test(char)) {
+                            // If the clicked character is an open space with no word of right side
+                            const rightSideOfChar = nodeTextContent.substring(
+                                offset,
+                                nodeTextContent.length
+                            );
+                            const isRightSideAllSpaces =
+                                rightSideOfChar.length > 0 && !/\S/.test(rightSideOfChar);
+                            if (isRightSideAllSpaces) {
+                                // select the first space only
+                                let start = offset;
+                                while (
+                                    start > 0 &&
+                                    SPACE_MATCHING_REGEX.test(nodeTextContent.charAt(start - 1))
+                                ) {
+                                    start--;
+                                }
                                 const newRange = this.editor.getDocument()?.createRange();
                                 if (newRange) {
-                                    newRange.setStart(offsetNode, offset);
-                                    newRange.setEnd(offsetNode, offset + 1);
+                                    newRange.setStart(node, start);
+                                    newRange.setEnd(node, start + 1);
                                     this.editor.setDOMSelection({
                                         type: 'range',
                                         range: newRange,
                                         isReverted: false,
                                     });
                                 }
-                            } else if (SPACE_MATCHING_REGEX.test(char)) {
-                                // If the clicked character is an open space with no word of right side
-                                const rightSideOfChar = nodeTextContent.substring(
-                                    offset,
-                                    nodeTextContent.length
-                                );
-                                const isRightSideAllSpaces =
-                                    rightSideOfChar.length > 0 && !/\S/.test(rightSideOfChar);
-                                if (isRightSideAllSpaces) {
-                                    // select the first space only
-                                    let start = offset;
-                                    while (
-                                        start > 0 &&
-                                        SPACE_MATCHING_REGEX.test(nodeTextContent.charAt(start - 1))
-                                    ) {
-                                        start--;
-                                    }
-                                    const newRange = this.editor.getDocument()?.createRange();
-                                    if (newRange) {
-                                        newRange.setStart(offsetNode, start);
-                                        newRange.setEnd(offsetNode, start + 1);
-                                        this.editor.setDOMSelection({
-                                            type: 'range',
-                                            range: newRange,
-                                            isReverted: false,
-                                        });
-                                    }
-                                }
-                            } else {
-                                const { wordStart, wordEnd } = findWordBoundaries(
-                                    nodeTextContent,
-                                    offset
-                                );
-                                const newRange = this.editor.getDocument()?.createRange();
-                                if (newRange) {
-                                    newRange.setStart(offsetNode, wordStart);
-                                    newRange.setEnd(offsetNode, wordEnd);
-                                    this.editor.setDOMSelection({
-                                        type: 'range',
-                                        range: newRange,
-                                        isReverted: false,
-                                    });
-                                }
+                            }
+                        } else {
+                            const { wordStart, wordEnd } = findWordBoundaries(
+                                nodeTextContent,
+                                offset
+                            );
+                            const newRange = this.editor.getDocument()?.createRange();
+                            if (newRange) {
+                                newRange.setStart(node, wordStart);
+                                newRange.setEnd(node, wordEnd);
+                                this.editor.setDOMSelection({
+                                    type: 'range',
+                                    range: newRange,
+                                    isReverted: false,
+                                });
                             }
                         }
                     }
