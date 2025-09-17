@@ -109,16 +109,17 @@ export class TouchPlugin implements EditorPlugin {
                                     });
                                     return;
                                 }
-                            } else {
-                                const newRange = this.editor.getDocument().createRange();
-                                newRange.setStart(node, offset);
-                                newRange.setEnd(node, offset);
-                                this.editor.setDOMSelection({
-                                    type: 'range',
-                                    range: newRange,
-                                    isReverted: false,
-                                });
                             }
+
+                            // Place cursor at same position of browser handler
+                            const newRange = this.editor.getDocument().createRange();
+                            newRange.setStart(node, offset);
+                            newRange.setEnd(node, offset);
+                            this.editor.setDOMSelection({
+                                type: 'range',
+                                range: newRange,
+                                isReverted: false,
+                            });
                         }
 
                         // reset values
