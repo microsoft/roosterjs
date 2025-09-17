@@ -3,6 +3,9 @@ import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
 const POINTER_DETECTION_DELAY = 150; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
+const WORD_MATCHING_REGEX = /[A-Za-z\u00C0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0530-\u058F\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u3040-\u309F\u30A0-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7AF_]/;
+const PUNCTUATION_MATCHING_REGEX = /[.,;:]/;
+const SPACE_MATCHING_REGEX = /\s/;
 
 /**
  * Touch plugin to manage touch behaviors
@@ -80,7 +83,7 @@ export class TouchPlugin implements EditorPlugin {
                             const { node, offset } = caretPosition;
                             const nodeTextContent = node.textContent || '';
                             const wordAtFocus = nodeTextContent[offset];
-                            if (wordAtFocus && /\w/.test(wordAtFocus)) {
+                            if (wordAtFocus && WORD_MATCHING_REGEX.test(wordAtFocus)) {
                                 const { wordStart, wordEnd } = findWordBoundaries(
                                     nodeTextContent,
                                     offset
@@ -147,7 +150,7 @@ export class TouchPlugin implements EditorPlugin {
                             const char = nodeTextContent.charAt(offset);
 
                             // Check if the clicked character is a punctuation mark, then highlight that character only
-                            if (/[.,;:]/.test(char)) {
+                            if (PUNCTUATION_MATCHING_REGEX.test(char)) {
                                 const newRange = this.editor.getDocument()?.createRange();
                                 if (newRange) {
                                     newRange.setStart(offsetNode, offset);
@@ -158,7 +161,7 @@ export class TouchPlugin implements EditorPlugin {
                                         isReverted: false,
                                     });
                                 }
-                            } else if (/\s/.test(char)) {
+                            } else if (SPACE_MATCHING_REGEX.test(char)) {
                                 // If the clicked character is an open space with no word of right side
                                 const rightSideOfChar = nodeTextContent.substring(
                                     offset,
@@ -171,7 +174,7 @@ export class TouchPlugin implements EditorPlugin {
                                     let start = offset;
                                     while (
                                         start > 0 &&
-                                        /\s/.test(nodeTextContent.charAt(start - 1))
+                                        SPACE_MATCHING_REGEX.test(nodeTextContent.charAt(start - 1))
                                     ) {
                                         start--;
                                     }
@@ -222,12 +225,12 @@ function findWordBoundaries(text: string, offset: number) {
     let end = offset;
 
     // Move start backwards to find word start
-    while (start > 0 && /\w/.test(text[start - 1])) {
+    while (start > 0 && WORD_MATCHING_REGEX.test(text[start - 1])) {
         start--;
     }
 
     // Move end forward to find word end
-    while (end < text.length && /\w/.test(text[end])) {
+    while (end < text.length && WORD_MATCHING_REGEX.test(text[end])) {
         end++;
     }
 
