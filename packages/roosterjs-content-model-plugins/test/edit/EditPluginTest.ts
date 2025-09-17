@@ -137,7 +137,6 @@ describe('EditPlugin', () => {
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
-
         it('handleExpandedSelectionOnDelete disabled', () => {
             plugin = new EditPlugin({ handleExpandedSelectionOnDelete: false });
             const rawEvent = { key: 'Delete' } as any;

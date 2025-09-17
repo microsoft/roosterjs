@@ -320,4 +320,3 @@ export class EditPlugin implements EditorPlugin {
         }
     }
 }
-
