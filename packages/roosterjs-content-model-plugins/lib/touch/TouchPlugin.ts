@@ -41,12 +41,11 @@ export class TouchPlugin implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        this.editor = null;
-
         if (this.timer) {
-            document?.defaultView?.clearTimeout(this.timer);
+            this.editor?.getDocument()?.defaultView?.clearTimeout(this.timer);
             this.timer = 0;
         }
+        this.editor = null;
     }
 
     /**
@@ -63,11 +62,12 @@ export class TouchPlugin implements EditorPlugin {
                 this.isTouchPenPointerEvent = true;
                 event.originalEvent.preventDefault();
 
+                const targetWindow = this.editor.getDocument()?.defaultView || window;
                 if (this.timer) {
-                    window.clearTimeout(this.timer);
+                    targetWindow.clearTimeout(this.timer);
                 }
 
-                this.timer = window.setTimeout(() => {
+                this.timer = targetWindow.setTimeout(() => {
                     this.timer = 0;
 
                     if (!this.isDblClicked && this.editor) {
@@ -103,10 +103,14 @@ export class TouchPlugin implements EditorPlugin {
                                     Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE
                                         ? 0
                                         : movingOffset;
-                                if (movingOffset !== 0) {
+                                const newOffsetPosition = offset + movingOffset;
+                                if (
+                                    movingOffset !== 0 &&
+                                    nodeTextContent.length > newOffsetPosition
+                                ) {
                                     const newRange = this.editor.getDocument().createRange();
-                                    newRange.setStart(node, offset + movingOffset);
-                                    newRange.setEnd(node, offset + movingOffset);
+                                    newRange.setStart(node, newOffsetPosition);
+                                    newRange.setEnd(node, newOffsetPosition);
                                     this.editor.setDOMSelection({
                                         type: 'range',
                                         range: newRange,
