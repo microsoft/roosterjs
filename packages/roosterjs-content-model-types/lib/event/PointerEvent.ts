@@ -3,15 +3,13 @@ import type { BasePluginDomEvent } from './BasePluginEvent';
 /**
  * This interface represents a PluginEvent wrapping native PointerDown event
  */
-export interface PointerDownEvent extends BasePluginDomEvent<'pointerDown', PointerEvent> {}
+export interface PointerDownEvent extends BasePluginDomEvent<'pointerDown', PointerEvent> {
+    originalEvent: MouseEvent | TouchEvent;
+}
 
 /**
  * This interface represents a PluginEvent wrapping native PointerUp event
  */
-export interface PointerUpEvent extends BasePluginDomEvent<'pointerUp', PointerEvent> {}
-
-/**
- * This interface represents a PluginEvent wrapping native double-click event with pointer information
- */
-export interface PointerDoubleClickEvent
-    extends BasePluginDomEvent<'pointerDoubleClick', PointerEvent> {}
+export interface PointerUpEvent extends BasePluginDomEvent<'pointerUp', PointerEvent> {
+    originalEvent: MouseEvent | TouchEvent;
+}

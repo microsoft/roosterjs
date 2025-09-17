@@ -159,6 +159,6 @@ export type PluginEventType =
     | 'pointerUp'
 
     /**
-     * HTML double click with Pointer event - for touch only
+     * HTML double click event
      */
-    | 'pointerDoubleClick';
+    | 'doubleClick';
