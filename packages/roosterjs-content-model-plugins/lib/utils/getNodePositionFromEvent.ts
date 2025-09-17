@@ -1,6 +1,8 @@
 import type { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
 
-// Get insertion point from coordinate.
+/**
+ * Get insertion point from coordinate.
+ */
 export function getNodePositionFromEvent(
     editor: IEditor,
     x: number,
