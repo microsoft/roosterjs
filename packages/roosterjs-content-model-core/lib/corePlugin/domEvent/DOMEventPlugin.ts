@@ -213,12 +213,10 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                 this.pointerEvent = null;
             }
             if (this.pointerEvent) {
-                if (this.editor && this.pointerEvent) {
-                    this.editor.triggerEvent('pointerDown', {
-                        rawEvent: this.pointerEvent,
-                        originalEvent: event,
-                    });
-                }
+                this.editor.triggerEvent('pointerDown', {
+                    rawEvent: this.pointerEvent,
+                    originalEvent: event,
+                });
             }
         }
     };

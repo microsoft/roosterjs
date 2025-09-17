@@ -1,4 +1,5 @@
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
 const POINTER_DETECTION_DELAY = 150; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
@@ -9,8 +10,8 @@ const POINTER_DETECTION_DELAY = 150; // Delay time to wait for selection to be u
 export class TouchPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private timer = 0;
-    public isDblClicked: boolean = false;
-    public isTouchPenPointerEvent: boolean = false;
+    private isDblClicked: boolean = false;
+    private isTouchPenPointerEvent: boolean = false;
 
     /**
      * Create an instance of Touch plugin
@@ -69,59 +70,58 @@ export class TouchPlugin implements EditorPlugin {
                     this.timer = 0;
 
                     if (!this.isDblClicked && this.editor) {
-                        if ('caretPositionFromPoint' in doc) {
-                            const caretPosition = (doc as any).caretPositionFromPoint(
-                                event.rawEvent.x,
-                                event.rawEvent.y
-                            );
+                        const caretPosition = getNodePositionFromEvent(
+                            this.editor,
+                            event.rawEvent.x,
+                            event.rawEvent.y
+                        );
 
-                            if (caretPosition) {
-                                const { offsetNode, offset } = caretPosition;
-                                const nodeTextContent = offsetNode.textContent || '';
-                                const wordAtFocus = nodeTextContent[offset];
-                                if (wordAtFocus && /\w/.test(wordAtFocus)) {
-                                    const { wordStart, wordEnd } = findWordBoundaries(
-                                        nodeTextContent,
-                                        offset
-                                    );
+                        if (caretPosition) {
+                            const { node, offset } = caretPosition;
+                            const nodeTextContent = node.textContent || '';
+                            const wordAtFocus = nodeTextContent[offset];
+                            if (wordAtFocus && /\w/.test(wordAtFocus)) {
+                                const { wordStart, wordEnd } = findWordBoundaries(
+                                    nodeTextContent,
+                                    offset
+                                );
 
-                                    // Move cursor to the calculated offset
-                                    const leftCursorWordLength = offset - wordStart;
-                                    const rightCursorWordLength = wordEnd - offset;
-                                    let movingOffset: number =
-                                        leftCursorWordLength >= rightCursorWordLength
-                                            ? rightCursorWordLength
-                                            : -leftCursorWordLength;
-                                    movingOffset =
-                                        Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE
-                                            ? 0
-                                            : movingOffset;
-                                    if (movingOffset !== 0) {
-                                        const newRange = this.editor.getDocument().createRange();
-                                        newRange.setStart(offsetNode, offset + movingOffset);
-                                        newRange.setEnd(offsetNode, offset + movingOffset);
-                                        this.editor.setDOMSelection({
-                                            type: 'range',
-                                            range: newRange,
-                                            isReverted: false,
-                                        });
-                                        return;
-                                    }
+                                // Move cursor to the calculated offset
+                                const leftCursorWordLength = offset - wordStart;
+                                const rightCursorWordLength = wordEnd - offset;
+                                let movingOffset: number =
+                                    leftCursorWordLength >= rightCursorWordLength
+                                        ? rightCursorWordLength
+                                        : -leftCursorWordLength;
+                                movingOffset =
+                                    Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE
+                                        ? 0
+                                        : movingOffset;
+                                if (movingOffset !== 0) {
+                                    const newRange = this.editor.getDocument().createRange();
+                                    newRange.setStart(node, offset + movingOffset);
+                                    newRange.setEnd(node, offset + movingOffset);
+                                    this.editor.setDOMSelection({
+                                        type: 'range',
+                                        range: newRange,
+                                        isReverted: false,
+                                    });
+                                    return;
                                 }
-
+                            } else {
                                 const newRange = this.editor.getDocument().createRange();
-                                newRange.setStart(offsetNode, offset);
-                                newRange.setEnd(offsetNode, offset);
+                                newRange.setStart(node, offset);
+                                newRange.setEnd(node, offset);
                                 this.editor.setDOMSelection({
                                     type: 'range',
                                     range: newRange,
                                     isReverted: false,
                                 });
                             }
-
-                            // reset values
-                            this.isTouchPenPointerEvent = false;
                         }
+
+                        // reset values
+                        this.isTouchPenPointerEvent = false;
                     }
                 }, POINTER_DETECTION_DELAY);
 
@@ -210,6 +210,13 @@ export class TouchPlugin implements EditorPlugin {
     }
 }
 
+/**
+ * @internal
+ * Finds the start and end indices of the word at the given offset in the text.
+ * @param text The string to search within.
+ * @param offset The index within the string to find the word boundaries around.
+ * @returns An object containing wordStart and wordEnd indices.
+ */
 function findWordBoundaries(text: string, offset: number) {
     let start = offset;
     let end = offset;
