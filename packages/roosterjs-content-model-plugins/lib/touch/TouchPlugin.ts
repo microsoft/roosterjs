@@ -79,9 +79,14 @@ export class TouchPlugin implements EditorPlugin {
 
                         if (caretPosition) {
                             const { node, offset } = caretPosition;
+
                             const nodeTextContent = node.textContent || '';
-                            const wordAtFocus = nodeTextContent[offset];
-                            if (wordAtFocus && WORD_MATCHING_REGEX.test(wordAtFocus)) {
+                            const charAtSelection = nodeTextContent[offset];
+                            if (
+                                node.nodeType === Node.TEXT_NODE &&
+                                charAtSelection &&
+                                WORD_MATCHING_REGEX.test(charAtSelection)
+                            ) {
                                 const { wordStart, wordEnd } = findWordBoundaries(
                                     nodeTextContent,
                                     offset
