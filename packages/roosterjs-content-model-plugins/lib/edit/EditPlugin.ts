@@ -33,6 +33,14 @@ export type EditOptions = {
      * @returns A boolean
      */
     shouldHandleEnterKey?: ((editor: IEditor) => boolean) | boolean;
+
+    /**
+     * Callback or boolean to determine whether the browser (not Content Model) should handle the Backspace key press.
+     * If the value/callback returns true, Rooster will NOT handle Backspace and will defer to the browser's native behavior.
+     * @param editor - The editor instance (when using callback).
+     * @returns A boolean
+     */
+    shouldHandleBackspaceKey?: ((editor: IEditor) => boolean) | boolean;
 };
 
 const BACKSPACE_KEY = 8;
@@ -201,7 +209,13 @@ export class EditPlugin implements EditorPlugin {
                 case 'Backspace':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    keyboardDelete(editor, rawEvent, this.options.handleExpandedSelectionOnDelete);
+                    if (!this.shouldBrowserHandleBackspace(editor)) {
+                        keyboardDelete(
+                            editor,
+                            rawEvent,
+                            this.options.handleExpandedSelectionOnDelete
+                        );
+                    }
                     break;
 
                 case 'Delete':
@@ -260,15 +274,17 @@ export class EditPlugin implements EditorPlugin {
         let handled = false;
         switch (rawEvent.inputType) {
             case 'deleteContentBackward':
-                handled = keyboardDelete(
-                    editor,
-                    new KeyboardEvent('keydown', {
-                        key: 'Backspace',
-                        keyCode: BACKSPACE_KEY,
-                        which: BACKSPACE_KEY,
-                    }),
-                    this.options.handleExpandedSelectionOnDelete
-                );
+                if (!this.shouldBrowserHandleBackspace(editor)) {
+                    handled = keyboardDelete(
+                        editor,
+                        new KeyboardEvent('keydown', {
+                            key: 'Backspace',
+                            keyCode: BACKSPACE_KEY,
+                            which: BACKSPACE_KEY,
+                        }),
+                        this.options.handleExpandedSelectionOnDelete
+                    );
+                }
                 break;
             case 'deleteContentForward':
                 handled = keyboardDelete(
@@ -291,4 +307,17 @@ export class EditPlugin implements EditorPlugin {
             this.selectionAfterDelete = editor.getDOMSelection();
         }
     }
+
+    private shouldBrowserHandleBackspace(editor: IEditor): boolean {
+        const opt = this.options.shouldHandleBackspaceKey;
+        switch (typeof opt) {
+            case 'function':
+                return Boolean(opt(editor));
+            case 'boolean':
+                return opt;
+            default:
+                return false;
+        }
+    }
 }
+
