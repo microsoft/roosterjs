@@ -17,7 +17,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keyup: 'keyUp',
     keypress: 'keyPress',
 };
-const POINTER_DETECTION_DELAY = 200; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
+const POINTER_DETECTION_DELAY = 100; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -214,20 +214,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             if (event.defaultPrevented) {
                 this.pointerEvent = null;
             }
-        }
-    };
-
-    private onMouseUp = (rawEvent: MouseEvent) => {
-        if (this.editor) {
-            this.removeMouseUpEventListener();
-            this.editor.triggerEvent('mouseUp', {
-                rawEvent,
-                isClicking:
-                    this.state.mouseDownX == rawEvent.pageX &&
-                    this.state.mouseDownY == rawEvent.pageY,
-            });
-
             if (this.pointerEvent) {
+                event.preventDefault();
                 const window = this.editor?.getDocument().defaultView;
 
                 if (!window) {
@@ -255,6 +243,18 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                     this.isDblClicked = false;
                 }, POINTER_DETECTION_DELAY);
             }
+        }
+    };
+
+    private onMouseUp = (rawEvent: MouseEvent) => {
+        if (this.editor) {
+            this.removeMouseUpEventListener();
+            this.editor.triggerEvent('mouseUp', {
+                rawEvent,
+                isClicking:
+                    this.state.mouseDownX == rawEvent.pageX &&
+                    this.state.mouseDownY == rawEvent.pageY,
+            });
         }
     };
 
