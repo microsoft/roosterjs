@@ -57,8 +57,6 @@ export class TouchPlugin implements EditorPlugin {
         if (!this.editor) {
             return;
         }
-        const doc = this.editor.getDocument();
-
         switch (event.eventType) {
             case 'pointerDown':
                 this.isDblClicked = false;
