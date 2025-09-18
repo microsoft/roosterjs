@@ -232,7 +232,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
     private addParagraphFromNode(node: Node | undefined, paragraphs: Set<ContentModelParagraph>) {
         if (node) {
-            const para = this.state.domIndexer.findParagraphFromIndex(node);
+            const para =
+                this.state.domIndexer.findParagraphFromIndex(node) ??
+                (node.firstChild && this.state.domIndexer.findParagraphFromIndex(node.firstChild));
+
             if (para) {
                 paragraphs.add(para);
             }
