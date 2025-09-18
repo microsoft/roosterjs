@@ -8,7 +8,7 @@ import type {
     TableSelection,
 } from '../selection/DOMSelection';
 import type { ParagraphIndexer, ParagraphMap } from '../parameter/ParagraphMap';
-import type { ICoauthoringClientBridge } from '../parameter/ICoauthoringClient';
+import type { ICoauthoringClientBridge } from '../parameter/ICoauthoringClientBridge';
 
 /**
  * Represents a range selection used for cache. We store the start and end insert point here instead of range itself

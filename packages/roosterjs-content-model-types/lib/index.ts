@@ -460,16 +460,18 @@ export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export {
     ICoauthoringClient,
-    ICoauthoringClientBridge,
     CoauthoringUpdate,
     CoauthoringUpdateBase,
     CoauthoringUpdateParagraph,
     CoauthoringUpdateModel,
     CoauthoringUpdateType,
+} from './parameter/ICoauthoringClient';
+export {
+    ICoauthoringClientBridge,
     CoauthoringLocalUpdate,
     CoauthoringLocalUpdateParagraph,
     CoauthoringLocalUpdateModel,
-} from './parameter/ICoauthoringClient';
+} from './parameter/ICoauthoringClientBridge';
 export { ICoauthoringAgent } from './parameter/ICoauthoringAgent';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';

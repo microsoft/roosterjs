@@ -6,9 +6,10 @@ import type { CoauthoringUpdate, ICoauthoringClient } from './ICoauthoringClient
 export interface ICoauthoringAgent {
     /**
      * Register a new coauthoring client
+     * @param owner The owner of the client
      * @param client The client to register
      */
-    register: (client: ICoauthoringClient) => void;
+    register: (owner: string, client: ICoauthoringClient) => void;
 
     /**
      * Unregister a coauthoring client

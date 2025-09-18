@@ -38,7 +38,6 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             textMutationObserver: createTextMutationObserver(contentDiv, this.onMutation),
             coauthoringClient: {
                 owner: option.owner ?? '',
-                onRemoteUpdate: () => {},
                 onLocalUpdate: () => {},
                 dispose: () => {},
                 isCoauthoring: false,

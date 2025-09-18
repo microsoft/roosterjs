@@ -1,8 +1,6 @@
-import { queryContentModelBlocks } from 'roosterjs-content-model-api/lib';
 import type {
     ContentModelParagraph,
     ContentModelParagraphCommon,
-    ReadonlyContentModelBlockGroup,
     ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
@@ -15,19 +13,6 @@ interface ParagraphWithMarker extends ContentModelParagraphCommon {
  */
 export class ParagraphMapBase {
     protected paragraphMap: { [key: string]: ReadonlyContentModelParagraph } = {};
-
-    scanParagraphs(group: ReadonlyContentModelBlockGroup) {
-        queryContentModelBlocks<ReadonlyContentModelParagraph>(group, 'Paragraph').forEach(
-            paragraph => {
-                const paragraphWithMarker = paragraph as ParagraphWithMarker;
-                const marker = paragraphWithMarker._marker;
-
-                if (marker) {
-                    this.paragraphMap[marker] = paragraph;
-                }
-            }
-        );
-    }
 
     /**
      * Get paragraph using a previously marked paragraph

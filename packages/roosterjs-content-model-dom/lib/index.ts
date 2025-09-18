@@ -75,7 +75,7 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 export { mergeTextSegments } from './modelApi/common/mergeTextSegments';
 export { normalizeSegmentFormat } from './modelApi/common/normalizeSegmentFormat';
-export { areSameSegments, segmentsWithSameFormat } from './modelApi/common/areSameSegments';
+export { segmentsWithSameFormat } from './modelApi/common/segmentsWithSameFormat';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 export { ParagraphMapBase } from './modelApi/block/ParagraphMapBase';

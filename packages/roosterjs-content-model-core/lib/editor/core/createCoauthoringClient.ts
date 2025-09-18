@@ -5,10 +5,100 @@ import type {
     ContentModelParagraph,
     EditorCore,
     ICoauthoringAgent,
+    ICoauthoringClient,
     ICoauthoringClientBridge,
     ReadonlyContentModelParagraph,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
+
+class CoauthoringClient implements ICoauthoringClient, ICoauthoringClientBridge {
+    private ignoreLocal = false;
+    private currentVersion = 0;
+    private clonedOptionForRemoteUpdate: CloneModelOptions;
+    private cloneOptionForLocalUpdate: CloneModelOptions;
+    public readonly isCoauthoring = true;
+
+    constructor(
+        private core: EditorCore,
+        public readonly owner: string,
+        private agent: ICoauthoringAgent
+    ) {
+        this.clonedOptionForRemoteUpdate = {
+            paragraphCloner: (target, source) => {
+                this.core.cache.paragraphMap?.copyParagraphMarker(target, source);
+            },
+            selectionMarkerCloner: target => {
+                if (target.owner == owner) {
+                    target.isSelected = true;
+                }
+            },
+        };
+
+        this.cloneOptionForLocalUpdate = {
+            paragraphCloner: (target, source) => {
+                this.core.cache.paragraphMap?.copyParagraphMarker(target, source);
+            },
+            selectionMarkerCloner: target => {
+                if (!target.owner) {
+                    target.owner = owner;
+                }
+
+                target.isSelected = false;
+            },
+        };
+
+        agent.register(owner, this);
+    }
+
+    dispose() {
+        this.agent.unregister(this.owner);
+    }
+
+    onRemoteUpdate(update: CoauthoringUpdate, fromOwner: string, newVersion: number) {
+        this.currentVersion = newVersion;
+
+        if (fromOwner != this.owner) {
+            this.ignoreLocal = true;
+            try {
+                applyRemoteUpdate(update, this.clonedOptionForRemoteUpdate, this.core);
+                this.core.cache.textMutationObserver.flushMutations(true /*ignoreMutations*/);
+            } finally {
+                this.ignoreLocal = false;
+            }
+        }
+    }
+
+    onLocalUpdate(update: CoauthoringUpdate) {
+        if (!this.ignoreLocal) {
+            switch (update.type) {
+                case 'paragraph':
+                    this.agent.onClientUpdate(
+                        {
+                            type: 'paragraph',
+                            paragraphs: cloneParagraphs(
+                                update.paragraphs,
+                                this.cloneOptionForLocalUpdate
+                            ),
+                        },
+                        this.owner,
+                        this.currentVersion
+                    );
+
+                    break;
+                case 'model':
+                    const targetModel = cloneModel(update.model, this.cloneOptionForLocalUpdate);
+
+                    this.agent.onClientUpdate(
+                        { type: 'model', model: targetModel },
+                        this.owner,
+                        this.currentVersion
+                    );
+
+                    break;
+            }
+        }
+    }
+}
 
 /**
  * @internal
@@ -18,98 +108,9 @@ export function createCoauthoringClient(
     owner: string,
     agent: ICoauthoringAgent
 ): ICoauthoringClientBridge {
-    let ignoreLocal = false;
-    let currentVersion = 0;
-    let expectedVersion: number | undefined;
-
-    const clonedOptionForRemoteUpdate: CloneModelOptions = {
-        paragraphCloner: (target, source) => {
-            core.cache.paragraphMap?.copyParagraphMarker(target, source);
-        },
-        selectionMarkerCloner: target => {
-            if (target.owner == owner) {
-                target.isSelected = true;
-            }
-        },
-    };
-
-    const cloneOptionForLocalUpdate: CloneModelOptions = {
-        paragraphCloner: (target, source) => {
-            core.cache.paragraphMap?.copyParagraphMarker(target, source);
-        },
-        selectionMarkerCloner: target => {
-            if (!target.owner) {
-                target.owner = owner;
-            }
-
-            target.isSelected = false;
-        },
-    };
-
-    const client: ICoauthoringClientBridge = {
-        isCoauthoring: true,
-        owner,
-        dispose: () => agent.unregister(owner),
-        onRemoteUpdate: (update, fromOwner, newVersion, originalVersion) => {
-            if (expectedVersion == undefined || newVersion >= expectedVersion) {
-                currentVersion = newVersion;
-                expectedVersion = undefined;
-
-                if (fromOwner === owner) {
-                    return;
-                }
-
-                ignoreLocal = true;
-                try {
-                    applyRemoteUpdate(update, clonedOptionForRemoteUpdate, core);
-                    core.cache.textMutationObserver.flushMutations(true /*ignoreMutations*/);
-                } finally {
-                    ignoreLocal = false;
-                }
-            }
-        },
-        onLocalUpdate: update => {
-            if (!ignoreLocal) {
-                if (expectedVersion === undefined) {
-                    expectedVersion = currentVersion + 1;
-                } else {
-                    expectedVersion++;
-                }
-
-                switch (update.type) {
-                    case 'paragraph':
-                        agent.onClientUpdate(
-                            {
-                                type: 'paragraph',
-                                paragraphs: cloneParagraphs(
-                                    update.paragraphs,
-                                    cloneOptionForLocalUpdate
-                                ),
-                            },
-                            owner,
-                            currentVersion
-                        );
-
-                        break;
-                    case 'model':
-                        const targetModel = cloneModel(update.model, cloneOptionForLocalUpdate);
-
-                        agent.onClientUpdate(
-                            { type: 'model', model: targetModel },
-                            owner,
-                            currentVersion
-                        );
-
-                        break;
-                }
-            }
-        },
-    };
-
-    agent.register(client);
-
-    return client;
+    return new CoauthoringClient(core, owner, agent);
 }
+
 function applyRemoteUpdate(
     update: CoauthoringUpdate,
     options: CloneModelOptions,

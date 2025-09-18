@@ -1,4 +1,4 @@
-import { segmentsWithSameFormat } from './areSameSegments';
+import { segmentsWithSameFormat } from './segmentsWithSameFormat';
 import type {
     ContentModelText,
     ShallowMutableContentModelParagraph,
