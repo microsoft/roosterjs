@@ -3,6 +3,14 @@ import { MIN_HEIGHT_WIDTH } from '../constants/constants';
 /**
  * @internal
  */
+interface WrapperDimensions {
+    height: number;
+    width: number;
+}
+
+/**
+ * @internal
+ */
 export function getPx(value: number): string {
     return value + 'px';
 }
@@ -54,11 +62,17 @@ export function setWrapperSizeDimensions(
     wrapper: HTMLElement,
     image: HTMLImageElement,
     width: number,
-    height: number
+    height: number,
+    isRotating: boolean
 ) {
     const hasBorder = image.style.borderStyle;
     if (hasBorder) {
         const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
+        if (isRotating) {
+            wrapper.style.width = getPx(parseInt(image.style.width) + borderWidth);
+            wrapper.style.height = getPx(parseInt(image.style.height) + borderWidth);
+            return;
+        }
         wrapper.style.width = getPx(width + borderWidth);
         wrapper.style.height = getPx(height + borderWidth);
         return;
@@ -110,4 +124,26 @@ export function checkIfImageWasResized(image: HTMLImageElement): boolean {
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;
     return !isNaN(numberValue);
+}
+
+/**
+ * @internal
+ */
+export function getActualWrapperDimensions(
+    image: HTMLImageElement,
+    wrapperWidth: number,
+    wrapperHeight: number
+): WrapperDimensions {
+    const hasBorder = image.style.borderStyle;
+    const borderWidth =
+        hasBorder && image.style.borderWidth
+            ? 2 * parseInt(image.style.borderWidth)
+            : hasBorder
+            ? 2
+            : 0;
+
+    return {
+        width: wrapperWidth - borderWidth,
+        height: wrapperHeight - borderWidth,
+    };
 }

@@ -597,7 +597,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                     this.wrapper,
                                     undefined /* resizers */,
                                     undefined /* croppers */,
-                                    isRTL
+                                    isRTL,
+                                    true /* isRotating */
                                 );
                                 this.updateRotateHandleState(
                                     editor,
