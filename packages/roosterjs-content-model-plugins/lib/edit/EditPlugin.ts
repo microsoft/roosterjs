@@ -275,6 +275,7 @@ export class EditPlugin implements EditorPlugin {
         switch (rawEvent.inputType) {
             case 'deleteContentBackward':
                 if (!this.shouldBrowserHandleBackspace(editor)) {
+                    // This logic is Android specific. It's because some Android keyboard doesn't support key and keycode, the value of them is always Unidentified, so we have to manually create a new one.
                     handled = keyboardDelete(
                         editor,
                         new KeyboardEvent('keydown', {
