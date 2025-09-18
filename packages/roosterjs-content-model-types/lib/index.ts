@@ -482,7 +482,7 @@ export {
     BeforeLogicalRootChangeEvent,
     LogicalRootChangedEvent,
 } from './event/LogicalRootChangedEvent';
-export { MouseDownEvent, MouseUpEvent } from './event/MouseEvent';
+export { MouseDownEvent, MouseUpEvent, DoubleClickEvent } from './event/MouseEvent';
 export { PluginEvent } from './event/PluginEvent';
 export {
     PluginEventData,
@@ -495,4 +495,4 @@ export { ScrollEvent } from './event/ScrollEvent';
 export { SelectionChangedEvent } from './event/SelectionChangedEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
-export { PointerDownEvent, PointerUpEvent, PointerDoubleClickEvent } from './event/PointerEvent';
+export { PointerDownEvent, PointerUpEvent } from './event/PointerEvent';

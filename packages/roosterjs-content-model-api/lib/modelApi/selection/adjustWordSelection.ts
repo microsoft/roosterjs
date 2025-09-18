@@ -13,10 +13,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * Return specific word segment where the selection marker is located
- * @param model The model document
- * @param marker The selection marker
- * @returns An array of segments that form the word where the selection marker is located
+ * @internal
  */
 export function adjustWordSelection(
     model: ReadonlyContentModelDocument,

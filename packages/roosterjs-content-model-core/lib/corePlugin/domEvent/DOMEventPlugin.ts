@@ -17,7 +17,6 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keyup: 'keyUp',
     keypress: 'keyPress',
 };
-const POINTER_DETECTION_DELAY = 200; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -36,7 +35,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
     private timer = 0;
-    private isDblClicked: boolean = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -79,6 +77,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 2. Mouse event
             mousedown: { beforeDispatch: this.onMouseDown },
+            dblclick: { beforeDispatch: (event: MouseEvent) => this.onDoubleClick(event) },
 
             // 3. IME state management
             compositionstart: { beforeDispatch: this.onCompositionStart },
@@ -90,7 +89,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 5. Pointer event
             pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
-            dblclick: { beforeDispatch: () => this.onDoubleClick() },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -214,6 +212,12 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             if (event.defaultPrevented) {
                 this.pointerEvent = null;
             }
+            if (this.pointerEvent) {
+                this.editor.triggerEvent('pointerDown', {
+                    rawEvent: this.pointerEvent,
+                    originalEvent: event,
+                });
+            }
         }
     };
 
@@ -226,40 +230,18 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
                     this.state.mouseDownX == rawEvent.pageX &&
                     this.state.mouseDownY == rawEvent.pageY,
             });
-
-            if (this.pointerEvent) {
-                const window = this.editor?.getDocument().defaultView;
-
-                if (!window) {
-                    return;
-                }
-
-                if (this.timer) {
-                    window.clearTimeout(this.timer);
-                }
-
-                this.timer = window.setTimeout(() => {
-                    this.timer = 0;
-                    if (this.editor && this.pointerEvent) {
-                        if (this.isDblClicked) {
-                            this.editor.triggerEvent('pointerDoubleClick', {
-                                rawEvent: this.pointerEvent,
-                            });
-                        } else {
-                            this.editor.triggerEvent('pointerUp', {
-                                rawEvent: this.pointerEvent,
-                            });
-                        }
-                    }
-                    this.pointerEvent = null;
-                    this.isDblClicked = false;
-                }, POINTER_DETECTION_DELAY);
-            }
+        }
+        if (this.pointerEvent) {
+            this.pointerEvent = null;
         }
     };
 
-    private onDoubleClick = () => {
-        this.isDblClicked = true;
+    private onDoubleClick = (event: MouseEvent) => {
+        if (this.editor) {
+            this.editor.triggerEvent('doubleClick', {
+                rawEvent: event,
+            });
+        }
     };
 
     private onCompositionStart = () => {

@@ -16,13 +16,13 @@ import type {
     BeforeLogicalRootChangeEvent,
     LogicalRootChangedEvent,
 } from './LogicalRootChangedEvent';
-import type { MouseDownEvent, MouseUpEvent } from './MouseEvent';
+import type { MouseDownEvent, MouseUpEvent, DoubleClickEvent } from './MouseEvent';
 import type { RewriteFromModelEvent } from './RewriteFromModelEvent';
 import type { ScrollEvent } from './ScrollEvent';
 import type { SelectionChangedEvent } from './SelectionChangedEvent';
 import type { EnterShadowEditEvent, LeaveShadowEditEvent } from './ShadowEditEvent';
 import type { ZoomChangedEvent } from './ZoomChangedEvent';
-import type { PointerDownEvent, PointerUpEvent, PointerDoubleClickEvent } from './PointerEvent';
+import type { PointerDownEvent, PointerUpEvent } from './PointerEvent';
 
 /**
  * Editor plugin event interface
@@ -57,4 +57,4 @@ export type PluginEvent =
     | ZoomChangedEvent
     | PointerDownEvent
     | PointerUpEvent
-    | PointerDoubleClickEvent;
+    | DoubleClickEvent;
