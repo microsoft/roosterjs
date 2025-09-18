@@ -1,4 +1,5 @@
 import { areSameSelections } from './areSameSelections';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { createParagraphMap } from './ParagraphMapImpl';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
@@ -132,7 +133,12 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     this.invalidateCache();
                 }
 
-                this.updateCoauthoringModel('ContentChangedEvent');
+                if (
+                    event.source != ChangeSource.SwitchToDarkMode &&
+                    event.source != ChangeSource.SwitchToLightMode
+                ) {
+                    this.updateCoauthoringModel('ContentChangedEvent');
+                }
 
                 break;
         }

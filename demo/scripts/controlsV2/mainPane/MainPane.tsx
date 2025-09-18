@@ -452,6 +452,7 @@ export class MainPane extends React.Component<MainPaneProps, MainPaneState> {
                     <WindowProvider window={this.state.popoutWindow}>
                         <ThemeProvider applyTo="body" theme={getTheme(this.state.isDarkMode)}>
                             <div className={styles.mainPane}>
+                                {this.renderTitleBar()}
                                 {this.renderTabs()}
                                 {this.renderRibbon(imageEditPlugin)}
                                 <div className={styles.body}>
