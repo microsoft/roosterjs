@@ -1,5 +1,5 @@
 import { areSameSelections } from './areSameSelections';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createParagraphMap } from './ParagraphMapImpl';
 import { createTextMutationObserver } from './textMutationObserver';
 import { DomIndexerImpl } from './domIndexerImpl';
