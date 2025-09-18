@@ -21,5 +21,5 @@ export interface ICoauthoringAgent {
      * @param update The update from the client
      * @param owner The owner of the client
      */
-    onClientUpdate: (update: CoauthoringUpdate, owner: string) => void;
+    onClientUpdate: (update: CoauthoringUpdate, owner: string, baseOnVersion: number) => void;
 }

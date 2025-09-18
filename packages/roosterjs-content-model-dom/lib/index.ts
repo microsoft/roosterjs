@@ -75,8 +75,10 @@ export { isEmpty } from './modelApi/common/isEmpty';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 export { mergeTextSegments } from './modelApi/common/mergeTextSegments';
 export { normalizeSegmentFormat } from './modelApi/common/normalizeSegmentFormat';
+export { areSameSegments, segmentsWithSameFormat } from './modelApi/common/areSameSegments';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+export { ParagraphMapBase } from './modelApi/block/ParagraphMapBase';
 export {
     copyFormat,
     ListFormats,
@@ -143,7 +145,7 @@ export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegmen
 export { hasSelectionInBlockGroup } from './modelApi/selection/hasSelectionInBlockGroup';
 export { setSelection } from './modelApi/selection/setSelection';
 
-export { cloneModel, cloneParagraph } from './modelApi/editing/cloneModel';
+export { cloneModel } from './modelApi/editing/cloneModel';
 export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';

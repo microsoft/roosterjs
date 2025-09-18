@@ -189,13 +189,7 @@ function cloneEntity(entity: ContentModelEntity, options: CloneModelOptions): Co
     );
 }
 
-/**
- * Clone a paragraph
- * @param paragraph The paragraph to clone
- * @param options Options to specify customize the clone behavior
- * @returns The cloned paragraph
- */
-export function cloneParagraph(
+function cloneParagraph(
     paragraph: ReadonlyContentModelParagraph,
     options: CloneModelOptions
 ): ContentModelParagraph {

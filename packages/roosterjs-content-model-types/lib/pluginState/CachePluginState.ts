@@ -8,7 +8,7 @@ import type {
     TableSelection,
 } from '../selection/DOMSelection';
 import type { ParagraphIndexer, ParagraphMap } from '../parameter/ParagraphMap';
-import type { ICoauthoringClient } from '../parameter/ICoauthoringClient';
+import type { ICoauthoringClientBridge } from '../parameter/ICoauthoringClient';
 
 /**
  * Represents a range selection used for cache. We store the start and end insert point here instead of range itself
@@ -66,5 +66,8 @@ export interface CachePluginState {
      */
     textMutationObserver: TextMutationObserver;
 
-    coauthoringClient: ICoauthoringClient;
+    /**
+     * The coauthoring client instance for this editor
+     */
+    coauthoringClient: ICoauthoringClientBridge;
 }

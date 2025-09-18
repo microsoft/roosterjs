@@ -1,15 +1,14 @@
-import { getParagraphMarker, setParagraphMarker } from 'roosterjs-content-model-dom';
+import {
+    getParagraphMarker,
+    ParagraphMapBase,
+    setParagraphMarker,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelParagraph,
-    ContentModelParagraphCommon,
     ParagraphIndexer,
     ParagraphMap,
     ReadonlyContentModelParagraph,
 } from 'roosterjs-content-model-types';
-
-interface ParagraphWithMarker extends ContentModelParagraphCommon {
-    _marker?: string;
-}
 
 /**
  * @internal, used by test code only
@@ -21,39 +20,37 @@ export interface ParagraphMapReset {
 
 const idPrefix = 'paragraph';
 
-class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapReset {
+class ParagraphMapImpl extends ParagraphMapBase
+    implements ParagraphMap, ParagraphIndexer, ParagraphMapReset {
     private static lastPrefixNum = 0;
-    private prefixNum: number;
+    private prefix: string;
     private nextId = 0;
-    private paragraphMap: { [key: string]: ReadonlyContentModelParagraph } = {};
 
-    constructor() {
-        this.prefixNum = ParagraphMapImpl.lastPrefixNum++;
+    constructor(idPrefix?: string | null) {
+        super();
+
+        this.prefix = idPrefix || (ParagraphMapImpl.lastPrefixNum++).toString();
     }
 
     assignMarkerToModel(element: HTMLElement, paragraph: ContentModelParagraph): void {
         const marker = getParagraphMarker(element);
-        const paragraphWithMarker = paragraph as ParagraphWithMarker;
 
         if (marker) {
-            paragraphWithMarker._marker = marker;
+            this.setMarkerToParagraph(paragraph, marker);
 
             this.paragraphMap[marker] = paragraph;
         } else {
-            paragraphWithMarker._marker = this.generateId();
-
+            this.setMarkerToParagraph(paragraph, this.generateId());
             this.applyMarkerToDom(element, paragraph);
         }
     }
 
     applyMarkerToDom(element: HTMLElement, paragraph: ContentModelParagraph): void {
-        const paragraphWithMarker = paragraph as ParagraphWithMarker;
-
-        if (!paragraphWithMarker._marker) {
-            paragraphWithMarker._marker = this.generateId();
+        if (!this.getMarkerFromParagraph(paragraph)) {
+            this.setMarkerToParagraph(paragraph, this.generateId());
         }
 
-        const marker = paragraphWithMarker._marker;
+        const marker = this.getMarkerFromParagraph(paragraph);
 
         if (marker) {
             setParagraphMarker(element, marker);
@@ -62,30 +59,8 @@ class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapRe
         }
     }
 
-    /**
-     * Get paragraph using a previously marked paragraph
-     * @param markedParagraph The previously marked paragraph to get
-     */
-    getParagraphFromMarker(
-        markerParagraph: ReadonlyContentModelParagraph
-    ): ReadonlyContentModelParagraph | null {
-        const marker = (markerParagraph as ParagraphWithMarker)._marker;
-
-        return marker ? this.paragraphMap[marker] || null : null;
-    }
-
     clear() {
         this.paragraphMap = {};
-    }
-
-    copyParagraphMarker(
-        targetParagraph: ContentModelParagraph,
-        sourceParagraph: ReadonlyContentModelParagraph
-    ) {
-        const sourceWithMarker = sourceParagraph as ParagraphWithMarker;
-        const targetWithMarker = targetParagraph as ParagraphWithMarker;
-
-        targetWithMarker._marker = sourceWithMarker._marker;
     }
 
     //#region For test code only
@@ -100,13 +75,13 @@ class ParagraphMapImpl implements ParagraphMap, ParagraphIndexer, ParagraphMapRe
     //#endregion
 
     private generateId() {
-        return `${idPrefix}_${this.prefixNum}_${this.nextId++}`;
+        return `${idPrefix}_${this.prefix}_${this.nextId++}`;
     }
 }
 
 /**
  * @internal
  */
-export function createParagraphMap(): ParagraphMap & ParagraphIndexer {
-    return new ParagraphMapImpl();
+export function createParagraphMap(idPrefix?: string | null): ParagraphMap & ParagraphIndexer {
+    return new ParagraphMapImpl(idPrefix);
 }

@@ -460,11 +460,15 @@ export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export {
     ICoauthoringClient,
+    ICoauthoringClientBridge,
     CoauthoringUpdate,
     CoauthoringUpdateBase,
     CoauthoringUpdateParagraph,
     CoauthoringUpdateModel,
     CoauthoringUpdateType,
+    CoauthoringLocalUpdate,
+    CoauthoringLocalUpdateParagraph,
+    CoauthoringLocalUpdateModel,
 } from './parameter/ICoauthoringClient';
 export { ICoauthoringAgent } from './parameter/ICoauthoringAgent';
 

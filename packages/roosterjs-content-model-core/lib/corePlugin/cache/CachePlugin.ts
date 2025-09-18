@@ -46,7 +46,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         };
 
         if (option.enableParagraphMap || option.coauthoringAgent) {
-            this.state.paragraphMap = createParagraphMap();
+            this.state.paragraphMap = createParagraphMap(option.owner);
         }
     }
 
@@ -165,7 +165,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     if (paragraph) {
                         this.state.coauthoringClient.onLocalUpdate({
                             type: 'paragraph',
-                            paragraph,
+                            paragraphs: [paragraph],
                         });
                     } else {
                         this.updateCoauthoringModel();
@@ -195,7 +195,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            const paragraphs = new Set<ContentModelParagraph | null>();
+            const paragraphs = new Set<ContentModelParagraph>();
 
             if (this.state.coauthoringClient.isCoauthoring) {
                 this.addModifiedParagraphs(paragraphs);
@@ -206,25 +206,31 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             if (this.state.coauthoringClient.isCoauthoring) {
                 this.addModifiedParagraphs(paragraphs);
 
-                paragraphs.forEach(paragraph => {
-                    if (paragraph) {
-                        this.state.coauthoringClient.onLocalUpdate({
-                            type: 'paragraph',
-                            paragraph,
-                        });
-                    }
-                });
+                if (paragraphs.size > 0) {
+                    this.state.coauthoringClient.onLocalUpdate({
+                        type: 'paragraph',
+                        paragraphs: Array.from(paragraphs),
+                    });
+                }
             }
         }
     };
 
-    private addModifiedParagraphs(paragraphs: Set<ContentModelParagraph | null>) {
-        const oldSelection = this.state.cachedSelection;
-        const start = oldSelection?.type == 'range' ? oldSelection.start.node : null;
-        const end = oldSelection?.type == 'range' ? oldSelection.end.node : null;
+    private addModifiedParagraphs(paragraphs: Set<ContentModelParagraph>) {
+        const selection = this.state.cachedSelection;
+        const range = selection?.type == 'range' ? selection : null;
 
-        paragraphs.add(start ? this.state.domIndexer.findParagraphFromIndex(start) : null);
-        paragraphs.add(end ? this.state.domIndexer.findParagraphFromIndex(end) : null);
+        this.addParagraphFromNode(range?.start.node, paragraphs);
+        this.addParagraphFromNode(range?.end.node, paragraphs);
+    }
+
+    private addParagraphFromNode(node: Node | undefined, paragraphs: Set<ContentModelParagraph>) {
+        if (node) {
+            const para = this.state.domIndexer.findParagraphFromIndex(node);
+            if (para) {
+                paragraphs.add(para);
+            }
+        }
     }
 
     private updateCoauthoringModel() {
