@@ -149,11 +149,16 @@ export type PluginEventType =
     | 'beforeAddUndoSnapshot'
 
     /**
-     * HTML PointerDown event
+     * HTML PointerDown event - for touch only
      */
     | 'pointerDown'
 
     /**
-     * HTML PointerUp event
+     * HTML PointerUp event - for touch only
      */
-    | 'pointerUp';
+    | 'pointerUp'
+
+    /**
+     * HTML double click with Pointer event - for touch only
+     */
+    | 'pointerDoubleClick';

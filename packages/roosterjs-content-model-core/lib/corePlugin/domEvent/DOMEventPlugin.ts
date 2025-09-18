@@ -17,6 +17,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keyup: 'keyUp',
     keypress: 'keyPress',
 };
+const POINTER_DETECTION_DELAY = 200; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
 
 /**
  * DOMEventPlugin handles customized DOM events, including:
@@ -34,6 +35,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private disposer: (() => void) | null = null;
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
+    private timer = 0;
+    private isDblClicked: boolean = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -87,6 +90,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 5. Pointer event
             pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
+            dblclick: { beforeDispatch: () => this.onDoubleClick() },
         };
 
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
@@ -104,7 +108,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.removeMouseUpEventListener();
 
         const document = this.editor?.getDocument();
-
         document?.defaultView?.removeEventListener('resize', this.onScroll);
         document?.defaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
@@ -112,6 +115,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.disposer = null;
         this.editor = null;
         this.pointerEvent = null;
+
+        if (this.timer) {
+            document?.defaultView?.clearTimeout(this.timer);
+            this.timer = 0;
+        }
     }
 
     /**
@@ -220,11 +228,38 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             });
 
             if (this.pointerEvent) {
-                this.editor.triggerEvent('pointerUp', {
-                    rawEvent: this.pointerEvent,
-                });
+                const window = this.editor?.getDocument().defaultView;
+
+                if (!window) {
+                    return;
+                }
+
+                if (this.timer) {
+                    window.clearTimeout(this.timer);
+                }
+
+                this.timer = window.setTimeout(() => {
+                    this.timer = 0;
+                    if (this.editor && this.pointerEvent) {
+                        if (this.isDblClicked) {
+                            this.editor.triggerEvent('pointerDoubleClick', {
+                                rawEvent: this.pointerEvent,
+                            });
+                        } else {
+                            this.editor.triggerEvent('pointerUp', {
+                                rawEvent: this.pointerEvent,
+                            });
+                        }
+                    }
+                    this.pointerEvent = null;
+                    this.isDblClicked = false;
+                }, POINTER_DETECTION_DELAY);
             }
         }
+    };
+
+    private onDoubleClick = () => {
+        this.isDblClicked = true;
     };
 
     private onCompositionStart = () => {

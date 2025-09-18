@@ -22,7 +22,7 @@ import type { ScrollEvent } from './ScrollEvent';
 import type { SelectionChangedEvent } from './SelectionChangedEvent';
 import type { EnterShadowEditEvent, LeaveShadowEditEvent } from './ShadowEditEvent';
 import type { ZoomChangedEvent } from './ZoomChangedEvent';
-import type { PointerDownEvent, PointerUpEvent } from './PointerEvent';
+import type { PointerDownEvent, PointerUpEvent, PointerDoubleClickEvent } from './PointerEvent';
 
 /**
  * Editor plugin event interface
@@ -56,4 +56,5 @@ export type PluginEvent =
     | SelectionChangedEvent
     | ZoomChangedEvent
     | PointerDownEvent
-    | PointerUpEvent;
+    | PointerUpEvent
+    | PointerDoubleClickEvent;
