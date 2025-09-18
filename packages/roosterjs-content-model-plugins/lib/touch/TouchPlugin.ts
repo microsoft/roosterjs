@@ -3,8 +3,7 @@ import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
 const POINTER_DETECTION_DELAY = 150; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
-const WORD_MATCHING_REGEX = /[A-Za-z\u00C0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0530-\u058F\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u3040-\u309F\u30A0-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7AF_]/;
-const PUNCTUATION_MATCHING_REGEX = /[.,;:]/;
+const PUNCTUATION_MATCHING_REGEX = /[.,;:!]/;
 const SPACE_MATCHING_REGEX = /\s/;
 
 /**
@@ -85,7 +84,8 @@ export class TouchPlugin implements EditorPlugin {
                             if (
                                 node.nodeType === Node.TEXT_NODE &&
                                 charAtSelection &&
-                                WORD_MATCHING_REGEX.test(charAtSelection)
+                                !SPACE_MATCHING_REGEX.test(charAtSelection) &&
+                                !PUNCTUATION_MATCHING_REGEX.test(charAtSelection)
                             ) {
                                 const { wordStart, wordEnd } = findWordBoundaries(
                                     nodeTextContent,
@@ -233,12 +233,20 @@ function findWordBoundaries(text: string, offset: number) {
     let end = offset;
 
     // Move start backwards to find word start
-    while (start > 0 && WORD_MATCHING_REGEX.test(text[start - 1])) {
+    while (
+        start > 0 &&
+        !SPACE_MATCHING_REGEX.test(text[start - 1]) &&
+        !PUNCTUATION_MATCHING_REGEX.test(text[start - 1])
+    ) {
         start--;
     }
 
     // Move end forward to find word end
-    while (end < text.length && WORD_MATCHING_REGEX.test(text[end])) {
+    while (
+        end < text.length &&
+        !SPACE_MATCHING_REGEX.test(text[end]) &&
+        !PUNCTUATION_MATCHING_REGEX.test(text[end])
+    ) {
         end++;
     }
 
