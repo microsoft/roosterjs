@@ -106,7 +106,7 @@ export class TouchPlugin implements EditorPlugin {
                                 const newOffsetPosition = offset + movingOffset;
                                 if (
                                     movingOffset !== 0 &&
-                                    nodeTextContent.length > newOffsetPosition
+                                    nodeTextContent.length >= newOffsetPosition
                                 ) {
                                     const newRange = this.editor.getDocument().createRange();
                                     newRange.setStart(node, newOffsetPosition);
