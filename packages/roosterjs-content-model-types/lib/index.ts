@@ -495,4 +495,4 @@ export { ScrollEvent } from './event/ScrollEvent';
 export { SelectionChangedEvent } from './event/SelectionChangedEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
-export { PointerDownEvent, PointerUpEvent } from './event/PointerEvent';
+export { PointerDownEvent, PointerUpEvent, PointerDoubleClickEvent } from './event/PointerEvent';
