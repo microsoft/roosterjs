@@ -11,6 +11,7 @@ import type {
     PluginWithState,
     EditorOptions,
     ContentModelParagraph,
+    LocalUpdateReason,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -118,7 +119,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
             case 'selectionChanged':
                 this.updateCachedModel(this.editor);
 
-                this.updateCoauthoringModel();
+                this.updateCoauthoringModel('SelectionChangedEvent');
 
                 break;
 
@@ -131,7 +132,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                     this.invalidateCache();
                 }
 
-                this.updateCoauthoringModel();
+                this.updateCoauthoringModel('ContentChangedEvent');
 
                 break;
         }
@@ -150,7 +151,7 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                         this.invalidateCache();
                     }
 
-                    this.updateCoauthoringModel();
+                    this.updateCoauthoringModel('ChildListMutation');
 
                     break;
 
@@ -162,12 +163,15 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                         this.state.domIndexer.findParagraphFromIndex(mutation.node);
 
                     if (paragraph) {
-                        this.state.coauthoringClient.onLocalUpdate({
-                            type: 'paragraph',
-                            paragraphs: [paragraph],
-                        });
+                        this.state.coauthoringClient.onLocalUpdate(
+                            {
+                                type: 'paragraph',
+                                paragraphs: [paragraph],
+                            },
+                            'TextMutation'
+                        );
                     } else {
-                        this.updateCoauthoringModel();
+                        this.updateCoauthoringModel('UnknownMutation');
                     }
                     break;
 
@@ -178,14 +182,14 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                         this.invalidateCache();
                     }
 
-                    this.updateCoauthoringModel();
+                    this.updateCoauthoringModel('IdMutation');
 
                     break;
 
                 case 'unknown':
                     this.invalidateCache();
 
-                    this.updateCoauthoringModel();
+                    this.updateCoauthoringModel('UnknownMutation');
 
                     break;
             }
@@ -206,10 +210,13 @@ class CachePlugin implements PluginWithState<CachePluginState> {
                 this.addModifiedParagraphs(paragraphs);
 
                 if (paragraphs.size > 0) {
-                    this.state.coauthoringClient.onLocalUpdate({
-                        type: 'paragraph',
-                        paragraphs: Array.from(paragraphs),
-                    });
+                    this.state.coauthoringClient.onLocalUpdate(
+                        {
+                            type: 'paragraph',
+                            paragraphs: Array.from(paragraphs),
+                        },
+                        'NativeSelectionChange'
+                    );
                 }
             }
         }
@@ -232,13 +239,16 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         }
     }
 
-    private updateCoauthoringModel() {
+    private updateCoauthoringModel(reason: LocalUpdateReason) {
         if (this.state.coauthoringClient.isCoauthoring && this.editor) {
             this.editor.formatContentModel(model => {
-                this.state.coauthoringClient.onLocalUpdate({
-                    type: 'model',
-                    model,
-                });
+                this.state.coauthoringClient.onLocalUpdate(
+                    {
+                        type: 'model',
+                        model,
+                    },
+                    reason
+                );
 
                 return false;
             });

@@ -7,6 +7,7 @@ import type {
     ICoauthoringAgent,
     ICoauthoringClient,
     ICoauthoringClientBridge,
+    LocalUpdateReason,
     ReadonlyContentModelParagraph,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
@@ -16,6 +17,7 @@ class CoauthoringClient implements ICoauthoringClient, ICoauthoringClientBridge 
     private currentVersion = 0;
     private clonedOptionForRemoteUpdate: CloneModelOptions;
     private cloneOptionForLocalUpdate: CloneModelOptions;
+    private ignoreNativeSelectionChange = false;
     public readonly isCoauthoring = true;
 
     constructor(
@@ -68,34 +70,48 @@ class CoauthoringClient implements ICoauthoringClient, ICoauthoringClientBridge 
         }
     }
 
-    onLocalUpdate(update: CoauthoringUpdate) {
-        if (!this.ignoreLocal) {
-            switch (update.type) {
-                case 'paragraph':
-                    this.agent.onClientUpdate(
-                        {
-                            type: 'paragraph',
-                            paragraphs: cloneParagraphs(
-                                update.paragraphs,
-                                this.cloneOptionForLocalUpdate
-                            ),
-                        },
-                        this.owner,
-                        this.currentVersion
-                    );
+    onLocalUpdate(update: CoauthoringUpdate, reason: LocalUpdateReason) {
+        if (reason === 'NativeSelectionChange' && this.ignoreNativeSelectionChange) {
+            this.ignoreNativeSelectionChange = false;
 
-                    break;
-                case 'model':
-                    const targetModel = cloneModel(update.model, this.cloneOptionForLocalUpdate);
+            return;
+        } else if (reason == 'TextMutation') {
+            this.ignoreNativeSelectionChange = true;
+        }
 
-                    this.agent.onClientUpdate(
-                        { type: 'model', model: targetModel },
-                        this.owner,
-                        this.currentVersion
-                    );
+        if (this.ignoreLocal) {
+            return;
+        }
 
-                    break;
-            }
+        // console.log(
+        //     '[Local update] Type: ' + update.type + ', Owner: ' + this.owner + ', Reason: ' + reason
+        // );
+
+        switch (update.type) {
+            case 'paragraph':
+                this.agent.onClientUpdate(
+                    {
+                        type: 'paragraph',
+                        paragraphs: cloneParagraphs(
+                            update.paragraphs,
+                            this.cloneOptionForLocalUpdate
+                        ),
+                    },
+                    this.owner,
+                    this.currentVersion
+                );
+
+                break;
+            case 'model':
+                const targetModel = cloneModel(update.model, this.cloneOptionForLocalUpdate);
+
+                this.agent.onClientUpdate(
+                    { type: 'model', model: targetModel },
+                    this.owner,
+                    this.currentVersion
+                );
+
+                break;
         }
     }
 }

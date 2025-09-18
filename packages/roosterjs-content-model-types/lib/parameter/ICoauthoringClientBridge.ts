@@ -28,6 +28,18 @@ export interface CoauthoringLocalUpdateModel extends CoauthoringUpdateBase<'mode
 export type CoauthoringLocalUpdate = CoauthoringLocalUpdateParagraph | CoauthoringLocalUpdateModel;
 
 /**
+ * The reason for a local update
+ */
+export type LocalUpdateReason =
+    | 'ContentChangedEvent'
+    | 'SelectionChangedEvent'
+    | 'TextMutation'
+    | 'ChildListMutation'
+    | 'IdMutation'
+    | 'UnknownMutation'
+    | 'NativeSelectionChange';
+
+/**
  * Represents a coauthoring client which can work with other clients through a coauthoring agent
  * and also handle local updates and send them to the agent
  */
@@ -51,5 +63,5 @@ export interface ICoauthoringClientBridge {
      * Handle a local update
      * @param update The update from local client
      */
-    onLocalUpdate(update: CoauthoringLocalUpdate): void;
+    onLocalUpdate(update: CoauthoringLocalUpdate, reason: LocalUpdateReason): void;
 }

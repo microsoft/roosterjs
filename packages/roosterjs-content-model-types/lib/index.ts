@@ -471,6 +471,7 @@ export {
     CoauthoringLocalUpdate,
     CoauthoringLocalUpdateParagraph,
     CoauthoringLocalUpdateModel,
+    LocalUpdateReason,
 } from './parameter/ICoauthoringClientBridge';
 export { ICoauthoringAgent } from './parameter/ICoauthoringAgent';
 
