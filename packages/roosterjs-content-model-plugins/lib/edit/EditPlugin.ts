@@ -313,7 +313,7 @@ export class EditPlugin implements EditorPlugin {
         const opt = this.options.shouldHandleBackspaceKey;
         switch (typeof opt) {
             case 'function':
-                return Boolean(opt(editor));
+                return opt(editor);
             case 'boolean':
                 return opt;
             default:
