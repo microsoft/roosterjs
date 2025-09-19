@@ -5,6 +5,7 @@ import type {
     IEditor,
     PluginWithState,
     EditorOptions,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 const ContextMenuButton = 2;
@@ -41,11 +42,14 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.attachDomEvent({
+        const eventHandlers: Partial<
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
+        > = {
             contextmenu: {
-                beforeDispatch: this.onContextMenuEvent,
+                beforeDispatch: (event: PointerEvent) => this.onContextMenuEvent(event),
             },
-        });
+        };
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
     }
 
     /**
@@ -64,7 +68,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         return this.state;
     }
 
-    private onContextMenuEvent = (e: Event) => {
+    private onContextMenuEvent = (e: PointerEvent) => {
         if (this.editor) {
             const allItems: any[] = [];
             const mouseEvent = e as MouseEvent;
@@ -75,6 +79,8 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
             const targetNode =
                 mouseEvent.button == ContextMenuButton
                     ? (mouseEvent.target as Node)
+                    : e.pointerType === 'touch' || e.pointerType === 'pen'
+                    ? (e.target as Node)
                     : this.getFocusedNode(this.editor);
 
             if (targetNode) {
