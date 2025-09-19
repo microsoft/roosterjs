@@ -72,9 +72,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         if (this.editor) {
             const allItems: any[] = [];
             const mouseEvent = e as MouseEvent;
-            /**
-             * If the firesTouchEvents property is truthy, it means that the context menu was triggered by touch
-             **/
+            // If the firesTouchEvents property is truthy, it means that the context menu was triggered by touch
             const firesTouchEvents = (e as ContextMenuEvent).sourceCapabilities.firesTouchEvents;
 
             // ContextMenu event can be triggered from mouse right click or keyboard (e.g. Shift+F10 on Windows)
