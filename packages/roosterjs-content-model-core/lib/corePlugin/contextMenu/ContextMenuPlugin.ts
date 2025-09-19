@@ -5,14 +5,11 @@ import type {
     IEditor,
     PluginWithState,
     EditorOptions,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 
 const ContextMenuButton = 2;
-interface ContextMenuEvent extends Event {
-    sourceCapabilities: {
-        firesTouchEvents: boolean;
-    };
-}
+
 /**
  * Edit Component helps handle Content edit features
  */
@@ -45,11 +42,14 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.attachDomEvent({
+        const eventHandlers: Partial<
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
+        > = {
             contextmenu: {
-                beforeDispatch: this.onContextMenuEvent,
+                beforeDispatch: (event: PointerEvent) => this.onContextMenuEvent(event),
             },
-        });
+        };
+        this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
     }
 
     /**
@@ -68,12 +68,10 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
         return this.state;
     }
 
-    private onContextMenuEvent = (e: Event) => {
+    private onContextMenuEvent = (e: PointerEvent) => {
         if (this.editor) {
             const allItems: any[] = [];
             const mouseEvent = e as MouseEvent;
-            // If the firesTouchEvents property is truthy, it means that the context menu was triggered by touch
-            const firesTouchEvents = (e as ContextMenuEvent).sourceCapabilities.firesTouchEvents;
 
             // ContextMenu event can be triggered from mouse right click or keyboard (e.g. Shift+F10 on Windows)
             // Need to check if this is from keyboard, we need to get target node from selection because in that case
@@ -81,7 +79,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
             const targetNode =
                 mouseEvent.button == ContextMenuButton
                     ? (mouseEvent.target as Node)
-                    : firesTouchEvents
+                    : e.pointerType === 'touch' || e.pointerType === 'pen'
                     ? (e.target as Node)
                     : this.getFocusedNode(this.editor);
 
