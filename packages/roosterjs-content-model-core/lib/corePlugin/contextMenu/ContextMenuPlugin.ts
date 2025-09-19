@@ -46,7 +46,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
             { [P in keyof HTMLElementEventMap]: DOMEventRecord<HTMLElementEventMap[P]> }
         > = {
             contextmenu: {
-                beforeDispatch: (event: PointerEvent) => this.onContextMenuEvent(event),
+                beforeDispatch: e => this.onContextMenuEvent(e),
             },
         };
         this.disposer = this.editor.attachDomEvent(<Record<string, DOMEventRecord>>eventHandlers);
