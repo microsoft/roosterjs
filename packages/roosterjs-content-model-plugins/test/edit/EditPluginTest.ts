@@ -120,6 +120,23 @@ describe('EditPlugin', () => {
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, true);
         });
 
+        it('Backspace with shouldHandleBackspaceKey boolean true', () => {
+            plugin = new EditPlugin({ shouldHandleBackspaceKey: true });
+            const rawEvent = { key: 'Backspace' } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardInputSpy).not.toHaveBeenCalled();
+            expect(keyboardEnterSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).not.toHaveBeenCalled();
+        });
+
         it('handleExpandedSelectionOnDelete disabled', () => {
             plugin = new EditPlugin({ handleExpandedSelectionOnDelete: false });
             const rawEvent = { key: 'Delete' } as any;

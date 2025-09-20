@@ -14,3 +14,8 @@ export interface MouseUpEvent extends BasePluginDomEvent<'mouseUp', MouseEvent> 
      */
     isClicking?: boolean;
 }
+
+/**
+ * This interface represents a PluginEvent wrapping native dblClick event
+ */
+export interface DoubleClickEvent extends BasePluginDomEvent<'doubleClick', MouseEvent> {}

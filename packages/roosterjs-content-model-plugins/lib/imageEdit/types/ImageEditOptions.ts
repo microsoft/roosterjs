@@ -25,7 +25,7 @@ export interface ImageEditOptions {
     /**
      * Whether preserve width/height ratio when resize
      * Pressing SHIFT key when resize will for preserve ratio even this value is set to false
-     * @default false
+     * @default true
      */
     preserveRatio?: boolean;
 

@@ -328,6 +328,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                         </>
                     )}
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
+                    {this.renderPluginItem('touch', 'Touch')}
                 </tbody>
             </table>
         );
