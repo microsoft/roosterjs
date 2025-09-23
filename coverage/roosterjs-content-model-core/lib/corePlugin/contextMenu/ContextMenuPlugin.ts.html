@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.24% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/42</span>
+                <span class='fraction'>44/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.19% </span>
+                <span class="strong">75.93% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>32/42</span>
+                <span class='fraction'>41/54</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/11</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.24% </span>
+                <span class="strong">95.56% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>40/42</span>
+                <span class='fraction'>43/45</span>
             </div>
         
             
@@ -184,7 +184,16 @@
 <a name='L125'></a><a href='#L125'>125</a>
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
-<a name='L128'></a><a href='#L128'>128</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,13 +234,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,12 +267,15 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -318,6 +334,7 @@ import type {
     IEditor,
     PluginWithState,
     EditorOptions,
+    DOMEventRecord,
 } from 'roosterjs-content-model-types';
 &nbsp;
 const ContextMenuButton = 2;
@@ -354,11 +371,15 @@ class ContextMenuPlugin implements PluginWithState&lt;ContextMenuPluginState&gt;
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.attachDomEvent({
+        const eventHandlers: Partial&lt;
+            { [P in keyof HTMLElementEventMap]: DOMEventRecord&lt;HTMLElementEventMap[P]&gt; }
+        &gt; = {
             contextmenu: {
-                beforeDispatch: this.onContextMenuEvent,
+                beforeDispatch: (event: MouseEvent | PointerEvent) =&gt;
+                    this.onContextMenuEvent(event),
             },
-        });
+        };
+        this.disposer = this.editor.attachDomEvent(&lt;Record&lt;string, DOMEventRecord&gt;&gt;eventHandlers);
     }
 &nbsp;
     /**
@@ -377,10 +398,11 @@ class ContextMenuPlugin implements PluginWithState&lt;ContextMenuPluginState&gt;
         return this.state;
     }
 &nbsp;
-    private onContextMenuEvent = (e: Event) =&gt; {
+    private onContextMenuEvent = (e: MouseEvent | PointerEvent) =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
             const allItems: any[] = [];
             const mouseEvent = e as MouseEvent;
+            const pointerEvent = e as PointerEvent;
 &nbsp;
             // ContextMenu event can be triggered from mouse right click or keyboard (e.g. Shift+F10 on Windows)
             // Need to check if this is from keyboard, we need to get target node from selection because in that case
@@ -388,6 +410,8 @@ class ContextMenuPlugin implements PluginWithState&lt;ContextMenuPluginState&gt;
             const targetNode =
                 mouseEvent.button == ContextMenuButton
                     ? (mouseEvent.target as Node)
+                    : pointerEvent<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ointerType === 'touch' || pointerEvent<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ointerType === 'pen'
+                    ? (<span class="branch-0 cbranch-no" title="branch not covered" >pointerEvent.target as Node)</span>
                     : this.getFocusedNode(this.editor);
 &nbsp;
             <span class="missing-if-branch" title="else path not taken" >E</span>if (targetNode) {
@@ -445,7 +469,7 @@ export function createContextMenuPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 18 2025 23:18:29 GMT+0000 (Coordinated Universal Time)
+                at Tue Sep 23 2025 19:42:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
