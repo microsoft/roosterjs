@@ -9,5 +9,9 @@ export const isLastWordUrl = (text: string): boolean => {
     const words = text.trim().split(/\s+/);
     const lastWord = words[words.length - 1];
 
-    return !!matchLink(lastWord)?.normalizedUrl;
+    const isMailto = lastWord.toLowerCase().startsWith('mailto:');
+    const isTel = lastWord.toLowerCase().startsWith('tel:');
+
+    // Use matchLink for other URL types
+    return !!matchLink(lastWord)?.normalizedUrl || isMailto || isTel;
 };

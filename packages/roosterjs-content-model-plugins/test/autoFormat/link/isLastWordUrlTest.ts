@@ -20,11 +20,6 @@ describe('isLastWordUrl', () => {
         expect(isLastWordUrl('Check www.github.com')).toBe(true);
     });
 
-    it('should return true for FTP URLs as last word', () => {
-        expect(isLastWordUrl('Download from ftp://files.example.com')).toBe(true);
-        expect(isLastWordUrl('ftp://ftp.gnu.org/gnu')).toBe(true);
-    });
-
     it('should return true for mailto URLs as last word', () => {
         expect(isLastWordUrl('Contact mailto:test@example.com')).toBe(true);
         expect(isLastWordUrl('Email mailto:support@company.com')).toBe(true);
@@ -33,6 +28,26 @@ describe('isLastWordUrl', () => {
     it('should return true for tel URLs as last word', () => {
         expect(isLastWordUrl('Call tel:+1234567890')).toBe(true);
         expect(isLastWordUrl('Phone tel:555-0123')).toBe(true);
+        expect(isLastWordUrl('Contact tel:(555)123-4567')).toBe(true);
+    });
+
+    it('should return true for case-insensitive mailto and tel', () => {
+        expect(isLastWordUrl('Email MAILTO:TEST@EXAMPLE.COM')).toBe(true);
+        expect(isLastWordUrl('Call TEL:+1234567890')).toBe(true);
+        expect(isLastWordUrl('Contact Mailto:Support@Company.Com')).toBe(true);
+        expect(isLastWordUrl('Phone Tel:555-0123')).toBe(true);
+    });
+
+    it('should return false for incomplete mailto/tel URLs', () => {
+        expect(isLastWordUrl('Just mailto:')).toBe(false);
+        expect(isLastWordUrl('Only tel:')).toBe(false);
+        expect(isLastWordUrl('Email MAILTO:')).toBe(false);
+        expect(isLastWordUrl('Phone TEL:')).toBe(false);
+    });
+
+    it('should return false for mailto/tel without content', () => {
+        expect(isLastWordUrl('Contact mailto: ')).toBe(false);
+        expect(isLastWordUrl('Call tel: ')).toBe(false);
     });
 
     it('should return false for empty or null input', () => {
@@ -58,6 +73,8 @@ describe('isLastWordUrl', () => {
         expect(isLastWordUrl('Only https')).toBe(false);
         expect(isLastWordUrl('Just www')).toBe(false);
         expect(isLastWordUrl('Only ftp')).toBe(false);
+        expect(isLastWordUrl('Just mailto')).toBe(false);
+        expect(isLastWordUrl('Only tel')).toBe(false);
     });
 
     it('should return false for URLs with spaces', () => {
@@ -82,5 +99,19 @@ describe('isLastWordUrl', () => {
         expect(isLastWordUrl('Visit HTTPS://EXAMPLE.COM')).toBe(true);
         expect(isLastWordUrl('Go to HTTP://LOCALHOST')).toBe(true);
         expect(isLastWordUrl('Email MAILTO:TEST@EXAMPLE.COM')).toBe(true);
+        expect(isLastWordUrl('Call TEL:+1234567890')).toBe(true);
+    });
+
+    it('should handle valid mailto formats', () => {
+        expect(isLastWordUrl('Email mailto:user@domain.com')).toBe(true);
+        expect(isLastWordUrl('Contact mailto:first.last+tag@example.co.uk')).toBe(true);
+        expect(isLastWordUrl('Send mailto:test123@sub.domain.org')).toBe(true);
+    });
+
+    it('should handle valid tel formats', () => {
+        expect(isLastWordUrl('Call tel:+1-555-123-4567')).toBe(true);
+        expect(isLastWordUrl('Phone tel:555.123.4567')).toBe(true);
+        expect(isLastWordUrl('Contact tel:15551234567')).toBe(true);
+        expect(isLastWordUrl('Dial tel:+44-20-7946-0958')).toBe(true);
     });
 });

@@ -124,7 +124,6 @@ export class AutoFormatPlugin implements EditorPlugin {
 
     willHandleEventExclusively(event: PluginEvent) {
         if (this.editor) {
-            console.log(event);
             switch (event.eventType) {
                 case 'input':
                     return this.shouldHandleInputEventExclusively(this.editor, event);
