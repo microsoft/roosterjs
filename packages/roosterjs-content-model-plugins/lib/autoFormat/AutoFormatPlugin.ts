@@ -2,6 +2,8 @@ import { ChangeSource } from 'roosterjs-content-model-dom';
 import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
 import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
+import { isLastWordUrl } from './link/isLastWordUrl';
+import { isLetterFollowedByMarker } from './list/isLetterFollowedByMarker';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
@@ -98,6 +100,37 @@ export class AutoFormatPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+    }
+
+    private shouldHandleInputEventExclusively(editor: IEditor, event: EditorInputEvent) {
+        const rawEvent = event.rawEvent;
+        const selection = editor.getDOMSelection();
+        if (
+            rawEvent.inputType === 'insertText' &&
+            selection &&
+            selection.type === 'range' &&
+            selection.range.collapsed &&
+            rawEvent.data == ' '
+        ) {
+            const previousText = selection.range.startContainer.textContent?.trim();
+            if (!previousText) {
+                return false;
+            }
+
+            return isLastWordUrl(previousText) || isLetterFollowedByMarker(previousText);
+        }
+        return false;
+    }
+
+    willHandleEventExclusively(event: PluginEvent) {
+        if (this.editor) {
+            console.log(event);
+            switch (event.eventType) {
+                case 'input':
+                    return this.shouldHandleInputEventExclusively(this.editor, event);
+            }
+        }
+        return false;
     }
 
     /**
