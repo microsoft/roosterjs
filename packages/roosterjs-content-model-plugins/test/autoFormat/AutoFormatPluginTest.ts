@@ -2483,4 +2483,241 @@ describe('Content Model Auto Format Plugin Test', () => {
             );
         });
     });
+
+    describe('willHandleEventExclusively', () => {
+        let plugin: AutoFormatPlugin;
+        let mockEditor: IEditor;
+        let mockSelection: any;
+
+        beforeEach(() => {
+            mockSelection = {
+                type: 'range',
+                range: {
+                    collapsed: true,
+                    startContainer: {
+                        textContent: '',
+                    },
+                },
+            };
+
+            mockEditor = {
+                getDOMSelection: () => mockSelection,
+            } as any;
+
+            plugin = new AutoFormatPlugin({
+                autoBullet: true,
+                autoNumbering: true,
+                autoLink: true,
+            });
+            plugin.initialize(mockEditor);
+        });
+
+        afterEach(() => {
+            plugin.dispose();
+        });
+
+        it('should return true when previous text is a letter followed by marker', () => {
+            mockSelection.range.startContainer.textContent = 'a.';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(true);
+        });
+
+        it('should return true when previous text contains a URL', () => {
+            mockSelection.range.startContainer.textContent = 'Visit https://example.com';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(true);
+        });
+
+        it('should return false when input is not a space', () => {
+            mockSelection.range.startContainer.textContent = 'a.';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: 'x',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when input type is not insertText', () => {
+            mockSelection.range.startContainer.textContent = 'a.';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'deleteContentBackward',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when selection is not collapsed', () => {
+            mockSelection.range.collapsed = false;
+            mockSelection.range.startContainer.textContent = 'a.';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when there is no selection', () => {
+            mockEditor.getDOMSelection = () => null;
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when selection type is not range', () => {
+            mockSelection.type = 'table';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when previous text is empty', () => {
+            mockSelection.range.startContainer.textContent = '';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when previous text is null', () => {
+            mockSelection.range.startContainer.textContent = null;
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when previous text does not match patterns', () => {
+            mockSelection.range.startContainer.textContent = 'normal text';
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false for non-input events', () => {
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should return false when editor is not initialized', () => {
+            const uninitializedPlugin = new AutoFormatPlugin();
+
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    inputType: 'insertText',
+                    data: ' ',
+                } as any,
+            };
+
+            const result = uninitializedPlugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+
+        it('should handle multiple valid patterns', () => {
+            const testCases = [
+                { text: 'a)', expected: true },
+                { text: 'B.', expected: true },
+                { text: 'z-', expected: true },
+                { text: 'Visit www.example.com', expected: true },
+                { text: 'Check https://test.com', expected: true },
+                { text: 'Email mailto:test@example.com', expected: true },
+            ];
+
+            testCases.forEach(({ text, expected }) => {
+                mockSelection.range.startContainer.textContent = text;
+
+                const event: EditorInputEvent = {
+                    eventType: 'input',
+                    rawEvent: {
+                        inputType: 'insertText',
+                        data: ' ',
+                    } as any,
+                };
+
+                const result = plugin.willHandleEventExclusively(event);
+                expect(result).toBe(expected);
+            });
+        });
+    });
 });
