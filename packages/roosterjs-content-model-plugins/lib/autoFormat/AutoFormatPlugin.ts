@@ -2,8 +2,7 @@ import { ChangeSource } from 'roosterjs-content-model-dom';
 import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
 import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
-import { isLastWordUrl } from './link/isLastWordUrl';
-import { isLetterFollowedByMarker } from './list/isLetterFollowedByMarker';
+import { getListTypeStyle } from './list/getListTypeStyle';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
@@ -105,6 +104,7 @@ export class AutoFormatPlugin implements EditorPlugin {
     private shouldHandleInputEventExclusively(editor: IEditor, event: EditorInputEvent) {
         const rawEvent = event.rawEvent;
         const selection = editor.getDOMSelection();
+        let shouldHandle = false;
         if (
             rawEvent.inputType === 'insertText' &&
             selection &&
@@ -112,14 +112,19 @@ export class AutoFormatPlugin implements EditorPlugin {
             selection.range.collapsed &&
             rawEvent.data == ' '
         ) {
-            const previousText = selection.range.startContainer.textContent?.trim();
-            if (!previousText) {
+            formatTextSegmentBeforeSelectionMarker(editor, (model, previousSegment, paragraph) => {
+                const { autoLink, autoTel, autoMailto, autoBullet, autoNumbering } = this.options;
+                const list = getListTypeStyle(model, autoBullet, autoNumbering);
+                const link = promoteLink(previousSegment, paragraph, {
+                    autoLink,
+                    autoTel,
+                    autoMailto,
+                });
+                shouldHandle = !!link || !!list;
                 return false;
-            }
-
-            return isLastWordUrl(previousText) || isLetterFollowedByMarker(previousText);
+            });
         }
-        return false;
+        return shouldHandle;
     }
 
     willHandleEventExclusively(event: PluginEvent) {
