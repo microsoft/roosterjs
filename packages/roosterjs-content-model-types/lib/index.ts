@@ -59,6 +59,7 @@ export { FloatFormat } from './contentModel/format/formatParts/FloatFormat';
 export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFormat';
 export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 export { ImageStateFormat } from './contentModel/format/formatParts/ImageStateFormat';
+export { RoleFormat } from './contentModel/format/formatParts/RoleFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
