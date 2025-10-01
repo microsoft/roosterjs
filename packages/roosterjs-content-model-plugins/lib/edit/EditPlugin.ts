@@ -177,9 +177,7 @@ export class EditPlugin implements EditorPlugin {
         ) {
             const selection = this.editor.getDOMSelection();
             const startContainer =
-                selection?.type == 'range' && selection.range.collapsed
-                    ? selection.range.startContainer
-                    : null;
+                selection?.type == 'range' ? selection.range.startContainer : null;
             const table = startContainer
                 ? this.editor.getDOMHelper().findClosestElementAncestor(startContainer, 'table')
                 : null;
