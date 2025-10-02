@@ -5,13 +5,15 @@ import type {
     DOMHelper,
 } from 'roosterjs-content-model-types';
 
+/**
+ * @internal
+ */
+export interface DOMHelperImplOption {
+    cloneIndependentRoot?: boolean;
+}
+
 class DOMHelperImpl implements DOMHelper {
-    constructor(
-        private contentDiv: HTMLElement,
-        private options: {
-            cloneIndependentRoot?: boolean;
-        }
-    ) {}
+    constructor(private contentDiv: HTMLElement, private options: DOMHelperImplOption) {}
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -153,9 +155,7 @@ class DOMHelperImpl implements DOMHelper {
  */
 export function createDOMHelper(
     contentDiv: HTMLElement,
-    options: {
-        cloneIndependentRoot?: boolean;
-    } = {}
+    options: DOMHelperImplOption = {}
 ): DOMHelper {
     return new DOMHelperImpl(contentDiv, options);
 }
