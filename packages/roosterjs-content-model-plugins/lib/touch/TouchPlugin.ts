@@ -61,6 +61,7 @@ export class TouchPlugin implements EditorPlugin {
             case 'pointerDown':
                 this.isDblClicked = false;
                 this.isTouchPenPointerEvent = true;
+                this.editor.setEditorStyle(HIDE_CURSOR_CSS_KEY, CARET_CSS_RULE);
 
                 const targetWindow = this.editor.getDocument()?.defaultView || window;
                 if (this.timer) {
@@ -70,11 +71,13 @@ export class TouchPlugin implements EditorPlugin {
                 this.timer = targetWindow.setTimeout(() => {
                     this.timer = 0;
 
-                    if (!this.isDblClicked && this.editor) {
-                        repositionTouchSelection(this.editor);
+                    if (this.editor) {
+                        if (!this.isDblClicked) {
+                            repositionTouchSelection(this.editor);
 
-                        // reset values
-                        this.isTouchPenPointerEvent = false;
+                            // reset values
+                            this.isTouchPenPointerEvent = false;
+                        }
                         this.editor.setEditorStyle(HIDE_CURSOR_CSS_KEY, null);
                     }
                 }, POINTER_DETECTION_DELAY);
