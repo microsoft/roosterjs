@@ -24,6 +24,7 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
+import { roleFormatHandler } from './common/roleFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
@@ -79,6 +80,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
+    role: roleFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
@@ -179,6 +181,7 @@ export const defaultFormatKeysPerCategory: {
         'tableLayout',
         'textColor',
         'direction',
+        'role',
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
