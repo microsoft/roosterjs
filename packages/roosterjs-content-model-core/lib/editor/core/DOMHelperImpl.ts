@@ -6,7 +6,12 @@ import type {
 } from 'roosterjs-content-model-types';
 
 class DOMHelperImpl implements DOMHelper {
-    constructor(private contentDiv: HTMLElement) {}
+    constructor(
+        private contentDiv: HTMLElement,
+        private options: {
+            cloneIndependentRoot?: boolean;
+        }
+    ) {}
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -90,7 +95,14 @@ class DOMHelperImpl implements DOMHelper {
      * Get a deep cloned root element
      */
     getClonedRoot(): HTMLElement {
-        return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+        if (this.options.cloneIndependentRoot) {
+            const doc = this.contentDiv.ownerDocument.implementation.createHTMLDocument();
+            const clone = doc.importNode(this.contentDiv, true /*deep*/);
+
+            return clone;
+        } else {
+            return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+        }
     }
 
     /**
@@ -139,6 +151,11 @@ class DOMHelperImpl implements DOMHelper {
 /**
  * @internal Create new instance of DOMHelper
  */
-export function createDOMHelper(contentDiv: HTMLElement): DOMHelper {
-    return new DOMHelperImpl(contentDiv);
+export function createDOMHelper(
+    contentDiv: HTMLElement,
+    options: {
+        cloneIndependentRoot?: boolean;
+    } = {}
+): DOMHelper {
+    return new DOMHelperImpl(contentDiv, options);
 }
