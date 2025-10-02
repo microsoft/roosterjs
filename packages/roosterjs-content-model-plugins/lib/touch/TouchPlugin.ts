@@ -3,6 +3,7 @@ import type {
     IEditor,
     PluginEvent,
     ContentModelText,
+    ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
 import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
@@ -80,8 +81,9 @@ export class TouchPlugin implements EditorPlugin {
 
                     if (this.editor) {
                         if (!this.isDblClicked) {
-                            this.repositionTouchSelection();
-
+                            this.editor.formatContentModel(model =>
+                                this.repositionTouchSelection(model)
+                            );
                             // reset values
                             this.isTouchPenPointerEvent = false;
                         }
@@ -173,81 +175,74 @@ export class TouchPlugin implements EditorPlugin {
         }
     }
 
-    repositionTouchSelection = () => {
-        this.editor?.formatContentModel(
-            (model, _context) => {
-                if (this.editor) {
-                    let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
-                        model,
-                        false /*includingFormatHolder*/,
-                        true /*includingEntity*/,
-                        true /*mutate*/
-                    );
+    repositionTouchSelection = (model: ReadonlyContentModelDocument) => {
+        if (this.editor) {
+            let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
+                model,
+                false /*includingFormatHolder*/,
+                true /*includingEntity*/,
+                true /*mutate*/
+            );
 
-                    const isCollapsedSelection =
-                        segmentAndParagraphs.length >= 1 &&
-                        segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
+            const isCollapsedSelection =
+                segmentAndParagraphs.length >= 1 &&
+                segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
 
-                    // 1. adjust selection to a word if selection is collapsed
-                    if (isCollapsedSelection) {
-                        const para = segmentAndParagraphs[0][1];
-                        const path = segmentAndParagraphs[0][2];
+            // 1. adjust selection to a word if selection is collapsed
+            if (isCollapsedSelection) {
+                const para = segmentAndParagraphs[0][1];
+                const path = segmentAndParagraphs[0][2];
 
-                        segmentAndParagraphs = adjustWordSelection(
-                            model,
-                            segmentAndParagraphs[0][0]
-                        ).map(x => [x, para, path]);
+                segmentAndParagraphs = adjustWordSelection(
+                    model,
+                    segmentAndParagraphs[0][0]
+                ).map(x => [x, para, path]);
 
-                        // 2. Collect all text segments in selection
-                        const segments: ContentModelText[] = [];
-                        segmentAndParagraphs.forEach(item => {
-                            if (item[0].segmentType == 'Text') {
-                                segments.push(item[0]);
-                            }
+                // 2. Collect all text segments in selection
+                const segments: ContentModelText[] = [];
+                segmentAndParagraphs.forEach(item => {
+                    if (item[0].segmentType == 'Text') {
+                        segments.push(item[0]);
+                    }
+                });
+
+                // If there are 3 text segment in the Word, selection is in middle of the word
+                // before selection marker + after selection marker
+                if (segments.length === 2) {
+                    // 3. Calculate the offset to move cursor to the nearest edge of the word if within 6 characters
+                    // default to end of the word if user tapped in the middle
+                    const leftCursorWordLength = segments[0].text.length;
+                    const rightCursorWordLength = segments[1].text.length;
+                    let movingOffset: number =
+                        leftCursorWordLength >= rightCursorWordLength
+                            ? rightCursorWordLength
+                            : -leftCursorWordLength;
+                    movingOffset =
+                        Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE ? 0 : movingOffset;
+
+                    // 4. Move cursor to the calculated offset
+                    const selection = this.editor.getDOMSelection();
+                    if (selection?.type == 'range' && movingOffset !== 0) {
+                        const selectedRange = selection.range;
+                        const newRange = this.editor.getDocument().createRange();
+                        newRange.setStart(
+                            selectedRange.startContainer,
+                            selectedRange.startOffset + movingOffset
+                        );
+                        newRange.setEnd(
+                            selectedRange.endContainer,
+                            selectedRange.endOffset + movingOffset
+                        );
+                        this.editor.setDOMSelection({
+                            type: 'range',
+                            range: newRange,
+                            isReverted: false,
                         });
-
-                        // If there are 3 text segment in the Word, selection is in middle of the word
-                        // before selection marker + after selection marker
-                        if (segments.length === 2) {
-                            // 3. Calculate the offset to move cursor to the nearest edge of the word if within 6 characters
-                            // default to end of the word if user tapped in the middle
-                            const leftCursorWordLength = segments[0].text.length;
-                            const rightCursorWordLength = segments[1].text.length;
-                            let movingOffset: number =
-                                leftCursorWordLength >= rightCursorWordLength
-                                    ? rightCursorWordLength
-                                    : -leftCursorWordLength;
-                            movingOffset =
-                                Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE ? 0 : movingOffset;
-
-                            // 4. Move cursor to the calculated offset
-                            const selection = this.editor.getDOMSelection();
-                            if (selection?.type == 'range' && movingOffset !== 0) {
-                                const selectedRange = selection.range;
-                                const newRange = this.editor.getDocument().createRange();
-                                newRange.setStart(
-                                    selectedRange.startContainer,
-                                    selectedRange.startOffset + movingOffset
-                                );
-                                newRange.setEnd(
-                                    selectedRange.endContainer,
-                                    selectedRange.endOffset + movingOffset
-                                );
-                                this.editor.setDOMSelection({
-                                    type: 'range',
-                                    range: newRange,
-                                    isReverted: false,
-                                });
-                            }
-                        }
                     }
                 }
-                return false;
-            },
-            {
-                apiName: 'TouchSelection',
             }
-        );
+        }
+        return false;
     };
 }
 
