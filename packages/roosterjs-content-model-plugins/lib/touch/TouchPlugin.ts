@@ -179,86 +179,79 @@ export class TouchPlugin implements EditorPlugin {
     }
 
     repositionTouchSelection = (model: ReadonlyContentModelDocument) => {
-        if (this.editor) {
-            const segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
-                model,
-                false /*includingFormatHolder*/,
-                true /*includingEntity*/,
-                true /*mutate*/
-            );
+        const segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
+            model,
+            false /*includingFormatHolder*/,
+            true /*includingEntity*/,
+            true /*mutate*/
+        );
 
-            const isCollapsedSelection =
-                segmentAndParagraphs.length >= 1 &&
-                segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
+        const isCollapsedSelection =
+            segmentAndParagraphs.length >= 1 &&
+            segmentAndParagraphs.every(x => x[0].segmentType == 'SelectionMarker');
 
-            // 1. adjust selection to a word if selection is collapsed
-            if (isCollapsedSelection) {
-                const para = segmentAndParagraphs[0][1];
-                const segments = adjustWordSelection(model, segmentAndParagraphs[0][0]);
+        // 1. adjust selection to a word if selection is collapsed
+        if (isCollapsedSelection) {
+            const para = segmentAndParagraphs[0][1];
+            const segments = adjustWordSelection(model, segmentAndParagraphs[0][0]);
 
-                if (
-                    segments.length > 2 &&
-                    segments.some(x => x.segmentType == 'Text' && !x.isSelected) &&
-                    para
-                ) {
-                    const selectionMarkerIndexInWord = segments.findIndex(
-                        segment => segment.segmentType == 'SelectionMarker'
-                    );
-                    const selectionMarkerIndexInPara = para.segments.findIndex(
-                        segment => segment.segmentType == 'SelectionMarker'
-                    );
-                    const leftSelectionSegmentsInWord = segments[selectionMarkerIndexInWord - 1];
-                    const rightSelectionSegmentsInWord = segments[selectionMarkerIndexInWord + 1];
-                    const leftCursorWordLength =
-                        leftSelectionSegmentsInWord.segmentType == 'Text'
-                            ? leftSelectionSegmentsInWord.text.length
-                            : 0;
-                    const rightCursorWordLength =
-                        rightSelectionSegmentsInWord.segmentType == 'Text'
-                            ? rightSelectionSegmentsInWord.text.length
-                            : 0;
+            if (
+                segments.length > 2 &&
+                segments.some(x => x.segmentType == 'Text' && !x.isSelected) &&
+                para
+            ) {
+                const selectionMarkerIndexInWord = segments.findIndex(
+                    segment => segment.segmentType == 'SelectionMarker'
+                );
+                const selectionMarkerIndexInPara = para.segments.findIndex(
+                    segment => segment.segmentType == 'SelectionMarker'
+                );
+                const leftSelectionSegmentsInWord = segments[selectionMarkerIndexInWord - 1];
+                const rightSelectionSegmentsInWord = segments[selectionMarkerIndexInWord + 1];
+                const leftCursorWordLength =
+                    leftSelectionSegmentsInWord.segmentType == 'Text'
+                        ? leftSelectionSegmentsInWord.text.length
+                        : 0;
+                const rightCursorWordLength =
+                    rightSelectionSegmentsInWord.segmentType == 'Text'
+                        ? rightSelectionSegmentsInWord.text.length
+                        : 0;
 
-                    // Move the cursor to the closest edge of the word if the distance is within threshold = 6
-                    if (rightCursorWordLength > leftCursorWordLength) {
-                        if (leftCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
-                            // Move cursor to beginning of word
-                            // Remove old marker
-                            mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
+                // Move the cursor to the closest edge of the word if the distance is within threshold = 6
+                if (rightCursorWordLength > leftCursorWordLength) {
+                    if (leftCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
+                        // Move cursor to beginning of word
+                        // Remove old marker
+                        mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
 
-                            // Add new marker
-                            const indexSegmentBeforeMarker = para.segments.findIndex(
-                                segment => segment === leftSelectionSegmentsInWord
-                            );
-                            const marker = createSelectionMarker(
-                                segments[selectionMarkerIndexInPara]?.format || para.format
-                            );
-                            mutateBlock(para).segments.splice(indexSegmentBeforeMarker, 0, marker);
-                        }
-                    } else {
-                        // Move cursor to end of word
-                        if (rightCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
-                            // Add new marker
-                            const indexSegmentAfterMarker = para.segments.findIndex(
-                                segment => segment === rightSelectionSegmentsInWord
-                            );
-                            const marker = createSelectionMarker(
-                                segments[selectionMarkerIndexInPara]?.format || para.format
-                            );
-                            mutateBlock(para).segments.splice(
-                                indexSegmentAfterMarker + 1,
-                                0,
-                                marker
-                            );
+                        // Add new marker
+                        const indexSegmentBeforeMarker = para.segments.findIndex(
+                            segment => segment === leftSelectionSegmentsInWord
+                        );
+                        const marker = createSelectionMarker(
+                            segments[selectionMarkerIndexInPara]?.format || para.format
+                        );
+                        mutateBlock(para).segments.splice(indexSegmentBeforeMarker, 0, marker);
+                    }
+                } else {
+                    // Move cursor to end of word
+                    if (rightCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
+                        // Add new marker
+                        const indexSegmentAfterMarker = para.segments.findIndex(
+                            segment => segment === rightSelectionSegmentsInWord
+                        );
+                        const marker = createSelectionMarker(
+                            segments[selectionMarkerIndexInPara]?.format || para.format
+                        );
+                        mutateBlock(para).segments.splice(indexSegmentAfterMarker + 1, 0, marker);
 
-                            // Remove old marker
-                            mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
-                        }
+                        // Remove old marker
+                        mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
                     }
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     };
 }
 
