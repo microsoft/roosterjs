@@ -238,6 +238,7 @@ export class TouchPlugin implements EditorPlugin {
                             range: newRange,
                             isReverted: false,
                         });
+                        return true;
                     }
                 }
             }
