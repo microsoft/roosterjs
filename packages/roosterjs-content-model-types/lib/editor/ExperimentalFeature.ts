@@ -35,4 +35,10 @@ export type ExperimentalFeature =
     /**
      * Export editor content as HTML using HTMLFast option
      */
-    | 'ExportHTMLFast';
+    | 'ExportHTMLFast'
+
+    /**
+     * Get cloned root element from an independent HTML document instead of current document.
+     * So any operation to the cloned root won't trigger network request for resources like images
+     */
+    | 'CloneIndependentRoot';
