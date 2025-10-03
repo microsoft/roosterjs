@@ -180,7 +180,7 @@ export class TouchPlugin implements EditorPlugin {
 
     repositionTouchSelection = (model: ReadonlyContentModelDocument) => {
         if (this.editor) {
-            let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
+            const segmentAndParagraphs = getSelectedSegmentsAndParagraphs(
                 model,
                 false /*includingFormatHolder*/,
                 true /*includingEntity*/,
