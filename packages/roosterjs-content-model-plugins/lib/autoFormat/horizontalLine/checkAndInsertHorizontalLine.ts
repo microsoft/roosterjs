@@ -1,5 +1,6 @@
 import type {
     ContentModelDividerFormat,
+    ContentModelListItem,
     FormatContentModelContext,
     ReadonlyContentModelDocument,
     ShallowMutableContentModelParagraph,
@@ -8,6 +9,7 @@ import {
     addBlock,
     createContentModelDocument,
     createDivider,
+    getOperationalBlocks,
     mergeModel,
 } from 'roosterjs-content-model-dom';
 
@@ -128,6 +130,20 @@ export const checkAndInsertHorizontalLine = (
     paragraph: ShallowMutableContentModelParagraph,
     context: FormatContentModelContext
 ) => {
+    // Do not create horizontal lines inside a list
+    const blocks = getOperationalBlocks<ContentModelListItem>(
+        model,
+        ['ListItem'],
+        ['TableCell', 'FormatContainer']
+    );
+    if (
+        blocks[0] &&
+        blocks[0].block.blockType == 'BlockGroup' &&
+        blocks[0].block.blockGroupType == 'ListItem'
+    ) {
+        return false;
+    }
+
     const allText = paragraph.segments.reduce(
         (acc, segment) => (segment.segmentType === 'Text' ? acc + segment.text : acc),
         ''

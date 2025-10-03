@@ -2,11 +2,18 @@ import * as addBlockFile from 'roosterjs-content-model-dom/lib/modelApi/common/a
 import * as createContentModelDocumentFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createContentModelDocument';
 import * as createDividerFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createDivider';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { insertHorizontalLineIntoModel } from '../../../lib/autoFormat/horizontalLine/checkAndInsertHorizontalLine';
+import {
+    insertHorizontalLineIntoModel,
+    checkAndInsertHorizontalLine,
+} from '../../../lib/autoFormat/horizontalLine/checkAndInsertHorizontalLine';
 import {
     addBlock,
     createContentModelDocument,
+    createListItem,
+    createListLevel,
+    createParagraph,
     createSelectionMarker,
+    createText,
 } from 'roosterjs-content-model-dom';
 import {
     FormatContentModelContext,
@@ -188,5 +195,32 @@ describe('insertHorizontalLineIntoModel', () => {
         expect(createContentModelDocumentSpy).toHaveBeenCalled();
         expect(mergeModelSpy).toHaveBeenCalled();
         expect(addBlockSpy).toHaveBeenCalled();
+    });
+
+    it('should not insert horizontal line when inside a list item', () => {
+        // Arrange: Create a model with a list item
+        model = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph();
+        const textSegment = createText('---');
+        const selectionMarker = createSelectionMarker();
+
+        paragraph.segments.push(textSegment, selectionMarker);
+        listItem.blocks.push(paragraph);
+        model.blocks.push(listItem);
+
+        // Act
+        const result = checkAndInsertHorizontalLine(model, paragraph, context);
+
+        // Assert
+        expect(result).toBe(false);
+        expect(model.blocks.length).toBe(1); // Should still only have the list item
+        expect(model.blocks[0].blockType).toBe('BlockGroup');
+        expect((model.blocks[0] as any).blockGroupType).toBe('ListItem');
+
+        // Verify the paragraph content is unchanged
+        const listItemBlock = model.blocks[0] as any;
+        expect(listItemBlock.blocks[0].segments.length).toBe(2); // text + selection marker
+        expect(listItemBlock.blocks[0].segments[0].text).toBe('---');
     });
 });
