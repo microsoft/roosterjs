@@ -2,11 +2,14 @@ import type {
     EditorPlugin,
     IEditor,
     PluginEvent,
-    ContentModelText,
     ReadonlyContentModelDocument,
 } from 'roosterjs-content-model-types';
 import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
-import { getSelectedSegmentsAndParagraphs } from 'roosterjs-content-model-dom';
+import {
+    getSelectedSegmentsAndParagraphs,
+    mutateBlock,
+    createSelectionMarker,
+} from 'roosterjs-content-model-dom';
 import { adjustWordSelection } from 'roosterjs-content-model-api';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
@@ -191,57 +194,69 @@ export class TouchPlugin implements EditorPlugin {
             // 1. adjust selection to a word if selection is collapsed
             if (isCollapsedSelection) {
                 const para = segmentAndParagraphs[0][1];
-                const path = segmentAndParagraphs[0][2];
+                const segments = adjustWordSelection(model, segmentAndParagraphs[0][0]);
 
-                segmentAndParagraphs = adjustWordSelection(
-                    model,
-                    segmentAndParagraphs[0][0]
-                ).map(x => [x, para, path]);
+                if (
+                    segments.length > 2 &&
+                    segments.some(x => x.segmentType == 'Text' && !x.isSelected) &&
+                    para
+                ) {
+                    const selectionMarkerIndexInWord = segments.findIndex(
+                        segment => segment.segmentType == 'SelectionMarker'
+                    );
+                    const selectionMarkerIndexInPara = para.segments.findIndex(
+                        segment => segment.segmentType == 'SelectionMarker'
+                    );
+                    const leftSelectionSegmentsInWord = segments[selectionMarkerIndexInWord - 1];
+                    const rightSelectionSegmentsInWord = segments[selectionMarkerIndexInWord + 1];
+                    const leftCursorWordLength =
+                        leftSelectionSegmentsInWord.segmentType == 'Text'
+                            ? leftSelectionSegmentsInWord.text.length
+                            : 0;
+                    const rightCursorWordLength =
+                        rightSelectionSegmentsInWord.segmentType == 'Text'
+                            ? rightSelectionSegmentsInWord.text.length
+                            : 0;
 
-                // 2. Collect all text segments in selection
-                const segments: ContentModelText[] = [];
-                segmentAndParagraphs.forEach(item => {
-                    if (item[0].segmentType == 'Text') {
-                        segments.push(item[0]);
-                    }
-                });
+                    // Move the cursor to the closest edge of the word if the distance is within threshold = 6
+                    if (rightCursorWordLength > leftCursorWordLength) {
+                        if (leftCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
+                            // Move cursor to beginning of word
+                            // Remove old marker
+                            mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
 
-                // If there are 3 text segment in the Word, selection is in middle of the word
-                // before selection marker + after selection marker
-                if (segments.length === 2) {
-                    // 3. Calculate the offset to move cursor to the nearest edge of the word if within 6 characters
-                    // default to end of the word if user tapped in the middle
-                    const leftCursorWordLength = segments[0].text.length;
-                    const rightCursorWordLength = segments[1].text.length;
-                    let movingOffset: number =
-                        leftCursorWordLength >= rightCursorWordLength
-                            ? rightCursorWordLength
-                            : -leftCursorWordLength;
-                    movingOffset =
-                        Math.abs(movingOffset) > MAX_TOUCH_MOVE_DISTANCE ? 0 : movingOffset;
+                            // Add new marker
+                            const indexSegmentBeforeMarker = para.segments.findIndex(
+                                segment => segment === leftSelectionSegmentsInWord
+                            );
+                            const marker = createSelectionMarker(
+                                segments[selectionMarkerIndexInPara]?.format || para.format
+                            );
+                            mutateBlock(para).segments.splice(indexSegmentBeforeMarker, 0, marker);
+                        }
+                    } else {
+                        // Move cursor to end of word
+                        if (rightCursorWordLength < MAX_TOUCH_MOVE_DISTANCE) {
+                            // Add new marker
+                            const indexSegmentAfterMarker = para.segments.findIndex(
+                                segment => segment === rightSelectionSegmentsInWord
+                            );
+                            const marker = createSelectionMarker(
+                                segments[selectionMarkerIndexInPara]?.format || para.format
+                            );
+                            mutateBlock(para).segments.splice(
+                                indexSegmentAfterMarker + 1,
+                                0,
+                                marker
+                            );
 
-                    // 4. Move cursor to the calculated offset
-                    const selection = this.editor.getDOMSelection();
-                    if (selection?.type == 'range' && movingOffset !== 0) {
-                        const selectedRange = selection.range;
-                        const newRange = this.editor.getDocument().createRange();
-                        newRange.setStart(
-                            selectedRange.startContainer,
-                            selectedRange.startOffset + movingOffset
-                        );
-                        newRange.setEnd(
-                            selectedRange.endContainer,
-                            selectedRange.endOffset + movingOffset
-                        );
-                        this.editor.setDOMSelection({
-                            type: 'range',
-                            range: newRange,
-                            isReverted: false,
-                        });
-                        return true;
+                            // Remove old marker
+                            mutateBlock(para).segments.splice(selectionMarkerIndexInPara, 1);
+                        }
                     }
                 }
             }
+            return true;
         }
         return false;
     };
