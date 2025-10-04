@@ -1,6 +1,6 @@
 {
     "react": "9.0.2",
-    "main": "9.37.0",
+    "main": "9.38.0",
     "legacyAdapter": "8.65.0",
-    "overrides": { "roosterjs-content-model-core": "9.37.1" }
+    "overrides": {}
 }

@@ -1,7 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DisplayFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-content-model-types';
 import { displayFormatHandler } from '../../../lib/formatHandlers/block/displayFormatHandler';
+import { DisplayFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-content-model-types';
 
 describe('displayFormatHandler.parse', () => {
     let div: HTMLElement;
