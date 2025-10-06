@@ -2826,7 +2826,7 @@ describe('Content Model Auto Format Plugin Test', () => {
             runTest(event, 'ftp://files.example.com', true, { autoLink: true });
         });
 
-        it('should return false for non-input events', () => {
+        it('should return false for non-input events ', () => {
             const plugin = new AutoFormatPlugin({ autoNumbering: true });
             plugin.initialize(editor);
 
