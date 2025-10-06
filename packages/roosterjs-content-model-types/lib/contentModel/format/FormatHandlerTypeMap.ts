@@ -22,6 +22,7 @@ import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { RoleFormat } from './formatParts/RoleFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { SpacingFormat } from './formatParts/SpacingFormat';
 import type { StrikeFormat } from './formatParts/StrikeFormat';
@@ -164,6 +165,11 @@ export interface FormatHandlerTypeMap {
      * Format for PaddingFormat
      */
     padding: PaddingFormat;
+
+    /**
+     * Format for RoleFormat
+     */
+    role: RoleFormat;
 
     /**
      * Format for SizeFormat

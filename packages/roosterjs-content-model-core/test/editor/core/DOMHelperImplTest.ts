@@ -365,6 +365,31 @@ describe('DOMHelperImpl', () => {
             expect(result).toBe(mockedClone);
             expect(cloneSpy).toHaveBeenCalledWith(true);
         });
+
+        it('getClonedRoot, with CloneIndependentRoot on', () => {
+            const mockedClone = 'CLONE' as any;
+            const cloneSpy = jasmine.createSpy('cloneSpy').and.returnValue(mockedClone);
+            const importNodeSpy = jasmine.createSpy('importNodeSpy').and.returnValue(mockedClone);
+            const mockedDiv: HTMLElement = {
+                cloneNode: cloneSpy,
+                ownerDocument: {
+                    implementation: {
+                        createHTMLDocument: () => ({
+                            importNode: importNodeSpy,
+                        }),
+                    },
+                },
+            } as any;
+            const domHelper = createDOMHelper(mockedDiv, {
+                cloneIndependentRoot: true,
+            });
+
+            const result = domHelper.getClonedRoot();
+
+            expect(result).toBe(mockedClone);
+            expect(cloneSpy).not.toHaveBeenCalled();
+            expect(importNodeSpy).toHaveBeenCalledWith(mockedDiv, true);
+        });
     });
 
     describe('getContainerFormat', () => {
