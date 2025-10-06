@@ -1,16 +1,5 @@
-import type {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    ReadonlyContentModelDocument,
-} from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
-import {
-    getSelectedSegmentsAndParagraphs,
-    mutateBlock,
-    createSelectionMarker,
-} from 'roosterjs-content-model-dom';
-import { adjustWordSelection } from 'roosterjs-content-model-api';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
 const POINTER_DETECTION_DELAY = 150; // Delay time to wait for selection to be updated and also detect if pointerup is a tap or part of double tap
