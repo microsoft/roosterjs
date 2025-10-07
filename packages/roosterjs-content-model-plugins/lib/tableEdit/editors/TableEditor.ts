@@ -256,7 +256,8 @@ export class TableEditor {
                 true /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onTableEditorCreated
             );
             this.verticalResizer = createCellResizer(
                 this.editor,
@@ -266,7 +267,8 @@ export class TableEditor {
                 false /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.anchorContainer
+                this.anchorContainer,
+                this.onTableEditorCreated
             );
         }
     }

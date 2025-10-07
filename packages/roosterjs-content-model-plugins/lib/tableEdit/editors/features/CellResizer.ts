@@ -12,6 +12,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 
 const CELL_RESIZER_WIDTH = 4;
 /**
@@ -34,7 +35,8 @@ export function createCellResizer(
     isHorizontal: boolean,
     onStart: () => void,
     onEnd: () => false,
-    anchorContainer?: HTMLElement
+    anchorContainer?: HTMLElement,
+    onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
     const document = td.ownerDocument;
     const createElementData = {
@@ -66,16 +68,40 @@ export function createCellResizer(
         onDragEnd: onEnd,
     };
 
-    const featureHandler = new DragAndDropHelper<CellResizerContext, CellResizerInitValue>(
+    const featureHandler = new CellResizer(
         div,
         context,
         setPosition,
         handler,
         zoomScale,
-        editor.getEnvironment().isMobileOrTablet
+        editor.getEnvironment().isMobileOrTablet,
+        onTableEditorCreated
     );
 
     return { node: td, div, featureHandler };
+}
+
+class CellResizer extends DragAndDropHelper<CellResizerContext, CellResizerInitValue> {
+    private disposer: undefined | (() => void);
+
+    constructor(
+        trigger: HTMLElement,
+        context: CellResizerContext,
+        onSubmit: (context: CellResizerContext, trigger: HTMLElement) => void,
+        handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue>,
+        zoomScale: number,
+        forceMobile?: boolean,
+        onTableEditorCreated?: OnTableEditorCreatedCallback
+    ) {
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        this.disposer = onTableEditorCreated?.('CellResizer', trigger);
+    }
+
+    dispose(): void {
+        this.disposer?.();
+        this.disposer = undefined;
+        super.dispose();
+    }
 }
 
 /**
