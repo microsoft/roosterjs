@@ -131,7 +131,6 @@ export class TouchPlugin implements EditorPlugin {
                         }
                     }
                 }, POINTER_DETECTION_DELAY);
-
                 break;
             case 'doubleClick':
                 if (this.isTouchPenPointerEvent) {
