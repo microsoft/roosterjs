@@ -87,7 +87,7 @@ class ContextMenuPlugin implements PluginWithState<ContextMenuPluginState> {
 
             if (targetNode) {
                 this.state.contextMenuProviders.forEach(provider => {
-                    const items = provider.getContextMenuItems(targetNode) ?? [];
+                    const items = provider.getContextMenuItems(targetNode, mouseEvent) ?? [];
                     if (items?.length > 0) {
                         if (allItems.length > 0) {
                             allItems.push(null);
