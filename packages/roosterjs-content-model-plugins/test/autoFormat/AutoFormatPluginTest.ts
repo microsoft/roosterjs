@@ -2483,4 +2483,364 @@ describe('Content Model Auto Format Plugin Test', () => {
             );
         });
     });
+
+    describe('shouldHandleInputEventExclusively', () => {
+        function runTest(
+            event: EditorInputEvent,
+            stringInSegment: string,
+            expectResult: boolean,
+            options: AutoFormatOptions
+        ) {
+            const marker: ContentModelSelectionMarker = {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            };
+            const plugin = new AutoFormatPlugin(options);
+            plugin.initialize(editor);
+
+            const textSegment: ContentModelText = {
+                segmentType: 'Text',
+                text: stringInSegment,
+                format: {},
+            };
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [textSegment, marker],
+                format: {},
+            };
+            const inputModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [paragraph],
+                format: {},
+            };
+
+            formatTextSegmentBeforeSelectionMarkerSpy.and.callFake((editor, callback, options) => {
+                callback(
+                    inputModel,
+                    textSegment,
+                    paragraph,
+                    {},
+                    { newEntities: [], newImages: [], deletedEntities: [] }
+                );
+
+                return true;
+            });
+
+            const result = plugin.willHandleEventExclusively(event);
+
+            expect(result).toEqual(expectResult);
+        }
+
+        it('should handle auto numbering with letter and dot', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', true, { autoNumbering: true });
+        });
+
+        it('should handle auto bullet list', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, '*', true, { autoBullet: true });
+        });
+
+        it('should handle auto link with URL', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'https://example.com', true, { autoLink: true });
+        });
+
+        it('should handle auto link with www URL', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'www.example.com', true, { autoLink: true });
+        });
+
+        it('should handle auto mailto', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'mailto:test@example.com', true, { autoMailto: true });
+        });
+
+        it('should handle auto tel', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'tel:+1234567890', true, { autoTel: true });
+        });
+
+        it('should not handle when no auto features enabled', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', false, {
+                autoNumbering: false,
+                autoBullet: false,
+                autoLink: false,
+            });
+        });
+
+        it('should not handle when input type is not insertText', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'deleteContentBackward',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', false, { autoNumbering: true });
+        });
+
+        it('should not handle when input data is not space', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: 'x',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', false, { autoNumbering: true });
+        });
+
+        it('should not handle normal text without patterns', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'normal text', false, {
+                autoNumbering: true,
+                autoBullet: true,
+                autoLink: true,
+            });
+        });
+
+        it('should handle mixed options - numbering enabled, bullet disabled', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', true, { autoNumbering: true, autoBullet: false });
+        });
+
+        it('should handle mixed options - bullet enabled, numbering disabled', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, '*', true, { autoNumbering: false, autoBullet: true });
+        });
+
+        it('should handle uppercase letters for numbering', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'A.', true, { autoNumbering: true });
+        });
+
+        it('should handle different numbered list formats', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, '1)', true, { autoNumbering: true });
+        });
+
+        it('should not handle invalid letter patterns', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'ab.', false, { autoNumbering: true });
+        });
+
+        it('should not handle numbers without markers', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, '123', false, { autoNumbering: true });
+        });
+
+        it('should not handle incomplete mailto', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'mailto:', false, { autoMailto: true });
+        });
+
+        it('should not handle incomplete tel', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'tel:', false, { autoTel: true });
+        });
+
+        it('should handle multiple auto features enabled', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'a.', true, {
+                autoNumbering: true,
+                autoBullet: true,
+                autoLink: true,
+                autoTel: true,
+                autoMailto: true,
+            });
+        });
+
+        it('should handle FTP URL', () => {
+            const event: EditorInputEvent = {
+                eventType: 'input',
+                rawEvent: {
+                    data: ' ',
+                    inputType: 'insertText',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            runTest(event, 'ftp://files.example.com', true, { autoLink: true });
+        });
+
+        it('should return false for non-input events ', () => {
+            const plugin = new AutoFormatPlugin({ autoNumbering: true });
+            plugin.initialize(editor);
+
+            const event: KeyDownEvent = {
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Enter',
+                    defaultPrevented: false,
+                    preventDefault: jasmine.createSpy('preventDefault'),
+                } as any,
+            };
+
+            const result = plugin.willHandleEventExclusively(event);
+            expect(result).toBe(false);
+        });
+    });
 });
