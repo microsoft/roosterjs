@@ -6,16 +6,26 @@ import {
     createTableCell,
     createTableRow,
 } from 'roosterjs-content-model-dom';
+import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
 
 /**
  * @internal
  */
-export function createTableFromMarkdown(tableLines: string[]): ContentModelTable {
+export function createTableFromMarkdown(
+    tableLines: string[],
+    options: MarkdownToModelOptions
+): ContentModelTable {
     const tableDivider = tableLines[1].split('|').filter(content => content.trim() !== '');
     tableLines.splice(1, 1);
-    const table = createTable(0, { borderCollapse: true });
+    const table = createTable(
+        0,
+        options.direction
+            ? { borderCollapse: true, direction: options.direction }
+            : { borderCollapse: true }
+    );
+
     for (const line of tableLines) {
-        createTableModel(line, table, tableDivider);
+        createTableModel(line, table, tableDivider, options);
     }
     applyTableFormat(table, {
         hasHeaderRow: true,
@@ -23,7 +33,12 @@ export function createTableFromMarkdown(tableLines: string[]): ContentModelTable
     return table;
 }
 
-function createTableModel(markdown: string, table: ContentModelTable, tableDivider: string[]) {
+function createTableModel(
+    markdown: string,
+    table: ContentModelTable,
+    tableDivider: string[],
+    options: MarkdownToModelOptions
+) {
     const contents = markdown.split('|');
     if (contents[0].trim() === '') {
         contents.shift();
@@ -32,15 +47,27 @@ function createTableModel(markdown: string, table: ContentModelTable, tableDivid
         contents.pop();
     }
 
-    addTableRow(table, contents, tableDivider);
+    addTableRow(table, contents, tableDivider, options);
 }
 
-function addTableRow(table: ContentModelTable, contents: string[], tableDivider: string[]) {
-    const row = createTableRow();
+function addTableRow(
+    table: ContentModelTable,
+    contents: string[],
+    tableDivider: string[],
+    options: MarkdownToModelOptions
+) {
+    const row = createTableRow(options.direction ? { direction: options.direction } : undefined);
+
     let index = 0;
     for (const content of contents) {
-        const paragraph = createParagraphFromMarkdown(content);
-        const cell = createTableCell();
+        const paragraph = createParagraphFromMarkdown(content, options);
+        const cell = createTableCell(
+            undefined /* spanLeftOrColSpan */,
+            undefined /* spanAboveOrRowSpan */,
+            undefined /* isHeader */,
+            options.direction ? { direction: options.direction } : undefined
+        );
+
         cell.blocks.push(paragraph);
         if (tableDivider[index]) {
             cell.format.textAlign = getCellAlignment(tableDivider[index]);
