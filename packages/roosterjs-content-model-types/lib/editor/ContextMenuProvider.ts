@@ -9,5 +9,5 @@ export interface ContextMenuProvider<T> extends EditorPlugin {
      * @param target Target node that triggered a ContextMenu event
      * @returns An array of context menu items, or null means no items needed
      */
-    getContextMenuItems: (target: Node) => T[] | null;
+    getContextMenuItems: (target: Node, event?: Event) => T[] | null;
 }
