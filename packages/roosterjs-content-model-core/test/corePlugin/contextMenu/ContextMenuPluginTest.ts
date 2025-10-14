@@ -105,8 +105,8 @@ describe('ContextMenu handle other event', () => {
         expect(collapseSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getSelectionRootNodeSpy).not.toHaveBeenCalled();
-        expect(getContextMenuItemSpy1).toHaveBeenCalledWith(mockedTarget);
-        expect(getContextMenuItemSpy2).toHaveBeenCalledWith(mockedTarget);
+        expect(getContextMenuItemSpy1).toHaveBeenCalledWith(mockedTarget, mockedEvent);
+        expect(getContextMenuItemSpy2).toHaveBeenCalledWith(mockedTarget, mockedEvent);
         expect(triggerEventSpy).toHaveBeenCalledWith('contextMenu', {
             rawEvent: mockedEvent,
             items: ['Item1', 'Item2', null, 'Item3', 'Item4'],
@@ -159,8 +159,8 @@ describe('ContextMenu handle other event', () => {
         expect(collapseSpy).toHaveBeenCalledWith(true);
         expect(getDOMSelectionSpy).toHaveBeenCalledWith();
         expect(getSelectionRootNodeSpy).toHaveBeenCalledWith(mockedSelection);
-        expect(getContextMenuItemSpy1).toHaveBeenCalledWith(mockedNode);
-        expect(getContextMenuItemSpy2).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemSpy1).toHaveBeenCalledWith(mockedNode, mockedEvent);
+        expect(getContextMenuItemSpy2).toHaveBeenCalledWith(mockedNode, mockedEvent);
         expect(triggerEventSpy).toHaveBeenCalledWith('contextMenu', {
             rawEvent: mockedEvent,
             items: ['Item1', 'Item2', null, 'Item3', 'Item4'],

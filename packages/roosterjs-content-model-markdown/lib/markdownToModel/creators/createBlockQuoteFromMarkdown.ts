@@ -4,6 +4,7 @@ import type {
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
 } from 'roosterjs-content-model-types';
+import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
 
 const QuoteFormat: ContentModelFormatContainerFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)',
@@ -20,11 +21,18 @@ const QuoteFormat: ContentModelFormatContainerFormat = {
  */
 export function createBlockQuoteFromMarkdown(
     text: string,
+    options: MarkdownToModelOptions,
     blockquote?: ContentModelFormatContainer
 ): ContentModelFormatContainer {
     text = text.replace('>', '');
-    const paragraph = createParagraphFromMarkdown(text);
-    const quote = blockquote || createFormatContainer('blockquote', QuoteFormat);
+    const paragraph = createParagraphFromMarkdown(text, options);
+    const quote =
+        blockquote ||
+        createFormatContainer(
+            'blockquote',
+            options.direction ? { ...QuoteFormat, direction: options.direction } : QuoteFormat
+        );
+
     quote.blocks.push(paragraph);
     return quote;
 }
