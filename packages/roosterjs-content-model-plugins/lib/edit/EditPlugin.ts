@@ -41,6 +41,13 @@ export type EditOptions = {
      * @returns A boolean
      */
     shouldHandleBackspaceKey?: ((editor: IEditor) => boolean) | boolean;
+
+    /**
+     * An array of format keys that should be kept when pressing Enter key to split a paragraph.
+     * For example, if the formatToKeep contains 'fontFamily', when pressing Enter in a paragraph with fontFamily='Arial',
+     * the new paragraph will also have fontFamily='Arial'.
+     */
+    formatsToKeep?: string[];
 };
 
 const BACKSPACE_KEY = 8;
@@ -70,7 +77,7 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleNormalEnter: (editor: IEditor) => boolean = (editor: IEditor) => false;
+    private handleNormalEnter: (editor: IEditor) => boolean = () => false;
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
@@ -88,15 +95,12 @@ export class EditPlugin implements EditorPlugin {
         switch (typeof this.options.shouldHandleEnterKey) {
             case 'function':
                 return this.options.shouldHandleEnterKey;
-                break;
             case 'boolean':
                 return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
-                break;
             default:
                 return this.createNormalEnterChecker(
                     editor.isExperimentalFeatureEnabled('HandleEnterKey')
                 );
-                break;
         }
     }
 
@@ -246,7 +250,12 @@ export class EditPlugin implements EditorPlugin {
                         !event.rawEvent.isComposing &&
                         event.rawEvent.keyCode !== DEAD_KEY
                     ) {
-                        keyboardEnter(editor, rawEvent, this.handleNormalEnter(editor));
+                        keyboardEnter(
+                            editor,
+                            rawEvent,
+                            this.handleNormalEnter(editor),
+                            this.options.formatsToKeep
+                        );
                     }
                     break;
 

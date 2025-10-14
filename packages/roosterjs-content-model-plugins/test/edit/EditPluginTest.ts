@@ -220,7 +220,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, false);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, false, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -243,7 +243,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -265,7 +265,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -289,7 +289,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 

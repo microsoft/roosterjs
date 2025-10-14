@@ -230,4 +230,52 @@ describe('splitParagraph', () => {
             path: [group],
         });
     });
+
+    it('empty paragraph with selection marker and BR', () => {
+        const doc = createContentModelDocument();
+        const marker = createSelectionMarker({ fontFamily: 'Arial' });
+        const br = createBr();
+        const para = createParagraph(false, { direction: 'ltr' }, { fontSize: '10pt' });
+        const ip: InsertPoint = {
+            marker: marker,
+            paragraph: para,
+            path: [doc],
+        };
+
+        para.segments.push(marker, br);
+        (para.format as any).test = 'true';
+        doc.blocks.push(para);
+
+        const result = splitParagraph(ip, false, ['test']);
+
+        const expectedResult: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [marker, br],
+            format: { direction: 'ltr', test: 'true' } as any,
+            segmentFormat: { fontSize: '10pt' },
+        };
+
+        expect(result).toEqual(expectedResult);
+        expect(ip).toEqual({
+            marker: marker,
+            paragraph: expectedResult,
+            path: [doc],
+        });
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: { fontFamily: 'Arial' },
+                        },
+                    ],
+                    format: { direction: 'ltr', test: 'true' } as any,
+                    segmentFormat: { fontSize: '10pt', fontFamily: 'Arial' },
+                },
+            ],
+        });
+    });
 });

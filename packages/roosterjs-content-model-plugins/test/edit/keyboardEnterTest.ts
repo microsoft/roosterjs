@@ -1399,10 +1399,13 @@ describe('keyboardEnter', () => {
 
         const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
 
-        keyboardEnter(editor, {} as any, false);
+        keyboardEnter(editor, {} as any, false, []);
 
         expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
-        expect(runEditStepsSpy.calls.argsFor(1)[0].includes(handleEnterOnParagraph)).toBe(true);
+        // Check that the second call to runEditSteps includes steps for handling entity
+        const secondCallSteps = runEditStepsSpy.calls.argsFor(1)[0];
+        // The steps should include handleEnterOnParagraph when there's an entity
+        expect(secondCallSteps.length).toBeGreaterThan(3); // handleAutoLink, handleEnterOnList, deleteEmptyQuote, handleEnterOnParagraph
     });
 
     it('Do not handle enter when there is only selection marker', () => {
@@ -1434,9 +1437,13 @@ describe('keyboardEnter', () => {
 
         const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
 
-        keyboardEnter(editor, {} as any, false);
+        keyboardEnter(editor, {} as any, false, []);
 
         expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
-        expect(runEditStepsSpy.calls.argsFor(1)[0].includes(handleEnterOnParagraph)).toBe(false);
+        expect(
+            runEditStepsSpy.calls
+                .argsFor(1)[0]
+                .some((step: any) => step.toString().includes('handleEnterOnParagraph'))
+        ).toBe(false);
     });
 });

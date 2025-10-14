@@ -16,7 +16,8 @@ import type { IEditor, ReadonlyContentModelParagraph } from 'roosterjs-content-m
 export function keyboardEnter(
     editor: IEditor,
     rawEvent: KeyboardEvent,
-    handleNormalEnter: boolean
+    handleNormalEnter: boolean,
+    formatsToKeep: string[] = []
 ) {
     const selection = editor.getDOMSelection();
 
@@ -36,7 +37,7 @@ export function keyboardEnter(
                     : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 
                 if (handleNormalEnter || handleEnterForEntity(result.insertPoint?.paragraph)) {
-                    steps.push(handleEnterOnParagraph);
+                    steps.push(handleEnterOnParagraph(formatsToKeep));
                 }
 
                 runEditSteps(steps, result);
