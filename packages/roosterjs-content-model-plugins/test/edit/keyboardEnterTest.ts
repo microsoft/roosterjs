@@ -1,5 +1,4 @@
 import * as runEditSteps from 'roosterjs-content-model-dom/lib/modelApi/editing/runEditSteps';
-import { handleEnterOnParagraph } from '../../lib/edit/inputSteps/handleEnterOnParagraph';
 import { keyboardEnter } from '../../lib/edit/keyboardEnter';
 import {
     createBr,
