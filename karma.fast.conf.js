@@ -9,7 +9,6 @@ const rootPath = __dirname;
 module.exports = function (config) {
     const plugins = [
         'karma-webpack',
-        'karma-phantomjs-launcher',
         'karma-jasmine',
         'karma-sourcemap-loader',
     ];
@@ -35,10 +34,12 @@ module.exports = function (config) {
             declaration: false,
             strict: false,
             downlevelIteration: true,
+            transpileOnly: true, // Faster compilation - skip type checking
             paths: {
                 '*': ['*', rootPath + '/packages/*'],
             },
         },
+        transpileOnly: true, // Enable faster transpilation
     };
 
     const rules = runCoverage
@@ -85,6 +86,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
+        autoWatchBatchDelay: 300, // Batch file changes for better performance
 
         // to avoid DISCONNECTED messages
         browserDisconnectTimeout: 10000, // default 2000
@@ -101,7 +103,7 @@ module.exports = function (config) {
 
         webpack: {
             mode: 'development',
-            devtool: 'inline-source-map',
+            devtool: 'eval-source-map', // Faster than inline-source-map
             module: {
                 rules,
             },
@@ -113,7 +115,15 @@ module.exports = function (config) {
             // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-780411348
             optimization: {
                 splitChunks: false,
+                removeAvailableModules: false, // Performance optimization
+                removeEmptyChunks: false, // Performance optimization
             },
+            // Add filesystem caching for better performance
+            cache: {
+                type: 'filesystem',
+                cacheDirectory: require('path').join(rootPath, 'node_modules/.cache/webpack'),
+            },
+            stats: 'errors-warnings', // Reduce console output
         },
 
         // Concurrency level
