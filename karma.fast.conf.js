@@ -7,11 +7,7 @@ const runChrome = typeof argv.chrome !== 'undefined';
 const rootPath = __dirname;
 
 module.exports = function (config) {
-    const plugins = [
-        'karma-webpack',
-        'karma-jasmine',
-        'karma-sourcemap-loader',
-    ];
+    const plugins = ['karma-webpack', 'karma-jasmine', 'karma-sourcemap-loader'];
     const launcher = [];
 
     if (runCoverage) {
