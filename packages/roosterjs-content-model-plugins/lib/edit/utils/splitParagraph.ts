@@ -34,7 +34,7 @@ export function splitParagraph(
     );
 
     copyFormat(newParagraph.format, paragraph.format, ParagraphFormats);
-    ``;
+
     if (formatToKeep.length) {
         const format = paragraph.format as { [key: string]: string };
         const newFormat = newParagraph.format as { [key: string]: string };
