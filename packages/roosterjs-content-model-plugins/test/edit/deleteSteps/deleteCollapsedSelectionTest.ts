@@ -1,3 +1,4 @@
+import { getDeleteCollapsedSelection } from '../../../lib/edit/deleteSteps/deleteCollapsedSelection';
 import {
     createBr,
     createContentModelDocument,
@@ -19,10 +20,9 @@ import {
     ContentModelSelectionMarker,
     DeletedEntity,
 } from 'roosterjs-content-model-types';
-import {
-    backwardDeleteCollapsedSelection,
-    forwardDeleteCollapsedSelection,
-} from '../../../lib/edit/deleteSteps/deleteCollapsedSelection';
+
+const forwardDeleteCollapsedSelection = getDeleteCollapsedSelection('forward', {});
+const backwardDeleteCollapsedSelection = getDeleteCollapsedSelection('backward', {});
 
 describe('deleteSelection - forward', () => {
     it('empty selection', () => {

@@ -1,3 +1,4 @@
+import { preserveParagraphFormat } from './preserveParagraphFormat';
 import {
     copyFormat,
     createBr,
@@ -34,18 +35,7 @@ export function splitParagraph(
     );
 
     copyFormat(newParagraph.format, paragraph.format, ParagraphFormats);
-
-    if (formatToKeep.length) {
-        const format = paragraph.format as { [key: string]: string };
-        const newFormat = newParagraph.format as { [key: string]: string };
-        formatToKeep.forEach(key => {
-            const formatValue = format[key];
-
-            if (formatValue !== undefined) {
-                newFormat[key] = formatValue;
-            }
-        });
-    }
+    preserveParagraphFormat(formatToKeep, paragraph, newParagraph);
 
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(

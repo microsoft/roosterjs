@@ -530,6 +530,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             editPluginOptions,
         } = this.state.initState;
 
+        editPluginOptions.formatsToKeep = ['className'];
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
             pluginList.edit && new EditPlugin(editPluginOptions),

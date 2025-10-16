@@ -1,4 +1,5 @@
 import { getLeafSiblingBlock } from '../utils/getLeafSiblingBlock';
+import { preserveParagraphFormat } from '../utils/preserveParagraphFormat';
 import { setModelIndentation } from 'roosterjs-content-model-api';
 import {
     deleteBlock,
@@ -15,8 +16,12 @@ import type {
     ReadonlyContentModelParagraph,
     ReadonlyContentModelSegment,
 } from 'roosterjs-content-model-types';
+import type { EditOptions } from '../EditOptions';
 
-function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
+export function getDeleteCollapsedSelection(
+    direction: 'forward' | 'backward',
+    options: EditOptions
+): DeleteSelectionStep {
     return context => {
         if (context.deleteResult != 'notDeleted') {
             return;
@@ -74,6 +79,12 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                         };
                         context.lastParagraph = paragraph;
                     }
+
+                    preserveParagraphFormat(
+                        options.formatsToKeep,
+                        context.insertPoint.paragraph,
+                        context.lastParagraph
+                    );
 
                     context.deleteResult = 'range';
                 }
@@ -138,13 +149,3 @@ function fixupBr(paragraph: ReadonlyContentModelParagraph) {
         }
     }
 }
-
-/**
- * @internal if we didn't delete anything, and we want to delete forward, now perform it
- */
-export const forwardDeleteCollapsedSelection = getDeleteCollapsedSelection('forward');
-
-/**
- * @internal if we didn't delete anything, and we want to delete backward, now perform it
- */
-export const backwardDeleteCollapsedSelection = getDeleteCollapsedSelection('backward');

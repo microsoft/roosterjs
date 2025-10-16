@@ -2,6 +2,7 @@ import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteList } from './deleteSteps/deleteList';
 import { deleteParagraphStyle } from './deleteSteps/deleteParagraphStyle';
+import { getDeleteCollapsedSelection } from './deleteSteps/deleteCollapsedSelection';
 import {
     ChangeSource,
     deleteSelection,
@@ -19,11 +20,8 @@ import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
 } from './deleteSteps/deleteWordSelection';
-import {
-    backwardDeleteCollapsedSelection,
-    forwardDeleteCollapsedSelection,
-} from './deleteSteps/deleteCollapsedSelection';
 import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-content-model-types';
+import type { EditOptions } from './EditOptions';
 
 /**
  * @internal
@@ -33,20 +31,17 @@ import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-conte
  * @param handleExpandedSelection Whether to handle expanded selection within a text node by CM
  * @returns True if the event is handled by content model, otherwise false
  */
-export function keyboardDelete(
-    editor: IEditor,
-    rawEvent: KeyboardEvent,
-    handleExpandedSelection: boolean = true
-) {
+export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent, options: EditOptions) {
     let handled = false;
     const selection = editor.getDOMSelection();
+    const { handleExpandedSelectionOnDelete } = options;
 
-    if (shouldDeleteWithContentModel(selection, rawEvent, handleExpandedSelection)) {
+    if (shouldDeleteWithContentModel(selection, rawEvent, !!handleExpandedSelectionOnDelete)) {
         editor.formatContentModel(
             (model, context) => {
                 const result = deleteSelection(
                     model,
-                    getDeleteSteps(rawEvent, !!editor.getEnvironment().isMac),
+                    getDeleteSteps(rawEvent, !!editor.getEnvironment().isMac, options),
                     context
                 ).deleteResult;
 
@@ -66,7 +61,11 @@ export function keyboardDelete(
     return handled;
 }
 
-function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelectionStep | null)[] {
+function getDeleteSteps(
+    rawEvent: KeyboardEvent,
+    isMac: boolean,
+    options: EditOptions
+): (DeleteSelectionStep | null)[] {
     const isForward = rawEvent.key == 'Delete';
     const deleteAllSegmentBeforeStep =
         shouldDeleteAllSegmentsBefore(rawEvent) && !isForward ? deleteAllSegmentBefore : null;
@@ -75,9 +74,12 @@ function getDeleteSteps(rawEvent: KeyboardEvent, isMac: boolean): (DeleteSelecti
             ? forwardDeleteWordSelection
             : backwardDeleteWordSelection
         : null;
-    const deleteCollapsedSelection = isForward
-        ? forwardDeleteCollapsedSelection
-        : backwardDeleteCollapsedSelection;
+
+    const deleteCollapsedSelection = getDeleteCollapsedSelection(
+        isForward ? 'forward' : 'backward',
+        options
+    );
+
     const deleteQuote = !isForward ? deleteEmptyQuote : null;
     return [
         deleteAllSegmentBeforeStep,
