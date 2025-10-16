@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.31% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>145/168</span>
+                <span class='fraction'>143/165</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.68% </span>
+                <span class="strong">74.42% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>98/133</span>
+                <span class='fraction'>96/129</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.5% </span>
+                <span class="strong">86.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>141/163</span>
+                <span class='fraction'>139/160</span>
             </div>
         
             
@@ -441,12 +441,7 @@
 <a name='L382'></a><a href='#L382'>382</a>
 <a name='L383'></a><a href='#L383'>383</a>
 <a name='L384'></a><a href='#L384'>384</a>
-<a name='L385'></a><a href='#L385'>385</a>
-<a name='L386'></a><a href='#L386'>386</a>
-<a name='L387'></a><a href='#L387'>387</a>
-<a name='L388'></a><a href='#L388'>388</a>
-<a name='L389'></a><a href='#L389'>389</a>
-<a name='L390'></a><a href='#L390'>390</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L385'></a><a href='#L385'>385</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -492,7 +487,6 @@
 <span class="cline-any cline-yes">147x</span>
 <span class="cline-any cline-yes">147x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">147x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -530,7 +524,6 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -683,10 +676,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -740,7 +730,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -881,7 +871,6 @@ class CopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
     private editor: IEditor | null = null;
     private disposer: (() =&gt; void) | null = null;
     private state: CopyPastePluginState;
-    private customCopyCutEnabled: boolean = false;
 &nbsp;
     /**
      * Construct a new instance of CopyPastePlugin
@@ -919,7 +908,6 @@ class CopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
                 beforeDispatch: e =&gt; this.onCutCopy(e, true /*isCut*/),
             },
         });
-        this.customCopyCutEnabled = editor.isExperimentalFeatureEnabled('CustomCopyCut');
     }
 &nbsp;
     /**
@@ -997,7 +985,7 @@ class CopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
                     isCut,
                 }).range;
 &nbsp;
-                if (this.customCopyCutEnabled &amp;&amp; isClipboardEvent(event)) {
+                if (isClipboardEvent(event)) {
                     event.preventDefault();
                     const text = contentModelToText(pasteModel);
                     event.clipboardData<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>etData('text/html', tempDiv.innerHTML);
@@ -1072,10 +1060,7 @@ class CopyPastePlugin implements PluginWithState&lt;CopyPastePluginState&gt; {
 <span class="cstat-no" title="statement not covered" >            tempDiv.style.left = '0';</span>
 <span class="cstat-no" title="statement not covered" >            tempDiv.style.userSelect = 'text';</span>
 <span class="cstat-no" title="statement not covered" >            tempDiv.contentEditable = 'true';</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            if (!this.customCopyCutEnabled) {</span>
-<span class="cstat-no" title="statement not covered" >                doc.body.appendChild(tempDiv);</span>
-            }
+<span class="cstat-no" title="statement not covered" >            doc.body.appendChild(tempDiv);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            this.state.tempDiv = tempDiv;</span>
         }
@@ -1231,7 +1216,7 @@ export function createCopyPastePlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Oct 13 2025 23:10:15 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 16 2025 15:29:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
