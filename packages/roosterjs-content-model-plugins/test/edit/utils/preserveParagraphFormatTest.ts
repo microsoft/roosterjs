@@ -1,5 +1,5 @@
-import { preserveParagraphFormat } from '../../../lib/edit/utils/preserveParagraphFormat';
 import { createParagraph } from 'roosterjs-content-model-dom';
+import { preserveParagraphFormat } from '../../../lib/edit/utils/preserveParagraphFormat';
 
 describe('preserveParagraphFormat', () => {
     it('should preserve specified format properties', () => {
@@ -86,7 +86,7 @@ describe('preserveParagraphFormat', () => {
         };
 
         (targetParagraph.format as any) = {
-            color: 'blue',
+            backgroundColor: 'blue',
         };
 
         const formatsToPreserve: string[] = [];
@@ -95,8 +95,8 @@ describe('preserveParagraphFormat', () => {
 
         // Verify target paragraph remains unchanged
         expect(targetParagraph.format).toEqual({
-            color: 'blue',
-        });
+            backgroundColor: 'blue',
+        } as any);
     });
 
     it('should handle undefined formatsToPreserve', () => {
@@ -109,15 +109,15 @@ describe('preserveParagraphFormat', () => {
         };
 
         (targetParagraph.format as any) = {
-            color: 'blue',
+            backgroundColor: 'blue',
         };
 
         preserveParagraphFormat(undefined, sourceParagraph, targetParagraph);
 
         // Verify target paragraph remains unchanged
         expect(targetParagraph.format).toEqual({
-            color: 'blue',
-        });
+            backgroundColor: 'blue',
+        } as any);
     });
 
     it('should preserve multiple format properties correctly', () => {

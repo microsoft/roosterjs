@@ -3526,7 +3526,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
             formatsToPreserveOnMerge: ['className'],
         });
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -3587,7 +3587,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
             formatsToPreserveOnMerge: [],
         });
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -3643,7 +3643,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
         // Test with no formatsToPreserveOnMerge option
         const deleteStep = getDeleteCollapsedSelection('backward', {});
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -3700,7 +3700,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
             formatsToPreserveOnMerge: ['className'],
         });
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -3761,7 +3761,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
             formatsToPreserveOnMerge: [],
         });
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -3817,7 +3817,7 @@ describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
         // Test with no formatsToPreserveOnMerge option
         const deleteStep = getDeleteCollapsedSelection('forward', {});
 
-        const result = deleteSelection(model, [deleteStep]);
+        deleteSelection(model, [deleteStep]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',

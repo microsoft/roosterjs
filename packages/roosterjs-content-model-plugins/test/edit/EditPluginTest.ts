@@ -542,7 +542,7 @@ describe('EditPlugin', () => {
             const options = {
                 handleTabKey: true,
                 handleExpandedSelectionOnDelete: true,
-                formatsToPreserveOnMerge: [],
+                formatsToPreserveOnMerge: [] as string[],
             };
 
             plugin = new EditPlugin(options);

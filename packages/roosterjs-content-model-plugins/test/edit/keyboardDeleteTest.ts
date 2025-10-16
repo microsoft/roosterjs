@@ -30,19 +30,17 @@ const backwardDeleteCollapsedSelection = deleteCollapsedSelectionModule.getDelet
 
 describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;
-    let getDeleteCollapsedSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
         // Spy on the factory function to return our pre-created variables
-        getDeleteCollapsedSelectionSpy = spyOn(
-            deleteCollapsedSelectionModule,
-            'getDeleteCollapsedSelection'
-        ).and.callFake((direction: 'forward' | 'backward', options: any) => {
-            return direction === 'forward'
-                ? forwardDeleteCollapsedSelection
-                : backwardDeleteCollapsedSelection;
-        });
+        spyOn(deleteCollapsedSelectionModule, 'getDeleteCollapsedSelection').and.callFake(
+            (direction: 'forward' | 'backward', options: any) => {
+                return direction === 'forward'
+                    ? forwardDeleteCollapsedSelection
+                    : backwardDeleteCollapsedSelection;
+            }
+        );
     });
 
     function runTest(
