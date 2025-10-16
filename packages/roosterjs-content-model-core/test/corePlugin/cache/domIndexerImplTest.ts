@@ -1169,7 +1169,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
     });
 
     it("Keeps selection marker's format when moving selection from an empty div to a text node inside", () => {
-        domIndexerImpl = new DomIndexerImpl(undefined, true);
+        domIndexerImpl = new DomIndexerImpl(true);
         const divNode = document.createElement('div');
         const textNode = document.createTextNode('t') as any;
         divNode.appendChild(textNode);
