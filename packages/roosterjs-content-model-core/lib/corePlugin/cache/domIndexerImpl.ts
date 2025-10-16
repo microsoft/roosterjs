@@ -156,10 +156,7 @@ function unindex(node: Partial<IndexedSegmentNode>) {
  * Implementation of DomIndexer
  */
 export class DomIndexerImpl implements DomIndexer {
-    constructor(
-        private readonly persistCache?: boolean,
-        private readonly keepSelectionMarkerWhenEnteringTextNode?: boolean
-    ) {}
+    constructor(private readonly keepSelectionMarkerWhenEnteringTextNode?: boolean) {}
 
     onSegment(segmentNode: Node, paragraph: ContentModelParagraph, segment: ContentModelSegment[]) {
         const indexedText = segmentNode as IndexedSegmentNode;
@@ -349,10 +346,6 @@ export class DomIndexerImpl implements DomIndexer {
     }
 
     reconcileChildList(addedNodes: ArrayLike<Node>, removedNodes: ArrayLike<Node>): boolean {
-        if (!this.persistCache) {
-            return false;
-        }
-
         let canHandle = true;
         const context: ReconcileChildListContext = {
             segIndex: -1,
@@ -554,10 +547,6 @@ export class DomIndexerImpl implements DomIndexer {
             }
 
             this.onSegment(textNode, paragraph, textSegments);
-
-            if (!this.persistCache) {
-                delete paragraph.cachedElement;
-            }
         } else if (first?.segmentType == 'Entity' && first == last) {
             const wrapper = first.wrapper;
             const index = paragraph.segments.indexOf(first);
