@@ -16,10 +16,10 @@ export default class MarkdownPane extends React.Component<
     private emptyLinePreserve = React.createRef<HTMLInputElement>();
     private emptyLineRemove = React.createRef<HTMLInputElement>();
     private emptyLineMerge = React.createRef<HTMLInputElement>();
+    private isRTL = React.createRef<HTMLInputElement>();
 
     constructor(props: MarkdownPaneProps) {
         super(props);
-
         this.state = { emptyLine: 'merge' };
     }
 
@@ -32,6 +32,7 @@ export default class MarkdownPane extends React.Component<
                     : this.emptyLineRemove.current.checked
                     ? 'remove'
                     : 'merge',
+                direction: this.isRTL.current.checked ? 'rtl' : 'ltr',
             });
 
             model.blocks = markdownModel.blocks;
@@ -115,6 +116,8 @@ export default class MarkdownPane extends React.Component<
                         onClick={this.onEmptyLineChange}
                     />{' '}
                     <label htmlFor="emptyLineMerge">Merge</label>
+                    <input type="checkbox" name="RTL" id="isRTL" ref={this.isRTL} />{' '}
+                    <label htmlFor="isRTL">RTL</label>
                 </div>
                 <textarea
                     className={styles.textArea}

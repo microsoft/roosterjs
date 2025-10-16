@@ -1,5 +1,6 @@
 import { ContentModelTable } from 'roosterjs-content-model-types';
 import { createTableFromMarkdown } from '../../../lib/markdownToModel/creators/createTableFromMarkdown';
+import { MarkdownToModelOptions } from '../../../lib/markdownToModel/types/MarkdownToModelOptions';
 import {
     applyTableFormat,
     createParagraph,
@@ -10,9 +11,14 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('createTableFromMarkdown', () => {
-    function runTest(tableLines: string[], expectedTable: ContentModelTable) {
+    function runTest(tableLines: string[], expectedTable: ContentModelTable, isRTL?: boolean) {
+        const options: MarkdownToModelOptions = isRTL
+            ? {
+                  direction: 'rtl',
+              }
+            : {};
         // Act
-        const result = createTableFromMarkdown(tableLines);
+        const result = createTableFromMarkdown(tableLines, options);
 
         // Assert
         expect(result).toEqual(expectedTable);
@@ -48,6 +54,45 @@ describe('createTableFromMarkdown', () => {
             hasHeaderRow: true,
         });
         runTest(['|text1|', '|----|', '|text2|'], table);
+    });
+
+    it('should return table with two rows and one column - RTL', () => {
+        const table = createTable(0, {
+            borderCollapse: true,
+        });
+        table.format.direction = 'rtl';
+        const row1 = createTableRow();
+        const cell1 = createTableCell();
+        const paragraph1 = createParagraph();
+        const text1 = createText('text1');
+        paragraph1.segments.push(text1);
+        cell1.blocks.push(paragraph1);
+        cell1.format.textAlign = 'start';
+        cell1.isHeader = true;
+        row1.cells.push(cell1);
+        row1.format.direction = 'rtl';
+        paragraph1.format.direction = 'rtl';
+        cell1.format.direction = 'rtl';
+
+        table.rows.push(row1);
+
+        const row2 = createTableRow();
+        const cell2 = createTableCell();
+        const paragraph2 = createParagraph();
+        const text2 = createText('text2');
+        paragraph2.segments.push(text2);
+        cell2.blocks.push(paragraph2);
+        cell2.format.textAlign = 'start';
+        row2.cells.push(cell2);
+        paragraph2.format.direction = 'rtl';
+        cell2.format.direction = 'rtl';
+        row2.format.direction = 'rtl';
+
+        table.rows.push(row2);
+        applyTableFormat(table, {
+            hasHeaderRow: true,
+        });
+        runTest(['|text1|', '|----|', '|text2|'], table, true /* isRTL */);
     });
 
     it('should return table with two rows and two columns', () => {

@@ -5,6 +5,7 @@ import type {
     ContentModelFormatContainer,
     ContentModelListItem,
 } from 'roosterjs-content-model-types';
+import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
 
 const MarkdownBlockGroupType: Record<string, ContentModelBlockGroupType> = {
     unordered_list: 'ListItem',
@@ -18,11 +19,12 @@ const MarkdownBlockGroupType: Record<string, ContentModelBlockGroupType> = {
 export function createBlockGroupFromMarkdown(
     text: string,
     patternName: string,
+    options: MarkdownToModelOptions,
     group?: ContentModelFormatContainer
 ): ContentModelFormatContainer | ContentModelListItem {
     if (MarkdownBlockGroupType[patternName] === 'ListItem') {
-        return createListFromMarkdown(text, patternName === 'ordered_list' ? 'OL' : 'UL');
+        return createListFromMarkdown(text, patternName === 'ordered_list' ? 'OL' : 'UL', options);
     } else {
-        return createBlockQuoteFromMarkdown(text, group);
+        return createBlockQuoteFromMarkdown(text, options, group);
     }
 }
