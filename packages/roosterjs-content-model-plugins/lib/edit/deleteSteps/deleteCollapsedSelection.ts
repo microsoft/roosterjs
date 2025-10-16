@@ -18,6 +18,13 @@ import type {
 } from 'roosterjs-content-model-types';
 import type { EditOptions } from '../EditOptions';
 
+/**
+ * @internal
+ * Get a delete step for collapsed selection at specified direction
+ * @param direction The direction to delete
+ * @param options Options for the delete operation
+ * @returns A delete step
+ */
 export function getDeleteCollapsedSelection(
     direction: 'forward' | 'backward',
     options: EditOptions
@@ -81,7 +88,7 @@ export function getDeleteCollapsedSelection(
                     }
 
                     preserveParagraphFormat(
-                        options.formatsToKeep,
+                        options.formatsToPreserveOnMerge,
                         context.insertPoint.paragraph,
                         context.lastParagraph
                     );

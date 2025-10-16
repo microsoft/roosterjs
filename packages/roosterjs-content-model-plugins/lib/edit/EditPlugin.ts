@@ -208,7 +208,7 @@ export class EditPlugin implements EditorPlugin {
                             editor,
                             rawEvent,
                             this.handleNormalEnter(editor),
-                            this.options.formatsToKeep
+                            this.options.formatsToPreserveOnMerge
                         );
                     }
                     break;

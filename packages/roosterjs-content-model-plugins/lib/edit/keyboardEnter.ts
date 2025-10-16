@@ -17,7 +17,7 @@ export function keyboardEnter(
     editor: IEditor,
     rawEvent: KeyboardEvent,
     handleNormalEnter: boolean,
-    formatsToKeep: string[] = []
+    formatsToPreserveOnMerge: string[] = []
 ) {
     const selection = editor.getDOMSelection();
 
@@ -37,7 +37,7 @@ export function keyboardEnter(
                     : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 
                 if (handleNormalEnter || handleEnterForEntity(result.insertPoint?.paragraph)) {
-                    steps.push(handleEnterOnParagraph(formatsToKeep));
+                    steps.push(handleEnterOnParagraph(formatsToPreserveOnMerge));
                 }
 
                 runEditSteps(steps, result);

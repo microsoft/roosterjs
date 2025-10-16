@@ -278,4 +278,121 @@ describe('splitParagraph', () => {
             ],
         });
     });
+
+    describe('formatsToPreserveOnMerge parameter', () => {
+        it('should preserve specified formats when splitting paragraph', () => {
+            const doc = createContentModelDocument();
+            const marker = createSelectionMarker();
+            const text = createText('Hello');
+            const para = createParagraph(false, { direction: 'ltr' });
+
+            // Add custom formats to the paragraph
+            (para.format as any).className = 'custom-class';
+            (para.format as any).fontFamily = 'Arial';
+            para.format.textAlign = 'center';
+            para.format.backgroundColor = 'red';
+
+            const ip: InsertPoint = {
+                marker: marker,
+                paragraph: para,
+                path: [doc],
+            };
+
+            para.segments.push(text, marker);
+            doc.blocks.push(para);
+
+            // Split paragraph and preserve only className and textAlign
+            const result = splitParagraph(ip, true, ['className', 'textAlign']);
+
+            expect((result.format as any).className).toBe('custom-class');
+            expect(result.format.textAlign).toBe('center');
+
+            expect((result.format as any).fontFamily).toBeUndefined();
+            expect(result.format.backgroundColor).toBe('red');
+            expect(result.format.direction).toBe('ltr');
+        });
+
+        it('should work with empty formatsToPreserveOnMerge array', () => {
+            const doc = createContentModelDocument();
+            const marker = createSelectionMarker();
+            const para = createParagraph(false, { direction: 'ltr' });
+
+            (para.format as any).className = 'custom-class';
+            para.format.textAlign = 'center';
+
+            const ip: InsertPoint = {
+                marker: marker,
+                paragraph: para,
+                path: [doc],
+            };
+
+            para.segments.push(marker);
+            doc.blocks.push(para);
+
+            const result = splitParagraph(ip, true, []);
+
+            // Only standard paragraph formats should be copied
+            expect((result.format as any).className).toBeUndefined();
+            expect(result.format.textAlign).toBe('center'); // This comes from ParagraphFormats copy
+            expect(result.format.direction).toBe('ltr'); // This comes from ParagraphFormats copy
+        });
+
+        it('should work with undefined formatsToPreserveOnMerge', () => {
+            const doc = createContentModelDocument();
+            const marker = createSelectionMarker();
+            const para = createParagraph(false, { direction: 'ltr' });
+
+            (para.format as any).className = 'custom-class';
+            para.format.textAlign = 'center';
+
+            const ip: InsertPoint = {
+                marker: marker,
+                paragraph: para,
+                path: [doc],
+            };
+
+            para.segments.push(marker);
+            doc.blocks.push(para);
+
+            const result = splitParagraph(ip, true, undefined);
+
+            // Only standard paragraph formats should be copied
+            expect((result.format as any).className).toBeUndefined();
+            expect(result.format.textAlign).toBe('center'); // This comes from ParagraphFormats copy
+            expect(result.format.direction).toBe('ltr'); // This comes from ParagraphFormats copy
+        });
+
+        it('should preserve multiple custom formats', () => {
+            const doc = createContentModelDocument();
+            const marker = createSelectionMarker();
+            const para = createParagraph(false, { direction: 'ltr' });
+
+            (para.format as any).className = 'highlight important';
+            (para.format as any).customProp = 'value123';
+            (para.format as any).anotherProp = 'test';
+            para.format.textAlign = 'center';
+
+            const ip: InsertPoint = {
+                marker: marker,
+                paragraph: para,
+                path: [doc],
+            };
+
+            para.segments.push(marker);
+            doc.blocks.push(para);
+
+            const result = splitParagraph(ip, true, ['className', 'customProp']);
+
+            // Check preserved formats
+            expect((result.format as any).className).toBe('highlight important');
+            expect((result.format as any).customProp).toBe('value123');
+
+            // Check non-preserved custom format is not copied
+            expect((result.format as any).anotherProp).toBeUndefined();
+
+            // Check standard formats are still copied
+            expect(result.format.textAlign).toBe('center');
+            expect(result.format.direction).toBe('ltr');
+        });
+    });
 });

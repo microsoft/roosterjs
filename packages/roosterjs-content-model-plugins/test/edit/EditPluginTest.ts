@@ -474,4 +474,123 @@ describe('EditPlugin', () => {
             );
         });
     });
+
+    describe('formatsToPreserveOnMerge integration tests', () => {
+        let keyboardEnterSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            keyboardEnterSpy = spyOn(keyboardEnter, 'keyboardEnter');
+            // Configure editor to handle Enter key (needed for handleNormalEnter to return true)
+            isExperimentalFeatureEnabledSpy.and.callFake((feature: string) => {
+                return feature === 'HandleEnterKey';
+            });
+        });
+
+        it('should pass formatsToPreserveOnMerge to keyboardEnter', () => {
+            const options = {
+                handleTabKey: true,
+                handleExpandedSelectionOnDelete: true,
+                formatsToPreserveOnMerge: ['className', 'fontFamily'],
+            };
+
+            plugin = new EditPlugin(options);
+            plugin.initialize(editor);
+
+            const rawEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                keyCode: 13,
+                which: 13,
+            });
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
+                'className',
+                'fontFamily',
+            ]);
+        });
+
+        it('should pass empty array when formatsToPreserveOnMerge is not specified', () => {
+            const options = {
+                handleTabKey: true,
+                handleExpandedSelectionOnDelete: true,
+            };
+
+            plugin = new EditPlugin(options);
+            plugin.initialize(editor);
+
+            const rawEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                keyCode: 13,
+                which: 13,
+            });
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
+        });
+
+        it('should pass empty formatsToPreserveOnMerge array', () => {
+            const options = {
+                handleTabKey: true,
+                handleExpandedSelectionOnDelete: true,
+                formatsToPreserveOnMerge: [],
+            };
+
+            plugin = new EditPlugin(options);
+            plugin.initialize(editor);
+
+            const rawEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                keyCode: 13,
+                which: 13,
+            });
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, []);
+        });
+
+        it('should work with multiple custom format properties', () => {
+            const options = {
+                handleTabKey: true,
+                handleExpandedSelectionOnDelete: true,
+                formatsToPreserveOnMerge: ['className', 'customProp', 'data-testid', 'fontFamily'],
+            };
+
+            plugin = new EditPlugin(options);
+            plugin.initialize(editor);
+
+            const rawEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                keyCode: 13,
+                which: 13,
+            });
+
+            plugin.onPluginEvent({
+                eventType: 'keyDown',
+                rawEvent,
+            });
+
+            expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
+                'className',
+                'customProp',
+                'data-testid',
+                'fontFamily',
+            ]);
+        });
+    });
 });

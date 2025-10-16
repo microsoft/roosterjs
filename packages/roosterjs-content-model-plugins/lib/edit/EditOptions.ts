@@ -1,4 +1,4 @@
-import type { IEditor } from 'roosterjs-content-model-types/lib';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Options to customize the keyboard handling behavior of Edit plugin
@@ -33,9 +33,19 @@ export type EditOptions = {
     shouldHandleBackspaceKey?: ((editor: IEditor) => boolean) | boolean;
 
     /**
-     * An array of format keys that should be kept when pressing Enter key to split a paragraph.
-     * For example, if the formatToKeep contains 'fontFamily', when pressing Enter in a paragraph with fontFamily='Arial',
-     * the new paragraph will also have fontFamily='Arial'.
+     * An array of format property names that should be preserved when merging paragraphs
+     * during editing operations such as pressing Enter, Backspace, or Delete keys.
+     * This ensures consistent formatting is maintained across paragraph operations.
+     *
+     * @example
+     * // Preserve font family and class name during paragraph operations
+     * formatsToPreserveOnMerge: ['fontFamily', 'className']
+     *
+     * // When pressing Enter in a paragraph with fontFamily='Arial' and className='highlight',
+     * // the new paragraph will inherit both properties: fontFamily='Arial' and className='highlight'
+     *
+     * // When pressing Backspace to merge two paragraphs, the preserved formats from the first
+     * // paragraph will be applied to the merged result
      */
-    formatsToKeep?: string[];
+    formatsToPreserveOnMerge?: string[];
 };

@@ -1445,4 +1445,115 @@ describe('keyboardEnter', () => {
                 .some((step: any) => step.toString().includes('handleEnterOnParagraph'))
         ).toBe(false);
     });
+
+    describe('formatsToPreserveOnMerge parameter', () => {
+        it('should accept formatsToPreserveOnMerge parameter', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const context: FormatContentModelContext = {
+                deletedEntities: [],
+                newEntities: [],
+                newImages: [],
+                rawEvent: { preventDefault: () => {} } as any,
+            };
+
+            formatContentModelSpy.and.callFake((callback: Function) => {
+                callback(model, context);
+            });
+
+            const formatsToPreserve = ['className', 'fontFamily'];
+
+            keyboardEnter(
+                editor,
+                { preventDefault: () => {}, shiftKey: false } as any,
+                true,
+                formatsToPreserve
+            );
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should work with empty formatsToPreserveOnMerge array', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const context: FormatContentModelContext = {
+                deletedEntities: [],
+                newEntities: [],
+                newImages: [],
+                rawEvent: { preventDefault: () => {} } as any,
+            };
+
+            formatContentModelSpy.and.callFake((callback: Function) => {
+                callback(model, context);
+            });
+
+            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any, true, []);
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should default to empty array when formatsToPreserveOnMerge is not provided', () => {
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const context: FormatContentModelContext = {
+                deletedEntities: [],
+                newEntities: [],
+                newImages: [],
+                rawEvent: { preventDefault: () => {} } as any,
+            };
+
+            formatContentModelSpy.and.callFake((callback: Function) => {
+                callback(model, context);
+            });
+
+            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any, true);
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        });
+    });
 });
