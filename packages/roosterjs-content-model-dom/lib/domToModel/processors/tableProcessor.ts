@@ -197,11 +197,17 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                                 for (
                                     let colSpan = 1;
-                                    colSpan <= td.colSpan;
+                                    colSpan <= (td.colSpan >= 0 ? 1 : td.colSpan);
                                     colSpan++, targetCol++
                                 ) {
-                                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
-                                        const hasTd = colSpan == 1 && rowSpan == 1;
+                                    for (
+                                        let rowSpan = 1;
+                                        // RowSpan of 0 means it should span to the end of the table
+                                        // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td#rowspan
+                                        rowSpan <= (td.rowSpan == 0 ? 1 : td.rowSpan);
+                                        rowSpan++
+                                    ) {
+                                        const hasTd = colSpan >= 1 && rowSpan == 1;
                                         const cell = createTableCell(
                                             colSpan > 1,
                                             rowSpan > 1,
