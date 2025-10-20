@@ -197,7 +197,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                                 for (
                                     let colSpan = 1;
-                                    colSpan <= (td.colSpan >= 0 ? 1 : td.colSpan);
+                                    colSpan <= td.colSpan;
                                     colSpan++, targetCol++
                                 ) {
                                     for (
