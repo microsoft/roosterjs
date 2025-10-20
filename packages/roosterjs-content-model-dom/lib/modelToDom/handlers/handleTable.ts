@@ -123,6 +123,10 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                     td.colSpan = colSpan;
                 }
 
+                if (cell.spanUntilNextSection) {
+                    td.rowSpan = 0;
+                }
+
                 if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
                     if (width > 0 && !td.style.width) {
                         td.style.width = width + 'px';

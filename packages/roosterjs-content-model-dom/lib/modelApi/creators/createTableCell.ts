@@ -16,13 +16,14 @@ export function createTableCell(
     spanAboveOrRowSpan?: boolean | number,
     isHeader?: boolean,
     format?: Readonly<ContentModelTableCellFormat>,
-    dataset?: ReadonlyDatasetFormat
+    dataset?: ReadonlyDatasetFormat,
+    spanUntilNextSection?: boolean
 ): ContentModelTableCell {
     const spanLeft =
         typeof spanLeftOrColSpan === 'number' ? spanLeftOrColSpan > 1 : !!spanLeftOrColSpan;
     const spanAbove =
         typeof spanAboveOrRowSpan === 'number' ? spanAboveOrRowSpan > 1 : !!spanAboveOrRowSpan;
-    return {
+    const result: ContentModelTableCell = {
         blockGroupType: 'TableCell',
         blocks: [],
         format: { ...format },
@@ -31,4 +32,10 @@ export function createTableCell(
         isHeader: !!isHeader,
         dataset: { ...dataset },
     };
+
+    if (spanUntilNextSection) {
+        result.spanUntilNextSection = true;
+    }
+
+    return result;
 }

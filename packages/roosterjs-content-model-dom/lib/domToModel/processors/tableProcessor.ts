@@ -197,7 +197,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                                 for (
                                     let colSpan = 1;
-                                    colSpan <= td.colSpan;
+                                    colSpan <= (td.colSpan == 0 ? 1 : td.colSpan);
                                     colSpan++, targetCol++
                                 ) {
                                     for (
@@ -212,7 +212,9 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                             colSpan > 1,
                                             rowSpan > 1,
                                             td.tagName == 'TH',
-                                            cellFormat
+                                            cellFormat,
+                                            undefined /* dataset */,
+                                            td.rowSpan == 0 /* spanUntilNextSection */
                                         );
 
                                         cell.dataset = { ...dataset };

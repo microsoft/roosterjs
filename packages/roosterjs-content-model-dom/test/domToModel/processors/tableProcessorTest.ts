@@ -236,7 +236,7 @@ describe('tableProcessor', () => {
             };
         });
 
-        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledTimes(2);
     });
 
     it('Process table with selection', () => {
@@ -1473,5 +1473,37 @@ describe('tableProcessor without recalculateTableSize', () => {
                 dataset: {},
             };
         });
+    });
+
+    it('Process a regular 1*1 table with colSpan 0 and rowSpan 0', () => {
+        runTest(
+            '<table class="tb1"><tr id="tr1"><td id="td1" colSpan="0" rowSpan="0"></td></tr></table>',
+            div => {
+                return {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                    spanUntilNextSection: true,
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                };
+            }
+        );
     });
 });

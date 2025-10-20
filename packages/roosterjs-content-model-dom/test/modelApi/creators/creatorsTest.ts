@@ -392,6 +392,70 @@ describe('Creators', () => {
         });
     });
 
+    it('createTableCell with spanUntilNextSection false', () => {
+        const tdModel = createTableCell(
+            1 /*colSpan*/,
+            1 /*rowSpan*/,
+            false /*isHeader*/,
+            undefined /*format*/,
+            undefined /*dataset*/,
+            false /*spanUntilNextSection*/
+        );
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: {},
+        });
+    });
+
+    it('createTableCell with spanUntilNextSection true', () => {
+        const tdModel = createTableCell(
+            1 /*colSpan*/,
+            1 /*rowSpan*/,
+            false /*isHeader*/,
+            undefined /*format*/,
+            undefined /*dataset*/,
+            true /*spanUntilNextSection*/
+        );
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: {},
+            spanUntilNextSection: true,
+        });
+    });
+
+    it('createTableCell with spanUntilNextSection undefined', () => {
+        const tdModel = createTableCell(
+            1 /*colSpan*/,
+            1 /*rowSpan*/,
+            false /*isHeader*/,
+            undefined /*format*/,
+            undefined /*dataset*/,
+            undefined /*spanUntilNextSection*/
+        );
+
+        expect(tdModel).toEqual({
+            blockGroupType: 'TableCell',
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+            format: {},
+            dataset: {},
+        });
+    });
+
     it('createSelectionMarker', () => {
         const marker = createSelectionMarker();
 
