@@ -1,3 +1,4 @@
+import * as deleteCollapsedSelectionModule from '../../lib/edit/deleteSteps/deleteCollapsedSelection';
 import * as deleteSelection from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as handleKeyboardEventResult from '../../lib/edit/handleKeyboardEventCommon';
 import { ChangeSource, setLinkUndeletable } from 'roosterjs-content-model-dom';
@@ -13,19 +14,33 @@ import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
 } from '../../lib/edit/deleteSteps/deleteWordSelection';
-import {
-    backwardDeleteCollapsedSelection,
-    forwardDeleteCollapsedSelection,
-} from '../../lib/edit/deleteSteps/deleteCollapsedSelection';
 
 const Delete = 46;
 const Backspace = 8;
+
+// Create the function variables by calling the factory function
+const forwardDeleteCollapsedSelection = deleteCollapsedSelectionModule.getDeleteCollapsedSelection(
+    'forward',
+    {}
+);
+const backwardDeleteCollapsedSelection = deleteCollapsedSelectionModule.getDeleteCollapsedSelection(
+    'backward',
+    {}
+);
 
 describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
+        // Spy on the factory function to return our pre-created variables
+        spyOn(deleteCollapsedSelectionModule, 'getDeleteCollapsedSelection').and.callFake(
+            (direction: 'forward' | 'backward', options: any) => {
+                return direction === 'forward'
+                    ? forwardDeleteCollapsedSelection
+                    : backwardDeleteCollapsedSelection;
+            }
+        );
     });
 
     function runTest(
@@ -61,7 +76,7 @@ describe('keyboardDelete', () => {
                     },
                 });
 
-                const result = keyboardDelete(editor, mockedEvent);
+                const result = keyboardDelete(editor, mockedEvent, {});
 
                 expect(result).toBe(expectedDelete == 'range' || expectedDelete == 'singleChar');
             },
@@ -526,7 +541,6 @@ describe('keyboardDelete', () => {
             1
         );
     });
-
     it('Check parameter of formatContentModel, forward', () => {
         const spy = jasmine.createSpy('formatContentModel');
 
@@ -543,7 +557,7 @@ describe('keyboardDelete', () => {
             key: 'Delete',
         } as any;
 
-        keyboardDelete(editor, event);
+        keyboardDelete(editor, event, {});
 
         expect(spy.calls.argsFor(0)[1]!.changeSource).toBe(ChangeSource.Keyboard);
         expect(spy.calls.argsFor(0)[1]!.getChangeData?.()).toBe(Delete);
@@ -569,7 +583,7 @@ describe('keyboardDelete', () => {
             preventDefault,
         } as any;
 
-        keyboardDelete(editor, event);
+        keyboardDelete(editor, event, {});
 
         expect(spy.calls.argsFor(0)[1]!.apiName).toBe('handleBackspaceKey');
         expect(spy.calls.argsFor(0)[1]?.changeSource).toBe(ChangeSource.Keyboard);
@@ -594,7 +608,7 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent, {});
 
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
@@ -617,7 +631,7 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent, {});
 
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
@@ -643,7 +657,11 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
+        keyboardDelete(
+            editor,
+            rawEvent,
+            { handleExpandedSelectionOnDelete: false } /* handleExpandedSelectionOnDelete */
+        );
 
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
@@ -667,7 +685,7 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent, {});
 
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
@@ -691,7 +709,7 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent);
+        keyboardDelete(editor, rawEvent, {});
 
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
@@ -717,7 +735,11 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
+        keyboardDelete(
+            editor,
+            rawEvent,
+            { handleExpandedSelectionOnDelete: false } /* handleExpandedSelectionOnDelete */
+        );
 
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
@@ -751,7 +773,11 @@ describe('keyboardDelete', () => {
             getEnvironment: () => ({}),
         } as any;
 
-        keyboardDelete(editor, rawEvent, false /* handleExpandedSelectionOnDelete */);
+        keyboardDelete(
+            editor,
+            rawEvent,
+            { handleExpandedSelectionOnDelete: false } /* handleExpandedSelectionOnDelete */
+        );
 
         expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });

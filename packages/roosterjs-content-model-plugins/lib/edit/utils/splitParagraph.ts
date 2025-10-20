@@ -1,3 +1,4 @@
+import { preserveParagraphFormat } from './preserveParagraphFormat';
 import {
     copyFormat,
     createBr,
@@ -23,7 +24,8 @@ import type {
  */
 export function splitParagraph(
     insertPoint: InsertPoint,
-    removeImplicitParagraph: boolean = true
+    removeImplicitParagraph: boolean = true,
+    formatsToPreserveOnMerge: string[] = []
 ): ShallowMutableContentModelParagraph {
     const { paragraph, marker } = insertPoint;
     const newParagraph: ShallowMutableContentModelParagraph = createParagraph(
@@ -33,6 +35,7 @@ export function splitParagraph(
     );
 
     copyFormat(newParagraph.format, paragraph.format, ParagraphFormats);
+    preserveParagraphFormat(formatsToPreserveOnMerge, paragraph, newParagraph);
 
     const markerIndex = paragraph.segments.indexOf(marker);
     const segments = paragraph.segments.splice(

@@ -1,3 +1,4 @@
+import { getDeleteCollapsedSelection } from '../../../lib/edit/deleteSteps/deleteCollapsedSelection';
 import {
     createBr,
     createContentModelDocument,
@@ -19,10 +20,9 @@ import {
     ContentModelSelectionMarker,
     DeletedEntity,
 } from 'roosterjs-content-model-types';
-import {
-    backwardDeleteCollapsedSelection,
-    forwardDeleteCollapsedSelection,
-} from '../../../lib/edit/deleteSteps/deleteCollapsedSelection';
+
+const forwardDeleteCollapsedSelection = getDeleteCollapsedSelection('forward', {});
+const backwardDeleteCollapsedSelection = getDeleteCollapsedSelection('backward', {});
 
 describe('deleteSelection - forward', () => {
     it('empty selection', () => {
@@ -3499,6 +3499,356 @@ describe('deleteSelection - backward', () => {
                         format: {},
                     },
                     format: {},
+                },
+            ],
+        });
+    });
+});
+
+describe('deleteCollapsedSelection - formatsToPreserveOnMerge', () => {
+    it('should preserve specified formats when deleting across paragraphs - basic test', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        // Add some basic custom formatting
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1);
+        para2.segments.push(marker, text2);
+        model.blocks.push(para1, para2);
+
+        const deleteStep = getDeleteCollapsedSelection('backward', {
+            formatsToPreserveOnMerge: ['className'],
+        });
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                        className: 'custom-class',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
+                },
+            ],
+        });
+
+        // Check that custom formats are preserved
+        expect((model.blocks[0] as any).format.className).toBe('custom-class');
+        expect((model.blocks[1] as any).format.className).toBe('custom-class');
+    });
+
+    it('should work with empty formatsToPreserveOnMerge array', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1);
+        para2.segments.push(marker, text2);
+        model.blocks.push(para1, para2);
+
+        const deleteStep = getDeleteCollapsedSelection('backward', {
+            formatsToPreserveOnMerge: [],
+        });
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                        className: 'custom-class',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
+                },
+            ],
+        });
+    });
+
+    it('should work when formatsToPreserveOnMerge is undefined', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1);
+        para2.segments.push(marker, text2);
+        model.blocks.push(para1, para2);
+
+        // Test with no formatsToPreserveOnMerge option
+        const deleteStep = getDeleteCollapsedSelection('backward', {});
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
+                },
+            ],
+        });
+    });
+
+    it('should preserve specified formats when deleting forward across paragraphs', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        // Add some basic custom formatting
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1, marker);
+        para2.segments.push(text2);
+        model.blocks.push(para1, para2);
+
+        const deleteStep = getDeleteCollapsedSelection('forward', {
+            formatsToPreserveOnMerge: ['className'],
+        });
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                        className: 'custom-class',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
+                },
+            ],
+        });
+
+        // Check that custom formats are preserved
+        expect((model.blocks[0] as any).format.className).toBe('custom-class');
+        expect((model.blocks[1] as any).format.className).toBe('custom-class');
+    });
+
+    it('should work with empty formatsToPreserveOnMerge array when deleting forward', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1, marker);
+        para2.segments.push(text2);
+        model.blocks.push(para1, para2);
+
+        const deleteStep = getDeleteCollapsedSelection('forward', {
+            formatsToPreserveOnMerge: [],
+        });
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                        className: 'custom-class',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
+                },
+            ],
+        });
+    });
+
+    it('should work when formatsToPreserveOnMerge is undefined for forward deletion', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('First');
+        const text2 = createText('Second');
+        const marker = createSelectionMarker();
+
+        (para1.format as any).className = 'custom-class';
+        para1.format.textAlign = 'center';
+
+        para1.segments.push(text1, marker);
+        para2.segments.push(text2);
+        model.blocks.push(para1, para2);
+
+        // Test with no formatsToPreserveOnMerge option
+        const deleteStep = getDeleteCollapsedSelection('forward', {});
+
+        deleteSelection(model, [deleteStep]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'First',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Second',
+                            format: {},
+                        },
+                    ],
+                    format: jasmine.objectContaining({
+                        textAlign: 'center',
+                    }),
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: jasmine.any(Object),
                 },
             ],
         });
