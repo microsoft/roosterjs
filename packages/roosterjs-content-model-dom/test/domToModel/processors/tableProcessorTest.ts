@@ -236,7 +236,7 @@ describe('tableProcessor', () => {
             };
         });
 
-        expect(childProcessor).toHaveBeenCalledTimes(1); // Only called once for the actual TD element
+        expect(childProcessor).toHaveBeenCalledTimes(1);
     });
 
     it('Process table with selection', () => {
