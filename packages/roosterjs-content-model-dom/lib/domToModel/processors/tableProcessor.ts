@@ -9,7 +9,6 @@ import { parseFormat } from '../utils/parseFormat';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
-    ContentModelTable,
     ContentModelTableCellFormat,
     DatasetFormat,
     DomToModelContext,

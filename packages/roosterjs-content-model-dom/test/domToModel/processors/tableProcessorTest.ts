@@ -218,7 +218,7 @@ describe('tableProcessor', () => {
         const tableHTML =
             '<table class="tb1"><tr id="tr1"><td colspan="2" id="td1"><span>test</span></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
-        const tdModel2 = createTableCell(2, 1, false); // spanLeft: true for merged cell
+        const tdModel2 = createTableCell(2, 1, false);
 
         runTest(tableHTML, div => {
             return {
