@@ -50,7 +50,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const selectedTable = tableSelection?.table;
             const hasTableSelection = selectedTable == tableElement;
             const recalculateTableSize = shouldRecalculateTableSize(tableElement, context);
-            const rowSpanZeroIndexes: number[][] = [];
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -95,12 +94,9 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                 stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
                     const parent = tr.parentElement;
-                    const parentTag = parent?.tagName;
+                    const isInTableSection = parent && getIsInTableSection(parent);
 
-                    if (
-                        parent &&
-                        (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
-                    ) {
+                    if (isInTableSection) {
                         // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
                         parseFormat(
                             parent,
@@ -206,21 +202,21 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                         let rowSpan = 1;
                                         // RowSpan of 0 means it should span to the end of the table
                                         // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td#rowspan
-                                        rowSpan <= (td.rowSpan == 0 ? 1 : td.rowSpan);
+                                        rowSpan <=
+                                        (td.rowSpan == 0
+                                            ? isInTableSection
+                                                ? translateRowSpanZero(parent, td)
+                                                : 1
+                                            : td.rowSpan);
                                         rowSpan++
                                     ) {
-                                        const hasTd = colSpan >= 1 && rowSpan == 1;
+                                        const hasTd = colSpan == 1 && rowSpan == 1;
                                         const cell = createTableCell(
                                             colSpan > 1,
                                             rowSpan > 1,
                                             td.tagName == 'TH',
-                                            cellFormat,
-                                            undefined /* dataset */
+                                            cellFormat
                                         );
-
-                                        if (td.rowSpan == 0) {
-                                            rowSpanZeroIndexes.push([row, targetCol]);
-                                        }
 
                                         cell.dataset = { ...dataset };
 
@@ -282,10 +278,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 }
             }
 
-            if (rowSpanZeroIndexes.length) {
-                adjustRowSpanZeroCells(table, rowSpanZeroIndexes);
-            }
-
             table.widths = calcSizes(columnPositions);
 
             const heights = calcSizes(rowPositions);
@@ -299,39 +291,24 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     );
 };
 
-function adjustRowSpanZeroCells(table: ContentModelTable, rowSpanZeroIndexes: number[][]): void {
-    // Process all cells with rowSpan=0 from end to start to avoid conflicts when shifting cells
-    for (let i = rowSpanZeroIndexes.length - 1; i >= 0; i--) {
-        const [rowIndex, colIndex] = rowSpanZeroIndexes[i];
+function translateRowSpanZero(parent: HTMLTableSectionElement, td: HTMLTableCellElement) {
+    const amountOfRows = parent.rows.length;
 
-        // This cell should span to the end of the table
-        // Set all cells below this one in the same column to spanAbove
-        for (let belowRowIndex = rowIndex + 1; belowRowIndex < table.rows.length; belowRowIndex++) {
-            const belowRow = table.rows[belowRowIndex];
-
-            if (belowRow.cells[colIndex]) {
-                // Move the original cell and all cells after it one position to the right
-                const originalCell = belowRow.cells[colIndex];
-
-                // Shift all cells from colIndex onwards to the right
-                for (let shiftCol = belowRow.cells.length; shiftCol > colIndex; shiftCol--) {
-                    belowRow.cells[shiftCol] = belowRow.cells[shiftCol - 1];
-                }
-
-                // Create an empty cell with spanAbove in the original position
-                belowRow.cells[colIndex] = createTableCell(
-                    false, // spanLeft
-                    true, // spanAbove - this cell is spanned from above
-                    originalCell.isHeader,
-                    originalCell.format,
-                    originalCell.dataset
-                );
-
-                // The original cell is now at colIndex + 1
-                belowRow.cells[colIndex + 1] = originalCell;
+    let tdIndex = -1;
+    for (let i = 0; i < parent.rows.length; i++) {
+        const row = parent.rows[i];
+        for (let j = 0; j < row.cells.length; j++) {
+            if (row.cells[j] === td) {
+                tdIndex = i;
+                break;
             }
         }
+        if (tdIndex !== -1) {
+            break;
+        }
     }
+
+    return amountOfRows - tdIndex;
 }
 
 function calcSizes(positions: (number | undefined)[]): number[] {
@@ -419,4 +396,12 @@ function shouldRecalculateTableSize(table: HTMLTableElement, context: DomToModel
         default:
             return false;
     }
+}
+
+function getIsInTableSection(element: HTMLElement): element is HTMLTableSectionElement {
+    return (
+        isElementOfType(element, 'tbody') ||
+        isElementOfType(element, 'thead') ||
+        isElementOfType(element, 'tfoot')
+    );
 }
