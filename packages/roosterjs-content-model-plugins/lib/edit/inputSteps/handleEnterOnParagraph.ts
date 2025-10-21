@@ -5,12 +5,18 @@ import type { DeleteSelectionStep } from 'roosterjs-content-model-types';
 /**
  * @internal
  */
-export const handleEnterOnParagraph: DeleteSelectionStep = context => {
+export const handleEnterOnParagraph: (
+    formatsToPreserveOnMerge: string[]
+) => DeleteSelectionStep = formatsToPreserveOnMerge => context => {
     const { paragraph, path } = context.insertPoint;
     const paraIndex = path[0]?.blocks.indexOf(paragraph) ?? -1;
 
     if (context.deleteResult == 'notDeleted' && paraIndex >= 0) {
-        const newPara = splitParagraph(context.insertPoint, false /* removeImplicitParagraph */);
+        const newPara = splitParagraph(
+            context.insertPoint,
+            false /* removeImplicitParagraph */,
+            formatsToPreserveOnMerge
+        );
 
         mutateBlock(path[0]).blocks.splice(paraIndex + 1, 0, newPara);
 
