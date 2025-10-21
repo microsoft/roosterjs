@@ -681,37 +681,4 @@ describe('handleTable', () => {
         });
         expect(reuseCachedElementSpy).not.toHaveBeenCalled();
     });
-
-    it('Table with spanUntilNextSection cell', () => {
-        const cell = createTableCell(1, 1, false);
-        cell.spanUntilNextSection = true;
-
-        runTest(
-            {
-                blockType: 'Table',
-                rows: [{ format: {}, height: 0, cells: [cell] }],
-                format: {},
-                widths: [],
-                dataset: {},
-            },
-            '<table><tbody><tr><td rowspan="0"></td></tr></tbody></table>'
-        );
-    });
-
-    it('Table with spanUntilNextSection cell and other cells', () => {
-        const cell1 = createTableCell(1, 1, false);
-        const cell2 = createTableCell(1, 1, false);
-        cell2.spanUntilNextSection = true;
-
-        runTest(
-            {
-                blockType: 'Table',
-                rows: [{ format: {}, height: 0, cells: [cell1, cell2] }],
-                format: {},
-                widths: [],
-                dataset: {},
-            },
-            '<table><tbody><tr><td></td><td rowspan="0"></td></tr></tbody></table>'
-        );
-    });
 });

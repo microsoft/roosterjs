@@ -1494,7 +1494,98 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blocks: [],
                                     format: {},
                                     dataset: {},
-                                    spanUntilNextSection: true,
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                };
+            }
+        );
+    });
+
+    it('Process a 3*2 table with rowSpan 0 in first row', () => {
+        runTest(
+            '<table class="tb1">' +
+                '<tr id="tr1"><td id="td1" rowSpan="0">Cell A</td><td id="td2">Cell B</td></tr>' +
+                '<tr id="tr2"><td id="td3">Cell C</td></tr>' +
+                '<tr id="tr3"><td id="td4">Cell D</td></tr>' +
+                '</table>',
+            div => {
+                return {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: true,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: true,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
                                 },
                             ],
                         },

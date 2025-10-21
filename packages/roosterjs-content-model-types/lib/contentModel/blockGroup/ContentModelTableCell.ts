@@ -38,12 +38,6 @@ export interface ContentModelTableCellCommon {
      * Whether this cell is a table header (TH) element
      */
     isHeader?: boolean;
-
-    /**
-     * Whether this cell is spanned until the next section
-     * For example when a cell contains rowSpan equal to 0
-     */
-    spanUntilNextSection?: boolean;
 }
 
 /**

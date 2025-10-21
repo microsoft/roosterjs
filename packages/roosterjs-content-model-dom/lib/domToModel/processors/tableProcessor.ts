@@ -9,6 +9,7 @@ import { parseFormat } from '../utils/parseFormat';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
+    ContentModelTable,
     ContentModelTableCellFormat,
     DatasetFormat,
     DomToModelContext,
@@ -49,6 +50,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const selectedTable = tableSelection?.table;
             const hasTableSelection = selectedTable == tableElement;
             const recalculateTableSize = shouldRecalculateTableSize(tableElement, context);
+            const rowSpanZeroIndexes: number[][] = [];
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -213,9 +215,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                             rowSpan > 1,
                                             td.tagName == 'TH',
                                             cellFormat,
-                                            undefined /* dataset */,
-                                            td.rowSpan == 0 /* spanUntilNextSection */
+                                            undefined /* dataset */
                                         );
+
+                                        if (td.rowSpan == 0) {
+                                            rowSpanZeroIndexes.push([row, targetCol]);
+                                        }
 
                                         cell.dataset = { ...dataset };
 
@@ -277,6 +282,10 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 }
             }
 
+            if (rowSpanZeroIndexes.length) {
+                adjustRowSpanZeroCells(table, rowSpanZeroIndexes);
+            }
+
             table.widths = calcSizes(columnPositions);
 
             const heights = calcSizes(rowPositions);
@@ -289,6 +298,41 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         }
     );
 };
+
+function adjustRowSpanZeroCells(table: ContentModelTable, rowSpanZeroIndexes: number[][]): void {
+    // Process all cells with rowSpan=0 from end to start to avoid conflicts when shifting cells
+    for (let i = rowSpanZeroIndexes.length - 1; i >= 0; i--) {
+        const [rowIndex, colIndex] = rowSpanZeroIndexes[i];
+
+        // This cell should span to the end of the table
+        // Set all cells below this one in the same column to spanAbove
+        for (let belowRowIndex = rowIndex + 1; belowRowIndex < table.rows.length; belowRowIndex++) {
+            const belowRow = table.rows[belowRowIndex];
+
+            if (belowRow.cells[colIndex]) {
+                // Move the original cell and all cells after it one position to the right
+                const originalCell = belowRow.cells[colIndex];
+
+                // Shift all cells from colIndex onwards to the right
+                for (let shiftCol = belowRow.cells.length; shiftCol > colIndex; shiftCol--) {
+                    belowRow.cells[shiftCol] = belowRow.cells[shiftCol - 1];
+                }
+
+                // Create an empty cell with spanAbove in the original position
+                belowRow.cells[colIndex] = createTableCell(
+                    false, // spanLeft
+                    true, // spanAbove - this cell is spanned from above
+                    originalCell.isHeader,
+                    originalCell.format,
+                    originalCell.dataset
+                );
+
+                // The original cell is now at colIndex + 1
+                belowRow.cells[colIndex + 1] = originalCell;
+            }
+        }
+    }
+}
 
 function calcSizes(positions: (number | undefined)[]): number[] {
     const result: number[] = [];
