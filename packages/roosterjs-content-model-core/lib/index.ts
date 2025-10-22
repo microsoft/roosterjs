@@ -7,3 +7,6 @@ export { exportContent } from './command/exportContent/exportContent';
 export { undo } from './command/undo/undo';
 export { redo } from './command/redo/redo';
 export { paste } from './command/paste/paste';
+
+//Editor copy helper
+export { createCopyRange } from './corePlugin/copyPaste/utils/createCopyRange';

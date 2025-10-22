@@ -6,8 +6,11 @@ import * as extractClipboardItemsFile from 'roosterjs-content-model-dom/lib/domU
 import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as paste from '../../../lib/command/paste/paste';
+import { adjustSelectionForCopyCut } from '../../../lib/corePlugin/copyPaste/utils/adjustSelectionForCopyCut';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
+import { onNodeCreated } from '../../../lib/corePlugin/copyPaste/utils/createCopyRange';
+import { preprocessTable } from '../../../lib/corePlugin/copyPaste/utils/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -23,10 +26,7 @@ import {
     PasteTypeOrGetter,
 } from 'roosterjs-content-model-types';
 import {
-    adjustSelectionForCopyCut,
     createCopyPastePlugin,
-    onNodeCreated,
-    preprocessTable,
     shouldPreventDefaultPaste,
 } from '../../../lib/corePlugin/copyPaste/CopyPastePlugin';
 

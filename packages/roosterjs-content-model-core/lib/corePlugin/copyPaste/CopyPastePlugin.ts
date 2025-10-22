@@ -1,38 +1,23 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
 import { adjustImageSelectionOnSafari } from './utils/adjustImageSelectionOnSafari';
+import { createCopyRange } from './utils/createCopyRange';
 import { deleteEmptyList } from './utils/deleteEmptyList';
-import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
 import { paste } from '../../command/paste/paste';
-import { pruneUnselectedModel } from './utils/pruneUnselectedModel';
 import {
     ChangeSource,
-    contentModelToDom,
     contentModelToText,
-    createModelToDomContext,
     deleteSelection,
     extractClipboardItems,
-    getSelectedCells,
-    isElementOfType,
-    isNodeOfType,
-    iterateSelections,
     moveChildNodes,
     normalizeContentModel,
     toArray,
-    wrap,
 } from 'roosterjs-content-model-dom';
 import type {
     ClipboardData,
     CopyPastePluginState,
-    ContentModelTable,
-    DOMSelection,
     IEditor,
-    OnNodeCreated,
     EditorOptions,
     PluginWithState,
-    ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelSegment,
-    ReadonlyTableSelectionContext,
 } from 'roosterjs-content-model-types';
 
 const TEMP_DIV_ID = 'roosterJS_copyCutTempDiv';
@@ -118,37 +103,9 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const pasteModel = this.editor.getContentModelCopy('disconnected');
-
-            pruneUnselectedModel(pasteModel);
-
-            if (selection.type === 'table') {
-                iterateSelections(pasteModel, (_, tableContext) => {
-                    if (tableContext?.table) {
-                        preprocessTable(tableContext.table);
-
-                        return true;
-                    }
-                    return false;
-                });
-            } else if (selection.type === 'range') {
-                adjustSelectionForCopyCut(pasteModel);
-            }
-
             const tempDiv = this.getTempDiv(this.editor.getDocument());
-            const context = createModelToDomContext();
 
-            context.onNodeCreated = onNodeCreated;
-
-            const selectionForCopy = contentModelToDom(
-                tempDiv.ownerDocument,
-                tempDiv,
-                pasteModel,
-                context
-            );
-
-            let newRange: Range | null = selectionForCopy
-                ? domSelectionToRange(doc, selectionForCopy)
-                : null;
+            let newRange = createCopyRange(this.editor, pasteModel, selection, tempDiv);
 
             if (newRange) {
                 newRange = this.editor.triggerEvent('beforeCutCopy', {
@@ -251,33 +208,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
         return div;
     }
 }
-/**
- * @internal
- * Exported only for unit testing
- */
-export function adjustSelectionForCopyCut(pasteModel: ContentModelDocument) {
-    let selectionMarker: ContentModelSegment | undefined;
-    let firstBlock: ContentModelParagraph | undefined;
-    let tableContext: ReadonlyTableSelectionContext | undefined;
-
-    iterateSelections(pasteModel, (_, tableCtxt, block, segments) => {
-        if (selectionMarker) {
-            if (tableCtxt != tableContext && firstBlock?.segments.includes(selectionMarker)) {
-                firstBlock.segments.splice(firstBlock.segments.indexOf(selectionMarker), 1);
-            }
-            return true;
-        }
-
-        const marker = segments?.find(segment => segment.segmentType == 'SelectionMarker');
-        if (!selectionMarker && marker) {
-            tableContext = tableCtxt;
-            firstBlock = block?.blockType == 'Paragraph' ? block : undefined;
-            selectionMarker = marker;
-        }
-
-        return false;
-    });
-}
 
 function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
     tempDiv.style.backgroundColor = '';
@@ -288,62 +218,6 @@ function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
 
 function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
-}
-
-function domSelectionToRange(doc: Document, selection: DOMSelection): Range | null {
-    let newRange: Range | null = null;
-
-    if (selection.type === 'table') {
-        const table = selection.table;
-        const elementToSelect =
-            table.parentElement?.childElementCount == 1 ? table.parentElement : table;
-
-        newRange = doc.createRange();
-        newRange.selectNode(elementToSelect);
-    } else if (selection.type === 'image') {
-        newRange = doc.createRange();
-        newRange.selectNode(selection.image);
-    } else {
-        newRange = selection.range;
-    }
-
-    return newRange;
-}
-
-/**
- * @internal
- * Exported only for unit testing
- */
-export const onNodeCreated: OnNodeCreated = (modelElement, node): void => {
-    if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
-        wrap(node.ownerDocument, node, 'div');
-    }
-    if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
-        node.removeAttribute('contenteditable');
-    }
-    onCreateCopyEntityNode(modelElement, node);
-};
-
-/**
- * @internal
- * Exported only for unit testing
- */
-export function preprocessTable(table: ContentModelTable) {
-    const sel = getSelectedCells(table);
-    table.rows = table.rows
-        .map(row => {
-            return {
-                ...row,
-                cells: row.cells.filter(cell => cell.isSelected),
-            };
-        })
-        .filter(row => row.cells.length > 0);
-
-    delete table.format.width;
-
-    table.widths = sel
-        ? table.widths.filter((_, index) => index >= sel?.firstColumn && index <= sel?.lastColumn)
-        : [];
 }
 
 /**
