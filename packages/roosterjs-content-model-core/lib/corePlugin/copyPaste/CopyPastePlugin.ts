@@ -111,15 +111,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                 addRangeToSelection(doc, range);
             }
 
-            const selection = this.editor.getDOMSelection();
-
-            if (!this.editor) {
-                return;
-            }
-
-            this.editor.setDOMSelection(selection);
-            this.editor.focus();
-
             if (isCut) {
                 this.editor.formatContentModel(
                     (model, context) => {
