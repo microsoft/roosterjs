@@ -1,5 +1,16 @@
-import { BeforeCutCopyEvent, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import { triggerBeforeCutCopyEvent } from '../../../lib/command/cutCopy/triggerBeforeCutCopyEvent';
+import {
+    BeforeCutCopyEvent,
+    ContentModelDocument,
+    ContentModelSettings,
+    DOMSelection,
+    DomToModelOption,
+    DomToModelSettings,
+    EditorEnvironment,
+    IEditor,
+    ModelToDomOption,
+    ModelToDomSettings,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createParagraph,
@@ -20,11 +31,21 @@ describe('triggerBeforeCutCopyEvent', () => {
         triggerEventSpy = jasmine.createSpy();
 
         editor = {
-            getDocument: () => mockDocument,
-            getDOMSelection: () => null,
-            getContentModelCopy: () => createContentModelDocument(),
-            getEnvironment: () => {
-                return { isSafari: false };
+            getDocument: (): Document => mockDocument,
+            getDOMSelection: (): DOMSelection | null => null,
+            getContentModelCopy: (): ContentModelDocument => createContentModelDocument(),
+            getEnvironment: (): EditorEnvironment => {
+                return {
+                    isSafari: false,
+                    domToModelSettings: {} as ContentModelSettings<
+                        DomToModelOption,
+                        DomToModelSettings
+                    >,
+                    modelToDomSettings: {} as ContentModelSettings<
+                        ModelToDomOption,
+                        ModelToDomSettings
+                    >,
+                };
             },
             triggerEvent: triggerEventSpy,
         } as any;
