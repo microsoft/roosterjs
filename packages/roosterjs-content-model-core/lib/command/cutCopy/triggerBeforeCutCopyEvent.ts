@@ -33,14 +33,13 @@ export const onNodeCreated: OnNodeCreated = (modelElement, node): void => {
 };
 
 /**
- * Create the range for the "beforeCutCopy" event
+ * Trigger the "beforeCutCopy" event
  * @param editor The editor object
- * @param pasteModel The model of the selection
- * @param selection The editor selection
- * @param tempDiv A temporary DIV element used for cut/copy content
+ * @param isCut If the event to be created is cut. @default false
+ * @param event an optional parameter for when the clipboard event needs to be trigger
  * @returns
  */
-export function createBeforeCutCopyEvent(
+export function triggerBeforeCutCopyEvent(
     editor: IEditor,
     isCut: boolean = false,
     event?: ClipboardEvent

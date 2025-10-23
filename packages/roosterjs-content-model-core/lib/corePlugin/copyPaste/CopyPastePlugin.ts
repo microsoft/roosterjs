@@ -1,7 +1,7 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
-import { createBeforeCutCopyEvent } from '../../command/cutCopy/createBeforeCutCopyEvent';
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { paste } from '../../command/paste/paste';
+import { triggerBeforeCutCopyEvent } from '../../command/cutCopy/triggerBeforeCutCopyEvent';
 import {
     ChangeSource,
     contentModelToText,
@@ -92,7 +92,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             return;
         }
 
-        const beforeCutCopyEvent = createBeforeCutCopyEvent(
+        const beforeCutCopyEvent = triggerBeforeCutCopyEvent(
             this.editor,
             isCut,
             event as ClipboardEvent

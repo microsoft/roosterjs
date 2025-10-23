@@ -1,5 +1,5 @@
 import { BeforeCutCopyEvent, DOMSelection, IEditor } from 'roosterjs-content-model-types';
-import { createBeforeCutCopyEvent } from '../../../lib/command/cutCopy/createBeforeCutCopyEvent';
+import { triggerBeforeCutCopyEvent } from '../../../lib/command/cutCopy/triggerBeforeCutCopyEvent';
 import {
     createContentModelDocument,
     createParagraph,
@@ -10,18 +10,13 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('createBeforeCutCopyEvent', () => {
+describe('triggerBeforeCutCopyEvent', () => {
     let editor: IEditor;
     let mockDocument: Document;
     let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         mockDocument = document.implementation.createHTMLDocument('test');
-        const div = mockDocument.createElement('div');
-        mockDocument.body.appendChild(div);
-        const range: Range = new Range();
-        range.selectNode(div);
-
         triggerEventSpy = jasmine.createSpy();
 
         editor = {
@@ -66,7 +61,7 @@ describe('createBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
         div.remove();
@@ -113,9 +108,10 @@ describe('createBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
+        div.remove();
     });
 
     it('should handle empty model', () => {
@@ -137,7 +133,7 @@ describe('createBeforeCutCopyEvent', () => {
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
 
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
         expect(result).toBeNull();
     });
 
@@ -158,7 +154,7 @@ describe('createBeforeCutCopyEvent', () => {
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
 
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
         expect(result).toBeDefined();
     });
 
@@ -211,8 +207,9 @@ describe('createBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
         expect(result).toBeDefined();
+        div.remove();
     });
 
     it('should process complex model with mixed content', () => {
@@ -275,8 +272,9 @@ describe('createBeforeCutCopyEvent', () => {
             isCut: false,
             pasteModel: model,
         } as BeforeCutCopyEvent);
-        const result = createBeforeCutCopyEvent(editor, false);
+        const result = triggerBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
+        div.remove();
     });
 });

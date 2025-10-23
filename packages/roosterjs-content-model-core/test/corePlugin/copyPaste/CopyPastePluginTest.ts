@@ -7,10 +7,9 @@ import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as paste from '../../../lib/command/paste/paste';
 import { adjustSelectionForCopyCut } from '../../../lib/corePlugin/copyPaste/utils/adjustSelectionForCopyCut';
-import { createElement } from 'react';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { onNodeCreated } from '../../../lib/command/cutCopy/createBeforeCutCopyEvent';
+import { onNodeCreated } from '../../../lib/command/cutCopy/triggerBeforeCutCopyEvent';
 import { preprocessTable } from '../../../lib/corePlugin/copyPaste/utils/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
