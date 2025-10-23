@@ -7,9 +7,10 @@ import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as paste from '../../../lib/command/paste/paste';
 import { adjustSelectionForCopyCut } from '../../../lib/corePlugin/copyPaste/utils/adjustSelectionForCopyCut';
+import { createElement } from 'react';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
-import { onNodeCreated } from '../../../lib/corePlugin/copyPaste/utils/createCopyRange';
+import { onNodeCreated } from '../../../lib/command/cutCopy/createBeforeCutCopyEvent';
 import { preprocessTable } from '../../../lib/corePlugin/copyPaste/utils/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
@@ -75,6 +76,7 @@ describe('CopyPastePlugin |', () => {
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
+    let mockedDocument: Document;
 
     let selectionValue: DOMSelection;
     let getDOMSelectionSpy: jasmine.Spy;
@@ -96,6 +98,17 @@ describe('CopyPastePlugin |', () => {
         formatResult = undefined;
 
         div = document.createElement('div');
+        mockedDocument = {
+            createRange: () => document.createRange(),
+            createDocumentFragment: () => document.createDocumentFragment(),
+            defaultView: {
+                requestAnimationFrame: (func: Function) => {
+                    func();
+                },
+            },
+            createElement: () => div,
+        } as any;
+
         getDOMSelectionSpy = jasmine
             .createSpy('getDOMSelection')
             .and.callFake(() => selectionValue);
@@ -142,17 +155,7 @@ describe('CopyPastePlugin |', () => {
             },
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
-            getDocument() {
-                return {
-                    createRange: () => document.createRange(),
-                    createDocumentFragment: () => document.createDocumentFragment(),
-                    defaultView: {
-                        requestAnimationFrame: (func: Function) => {
-                            func();
-                        },
-                    },
-                };
-            },
+            getDocument: () => mockedDocument,
             isDarkMode: () => {
                 return false;
             },
@@ -217,7 +220,7 @@ describe('CopyPastePlugin |', () => {
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -264,7 +267,7 @@ describe('CopyPastePlugin |', () => {
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -282,7 +285,7 @@ describe('CopyPastePlugin |', () => {
 
         it('Selection not Collapsed and image selection', () => {
             // Arrange
-            const image = document.createElement('image');
+            const image = document.createElement('img');
             image.id = 'image';
             selectionValue = <DOMSelection>{
                 type: 'image',
@@ -307,7 +310,7 @@ describe('CopyPastePlugin |', () => {
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -355,7 +358,7 @@ describe('CopyPastePlugin |', () => {
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -407,7 +410,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -454,7 +457,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -478,7 +481,7 @@ describe('CopyPastePlugin |', () => {
 
             it('Selection not Collapsed and image selection', () => {
                 // Arrange
-                const image = document.createElement('image');
+                const image = document.createElement('img');
                 image.id = 'image';
                 selectionValue = <DOMSelection>{
                     type: 'image',
@@ -503,7 +506,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -515,7 +518,7 @@ describe('CopyPastePlugin |', () => {
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<image id="image"></image>'
+                    '<img id="image">'
                 );
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
@@ -557,7 +560,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -637,7 +640,7 @@ describe('CopyPastePlugin |', () => {
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -686,7 +689,7 @@ describe('CopyPastePlugin |', () => {
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -706,7 +709,7 @@ describe('CopyPastePlugin |', () => {
 
         it('Selection not Collapsed and image selection', () => {
             // Arrange
-            const image = document.createElement('image');
+            const image = document.createElement('img');
             image.id = 'image';
             selectionValue = <DOMSelection>{
                 type: 'image',
@@ -734,7 +737,7 @@ describe('CopyPastePlugin |', () => {
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -801,7 +804,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -854,7 +857,7 @@ describe('CopyPastePlugin |', () => {
                 // Assert
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -882,7 +885,7 @@ describe('CopyPastePlugin |', () => {
 
             it('Selection not Collapsed and image selection', () => {
                 // Arrange
-                const image = document.createElement('image');
+                const image = document.createElement('img');
                 image.id = 'image';
                 selectionValue = <DOMSelection>{
                     type: 'image',
@@ -911,7 +914,7 @@ describe('CopyPastePlugin |', () => {
                 // Assert
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -923,7 +926,7 @@ describe('CopyPastePlugin |', () => {
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<image id="image"></image>'
+                    '<img id="image">'
                 );
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 

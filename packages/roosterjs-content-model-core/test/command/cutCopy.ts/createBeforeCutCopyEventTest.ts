@@ -1,5 +1,5 @@
-import { createCopyRange } from '../../../../lib/corePlugin/copyPaste/utils/createCopyRange';
-import { DOMSelection, IEditor } from 'roosterjs-content-model-types';
+import { BeforeCutCopyEvent, DOMSelection, IEditor } from 'roosterjs-content-model-types';
+import { createBeforeCutCopyEvent } from '../../../lib/command/cutCopy/createBeforeCutCopyEvent';
 import {
     createContentModelDocument,
     createParagraph,
@@ -10,24 +10,29 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('createCopySelection', () => {
+describe('createBeforeCutCopyEvent', () => {
     let editor: IEditor;
     let mockDocument: Document;
-    let tempDiv: HTMLDivElement;
+    let triggerEventSpy: jasmine.Spy;
 
     beforeEach(() => {
         mockDocument = document.implementation.createHTMLDocument('test');
-        tempDiv = mockDocument.createElement('div');
+        const div = mockDocument.createElement('div');
+        mockDocument.body.appendChild(div);
+        const range: Range = new Range();
+        range.selectNode(div);
+
+        triggerEventSpy = jasmine.createSpy();
 
         editor = {
             getDocument: () => mockDocument,
+            getDOMSelection: () => null,
+            getContentModelCopy: () => createContentModelDocument(),
+            getEnvironment: () => {
+                return { isSafari: false };
+            },
+            triggerEvent: triggerEventSpy,
         } as any;
-    });
-
-    afterEach(() => {
-        // Clean up any elements added to body
-        const tempDivs = mockDocument.querySelectorAll('#roosterJS_copyCutTempDiv');
-        tempDivs.forEach(div => div.remove());
     });
 
     it('should handle range selection and call adjustSelectionForCopyCut', () => {
@@ -38,22 +43,33 @@ describe('createCopySelection', () => {
 
         para.segments.push(marker, text);
         model.blocks.push(para);
+        const div = mockDocument.createElement('div');
+        mockDocument.body.appendChild(div);
+        const range: Range = new Range();
+        range.selectNode(div);
 
         const selection: DOMSelection = {
             type: 'range',
-            range: {
-                startContainer: mockDocument.createElement('div'),
-                startOffset: 0,
-                endContainer: mockDocument.createElement('div'),
-                endOffset: 1,
-                collapsed: false,
-            } as any,
+            range,
             isReverted: false,
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+
+        triggerEventSpy.and.returnValue({
+            clonedRoot: div,
+            range,
+            rawEvent: new ClipboardEvent('copy'),
+            isCut: false,
+            pasteModel: model,
+        } as BeforeCutCopyEvent);
+
+        const result = createBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
+        div.remove();
     });
 
     it('should handle table selection and call preprocessTable', () => {
@@ -70,17 +86,34 @@ describe('createCopySelection', () => {
         row.cells.push(cell);
         table.rows[0] = row;
         model.blocks.push(table);
+        const div = mockDocument.createElement('div');
+        const tableElement = mockDocument.createElement('table');
+        mockDocument.body.appendChild(div);
+        div.appendChild(tableElement);
+        const range: Range = new Range();
+        range.selectNode(div);
 
         const selection: DOMSelection = {
             type: 'table',
-            table: mockDocument.createElement('table'),
+            table: tableElement,
             firstColumn: 0,
             firstRow: 0,
             lastColumn: 0,
             lastRow: 0,
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+        triggerEventSpy.and.returnValue({
+            clonedRoot: div,
+            range,
+            rawEvent: new ClipboardEvent('copy'),
+            isCut: false,
+            pasteModel: model,
+        } as BeforeCutCopyEvent);
+
+        const result = createBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
     });
@@ -100,7 +133,11 @@ describe('createCopySelection', () => {
             isReverted: false,
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+
+        const result = createBeforeCutCopyEvent(editor, false);
         expect(result).toBeNull();
     });
 
@@ -117,7 +154,11 @@ describe('createCopySelection', () => {
             image: mockDocument.createElement('img'),
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+
+        const result = createBeforeCutCopyEvent(editor, false);
         expect(result).toBeDefined();
     });
 
@@ -143,17 +184,34 @@ describe('createCopySelection', () => {
 
         table.widths = [100, 150];
         model.blocks.push(table);
+        const div = mockDocument.createElement('div');
+        const tableElement = mockDocument.createElement('table');
+        mockDocument.body.appendChild(div);
+        div.appendChild(tableElement);
+        const range: Range = new Range();
+        range.selectNode(div);
 
         const selection: DOMSelection = {
             type: 'table',
-            table: mockDocument.createElement('table'),
+            table: tableElement,
             firstColumn: 0,
             firstRow: 0,
             lastColumn: 1,
             lastRow: 1,
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+        triggerEventSpy.and.returnValue({
+            clonedRoot: div,
+            range,
+            rawEvent: new ClipboardEvent('copy'),
+            isCut: false,
+            pasteModel: model,
+        } as BeforeCutCopyEvent);
+
+        const result = createBeforeCutCopyEvent(editor, false);
         expect(result).toBeDefined();
     });
 
@@ -187,19 +245,37 @@ describe('createCopySelection', () => {
 
         model.blocks.push(para1, table, para3);
 
+        const div = mockDocument.createElement('div');
+        const tableElement = mockDocument.createElement('table');
+        mockDocument.body.appendChild(div);
+        div.appendChild(tableElement);
+        const range: Range = new Range();
+        range.selectNode(div);
+
         const selection: DOMSelection = {
             type: 'range',
             range: {
-                startContainer: mockDocument.createElement('div'),
+                startContainer: div,
                 startOffset: 0,
-                endContainer: mockDocument.createElement('div'),
+                endContainer: div,
                 endOffset: 1,
                 collapsed: false,
             } as any,
             isReverted: false,
         };
 
-        const result = createCopyRange(editor, model, selection, tempDiv);
+        // Mock the editor to return the model and selection
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+
+        triggerEventSpy.and.returnValue({
+            clonedRoot: div,
+            range,
+            rawEvent: new ClipboardEvent('copy'),
+            isCut: false,
+            pasteModel: model,
+        } as BeforeCutCopyEvent);
+        const result = createBeforeCutCopyEvent(editor, false);
 
         expect(result).toBeDefined();
     });

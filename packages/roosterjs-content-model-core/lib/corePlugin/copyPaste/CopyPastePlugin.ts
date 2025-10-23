@@ -1,6 +1,5 @@
 import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
-import { adjustImageSelectionOnSafari } from './utils/adjustImageSelectionOnSafari';
-import { createCopyRange } from './utils/createCopyRange';
+import { createBeforeCutCopyEvent } from '../../command/cutCopy/createBeforeCutCopyEvent';
 import { deleteEmptyList } from './utils/deleteEmptyList';
 import { paste } from '../../command/paste/paste';
 import {
@@ -8,7 +7,6 @@ import {
     contentModelToText,
     deleteSelection,
     extractClipboardItems,
-    moveChildNodes,
     normalizeContentModel,
     toArray,
 } from 'roosterjs-content-model-dom';
@@ -19,8 +17,6 @@ import type {
     EditorOptions,
     PluginWithState,
 } from 'roosterjs-content-model-types';
-
-const TEMP_DIV_ID = 'roosterJS_copyCutTempDiv';
 
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
@@ -96,65 +92,55 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             return;
         }
 
-        const doc = this.editor.getDocument();
-        const selection = this.editor.getDOMSelection();
+        const beforeCutCopyEvent = createBeforeCutCopyEvent(
+            this.editor,
+            isCut,
+            event as ClipboardEvent
+        );
 
-        adjustImageSelectionOnSafari(this.editor, selection);
+        if (beforeCutCopyEvent) {
+            const { clonedRoot, range, pasteModel } = beforeCutCopyEvent;
+            const doc = this.editor.getDocument();
 
-        if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
-            const pasteModel = this.editor.getContentModelCopy('disconnected');
-            const tempDiv = this.getTempDiv(this.editor.getDocument());
+            if (isClipboardEvent(event)) {
+                event.preventDefault();
+                const text = pasteModel ? contentModelToText(pasteModel) : '';
+                event.clipboardData?.setData('text/html', clonedRoot.innerHTML);
+                event.clipboardData?.setData('text/plain', text);
+            } else if (range) {
+                const doc = this.editor.getDocument();
+                addRangeToSelection(doc, range);
+            }
 
-            let newRange = createCopyRange(this.editor, pasteModel, selection, tempDiv);
+            const selection = this.editor.getDOMSelection();
 
-            if (newRange) {
-                newRange = this.editor.triggerEvent('beforeCutCopy', {
-                    clonedRoot: tempDiv,
-                    range: newRange,
-                    rawEvent: event as ClipboardEvent,
-                    isCut,
-                }).range;
-
-                if (isClipboardEvent(event)) {
-                    event.preventDefault();
-                    const text = contentModelToText(pasteModel);
-                    event.clipboardData?.setData('text/html', tempDiv.innerHTML);
-                    event.clipboardData?.setData('text/plain', text);
-                } else if (newRange) {
-                    addRangeToSelection(doc, newRange);
+            doc.defaultView?.requestAnimationFrame(() => {
+                if (!this.editor) {
+                    return;
                 }
 
-                doc.defaultView?.requestAnimationFrame(() => {
-                    if (!this.editor) {
-                        return;
-                    }
+                this.editor.setDOMSelection(selection);
+                this.editor.focus();
 
-                    cleanUpAndRestoreSelection(tempDiv);
-                    this.editor.setDOMSelection(selection);
-                    this.editor.focus();
-
-                    if (isCut) {
-                        this.editor.formatContentModel(
-                            (model, context) => {
-                                if (
-                                    deleteSelection(model, [deleteEmptyList], context)
-                                        .deleteResult == 'range'
-                                ) {
-                                    normalizeContentModel(model);
-                                }
-
-                                return true;
-                            },
-                            {
-                                apiName: 'cut',
-                                changeSource: ChangeSource.Cut,
+                if (isCut) {
+                    this.editor.formatContentModel(
+                        (model, context) => {
+                            if (
+                                deleteSelection(model, [deleteEmptyList], context).deleteResult ==
+                                'range'
+                            ) {
+                                normalizeContentModel(model);
                             }
-                        );
-                    }
-                });
-            } else {
-                cleanUpAndRestoreSelection(tempDiv);
-            }
+
+                            return true;
+                        },
+                        {
+                            apiName: 'cut',
+                            changeSource: ChangeSource.Cut,
+                        }
+                    );
+                }
+            });
         }
     }
 
@@ -177,43 +163,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             }
         }
     };
-
-    private getTempDiv(doc: Document) {
-        if (!this.state.tempDiv) {
-            const tempDiv = doc.createElement('div');
-
-            tempDiv.style.width = '600px';
-            tempDiv.style.height = '1px';
-            tempDiv.style.overflow = 'hidden';
-            tempDiv.style.position = 'fixed';
-            tempDiv.style.top = '0';
-            tempDiv.style.left = '0';
-            tempDiv.style.userSelect = 'text';
-            tempDiv.contentEditable = 'true';
-            doc.body.appendChild(tempDiv);
-
-            this.state.tempDiv = tempDiv;
-        }
-
-        const div = this.state.tempDiv;
-
-        div.style.backgroundColor = 'white';
-        div.style.color = 'black';
-        div.childNodes.forEach(node => div.removeChild(node));
-
-        div.style.display = '';
-        div.id = TEMP_DIV_ID;
-        div.focus();
-
-        return div;
-    }
-}
-
-function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
-    tempDiv.style.backgroundColor = '';
-    tempDiv.style.color = '';
-    tempDiv.style.display = 'none';
-    moveChildNodes(tempDiv);
 }
 
 function isClipboardEvent(event: Event): event is ClipboardEvent {
