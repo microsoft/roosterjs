@@ -100,7 +100,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
         if (beforeCutCopyEvent) {
             const { clonedRoot, range, pasteModel } = beforeCutCopyEvent;
-            const doc = this.editor.getDocument();
 
             if (isClipboardEvent(event)) {
                 event.preventDefault();
@@ -114,33 +113,31 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
 
             const selection = this.editor.getDOMSelection();
 
-            doc.defaultView?.requestAnimationFrame(() => {
-                if (!this.editor) {
-                    return;
-                }
+            if (!this.editor) {
+                return;
+            }
 
-                this.editor.setDOMSelection(selection);
-                this.editor.focus();
+            this.editor.setDOMSelection(selection);
+            this.editor.focus();
 
-                if (isCut) {
-                    this.editor.formatContentModel(
-                        (model, context) => {
-                            if (
-                                deleteSelection(model, [deleteEmptyList], context).deleteResult ==
-                                'range'
-                            ) {
-                                normalizeContentModel(model);
-                            }
-
-                            return true;
-                        },
-                        {
-                            apiName: 'cut',
-                            changeSource: ChangeSource.Cut,
+            if (isCut) {
+                this.editor.formatContentModel(
+                    (model, context) => {
+                        if (
+                            deleteSelection(model, [deleteEmptyList], context).deleteResult ==
+                            'range'
+                        ) {
+                            normalizeContentModel(model);
                         }
-                    );
-                }
-            });
+
+                        return true;
+                    },
+                    {
+                        apiName: 'cut',
+                        changeSource: ChangeSource.Cut,
+                    }
+                );
+            }
         }
     }
 

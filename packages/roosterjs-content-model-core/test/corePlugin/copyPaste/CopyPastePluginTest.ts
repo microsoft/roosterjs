@@ -100,11 +100,6 @@ describe('CopyPastePlugin |', () => {
         mockedDocument = {
             createRange: () => document.createRange(),
             createDocumentFragment: () => document.createDocumentFragment(),
-            defaultView: {
-                requestAnimationFrame: (func: Function) => {
-                    func();
-                },
-            },
             createElement: () => div,
         } as any;
 
