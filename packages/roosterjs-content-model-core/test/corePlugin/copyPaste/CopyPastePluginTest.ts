@@ -373,7 +373,6 @@ describe('CopyPastePlugin |', () => {
 
         describe('withCustomCopyCutEnabled |', () => {
             beforeEach(() => {
-                editor.isExperimentalFeatureEnabled = () => true;
                 plugin.initialize(editor);
             });
 

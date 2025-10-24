@@ -27,7 +27,7 @@ describe('handleEnterOnParagraph', () => {
             },
         };
 
-        handleEnterOnParagraph(context);
+        handleEnterOnParagraph([])(context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -57,7 +57,7 @@ describe('handleEnterOnParagraph', () => {
             },
         };
 
-        handleEnterOnParagraph(context);
+        handleEnterOnParagraph([])(context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -122,7 +122,7 @@ describe('handleEnterOnParagraph', () => {
             },
         };
 
-        handleEnterOnParagraph(context);
+        handleEnterOnParagraph([])(context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',

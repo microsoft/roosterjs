@@ -93,12 +93,9 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                 stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
                     const parent = tr.parentElement;
-                    const parentTag = parent?.tagName;
+                    const isInTableSection = parent && getIsInTableSection(parent);
 
-                    if (
-                        parent &&
-                        (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
-                    ) {
+                    if (isInTableSection) {
                         // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
                         parseFormat(
                             parent,
@@ -197,10 +194,21 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                                 for (
                                     let colSpan = 1;
-                                    colSpan <= td.colSpan;
+                                    colSpan <= (td.colSpan == 0 ? 1 : td.colSpan);
                                     colSpan++, targetCol++
                                 ) {
-                                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                                    for (
+                                        let rowSpan = 1;
+                                        // RowSpan of 0 means it should span to the end of the table
+                                        // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td#rowspan
+                                        rowSpan <=
+                                        (td.rowSpan == 0
+                                            ? isInTableSection
+                                                ? translateRowSpanZero(parent, td)
+                                                : 1
+                                            : td.rowSpan);
+                                        rowSpan++
+                                    ) {
                                         const hasTd = colSpan == 1 && rowSpan == 1;
                                         const cell = createTableCell(
                                             colSpan > 1,
@@ -281,6 +289,26 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         }
     );
 };
+
+function translateRowSpanZero(parent: HTMLTableSectionElement, td: HTMLTableCellElement) {
+    const amountOfRows = parent.rows.length;
+
+    let tdIndex = -1;
+    for (let i = 0; i < parent.rows.length; i++) {
+        const row = parent.rows[i];
+        for (let j = 0; j < row.cells.length; j++) {
+            if (row.cells[j] === td) {
+                tdIndex = i;
+                break;
+            }
+        }
+        if (tdIndex !== -1) {
+            break;
+        }
+    }
+
+    return amountOfRows - tdIndex;
+}
 
 function calcSizes(positions: (number | undefined)[]): number[] {
     const result: number[] = [];
@@ -367,4 +395,12 @@ function shouldRecalculateTableSize(table: HTMLTableElement, context: DomToModel
         default:
             return false;
     }
+}
+
+function getIsInTableSection(element: HTMLElement): element is HTMLTableSectionElement {
+    return (
+        isElementOfType(element, 'tbody') ||
+        isElementOfType(element, 'thead') ||
+        isElementOfType(element, 'tfoot')
+    );
 }
