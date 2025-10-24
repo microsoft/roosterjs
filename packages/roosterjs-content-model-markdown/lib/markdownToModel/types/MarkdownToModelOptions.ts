@@ -15,4 +15,10 @@ export interface MarkdownToModelOptions {
      * @default 'merge'
      */
     emptyLine?: 'preserve' | 'remove' | 'merge';
+
+    /**
+     * Specify the direction of the converted markdown text
+     * @default 'ltr'
+     */
+    direction?: 'ltr' | 'rtl' | undefined;
 }

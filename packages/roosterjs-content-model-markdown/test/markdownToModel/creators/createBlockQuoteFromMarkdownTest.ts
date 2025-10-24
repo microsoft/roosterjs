@@ -1,6 +1,7 @@
 import { ContentModelFormatContainer } from 'roosterjs-content-model-types';
 import { createBlockQuoteFromMarkdown } from '../../../lib/markdownToModel/creators/createBlockQuoteFromMarkdown';
 import { createFormatContainer, createParagraph, createText } from 'roosterjs-content-model-dom';
+import { MarkdownToModelOptions } from '../../../lib/markdownToModel/types/MarkdownToModelOptions';
 
 const DEFAULT_BLOCKQUOTE = {
     borderLeft: '3px solid rgb(200, 200, 200)',
@@ -16,10 +17,16 @@ describe('createBlockQuoteFromMarkdown', () => {
     function runTest(
         text: string,
         blockquote: ContentModelFormatContainer | undefined,
-        expectedBlockquote: ContentModelFormatContainer
+        expectedBlockquote: ContentModelFormatContainer,
+        isRTL?: boolean
     ) {
+        const options: MarkdownToModelOptions = isRTL
+            ? {
+                  direction: 'rtl',
+              }
+            : {};
         // Act
-        const result = createBlockQuoteFromMarkdown(text, blockquote);
+        const result = createBlockQuoteFromMarkdown(text, options, blockquote);
         expect(result).toEqual(expectedBlockquote);
     }
 
@@ -63,5 +70,24 @@ describe('createBlockQuoteFromMarkdown', () => {
         paragraph.segments.push(text);
         blockquote.blocks.push(paragraph);
         runTest('># text', undefined, blockquote);
+    });
+
+    it('should return blockquote with heading - RTL', () => {
+        const blockquote = createFormatContainer('blockquote', DEFAULT_BLOCKQUOTE);
+        const paragraph = createParagraph();
+        paragraph.format.direction = 'rtl';
+        blockquote.format.direction = 'rtl';
+
+        const text = createText('text');
+        paragraph.decorator = {
+            tagName: 'h1',
+            format: {
+                fontSize: '2em',
+                fontWeight: 'bold',
+            },
+        };
+        paragraph.segments.push(text);
+        blockquote.blocks.push(paragraph);
+        runTest('># text', undefined, blockquote, true /* isRTL */);
     });
 });

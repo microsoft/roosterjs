@@ -44,7 +44,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
-    private customCopyCutEnabled: boolean = false;
 
     /**
      * Construct a new instance of CopyPastePlugin
@@ -82,7 +81,6 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                 beforeDispatch: e => this.onCutCopy(e, true /*isCut*/),
             },
         });
-        this.customCopyCutEnabled = editor.isExperimentalFeatureEnabled('CustomCopyCut');
     }
 
     /**
@@ -160,7 +158,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                     isCut,
                 }).range;
 
-                if (this.customCopyCutEnabled && isClipboardEvent(event)) {
+                if (isClipboardEvent(event)) {
                     event.preventDefault();
                     const text = contentModelToText(pasteModel);
                     event.clipboardData?.setData('text/html', tempDiv.innerHTML);
@@ -235,10 +233,7 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             tempDiv.style.left = '0';
             tempDiv.style.userSelect = 'text';
             tempDiv.contentEditable = 'true';
-
-            if (!this.customCopyCutEnabled) {
-                doc.body.appendChild(tempDiv);
-            }
+            doc.body.appendChild(tempDiv);
 
             this.state.tempDiv = tempDiv;
         }

@@ -1,11 +1,17 @@
 import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createImage, createParagraph, createText } from 'roosterjs-content-model-dom';
 import { createParagraphFromMarkdown } from '../../../lib/markdownToModel/creators/createParagraphFromMarkdown';
+import { MarkdownToModelOptions } from '../../../lib/markdownToModel/types/MarkdownToModelOptions';
 
 describe('createParagraphFromMarkdown', () => {
-    function runTest(text: string, expectedContentModel: ContentModelParagraph) {
+    function runTest(text: string, expectedContentModel: ContentModelParagraph, isRTL?: boolean) {
+        const options: MarkdownToModelOptions = isRTL
+            ? {
+                  direction: 'rtl',
+              }
+            : {};
         // Act
-        const result = createParagraphFromMarkdown(text);
+        const result = createParagraphFromMarkdown(text, options);
 
         // Assert
         expect(result).toEqual(expectedContentModel);
@@ -239,5 +245,27 @@ describe('createParagraphFromMarkdown', () => {
             },
         };
         runTest('# [link](https://www.example.com)', paragraph);
+    });
+
+    it('should have heading 1 with link - rtl', () => {
+        const paragraph = createParagraph();
+        paragraph.format.direction = 'rtl';
+        const link = createText('link');
+        link.link = {
+            dataset: {},
+            format: {
+                href: 'https://www.example.com',
+                underline: true,
+            },
+        };
+        paragraph.segments.push(link);
+        paragraph.decorator = {
+            tagName: 'h1',
+            format: {
+                fontSize: '2em',
+                fontWeight: 'bold',
+            },
+        };
+        runTest('# [link](https://www.example.com)', paragraph, true /* isRTL */);
     });
 });

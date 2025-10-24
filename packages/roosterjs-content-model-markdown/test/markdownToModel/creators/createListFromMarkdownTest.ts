@@ -1,5 +1,6 @@
 import { ContentModelListItem } from 'roosterjs-content-model-types';
 import { createListFromMarkdown } from '../../../lib/markdownToModel/creators/createListFromMarkdown';
+import { MarkdownToModelOptions } from '../../../lib/markdownToModel/types/MarkdownToModelOptions';
 import {
     createListItem,
     createListLevel,
@@ -11,10 +12,16 @@ describe('createListFromMarkdown', () => {
     function runTest(
         text: string,
         patternName: 'OL' | 'UL',
-        expectedBlockGroup: ContentModelListItem
+        expectedBlockGroup: ContentModelListItem,
+        isRTL?: boolean
     ) {
+        const options: MarkdownToModelOptions = isRTL
+            ? {
+                  direction: 'rtl',
+              }
+            : {};
         // Act
-        const result = createListFromMarkdown(text, patternName);
+        const result = createListFromMarkdown(text, patternName, options);
 
         // Assert
         expect(result.blocks).toEqual(expectedBlockGroup.blocks);
@@ -132,5 +139,23 @@ describe('createListFromMarkdown', () => {
         };
         listItem.blocks.push(paragraph);
         runTest('1. # text', 'OL', listItem);
+    });
+
+    it('should return list item for OL - RTL', () => {
+        const listItem = createListItem([createListLevel('OL', { direction: 'rtl' })]);
+        const paragraph = createParagraph();
+        paragraph.format.direction = 'rtl';
+        listItem.format.direction = 'rtl';
+        const text = createText('text');
+        paragraph.segments.push(text);
+        paragraph.decorator = {
+            tagName: 'h1',
+            format: {
+                fontSize: '2em',
+                fontWeight: 'bold',
+            },
+        };
+        listItem.blocks.push(paragraph);
+        runTest('1. # text', 'OL', listItem, true /* isRTL */);
     });
 });

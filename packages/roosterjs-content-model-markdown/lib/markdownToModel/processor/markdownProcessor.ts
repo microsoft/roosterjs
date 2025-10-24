@@ -95,11 +95,11 @@ function addMarkdownBlockToModel(
             isMarkdownTable(markdownContext.tableLines[1]) &&
             markdownContext.tableLines.length > 1
         ) {
-            const tableModel = createTableFromMarkdown(markdownContext.tableLines);
+            const tableModel = createTableFromMarkdown(markdownContext.tableLines, options);
             model.blocks.push(tableModel);
         } else {
             for (const line of markdownContext.tableLines) {
-                const paragraph = createParagraphFromMarkdown(line);
+                const paragraph = createParagraphFromMarkdown(line, options);
                 model.blocks.push(paragraph);
             }
         }
@@ -163,7 +163,7 @@ function addMarkdownBlockToModel(
 
     switch (blockType) {
         case 'Paragraph':
-            const paragraph = createParagraphFromMarkdown(markdown);
+            const paragraph = createParagraphFromMarkdown(markdown, options);
             model.blocks.push(paragraph);
             break;
         case 'Divider':
@@ -174,6 +174,7 @@ function addMarkdownBlockToModel(
             const blockGroup = createBlockGroupFromMarkdown(
                 markdown,
                 patternName,
+                options,
                 markdownContext.lastQuote
             );
             if (!markdownContext.lastQuote) {

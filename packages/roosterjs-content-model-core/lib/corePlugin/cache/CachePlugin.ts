@@ -28,8 +28,6 @@ class CachePlugin implements PluginWithState<CachePluginState> {
         this.state = {
             domIndexer: new DomIndexerImpl(
                 option.experimentalFeatures &&
-                    option.experimentalFeatures.indexOf('PersistCache') >= 0,
-                option.experimentalFeatures &&
                     option.experimentalFeatures.indexOf(
                         'KeepSelectionMarkerWhenEnteringTextNode'
                     ) >= 0
