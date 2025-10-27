@@ -17,7 +17,7 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('pruneUnselectedModel', () => {
-    it('handles empty document by removing all blocks', () => {
+    it('handles empty document by removing all blocks ', () => {
         const group = createContentModelDocument();
         pruneUnselectedModel(group);
 
