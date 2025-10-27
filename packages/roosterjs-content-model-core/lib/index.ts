@@ -9,4 +9,4 @@ export { redo } from './command/redo/redo';
 export { paste } from './command/paste/paste';
 
 //Editor copy helper
-export { triggerBeforeCutCopyEvent } from './command/cutCopy/triggerBeforeCutCopyEvent';
+export { getContentForCopy, CopyContent } from './command/cutCopy/getContentForCopy';

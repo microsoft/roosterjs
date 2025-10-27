@@ -1,4 +1,4 @@
-import { adjustSelectionForCopyCut } from '../../../../lib/corePlugin/copyPaste/utils/adjustSelectionForCopyCut';
+import { adjustSelectionForCopyCut } from '../../../lib/command/cutCopy/adjustSelectionForCopyCut';
 import {
     createContentModelDocument,
     createParagraph,

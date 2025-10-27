@@ -1,22 +1,26 @@
-import { adjustImageSelectionOnSafari } from '../../corePlugin/copyPaste/utils/adjustImageSelectionOnSafari';
-import { adjustSelectionForCopyCut } from '../../corePlugin/copyPaste/utils/adjustSelectionForCopyCut';
+import { adjustImageSelectionOnSafari } from './adjustImageSelectionOnSafari';
+import { adjustSelectionForCopyCut } from './adjustSelectionForCopyCut';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
-import { preprocessTable } from '../../corePlugin/copyPaste/utils/preprocessTable';
-import { pruneUnselectedModel } from '../../corePlugin/copyPaste/utils/pruneUnselectedModel';
-import type {
-    BeforeCutCopyEvent,
-    DOMSelection,
-    IEditor,
-    OnNodeCreated,
-} from 'roosterjs-content-model-types';
+import { preprocessTable } from './preprocessTable';
+import { pruneUnselectedModel } from './pruneUnselectedModel';
+import type { DOMSelection, IEditor, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     contentModelToDom,
+    contentModelToText,
     createModelToDomContext,
     isElementOfType,
     isNodeOfType,
     iterateSelections,
     wrap,
 } from 'roosterjs-content-model-dom';
+
+/**
+ * The html and text content for the copy action
+ */
+export interface CopyContent {
+    htmlContent: HTMLDivElement;
+    textContent: string;
+}
 
 /**
  * @internal
@@ -33,17 +37,17 @@ export const onNodeCreated: OnNodeCreated = (modelElement, node): void => {
 };
 
 /**
- * Trigger the "beforeCutCopy" event
+ * Get the content for the copy event
  * @param editor The editor object
- * @param isCut If the event to be created is cut. @default false
- * @param event an optional parameter for when the clipboard event needs to be trigger
+ * @param isCut if the event cut the content.
+ * @param event the clipboard event that triggered the copy/cut
  * @returns
  */
-export function triggerBeforeCutCopyEvent(
+export function getContentForCopy(
     editor: IEditor,
-    isCut: boolean = false,
-    event?: ClipboardEvent
-): BeforeCutCopyEvent | null {
+    isCut: boolean,
+    event: ClipboardEvent
+): CopyContent | null {
     const selection = editor.getDOMSelection();
     adjustImageSelectionOnSafari(editor, selection);
     if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
@@ -70,16 +74,20 @@ export function triggerBeforeCutCopyEvent(
 
         const selectionForCopy = contentModelToDom(doc, tempDiv, pasteModel, context);
         const newRange = selectionForCopy ? domSelectionToRange(doc, selectionForCopy) : null;
+        if (newRange) {
+            const { clonedRoot } = editor.triggerEvent('beforeCutCopy', {
+                clonedRoot: tempDiv,
+                range: newRange,
+                rawEvent: event,
+                isCut,
+                pasteModel,
+            });
 
-        return newRange
-            ? editor.triggerEvent('beforeCutCopy', {
-                  clonedRoot: tempDiv,
-                  range: newRange,
-                  rawEvent: event || new ClipboardEvent(isCut ? 'cut' : 'copy'),
-                  isCut,
-                  pasteModel,
-              })
-            : null;
+            return {
+                htmlContent: clonedRoot,
+                textContent: contentModelToText(pasteModel),
+            };
+        }
     }
     return null;
 }

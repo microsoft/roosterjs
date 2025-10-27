@@ -1,4 +1,4 @@
-import { preprocessTable } from '../../../../lib/corePlugin/copyPaste/utils/preprocessTable';
+import { preprocessTable } from '../../../lib/command/cutCopy/preprocessTable';
 import {
     createTable,
     createTableCell,

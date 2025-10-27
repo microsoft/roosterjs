@@ -1,10 +1,8 @@
-import { addRangeToSelection } from '../../coreApi/setDOMSelection/addRangeToSelection';
 import { deleteEmptyList } from './utils/deleteEmptyList';
+import { getContentForCopy } from '../../command/cutCopy/getContentForCopy';
 import { paste } from '../../command/paste/paste';
-import { triggerBeforeCutCopyEvent } from '../../command/cutCopy/triggerBeforeCutCopyEvent';
 import {
     ChangeSource,
-    contentModelToText,
     deleteSelection,
     extractClipboardItems,
     normalizeContentModel,
@@ -92,23 +90,15 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
             return;
         }
 
-        const beforeCutCopyEvent = triggerBeforeCutCopyEvent(
-            this.editor,
-            isCut,
-            event as ClipboardEvent
-        );
+        const beforeCutCopyEvent = getContentForCopy(this.editor, isCut, event as ClipboardEvent);
 
         if (beforeCutCopyEvent) {
-            const { clonedRoot, range, pasteModel } = beforeCutCopyEvent;
+            const { htmlContent, textContent } = beforeCutCopyEvent;
 
             if (isClipboardEvent(event)) {
                 event.preventDefault();
-                const text = pasteModel ? contentModelToText(pasteModel) : '';
-                event.clipboardData?.setData('text/html', clonedRoot.innerHTML);
-                event.clipboardData?.setData('text/plain', text);
-            } else if (range) {
-                const doc = this.editor.getDocument();
-                addRangeToSelection(doc, range);
+                event.clipboardData?.setData('text/html', htmlContent.innerHTML);
+                event.clipboardData?.setData('text/plain', textContent);
             }
 
             if (isCut) {

@@ -1,4 +1,4 @@
-import { triggerBeforeCutCopyEvent } from '../../../lib/command/cutCopy/triggerBeforeCutCopyEvent';
+import { getContentForCopy } from '../../../lib/command/cutCopy/getContentForCopy';
 import {
     BeforeCutCopyEvent,
     ContentModelDocument,
@@ -21,7 +21,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('triggerBeforeCutCopyEvent', () => {
+describe('getContentForCopy', () => {
     let editor: IEditor;
     let mockDocument: Document;
     let triggerEventSpy: jasmine.Spy;
@@ -82,7 +82,7 @@ describe('triggerBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
 
         expect(result).toBeDefined();
         div.remove();
@@ -129,7 +129,7 @@ describe('triggerBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
 
         expect(result).toBeDefined();
         div.remove();
@@ -154,7 +154,7 @@ describe('triggerBeforeCutCopyEvent', () => {
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
 
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
         expect(result).toBeNull();
     });
 
@@ -175,7 +175,7 @@ describe('triggerBeforeCutCopyEvent', () => {
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         spyOn(editor, 'getContentModelCopy').and.returnValue(model);
 
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
         expect(result).toBeDefined();
     });
 
@@ -228,7 +228,7 @@ describe('triggerBeforeCutCopyEvent', () => {
             pasteModel: model,
         } as BeforeCutCopyEvent);
 
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
         expect(result).toBeDefined();
         div.remove();
     });
@@ -293,7 +293,7 @@ describe('triggerBeforeCutCopyEvent', () => {
             isCut: false,
             pasteModel: model,
         } as BeforeCutCopyEvent);
-        const result = triggerBeforeCutCopyEvent(editor, false);
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
 
         expect(result).toBeDefined();
         div.remove();

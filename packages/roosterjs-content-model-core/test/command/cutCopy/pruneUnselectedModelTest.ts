@@ -1,4 +1,4 @@
-import { pruneUnselectedModel } from '../../../../lib/corePlugin/copyPaste/utils/pruneUnselectedModel';
+import { pruneUnselectedModel } from '../../../lib/command/cutCopy/pruneUnselectedModel';
 import {
     createBr,
     createContentModelDocument,
