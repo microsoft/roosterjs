@@ -86,8 +86,6 @@ describe('directionFormatHandler.apply', () => {
         const table = document.createElement('table');
         format.direction = 'rtl';
         directionFormatHandler.apply(format, table, context);
-        expect(table.outerHTML).toBe(
-            '<table style="direction: rtl; justify-self: flex-end;"></table>'
-        );
+        expect(table.outerHTML).toBe('<table style="direction: rtl; margin-left: auto;"></table>');
     });
 });

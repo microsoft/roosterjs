@@ -19,7 +19,8 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         }
 
         if (format.direction == 'rtl' && isElementOfType(element, 'table')) {
-            element.style.justifySelf = 'flex-end';
+            element.style.marginLeft = 'auto';
+            element.style.marginRight = '';
         }
     },
 };
