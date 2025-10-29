@@ -88,4 +88,12 @@ describe('directionFormatHandler.apply', () => {
         directionFormatHandler.apply(format, table, context);
         expect(table.outerHTML).toBe('<table style="direction: rtl; margin-left: auto;"></table>');
     });
+
+    it('RTL on table do not overlay alignment', () => {
+        const table = document.createElement('table');
+        table.style.marginRight = 'auto';
+        format.direction = 'rtl';
+        directionFormatHandler.apply(format, table, context);
+        expect(table.outerHTML).toBe('<table style="margin-right: auto; direction: rtl;"></table>');
+    });
 });

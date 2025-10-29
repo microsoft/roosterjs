@@ -18,7 +18,12 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             element.style.direction = format.direction;
         }
 
-        if (format.direction == 'rtl' && isElementOfType(element, 'table')) {
+        if (
+            format.direction == 'rtl' &&
+            isElementOfType(element, 'table') &&
+            !element.style.marginLeft &&
+            !element.style.marginRight
+        ) {
             element.style.marginLeft = 'auto';
             element.style.marginRight = '';
         }
