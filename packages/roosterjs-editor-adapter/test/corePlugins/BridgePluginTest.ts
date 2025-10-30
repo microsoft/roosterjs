@@ -608,10 +608,7 @@ describe('BridgePlugin', () => {
             },
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
-        const createDarkColorHandlerSpy = spyOn(
-            DarkColorHandler,
-            'createDarkColorHandler'
-        ).and.returnValue(mockedDarkColorHandler);
+        spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkColorHandler);
 
         plugin.initialize(mockedInnerEditor);
 
@@ -714,10 +711,7 @@ describe('BridgePlugin', () => {
             },
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
-        const createDarkColorHandlerSpy = spyOn(
-            DarkColorHandler,
-            'createDarkColorHandler'
-        ).and.returnValue(mockedDarkColorHandler);
+        spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkColorHandler);
 
         plugin.initialize(mockedInnerEditor);
 
@@ -815,10 +809,7 @@ describe('BridgePlugin', () => {
             },
         } as any;
 
-        const createDarkColorHandlerSpy = spyOn(
-            DarkColorHandler,
-            'createDarkColorHandler'
-        ).and.returnValue('COLOR' as any);
+        spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue('COLOR' as any);
 
         plugin.initialize(mockedInnerEditor);
 
