@@ -153,17 +153,28 @@ export class BridgePlugin implements ContextMenuProvider<any> {
      * @param target Target node that triggered a ContextMenu event
      * @returns An array of context menu items, or null means no items needed
      */
-    getContextMenuItems(target: Node): any[] {
+    getContextMenuItems(target: Node, event?: Event): any[] {
         const allItems: any[] = [];
 
         this.contextMenuProviders.forEach(provider => {
-            const items = provider.getContextMenuItems(target) ?? [];
-            if (items?.length > 0) {
-                if (allItems.length > 0) {
-                    allItems.push(null);
-                }
+            if (isV9ContextMenuProvider(provider)) {
+                const items = provider.getContextMenuItems(target, event) ?? [];
+                if (items?.length > 0) {
+                    if (allItems.length > 0) {
+                        allItems.push(null);
+                    }
 
-                allItems.push(...items);
+                    allItems.push(...items);
+                }
+            } else {
+                const items = provider.getContextMenuItems(target) ?? [];
+                if (items?.length > 0) {
+                    if (allItems.length > 0) {
+                        allItems.push(null);
+                    }
+
+                    allItems.push(...items);
+                }
             }
         });
 
@@ -218,6 +229,10 @@ export class BridgePlugin implements ContextMenuProvider<any> {
             plugin.onPluginEventV9?.(newEvent);
         }
     }
+}
+
+function isV9ContextMenuProvider(provider: any): provider is ContextMenuProvider<any> {
+    return (provider?.getContextMenuItems?.length || 0) == 2;
 }
 
 /**

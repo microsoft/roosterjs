@@ -255,7 +255,7 @@ describe('BridgePlugin', () => {
             mockedPlugin2,
         ]);
 
-        spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
+        spyOn(eventConverter, 'newEventToOldEvent').and.callFake((newEvent: any) => {
             return ('NEW_' + newEvent) as any;
         });
 
@@ -277,10 +277,10 @@ describe('BridgePlugin', () => {
 
     it('onPluginEvent without exclusive handling', () => {
         const initializeSpy = jasmine.createSpy('initialize');
-        const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1').and.callFake(event => {
+        const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1').and.callFake((event: any) => {
             event.data = 'plugin1';
         });
-        const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2').and.callFake(event => {
+        const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2').and.callFake((event: any) => {
             event.data = 'plugin2';
         });
         const disposeSpy = jasmine.createSpy('dispose');
@@ -305,7 +305,7 @@ describe('BridgePlugin', () => {
             mockedPlugin2,
         ]);
 
-        spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
+        spyOn(eventConverter, 'newEventToOldEvent').and.callFake((newEvent: any) => {
             return {
                 eventType: 'old_' + newEvent.eventType,
             } as any;
@@ -390,7 +390,7 @@ describe('BridgePlugin', () => {
             mockedPlugin2,
         ]);
 
-        spyOn(eventConverter, 'newEventToOldEvent').and.callFake(newEvent => {
+        spyOn(eventConverter, 'newEventToOldEvent').and.callFake((newEvent: any) => {
             return {
                 eventType: 'old_' + newEvent.eventType,
                 eventDataCache: newEvent.eventDataCache,
@@ -532,6 +532,307 @@ describe('BridgePlugin', () => {
         plugin.dispose();
 
         expect(disposeSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('Context Menu provider with V9 providers', () => {
+        const initializeSpy = jasmine.createSpy('initialize');
+        const onPluginEventSpy1 = jasmine.createSpy('onPluginEvent1');
+        const onPluginEventSpy2 = jasmine.createSpy('onPluginEvent2');
+        const onPluginEventSpy3 = jasmine.createSpy('onPluginEvent3');
+        const disposeSpy = jasmine.createSpy('dispose');
+        const queryElementsSpy = jasmine.createSpy('queryElement').and.returnValue([]);
+
+        // V8 style context menu provider (1 argument)
+        const getContextMenuItemsSpyV8 = jasmine
+            .createSpy('getContextMenuItems V8')
+            .and.returnValue(['item1', 'item2']);
+
+        // V9 style context menu provider (2 arguments) - create function with proper length
+        const getContextMenuItemsSpyV9 = jasmine
+            .createSpy('getContextMenuItems V9')
+            .and.returnValue(['item3', 'item4']);
+        // Override length property to simulate V9 function signature
+        Object.defineProperty(getContextMenuItemsSpyV9, 'length', { value: 2 });
+
+        const mockedPluginV8 = {
+            initialize: initializeSpy,
+            onPluginEvent: onPluginEventSpy1,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpyV8,
+            getName: () => '',
+        } as any;
+
+        const mockedPluginV9 = {
+            initialize: initializeSpy,
+            onPluginEvent: onPluginEventSpy2,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpyV9,
+            getName: () => '',
+        } as any;
+
+        const mockedPluginRegular = {
+            initialize: initializeSpy,
+            onPluginEvent: onPluginEventSpy3,
+            dispose: disposeSpy,
+            getName: () => '',
+        } as any;
+
+        const mockedEditor = {
+            queryElements: queryElementsSpy,
+        } as any;
+
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin.BridgePlugin(onInitializeSpy, [
+            mockedPluginV8,
+            mockedPluginV9,
+            mockedPluginRegular,
+        ]);
+
+        const mockedZoomScale = 'ZOOM' as any;
+        const calculateZoomScaleSpy = jasmine
+            .createSpy('calculateZoomScale')
+            .and.returnValue(mockedZoomScale);
+        const mockedColorManager = 'COLOR' as any;
+        const mockedInnerEditor = {
+            getDOMHelper: () => ({
+                calculateZoomScale: calculateZoomScaleSpy,
+            }),
+            getColorManager: () => mockedColorManager,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
+        } as any;
+        const mockedDarkColorHandler = 'COLOR' as any;
+        const createDarkColorHandlerSpy = spyOn(
+            DarkColorHandler,
+            'createDarkColorHandler'
+        ).and.returnValue(mockedDarkColorHandler);
+
+        plugin.initialize(mockedInnerEditor);
+
+        expect(onInitializeSpy).toHaveBeenCalledWith({
+            customData: {},
+            experimentalFeatures: [],
+            sizeTransformer: jasmine.anything(),
+            darkColorHandler: mockedDarkColorHandler,
+            edit: 'edit',
+            contextMenuProviders: [mockedPluginV8, mockedPluginV9],
+        } as any);
+
+        const mockedNode = 'NODE' as any;
+        const mockedEvent = 'EVENT' as any;
+
+        // Test that V9 provider receives both arguments, V8 provider receives only target
+        const items = plugin.getContextMenuItems(mockedNode, mockedEvent);
+
+        expect(items).toEqual(['item1', 'item2', null, 'item3', 'item4']);
+        expect(getContextMenuItemsSpyV8).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemsSpyV9).toHaveBeenCalledWith(mockedNode, mockedEvent);
+
+        plugin.dispose();
+
+        expect(disposeSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('Context Menu provider with empty results', () => {
+        const initializeSpy = jasmine.createSpy('initialize');
+        const disposeSpy = jasmine.createSpy('dispose');
+        const queryElementsSpy = jasmine.createSpy('queryElement').and.returnValue([]);
+
+        // V8 provider returning empty array
+        const getContextMenuItemsSpyV8Empty = jasmine
+            .createSpy('getContextMenuItems V8 Empty')
+            .and.returnValue([]);
+
+        // V9 provider returning null
+        const getContextMenuItemsSpyV9Null = jasmine
+            .createSpy('getContextMenuItems V9 Null')
+            .and.returnValue(null);
+        Object.defineProperty(getContextMenuItemsSpyV9Null, 'length', { value: 2 });
+
+        // V9 provider returning items
+        const getContextMenuItemsSpyV9Items = jasmine
+            .createSpy('getContextMenuItems V9 Items')
+            .and.returnValue(['item1']);
+        Object.defineProperty(getContextMenuItemsSpyV9Items, 'length', { value: 2 });
+
+        const mockedPluginV8Empty = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpyV8Empty,
+            getName: () => '',
+        } as any;
+
+        const mockedPluginV9Null = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpyV9Null,
+            getName: () => '',
+        } as any;
+
+        const mockedPluginV9Items = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsSpyV9Items,
+            getName: () => '',
+        } as any;
+
+        const mockedEditor = {
+            queryElements: queryElementsSpy,
+        } as any;
+
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin.BridgePlugin(onInitializeSpy, [
+            mockedPluginV8Empty,
+            mockedPluginV9Null,
+            mockedPluginV9Items,
+        ]);
+
+        const mockedZoomScale = 'ZOOM' as any;
+        const calculateZoomScaleSpy = jasmine
+            .createSpy('calculateZoomScale')
+            .and.returnValue(mockedZoomScale);
+        const mockedColorManager = 'COLOR' as any;
+        const mockedInnerEditor = {
+            getDOMHelper: () => ({
+                calculateZoomScale: calculateZoomScaleSpy,
+            }),
+            getColorManager: () => mockedColorManager,
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
+        } as any;
+        const mockedDarkColorHandler = 'COLOR' as any;
+        const createDarkColorHandlerSpy = spyOn(
+            DarkColorHandler,
+            'createDarkColorHandler'
+        ).and.returnValue(mockedDarkColorHandler);
+
+        plugin.initialize(mockedInnerEditor);
+
+        const mockedNode = 'NODE' as any;
+        const mockedEvent = 'EVENT' as any;
+
+        // Only the provider with items should contribute to the result
+        const items = plugin.getContextMenuItems(mockedNode, mockedEvent);
+
+        expect(items).toEqual(['item1']);
+        expect(getContextMenuItemsSpyV8Empty).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemsSpyV9Null).toHaveBeenCalledWith(mockedNode, mockedEvent);
+        expect(getContextMenuItemsSpyV9Items).toHaveBeenCalledWith(mockedNode, mockedEvent);
+
+        plugin.dispose();
+    });
+
+    it('isV9ContextMenuProvider detection', () => {
+        const initializeSpy = jasmine.createSpy('initialize');
+        const disposeSpy = jasmine.createSpy('dispose');
+
+        // Function with 1 parameter (V8 style)
+        const getContextMenuItemsV8 = jasmine
+            .createSpy('getContextMenuItems V8')
+            .and.returnValue(['item1']);
+        Object.defineProperty(getContextMenuItemsV8, 'length', { value: 1 });
+
+        // Function with 2 parameters (V9 style)
+        const getContextMenuItemsV9 = jasmine
+            .createSpy('getContextMenuItems V9')
+            .and.returnValue(['item2']);
+        Object.defineProperty(getContextMenuItemsV9, 'length', { value: 2 });
+
+        // Function with 0 parameters
+        const getContextMenuItemsZero = jasmine
+            .createSpy('getContextMenuItems Zero')
+            .and.returnValue(['item3']);
+        Object.defineProperty(getContextMenuItemsZero, 'length', { value: 0 });
+
+        // Function with 3 parameters
+        const getContextMenuItemsThree = jasmine
+            .createSpy('getContextMenuItems Three')
+            .and.returnValue(['item4']);
+        Object.defineProperty(getContextMenuItemsThree, 'length', { value: 3 });
+
+        const mockedPluginV8 = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsV8,
+            getName: () => 'V8Plugin',
+        } as any;
+
+        const mockedPluginV9 = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsV9,
+            getName: () => 'V9Plugin',
+        } as any;
+
+        const mockedPluginZero = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsZero,
+            getName: () => 'ZeroPlugin',
+        } as any;
+
+        const mockedPluginThree = {
+            initialize: initializeSpy,
+            dispose: disposeSpy,
+            getContextMenuItems: getContextMenuItemsThree,
+            getName: () => 'ThreePlugin',
+        } as any;
+
+        const mockedEditor = {} as any;
+        const onInitializeSpy = jasmine.createSpy('onInitialize').and.returnValue(mockedEditor);
+        const plugin = new BridgePlugin.BridgePlugin(onInitializeSpy, [
+            mockedPluginV8,
+            mockedPluginV9,
+            mockedPluginZero,
+            mockedPluginThree,
+        ]);
+
+        const mockedInnerEditor = {
+            getDOMHelper: () => ({
+                calculateZoomScale: () => 1,
+            }),
+            getColorManager: () => 'COLOR',
+            getEnvironment: () => {
+                return {
+                    domToModelSettings: {
+                        customized: {},
+                    },
+                };
+            },
+        } as any;
+
+        const createDarkColorHandlerSpy = spyOn(
+            DarkColorHandler,
+            'createDarkColorHandler'
+        ).and.returnValue('COLOR' as any);
+
+        plugin.initialize(mockedInnerEditor);
+
+        const mockedNode = 'NODE' as any;
+        const mockedEvent = 'EVENT' as any;
+
+        const items = plugin.getContextMenuItems(mockedNode, mockedEvent);
+
+        // V8 plugins should be called with only target, V9 plugin should be called with both target and event
+        expect(getContextMenuItemsV8).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemsV9).toHaveBeenCalledWith(mockedNode, mockedEvent);
+        expect(getContextMenuItemsZero).toHaveBeenCalledWith(mockedNode);
+        expect(getContextMenuItemsThree).toHaveBeenCalledWith(mockedNode);
+
+        // Only V9 plugin (length === 2) should receive the event parameter
+        expect(items).toEqual(['item1', null, 'item2', null, 'item3', null, 'item4']);
+
+        plugin.dispose();
     });
 
     it('MixedPlugin', () => {
