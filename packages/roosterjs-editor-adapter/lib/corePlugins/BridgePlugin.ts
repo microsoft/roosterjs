@@ -232,7 +232,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
 }
 
 function isV9ContextMenuProvider(provider: any): provider is ContextMenuProvider<any> {
-    return (provider?.getContextMenuItems?.length || 0) == 2;
+    return (provider?.getContextMenuItems?.length || 0) == 2 && isMixedPlugin(provider);
 }
 
 /**

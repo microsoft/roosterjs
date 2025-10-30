@@ -568,6 +568,7 @@ describe('BridgePlugin', () => {
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsSpyV9,
             getName: () => '',
+            initializeV9: jasmine.createSpy('initializeV9'),
         } as any;
 
         const mockedPluginRegular = {
@@ -672,6 +673,7 @@ describe('BridgePlugin', () => {
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsSpyV9Null,
             getName: () => '',
+            initializeV9: jasmine.createSpy('initializeV9'),
         } as any;
 
         const mockedPluginV9Items = {
@@ -679,6 +681,7 @@ describe('BridgePlugin', () => {
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsSpyV9Items,
             getName: () => '',
+            initializeV9: jasmine.createSpy('initializeV9'),
         } as any;
 
         const mockedEditor = {
@@ -772,6 +775,7 @@ describe('BridgePlugin', () => {
             dispose: disposeSpy,
             getContextMenuItems: getContextMenuItemsV9,
             getName: () => 'V9Plugin',
+            initializeV9: jasmine.createSpy('initializeV9'),
         } as any;
 
         const mockedPluginZero = {
