@@ -13,7 +13,7 @@ export interface HighlightHelper {
      */
     dispose(): void;
 
-    /*
+    /**
      * Add ranges to be highlighted
      */
     addRanges(ranges: Range[]): void;
