@@ -1,4 +1,4 @@
-import { getDOMInsertPointRect } from 'roosterjs-content-model-dom';
+import { getDOMInsertPointRect, scrollRectIntoView } from 'roosterjs-content-model-dom';
 import type { EditorCore, ImageSelection, RangeSelection } from 'roosterjs-content-model-types';
 
 /**
@@ -26,14 +26,6 @@ export function scrollCaretIntoView(core: EditorCore, selection: RangeSelection 
     const scrollContainer = core.domEvent.scrollContainer;
 
     if (rect && visibleRect) {
-        if (rect.bottom > visibleRect.bottom) {
-            const zoomScale = core.domHelper.calculateZoomScale();
-
-            scrollContainer.scrollTop += (rect.bottom - visibleRect.bottom) / zoomScale;
-        } else if (rect.top < visibleRect.top) {
-            const zoomScale = core.domHelper.calculateZoomScale();
-
-            scrollContainer.scrollTop += (rect.top - visibleRect.top) / zoomScale;
-        }
+        scrollRectIntoView(scrollContainer, visibleRect, core.domHelper, rect);
     }
 }

@@ -497,3 +497,4 @@ export { SelectionChangedEvent } from './event/SelectionChangedEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
 export { PointerDownEvent, PointerUpEvent } from './event/PointerEvent';
+export { FindResultChangedEvent } from './event/FindResultChangedEvent';

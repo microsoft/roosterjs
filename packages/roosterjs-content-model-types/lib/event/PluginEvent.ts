@@ -1,3 +1,4 @@
+import type { FindResultChangedEvent } from './FindResultChangedEvent';
 import type { BeforeAddUndoSnapshotEvent } from './BeforeAddUndoSnapshotEvent';
 import type { BeforeCutCopyEvent } from './BeforeCutCopyEvent';
 import type { BeforeDisposeEvent } from './BeforeDisposeEvent';
@@ -57,4 +58,5 @@ export type PluginEvent =
     | ZoomChangedEvent
     | PointerDownEvent
     | PointerUpEvent
-    | DoubleClickEvent;
+    | DoubleClickEvent
+    | FindResultChangedEvent;

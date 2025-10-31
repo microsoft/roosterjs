@@ -1,4 +1,11 @@
-import { getColor, isNodeOfType, parseValueWithUnit, toArray } from 'roosterjs-content-model-dom';
+import {
+    getColor,
+    getRangesByText,
+    isBlockElement,
+    isNodeOfType,
+    parseValueWithUnit,
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelSegmentFormat,
     DarkColorHandler,
@@ -65,6 +72,25 @@ class DOMHelperImpl implements DOMHelper {
             closestElement != this.contentDiv
             ? closestElement
             : null;
+    }
+
+    /**
+     * Find the closest block element ancestor from the given node within current editing scope
+     * @param startFrom The node to start the search from
+     * @returns The closest block element ancestor
+     */
+    findClosestBlockElement(startFrom: Node): HTMLElement {
+        let node: Node | null = startFrom;
+
+        while (node && this.isNodeInEditor(node)) {
+            if (isNodeOfType(node, 'ELEMENT_NODE') && isBlockElement(node)) {
+                return node;
+            }
+
+            node = node.parentElement;
+        }
+
+        return this.contentDiv;
     }
 
     hasFocus(): boolean {
@@ -147,6 +173,18 @@ class DOMHelperImpl implements DOMHelper {
                   underline: style.textDecoration?.includes('underline'),
               }
             : {};
+    }
+
+    /**
+     * Get text ranges by searching for a specific text, with options to match case and whole word.
+     * This will only search within editable elements.
+     * @param text The text to search for
+     * @param matchCase Whether to match case
+     * @param wholeWord Whether to match whole word
+     * @returns An array of Ranges that match the search criteria
+     */
+    getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[] {
+        return getRangesByText(this.contentDiv, text, matchCase, wholeWord, true /*editableOnly*/);
     }
 }
 

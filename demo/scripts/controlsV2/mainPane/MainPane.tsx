@@ -71,6 +71,9 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
     TouchPlugin,
+    FindReplacePlugin,
+    FindReplaceContext,
+    createFindReplaceContext,
 } from 'roosterjs-content-model-plugins';
 import DOMPurify = require('dompurify');
 
@@ -110,6 +113,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private markdownPanePlugin: MarkdownPanePlugin;
+    private findReplacePlugin: FindReplacePlugin;
+    private findReplaceContext: FindReplaceContext;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -148,6 +153,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.markdownPanePlugin = new MarkdownPanePlugin();
+
+        this.findReplaceContext = createFindReplaceContext();
+        this.findReplacePlugin = new FindReplacePlugin(this.findReplaceContext);
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -287,6 +295,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
     }
 
+    getFindReplaceContext(): FindReplaceContext {
+        return this.findReplaceContext;
+    }
+
     private renderTitleBar() {
         return <TitleBar className={styles.noGrow} />;
     }
@@ -368,6 +380,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             ...this.getToggleablePlugins(imageEditPlugin),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
+            this.findReplacePlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
