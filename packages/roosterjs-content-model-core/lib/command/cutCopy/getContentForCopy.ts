@@ -3,7 +3,12 @@ import { adjustSelectionForCopyCut } from './adjustSelectionForCopyCut';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
 import { preprocessTable } from './preprocessTable';
 import { pruneUnselectedModel } from './pruneUnselectedModel';
-import type { DOMSelection, IEditor, OnNodeCreated } from 'roosterjs-content-model-types';
+import type {
+    DOMSelection,
+    IEditor,
+    OnNodeCreated,
+    TextAndHtmlContentForCopy,
+} from 'roosterjs-content-model-types';
 import {
     contentModelToDom,
     contentModelToText,
@@ -13,14 +18,6 @@ import {
     iterateSelections,
     wrap,
 } from 'roosterjs-content-model-dom';
-
-/**
- * The html and text content for the copy action
- */
-export interface CopyContent {
-    htmlContent: HTMLDivElement;
-    textContent: string;
-}
 
 /**
  * @internal
@@ -47,7 +44,7 @@ export function getContentForCopy(
     editor: IEditor,
     isCut: boolean,
     event: ClipboardEvent
-): CopyContent | null {
+): TextAndHtmlContentForCopy | null {
     const selection = editor.getDOMSelection();
     adjustImageSelectionOnSafari(editor, selection);
     if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
@@ -80,7 +77,6 @@ export function getContentForCopy(
                 range: newRange,
                 rawEvent: event,
                 isCut,
-                pasteModel,
             });
 
             return {

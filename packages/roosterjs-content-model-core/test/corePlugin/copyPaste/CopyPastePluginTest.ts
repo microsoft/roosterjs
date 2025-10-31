@@ -177,7 +177,17 @@ describe('CopyPastePlugin |', () => {
             getContentModelCopySpy.and.callThrough();
             triggerPluginEventSpy.and.callThrough();
 
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(getContentModelCopySpy).not.toHaveBeenCalled();
@@ -200,7 +210,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -243,7 +263,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -282,7 +312,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -326,7 +366,17 @@ describe('CopyPastePlugin |', () => {
             editor.isDarkMode = () => true;
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -554,7 +604,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -588,7 +648,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -634,7 +704,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -678,7 +758,17 @@ describe('CopyPastePlugin |', () => {
             triggerPluginEventSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
@@ -888,6 +978,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -917,6 +1008,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -947,6 +1039,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -977,6 +1070,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1007,6 +1101,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1037,6 +1132,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();

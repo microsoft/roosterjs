@@ -86,20 +86,17 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        if (!this.editor) {
+        if (!this.editor || !isClipboardEvent(event)) {
             return;
         }
 
-        const beforeCutCopyEvent = getContentForCopy(this.editor, isCut, event as ClipboardEvent);
+        const textAndHtmlContent = getContentForCopy(this.editor, isCut, event);
 
-        if (beforeCutCopyEvent) {
-            const { htmlContent, textContent } = beforeCutCopyEvent;
-
-            if (isClipboardEvent(event)) {
-                event.preventDefault();
-                event.clipboardData?.setData('text/html', htmlContent.innerHTML);
-                event.clipboardData?.setData('text/plain', textContent);
-            }
+        if (textAndHtmlContent) {
+            const { htmlContent, textContent } = textAndHtmlContent;
+            event.preventDefault();
+            event.clipboardData?.setData('text/html', htmlContent.innerHTML);
+            event.clipboardData?.setData('text/plain', textContent);
 
             if (isCut) {
                 this.editor.formatContentModel(

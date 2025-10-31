@@ -1,5 +1,4 @@
 import type { BasePluginDomEvent } from './BasePluginEvent';
-import type { ContentModelDocument } from '../contentModel/blockGroup/ContentModelDocument';
 
 /**
  * Provides a chance for plugin to change the content before it is copied from editor.
@@ -19,9 +18,4 @@ export interface BeforeCutCopyEvent extends BasePluginDomEvent<'beforeCutCopy', 
      * Whether this is a cut event
      */
     isCut: boolean;
-
-    /**
-     * The model adjusted by beforeCutCopy event
-     */
-    pasteModel?: ContentModelDocument;
 }
