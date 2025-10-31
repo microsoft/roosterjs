@@ -231,7 +231,13 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 }
 
+/**
+ * Check if a provider is a V9 context menu provider
+ * @param provider The provider to check
+ * @returns True if the provider is a V9 context menu provider, false otherwise
+ */
 function isV9ContextMenuProvider(provider: any): provider is ContextMenuProvider<any> {
+    // v9 getContextMenuItems has 2 parameters signature, use this check to confirm that the provider is v9
     return (provider?.getContextMenuItems?.length || 0) == 2 && isMixedPlugin(provider);
 }
 
