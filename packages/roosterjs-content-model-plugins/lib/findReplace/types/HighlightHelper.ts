@@ -15,6 +15,7 @@ export interface HighlightHelper {
 
     /**
      * Add ranges to be highlighted
+     * @param ranges The ranges to be highlighted
      */
     addRanges(ranges: Range[]): void;
 
