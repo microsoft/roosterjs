@@ -1,3 +1,4 @@
+import * as getRangesByText from 'roosterjs-content-model-dom/lib/domUtils/getRangesByText';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
 import { DOMHelper } from 'roosterjs-content-model-types';
 
@@ -561,6 +562,108 @@ describe('DOMHelperImpl', () => {
                 superOrSubScriptSequence: 'super',
                 underline: true,
             });
+        });
+    });
+
+    describe('DOMHelperImpl.findClosestBlockElement', () => {
+        let contentDiv: HTMLElement;
+        let domHelper: DOMHelper;
+
+        beforeEach(() => {
+            contentDiv = document.createElement('div');
+            contentDiv.innerHTML = `
+            <div id="block1">
+                <span id="inline1">
+                    <em id="inline2">text</em>
+                </span>
+                <p id="block2">
+                    <strong id="inline3">paragraph text</strong>
+                </p>
+            </div>
+            <section id="block3">
+                <span id="inline4">section content</span>
+            </section>
+        `;
+            document.body.appendChild(contentDiv);
+            domHelper = createDOMHelper(contentDiv);
+        });
+
+        afterEach(() => {
+            document.body.removeChild(contentDiv);
+        });
+
+        it('should return the closest block element when starting from inline element', () => {
+            const inlineElement = contentDiv.querySelector('#inline1') as HTMLElement;
+            const result = domHelper.findClosestBlockElement(inlineElement);
+
+            expect(result.id).toBe('block1');
+        });
+
+        it('should return the same element when starting from block element', () => {
+            const blockElement = contentDiv.querySelector('#block2') as HTMLElement;
+            const result = domHelper.findClosestBlockElement(blockElement);
+
+            expect(result.id).toBe('block2');
+        });
+
+        it('should return closest block element when starting from text node', () => {
+            const textNode = contentDiv.querySelector('#inline2')?.firstChild as Text;
+            const result = domHelper.findClosestBlockElement(textNode);
+
+            expect(result.id).toBe('block1');
+        });
+
+        it('should return closest block element when starting from deeply nested inline element', () => {
+            const deepInline = contentDiv.querySelector('#inline2') as HTMLElement;
+            const result = domHelper.findClosestBlockElement(deepInline);
+
+            expect(result.id).toBe('block1');
+        });
+
+        it('should return contentDiv when no block element is found', () => {
+            const orphanSpan = document.createElement('span');
+            orphanSpan.textContent = 'orphan';
+
+            const result = domHelper.findClosestBlockElement(orphanSpan);
+
+            expect(result).toBe(contentDiv);
+        });
+
+        it('should return contentDiv when starting from node outside editor', () => {
+            const outsideElement = document.createElement('div');
+            document.body.appendChild(outsideElement);
+
+            const result = domHelper.findClosestBlockElement(outsideElement);
+
+            expect(result).toBe(contentDiv);
+
+            document.body.removeChild(outsideElement);
+        });
+
+        it('should traverse up through multiple inline elements to find block', () => {
+            const nestedInline = contentDiv.querySelector('#inline3') as HTMLElement;
+            const result = domHelper.findClosestBlockElement(nestedInline);
+
+            expect(result.id).toBe('block2');
+        });
+    });
+
+    describe('DOMHelperImpl.getRangesByText', () => {
+        let contentDiv: HTMLElement;
+        let domHelper: DOMHelper;
+        let getRangesByTextSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            contentDiv = document.createElement('div');
+            domHelper = createDOMHelper(contentDiv);
+            getRangesByTextSpy = spyOn(getRangesByText, 'getRangesByText');
+        });
+
+        it('call getRangesByText', () => {
+            const ranges = domHelper.getRangesByText('test', false, true);
+
+            expect(getRangesByTextSpy).toHaveBeenCalledWith(contentDiv, 'test', false, true, true);
+            expect(ranges).toBe(getRangesByTextSpy.calls.mostRecent().returnValue);
         });
     });
 });

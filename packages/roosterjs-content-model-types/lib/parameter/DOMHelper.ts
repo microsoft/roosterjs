@@ -81,6 +81,13 @@ export interface DOMHelper {
     findClosestElementAncestor(node: Node, selector?: string): HTMLElement | null;
 
     /**
+     * Find the closest block element ancestor from the given node within current editing scope
+     * @param startFrom The node to start the search from
+     * @returns The closest block element ancestor
+     */
+    findClosestBlockElement(startFrom: Node): HTMLElement;
+
+    /**
      * Check if the editor has focus now
      * @returns True if the editor has focus, otherwise false
      */
@@ -110,4 +117,14 @@ export interface DOMHelper {
         isInDarkMode?: boolean,
         darkColorHandler?: DarkColorHandler
     ): ContentModelSegmentFormat;
+
+    /**
+     * Get text ranges by searching for a specific text, with options to match case and whole word.
+     * This will only search within editable elements.
+     * @param text The text to search for
+     * @param matchCase Whether to match case
+     * @param wholeWord Whether to match whole word
+     * @returns An array of Ranges that match the search criteria
+     */
+    getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[];
 }
