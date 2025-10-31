@@ -79,7 +79,6 @@ describe('getContentForCopy', () => {
             range,
             rawEvent: new ClipboardEvent('copy'),
             isCut: false,
-            pasteModel: model,
         } as BeforeCutCopyEvent);
 
         const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
@@ -126,7 +125,6 @@ describe('getContentForCopy', () => {
             range,
             rawEvent: new ClipboardEvent('copy'),
             isCut: false,
-            pasteModel: model,
         } as BeforeCutCopyEvent);
 
         const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
@@ -225,7 +223,6 @@ describe('getContentForCopy', () => {
             range,
             rawEvent: new ClipboardEvent('copy'),
             isCut: false,
-            pasteModel: model,
         } as BeforeCutCopyEvent);
 
         const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
@@ -291,7 +288,6 @@ describe('getContentForCopy', () => {
             range,
             rawEvent: new ClipboardEvent('copy'),
             isCut: false,
-            pasteModel: model,
         } as BeforeCutCopyEvent);
         const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
 
