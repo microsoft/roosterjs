@@ -1,4 +1,4 @@
-import { adjustImageSelectionOnSafari } from '../../../../lib/corePlugin/copyPaste/utils/adjustImageSelectionOnSafari';
+import { adjustImageSelectionOnSafari } from '../../../lib/command/cutCopy/adjustImageSelectionOnSafari';
 import type { DOMSelection, IEditor } from 'roosterjs-content-model-types';
 
 describe('adjustImageSelectionOnSafari', () => {
