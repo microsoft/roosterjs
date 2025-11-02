@@ -78,6 +78,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#createmodelfromhtml" class="tsd-kind-icon">create<wbr>Model<wbr>From<wbr>Html</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#exportcontent" class="tsd-kind-icon">export<wbr>Content</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#getcontentforcopy" class="tsd-kind-icon">get<wbr>Content<wbr>For<wbr>Copy</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#paste" class="tsd-kind-icon">paste</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#redo" class="tsd-kind-icon">redo</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_core.html#undo" class="tsd-kind-icon">undo</a></li>
@@ -98,7 +99,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/createModelFromHtml/createModelFromHtml.ts#L19">roosterjs-content-model-core/lib/command/createModelFromHtml/createModelFromHtml.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/createModelFromHtml/createModelFromHtml.ts#L19">roosterjs-content-model-core/lib/command/createModelFromHtml/createModelFromHtml.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -148,7 +149,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L21">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L21">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:21</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -182,7 +183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L29">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L29">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -211,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L37">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L37">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -245,7 +246,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L49">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/exportContent/exportContent.ts#L49">roosterjs-content-model-core/lib/command/exportContent/exportContent.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -273,6 +274,49 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="getcontentforcopy" class="tsd-anchor"></a>
+					<h3>get<wbr>Content<wbr>For<wbr>Copy</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Content<wbr>For<wbr>Copy<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, isCut<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClipboardEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.textandhtmlcontentforcopy.html" class="tsd-signature-type" data-tsd-kind="Interface">TextAndHtmlContentForCopy</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/cutCopy/getContentForCopy.ts#L43">roosterjs-content-model-core/lib/command/cutCopy/getContentForCopy.ts:43</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the content for the copy event</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>editor: <a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The editor object</p>
+									</div>
+								</li>
+								<li>
+									<h5>isCut: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>if the event cut the content.</p>
+									</div>
+								</li>
+								<li>
+									<h5>event: <span class="tsd-signature-type">ClipboardEvent</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the clipboard event that triggered the copy/cut</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.textandhtmlcontentforcopy.html" class="tsd-signature-type" data-tsd-kind="Interface">TextAndHtmlContentForCopy</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="paste" class="tsd-anchor"></a>
 					<h3>paste</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
@@ -282,7 +326,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/paste/paste.ts#L20">roosterjs-content-model-core/lib/command/paste/paste.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/paste/paste.ts#L20">roosterjs-content-model-core/lib/command/paste/paste.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,7 +369,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/redo/redo.ts#L7">roosterjs-content-model-core/lib/command/redo/redo.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/redo/redo.ts#L7">roosterjs-content-model-core/lib/command/redo/redo.ts:7</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -356,7 +400,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/97251ed/packages/roosterjs-content-model-core/lib/command/undo/undo.ts#L7">roosterjs-content-model-core/lib/command/undo/undo.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e8c9251/packages/roosterjs-content-model-core/lib/command/undo/undo.ts#L7">roosterjs-content-model-core/lib/command/undo/undo.ts:7</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -427,6 +471,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_content_model_core.html#exportcontent" class="tsd-kind-icon">export<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_content_model_core.html#getcontentforcopy" class="tsd-kind-icon">get<wbr>Content<wbr>For<wbr>Copy</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_content_model_core.html#paste" class="tsd-kind-icon">paste</a>
