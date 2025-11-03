@@ -5,6 +5,9 @@ import {
     IEditor,
     ContentModelFormatter,
     FormatContentModelOptions,
+    ContentModelEntity,
+    DeletedEntity,
+    ContentModelImage,
 } from 'roosterjs-content-model-types';
 
 describe('toggleBold', () => {
@@ -379,9 +382,9 @@ describe('toggleBold', () => {
                         (callback: ContentModelFormatter, options: FormatContentModelOptions) => {
                             expect(options.apiName).toBe('toggleBold');
                             const context = {
-                                newEntities: [],
-                                deletedEntities: [],
-                                newImages: [],
+                                newEntities: [] as ContentModelEntity[],
+                                deletedEntities: [] as DeletedEntity[],
+                                newImages: [] as ContentModelImage[],
                             };
                             formatResult = callback(model, context);
                             announceData = (context as any).announceData;
@@ -516,9 +519,9 @@ describe('toggleBold', () => {
                     (callback: ContentModelFormatter, options: FormatContentModelOptions) => {
                         expect(options.apiName).toBe('toggleBold');
                         const context = {
-                            newEntities: [],
-                            deletedEntities: [],
-                            newImages: [],
+                            newEntities: [] as ContentModelEntity[],
+                            deletedEntities: [] as DeletedEntity[],
+                            newImages: [] as ContentModelImage[],
                         };
                         formatResult = callback(model, context);
                         announceData = (context as any).announceData;
@@ -563,9 +566,9 @@ describe('toggleBold', () => {
                     (callback: ContentModelFormatter, options: FormatContentModelOptions) => {
                         expect(options.apiName).toBe('toggleBold');
                         const context = {
-                            newEntities: [],
-                            deletedEntities: [],
-                            newImages: [],
+                            newEntities: [] as ContentModelEntity[],
+                            deletedEntities: [] as DeletedEntity[],
+                            newImages: [] as ContentModelImage[],
                         };
                         formatResult = callback(model, context);
                         announceData = (context as any).announceData;
