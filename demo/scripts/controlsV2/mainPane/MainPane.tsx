@@ -570,6 +570,12 @@ const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceListItemBullet: 'Auto corrected Bullet',
     announceListItemNumbering: 'Auto corrected {0}',
     announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
+    announceBoldOn: 'Bold On',
+    announceBoldOff: 'Bold Off',
+    announceItalicOn: 'Italic On',
+    announceItalicOff: 'Italic Off',
+    announceUnderlineOn: 'Underline On',
+    announceUnderlineOff: 'Underline Off',
 };
 
 function getAnnouncingString(key: KnownAnnounceStrings) {

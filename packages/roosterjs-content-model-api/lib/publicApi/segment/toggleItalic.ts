@@ -2,10 +2,20 @@ import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContent
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
+ * Options for toggle italic API
+ */
+export interface ToggleItalicOptions {
+    /**
+     * Whether to announce the format change
+     */
+    announceFormatChange?: boolean;
+}
+
+/**
  * Toggle italic style
  * @param editor The editor to operate on
  */
-export function toggleItalic(editor: IEditor) {
+export function toggleItalic(editor: IEditor, options?: ToggleItalicOptions) {
     editor.focus();
 
     formatSegmentWithContentModel(
@@ -14,6 +24,14 @@ export function toggleItalic(editor: IEditor) {
         (format, isTurningOn) => {
             format.italic = !!isTurningOn;
         },
-        format => !!format.italic
+        format => !!format.italic,
+        undefined /* includingFormatHolder */,
+        (_model, isTurningOff, context) => {
+            if (options?.announceFormatChange) {
+                context.announceData = {
+                    defaultStrings: isTurningOff ? 'announceItalicOff' : 'announceItalicOn',
+                };
+            }
+        }
     );
 }

@@ -2,10 +2,20 @@ import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContent
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
+ * Options for toggle underline API
+ */
+export interface ToggleUnderlineOptions {
+    /**
+     * Whether to announce the format change
+     */
+    announceFormatChange?: boolean;
+}
+
+/**
  * Toggle underline style
  * @param editor The editor to operate on
  */
-export function toggleUnderline(editor: IEditor) {
+export function toggleUnderline(editor: IEditor, options?: ToggleUnderlineOptions) {
     editor.focus();
 
     formatSegmentWithContentModel(
@@ -19,6 +29,13 @@ export function toggleUnderline(editor: IEditor) {
             }
         },
         (format, segment) => !!format.underline || !!segment?.link?.format?.underline,
-        false /*includingFormatHolder*/
+        false /*includingFormatHolder*/,
+        (_model, isTurningOff, context) => {
+            if (options?.announceFormatChange) {
+                context.announceData = {
+                    defaultStrings: isTurningOff ? 'announceUnderlineOff' : 'announceUnderlineOn',
+                };
+            }
+        }
     );
 }
