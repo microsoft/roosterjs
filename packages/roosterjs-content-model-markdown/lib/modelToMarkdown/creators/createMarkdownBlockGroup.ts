@@ -32,14 +32,30 @@ export function createMarkdownBlockGroup(
         case 'FormatContainer':
             if (blockGroup.tagName == 'blockquote') {
                 markdownString += createMarkdownBlockQuote(blockGroup, newLinePattern, listCounter);
-                break;
-            }
-        default:
-            const { blocks } = blockGroup;
-            for (const block of blocks) {
-                markdownString += createMarkdownBlock(block, newLinePattern, listCounter);
+            } else {
+                markdownString += createDefaultMarkdownString(
+                    blockGroup,
+                    newLinePattern,
+                    listCounter
+                );
             }
             break;
+        default:
+            markdownString += createDefaultMarkdownString(blockGroup, newLinePattern, listCounter);
+            break;
+    }
+    return markdownString;
+}
+
+function createDefaultMarkdownString(
+    blockGroup: ContentModelBlockGroup,
+    newLinePattern: MarkdownLineBreaks,
+    listCounter: ListCounter
+): string {
+    let markdownString = '';
+    const { blocks } = blockGroup;
+    for (const block of blocks) {
+        markdownString += createMarkdownBlock(block, newLinePattern, listCounter);
     }
     return markdownString;
 }
