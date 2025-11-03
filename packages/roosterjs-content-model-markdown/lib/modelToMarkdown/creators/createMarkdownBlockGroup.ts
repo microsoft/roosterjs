@@ -55,7 +55,11 @@ function createDefaultMarkdownString(
     let markdownString = '';
     const { blocks } = blockGroup;
     for (const block of blocks) {
-        markdownString += createMarkdownBlock(block, newLinePattern, listCounter);
+        markdownString += createMarkdownBlock(block, newLinePattern, listCounter, {
+            table: newLinePattern.newLine,
+            paragraph: newLinePattern.lineBreak,
+            divider: newLinePattern.lineBreak,
+        });
     }
     return markdownString;
 }
