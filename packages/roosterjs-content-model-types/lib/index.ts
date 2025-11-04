@@ -429,6 +429,7 @@ export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRec
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
+export { AnnouncingOption } from './parameter/AnnouncingOption';
 export {
     TrustedHTMLHandler,
     DOMCreator,

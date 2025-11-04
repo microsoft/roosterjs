@@ -1,21 +1,11 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import type { IEditor } from 'roosterjs-content-model-types';
-
-/**
- * Options for toggle underline API
- */
-export interface ToggleUnderlineOptions {
-    /**
-     * Whether to announce the format change
-     */
-    announceFormatChange?: boolean;
-}
+import type { AnnouncingOption, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle underline style
  * @param editor The editor to operate on
  */
-export function toggleUnderline(editor: IEditor, options?: ToggleUnderlineOptions) {
+export function toggleUnderline(editor: IEditor, options?: AnnouncingOption) {
     editor.focus();
 
     formatSegmentWithContentModel(
