@@ -1,4 +1,3 @@
-import { Coordinates } from 'roosterjs-editor-types';
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
 import { getIsSelectingOrUnselecting, retrieveStringFromParsedTable } from './tableSelectionUtils';
@@ -788,17 +787,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const selection = this.editor?.getDOMSelection();
 
         if (selection?.type == 'table') {
-            const prevLastCo: Coordinates = {
-                x: selection.lastColumn,
-                y: selection.lastRow,
-            };
-
-            const prevFirstCo: Coordinates = {
-                x: selection.firstColumn,
-                y: selection.firstRow,
-            };
-
-            return getIsSelectingOrUnselecting(prevFirstCo, prevLastCo, firstCo, lastCo);
+            return getIsSelectingOrUnselecting(selection, firstCo, lastCo);
         }
         return null;
     }

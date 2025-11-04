@@ -15,6 +15,7 @@ import {
     IEditor,
     PluginWithState,
     SelectionPluginState,
+    TableSelectionInfo,
 } from 'roosterjs-content-model-types';
 
 const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
@@ -3605,7 +3606,7 @@ describe('SelectionPlugin table selection announcements', () => {
             const td1 = document.createElement('td');
             td1.innerText = 'Cell 1';
 
-            const tableSelectionInfo = {
+            const tableSelectionInfo: TableSelectionInfo = {
                 parsedTable: [[td1]],
                 firstCo: { row: 0, col: 0 },
                 lastCo: undefined, // No lastCo initially

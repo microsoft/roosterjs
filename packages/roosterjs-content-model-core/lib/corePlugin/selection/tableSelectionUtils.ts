@@ -1,5 +1,8 @@
-import { Coordinates } from 'roosterjs-editor-types';
-import type { TableSelectionInfo, TableCellCoordinate } from 'roosterjs-content-model-types';
+import type {
+    TableSelectionInfo,
+    TableCellCoordinate,
+    TableSelection,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -35,13 +38,18 @@ export function retrieveStringFromParsedTable(tsInfo: TableSelectionInfo): strin
  * @returns 'selecting' if expanding selection, 'unselecting' if contracting, or null if no change
  */
 export function getIsSelectingOrUnselecting(
-    prevFirstCo: Coordinates,
-    prevLastCo: Coordinates,
+    prevTableSelection: TableSelection,
     firstCo: TableCellCoordinate,
     lastCo: TableCellCoordinate
 ): 'selecting' | 'unselecting' | null {
-    const prevRowSpan = Math.abs(prevLastCo.y - prevFirstCo.y) + 1;
-    const prevColSpan = Math.abs(prevLastCo.x - prevFirstCo.x) + 1;
+    const {
+        firstRow: prevFirstRow,
+        lastRow: prevLastRow,
+        firstColumn: prevFirstColumn,
+        lastColumn: prevLastColumn,
+    } = prevTableSelection;
+    const prevRowSpan = Math.abs(prevLastRow - prevFirstRow) + 1;
+    const prevColSpan = Math.abs(prevLastColumn - prevFirstColumn) + 1;
     const prevArea = prevRowSpan * prevColSpan;
 
     const newRowSpan = Math.abs(lastCo.row - firstCo.row) + 1;
@@ -55,10 +63,10 @@ export function getIsSelectingOrUnselecting(
     }
 
     if (
-        prevFirstCo.x !== firstCo.col ||
-        prevFirstCo.y !== firstCo.row ||
-        prevLastCo.x !== lastCo.col ||
-        prevLastCo.y !== lastCo.row
+        prevFirstColumn !== firstCo.col ||
+        prevFirstRow !== firstCo.row ||
+        prevLastColumn !== lastCo.col ||
+        prevLastRow !== lastCo.row
     ) {
         return 'selecting';
     }
