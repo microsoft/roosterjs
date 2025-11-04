@@ -31,8 +31,7 @@ export function retrieveStringFromParsedTable(tsInfo: TableSelectionInfo): strin
 /**
  * @internal
  * Determines whether the table selection is expanding (selecting more) or contracting (selecting less)
- * @param prevFirstCo Previous first coordinate of the selection (with x, y properties)
- * @param prevLastCo Previous last coordinate of the selection (with x, y properties)
+ * @param prevTableSelection Previous table selection object containing firstRow, lastRow, firstColumn, and lastColumn properties
  * @param firstCo Current first coordinate of the selection (with row, col properties)
  * @param lastCo Current last coordinate of the selection (with row, col properties)
  * @returns 'selecting' if expanding selection, 'unselecting' if contracting, or null if no change
