@@ -50,7 +50,22 @@ export type KnownAnnounceStrings =
     /**
      * String announced when underline formatting is removed
      */
-    | 'announceUnderlineOff';
+    | 'announceUnderlineOff'
+
+    /**
+     * String announced when text is selected in the editor
+     * @example
+     * {0}, selected
+     * Where {0} is the selected text content
+     */
+    | 'selected'
+
+    /**
+     * String announced when text is unselected in the editor
+     * @example
+     * {0}, unselected
+     */
+    | 'unselected';
 
 /**
  * Represents data, that can be used to announce text to screen reader.

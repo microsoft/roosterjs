@@ -1,5 +1,7 @@
+import { Coordinates } from 'roosterjs-editor-types';
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import { getIsSelectingOrUnselecting, retrieveStringFromParsedTable } from './tableSelectionUtils';
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
@@ -754,6 +756,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (oldCo || firstCo.row != lastCo.row || firstCo.col != lastCo.col) {
                 this.state.tableSelection.lastCo = lastCo;
 
+                const action = this.getIsSelectionOrCollapsing(firstCo, lastCo);
+
                 this.setDOMSelection(
                     {
                         type: 'table',
@@ -766,11 +770,37 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     { table, firstCo, lastCo, parsedTable, startNode }
                 );
 
+                if (action) {
+                    this.editor.announce({
+                        defaultStrings: action === 'unselecting' ? 'unselected' : 'selected',
+                        formatStrings: [retrieveStringFromParsedTable(this.state.tableSelection)],
+                    });
+                }
+
                 return true;
             }
         }
 
         return false;
+    }
+
+    private getIsSelectionOrCollapsing(firstCo: TableCellCoordinate, lastCo: TableCellCoordinate) {
+        const selection = this.editor?.getDOMSelection();
+
+        if (selection?.type == 'table') {
+            const prevLastCo: Coordinates = {
+                x: selection.lastColumn,
+                y: selection.lastRow,
+            };
+
+            const prevFirstCo: Coordinates = {
+                x: selection.firstColumn,
+                y: selection.firstRow,
+            };
+
+            return getIsSelectingOrUnselecting(prevFirstCo, prevLastCo, firstCo, lastCo);
+        }
+        return null;
     }
 
     private setDOMSelection(
