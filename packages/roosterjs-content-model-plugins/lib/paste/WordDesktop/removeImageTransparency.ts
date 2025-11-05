@@ -3,9 +3,9 @@ import type { OnNodeCreated } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Remove transparency from images in the content model
- * @param _model
- * @param node
+ * Replaces fully transparent pixels in images with opaque white pixels.
+ * @param _model Unused. Present for interface compatibility.
+ * @param node The DOM node to process. If it is an <img> element, its fully transparent pixels will be replaced with opaque white.
  */
 export const removeImageTransparencyFromNode: OnNodeCreated = (_model, node): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
