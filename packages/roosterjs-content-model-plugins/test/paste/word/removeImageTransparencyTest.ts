@@ -34,8 +34,7 @@ describe('removeImageTransparencyFromNode', () => {
             ]),
             width: 2,
             height: 2,
-            colorSpace: 'srgb',
-        };
+        } as ImageData;
 
         mockCtx = ({
             drawImage: jasmine.createSpy('drawImage'),
@@ -90,7 +89,7 @@ describe('removeImageTransparencyFromNode', () => {
             expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', {});
             expect(mockCanvas.width).toBe(100);
             expect(mockCanvas.height).toBe(100);
-            expect(mockCtx.drawImage).toHaveBeenCalledWith(img, 0, 0, 100, 100);
+            expect(mockCtx.drawImage).toHaveBeenCalledWith(img, 0, 0, 100, 100, 0, 0, 100, 100);
             expect(mockCtx.getImageData).toHaveBeenCalledWith(0, 0, 100, 100);
             expect(mockCtx.putImageData).toHaveBeenCalled();
             expect(img.src).toBe('data:image/png;base64,mock');
