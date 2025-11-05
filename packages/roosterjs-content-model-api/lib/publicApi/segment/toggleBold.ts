@@ -1,12 +1,12 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { isBold } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { AnnouncingOption, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * Toggle bold style
  * @param editor The editor to operate on
  */
-export function toggleBold(editor: IEditor) {
+export function toggleBold(editor: IEditor, options?: AnnouncingOption) {
     editor.focus();
 
     formatSegmentWithContentModel(
@@ -20,6 +20,14 @@ export function toggleBold(editor: IEditor) {
                 typeof format.fontWeight == 'undefined'
                     ? paragraph?.decorator?.format.fontWeight
                     : format.fontWeight
-            )
+            ),
+        undefined /* includeFormatHolder */,
+        (_model, isTurningOff, context) => {
+            if (options?.announceFormatChange) {
+                context.announceData = {
+                    defaultStrings: isTurningOff ? 'announceBoldOff' : 'announceBoldOn',
+                };
+            }
+        }
     );
 }
