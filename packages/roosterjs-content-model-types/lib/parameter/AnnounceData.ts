@@ -61,7 +61,7 @@ export type KnownAnnounceStrings =
     | 'selected'
 
     /**
-     * String announced when text is unselected in the editor
+     * String announced when text is unselected in the editor.
      * @example
      * {0}, unselected
      */
