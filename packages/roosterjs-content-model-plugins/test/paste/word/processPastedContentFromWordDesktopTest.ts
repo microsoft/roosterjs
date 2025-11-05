@@ -27,7 +27,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event);
+        processPastedContentFromWordDesktop(event, {});
 
         const model = domToContentModel(
             fragment,
@@ -4933,6 +4933,56 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 true,
                 htmlBefore
             );
+        });
+    });
+
+    describe('Image transparency removal tests', () => {
+        it('should call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is enabled', () => {
+            // Arrange
+            const fragment = document.createDocumentFragment();
+            const event = createBeforePasteEventMock(fragment);
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
+
+            const options = { removeTransparencyFromWordDesktopImages: true };
+
+            // Act
+            processPastedContentFromWordDesktop(event, options);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should not call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is disabled', () => {
+            // Arrange
+            const fragment = document.createDocumentFragment();
+            const event = createBeforePasteEventMock(fragment);
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
+
+            const options = { removeTransparencyFromWordDesktopImages: false };
+
+            // Act
+            processPastedContentFromWordDesktop(event, options);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is not provided', () => {
+            // Arrange
+            const fragment = document.createDocumentFragment();
+            const event = createBeforePasteEventMock(fragment);
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
+
+            const options = {};
+
+            // Act
+            processPastedContentFromWordDesktop(event, options);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
         });
     });
 });

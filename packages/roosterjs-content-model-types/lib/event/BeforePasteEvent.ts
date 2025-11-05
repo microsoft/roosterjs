@@ -1,3 +1,4 @@
+import type { OnNodeCreated } from '../context/ModelToDomSettings';
 import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
@@ -67,4 +68,16 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * Whether the current clipboard contains at least a block element.
      */
     readonly containsBlockElements?: boolean;
+
+    /**
+     * A callback function to get the onNodeCreated handler
+     */
+    readonly getOnNodeCreated?: () => OnNodeCreated | undefined;
+
+    /**
+     * A function to chain additional onNodeCreated callback to the existing one
+     * @param onNodeCreated
+     * @returns
+     */
+    readonly chainOnNodeCreatedCallback?: (onNodeCreated: OnNodeCreated) => void;
 }

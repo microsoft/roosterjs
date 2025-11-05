@@ -98,6 +98,7 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 
 export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
+    private removeTransparencyFromWordDesktopImages = React.createRef<HTMLInputElement>();
     private handleTabKey = React.createRef<HTMLInputElement>();
     private handleEnterKey = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
@@ -222,12 +223,22 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     {this.renderPluginItem(
                         'paste',
                         'Paste',
-                        this.renderCheckBox(
-                            'Do not add border for Excel table',
-                            this.allowExcelNoBorderTable,
-                            this.props.state.allowExcelNoBorderTable,
-                            (state, value) => (state.allowExcelNoBorderTable = value)
-                        )
+                        <>
+                            {this.renderCheckBox(
+                                'Do not add border for Excel table',
+                                this.allowExcelNoBorderTable,
+                                this.props.state.allowExcelNoBorderTable,
+                                (state, value) => (state.allowExcelNoBorderTable = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Remove transparency from Word Desktop images',
+                                this.removeTransparencyFromWordDesktopImages,
+                                this.props.state.pastePluginOptions
+                                    .removeTransparencyFromWordDesktopImages,
+                                (state, value) =>
+                                    (state.pastePluginOptions.removeTransparencyFromWordDesktopImages = value)
+                            )}
+                        </>
                     )}
                     {this.renderPluginItem('shortcut', 'Shortcut')}
                     {this.renderPluginItem('tableEdit', 'TableEdit')}

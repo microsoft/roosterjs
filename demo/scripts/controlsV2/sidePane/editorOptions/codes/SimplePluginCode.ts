@@ -16,9 +16,35 @@ export class EditPluginCode extends SimplePluginCode {
     }
 }
 
-export class PastePluginCode extends SimplePluginCode {
-    constructor() {
-        super('PastePlugin');
+export class PastePluginCode extends CodeElement {
+    constructor(
+        private allowExcelNoBorderTable: boolean,
+        private pastePluginOptions: { removeTransparencyFromWordDesktopImages?: boolean }
+    ) {
+        super();
+    }
+
+    getCode() {
+        const parts: string[] = [];
+
+        if (this.allowExcelNoBorderTable) {
+            parts.push('true');
+        } else {
+            parts.push('false');
+        }
+
+        parts.push('undefined'); // domToModelForSanitizing parameter
+
+        const options: string[] = [];
+        if (this.pastePluginOptions.removeTransparencyFromWordDesktopImages) {
+            options.push('removeTransparencyFromWordDesktopImages: true');
+        }
+
+        if (options.length > 0) {
+            parts.push(`{ ${options.join(', ')} }`);
+        }
+
+        return `new roosterjs.PastePlugin(${parts.join(', ')})`;
     }
 }
 

@@ -22,6 +22,7 @@ import type {
     EditorPlugin,
     FormatParser,
     IEditor,
+    PastePluginOptions,
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
@@ -53,6 +54,9 @@ export class PastePlugin implements EditorPlugin {
             additionalAllowedTags: [],
             additionalDisallowedTags: [],
             attributeSanitizers: {},
+        },
+        private options: PastePluginOptions = {
+            removeTransparencyFromWordDesktopImages: false,
         }
     ) {}
 
@@ -106,7 +110,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event);
+                processPastedContentFromWordDesktop(event, this.options);
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);

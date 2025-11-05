@@ -5,6 +5,7 @@ import type {
     DomToModelOptionForSanitizing,
     PasteType,
     IEditor,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,6 +30,15 @@ export function generatePasteOptionFromPlugins(
             .processNonVisibleElements,
     };
 
+    let onNodeCreated: OnNodeCreated | undefined = undefined;
+    const chainOnNodeCreatedCallback = (newOnNodeCreated: OnNodeCreated) => {
+        const existingOnNodeCreated = onNodeCreated;
+        onNodeCreated = (model, node) => {
+            existingOnNodeCreated?.(model, node);
+            newOnNodeCreated(model, node);
+        };
+    };
+
     const event: BeforePasteEvent = {
         eventType: 'beforePaste',
         clipboardData,
@@ -39,6 +49,8 @@ export function generatePasteOptionFromPlugins(
         pasteType: pasteType,
         domToModelOption,
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
+        getOnNodeCreated: () => onNodeCreated,
+        chainOnNodeCreatedCallback,
     };
 
     return editor.triggerEvent('beforePaste', event, true /* broadcast */);

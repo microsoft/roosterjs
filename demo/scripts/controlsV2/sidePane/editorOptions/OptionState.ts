@@ -5,7 +5,11 @@ import {
     MarkdownOptions,
 } from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
-import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegmentFormat,
+    ExperimentalFeature,
+    PastePluginOptions,
+} from 'roosterjs-content-model-types';
 
 export interface BuildInPluginList {
     autoFormat: boolean;
@@ -31,6 +35,7 @@ export interface OptionState {
 
     // New plugin options
     allowExcelNoBorderTable: boolean;
+    pastePluginOptions: PastePluginOptions;
     listMenu: boolean;
     tableMenu: boolean;
     imageMenu: boolean;

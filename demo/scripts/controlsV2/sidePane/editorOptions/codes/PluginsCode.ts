@@ -39,7 +39,8 @@ export class PluginsCode extends PluginsCodeBase {
         super([
             pluginList.autoFormat && new AutoFormatCode(state.autoFormatOptions),
             pluginList.edit && new EditPluginCode(),
-            pluginList.paste && new PastePluginCode(),
+            pluginList.paste &&
+                new PastePluginCode(state.allowExcelNoBorderTable, state.pastePluginOptions),
             pluginList.tableEdit && new TableEditPluginCode(),
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),

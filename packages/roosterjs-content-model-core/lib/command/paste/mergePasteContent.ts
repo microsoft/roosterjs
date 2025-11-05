@@ -48,6 +48,7 @@ export function mergePasteContent(
         pasteType,
         clipboardData,
         containsBlockElements,
+        getOnNodeCreated,
     } = eventResult;
 
     editor.formatContentModel(
@@ -94,6 +95,7 @@ export function mergePasteContent(
             getChangeData: () => clipboardData,
             scrollCaretIntoView: true,
             apiName: 'paste',
+            onNodeCreated: getOnNodeCreated?.(),
         }
     );
 }

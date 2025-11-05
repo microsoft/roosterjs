@@ -121,6 +121,9 @@ export class OptionsPane extends React.Component<OptionPaneProps, OptionState> {
             isRtl: this.state.isRtl,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
             allowExcelNoBorderTable: this.state.allowExcelNoBorderTable,
+            pastePluginOptions: {
+                ...this.state.pastePluginOptions,
+            },
             listMenu: this.state.listMenu,
             tableMenu: this.state.tableMenu,
             imageMenu: this.state.imageMenu,

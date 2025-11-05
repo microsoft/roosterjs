@@ -519,6 +519,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         const {
             pluginList,
             allowExcelNoBorderTable,
+            pastePluginOptions,
             listMenu,
             tableMenu,
             imageMenu,
@@ -534,7 +535,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         return [
             pluginList.autoFormat && new AutoFormatPlugin(autoFormatOptions),
             pluginList.edit && new EditPlugin(editPluginOptions),
-            pluginList.paste && new PastePlugin(allowExcelNoBorderTable),
+            pluginList.paste &&
+                new PastePlugin(allowExcelNoBorderTable, undefined, pastePluginOptions),
             pluginList.shortcut && new ShortcutPlugin(),
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),

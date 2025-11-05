@@ -66,7 +66,10 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         } as any);
+        expect(result.getOnNodeCreated!()).toBeUndefined();
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(originalEvent).toEqual({
             eventType: 'beforePaste',
@@ -78,7 +81,10 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'normal',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         });
+        expect(originalEvent.getOnNodeCreated()).toBeUndefined();
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             'beforePaste',
             {
@@ -91,6 +97,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                getOnNodeCreated: jasmine.any(Function),
+                chainOnNodeCreatedCallback: jasmine.any(Function),
             },
             true
         );
@@ -132,7 +140,10 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         } as any);
+        expect(result.getOnNodeCreated!()).toBeUndefined();
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             'beforePaste',
@@ -147,6 +158,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 domToModelOption: 'OptionResult',
                 customizedMerge: mockedCustomizedMerge,
                 containsBlockElements: false,
+                getOnNodeCreated: jasmine.any(Function),
+                chainOnNodeCreatedCallback: jasmine.any(Function),
             },
             true
         );
@@ -182,7 +195,10 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         } as any);
+        expect(result.getOnNodeCreated!()).toBeUndefined();
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             'beforePaste',
@@ -196,6 +212,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                getOnNodeCreated: jasmine.any(Function),
+                chainOnNodeCreatedCallback: jasmine.any(Function),
             },
             true
         );
@@ -209,7 +227,10 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'mergeFormat',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         });
+        expect(originalEvent.getOnNodeCreated()).toBeUndefined();
     });
 
     it('PasteType=asPlainText', () => {
@@ -241,7 +262,10 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'TypeResult' as any,
             domToModelOption: 'OptionResult' as any,
             containsBlockElements: false,
+            getOnNodeCreated: jasmine.any(Function),
+            chainOnNodeCreatedCallback: jasmine.any(Function),
         });
+        expect(result.getOnNodeCreated!()).toBeUndefined();
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
     });
 });
