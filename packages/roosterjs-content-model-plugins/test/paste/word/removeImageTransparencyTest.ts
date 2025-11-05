@@ -36,13 +36,13 @@ describe('removeImageTransparencyFromNode', () => {
             height: 2,
         } as ImageData;
 
-        mockCtx = ({
+        mockCtx = {
             drawImage: jasmine.createSpy('drawImage'),
             getImageData: jasmine.createSpy('getImageData').and.returnValue(mockImageData),
             putImageData: jasmine.createSpy('putImageData'),
             fillStyle: '',
             fillRect: jasmine.createSpy('fillRect'),
-        } as any) as CanvasRenderingContext2D;
+        } as any;
 
         mockCanvas = {
             getContext: jasmine.createSpy('getContext').and.returnValue(mockCtx),
@@ -89,7 +89,7 @@ describe('removeImageTransparencyFromNode', () => {
             expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', {});
             expect(mockCanvas.width).toBe(100);
             expect(mockCanvas.height).toBe(100);
-            expect(mockCtx.drawImage).toHaveBeenCalledWith(img, 0, 0, 100, 100, 0, 0, 100, 100);
+            expect(mockCtx.drawImage as jasmine.Spy).toHaveBeenCalledWith(img, 0, 0, 100, 100);
             expect(mockCtx.getImageData).toHaveBeenCalledWith(0, 0, 100, 100);
             expect(mockCtx.putImageData).toHaveBeenCalled();
             expect(img.src).toBe('data:image/png;base64,mock');
