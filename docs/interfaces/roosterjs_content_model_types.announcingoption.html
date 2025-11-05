@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MetadataApplier | RoosterJs API Reference</title>
+	<title>AnnouncingOption | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.metadataapplier.html">MetadataApplier</a>
+					<a href="roosterjs_content_model_types.announcingoption.html">AnnouncingOption</a>
 				</li>
 			</ul>
-			<h1>Interface MetadataApplier&lt;TMetadata, TFormat&gt;</h1>
+			<h1>Interface AnnouncingOption</h1>
 		</div>
 	</div>
 </header>
@@ -69,26 +69,15 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Metadata applier interface</p>
+						<p>Options for announcing format changes</p>
 					</div>
 				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>TMetadata</h4>
-					</li>
-					<li>
-						<h4>TFormat<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_content_model_types.html#contentmodelformatbase" class="tsd-signature-type" data-tsd-kind="Type alias">ContentModelFormatBase</a></h4>
-					</li>
-				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MetadataApplier</span>
+						<span class="target">AnnouncingOption</span>
 					</li>
 				</ul>
 			</section>
@@ -99,8 +88,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.metadataapplier.html#applierfunction" class="tsd-kind-icon">applier<wbr>Function</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.metadataapplier.html#metadatadefinition" class="tsd-kind-icon">metadata<wbr>Definition</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.announcingoption.html#announceformatchange" class="tsd-kind-icon">announce<wbr>Format<wbr>Change</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,35 +97,18 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="applierfunction" class="tsd-anchor"></a>
-					<h3>applier<wbr>Function</h3>
-					<div class="tsd-signature tsd-kind-icon">applier<wbr>Function<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#applymetadata" class="tsd-signature-type" data-tsd-kind="Type alias">ApplyMetadata</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TMetadata</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TFormat</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="announceformatchange" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> announce<wbr>Format<wbr>Change</h3>
+					<div class="tsd-signature tsd-kind-icon">announce<wbr>Format<wbr>Change<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8f11c65/packages/roosterjs-content-model-types/lib/context/ModelToDomSettings.ts#L193">roosterjs-content-model-types/lib/context/ModelToDomSettings.ts:193</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8f11c65/packages/roosterjs-content-model-types/lib/parameter/AnnouncingOption.ts#L8">roosterjs-content-model-types/lib/parameter/AnnouncingOption.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The metadata applier function</p>
+							<p>Whether to announce the format change</p>
 						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="metadatadefinition" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> metadata<wbr>Definition</h3>
-					<div class="tsd-signature tsd-kind-icon">metadata<wbr>Definition<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_content_model_types.html#definition" class="tsd-signature-type" data-tsd-kind="Type alias">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TMetadata</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8f11c65/packages/roosterjs-content-model-types/lib/context/ModelToDomSettings.ts#L198">roosterjs-content-model-types/lib/context/ModelToDomSettings.ts:198</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>optional</dt>
-							<dd><p>Metadata definition, used for validate the metadata object</p>
-							</dd>
-						</dl>
 					</div>
 				</section>
 			</section>
@@ -184,14 +155,11 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="roosterjs_content_model_types.metadataapplier.html" class="tsd-kind-icon">Metadata<wbr>Applier</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_content_model_types.announcingoption.html" class="tsd-kind-icon">Announcing<wbr>Option</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.metadataapplier.html#applierfunction" class="tsd-kind-icon">applier<wbr>Function</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.metadataapplier.html#metadatadefinition" class="tsd-kind-icon">metadata<wbr>Definition</a>
+								<a href="roosterjs_content_model_types.announcingoption.html#announceformatchange" class="tsd-kind-icon">announce<wbr>Format<wbr>Change</a>
 							</li>
 						</ul>
 					</li>
