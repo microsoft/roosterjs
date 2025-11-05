@@ -27,7 +27,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event, {});
+        const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
+        processPastedContentFromWordDesktop(event, mockEditor, {});
 
         const model = domToContentModel(
             fragment,
@@ -4944,10 +4945,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
             (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
 
+            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
             const options = { removeTransparencyFromWordDesktopImages: true };
 
             // Act
-            processPastedContentFromWordDesktop(event, options);
+            processPastedContentFromWordDesktop(event, mockEditor, options);
 
             // Assert
             expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
@@ -4960,10 +4962,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
             (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
 
+            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
             const options = { removeTransparencyFromWordDesktopImages: false };
 
             // Act
-            processPastedContentFromWordDesktop(event, options);
+            processPastedContentFromWordDesktop(event, mockEditor, options);
 
             // Assert
             expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
@@ -4976,10 +4979,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
             const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
             (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
 
+            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
             const options = {};
 
             // Act
-            processPastedContentFromWordDesktop(event, options);
+            processPastedContentFromWordDesktop(event, mockEditor, options);
 
             // Assert
             expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();

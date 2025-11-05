@@ -110,7 +110,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event, this.options);
+                processPastedContentFromWordDesktop(event, this.editor, this.options);
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);

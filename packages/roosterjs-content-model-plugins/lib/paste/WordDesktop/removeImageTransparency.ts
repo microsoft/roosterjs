@@ -1,5 +1,5 @@
-import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
-import type { OnNodeCreated } from 'roosterjs-content-model-types';
+import { ChangeSource, isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+import type { IEditor, OnNodeCreated } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -7,13 +7,16 @@ import type { OnNodeCreated } from 'roosterjs-content-model-types';
  * @param _model
  * @param node
  */
-export const removeImageTransparencyFromNode: OnNodeCreated = (_model, node): void => {
+export const removeImageTransparencyFromNode: (editor: IEditor) => OnNodeCreated = editor => (
+    _model,
+    node
+): void => {
     if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'img')) {
         if (node.complete) {
-            removeImageTransparency(node);
+            removeImageTransparency(node, editor);
         } else {
             node.onload = () => {
-                removeImageTransparency(node);
+                removeImageTransparency(node, editor);
                 node.onload = null;
                 node.onerror = null;
             };
@@ -26,7 +29,7 @@ export const removeImageTransparencyFromNode: OnNodeCreated = (_model, node): vo
     }
 };
 
-const removeImageTransparency = (element: HTMLImageElement) => {
+const removeImageTransparency = (element: HTMLImageElement, editor: IEditor) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', {});
     if (ctx) {
@@ -56,5 +59,10 @@ const removeImageTransparency = (element: HTMLImageElement) => {
 
         ctx.putImageData(imageData, 0, 0);
         element.src = canvas.toDataURL('image/png');
+
+        editor.triggerEvent('contentChanged', {
+            source: ChangeSource.ImageTransparencyRemoved,
+            data: element,
+        });
     }
 };

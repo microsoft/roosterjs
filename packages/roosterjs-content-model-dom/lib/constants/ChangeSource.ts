@@ -61,4 +61,9 @@ export const ChangeSource = {
      * Content changed by auto format
      */
     AutoFormat: 'AutoFormat',
+
+    /**
+     * Content changed by image transparency removal
+     */
+    ImageTransparencyRemoved: 'ImageTransparencyRemoved',
 };

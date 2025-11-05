@@ -6,8 +6,14 @@ describe('removeImageTransparencyFromNode', () => {
     let mockCtx: CanvasRenderingContext2D;
     let mockImageData: ImageData;
     let originalCreateElement: typeof document.createElement;
+    let mockEditor: any;
 
     beforeEach(() => {
+        // Mock editor
+        mockEditor = {
+            triggerEvent: jasmine.createSpy('triggerEvent'),
+        };
+
         // Mock canvas and context
         mockImageData = {
             data: new Uint8ClampedArray([
@@ -81,8 +87,9 @@ describe('removeImageTransparencyFromNode', () => {
         Object.defineProperty(img, 'width', { value: 100, writable: true });
         Object.defineProperty(img, 'height', { value: 100, writable: true });
 
-        // Call removeImageTransparencyFromNode directly
-        removeImageTransparencyFromNode(null as any, img);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, img);
 
         // Since the image is already complete, processing should happen immediately
         setTimeout(() => {
@@ -93,6 +100,10 @@ describe('removeImageTransparencyFromNode', () => {
             expect(mockCtx.getImageData).toHaveBeenCalledWith(0, 0, 100, 100);
             expect(mockCtx.putImageData).toHaveBeenCalled();
             expect(img.src).toBe('data:image/png;base64,mock');
+            expect(mockEditor.triggerEvent).toHaveBeenCalledWith('contentChanged', {
+                source: 'ImageTransparencyRemoved',
+                data: img,
+            });
 
             // Check that only fully transparent pixels were replaced with white
             expect(mockImageData.data[0]).toBe(255); // red -> white
@@ -137,8 +148,9 @@ describe('removeImageTransparencyFromNode', () => {
         Object.defineProperty(img, 'naturalWidth', { value: 0, writable: true });
         Object.defineProperty(img, 'naturalHeight', { value: 0, writable: true });
 
-        // Call removeImageTransparencyFromNode directly
-        removeImageTransparencyFromNode(null as any, img);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, img);
 
         // Processing should not happen immediately since image is not loaded
         expect(mockCanvas.getContext).not.toHaveBeenCalled();
@@ -175,8 +187,9 @@ describe('removeImageTransparencyFromNode', () => {
         Object.defineProperty(img, 'complete', { value: false, writable: true });
         Object.defineProperty(img, 'naturalWidth', { value: 0, writable: true });
 
-        // Call removeImageTransparencyFromNode directly
-        removeImageTransparencyFromNode(null as any, img);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, img);
 
         // Simulate image error
         setTimeout(() => {
@@ -209,8 +222,9 @@ describe('removeImageTransparencyFromNode', () => {
         // Mock getContext to return null
         mockCanvas.getContext = jasmine.createSpy('getContext').and.returnValue(null);
 
-        // Call removeImageTransparencyFromNode directly
-        removeImageTransparencyFromNode(null as any, img);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, img);
 
         setTimeout(() => {
             expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', {});
@@ -238,8 +252,9 @@ describe('removeImageTransparencyFromNode', () => {
         Object.defineProperty(img, 'offsetWidth', { value: 0, writable: true });
         Object.defineProperty(img, 'offsetHeight', { value: 0, writable: true });
 
-        // Call removeImageTransparencyFromNode directly
-        removeImageTransparencyFromNode(null as any, img);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, img);
 
         setTimeout(() => {
             expect(mockCanvas.getContext).toHaveBeenCalledWith('2d', {});
@@ -252,8 +267,9 @@ describe('removeImageTransparencyFromNode', () => {
     it('should ignore non-image elements', () => {
         const div = document.createElement('div');
 
-        // Call removeImageTransparencyFromNode with a div element
-        removeImageTransparencyFromNode(null as any, div);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, div);
 
         // Should not attempt to process
         expect(mockCanvas.getContext).not.toHaveBeenCalled();
@@ -262,8 +278,9 @@ describe('removeImageTransparencyFromNode', () => {
     it('should ignore non-element nodes', () => {
         const textNode = document.createTextNode('test');
 
-        // Call removeImageTransparencyFromNode with a text node
-        removeImageTransparencyFromNode(null as any, textNode);
+        // Call removeImageTransparencyFromNode with editor and get the callback function
+        const callback = removeImageTransparencyFromNode(mockEditor);
+        callback(null as any, textNode);
 
         // Should not attempt to process
         expect(mockCanvas.getContext).not.toHaveBeenCalled();

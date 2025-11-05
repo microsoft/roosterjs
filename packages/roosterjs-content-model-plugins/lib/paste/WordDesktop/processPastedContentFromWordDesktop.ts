@@ -15,6 +15,7 @@ import type {
     DomToModelContext,
     ElementProcessor,
     FormatParser,
+    IEditor,
     PastePluginOptions,
 } from 'roosterjs-content-model-types';
 
@@ -29,6 +30,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  */
 export function processPastedContentFromWordDesktop(
     ev: BeforePasteEvent,
+    editor: IEditor,
     options?: PastePluginOptions
 ) {
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
@@ -41,7 +43,7 @@ export function processPastedContentFromWordDesktop(
     addParser(ev.domToModelOption, 'table', wordTableParser);
 
     if (options?.removeTransparencyFromWordDesktopImages) {
-        ev.chainOnNodeCreatedCallback?.(removeImageTransparencyFromNode);
+        ev.chainOnNodeCreatedCallback?.(removeImageTransparencyFromNode(editor));
     }
 }
 
