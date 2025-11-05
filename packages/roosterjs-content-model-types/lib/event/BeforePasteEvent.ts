@@ -76,8 +76,7 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
 
     /**
      * A function to chain additional onNodeCreated callback to the existing one
-     * @param onNodeCreated
-     * @returns
+     * @param onNodeCreated The callback to be chained to the existing onNodeCreated handler
      */
     readonly chainOnNodeCreatedCallback?: (onNodeCreated: OnNodeCreated) => void;
 }
