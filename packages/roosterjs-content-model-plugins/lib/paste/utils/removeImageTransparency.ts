@@ -1,8 +1,30 @@
 import { ChangeSource, isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
-import type { IEditor, OnNodeCreated } from 'roosterjs-content-model-types';
+import type {
+    BeforePasteEvent,
+    IEditor,
+    OnNodeCreated,
+    PastePluginOptions,
+} from 'roosterjs-content-model-types';
 
 /**
+ * Installs a callback to remove image transparency if the option is enabled.
+ * @param options The paste plugin options.
+ * @param ev The before paste event.
+ * @param editor The editor instance.
  * @internal
+ */
+export function setupImageTransparencyRemoval(
+    options: PastePluginOptions | undefined,
+    ev: BeforePasteEvent,
+    editor: IEditor
+) {
+    if (options?.removeTransparencyFromImages) {
+        ev.chainOnNodeCreatedCallback?.(removeImageTransparencyFromNode(editor));
+    }
+}
+
+/**
+ * @internal Exported only for testing
  * Replaces fully transparent pixels in images with opaque white pixels.
  * @param _model Unused. Present for interface compatibility.
  * @param node The DOM node to process. If it is an <img> element, its fully transparent pixels will be replaced with opaque white.

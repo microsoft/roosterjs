@@ -13,6 +13,7 @@ import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedCo
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import { setProcessor } from './utils/setProcessor';
+import { setupImageTransparencyRemoval } from './utils/removeImageTransparency';
 import type {
     BeforePasteEvent,
     BorderFormat,
@@ -56,7 +57,7 @@ export class PastePlugin implements EditorPlugin {
             attributeSanitizers: {},
         },
         private options: PastePluginOptions = {
-            removeTransparencyFromWordDesktopImages: false,
+            removeTransparencyFromImages: false,
         }
     ) {}
 
@@ -110,7 +111,7 @@ export class PastePlugin implements EditorPlugin {
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event, this.editor, this.options);
+                processPastedContentFromWordDesktop(event);
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
@@ -142,6 +143,7 @@ export class PastePlugin implements EditorPlugin {
                 break;
         }
 
+        setupImageTransparencyRemoval(this.options, event, this.editor);
         addParser(event.domToModelOption, 'link', parseLink);
         addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);

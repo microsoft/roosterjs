@@ -233,10 +233,9 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                             {this.renderCheckBox(
                                 'Remove transparency from Word Desktop images',
                                 this.removeTransparencyFromWordDesktopImages,
-                                this.props.state.pastePluginOptions
-                                    .removeTransparencyFromWordDesktopImages,
+                                this.props.state.pastePluginOptions.removeTransparencyFromImages,
                                 (state, value) =>
-                                    (state.pastePluginOptions.removeTransparencyFromWordDesktopImages = value)
+                                    (state.pastePluginOptions.removeTransparencyFromImages = value)
                             )}
                         </>
                     )}

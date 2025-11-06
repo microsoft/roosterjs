@@ -3,6 +3,7 @@ import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExc
 import * as getPasteSource from '../../../lib/paste/pasteSourceValidations/getPasteSource';
 import * as oneNoteFile from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
+import * as removeImageTransparency from '../../../lib/paste/utils/removeImageTransparency';
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
 import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
@@ -256,6 +257,181 @@ describe('Content Model Paste Plugin Test', () => {
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
             expect(oneNoteFile.processPastedContentFromOneNote).toHaveBeenCalledWith(event);
+        });
+    });
+
+    describe('Image transparency removal integration', () => {
+        function createTestEvent(
+            chainOnNodeCreatedCallback?: (callback: any) => void
+        ): BeforePasteEvent {
+            return {
+                eventType: 'beforePaste',
+                clipboardData: <any>{
+                    html: '',
+                    types: [],
+                },
+                fragment: document.createDocumentFragment(),
+                htmlBefore: '',
+                htmlAfter: '',
+                htmlAttributes: {},
+                pasteType: 'normal',
+                domToModelOption: createDefaultDomToModelContext(),
+                chainOnNodeCreatedCallback: chainOnNodeCreatedCallback,
+            };
+        }
+
+        it('should call setupImageTransparencyRemoval when plugin has removeTransparencyFromImages option enabled', () => {
+            // Arrange
+            const plugin = new PastePlugin(
+                false,
+                {
+                    styleSanitizers: {},
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                    attributeSanitizers: {},
+                },
+                { removeTransparencyFromImages: true }
+            );
+
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            // Spy on setupImageTransparencyRemoval to see if it's called
+            spyOn(removeImageTransparency, 'setupImageTransparencyRemoval').and.callThrough();
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any); // Cast to PluginEvent
+
+            // Assert
+            expect(removeImageTransparency.setupImageTransparencyRemoval).toHaveBeenCalledWith(
+                { removeTransparencyFromImages: true },
+                testEvent,
+                editor
+            );
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should not call setupImageTransparencyRemoval when plugin has removeTransparencyFromImages option disabled', () => {
+            // Arrange
+            const plugin = new PastePlugin(
+                false,
+                {
+                    styleSanitizers: {},
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                    attributeSanitizers: {},
+                },
+                { removeTransparencyFromImages: false }
+            );
+
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('default');
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+
+        it('should apply image transparency removal for Word Desktop content', () => {
+            // Arrange
+            const plugin = new PastePlugin(
+                false,
+                {
+                    styleSanitizers: {},
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                    attributeSanitizers: {},
+                },
+                { removeTransparencyFromImages: true }
+            );
+
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('wordDesktop');
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should apply image transparency removal for Excel content', () => {
+            // Arrange
+            const plugin = new PastePlugin(
+                false,
+                {
+                    styleSanitizers: {},
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                    attributeSanitizers: {},
+                },
+                { removeTransparencyFromImages: true }
+            );
+
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('excelDesktop');
+            spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should apply image transparency removal for any paste source', () => {
+            // Arrange
+            const plugin = new PastePlugin(
+                false,
+                {
+                    styleSanitizers: {},
+                    additionalAllowedTags: [],
+                    additionalDisallowedTags: [],
+                    attributeSanitizers: {},
+                },
+                { removeTransparencyFromImages: true }
+            );
+
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('powerPointDesktop');
+            spyOn(PowerPointFile, 'processPastedContentFromPowerPoint').and.callThrough();
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should use default options when not specified', () => {
+            // Arrange
+            const plugin = new PastePlugin(); // No options specified, defaults to removeTransparencyFromImages: false
+            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+            const testEvent = createTestEvent(chainOnNodeCreatedCallbackSpy);
+
+            spyOn(getPasteSource, 'getPasteSource').and.returnValue('default');
+
+            // Act
+            plugin.initialize(editor);
+            plugin.onPluginEvent(testEvent as any);
+
+            // Assert - Default is false, so should not be called
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
         });
     });
 });

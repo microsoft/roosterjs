@@ -36,7 +36,7 @@ const initialState: OptionState = {
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
     allowExcelNoBorderTable: false,
     pastePluginOptions: {
-        removeTransparencyFromWordDesktopImages: false,
+        removeTransparencyFromImages: false,
     },
     imageMenu: true,
     tableMenu: true,

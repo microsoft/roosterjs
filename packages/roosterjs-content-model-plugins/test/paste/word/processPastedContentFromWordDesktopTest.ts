@@ -27,8 +27,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
-        processPastedContentFromWordDesktop(event, mockEditor, {});
+        processPastedContentFromWordDesktop(event);
 
         const model = domToContentModel(
             fragment,
@@ -4937,56 +4936,17 @@ describe('processPastedContentFromWordDesktopTest', () => {
         });
     });
 
-    describe('Image transparency removal tests', () => {
-        it('should call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is enabled', () => {
+    describe('Function signature tests', () => {
+        it('should process Word Desktop content with event parameter only', () => {
             // Arrange
             const fragment = document.createDocumentFragment();
+            const div = document.createElement('div');
+            div.innerHTML = '<p>Test content</p>';
+            fragment.appendChild(div);
             const event = createBeforePasteEventMock(fragment);
-            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
-            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
 
-            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
-            const options = { removeTransparencyFromWordDesktopImages: true };
-
-            // Act
-            processPastedContentFromWordDesktop(event, mockEditor, options);
-
-            // Assert
-            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
-        });
-
-        it('should not call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is disabled', () => {
-            // Arrange
-            const fragment = document.createDocumentFragment();
-            const event = createBeforePasteEventMock(fragment);
-            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
-            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
-
-            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
-            const options = { removeTransparencyFromWordDesktopImages: false };
-
-            // Act
-            processPastedContentFromWordDesktop(event, mockEditor, options);
-
-            // Assert
-            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
-        });
-
-        it('should not call chainOnNodeCreatedCallback when removeTransparencyFromWordDesktopImages option is not provided', () => {
-            // Arrange
-            const fragment = document.createDocumentFragment();
-            const event = createBeforePasteEventMock(fragment);
-            const chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
-            (event as any).chainOnNodeCreatedCallback = chainOnNodeCreatedCallbackSpy;
-
-            const mockEditor = { triggerEvent: jasmine.createSpy('triggerEvent') } as any;
-            const options = {};
-
-            // Act
-            processPastedContentFromWordDesktop(event, mockEditor, options);
-
-            // Assert
-            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+            // Act & Assert - should not throw with single parameter
+            expect(() => processPastedContentFromWordDesktop(event)).not.toThrow();
         });
     });
 });

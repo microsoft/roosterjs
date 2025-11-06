@@ -3,7 +3,6 @@ import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
-import { removeImageTransparencyFromNode } from './removeImageTransparency';
 import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
@@ -15,8 +14,6 @@ import type {
     DomToModelContext,
     ElementProcessor,
     FormatParser,
-    IEditor,
-    PastePluginOptions,
 } from 'roosterjs-content-model-types';
 
 const PERCENTAGE_REGEX = /%/;
@@ -28,11 +25,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  * Handles Pasted content when source is Word Desktop
  * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(
-    ev: BeforePasteEvent,
-    editor: IEditor,
-    options?: PastePluginOptions
-) {
+export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
 
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
@@ -41,10 +34,6 @@ export function processPastedContentFromWordDesktop(
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'container', wordTableParser);
     addParser(ev.domToModelOption, 'table', wordTableParser);
-
-    if (options?.removeTransparencyFromWordDesktopImages) {
-        ev.chainOnNodeCreatedCallback?.(removeImageTransparencyFromNode(editor));
-    }
 }
 
 const wordDesktopElementProcessor = (

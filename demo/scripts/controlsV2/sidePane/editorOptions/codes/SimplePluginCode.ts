@@ -1,4 +1,5 @@
 import { CodeElement } from './CodeElement';
+import type { PastePluginOptions } from 'roosterjs-content-model-types';
 
 class SimplePluginCode extends CodeElement {
     constructor(private name: string, private namespace: string = 'roosterjs') {
@@ -19,7 +20,7 @@ export class EditPluginCode extends SimplePluginCode {
 export class PastePluginCode extends CodeElement {
     constructor(
         private allowExcelNoBorderTable: boolean,
-        private pastePluginOptions: { removeTransparencyFromWordDesktopImages?: boolean }
+        private pastePluginOptions: PastePluginOptions
     ) {
         super();
     }
@@ -36,7 +37,7 @@ export class PastePluginCode extends CodeElement {
         parts.push('undefined'); // domToModelForSanitizing parameter
 
         const options: string[] = [];
-        if (this.pastePluginOptions.removeTransparencyFromWordDesktopImages) {
+        if (this.pastePluginOptions.removeTransparencyFromImages) {
             options.push('removeTransparencyFromWordDesktopImages: true');
         }
 

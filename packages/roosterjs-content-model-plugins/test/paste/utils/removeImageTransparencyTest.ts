@@ -1,5 +1,8 @@
 import { moveChildNodes } from 'roosterjs-content-model-dom';
-import { removeImageTransparencyFromNode } from '../../../lib/paste/WordDesktop/removeImageTransparency';
+import {
+    setupImageTransparencyRemoval,
+    removeImageTransparencyFromNode,
+} from '../../../lib/paste/utils/removeImageTransparency';
 
 describe('removeImageTransparencyFromNode', () => {
     let mockCanvas: HTMLCanvasElement;
@@ -284,5 +287,133 @@ describe('removeImageTransparencyFromNode', () => {
 
         // Should not attempt to process
         expect(mockCanvas.getContext).not.toHaveBeenCalled();
+    });
+});
+
+describe('setupImageTransparencyRemoval', () => {
+    let mockEvent: any;
+    let mockEditor: any;
+    let chainOnNodeCreatedCallbackSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        chainOnNodeCreatedCallbackSpy = jasmine.createSpy('chainOnNodeCreatedCallback');
+        mockEvent = {
+            chainOnNodeCreatedCallback: chainOnNodeCreatedCallbackSpy,
+        };
+        mockEditor = {
+            triggerEvent: jasmine.createSpy('triggerEvent'),
+        };
+    });
+
+    describe('when removeTransparencyFromImages option is enabled', () => {
+        it('should call chainOnNodeCreatedCallback with image processing function', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: true };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+
+        it('should process the callback function correctly', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: true };
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Get the callback function that was passed
+            const callbackFactory = chainOnNodeCreatedCallbackSpy.calls.argsFor(0)[0];
+            const callback = callbackFactory;
+
+            // Create a mock image element
+            const mockImg = document.createElement('img');
+            Object.defineProperty(mockImg, 'complete', { value: true, writable: true });
+            Object.defineProperty(mockImg, 'naturalWidth', { value: 100, writable: true });
+            Object.defineProperty(mockImg, 'naturalHeight', { value: 100, writable: true });
+
+            // Act & Assert - should not throw when processing an image
+            expect(() => callback(null, mockImg)).not.toThrow();
+        });
+    });
+
+    describe('when removeTransparencyFromImages option is disabled', () => {
+        it('should not call chainOnNodeCreatedCallback when option is false', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: false };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not call chainOnNodeCreatedCallback when option is undefined', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: undefined as boolean | undefined };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('when options parameter is undefined or empty', () => {
+        it('should not call chainOnNodeCreatedCallback when options is undefined', () => {
+            // Act
+            setupImageTransparencyRemoval(undefined, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not call chainOnNodeCreatedCallback when options is empty object', () => {
+            // Arrange
+            const options = {};
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('integration with all paste sources', () => {
+        it('should work for Word Desktop paste source', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: true };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalled();
+        });
+
+        it('should work for Excel paste source', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: true };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalled();
+        });
+
+        it('should work for any paste source when enabled', () => {
+            // Arrange
+            const options = { removeTransparencyFromImages: true };
+
+            // Act
+            setupImageTransparencyRemoval(options, mockEvent, mockEditor);
+
+            // Assert
+            expect(chainOnNodeCreatedCallbackSpy).toHaveBeenCalledWith(jasmine.any(Function));
+        });
     });
 });
