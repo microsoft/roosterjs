@@ -6,8 +6,11 @@ import * as extractClipboardItemsFile from 'roosterjs-content-model-dom/lib/domU
 import * as iterateSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as paste from '../../../lib/command/paste/paste';
+import { adjustSelectionForCopyCut } from '../../../lib/command/cutCopy/adjustSelectionForCopyCut';
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
+import { onNodeCreated } from '../../../lib/command/cutCopy/getContentForCopy';
+import { preprocessTable } from '../../../lib/command/cutCopy/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -23,10 +26,7 @@ import {
     PasteTypeOrGetter,
 } from 'roosterjs-content-model-types';
 import {
-    adjustSelectionForCopyCut,
     createCopyPastePlugin,
-    onNodeCreated,
-    preprocessTable,
     shouldPreventDefaultPaste,
 } from '../../../lib/corePlugin/copyPaste/CopyPastePlugin';
 
@@ -75,12 +75,13 @@ describe('CopyPastePlugin |', () => {
     let plugin: PluginWithState<CopyPastePluginState>;
     let domEvents: Record<string, DOMEventRecord> = {};
     let div: HTMLDivElement;
+    let mockedDocument: Document;
 
     let selectionValue: DOMSelection;
     let getDOMSelectionSpy: jasmine.Spy;
     let getContentModelCopySpy: jasmine.Spy;
     let triggerPluginEventSpy: jasmine.Spy;
-    let focusSpy: jasmine.Spy;
+
     let formatContentModelSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
 
@@ -96,6 +97,12 @@ describe('CopyPastePlugin |', () => {
         formatResult = undefined;
 
         div = document.createElement('div');
+        mockedDocument = {
+            createRange: () => document.createRange(),
+            createDocumentFragment: () => document.createDocumentFragment(),
+            createElement: () => div,
+        } as any;
+
         getDOMSelectionSpy = jasmine
             .createSpy('getDOMSelection')
             .and.callFake(() => selectionValue);
@@ -103,7 +110,6 @@ describe('CopyPastePlugin |', () => {
             .createSpy('getContentModelCopy')
             .and.returnValue(pasteModelValue);
         triggerPluginEventSpy = jasmine.createSpy('triggerPluginEventSpy');
-        focusSpy = jasmine.createSpy('focusSpy');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         pasteSpy = jasmine.createSpy('paste_');
         isDisposed = jasmine.createSpy('isDisposed');
@@ -137,22 +143,10 @@ describe('CopyPastePlugin |', () => {
             runAsync(callback: any) {
                 callback(editor);
             },
-            focus() {
-                focusSpy();
-            },
+
             getDOMSelection: getDOMSelectionSpy,
             setDOMSelection: setDOMSelectionSpy,
-            getDocument() {
-                return {
-                    createRange: () => document.createRange(),
-                    createDocumentFragment: () => document.createDocumentFragment(),
-                    defaultView: {
-                        requestAnimationFrame: (func: Function) => {
-                            func();
-                        },
-                    },
-                };
-            },
+            getDocument: () => mockedDocument,
             isDarkMode: () => {
                 return false;
             },
@@ -182,16 +176,23 @@ describe('CopyPastePlugin |', () => {
 
             getContentModelCopySpy.and.callThrough();
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(getContentModelCopySpy).not.toHaveBeenCalled();
             expect(triggerPluginEventSpy).not.toHaveBeenCalled();
-            expect(focusSpy).not.toHaveBeenCalled();
-            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+
             expect(formatResult).toBeFalsy();
         });
 
@@ -207,17 +208,25 @@ describe('CopyPastePlugin |', () => {
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -225,8 +234,6 @@ describe('CopyPastePlugin |', () => {
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -254,17 +261,25 @@ describe('CopyPastePlugin |', () => {
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
@@ -272,8 +287,6 @@ describe('CopyPastePlugin |', () => {
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -282,7 +295,7 @@ describe('CopyPastePlugin |', () => {
 
         it('Selection not Collapsed and image selection', () => {
             // Arrange
-            const image = document.createElement('image');
+            const image = document.createElement('img');
             image.id = 'image';
             selectionValue = <DOMSelection>{
                 type: 'image',
@@ -297,25 +310,31 @@ describe('CopyPastePlugin |', () => {
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -343,27 +362,33 @@ describe('CopyPastePlugin |', () => {
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             editor.isDarkMode = () => true;
 
             // Act
-            domEvents.copy.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
             expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -396,8 +421,6 @@ describe('CopyPastePlugin |', () => {
                 spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
                 spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
                 const event = createClipboardEventMock();
 
                 // Act
@@ -407,7 +430,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -415,8 +438,6 @@ describe('CopyPastePlugin |', () => {
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
                 expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -443,8 +464,6 @@ describe('CopyPastePlugin |', () => {
                 });
                 spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
                 const event = createClipboardEventMock();
 
                 // Act
@@ -454,7 +473,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
@@ -462,8 +481,7 @@ describe('CopyPastePlugin |', () => {
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
                 expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
@@ -478,7 +496,7 @@ describe('CopyPastePlugin |', () => {
 
             it('Selection not Collapsed and image selection', () => {
                 // Arrange
-                const image = document.createElement('image');
+                const image = document.createElement('img');
                 image.id = 'image';
                 selectionValue = <DOMSelection>{
                     type: 'image',
@@ -492,8 +510,6 @@ describe('CopyPastePlugin |', () => {
                 });
                 spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
                 const event = createClipboardEventMock();
 
                 // Act
@@ -503,19 +519,18 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
                 );
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<image id="image"></image>'
+                    '<img id="image">'
                 );
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
@@ -544,9 +559,6 @@ describe('CopyPastePlugin |', () => {
                 });
                 spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
-
                 editor.isDarkMode = () => true;
                 const event = createClipboardEventMock();
 
@@ -557,15 +569,14 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
                 );
                 expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
@@ -591,19 +602,27 @@ describe('CopyPastePlugin |', () => {
 
             getContentModelCopySpy.and.callThrough();
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.copy.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(getContentModelCopySpy).not.toHaveBeenCalled();
             expect(triggerPluginEventSpy).not.toHaveBeenCalled();
-            expect(focusSpy).not.toHaveBeenCalled();
+
             expect(formatContentModelSpy).not.toHaveBeenCalled();
-            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+
             expect(formatResult).toBeFalsy();
         });
 
@@ -627,25 +646,31 @@ describe('CopyPastePlugin |', () => {
             spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
@@ -677,24 +702,30 @@ describe('CopyPastePlugin |', () => {
             spyOn(normalizeContentModel, 'normalizeContentModel');
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
@@ -706,7 +737,7 @@ describe('CopyPastePlugin |', () => {
 
         it('Selection not Collapsed and image selection', () => {
             // Arrange
-            const image = document.createElement('image');
+            const image = document.createElement('img');
             image.id = 'image';
             selectionValue = <DOMSelection>{
                 type: 'image',
@@ -725,24 +756,30 @@ describe('CopyPastePlugin |', () => {
             spyOn(normalizeContentModel, 'normalizeContentModel');
 
             triggerPluginEventSpy.and.callThrough();
-            focusSpy.and.callThrough();
-            setDOMSelectionSpy.and.callThrough();
 
             // Act
-            domEvents.cut.beforeDispatch?.(<Event>{});
+            const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
+            let clipboardEvent = <ClipboardEvent>{
+                clipboardData: <DataTransfer>(<any>{
+                    items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
+                }),
+                preventDefault() {
+                    preventDefaultSpy();
+                },
+            };
+            domEvents.cut.beforeDispatch?.(clipboardEvent);
 
             // Assert
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                document,
+                mockedDocument,
                 div,
                 pasteModelValue,
                 { ...createModelToDomContext(), onNodeCreated }
             );
             expect(getContentModelCopySpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-            expect(focusSpy).toHaveBeenCalled();
-            expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
 
             // On Cut Spy
             expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
@@ -790,8 +827,7 @@ describe('CopyPastePlugin |', () => {
                 spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(selectionValue);
 
                 triggerPluginEventSpy.and.callThrough();
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
+
                 const event = createClipboardEventMock();
 
                 // Act
@@ -801,15 +837,14 @@ describe('CopyPastePlugin |', () => {
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
                 );
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/html', '');
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
@@ -844,8 +879,7 @@ describe('CopyPastePlugin |', () => {
                 spyOn(normalizeContentModel, 'normalizeContentModel');
 
                 triggerPluginEventSpy.and.callThrough();
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
+
                 const event = createClipboardEventMock();
 
                 // Act
@@ -854,15 +888,14 @@ describe('CopyPastePlugin |', () => {
                 // Assert
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
                 );
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
@@ -882,7 +915,7 @@ describe('CopyPastePlugin |', () => {
 
             it('Selection not Collapsed and image selection', () => {
                 // Arrange
-                const image = document.createElement('image');
+                const image = document.createElement('img');
                 image.id = 'image';
                 selectionValue = <DOMSelection>{
                     type: 'image',
@@ -901,8 +934,7 @@ describe('CopyPastePlugin |', () => {
                 spyOn(normalizeContentModel, 'normalizeContentModel');
 
                 triggerPluginEventSpy.and.callThrough();
-                focusSpy.and.callThrough();
-                setDOMSelectionSpy.and.callThrough();
+
                 const event = createClipboardEventMock();
 
                 // Act
@@ -911,19 +943,18 @@ describe('CopyPastePlugin |', () => {
                 // Assert
                 expect(getDOMSelectionSpy).toHaveBeenCalled();
                 expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
-                    document,
+                    mockedDocument,
                     div,
                     pasteModelValue,
                     { ...createModelToDomContext(), onNodeCreated }
                 );
                 expect(getContentModelCopySpy).toHaveBeenCalled();
                 expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
-                expect(focusSpy).toHaveBeenCalled();
-                expect(setDOMSelectionSpy).toHaveBeenCalledWith(selectionValue);
+
                 expect(event.clipboardData?.setData).toHaveBeenCalledTimes(2);
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith(
                     'text/html',
-                    '<image id="image"></image>'
+                    '<img id="image">'
                 );
                 expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
 
@@ -947,6 +978,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -976,6 +1008,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1006,6 +1039,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1036,6 +1070,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1066,6 +1101,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
@@ -1096,6 +1132,7 @@ describe('CopyPastePlugin |', () => {
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
                     items: [<DataTransferItem>{}],
+                    setData: jasmine.createSpy('setData'),
                 }),
                 preventDefault() {
                     preventDefaultSpy();
