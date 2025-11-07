@@ -59,7 +59,7 @@ export interface TableSelection extends TableSelectionCoordinates, SelectionBase
     table: HTMLTableElement;
 
     /**
-     * Table selecting info
+     * Table selection info
      */
     tableSelectionInfo?: TableSelectionInfo;
 }
