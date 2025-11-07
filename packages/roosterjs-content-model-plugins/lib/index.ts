@@ -52,3 +52,4 @@ export { moveHighlight } from './findReplace/moveHighlight';
 export { FindReplaceContext } from './findReplace/types/FindReplaceContext';
 export { HighlightHelper } from './findReplace/types/HighlightHelper';
 export { FindReplaceHighlightOptions } from './findReplace/types/FindReplaceHighlightOptions';
+export { AnnouncePlugin } from './announce/AnnouncePlugin';

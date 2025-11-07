@@ -57,6 +57,8 @@ const KnownAnnounceStringsNewToOld: Record<
     announceItalicOff: undefined,
     announceUnderlineOn: undefined,
     announceUnderlineOff: undefined,
+    selected: undefined,
+    unselected: undefined,
 };
 
 const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | undefined> = {

@@ -24,6 +24,7 @@ export interface BuildInPluginList {
     customReplace: boolean;
     hiddenProperty: boolean;
     touch: boolean;
+    announce: boolean;
 }
 
 export interface OptionState {

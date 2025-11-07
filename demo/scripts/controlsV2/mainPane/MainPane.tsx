@@ -59,6 +59,7 @@ import {
     Snapshots,
 } from 'roosterjs-content-model-types';
 import {
+    AnnouncePlugin,
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
@@ -575,6 +576,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     undeletableLinkChecker: undeletableLinkChecker,
                 }),
             pluginList.touch && new TouchPlugin(),
+            pluginList.announce && new AnnouncePlugin(),
         ].filter(x => !!x);
     }
 }
@@ -589,6 +591,8 @@ const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceItalicOff: 'Italic Off',
     announceUnderlineOn: 'Underline On',
     announceUnderlineOff: 'Underline Off',
+    selected: '{0}, selected',
+    unselected: '{0}, unselected',
 };
 
 function getAnnouncingString(key: KnownAnnounceStrings) {
