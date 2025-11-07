@@ -1,3 +1,5 @@
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
+import { createEditorContextForEntity } from './createEditorContextForEntity';
 import {
     contentModelToDom,
     createDomToModelContext,
@@ -10,6 +12,7 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelSegmentFormat,
+    FormatContentModelContext,
     FormattableRoot,
     IEditor,
     PluginEventData,
@@ -17,8 +20,6 @@ import type {
     ShallowMutableContentModelParagraph,
     ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
-import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { createEditorContextForEntity } from './createEditorContextForEntity';
 
 /**
  * Invoke a callback to format the selected segment using Content Model
@@ -44,7 +45,11 @@ export function formatSegmentWithContentModel(
         paragraph: ShallowMutableContentModelParagraph | null
     ) => boolean,
     includingFormatHolder?: boolean,
-    afterFormatCallback?: (model: ReadonlyContentModelDocument) => void
+    afterFormatCallback?: (
+        model: ReadonlyContentModelDocument,
+        isTurningOff: boolean,
+        context: FormatContentModelContext
+    ) => void
 ) {
     editor.formatContentModel(
         (model, context) => {
@@ -107,7 +112,7 @@ export function formatSegmentWithContentModel(
             });
 
             // 5. after format is applied to all selections, invoke another callback to do some clean up before write the change back
-            afterFormatCallback?.(model);
+            afterFormatCallback?.(model, isTurningOff, context);
 
             // 6. finally merge segments if possible, to avoid fragmentation
             formatsAndSegments.forEach(([_, __, paragraph]) => {

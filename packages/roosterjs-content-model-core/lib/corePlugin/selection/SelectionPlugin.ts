@@ -753,7 +753,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             if (oldCo || firstCo.row != lastCo.row || firstCo.col != lastCo.col) {
                 this.state.tableSelection.lastCo = lastCo;
-
                 this.setDOMSelection(
                     {
                         type: 'table',
@@ -762,6 +761,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         firstColumn: firstCo.col,
                         lastRow: lastCo.row,
                         lastColumn: lastCo.col,
+                        tableSelectionInfo: this.state.tableSelection,
                     },
                     { table, firstCo, lastCo, parsedTable, startNode }
                 );

@@ -59,6 +59,7 @@ import {
     Snapshots,
 } from 'roosterjs-content-model-types';
 import {
+    AnnouncePlugin,
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
@@ -71,6 +72,9 @@ import {
     TableEditPlugin,
     WatermarkPlugin,
     TouchPlugin,
+    FindReplacePlugin,
+    FindReplaceContext,
+    createFindReplaceContext,
 } from 'roosterjs-content-model-plugins';
 import DOMPurify = require('dompurify');
 
@@ -110,6 +114,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private markdownPanePlugin: MarkdownPanePlugin;
+    private findReplacePlugin: FindReplacePlugin;
+    private findReplaceContext: FindReplaceContext;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -148,6 +154,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.markdownPanePlugin = new MarkdownPanePlugin();
+
+        this.findReplaceContext = createFindReplaceContext();
+        this.findReplacePlugin = new FindReplacePlugin(this.findReplaceContext);
 
         this.state = {
             showSidePane: window.location.hash != '',
@@ -287,6 +296,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
     }
 
+    getFindReplaceContext(): FindReplaceContext {
+        return this.findReplaceContext;
+    }
+
     private renderTitleBar() {
         return <TitleBar className={styles.noGrow} />;
     }
@@ -368,6 +381,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             ...this.getToggleablePlugins(imageEditPlugin),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
+            this.findReplacePlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
@@ -562,6 +576,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     undeletableLinkChecker: undeletableLinkChecker,
                 }),
             pluginList.touch && new TouchPlugin(),
+            pluginList.announce && new AnnouncePlugin(),
         ].filter(x => !!x);
     }
 }
@@ -570,6 +585,14 @@ const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceListItemBullet: 'Auto corrected Bullet',
     announceListItemNumbering: 'Auto corrected {0}',
     announceOnFocusLastCell: 'Warning, pressing tab here adds an extra row.',
+    announceBoldOn: 'Bold On',
+    announceBoldOff: 'Bold Off',
+    announceItalicOn: 'Italic On',
+    announceItalicOff: 'Italic Off',
+    announceUnderlineOn: 'Underline On',
+    announceUnderlineOff: 'Underline Off',
+    selected: '{0}, selected',
+    unselected: '{0}, unselected',
 };
 
 function getAnnouncingString(key: KnownAnnounceStrings) {

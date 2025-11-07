@@ -38,6 +38,7 @@ export {
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
+export { scrollRectIntoView } from './domUtils/scrollRectIntoView';
 
 export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
 
@@ -125,6 +126,7 @@ export {
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
 export { setImageState, getImageState } from './domUtils/hiddenProperties/imageState';
+export { getRangesByText } from './domUtils/getRangesByText';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 
