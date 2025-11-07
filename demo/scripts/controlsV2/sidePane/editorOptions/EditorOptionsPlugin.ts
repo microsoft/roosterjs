@@ -23,6 +23,7 @@ const initialState: OptionState = {
         customReplace: true,
         hiddenProperty: true,
         touch: true,
+        announce: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',

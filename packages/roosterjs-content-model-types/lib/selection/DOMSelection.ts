@@ -1,3 +1,4 @@
+import type { TableSelectionInfo } from '../pluginState/SelectionPluginState';
 import type { TableSelectionCoordinates } from '../selection/TableSelectionCoordinates';
 
 /**
@@ -56,6 +57,11 @@ export interface TableSelection extends TableSelectionCoordinates, SelectionBase
      * The table that this selection is representing
      */
     table: HTMLTableElement;
+
+    /**
+     * Table selecting info
+     */
+    tableSelectionInfo?: TableSelectionInfo;
 }
 
 /**

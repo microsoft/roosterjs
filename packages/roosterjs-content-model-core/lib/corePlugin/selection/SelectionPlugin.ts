@@ -1,6 +1,5 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
-import { getIsSelectingOrUnselecting, retrieveStringFromParsedTable } from './tableSelectionUtils';
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
@@ -754,9 +753,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             if (oldCo || firstCo.row != lastCo.row || firstCo.col != lastCo.col) {
                 this.state.tableSelection.lastCo = lastCo;
-
-                const action = this.getIsSelectionOrCollapsing(firstCo, lastCo);
-
                 this.setDOMSelection(
                     {
                         type: 'table',
@@ -765,31 +761,16 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                         firstColumn: firstCo.col,
                         lastRow: lastCo.row,
                         lastColumn: lastCo.col,
+                        tableSelectionInfo: this.state.tableSelection,
                     },
                     { table, firstCo, lastCo, parsedTable, startNode }
                 );
-
-                if (action) {
-                    this.editor.announce({
-                        defaultStrings: action === 'unselecting' ? 'unselected' : 'selected',
-                        formatStrings: [retrieveStringFromParsedTable(this.state.tableSelection)],
-                    });
-                }
 
                 return true;
             }
         }
 
         return false;
-    }
-
-    private getIsSelectionOrCollapsing(firstCo: TableCellCoordinate, lastCo: TableCellCoordinate) {
-        const selection = this.editor?.getDOMSelection();
-
-        if (selection?.type == 'table') {
-            return getIsSelectingOrUnselecting(selection, firstCo, lastCo);
-        }
-        return null;
     }
 
     private setDOMSelection(

@@ -59,6 +59,7 @@ import {
     Snapshots,
 } from 'roosterjs-content-model-types';
 import {
+    AnnouncePlugin,
     AutoFormatPlugin,
     CustomReplacePlugin,
     EditPlugin,
@@ -562,6 +563,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                     undeletableLinkChecker: undeletableLinkChecker,
                 }),
             pluginList.touch && new TouchPlugin(),
+            pluginList.announce && new AnnouncePlugin(),
         ].filter(x => !!x);
     }
 }

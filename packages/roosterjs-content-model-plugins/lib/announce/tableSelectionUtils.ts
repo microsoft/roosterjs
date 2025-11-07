@@ -1,8 +1,4 @@
-import type {
-    TableSelectionInfo,
-    TableCellCoordinate,
-    TableSelection,
-} from 'roosterjs-content-model-types';
+import type { TableSelectionInfo, TableSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -17,8 +13,8 @@ export function retrieveStringFromParsedTable(tsInfo: TableSelectionInfo): strin
     if (lastCo) {
         for (let r = firstCo.row; r <= lastCo.row; r++) {
             for (let c = firstCo.col; c <= lastCo.col; c++) {
-                const cell = parsedTable[r][c];
-                if (typeof cell != 'string') {
+                const cell = parsedTable[r] && parsedTable[r][c];
+                if (cell && typeof cell != 'string') {
                     result += ' ' + cell.innerText + ',';
                 }
             }
@@ -37,35 +33,59 @@ export function retrieveStringFromParsedTable(tsInfo: TableSelectionInfo): strin
  * @returns 'selecting' if expanding selection, 'unselecting' if contracting, or null if no change
  */
 export function getIsSelectingOrUnselecting(
-    prevTableSelection: TableSelection,
-    firstCo: TableCellCoordinate,
-    lastCo: TableCellCoordinate
+    prevTableSelection: TableSelection | null,
+    newTableSelection: TableSelection
 ): 'selecting' | 'unselecting' | null {
+    if (!prevTableSelection) {
+        return 'selecting';
+    }
+
     const {
         firstRow: prevFirstRow,
         lastRow: prevLastRow,
         firstColumn: prevFirstColumn,
         lastColumn: prevLastColumn,
     } = prevTableSelection;
+
+    const {
+        firstRow: newFirstRow,
+        lastRow: newLastRow,
+        firstColumn: newFirstColumn,
+        lastColumn: newLastColumn,
+    } = newTableSelection;
+
     const prevRowSpan = Math.abs(prevLastRow - prevFirstRow) + 1;
     const prevColSpan = Math.abs(prevLastColumn - prevFirstColumn) + 1;
     const prevArea = prevRowSpan * prevColSpan;
 
-    const newRowSpan = Math.abs(lastCo.row - firstCo.row) + 1;
-    const newColSpan = Math.abs(lastCo.col - firstCo.col) + 1;
+    const newRowSpan = Math.abs(newLastRow - newFirstRow) + 1;
+    const newColSpan = Math.abs(newLastColumn - newFirstColumn) + 1;
     const newArea = newRowSpan * newColSpan;
 
-    if (newArea > prevArea || newArea === prevArea) {
+    // Check if selections are identical
+    if (
+        prevFirstRow === newFirstRow &&
+        prevLastRow === newLastRow &&
+        prevFirstColumn === newFirstColumn &&
+        prevLastColumn === newLastColumn
+    ) {
+        return null;
+    }
+
+    if (newArea > prevArea) {
         return 'selecting';
     } else if (newArea < prevArea) {
         return 'unselecting';
+    } else {
+        // Same area but different positions
+        return 'selecting';
     }
 
     if (
-        prevFirstColumn !== firstCo.col ||
-        prevFirstRow !== firstCo.row ||
-        prevLastColumn !== lastCo.col ||
-        prevLastRow !== lastCo.row
+        prevFirstColumn !== newFirstColumn ||
+        prevFirstRow !== newFirstRow ||
+        prevLastColumn !== newLastColumn ||
+        prevLastRow !== newLastRow
     ) {
         return 'selecting';
     }

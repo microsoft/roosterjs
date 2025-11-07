@@ -254,6 +254,7 @@ describe('Table Mover Tests', () => {
                 lastRow: 1,
                 lastColumn: 1,
                 type: 'table',
+                tableSelectionInfo: undefined,
             });
         }
     });

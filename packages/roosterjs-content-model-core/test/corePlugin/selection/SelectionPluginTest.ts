@@ -15,7 +15,6 @@ import {
     IEditor,
     PluginWithState,
     SelectionPluginState,
-    TableSelectionInfo,
 } from 'roosterjs-content-model-types';
 
 const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
@@ -1074,6 +1073,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
     });
 
@@ -1156,6 +1156,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 1,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table,
@@ -1179,6 +1180,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 1,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table,
@@ -1260,6 +1262,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table: table1,
@@ -1291,6 +1294,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table: table2,
@@ -2168,8 +2172,8 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down', () => {
@@ -2236,8 +2240,8 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down to ouside of table', () => {
@@ -2458,12 +2462,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 0,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected', // Changed position with same area
-                formatStrings: jasmine.any(Array),
-            });
         });
 
         it('From Table, Press Shift+Up', () => {
@@ -2520,12 +2521,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 0,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected', // Changed position with same area
-                formatStrings: jasmine.any(Array),
-            });
         });
 
         it('From Table, Format, Press Shift+Left', () => {
@@ -2536,6 +2534,16 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 1,
                 lastRow: 1,
                 table,
+                tableSelectionInfo: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    startNode: td2,
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 1 },
+                },
             });
 
             spyOn(parseTableCells, 'parseTableCells').and.returnValue([
@@ -2602,12 +2610,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 0,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected', // Changed position with same area
-                formatStrings: jasmine.any(Array),
-            });
         });
 
         it('From Table, Format, Press Shift+Up', () => {
@@ -2618,6 +2623,16 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 1,
                 lastRow: 1,
                 table,
+                tableSelectionInfo: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    startNode: td3,
+                    firstCo: { row: 1, col: 0 },
+                    lastCo: { row: 1, col: 1 },
+                },
             });
 
             spyOn(parseTableCells, 'parseTableCells').and.returnValue([
@@ -2684,12 +2699,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 0,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected', // Changed position with same area
-                formatStrings: jasmine.any(Array),
-            });
         });
     });
 });
@@ -3287,342 +3299,5 @@ describe('SelectionPlugin handle logical root change', () => {
         plugin.dispose();
         expect(newLogicalRootDisposer).toHaveBeenCalled();
         expect(disposer).toHaveBeenCalled();
-    });
-});
-
-describe('SelectionPlugin table selection announcements', () => {
-    let plugin: PluginWithState<SelectionPluginState>;
-    let editor: IEditor;
-    let announceSpy: jasmine.Spy;
-    let setDOMSelectionSpy: jasmine.Spy;
-    let getDOMSelectionSpy: jasmine.Spy;
-
-    beforeEach(() => {
-        announceSpy = jasmine.createSpy('announce');
-        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
-        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
-
-        editor = ({
-            announce: announceSpy,
-            setDOMSelection: setDOMSelectionSpy,
-            getDOMSelection: getDOMSelectionSpy,
-            getDocument: () => document,
-            attachDomEvent: () => () => {},
-            getEnvironment: () => ({}),
-            getColorManager: () => ({
-                getDarkColor: (color: string) => `DarkColorMock-${color}`,
-            }),
-        } as any) as IEditor;
-
-        plugin = createSelectionPlugin({});
-        plugin.initialize(editor);
-    });
-
-    afterEach(() => {
-        plugin.dispose();
-    });
-
-    describe('getIsSelectionOrCollapsing method', () => {
-        it('should return "selecting" when selection area increases', () => {
-            // Setup: Previous selection is 1x1 (single cell)
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 0,
-            });
-
-            // Mock table selection state
-            const table = document.createElement('table');
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-            const td2 = document.createElement('td');
-            td2.innerText = 'Cell 2';
-            const td3 = document.createElement('td');
-            td3.innerText = 'Cell 3';
-            const td4 = document.createElement('td');
-            td4.innerText = 'Cell 4';
-
-            plugin.getState().tableSelection = {
-                table,
-                parsedTable: [
-                    [td1, td2],
-                    [td3, td4],
-                ],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // Start with 1x1 selection
-                startNode: td1,
-            };
-
-            // Trigger updateTableSelection to expand to 2x2
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 1, col: 1 });
-
-            expect(result).toBe(true);
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected',
-                formatStrings: [' Cell 1, Cell 2, Cell 3, Cell 4,'],
-            });
-        });
-
-        it('should return "unselecting" when selection area decreases', () => {
-            // Setup: Previous selection is 2x2 (4 cells)
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 1,
-                lastColumn: 1,
-            });
-
-            const table = document.createElement('table');
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-
-            plugin.getState().tableSelection = {
-                table,
-                parsedTable: [[td1]],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // 1x1 selection (area = 1)
-                startNode: td1,
-            };
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 0, col: 0 });
-
-            expect(result).toBe(true);
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'unselected',
-                formatStrings: [' Cell 1,'],
-            });
-        });
-
-        it('should return "selecting" when selection moves with same area', () => {
-            // Setup: Previous selection is 1x2 at (0,0)-(0,1)
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 1,
-            });
-
-            const table = document.createElement('table');
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-            const td2 = document.createElement('td');
-            td2.innerText = 'Cell 2';
-            const td3 = document.createElement('td');
-            td3.innerText = 'Cell 3';
-
-            plugin.getState().tableSelection = {
-                table,
-                parsedTable: [[td1, td2, td3]],
-                firstCo: { row: 0, col: 1 },
-                lastCo: { row: 0, col: 1 }, // Initial state
-                startNode: td2,
-            };
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 0, col: 2 });
-
-            expect(result).toBe(true);
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected',
-                formatStrings: [' Cell 2, Cell 3,'],
-            });
-        });
-
-        it('should announce when no previous table selection but coordinates change', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'range',
-                range: document.createRange(),
-            });
-
-            const table = document.createElement('table');
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-
-            plugin.getState().tableSelection = {
-                table,
-                parsedTable: [[td1]],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 },
-                startNode: td1,
-            };
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 0, col: 0 });
-
-            expect(result).toBe(true); // Returns true because oldCo exists (lastCo = {row: 0, col: 0})
-            expect(announceSpy).not.toHaveBeenCalled(); // No announcement when no previous table selection context
-        });
-
-        it('should announce when selection coordinates are the same but oldCo exists', () => {
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 0,
-            });
-
-            const table = document.createElement('table');
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-
-            plugin.getState().tableSelection = {
-                table,
-                parsedTable: [[td1]],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // Already at the same coordinates
-                startNode: td1,
-            };
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 0, col: 0 }); // Same coordinates but oldCo exists
-
-            expect(result).toBe(true); // Returns true because oldCo exists
-            expect(announceSpy).toHaveBeenCalled(); // Now announces because same area is considered 'selecting'
-        });
-    });
-
-    describe('retrieveStringFromParsedTable function', () => {
-        it('should extract text from single cell when coordinates change', () => {
-            // Setup: Previous selection to enable comparison
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 0,
-            });
-
-            const td1 = document.createElement('td');
-            td1.innerText = 'Hello World';
-            const td2 = document.createElement('td');
-            td2.innerText = 'World 2';
-
-            const tableSelectionInfo = {
-                parsedTable: [[td1, td2]],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // Start with single cell
-                table: document.createElement('table'),
-                startNode: td1,
-            };
-
-            plugin.getState().tableSelection = tableSelectionInfo;
-
-            // Trigger a change in selection to expand
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            updateTableSelectionMethod.call(plugin, { row: 0, col: 1 });
-
-            // Should announce since selection expanded
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected',
-                formatStrings: [' Hello World, World 2,'],
-            });
-        });
-
-        it('should extract text from multiple cells', () => {
-            // Setup: Previous selection is 1x1 to enable comparison
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 0,
-            });
-
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-            const td2 = document.createElement('td');
-            td2.innerText = 'Cell 2';
-            const td3 = document.createElement('td');
-            td3.innerText = 'Cell 3';
-            const td4 = document.createElement('td');
-            td4.innerText = 'Cell 4';
-
-            const tableSelectionInfo = {
-                parsedTable: [
-                    [td1, td2],
-                    [td3, td4],
-                ],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // Start with single cell
-                table: document.createElement('table'),
-                startNode: td1,
-            };
-
-            plugin.getState().tableSelection = tableSelectionInfo;
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            updateTableSelectionMethod.call(plugin, { row: 1, col: 1 });
-
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected',
-                formatStrings: [' Cell 1, Cell 2, Cell 3, Cell 4,'],
-            });
-        });
-
-        it('should handle string placeholders in parsed table', () => {
-            // Setup: Previous selection to enable comparison
-            getDOMSelectionSpy.and.returnValue({
-                type: 'table',
-                firstRow: 0,
-                firstColumn: 0,
-                lastRow: 0,
-                lastColumn: 0,
-            });
-
-            const td1 = document.createElement('td');
-            td1.innerText = 'Real Cell';
-
-            const tableSelectionInfo = {
-                parsedTable: [
-                    [td1, 'spanLeft' as const],
-                    ['spanTop' as const, td1],
-                ],
-                firstCo: { row: 0, col: 0 },
-                lastCo: { row: 0, col: 0 }, // Start with single cell
-                table: document.createElement('table'),
-                startNode: td1,
-            };
-
-            plugin.getState().tableSelection = tableSelectionInfo;
-
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            updateTableSelectionMethod.call(plugin, { row: 1, col: 1 });
-
-            // Should only include text from real cells, not string placeholders
-            expect(announceSpy).toHaveBeenCalledWith({
-                defaultStrings: 'selected',
-                formatStrings: [' Real Cell, Real Cell,'],
-            });
-        });
-
-        it('should handle when no lastCo is provided initially', () => {
-            const td1 = document.createElement('td');
-            td1.innerText = 'Cell 1';
-
-            const tableSelectionInfo: TableSelectionInfo = {
-                parsedTable: [[td1]],
-                firstCo: { row: 0, col: 0 },
-                lastCo: undefined, // No lastCo initially
-                table: document.createElement('table'),
-                startNode: td1,
-            };
-
-            plugin.getState().tableSelection = tableSelectionInfo;
-
-            // Call with different coordinates to trigger the condition
-            const updateTableSelectionMethod = (plugin as any).updateTableSelection;
-            const result = updateTableSelectionMethod.call(plugin, { row: 0, col: 1 });
-
-            expect(result).toBe(true); // Returns true because coordinates changed
-            // Should not announce since no previous DOM selection context
-            expect(announceSpy).not.toHaveBeenCalled();
-        });
     });
 });

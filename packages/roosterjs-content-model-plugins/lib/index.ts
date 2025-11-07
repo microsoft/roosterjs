@@ -44,3 +44,4 @@ export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
 export { HiddenPropertyPlugin } from './hiddenProperty/HiddenPropertyPlugin';
 export { HiddenPropertyOptions } from './hiddenProperty/HiddenPropertyOptions';
 export { TouchPlugin } from './touch/TouchPlugin';
+export { AnnouncePlugin } from './announce/AnnouncePlugin';
