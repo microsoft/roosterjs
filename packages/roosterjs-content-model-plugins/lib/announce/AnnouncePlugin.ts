@@ -28,6 +28,7 @@ export class AnnouncePlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.previousSelection = null;
     }
 
     /**
