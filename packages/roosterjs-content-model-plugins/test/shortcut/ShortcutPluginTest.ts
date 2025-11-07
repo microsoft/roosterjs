@@ -95,7 +95,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('italic', () => {
@@ -116,7 +116,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('underline', () => {
@@ -136,7 +136,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('clear format', () => {
@@ -404,7 +404,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('italic', () => {
@@ -425,7 +425,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('underline', () => {
@@ -445,7 +445,7 @@ describe('ShortcutPlugin', () => {
 
             plugin.onPluginEvent(event);
 
-            expect(apiSpy).toHaveBeenCalledWith(mockedEditor);
+            expect(apiSpy).toHaveBeenCalledWith(mockedEditor, { announceFormatChange: true });
         });
 
         it('clear format', () => {

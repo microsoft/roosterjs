@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CreateModelFromHtmlPane from './createModelFromHtml/CreateModelFromHtmlPane';
+import FindReplacePane from './findReplace/FindReplacePane';
 import InsertCustomContainerPane from './insertCustomContainer/InsertCustomContainerPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import PastePane from './paste/PastePane';
@@ -33,6 +34,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     customContainer: {
         name: 'Insert Custom Container',
         component: InsertCustomContainerPane,
+    },
+    findReplace: {
+        name: 'Find and Replace',
+        component: FindReplacePane,
     },
     more: {
         name: 'Coming soon...',

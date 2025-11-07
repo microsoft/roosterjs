@@ -99,7 +99,7 @@ module.exports = function (config) {
 
         webpack: {
             mode: 'development',
-            devtool: 'eval-source-map', // Faster than inline-source-map
+            devtool: 'inline-source-map', // More accurate source maps for debugging
             module: {
                 rules,
             },
