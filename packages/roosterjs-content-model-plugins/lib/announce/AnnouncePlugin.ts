@@ -28,7 +28,6 @@ export class AnnouncePlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.previousSelection = null;
     }
 
     /**
@@ -38,6 +37,7 @@ export class AnnouncePlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.previousSelection = null;
     }
 
     /**
