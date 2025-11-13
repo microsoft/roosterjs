@@ -1,10 +1,10 @@
-import { ContentModelImageFormat } from 'roosterjs-content-model-types';
+import { ContentModelImageFormat, DomToModelContext } from 'roosterjs-content-model-types';
 import { imageSizeParser } from '../../../lib/paste/parsers/imageSizeParser';
 
 describe('imageSizeParser', () => {
     let format: ContentModelImageFormat;
     let element: HTMLElement;
-    let context: any;
+    let context: DomToModelContext;
     const originalEditorViewWidth = 800;
 
     beforeEach(() => {
@@ -12,7 +12,7 @@ describe('imageSizeParser', () => {
         element = document.createElement('img');
         context = {
             editorViewWidth: originalEditorViewWidth,
-        };
+        } as any;
     });
 
     it('No width in format', () => {

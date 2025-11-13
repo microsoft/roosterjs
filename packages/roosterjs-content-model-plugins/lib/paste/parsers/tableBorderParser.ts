@@ -19,10 +19,14 @@ const ElementBorderKeys = new Map<
     ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
 ]);
 
+/**
+ * @internal
+ */
 export const tableBorderParser: FormatParser<ContentModelTableCellFormat> = (format, element) => {
     BorderKeys.forEach(key => {
         if (!format[key]) {
             const styleSet = ElementBorderKeys.get(key);
+
             if (
                 styleSet &&
                 element.style[styleSet.w] &&
