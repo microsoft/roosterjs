@@ -75,7 +75,8 @@ export interface EditorContext {
     recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
 
     /**
-     * Width of editor view in pixels
+     * Width of the editor's editable area in pixels, excluding padding.
+     * This value is typically used for layout calculations such as constraining pasted image sizes.
      */
     editorViewWidth?: number;
 }
