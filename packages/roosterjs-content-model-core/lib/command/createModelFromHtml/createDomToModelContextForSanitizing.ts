@@ -9,6 +9,7 @@ import { pasteTextProcessor } from '../../override/pasteTextProcessor';
 import { pasteWhiteSpaceFormatParser } from '../../override/pasteWhiteSpaceFormatParser';
 import type {
     ContentModelSegmentFormat,
+    DOMHelper,
     DomToModelContext,
     DomToModelOption,
     DomToModelOptionForSanitizing,
@@ -32,7 +33,8 @@ export function createDomToModelContextForSanitizing(
     document: Document,
     defaultFormat?: ContentModelSegmentFormat,
     defaultOption?: DomToModelOption,
-    additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>
+    additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>,
+    domHelper?: DOMHelper
 ): DomToModelContext {
     const sanitizingOption: DomToModelOptionForSanitizing = {
         ...DefaultSanitizingOption,
@@ -44,6 +46,7 @@ export function createDomToModelContextForSanitizing(
             defaultFormat,
             ...getRootComputedStyleForContext(document),
             experimentalFeatures: [],
+            editorViewWidth: domHelper?.getClientWidth(),
         },
         defaultOption,
         {
