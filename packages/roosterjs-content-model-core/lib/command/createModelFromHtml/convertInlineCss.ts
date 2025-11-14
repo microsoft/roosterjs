@@ -23,7 +23,7 @@ function splitSelectors(selectorText: string) {
 /**
  * @internal
  */
-export function retrieveCssRules(doc: Document): CssRule[] {
+export function retrieveCssRules(doc: DocumentFragment | Document): CssRule[] {
     const styles = toArray(doc.querySelectorAll('style'));
     const result: CssRule[] = [];
 
