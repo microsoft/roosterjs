@@ -64,7 +64,8 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated,
-    isInitializing?: boolean
+    isInitializing?: boolean,
+    skipSelectionChangedEvent?: boolean
 ) => DOMSelection | null;
 
 /**

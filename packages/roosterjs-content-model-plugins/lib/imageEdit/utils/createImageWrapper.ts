@@ -11,7 +11,7 @@ import type {
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
-const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
+export const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
 
 /**
  * @internal

@@ -1,7 +1,7 @@
 import { applyChange } from './utils/applyChange';
 import { canRegenerateImage } from './utils/canRegenerateImage';
 import { checkIfImageWasResized, isASmallImage } from './utils/imageEditUtils';
-import { createImageWrapper } from './utils/createImageWrapper';
+import { createImageWrapper, IMAGE_EDIT_SHADOW_ROOT } from './utils/createImageWrapper';
 import { Cropper } from './Cropper/cropperContext';
 import { EDITING_MARKER, findEditingImage } from './utils/findEditingImage';
 import { filterInnerResizerHandles } from './utils/filterInnerResizerHandles';
@@ -10,17 +10,18 @@ import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
 import { getSelectedImageMetadata, updateImageEditInfo } from './utils/updateImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
-import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
 import { updateHandleCursor } from './utils/updateHandleCursor';
 import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
+//import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import {
     ChangeSource,
     getSafeIdSelector,
-    getSelectedParagraphs,
+    //getSelectedParagraphs,
     isElementOfType,
+    isEntityElement,
     isNodeOfType,
     mutateBlock,
     mutateSegment,
@@ -41,8 +42,10 @@ import type {
     ImageMetadataFormat,
     KeyDownEvent,
     MouseDownEvent,
-    MouseUpEvent,
+    // MouseDownEvent,
+    // MouseUpEvent,
     PluginEvent,
+    SelectionChangedEvent,
 } from 'roosterjs-content-model-types';
 
 const DefaultOptions: Partial<ImageEditOptions> = {
@@ -55,7 +58,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
     onSelectState: ['resize', 'rotate'],
 };
 
-const MouseRightButton = 2;
+//const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
@@ -85,7 +88,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
-    protected isEditing = false;
     protected options: ImageEditOptions;
 
     constructor(options?: ImageEditOptions) {
@@ -108,17 +110,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
-            blur: {
-                beforeDispatch: () => {
-                    if (this.isEditing && this.editor && !this.editor.isDisposed()) {
-                        this.applyFormatWithContentModel(
-                            this.editor,
-                            this.isCropMode,
-                            true /* shouldSelectImage */
-                        );
-                    }
-                },
-            },
             dragstart: {
                 beforeDispatch: ev => {
                     if (this.editor) {
@@ -139,6 +130,15 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     }
                 },
             },
+            blur: {
+                beforeDispatch: ev => {
+                    if (this.editor && this.selectedImage) {
+                        if (this.editor) {
+                            this.applyFormatWithContentModel(this.editor, this.isCropMode);
+                        }
+                    }
+                },
+            },
         });
     }
 
@@ -152,7 +152,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
-        this.isEditing = false;
         this.cleanInfo();
         this.editor = null;
     }
@@ -168,14 +167,14 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             return;
         }
         switch (event.eventType) {
-            case 'mouseDown':
-                this.mouseDownHandler(this.editor, event);
-                break;
-            case 'mouseUp':
-                this.mouseUpHandler(this.editor, event);
+            case 'selectionChanged':
+                this.selectionChangeHandler(this.editor, event);
                 break;
             case 'keyDown':
                 this.keyDownHandler(this.editor, event);
+                break;
+            case 'mouseDown':
+                this.mouseDownHandler(this.editor, event);
                 break;
             case 'contentChanged':
                 this.contentChangedHandler(this.editor, event);
@@ -190,14 +189,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private handleBeforeLogicalRootChange() {
-        if (this.isEditing && this.editor && !this.editor.isDisposed()) {
-            this.applyFormatWithContentModel(
-                this.editor,
-                this.isCropMode,
-                false /* shouldSelectImage */
-            );
-            this.removeImageWrapper();
-            this.cleanInfo();
+        if (this.selectedImage && this.editor && !this.editor.isDisposed()) {
+            this.applyFormatWithContentModel(this.editor, this.isCropMode);
         }
     }
 
@@ -208,6 +201,26 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 delete image.dataset.editingInfo;
             }
         });
+    }
+
+    private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
+        const selection = editor.getDOMSelection();
+        const target = event.rawEvent.target as Element;
+        const isEditingImage =
+            target.firstElementChild?.id == IMAGE_EDIT_SHADOW_ROOT && target.childElementCount == 1;
+        if (selection?.type == 'image' && (isEditingImage || isEntityElement(target))) {
+            const range = editor.getDocument().createRange();
+            const image = this.removeImageWrapper();
+            if (image) {
+                range.selectNode(image);
+                range.collapse();
+                editor.setDOMSelection({
+                    type: 'range',
+                    range,
+                    isReverted: false,
+                });
+            }
+        }
     }
 
     private isImageSelection(target: Node): target is HTMLElement {
@@ -223,24 +236,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         );
     }
 
-    private mouseUpHandler(editor: IEditor, event: MouseUpEvent) {
-        const selection = editor.getDOMSelection();
-        if ((selection && selection.type == 'image') || this.isEditing) {
-            const shouldSelectImage =
-                this.isImageSelection(event.rawEvent.target as Node) &&
-                event.rawEvent.button === MouseRightButton;
-            this.applyFormatWithContentModel(editor, this.isCropMode, shouldSelectImage);
-        }
-    }
-
-    private mouseDownHandler(editor: IEditor, event: MouseDownEvent) {
-        if (
-            this.isEditing &&
-            this.isImageSelection(event.rawEvent.target as Node) &&
-            event.rawEvent.button !== MouseRightButton &&
-            !this.isCropMode
-        ) {
-            this.applyFormatWithContentModel(editor, this.isCropMode);
+    private selectionChangeHandler(editor: IEditor, event: SelectionChangedEvent) {
+        if ((event.newSelection && event.newSelection.type == 'image') || this.selectedImage) {
+            editor.getDocument().defaultView?.requestAnimationFrame(() => {
+                this.applyFormatWithContentModel(editor, this.isCropMode);
+            });
         }
     }
 
@@ -273,7 +273,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
-        if (this.isEditing) {
+        if (this.selectedImage) {
             if (
                 event.rawEvent.key === 'Escape' ||
                 event.rawEvent.key === 'Delete' ||
@@ -290,7 +290,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 this.applyFormatWithContentModel(
                     editor,
                     this.isCropMode,
-                    true /** should selectImage */,
                     false /* isApiOperation */
                 );
             }
@@ -302,16 +301,12 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (selection?.type == 'image') {
             this.cleanInfo();
             setImageState(selection.image, '');
-            this.isEditing = false;
-            this.isCropMode = false;
         }
     }
 
     private formatEventHandler(event: ContentChangedEvent) {
-        if (this.isEditing && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
+        if (this.selectedImage && event.formatApiName !== IMAGE_EDIT_FORMAT_EVENT) {
             this.cleanInfo();
-            this.isEditing = false;
-            this.isCropMode = false;
         }
     }
 
@@ -335,7 +330,6 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     protected applyFormatWithContentModel(
         editor: IEditor,
         isCropMode: boolean,
-        shouldSelectImage?: boolean,
         isApiOperation?: boolean
     ) {
         let editingImageModel: ContentModelImage | undefined;
@@ -347,21 +341,21 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 const editingImage = getSelectedImage(model);
                 const previousSelectedImage = isApiOperation
                     ? editingImage
-                    : findEditingImage(model);
+                    : findEditingImage(model, undefined);
                 let result = false;
 
                 // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
                 context.skipUndoSnapshot = 'SkipAll';
 
+                const clickInDifferentImage = previousSelectedImage?.image != editingImage?.image;
+
                 if (
-                    shouldSelectImage ||
-                    previousSelectedImage?.image != editingImage?.image ||
+                    clickInDifferentImage ||
                     previousSelectedImage?.image.format.imageState == EDITING_MARKER ||
                     isApiOperation
                 ) {
                     const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
                     if (
-                        (this.isEditing || isApiOperation) &&
                         previousSelectedImage &&
                         lastSrc &&
                         selectedImage &&
@@ -385,42 +379,20 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                                 if (this.wasImageResized || changeState == 'FullyChanged') {
                                     context.skipUndoSnapshot = false;
                                 }
-                                const isSameImage =
-                                    previousSelectedImage?.image === editingImage?.image;
-                                image.isSelected = isSameImage || shouldSelectImage;
-                                image.isSelectedAsImageSelection = isSameImage || shouldSelectImage;
                                 image.format.imageState = undefined;
-
-                                if (selection?.type == 'range' && !selection.range.collapsed) {
-                                    const selectedParagraphs = getSelectedParagraphs(model, true);
-                                    const isImageInRange = selectedParagraphs.some(paragraph =>
-                                        paragraph.segments.includes(image)
-                                    );
-                                    if (isImageInRange) {
-                                        image.isSelected = true;
-                                    }
-                                }
                             }
                         );
-
-                        if (shouldSelectImage) {
-                            normalizeImageSelection(previousSelectedImage);
-                        }
 
                         this.cleanInfo();
                         result = true;
                     }
 
-                    this.isEditing = false;
-                    this.isCropMode = false;
-
                     if (
+                        clickInDifferentImage &&
                         editingImage &&
                         selection?.type == 'image' &&
-                        !shouldSelectImage &&
                         !isApiOperation
                     ) {
-                        this.isEditing = true;
                         this.isCropMode = isCropMode;
                         mutateSegment(editingImage.paragraph, editingImage.image, image => {
                             editingImageModel = image;
@@ -436,6 +408,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 return result;
             },
             {
+                skipSelectionChangedEvent: true,
                 onNodeCreated: (model, node) => {
                     if (
                         !isApiOperation &&
@@ -544,6 +517,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     public startRotateAndResize(editor: IEditor, image: HTMLImageElement, isRTL: boolean) {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
+
             if (this.selectedImage && this.imageEditInfo && this.wrapper && this.clonedImage) {
                 const isMobileOrTable = !!editor.getEnvironment().isMobileOrTablet;
                 this.dndHelpers = [
@@ -779,12 +753,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             this.wrapper
         );
 
-        this.applyFormatWithContentModel(
-            editor,
-            false /* isCrop */,
-            true /* shouldSelect*/,
-            true /* isApiOperation */
-        );
+        this.applyFormatWithContentModel(editor, false /* isCrop */, true /* isApiOperation */);
     }
 
     /**
@@ -836,10 +805,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.editor) {
             this.editImage(this.editor, image, ['flip'], imageEditInfo => {
                 const angleRad = imageEditInfo.angleRad || 0;
-                const isInVerticalPostion =
+                const isInVerticalPosition =
                     (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
                     (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
-                if (isInVerticalPostion) {
+                if (isInVerticalPosition) {
                     if (direction === 'horizontal') {
                         imageEditInfo.flippedVertical = !imageEditInfo.flippedVertical;
                     } else {

@@ -62,7 +62,7 @@ function createImageFlipButton(handler: ImageEditor): RibbonButton<'buttonNameFl
             items: flipDirections,
         },
         isDisabled: formatState => !formatState.canAddImageAltText,
-        onClick: (_editor, flipDirection) => {
+        onClick: (editor, flipDirection) => {
             handler.flipImage(flipDirection as 'horizontal' | 'vertical');
         },
     };
