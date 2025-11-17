@@ -140,7 +140,6 @@ export class Editor implements IEditor {
      */
     getDOMSelection(): DOMSelection | null {
         const core = this.getCore();
-        console.log(core.api.getDOMSelection(core));
 
         return core.api.getDOMSelection(core);
     }

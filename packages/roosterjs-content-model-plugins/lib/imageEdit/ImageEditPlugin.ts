@@ -398,7 +398,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             editingImageModel = image;
                             isRTL = editingImage.paragraph.format.direction == 'rtl';
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
-                            image.format.imageState = 'isEditing';
+                            image.format.imageState = EDITING_MARKER;
                         });
 
                         result = true;
