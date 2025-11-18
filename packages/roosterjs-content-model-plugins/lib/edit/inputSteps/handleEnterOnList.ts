@@ -5,13 +5,11 @@ import {
     createListItem,
     createListLevel,
     getClosestAncestorBlockGroupIndex,
-    isBlockGroupOfType,
     ListFormats,
     mutateBlock,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockFormat,
-    ContentModelListItem,
     DeleteSelectionStep,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
@@ -50,35 +48,6 @@ export const handleEnterOnList: DeleteSelectionStep = context => {
                         listItem,
                         ...path.slice(index + 1),
                     ]);
-                }
-            }
-
-            const listIndex = listParent.blocks.indexOf(listItem);
-            const nextBlock = listParent.blocks[listIndex + 1];
-
-            if (nextBlock) {
-                if (
-                    isBlockGroupOfType<ContentModelListItem>(nextBlock, 'ListItem') &&
-                    nextBlock.levels[0]
-                ) {
-                    nextBlock.levels.forEach(level => {
-                        // Remove startNumberOverride so that next list item can join current list, unless it is 1.
-                        // List start with 1 means it should be an explicit new list and should never join another list before it
-                        if (level.format.startNumberOverride !== 1) {
-                            level.format.startNumberOverride = undefined;
-                        }
-                    });
-
-                    if (listItem.levels.length == 0) {
-                        const nextBlockIndex = findIndex(
-                            listParent.blocks,
-                            nextBlock.levels.length
-                        );
-
-                        nextBlock.levels[
-                            nextBlock.levels.length - 1
-                        ].format.startNumberOverride = nextBlockIndex;
-                    }
                 }
             }
 
@@ -151,25 +120,4 @@ const createNewListLevel = (listItem: ReadonlyContentModelListItem) => {
             level.dataset
         );
     });
-};
-
-const findIndex = (blocks: readonly ReadonlyContentModelBlock[], levelLength: number) => {
-    let counter = 1;
-    for (let i = 0; i < blocks.length; i++) {
-        const listItem = blocks[i];
-
-        if (
-            isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
-            listItem.levels.length === levelLength
-        ) {
-            counter++;
-        } else if (
-            isBlockGroupOfType<ContentModelListItem>(listItem, 'ListItem') &&
-            listItem.levels.length == 0
-        ) {
-            return counter;
-        }
-    }
-
-    return counter;
 };
