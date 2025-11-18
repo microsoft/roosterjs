@@ -45,6 +45,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 defaultFormat: undefined,
                 rootFontSize: 16,
                 experimentalFeatures: [],
+                editorViewWidth: undefined,
             },
             undefined,
             {
@@ -77,7 +78,10 @@ describe('createDomToModelContextForSanitizing', () => {
             document,
             mockedDefaultFormat,
             mockedOption,
-            mockedAdditionalOption
+            mockedAdditionalOption,
+            {
+                getClientWidth: () => 500,
+            } as any
         );
 
         const additionalOption = {
@@ -91,6 +95,7 @@ describe('createDomToModelContextForSanitizing', () => {
                 defaultFormat: mockedDefaultFormat,
                 rootFontSize: 16,
                 experimentalFeatures: [],
+                editorViewWidth: 500,
             },
             mockedOption,
             {
