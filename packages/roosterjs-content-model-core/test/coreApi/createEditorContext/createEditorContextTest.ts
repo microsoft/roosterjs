@@ -32,6 +32,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
 
@@ -49,6 +50,7 @@ describe('createEditorContext', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 
@@ -82,6 +84,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
 
@@ -99,6 +102,7 @@ describe('createEditorContext', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 
@@ -129,6 +133,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: jasmine.createSpy('isRtl'),
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
 
@@ -146,6 +151,7 @@ describe('createEditorContext', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 
@@ -179,6 +185,7 @@ describe('createEditorContext', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
 
@@ -196,6 +203,7 @@ describe('createEditorContext', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 });
@@ -231,6 +239,7 @@ describe('createEditorContext - checkZoomScale', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
     });
@@ -252,6 +261,7 @@ describe('createEditorContext - checkZoomScale', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 });
@@ -288,6 +298,7 @@ describe('createEditorContext - checkRootDir', () => {
             domHelper: {
                 calculateZoomScale: calculateZoomScaleSpy,
                 isRightToLeft: isRtlSpy,
+                getClientWidth: () => 800,
             },
         } as any) as EditorCore;
     });
@@ -308,6 +319,7 @@ describe('createEditorContext - checkRootDir', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 
@@ -328,6 +340,7 @@ describe('createEditorContext - checkRootDir', () => {
             rootFontSize: 16,
             experimentalFeatures: [],
             paragraphMap: mockedParagraphMap,
+            editorViewWidth: 800,
         });
     });
 });
