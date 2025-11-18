@@ -73,4 +73,10 @@ export interface EditorContext {
      * When set to true, size of table will be recalculated when converting from DOM to Content Model.
      */
     recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
+
+    /**
+     * Width of the editor's editable area in pixels, excluding padding.
+     * This value is typically used for layout calculations such as constraining pasted image sizes.
+     */
+    editorViewWidth?: number;
 }
