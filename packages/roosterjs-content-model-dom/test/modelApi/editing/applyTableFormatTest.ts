@@ -632,4 +632,85 @@ describe('applyTableFormat', () => {
             }
         });
     });
+
+    it('Apply first column', () => {
+        const table = createTable(1, 1);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        //apply FirstColumn
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasFirstColumn: true });
+
+        table.rows.forEach(row => {
+            row.cells.forEach((cell, index) => {
+                if (index == 0) {
+                    cell.blocks.forEach(block => {
+                        if (block.blockType == 'Paragraph') {
+                            block.segments.forEach(segment => {
+                                expect(segment.format.fontWeight).toEqual('bold');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    it('Remove first column', () => {
+        const table = createTable(1, 1);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        //apply FirstColumn
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasFirstColumn: true });
+
+        //apply FirstColumn
+        applyTableFormat(table as ReadonlyContentModelTable, { ...format, hasFirstColumn: false });
+
+        table.rows.forEach(row => {
+            row.cells.forEach((cell, index) => {
+                if (index == 0) {
+                    cell.blocks.forEach(block => {
+                        if (block.blockType == 'Paragraph') {
+                            block.segments.forEach(segment => {
+                                expect(segment.format.fontWeight).not.toEqual('bold');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
 });
