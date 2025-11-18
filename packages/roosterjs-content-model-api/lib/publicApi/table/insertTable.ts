@@ -21,8 +21,7 @@ import type {
  * @param columns Number of columns in table, it also controls the default table cell width:
  * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
- * @param tableMetadataFormat (Optional) The table format that are store in metadata. If not passed, the default format will be applied:
- * background color: #FFF; border color: #ABABAB
+ * @param tableMetadataFormat (Optional) The table format that are stored as metadata. If not passed, the default format will be applied: background color: #FFF; border color: #ABABAB
  * @param format (Optional) The table format used for style attributes
  */
 export function insertTable(
