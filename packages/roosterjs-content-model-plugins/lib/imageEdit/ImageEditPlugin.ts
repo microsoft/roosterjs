@@ -133,9 +133,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             blur: {
                 beforeDispatch: ev => {
                     if (this.editor && this.selectedImage) {
-                        if (this.editor) {
-                            this.applyFormatWithContentModel(this.editor, this.isCropMode);
-                        }
+                        this.applyFormatWithContentModel(this.editor, this.isCropMode);
                     }
                 },
             },
@@ -238,9 +236,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private selectionChangeHandler(editor: IEditor, event: SelectionChangedEvent) {
         if ((event.newSelection && event.newSelection.type == 'image') || this.selectedImage) {
-            editor.getDocument().defaultView?.requestAnimationFrame(() => {
-                this.applyFormatWithContentModel(editor, this.isCropMode);
-            });
+            this.applyFormatWithContentModel(editor, this.isCropMode);
         }
     }
 
@@ -335,102 +331,104 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         let editingImageModel: ContentModelImage | undefined;
         const selection = editor.getDOMSelection();
         let isRTL: boolean = false;
+        editor.getDocument().defaultView?.requestAnimationFrame(() => {
+            editor.formatContentModel(
+                (model, context) => {
+                    const editingImage = getSelectedImage(model);
+                    const previousSelectedImage = isApiOperation
+                        ? editingImage
+                        : findEditingImage(model, undefined);
+                    let result = false;
 
-        editor.formatContentModel(
-            (model, context) => {
-                const editingImage = getSelectedImage(model);
-                const previousSelectedImage = isApiOperation
-                    ? editingImage
-                    : findEditingImage(model, undefined);
-                let result = false;
+                    // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
+                    context.skipUndoSnapshot = 'SkipAll';
 
-                // Skip adding undo snapshot for now. If we detect any changes later, we will reset it
-                context.skipUndoSnapshot = 'SkipAll';
+                    const clickInDifferentImage =
+                        previousSelectedImage?.image != editingImage?.image;
 
-                const clickInDifferentImage = previousSelectedImage?.image != editingImage?.image;
-
-                if (
-                    clickInDifferentImage ||
-                    previousSelectedImage?.image.format.imageState == EDITING_MARKER ||
-                    isApiOperation
-                ) {
-                    const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
                     if (
-                        previousSelectedImage &&
-                        lastSrc &&
-                        selectedImage &&
-                        imageEditInfo &&
-                        clonedImage
+                        clickInDifferentImage ||
+                        previousSelectedImage?.image.format.imageState == EDITING_MARKER ||
+                        isApiOperation
                     ) {
-                        mutateSegment(
-                            previousSelectedImage.paragraph,
-                            previousSelectedImage.image,
-                            image => {
-                                const changeState = applyChange(
-                                    editor,
-                                    selectedImage,
-                                    image,
-                                    imageEditInfo,
-                                    lastSrc,
-                                    this.wasImageResized || this.isCropMode,
-                                    clonedImage
-                                );
+                        const { lastSrc, selectedImage, imageEditInfo, clonedImage } = this;
+                        if (
+                            previousSelectedImage &&
+                            lastSrc &&
+                            selectedImage &&
+                            imageEditInfo &&
+                            clonedImage
+                        ) {
+                            mutateSegment(
+                                previousSelectedImage.paragraph,
+                                previousSelectedImage.image,
+                                image => {
+                                    const changeState = applyChange(
+                                        editor,
+                                        selectedImage,
+                                        image,
+                                        imageEditInfo,
+                                        lastSrc,
+                                        this.wasImageResized || this.isCropMode,
+                                        clonedImage
+                                    );
 
-                                if (this.wasImageResized || changeState == 'FullyChanged') {
-                                    context.skipUndoSnapshot = false;
+                                    if (this.wasImageResized || changeState == 'FullyChanged') {
+                                        context.skipUndoSnapshot = false;
+                                    }
+                                    image.format.imageState = undefined;
                                 }
-                                image.format.imageState = undefined;
-                            }
-                        );
+                            );
 
-                        this.cleanInfo();
-                        result = true;
-                    }
+                            this.cleanInfo();
+                            result = true;
+                        }
 
-                    if (
-                        clickInDifferentImage &&
-                        editingImage &&
-                        selection?.type == 'image' &&
-                        !isApiOperation
-                    ) {
-                        this.isCropMode = isCropMode;
-                        mutateSegment(editingImage.paragraph, editingImage.image, image => {
-                            editingImageModel = image;
-                            isRTL = editingImage.paragraph.format.direction == 'rtl';
-                            this.imageEditInfo = updateImageEditInfo(image, selection.image);
-                            image.format.imageState = EDITING_MARKER;
-                        });
+                        if (
+                            clickInDifferentImage &&
+                            editingImage &&
+                            selection?.type == 'image' &&
+                            !isApiOperation
+                        ) {
+                            this.isCropMode = isCropMode;
+                            mutateSegment(editingImage.paragraph, editingImage.image, image => {
+                                editingImageModel = image;
+                                isRTL = editingImage.paragraph.format.direction == 'rtl';
+                                this.imageEditInfo = updateImageEditInfo(image, selection.image);
+                                image.format.imageState = EDITING_MARKER;
+                            });
 
-                        result = true;
-                    }
-                }
-
-                return result;
-            },
-            {
-                skipSelectionChangedEvent: true,
-                onNodeCreated: (model, node) => {
-                    if (
-                        !isApiOperation &&
-                        editingImageModel &&
-                        editingImageModel == model &&
-                        editingImageModel.format.imageState == EDITING_MARKER &&
-                        isNodeOfType(node, 'ELEMENT_NODE') &&
-                        isElementOfType(node, 'img')
-                    ) {
-                        if (isCropMode) {
-                            this.startCropMode(editor, node, isRTL);
-                        } else {
-                            this.startRotateAndResize(editor, node, isRTL);
+                            result = true;
                         }
                     }
+
+                    return result;
                 },
-                apiName: IMAGE_EDIT_FORMAT_EVENT,
-            },
-            {
-                tryGetFromCache: true,
-            }
-        );
+                {
+                    skipSelectionChangedEvent: true,
+                    onNodeCreated: (model, node) => {
+                        if (
+                            !isApiOperation &&
+                            editingImageModel &&
+                            editingImageModel == model &&
+                            editingImageModel.format.imageState == EDITING_MARKER &&
+                            isNodeOfType(node, 'ELEMENT_NODE') &&
+                            isElementOfType(node, 'img')
+                        ) {
+                            if (isCropMode) {
+                                this.startCropMode(editor, node, isRTL);
+                            } else {
+                                this.startRotateAndResize(editor, node, isRTL);
+                            }
+                        }
+                    },
+                    apiName: IMAGE_EDIT_FORMAT_EVENT,
+                },
+                {
+                    tryGetFromCache: true,
+                }
+            );
+        });
     }
 
     private startEditing(

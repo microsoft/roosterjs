@@ -110,6 +110,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private markdownPanePlugin: MarkdownPanePlugin;
+    private imageEditPlugin: ImageEditPlugin;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -164,26 +165,24 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             },
             activeTab: 'all',
         };
+
+        this.imageEditPlugin = new ImageEditPlugin({
+            disableSideResize: this.state.initState.disableSideResize,
+        });
     }
 
     render() {
         const theme = getTheme(this.state.isDarkMode);
 
-        const imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
-            ? new ImageEditPlugin({
-                  disableSideResize: this.state.initState.disableSideResize,
-              })
-            : null;
-
         return (
             <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>
                 {this.renderTitleBar()}
                 {!this.state.popoutWindow && this.renderTabs()}
-                {!this.state.popoutWindow && this.renderRibbon(imageEditPlugin)}
+                {!this.state.popoutWindow && this.renderRibbon(this.imageEditPlugin)}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow
-                        ? this.renderPopout(imageEditPlugin)
-                        : this.renderMainPane(imageEditPlugin)}
+                        ? this.renderPopout(this.imageEditPlugin)
+                        : this.renderMainPane(this.imageEditPlugin)}
                 </div>
             </ThemeProvider>
         );
