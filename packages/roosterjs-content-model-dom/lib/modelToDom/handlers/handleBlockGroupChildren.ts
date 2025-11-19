@@ -3,6 +3,8 @@ import type {
     ContentModelBlockGroup,
     ContentModelHandler,
     ModelToDomContext,
+    ModelToDomListStackItem,
+    RewriteFromModel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,6 +31,10 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 childBlock.blockType != 'BlockGroup' ||
                 childBlock.blockGroupType != 'ListItem'
             ) {
+                if (context.allowCacheListItem) {
+                    cleanUpNodeState(listFormat.nodeStack, context.rewriteFromModel);
+                }
+
                 listFormat.nodeStack = [];
             }
 
@@ -39,18 +45,35 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             }
         });
 
-        // Remove all rest node if any since they don't appear in content model
-        while (refNode) {
-            const next = refNode.nextSibling;
-
-            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
-                context.rewriteFromModel.removedBlockElements.push(refNode);
-            }
-
-            refNode.parentNode?.removeChild(refNode);
-            refNode = next;
+        if (context.allowCacheListItem) {
+            cleanUpNodeState(listFormat.nodeStack, context.rewriteFromModel);
         }
+
+        // Remove all rest node if any since they don't appear in content model
+        cleanUpRestNodes(refNode, context.rewriteFromModel);
     } finally {
         listFormat.nodeStack = nodeStack;
     }
 };
+
+function cleanUpNodeState(nodeStack: ModelToDomListStackItem[], rewriteContext: RewriteFromModel) {
+    // Clear list stack, only run to nodeState[1] because nodeState[0] is the parent node
+    for (let i = nodeStack.length - 1; i > 0; i--) {
+        const node = nodeStack.pop()?.refNode ?? null;
+
+        cleanUpRestNodes(node, rewriteContext);
+    }
+}
+
+function cleanUpRestNodes(refNode: Node | null, rewriteContext: RewriteFromModel) {
+    while (refNode) {
+        const next = refNode.nextSibling;
+
+        if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
+            rewriteContext.removedBlockElements.push(refNode);
+        }
+
+        refNode.parentNode?.removeChild(refNode);
+        refNode = next;
+    }
+}

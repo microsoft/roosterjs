@@ -68,6 +68,7 @@ const initialState: OptionState = {
         'HandleEnterKey',
         'CustomCopyCut',
         'CloneIndependentRoot',
+        'CacheList',
     ]),
 };
 

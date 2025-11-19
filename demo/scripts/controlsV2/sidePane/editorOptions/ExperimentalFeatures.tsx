@@ -15,6 +15,7 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
                 {this.renderFeature('HandleEnterKey')}
                 {this.renderFeature('CustomCopyCut')}
                 {this.renderFeature('CloneIndependentRoot')}
+                {this.renderFeature('CacheList')}
             </>
         );
     }
