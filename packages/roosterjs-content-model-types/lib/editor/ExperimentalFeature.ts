@@ -42,4 +42,9 @@ export type ExperimentalFeature =
      * Get cloned root element from an independent HTML document instead of current document.
      * So any operation to the cloned root won't trigger network request for resources like images
      */
-    | 'CloneIndependentRoot';
+    | 'CloneIndependentRoot'
+
+    /**
+     * Use selection change event instead of mouse up to insert the image edit handles
+     */
+    | 'ImageEditV2';

@@ -67,6 +67,7 @@ const initialState: OptionState = {
         'HandleEnterKey',
         'CustomCopyCut',
         'CloneIndependentRoot',
+        'ImageEditV2',
     ]),
 };
 

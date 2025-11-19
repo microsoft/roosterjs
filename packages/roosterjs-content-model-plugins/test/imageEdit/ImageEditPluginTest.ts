@@ -3,8 +3,8 @@ import * as findImage from '../../lib/imageEdit/utils/findEditingImage';
 import * as getSelectedImage from '../../lib/imageEdit/utils/getSelectedImage';
 import * as normalizeImageSelection from '../../lib/imageEdit/utils/normalizeImageSelection';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
-import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
 import { initEditor } from '../TestHelper';
+import { LegacyImageEditPlugin } from '../../lib/imageEdit/LegacyImageEditPlugin';
 import {
     ChangeSource,
     createImage,
@@ -23,7 +23,7 @@ import {
     ImageSelection,
 } from 'roosterjs-content-model-types';
 
-describe('ImageEditPlugin', () => {
+describe('LegacyImageEditPlugin', () => {
     const model: ContentModelDocument = {
         blockGroupType: 'Document',
         blocks: [
@@ -164,7 +164,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -223,7 +223,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
         getDOMSelectionSpy.and.returnValue({
@@ -257,7 +257,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -279,7 +279,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -300,7 +300,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -333,7 +333,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('cropImage', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
@@ -348,7 +348,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('flip', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const image = new Image();
         image.src = 'test';
         getDOMSelectionSpy.and.returnValue({
@@ -365,7 +365,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('rotate', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const image = new Image();
         image.src = 'test';
         getDOMSelectionSpy.and.returnValue({
@@ -419,7 +419,7 @@ describe('ImageEditPlugin', () => {
                 textColor: '#000000',
             },
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], modelWithUnsupportedId);
         spyOn(editor, 'setEditorStyle').and.callThrough();
         (plugin as any).imageEditInfo = {
@@ -450,7 +450,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -483,7 +483,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -504,7 +504,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -540,7 +540,7 @@ describe('ImageEditPlugin', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         getDOMSelectionSpy.and.returnValue({
             type: 'image',
@@ -600,7 +600,7 @@ describe('ImageEditPlugin', () => {
             id: 'image_0',
             getAttribute: getAttributeSpy,
         } as any;
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         const draggedImage = mockedImage as HTMLImageElement;
         getDOMSelectionSpy.and.returnValue({
@@ -637,7 +637,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('dragImage only', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         const draggedImage = document.createElement('img');
         draggedImage.id = 'image_0';
@@ -650,7 +650,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('dragImage at same place', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         const draggedImage = document.createElement('img');
         draggedImage.id = 'image_0';
@@ -701,7 +701,7 @@ describe('ImageEditPlugin', () => {
                 textColor: '#000000',
             },
         };
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], model);
         spyOn(editor, 'setEditorStyle').and.callThrough();
 
@@ -735,7 +735,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('extractContentWithDom', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         const clonedRoot = document.createElement('div');
         const image = document.createElement('img');
@@ -783,7 +783,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('contentChanged - should remove isEditing', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
         const image = document.createElement('img');
@@ -808,7 +808,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('should call applyFormatWithContentModel and clean up on beforeLogicalRootChange when editing', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         // Simulate editing state
         plugin['isEditing'] = true;
@@ -833,7 +833,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('should do nothing on beforeLogicalRootChange if not editing', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new LegacyImageEditPlugin();
         plugin.initialize(editor);
         plugin['isEditing'] = false;
         plugin['editor'] = editor;
@@ -850,7 +850,7 @@ describe('ImageEditPlugin', () => {
     });
 });
 
-class TestPlugin extends ImageEditPlugin {
+class TestPlugin extends LegacyImageEditPlugin {
     public setIsEditing(isEditing: boolean) {
         this.isEditing = isEditing;
     }
@@ -888,7 +888,7 @@ interface TestOptions {
     shouldCleanInfo?: boolean;
 }
 
-describe('ImageEditPlugin - applyFormatWithContentModel', () => {
+describe('LegacyImageEditPlugin - applyFormatWithContentModel', () => {
     function runTest(
         model: ContentModelDocument,
         expectedModel: ContentModelDocument,

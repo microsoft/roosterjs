@@ -24,7 +24,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
-//const MouseRightButton = 2;
+const MouseRightButton = 2;
 const Up = 'ArrowUp';
 const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
@@ -181,6 +181,18 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private onMouseDown(editor: IEditor, rawEvent: MouseEvent) {
         const selection = editor.getDOMSelection();
         let image: HTMLImageElement | null;
+
+        // Image selection
+        if (
+            !editor.isExperimentalFeatureEnabled('ImageEditV2') &&
+            selection?.type == 'image' &&
+            (rawEvent.button == MouseLeftButton ||
+                (rawEvent.button == MouseRightButton &&
+                    !this.getClickingImage(rawEvent) &&
+                    !this.getContainedTargetImage(rawEvent, selection)))
+        ) {
+            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+        }
 
         if (
             (image =
