@@ -14,7 +14,7 @@ export const wordDesktopElementProcessor = (
 ): ElementProcessor<HTMLElement> => {
     return (group, element, context) => {
         const styles = getStyles(element);
-        // Process Word Lists or Word Commands, otherwise use the default processor on this element.
+        // Process Word Lists or Word Comments, otherwise use the default processor on this element.
         if (
             !(
                 processWordList(styles, group, element, context, metadataKey) ||

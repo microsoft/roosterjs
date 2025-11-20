@@ -15,7 +15,7 @@ export const wordDesktopListLevelParser: FormatParser<ContentModelListItemLevelF
     _context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
 ) => {
-    if (element.style.marginLeft != '') {
+    if (element.style.marginLeft !== '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
