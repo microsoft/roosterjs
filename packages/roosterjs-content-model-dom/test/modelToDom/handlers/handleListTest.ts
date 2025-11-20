@@ -5,6 +5,7 @@ import { createListLevel } from '../../../lib/modelApi/creators/createListLevel'
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { expectHtml } from '../../testUtils';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
+import { listLevelMetadataApplier } from 'roosterjs-content-model-core/lib/override/listMetadataApplier';
 import { NumberingListType } from '../../../lib/constants/NumberingListType';
 
 describe('handleList without format handlers', () => {
@@ -509,5 +510,66 @@ describe('handleList handles metadata', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listLevel1);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('ul'));
+    });
+
+    it('List style type is changed by metadata, node stack should not be changed', () => {
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {},
+                    dataset: {
+                        editingInfo: '{"applyListStyleFromLevel":true}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
+
+        context = createModelToDomContext(undefined, {
+            metadataAppliers: {
+                listLevel: listLevelMetadataApplier,
+            },
+        });
+
+        handleList(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ul data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}" style="list-style-type: disc;"></ul></div>'
+        );
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    node: parent.firstChild as HTMLElement,
+                    listType: 'UL',
+                    dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                    format: {},
+                },
+            ],
+        });
+        expect(listItem.levels[0].format.listStyleType).toBe('disc');
     });
 });
