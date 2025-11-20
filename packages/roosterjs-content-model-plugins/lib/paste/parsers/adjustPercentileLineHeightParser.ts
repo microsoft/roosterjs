@@ -14,7 +14,7 @@ export function adjustPercentileLineHeight(
     format: ContentModelBlockFormat,
     element: HTMLElement
 ): void {
-    //If the line height is less than the browser default line height, line between the text is going to be too narrow
+    // If the line height is less than the browser default line height, line between the text is going to be too narrow
     let parsedLineHeight: number;
     if (
         PERCENTAGE_REGEX.test(element.style.lineHeight) &&

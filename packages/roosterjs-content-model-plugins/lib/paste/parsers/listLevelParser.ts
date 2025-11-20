@@ -18,7 +18,7 @@ export const listLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     _context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
 ) => {
-    if (element.style.marginLeft != '') {
+    if (element.style.marginLeft !== '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
