@@ -1,4 +1,4 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { isWordDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isWordDesktopDocument';
 import { WORD_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
@@ -53,12 +53,10 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {
-                rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+            rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
                 xmlns:w="urn:schemas-microsoft-com:office:word"
                 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
                 xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>`,
-            },
             environment: {
                 isSafari: true,
             },
@@ -72,12 +70,10 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {
-                rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+            rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
                 xmlns:w  =  "urn:schemas-microsoft-com:office:word"
                 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
                 xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>`,
-            },
             environment: {
                 isSafari: true,
             },

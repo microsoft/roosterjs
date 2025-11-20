@@ -1,5 +1,5 @@
 import { ClipboardData } from 'roosterjs-content-model-types';
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { shouldConvertToSingleImage } from '../../../lib/paste/pasteSourceValidations/shouldConvertToSingleImage';
 
 describe('shouldConvertToSingleImage |', () => {
@@ -25,14 +25,13 @@ describe('shouldConvertToSingleImage |', () => {
         shouldConvertToSingleImageInput: boolean
     ) {
         const fragment = document.createDocumentFragment();
-        const clipboardData = <ClipboardData>{
-            htmlFirstLevelChildTags,
-        };
 
         const result = shouldConvertToSingleImage(<GetSourceInputParams>{
             fragment,
             shouldConvertSingleImage: shouldConvertToSingleImageInput,
-            clipboardData,
+            htmlFirstLevelChildTags,
+            htmlAttributes: {},
+            environment: {} as any,
         });
 
         expect(result).toEqual(resultExpected);

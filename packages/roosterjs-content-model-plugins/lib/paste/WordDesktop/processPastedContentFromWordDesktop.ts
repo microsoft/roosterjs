@@ -7,11 +7,11 @@ import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextInd
 import { setProcessor } from '../utils/setProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type {
-    BeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelListItemLevelFormat,
     ContentModelTableFormat,
     DomToModelContext,
+    DomToModelOption,
     ElementProcessor,
     FormatParser,
 } from 'roosterjs-content-model-types';
@@ -25,15 +25,18 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 1.2;
  * Handles Pasted content when source is Word Desktop
  * @param ev BeforePasteEvent
  */
-export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
-    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
+export function processPastedContentFromWordDesktop(
+    domToModelOption: DomToModelOption,
+    htmlString: string
+) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
-    setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
-    addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
-    addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
-    addParser(ev.domToModelOption, 'listLevel', listLevelParser);
-    addParser(ev.domToModelOption, 'container', wordTableParser);
-    addParser(ev.domToModelOption, 'table', wordTableParser);
+    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
+    addParser(domToModelOption, 'listLevel', listLevelParser);
+    addParser(domToModelOption, 'container', wordTableParser);
+    addParser(domToModelOption, 'table', wordTableParser);
 }
 
 const wordDesktopElementProcessor = (
