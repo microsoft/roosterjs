@@ -250,17 +250,12 @@ describe('iterateSelections', () => {
         iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(3);
-        expect(callback).toHaveBeenCalledWith(
-            [group],
-            {
-                table: table,
-                colIndex: 0,
-                rowIndex: 0,
-                isWholeTableSelected: false,
-            },
-            undefined,
-            undefined
-        );
+        expect(callback).toHaveBeenCalledWith([group], {
+            table: table,
+            colIndex: 0,
+            rowIndex: 0,
+            isWholeTableSelected: false,
+        });
         expect(callback).toHaveBeenCalledWith(
             [cell1, group],
             {
@@ -311,17 +306,12 @@ describe('iterateSelections', () => {
         });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith(
-            [group],
-            {
-                table: table,
-                colIndex: 0,
-                rowIndex: 0,
-                isWholeTableSelected: false,
-            },
-            undefined,
-            undefined
-        );
+        expect(callback).toHaveBeenCalledWith([group], {
+            table: table,
+            colIndex: 0,
+            rowIndex: 0,
+            isWholeTableSelected: false,
+        });
     });
 
     it('Group with table selection and ignore selected table content', () => {
@@ -350,17 +340,12 @@ describe('iterateSelections', () => {
         });
 
         expect(callback).toHaveBeenCalledTimes(3);
-        expect(callback).toHaveBeenCalledWith(
-            [group],
-            {
-                table: table,
-                colIndex: 0,
-                rowIndex: 0,
-                isWholeTableSelected: false,
-            },
-            undefined,
-            undefined
-        );
+        expect(callback).toHaveBeenCalledWith([group], {
+            table: table,
+            colIndex: 0,
+            rowIndex: 0,
+            isWholeTableSelected: false,
+        });
         expect(callback).toHaveBeenCalledWith(
             [cell1, group],
             {
@@ -410,7 +395,7 @@ describe('iterateSelections', () => {
         iterateSelections(group, callback, { contentUnderSelectedTableCell: 'ignoreForTable' });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, table, undefined);
+        expect(callback).toHaveBeenCalledWith([group], undefined, table);
     });
 
     it('Select from the end of paragraph', () => {
@@ -857,16 +842,16 @@ describe('iterateSelections', () => {
         iterateSelections(group, callback3, { contentUnderSelectedGeneralElement: 'both' });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback).toHaveBeenCalledWith([group], undefined, generalDiv);
 
         expect(callback1).toHaveBeenCalledTimes(1);
-        expect(callback1).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback1).toHaveBeenCalledWith([group], undefined, generalDiv);
 
         expect(callback2).toHaveBeenCalledTimes(1);
-        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv);
 
         expect(callback3).toHaveBeenCalledTimes(1);
-        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv);
     });
 
     it('Get Selection from model that contains selected general block', () => {
@@ -907,14 +892,14 @@ describe('iterateSelections', () => {
         ]);
 
         expect(callback2).toHaveBeenCalledTimes(1);
-        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv);
 
         expect(callback3).toHaveBeenCalledTimes(2);
         expect(callback3).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
             text1,
             text2,
         ]);
-        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv);
     });
 
     it('Divider selection', () => {
@@ -927,7 +912,7 @@ describe('iterateSelections', () => {
         iterateSelections(group, callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, divider, undefined);
+        expect(callback).toHaveBeenCalledWith([group], undefined, divider);
     });
 
     it('Return true from first selection', () => {
@@ -983,7 +968,7 @@ describe('iterateSelections', () => {
 
         expect(newCallback).toHaveBeenCalledTimes(2);
         expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
-        expect(newCallback).toHaveBeenCalledWith([group], undefined, divider, undefined);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, divider);
     });
 
     it('Return true from first selection in nested block group', () => {
@@ -1043,7 +1028,7 @@ describe('iterateSelections', () => {
         });
 
         expect(newCallback).toHaveBeenCalledTimes(1);
-        expect(newCallback).toHaveBeenCalledWith([group], undefined, table, undefined);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, table);
     });
 
     it('Return true from table cell selection', () => {
@@ -1075,28 +1060,18 @@ describe('iterateSelections', () => {
         iterateSelections(group, newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(2);
-        expect(newCallback).toHaveBeenCalledWith(
-            [group],
-            {
-                table: table,
-                rowIndex: 0,
-                colIndex: 0,
-                isWholeTableSelected: true,
-            },
-            undefined,
-            undefined
-        );
-        expect(newCallback).toHaveBeenCalledWith(
-            [group],
-            {
-                table: table,
-                rowIndex: 0,
-                colIndex: 1,
-                isWholeTableSelected: true,
-            },
-            undefined,
-            undefined
-        );
+        expect(newCallback).toHaveBeenCalledWith([group], {
+            table: table,
+            rowIndex: 0,
+            colIndex: 0,
+            isWholeTableSelected: true,
+        });
+        expect(newCallback).toHaveBeenCalledWith([group], {
+            table: table,
+            rowIndex: 0,
+            colIndex: 1,
+            isWholeTableSelected: true,
+        });
     });
 
     it('includeListFormatHolder=anySegment', () => {
@@ -1218,6 +1193,6 @@ describe('iterateSelections', () => {
         iterateSelections(doc, callback, { includeListFormatHolder: 'never' });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([doc], undefined, entity, undefined);
+        expect(callback).toHaveBeenCalledWith([doc], undefined, entity);
     });
 });
