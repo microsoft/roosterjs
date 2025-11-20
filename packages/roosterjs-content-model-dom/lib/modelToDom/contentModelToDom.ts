@@ -1,6 +1,5 @@
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { toArray } from '../domUtils/toArray';
-import type { ContentModelDocumentWithPersistedCache } from '../modelApi/selection/iterateSelections';
 import type {
     ContentModelDocument,
     DOMSelection,
