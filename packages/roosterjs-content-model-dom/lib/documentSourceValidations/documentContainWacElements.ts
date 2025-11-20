@@ -28,7 +28,7 @@ const WAC_IDENTIFY_SELECTOR = `ul[class^="${BULLET_LIST_STYLE}"]>.${OUTLINE_ELEM
  * @internal
  * Check whether the fragment provided contain Wac Elements
  * @param props Properties related to the PasteEvent
- * @returns
+ * @returns True if the fragment contains WAC elements, false otherwise.
  */
 export const documentContainWacElements: GetSourceFunction = props => {
     const { fragment } = props;
