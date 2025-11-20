@@ -9,7 +9,7 @@ import type { GetSourceFunction } from './getDocumentSource';
  */
 export const shouldConvertToSingleImage: GetSourceFunction = props => {
     const { shouldConvertSingleImage, htmlFirstLevelChildTags } = props;
-    return (
+    return !!(
         shouldConvertSingleImage &&
         htmlFirstLevelChildTags?.length == 1 &&
         htmlFirstLevelChildTags[0] == 'IMG'
