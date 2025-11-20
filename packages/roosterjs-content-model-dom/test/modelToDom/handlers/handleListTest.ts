@@ -553,9 +553,10 @@ describe('handleList handles metadata', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe(
-            '<div><ul data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}" style="list-style-type: disc;"></ul></div>'
-        );
+        expectHtml(parent.outerHTML, [
+            '<div><ul data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}" style="list-style-type: disc;"></ul></div>',
+            '<div><ul style="list-style-type: disc;" data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}"></ul></div>',
+        ]);
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
