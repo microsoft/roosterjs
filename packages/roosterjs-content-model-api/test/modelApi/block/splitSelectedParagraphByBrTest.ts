@@ -468,11 +468,13 @@ describe('splitSelectedParagraphByBr', () => {
                     blockType: 'Paragraph',
                     segments: [text3_1],
                     format: {},
+                    cachedElement: mockedCache,
                 },
                 {
                     blockType: 'Paragraph',
                     segments: [text4_1],
                     format: {},
+                    cachedElement: mockedCache,
                 },
                 {
                     blockType: 'Paragraph',
