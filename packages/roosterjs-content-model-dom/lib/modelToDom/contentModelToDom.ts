@@ -32,10 +32,6 @@ export function contentModelToDom(
         range.isReverted = true;
     }
 
-    if (context.domIndexer && context.allowCacheElement) {
-        (model as ContentModelDocumentWithPersistedCache).persistCache = true;
-    }
-
     root.normalize();
 
     return range;
