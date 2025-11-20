@@ -27,7 +27,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event);
+        processPastedContentFromWordDesktop(event.domToModelOption, htmlBefore || '');
 
         const model = domToContentModel(
             fragment,

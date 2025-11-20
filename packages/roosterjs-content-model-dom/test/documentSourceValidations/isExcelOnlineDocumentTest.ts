@@ -1,6 +1,6 @@
 import { EXCEL_ATTRIBUTE_VALUE } from './pasteTestUtils';
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
-import { isExcelOnlineDocument } from '../../../lib/paste/pasteSourceValidations/isExcelOnlineDocument';
+import { GetSourceInputParams } from 'roosterjs-content-model-types';
+import { isExcelOnlineDocument } from '../../lib/documentSourceValidations/isExcelOnlineDocument';
 
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 

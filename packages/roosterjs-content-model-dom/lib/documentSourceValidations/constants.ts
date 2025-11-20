@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-export const PastePropertyNames = {
+export const DocumentPropertyNames = {
     /**
      * Node attribute used to identify if the content is from Google Sheets.
      */

@@ -1,6 +1,7 @@
 export { domToContentModel } from './domToModel/domToContentModel';
 export { contentModelToDom } from './modelToDom/contentModelToDom';
 export { contentModelToText } from './modelToText/contentModelToText';
+export { getDocumentSource } from './documentSourceValidations/getDocumentSource';
 
 export {
     childProcessor,
@@ -117,6 +118,7 @@ export { combineBorderValue, extractBorderValues } from './domUtils/style/border
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
+export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
 export { transformColor } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';

@@ -1,5 +1,5 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
-import { isPowerPointDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isPowerPointDesktopDocument';
+import { GetSourceInputParams } from 'roosterjs-content-model-types';
+import { isPowerPointDesktopDocument } from '../../lib/documentSourceValidations/isPowerPointDesktopDocument';
 import { POWERPOINT_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 describe('isPowerPointDesktopDocument |', () => {

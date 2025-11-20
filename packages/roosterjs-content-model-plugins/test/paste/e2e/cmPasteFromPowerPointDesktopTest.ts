@@ -1,5 +1,5 @@
 import * as addParserF from '../../../lib/paste/utils/addParser';
-import * as getPasteSourceF from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as getPasteSourceF from '../../../lib/paste/getPasteSource';
 import * as ppt from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/paste/utils/setProcessor';
 import { expectEqual, initEditor } from './testUtils';

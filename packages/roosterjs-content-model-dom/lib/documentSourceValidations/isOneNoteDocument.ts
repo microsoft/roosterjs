@@ -1,5 +1,5 @@
-import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import { DocumentPropertyNames } from './constants';
+import type { GetSourceFunction } from './getDocumentSource';
 
 const ONE_NOTE_ATTRIBUTE_VALUE = 'OneNote.File';
 
@@ -12,5 +12,5 @@ const ONE_NOTE_ATTRIBUTE_VALUE = 'OneNote.File';
 export const isOneNoteDesktopDocument: GetSourceFunction = props => {
     const { htmlAttributes } = props;
     // The presence of this attribute confirms its origin from OneNote Desktop
-    return htmlAttributes[PastePropertyNames.PROG_ID_NAME] == ONE_NOTE_ATTRIBUTE_VALUE;
+    return htmlAttributes[DocumentPropertyNames.PROG_ID_NAME] == ONE_NOTE_ATTRIBUTE_VALUE;
 };

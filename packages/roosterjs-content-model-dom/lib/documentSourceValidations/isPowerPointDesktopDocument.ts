@@ -1,5 +1,5 @@
-import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import { DocumentPropertyNames } from './constants';
+import type { GetSourceFunction } from './getDocumentSource';
 
 const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 
@@ -10,5 +10,5 @@ const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
  * @returns
  */
 export const isPowerPointDesktopDocument: GetSourceFunction = props => {
-    return props.htmlAttributes[PastePropertyNames.PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE;
+    return props.htmlAttributes[DocumentPropertyNames.PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE;
 };

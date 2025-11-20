@@ -1,12 +1,12 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { DocumentPropertyNames } from '../../lib/documentSourceValidations/constants';
+import { GetSourceInputParams } from 'roosterjs-content-model-types';
 import { getWacElement } from './pasteTestUtils';
-import { isGoogleSheetDocument } from '../../../lib/paste/pasteSourceValidations/isGoogleSheetDocument';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
+import { isGoogleSheetDocument } from '../../lib/documentSourceValidations/isGoogleSheetDocument';
 
 describe('isGoogleSheetDocument |', () => {
     it('Is from Google Sheets', () => {
         const fragment = document.createDocumentFragment();
-        fragment.appendChild(document.createElement(PastePropertyNames.GOOGLE_SHEET_NODE_NAME));
+        fragment.appendChild(document.createElement(DocumentPropertyNames.GOOGLE_SHEET_NODE_NAME));
 
         const result = isGoogleSheetDocument(<GetSourceInputParams>{ fragment });
 

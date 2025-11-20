@@ -1,5 +1,5 @@
-import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import { DocumentPropertyNames } from './constants';
+import type { GetSourceFunction } from './getDocumentSource';
 
 /**
  * @internal
@@ -9,5 +9,5 @@ import type { GetSourceFunction } from './getPasteSource';
  */
 export const isGoogleSheetDocument: GetSourceFunction = props => {
     const { fragment } = props;
-    return !!fragment.querySelector(PastePropertyNames.GOOGLE_SHEET_NODE_NAME);
+    return !!fragment.querySelector(DocumentPropertyNames.GOOGLE_SHEET_NODE_NAME);
 };

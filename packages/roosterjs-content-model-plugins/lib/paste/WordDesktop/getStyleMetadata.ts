@@ -1,6 +1,5 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
 const STYLE_TAG = '<style';
@@ -40,7 +39,7 @@ function extractHtmlIndexes(html: string, startIndex: number = 0) {
 /**
  * @internal
  * Word Desktop content has a style tag that contains data for the lists.
- * So this function query that style tag and extract the data from the innerHTML, since it is not available from the HTMLStyleElement.sheet.
+ * So this function queries that style tag and extracts the data from the innerHTML, since it is not available from the HTMLStyleElement.sheet.
  *
  * The format is like:
  * example of style element content
@@ -56,10 +55,12 @@ function extractHtmlIndexes(html: string, startIndex: number = 0) {
  * 4. Split the value of the rule  using : as separator: styleTag: styleValue = [styleTag, styleValue]
  * 5. Save data in record and only use the required information.
  *
+ * @param htmlString The HTML string containing style tags to parse for metadata
+ * @returns A Map containing Word metadata keyed by list level identifiers
  */
-export function getStyleMetadata(ev: BeforePasteEvent) {
+export function getStyleMetadata(htmlString: string) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore || ev.clipboardData.rawHtml || '');
+    const headStyles = extractStyleTagsFromHtml(htmlString);
 
     headStyles.forEach(text => {
         let index = 0;

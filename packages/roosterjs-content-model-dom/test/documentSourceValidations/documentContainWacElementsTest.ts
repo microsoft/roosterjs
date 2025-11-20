@@ -1,5 +1,5 @@
-import { documentContainWacElements } from '../../../lib/paste/pasteSourceValidations/documentContainWacElements';
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { documentContainWacElements } from '../../lib/documentSourceValidations/documentContainWacElements';
+import { GetSourceInputParams } from 'roosterjs';
 import { getWacElement } from './pasteTestUtils';
 
 describe('documentContainWacElements |', () => {

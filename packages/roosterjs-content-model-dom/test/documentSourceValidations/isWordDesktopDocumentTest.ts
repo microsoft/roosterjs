@@ -1,5 +1,5 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
-import { isWordDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isWordDesktopDocument';
+import { GetSourceInputParams } from 'roosterjs-content-model-types';
+import { isWordDesktopDocument } from '../../lib/documentSourceValidations/isWordDesktopDocument';
 import { WORD_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 const WORD_PROG_ID = 'Word.Document';
@@ -12,7 +12,9 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {},
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
             environment: {},
         });
 
@@ -27,7 +29,9 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {},
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
             environment: {},
         });
 
@@ -41,7 +45,9 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {},
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
             environment: {},
         });
 
@@ -53,12 +59,13 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {
-                rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
+            rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
                 xmlns:w="urn:schemas-microsoft-com:office:word"
                 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
                 xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>`,
-            },
             environment: {
                 isSafari: true,
             },
@@ -72,12 +79,13 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {
-                rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
+            rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
                 xmlns:w  =  "urn:schemas-microsoft-com:office:word"
                 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
                 xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>`,
-            },
             environment: {
                 isSafari: true,
             },
@@ -91,12 +99,13 @@ describe('isWordDesktopDocument |', () => {
 
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes,
-            clipboardData: {
-                rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
+            rawHtml: `<html xmlns:o="urn:schemas-microsoft-com:office:office"
                 xmlns:w="urn:schemas-microsoft-com:office:word"
                 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
                 xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>`,
-            },
             environment: {},
         });
 
@@ -106,7 +115,9 @@ describe('isWordDesktopDocument |', () => {
     it('Is not a Word Document', () => {
         const result = isWordDesktopDocument(<GetSourceInputParams>{
             htmlAttributes: {},
-            clipboardData: {},
+            fragment: document.createDocumentFragment(),
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: [],
             environment: {},
         });
 

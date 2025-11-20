@@ -1,5 +1,5 @@
-import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import { DocumentPropertyNames } from './constants';
+import type { GetSourceFunction } from './getDocumentSource';
 
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
@@ -12,18 +12,17 @@ const WORD_PROG_ID = 'Word.Document';
  * @returns
  */
 export const isWordDesktopDocument: GetSourceFunction = props => {
-    const { htmlAttributes, clipboardData, environment } = props;
+    const { htmlAttributes, rawHtml, environment } = props;
 
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PastePropertyNames.PROG_ID_NAME] == WORD_PROG_ID ||
+        htmlAttributes[DocumentPropertyNames.PROG_ID_NAME] == WORD_PROG_ID ||
         // Safari removes the metadata from the clipboard html, so we need to do this check.
         !!(
             environment.isSafari &&
-            clipboardData.rawHtml &&
-            clipboardData.rawHtml
-                ?.replace(/ /g, '')
-                .indexOf(`${WORD_ATTRIBUTE_NAME}="${WORD_ATTRIBUTE_VALUE}`) > -1
+            rawHtml &&
+            rawHtml?.replace(/ /g, '').indexOf(`${WORD_ATTRIBUTE_NAME}="${WORD_ATTRIBUTE_VALUE}`) >
+                -1
         )
     );
 };

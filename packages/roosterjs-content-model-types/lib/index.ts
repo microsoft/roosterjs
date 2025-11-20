@@ -404,6 +404,7 @@ export {
     FormatContentModelOptions,
     ContentModelFormatter,
 } from './parameter/FormatContentModelOptions';
+export { GetSourceInputParams } from './parameter/GetSourceInputParams';
 export { ContentModelFormatState } from './parameter/ContentModelFormatState';
 export { PasteTypeOrGetter } from './parameter/PasteTypeOrGetter';
 export { ImageFormatState } from './parameter/ImageFormatState';
@@ -447,6 +448,7 @@ export {
     IterateSelectionsOption,
     ReadonlyIterateSelectionsCallback,
 } from './parameter/IterateSelectionsOption';
+export { KnownDocumentSourceType } from './parameter/KnownDocumentSourceType';
 export { NodeTypeMap } from './parameter/NodeTypeMap';
 export { TypeOfBlockGroup } from './parameter/TypeOfBlockGroup';
 export { OperationalBlocks, ReadonlyOperationalBlocks } from './parameter/OperationalBlocks';

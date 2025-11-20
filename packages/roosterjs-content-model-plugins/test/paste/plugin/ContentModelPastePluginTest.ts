@@ -1,6 +1,6 @@
 import * as addParser from '../../../lib/paste/utils/addParser';
 import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import * as getPasteSource from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as getPasteSource from '../../../lib/paste/getPasteSource';
 import * as oneNoteFile from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
@@ -8,9 +8,8 @@ import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentW
 import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
 import { createDefaultDomToModelContext } from '../../TestHelper';
 import { PastePlugin } from '../../../lib/paste/PastePlugin';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
-
 const trustedHTMLHandler = (val: string) => val;
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const domCreator: DOMCreator = {
     htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
 };
@@ -242,7 +241,7 @@ describe('Content Model Paste Plugin Test', () => {
             expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(event.domToModelOption.additionalAllowedTags).toEqual([
-                PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
+                GOOGLE_SHEET_NODE_NAME as Lowercase<string>,
             ]);
         });
 

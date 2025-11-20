@@ -1,166 +1,102 @@
-import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
-import { getPasteSource } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
-
-const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
-const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
-const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
-
-const getWacElement = (): HTMLElement => {
-    const element = document.createElement('span');
-    element.classList.add('WACImageContainer');
-    return element;
-};
+import { getPasteSource } from '../../../lib/paste/getPasteSource';
+import type {
+    BeforePasteEvent,
+    EditorEnvironment,
+    ClipboardData,
+} from 'roosterjs-content-model-types';
 
 describe('getPasteSourceTest | ', () => {
-    it('Is Word', () => {
-        const result = getPasteSource(wordParam(), false /* shouldConvertSingleImage */, <any>{});
+    let mockEnvironment: EditorEnvironment;
+
+    beforeEach(() => {
+        mockEnvironment = <any>{
+            isMac: false,
+            isAndroid: false,
+            isSafari: false,
+        };
+    });
+
+    function createMockEvent(
+        htmlAttributes: Record<string, string> = {},
+        clipboardData: Partial<ClipboardData> = {},
+        fragment?: DocumentFragment
+    ): BeforePasteEvent {
+        return {
+            eventType: 'beforePaste',
+            htmlAttributes,
+            fragment: fragment || document.createDocumentFragment(),
+            clipboardData: {
+                types: ['text/html'],
+                htmlFirstLevelChildTags: ['DIV'],
+                rawHtml: '<div>test</div>',
+                ...clipboardData,
+            } as ClipboardData,
+        } as BeforePasteEvent;
+    }
+
+    it('should return default for unknown content', () => {
+        const mockEvent = createMockEvent();
+        const result = getPasteSource(mockEvent, false, mockEnvironment);
+        expect(result).toBe('default');
+    });
+
+    it('should detect Word Desktop content', () => {
+        const mockEvent = createMockEvent({
+            ProgId: 'Word.Document',
+            'xmlns:w': 'urn:schemas-microsoft-com:office:word',
+        });
+        const result = getPasteSource(mockEvent, false, mockEnvironment);
         expect(result).toBe('wordDesktop');
     });
-    it('Is Wac Doc', () => {
-        const result = getPasteSource(wacParam(), false /* shouldConvertSingleImage */, <any>{});
-        expect(result).toBe('wacComponents');
-    });
-    it('Is Excel Doc', () => {
-        const result = getPasteSource(excelParam(), false /* shouldConvertSingleImage */, <any>{});
+
+    it('should detect Excel Desktop content', () => {
+        const mockEvent = createMockEvent({
+            ProgId: 'Excel.Sheet',
+            'xmlns:x': 'urn:schemas-microsoft-com:office:excel',
+        });
+        const result = getPasteSource(mockEvent, false, mockEnvironment);
         expect(result).toBe('excelDesktop');
     });
-    it('Is GoogleSheet Doc', () => {
-        const result = getPasteSource(
-            googleSheetParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
-        expect(result).toBe('googleSheets');
-    });
-    it('Is PowerPoint Doc', () => {
-        const result = getPasteSource(
-            powerPointParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+
+    it('should detect PowerPoint Desktop content', () => {
+        const mockEvent = createMockEvent({
+            ProgId: 'PowerPoint.Slide',
+        });
+        const result = getPasteSource(mockEvent, false, mockEnvironment);
         expect(result).toBe('powerPointDesktop');
     });
-    it('Is SingleImage', () => {
-        const result = getPasteSource(
-            converSingleImageParam(),
-            true /* shouldConvertSingleImage */,
-            <any>{}
+
+    it('should handle single image detection when enabled', () => {
+        const fragment = document.createDocumentFragment();
+        const img = document.createElement('img');
+        img.src = 'data:image/png;base64,test';
+        fragment.appendChild(img);
+
+        const mockEvent = createMockEvent(
+            {},
+            {
+                types: ['Files'],
+                htmlFirstLevelChildTags: ['IMG'],
+            },
+            fragment
         );
+
+        const result = getPasteSource(mockEvent, true, mockEnvironment);
         expect(result).toBe('singleImage');
     });
-    it('Is SingleImage, but should not convert single image', () => {
-        const result = getPasteSource(
-            converSingleImageParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
-        expect(result).toBe('default');
-    });
-    it('Is Default', () => {
-        const result = getPasteSource(
-            defaultParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
-        expect(result).toBe('default');
-    });
-    it('Is Excel Non-Native Event', () => {
-        const result = getPasteSource(
-            excelNonNativeEventParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
-        expect(result).toBe('excelNonNativeEvent');
-    });
-    it('should return "oneNoteDesktop" when isOneNoteDesktopDocument returns true', () => {
-        const mockEvent: any = {
-            htmlAttributes: {
-                [PastePropertyNames.PROG_ID_NAME]: 'OneNote.File',
-            },
-            clipboardData: {
-                types: [],
-            } as any,
-            fragment: document.createDocumentFragment(),
-        };
-        const shouldConvertSingleImage = false;
 
-        const result = getPasteSource(mockEvent, shouldConvertSingleImage, <any>{});
+    it('should handle different environment configurations', () => {
+        const safariEnvironment = { ...mockEnvironment, isSafari: true };
+        const mockEvent = createMockEvent(
+            {},
+            {
+                rawHtml: `<html xmlns:w="urn:schemas-microsoft-com:office:word">
+                <head><meta charset="UTF-8"></head><body>test</body></html>`,
+            }
+        );
 
-        expect(result).toBe('oneNoteDesktop');
+        const result = getPasteSource(mockEvent, false, safariEnvironment);
+        // In Safari, Word Desktop detection uses rawHtml
+        expect(result).toBe('wordDesktop');
     });
 });
-
-function wacParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-    fragment.appendChild(getWacElement());
-
-    return <BeforePasteEvent>{ fragment, htmlAttributes: {}, clipboardData: {} };
-}
-
-function excelParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-    const htmlAttributes: Record<string, string> = {
-        'xmlns:x': EXCEL_ATTRIBUTE_VALUE,
-    };
-
-    return <BeforePasteEvent>{ htmlAttributes, fragment, clipboardData: {} };
-}
-
-function googleSheetParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-    fragment.appendChild(document.createElement(PastePropertyNames.GOOGLE_SHEET_NODE_NAME));
-
-    return <BeforePasteEvent>{ fragment, htmlAttributes: {}, clipboardData: {} };
-}
-
-function converSingleImageParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-    const clipboardData = <any>{
-        htmlFirstLevelChildTags: ['IMG'],
-        types: [],
-    };
-
-    return <BeforePasteEvent>{
-        fragment,
-        clipboardData,
-        htmlAttributes: {},
-    };
-}
-
-function powerPointParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-
-    const htmlAttributes: Record<string, string> = {
-        ProgId: POWERPOINT_ATTRIBUTE_VALUE,
-    };
-
-    return <BeforePasteEvent>{ htmlAttributes, fragment, clipboardData: {} };
-}
-
-function wordParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-    const htmlAttributes: Record<string, string> = {
-        'xmlns:w': WORD_ATTRIBUTE_VALUE,
-    };
-
-    return <BeforePasteEvent>{ htmlAttributes, fragment, clipboardData: {} };
-}
-
-function defaultParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-
-    return <BeforePasteEvent>{ htmlAttributes: {}, fragment, clipboardData: <any>{ types: [] } };
-}
-
-function excelNonNativeEventParam(): BeforePasteEvent {
-    const fragment = document.createDocumentFragment();
-
-    const clipboardData: ClipboardData = {
-        types: ['web data/shadow-workbook'],
-        rawHtml: '',
-        htmlFirstLevelChildTags: ['TABLE'],
-    } as any;
-
-    return <BeforePasteEvent>{ fragment, clipboardData, htmlAttributes: {} };
-}
