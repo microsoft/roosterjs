@@ -63,12 +63,7 @@ const initialState: OptionState = {
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
-    experimentalFeatures: new Set<ExperimentalFeature>([
-        'PersistCache',
-        'HandleEnterKey',
-        'CustomCopyCut',
-        'CloneIndependentRoot',
-    ]),
+    experimentalFeatures: new Set<ExperimentalFeature>(['HandleEnterKey', 'CloneIndependentRoot']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

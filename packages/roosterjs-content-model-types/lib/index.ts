@@ -333,7 +333,7 @@ export {
 export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IEditor } from './editor/IEditor';
-export { ExperimentalFeature } from './editor/ExperimentalFeature';
+export { ExperimentalFeature, GraduatedExperimentalFeature } from './editor/ExperimentalFeature';
 export {
     EditorOptions,
     ColorOptions,
