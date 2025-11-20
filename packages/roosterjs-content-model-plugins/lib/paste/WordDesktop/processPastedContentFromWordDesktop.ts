@@ -34,6 +34,7 @@ export function processPastedContentFromWordDesktop(
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
+    addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listLevel', listLevelParser);
     addParser(domToModelOption, 'container', wordTableParser);
     addParser(domToModelOption, 'table', wordTableParser);
