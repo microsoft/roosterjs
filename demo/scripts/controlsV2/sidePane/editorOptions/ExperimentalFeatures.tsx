@@ -11,9 +11,8 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
     render() {
         return (
             <>
-                {this.renderFeature('PersistCache')}
                 {this.renderFeature('HandleEnterKey')}
-                {this.renderFeature('CustomCopyCut')}
+                {this.renderFeature('KeepSelectionMarkerWhenEnteringTextNode')}
                 {this.renderFeature('CloneIndependentRoot')}
             </>
         );
