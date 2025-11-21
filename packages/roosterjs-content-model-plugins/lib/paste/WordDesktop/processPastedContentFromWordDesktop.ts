@@ -13,8 +13,9 @@ import type { DomToModelOption, ElementProcessor } from 'roosterjs-content-model
 
 /**
  * @internal
- * Handles Pasted content when source is Word Desktop
- * @param ev BeforePasteEvent
+ * Handles pasted content when the source is Word Desktop.
+ * @param domToModelOption Options for DOM to Content Model conversion
+ * @param htmlString The HTML string to process
  */
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
