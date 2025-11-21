@@ -3,7 +3,7 @@ import { keyboardEnter } from './keyboardEnter';
 import { keyboardInput } from './keyboardInput';
 import { keyboardTab } from './keyboardTab';
 import { parseTableCells } from 'roosterjs-content-model-dom';
-import type { EditOptions } from './EditOptions';
+import type { EditOptions, HandleTabOptions } from './EditOptions';
 import type {
     DOMSelection,
     EditorPlugin,
@@ -22,8 +22,24 @@ const DELETE_KEY = 46;
  */
 const DEAD_KEY = 229;
 
-const DefaultOptions: Partial<EditOptions> = {
-    handleTabKey: true,
+const DefaultHandleTabOptions: Required<HandleTabOptions> = {
+    indentMultipleBlocks: true,
+    indentTable: true,
+    appendTableRow: true,
+    indentList: true,
+    indentParagraph: true,
+};
+
+const DisabledHandleTabOptions: Required<HandleTabOptions> = {
+    indentMultipleBlocks: false,
+    indentTable: false,
+    appendTableRow: false,
+    indentList: false,
+    indentParagraph: false,
+};
+
+const DefaultOptions: Partial<EditOptions> & { handleTabKey: Required<HandleTabOptions> } = {
+    handleTabKey: DefaultHandleTabOptions,
     handleExpandedSelectionOnDelete: true,
 };
 
@@ -40,13 +56,20 @@ export class EditPlugin implements EditorPlugin {
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
     private handleNormalEnter: (editor: IEditor) => boolean = () => false;
+    private options: EditOptions & { handleTabKey: Required<HandleTabOptions> };
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
      * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
      */
-    constructor(private options: EditOptions = DefaultOptions) {
-        this.options = { ...DefaultOptions, ...options };
+    constructor(options: EditOptions = DefaultOptions) {
+        const tabOptions =
+            options.handleTabKey === false
+                ? DisabledHandleTabOptions
+                : options.handleTabKey === true || !options.handleTabKey
+                ? DefaultHandleTabOptions
+                : { ...DefaultHandleTabOptions, ...options.handleTabKey };
+        this.options = { ...DefaultOptions, ...options, handleTabKey: tabOptions };
     }
 
     private createNormalEnterChecker(result: boolean) {
@@ -136,7 +159,7 @@ export class EditPlugin implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent) {
         if (
             this.editor &&
-            this.options.handleTabKey &&
+            this.options.handleTabKey.appendTableRow &&
             event.eventType == 'keyDown' &&
             event.rawEvent.key == 'Tab' &&
             !event.rawEvent.shiftKey
@@ -189,7 +212,7 @@ export class EditPlugin implements EditorPlugin {
 
                 case 'Tab':
                     if (this.options.handleTabKey && !hasCtrlOrMetaKey) {
-                        keyboardTab(editor, rawEvent);
+                        keyboardTab(editor, rawEvent, this.options.handleTabKey);
                     }
                     break;
                 case 'Unidentified':

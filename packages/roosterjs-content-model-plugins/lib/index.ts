@@ -5,7 +5,7 @@ export { TableWithRoot } from './tableEdit/TableWithRoot';
 export { PastePlugin } from './paste/PastePlugin';
 export { DefaultSanitizers } from './paste/DefaultSanitizers';
 export { EditPlugin } from './edit/EditPlugin';
-export { EditOptions } from './edit/EditOptions';
+export { EditOptions, HandleTabOptions } from './edit/EditOptions';
 export { AutoFormatPlugin } from './autoFormat/AutoFormatPlugin';
 export { AutoFormatOptions } from './autoFormat/interface/AutoFormatOptions';
 
