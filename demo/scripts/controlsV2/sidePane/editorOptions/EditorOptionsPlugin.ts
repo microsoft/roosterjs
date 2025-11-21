@@ -64,9 +64,7 @@ const initialState: OptionState = {
     customReplacements: emojiReplacements,
     disableSideResize: false,
     experimentalFeatures: new Set<ExperimentalFeature>([
-        'PersistCache',
         'HandleEnterKey',
-        'CustomCopyCut',
         'CloneIndependentRoot',
         'CacheList',
     ]),

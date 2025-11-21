@@ -63,6 +63,7 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
             ],
         });
@@ -93,10 +94,12 @@ describe('handleListItem without format handler', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'OL',
+                refNode: null,
             },
         ];
 
@@ -108,10 +111,12 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'OL',
+                    refNode: null,
                 },
             ],
         });
@@ -160,10 +165,12 @@ describe('handleListItem without format handler', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'UL',
+                refNode: null,
             },
         ];
 
@@ -175,10 +182,12 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'UL',
+                    refNode: null,
                 },
             ],
         });

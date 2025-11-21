@@ -5,6 +5,7 @@ import { createListLevel } from '../../../lib/modelApi/creators/createListLevel'
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { expectHtml } from '../../testUtils';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
+import { listLevelMetadataApplier } from 'roosterjs-content-model-core/lib/override/listMetadataApplier';
 import { NumberingListType } from '../../../lib/constants/NumberingListType';
 
 describe('handleList without format handlers', () => {
@@ -32,6 +33,7 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
             ],
         });
@@ -46,14 +48,13 @@ describe('handleList without format handlers', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
-                {
-                    node: parent,
-                },
+                { refNode: null, node: parent },
                 {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -75,12 +76,14 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -91,7 +94,10 @@ describe('handleList without format handlers', () => {
         const listItem = createListItem([createListLevel('OL')]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -103,10 +109,12 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL,
+                    refNode: null,
                 },
             ],
         });
@@ -119,7 +127,10 @@ describe('handleList without format handlers', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -131,12 +142,14 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: parent.childNodes[1],
                     dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -150,7 +163,10 @@ describe('handleList without format handlers', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -162,16 +178,19 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -185,7 +204,10 @@ describe('handleList without format handlers', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -197,18 +219,21 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) },
                     format: {},
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -224,9 +249,9 @@ describe('handleList without format handlers', () => {
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'OL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'OL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -237,10 +262,12 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL1,
+                    refNode: null,
                 },
             ],
         });
@@ -256,9 +283,9 @@ describe('handleList without format handlers', () => {
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'UL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'UL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -275,12 +302,14 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -299,9 +328,9 @@ describe('handleList without format handlers', () => {
 
         context.listFormat.threadItemCounts = [1, 1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'UL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'UL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -312,10 +341,12 @@ describe('handleList without format handlers', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'UL',
                     node: existingOL1,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
@@ -324,6 +355,7 @@ describe('handleList without format handlers', () => {
                     format: {
                         startNumberOverride: 3,
                     },
+                    refNode: null,
                 },
             ],
         });
@@ -424,12 +456,14 @@ describe('handleList handles metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: br,
                 },
                 {
                     node: parent.firstChild as HTMLElement,
                     listType: 'OL',
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -441,17 +475,17 @@ describe('handleList handles metadata', () => {
         const br = document.createElement('br');
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: br },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
         parent.appendChild(br);
 
         const result = handleList(document, parent, listItem, context, br);
 
-        const possibleResults = [
-            '<div><ol><ol start="1"></ol></ol><br></div>', //Chrome
-            '<div><ol><ol start="1"></ol></ol><br></div>', //Firefox
-        ];
+        const possibleResults = ['<div><ol><ol start="1"></ol></ol><br></div>'];
 
         expectHtml(parent.outerHTML, possibleResults);
 
@@ -460,16 +494,19 @@ describe('handleList handles metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: br,
                 },
                 {
                     listType: 'OL',
                     node: existingOL,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -509,5 +546,69 @@ describe('handleList handles metadata', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listLevel1);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('ul'));
+    });
+
+    it('List style type is changed by metadata, node stack should not be changed', () => {
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {},
+                    dataset: {
+                        editingInfo: '{"applyListStyleFromLevel":true}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
+
+        context = createModelToDomContext(undefined, {
+            metadataAppliers: {
+                listLevel: listLevelMetadataApplier,
+            },
+        });
+
+        handleList(document, parent, listItem, context, null);
+
+        expectHtml(parent.outerHTML, [
+            '<div><ul data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}" style="list-style-type: disc;"></ul></div>',
+            '<div><ul style="list-style-type: disc;" data-editing-info="{&quot;applyListStyleFromLevel&quot;:true}"></ul></div>',
+        ]);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: parent.firstChild as HTMLElement,
+                    listType: 'UL',
+                    dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(listItem.levels[0].format.listStyleType).toBe('disc');
     });
 });

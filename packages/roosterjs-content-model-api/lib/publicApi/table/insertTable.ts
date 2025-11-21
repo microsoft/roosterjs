@@ -9,7 +9,11 @@ import {
     normalizeTable,
     setSelection,
 } from 'roosterjs-content-model-dom';
-import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTableFormat,
+    IEditor,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * Insert table into editor at current selection
@@ -17,14 +21,15 @@ import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types
  * @param columns Number of columns in table, it also controls the default table cell width:
  * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
- * @param format (Optional) The table format. If not passed, the default format will be applied:
- * background color: #FFF; border color: #ABABAB
+ * @param tableMetadataFormat (Optional) The table format that are stored as metadata. If not passed, the default format will be applied: background color: #FFF; border color: #ABABAB
+ * @param format (Optional) The table format used for style attributes
  */
 export function insertTable(
     editor: IEditor,
     columns: number,
     rows: number,
-    format?: Partial<TableMetadataFormat>
+    tableMetadataFormat?: Partial<TableMetadataFormat>,
+    format?: ContentModelTableFormat
 ) {
     editor.focus();
 
@@ -35,14 +40,17 @@ export function insertTable(
             if (insertPosition) {
                 const doc = createContentModelDocument();
                 const table = createTableStructure(doc, columns, rows);
+                if (format) {
+                    table.format = { ...format };
+                }
 
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
 
                 adjustTableIndentation(insertPosition, table);
 
                 // Assign default vertical align
-                format = format || { verticalAlign: 'top' };
-                applyTableFormat(table, format);
+                tableMetadataFormat = tableMetadataFormat || { verticalAlign: 'top' };
+                applyTableFormat(table, tableMetadataFormat);
                 mergeModel(model, doc, context, {
                     insertPosition,
                     mergeFormat: 'mergeAll',

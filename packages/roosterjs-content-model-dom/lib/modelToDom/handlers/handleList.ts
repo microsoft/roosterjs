@@ -65,13 +65,25 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
                 levelRefNode,
                 context.rewriteFromModel
             );
-            nodeStack.push({ node: newList, refNode: newList.firstChild, ...level });
+            nodeStack.push({
+                node: newList,
+                refNode: newList.firstChild,
+                listType: level.listType,
+                format: { ...level.format },
+                dataset: { ...level.dataset },
+            });
         } else {
             newList = doc.createElement(level.listType == 'OL' ? 'ol' : 'ul');
             isNewlyCreated = true;
 
             lastParent.insertBefore(newList, levelRefNode);
-            nodeStack.push({ node: newList, refNode: null, ...level });
+            nodeStack.push({
+                node: newList,
+                refNode: null,
+                listType: level.listType,
+                format: { ...level.format },
+                dataset: { ...level.dataset },
+            });
 
             if (context.allowCacheListItem) {
                 level.cachedElement = newList;
