@@ -7,6 +7,7 @@ import {
     getOperationalBlocks,
     isBlockGroupOfType,
     mutateBlock,
+    normalizeContentModel,
     parseValueWithUnit,
     updateListMetadata,
 } from 'roosterjs-content-model-dom';
@@ -134,7 +135,13 @@ export function setModelIndentation(
         }
     });
 
-    return paragraphOrListItem.length > 0;
+    if (paragraphOrListItem.length > 0) {
+        normalizeContentModel(model);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function isSelected(listItem: ReadonlyContentModelListItem) {

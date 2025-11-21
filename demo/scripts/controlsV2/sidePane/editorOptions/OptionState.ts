@@ -2,6 +2,7 @@ import {
     AutoFormatOptions,
     CustomReplace,
     EditOptions,
+    HandleTabOptions,
     MarkdownOptions,
 } from 'roosterjs-content-model-plugins';
 import type { SidePaneElementProps } from '../SidePaneElement';
@@ -39,7 +40,7 @@ export interface OptionState {
     autoFormatOptions: AutoFormatOptions;
     markdownOptions: MarkdownOptions;
     customReplacements: CustomReplace[];
-    editPluginOptions: EditOptions;
+    editPluginOptions: EditOptions & { handleTabKey: HandleTabOptions };
     disableSideResize: boolean;
 
     // Legacy plugin options

@@ -3,6 +3,7 @@ import { handleTabOnParagraph } from './tabUtils/handleTabOnParagraph';
 import { handleTabOnTable } from './tabUtils/handleTabOnTable';
 import { handleTabOnTableCell } from './tabUtils/handleTabOnTableCell';
 import { setModelIndentation } from 'roosterjs-content-model-api';
+import type { HandleTabOptions } from './EditOptions';
 import {
     ChangeSource,
     getOperationalBlocks,
@@ -19,14 +20,18 @@ import type {
 /**
  * @internal
  */
-export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
+export function keyboardTab(
+    editor: IEditor,
+    rawEvent: KeyboardEvent,
+    options: Required<HandleTabOptions>
+) {
     const selection = editor.getDOMSelection();
 
     switch (selection?.type) {
         case 'range':
             editor.formatContentModel(
                 (model, context) => {
-                    return handleTab(model, rawEvent, context);
+                    return handleTab(model, rawEvent, context, options);
                 },
                 {
                     apiName: 'handleTabKey',
@@ -35,21 +40,23 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
                     getChangeData: () => rawEvent.which,
                 }
             );
+            break;
 
-            return true;
         case 'table':
-            editor.formatContentModel(
-                model => {
-                    return handleTabOnTable(model, rawEvent);
-                },
-                {
-                    apiName: 'handleTabKey',
-                    rawEvent,
-                    changeSource: ChangeSource.Keyboard,
-                    getChangeData: () => rawEvent.which,
-                }
-            );
-            return true;
+            if (options.indentTable) {
+                editor.formatContentModel(
+                    model => {
+                        return handleTabOnTable(model, rawEvent);
+                    },
+                    {
+                        apiName: 'handleTabKey',
+                        rawEvent,
+                        changeSource: ChangeSource.Keyboard,
+                        getChangeData: () => rawEvent.which,
+                    }
+                );
+            }
+            break;
     }
 }
 
@@ -63,7 +70,8 @@ export function keyboardTab(editor: IEditor, rawEvent: KeyboardEvent) {
 function handleTab(
     model: ReadonlyContentModelDocument,
     rawEvent: KeyboardEvent,
-    context: FormatContentModelContext
+    context: FormatContentModelContext,
+    options: Required<HandleTabOptions>
 ) {
     const blocks = getOperationalBlocks<ContentModelListItem | ContentModelTableCell>(
         model,
@@ -73,15 +81,23 @@ function handleTab(
     const block = blocks.length > 0 ? blocks[0].block : undefined;
 
     if (blocks.length > 1) {
-        setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
-        rawEvent.preventDefault();
-        return true;
+        if (options.indentMultipleBlocks) {
+            setModelIndentation(model, rawEvent.shiftKey ? 'outdent' : 'indent');
+            rawEvent.preventDefault();
+            return true;
+        }
     } else if (isBlockGroupOfType<ContentModelTableCell>(block, 'TableCell')) {
-        return handleTabOnTableCell(model, block, rawEvent);
+        if (options.appendTableRow) {
+            return handleTabOnTableCell(model, block, rawEvent);
+        }
     } else if (block?.blockType === 'Paragraph') {
-        return handleTabOnParagraph(model, block, rawEvent, context);
+        if (options.indentParagraph) {
+            return handleTabOnParagraph(model, block, rawEvent, context);
+        }
     } else if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-        return handleTabOnList(model, block, rawEvent, context);
+        if (options.indentList) {
+            return handleTabOnList(model, block, rawEvent, context);
+        }
     }
     return false;
 }

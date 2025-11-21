@@ -1,6 +1,41 @@
 import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
+ * Options for handling Tab key in Edit plugin
+ */
+export interface HandleTabOptions {
+    /**
+     * Whether to indent/outdent multiple selected blocks when Tab/Shift+Tab is pressed and multiple blocks are selected.
+     * @default true
+     */
+    indentMultipleBlocks?: boolean;
+
+    /**
+     * Whether to indent/outdent table cells when Tab key is pressed and a table is selected
+     * @default true
+     */
+    indentTable?: boolean;
+
+    /**
+     * Whether to append a new row when Tab key is pressed in the last cell of a table
+     * @default true
+     */
+    appendTableRow?: boolean;
+
+    /**
+     * Whether to indent/outdent list items when Tab key is pressed
+     * @default true
+     */
+    indentList?: boolean;
+
+    /**
+     * Whether to indent/outdent paragraph when Tab key is pressed
+     * @default true
+     */
+    indentParagraph?: boolean;
+}
+
+/**
  * Options to customize the keyboard handling behavior of Edit plugin
  */
 
@@ -8,7 +43,7 @@ export type EditOptions = {
     /**
      * Whether to handle Tab key in keyboard. @default true
      */
-    handleTabKey?: boolean;
+    handleTabKey?: HandleTabOptions | boolean;
 
     /**
      * Whether expanded selection within a text node should be handled by CM when pressing Backspace/Delete key.

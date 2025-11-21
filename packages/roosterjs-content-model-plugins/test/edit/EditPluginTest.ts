@@ -4,6 +4,15 @@ import * as keyboardInput from '../../lib/edit/keyboardInput';
 import * as keyboardTab from '../../lib/edit/keyboardTab';
 import { DOMEventRecord, IEditor } from 'roosterjs-content-model-types';
 import { EditPlugin } from '../../lib/edit/EditPlugin';
+import { HandleTabOptions } from '../../lib/edit/EditOptions';
+
+const DefaultHandleTabOptions: Required<HandleTabOptions> = {
+    indentMultipleBlocks: true,
+    indentTable: true,
+    appendTableRow: true,
+    indentList: true,
+    indentParagraph: true,
+};
 
 describe('EditPlugin', () => {
     let plugin: EditPlugin;
@@ -67,7 +76,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, {
-                handleTabKey: true,
+                handleTabKey: DefaultHandleTabOptions,
                 handleExpandedSelectionOnDelete: true,
             });
             expect(keyboardInputSpy).not.toHaveBeenCalled();
@@ -87,7 +96,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, {
-                handleTabKey: true,
+                handleTabKey: DefaultHandleTabOptions,
                 handleExpandedSelectionOnDelete: true,
             });
             expect(keyboardInputSpy).not.toHaveBeenCalled();
@@ -124,7 +133,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, {
-                handleTabKey: true,
+                handleTabKey: DefaultHandleTabOptions,
                 handleExpandedSelectionOnDelete: true,
                 shouldHandleEnterKey: true,
             });
@@ -159,7 +168,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, {
-                handleTabKey: true,
+                handleTabKey: DefaultHandleTabOptions,
                 handleExpandedSelectionOnDelete: false,
             });
         });
@@ -175,7 +184,7 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent, DefaultHandleTabOptions);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
@@ -194,7 +203,7 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent, DefaultHandleTabOptions);
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
@@ -211,7 +220,13 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardTabSpy).not.toHaveBeenCalled();
+            expect(keyboardTabSpy).toHaveBeenCalledWith(editor, rawEvent, {
+                indentMultipleBlocks: false,
+                indentTable: false,
+                appendTableRow: false,
+                indentList: false,
+                indentParagraph: false,
+            });
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
@@ -387,7 +402,7 @@ describe('EditPlugin', () => {
                 {
                     key: 'Delete',
                 } as any,
-                { handleTabKey: true, handleExpandedSelectionOnDelete: true }
+                { handleTabKey: DefaultHandleTabOptions, handleExpandedSelectionOnDelete: true }
             );
 
             plugin.onPluginEvent({
@@ -401,7 +416,7 @@ describe('EditPlugin', () => {
                 {
                     key: 'Delete',
                 } as any,
-                { handleTabKey: true, handleExpandedSelectionOnDelete: true }
+                { handleTabKey: DefaultHandleTabOptions, handleExpandedSelectionOnDelete: true }
             );
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
@@ -441,7 +456,7 @@ describe('EditPlugin', () => {
                     keyCode: 8,
                     which: 8,
                 }),
-                { handleTabKey: true, handleExpandedSelectionOnDelete: true }
+                { handleTabKey: DefaultHandleTabOptions, handleExpandedSelectionOnDelete: true }
             );
         });
 
@@ -470,7 +485,7 @@ describe('EditPlugin', () => {
                     keyCode: 46,
                     which: 46,
                 }),
-                { handleTabKey: true, handleExpandedSelectionOnDelete: true }
+                { handleTabKey: DefaultHandleTabOptions, handleExpandedSelectionOnDelete: true }
             );
         });
     });
