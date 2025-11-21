@@ -10,6 +10,11 @@ export interface ModelToDomListStackItem extends Partial<ContentModelListLevel> 
      * DOM node of this list stack
      */
     node: Node;
+
+    /**
+     * Reference node to insert next list item under this list
+     */
+    refNode: Node | null;
 }
 
 /**

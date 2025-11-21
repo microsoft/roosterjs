@@ -17,6 +17,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         darkColorHandler: darkColorHandler,
         addDelimiterForEntity: true,
         allowCacheElement: true,
+        allowCacheListItem: !!core.experimentalFeatures?.includes('CacheList'),
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
         experimentalFeatures: core.experimentalFeatures ?? [],

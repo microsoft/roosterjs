@@ -50,6 +50,11 @@ export interface EditorContext {
     allowCacheElement?: boolean;
 
     /**
+     * Whether to allow caching list item elements separately.
+     */
+    allowCacheListItem?: boolean;
+
+    /**
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: DomIndexer;

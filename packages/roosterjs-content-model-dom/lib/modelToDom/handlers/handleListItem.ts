@@ -1,6 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
 import { isGenericRoleElement } from '../../domUtils/isGenericRoleElement';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
 import { unwrap } from '../../domUtils/unwrap';
@@ -8,6 +9,7 @@ import type {
     ContentModelBlockHandler,
     ContentModelListItem,
     ModelToDomContext,
+    ModelToDomListStackItem,
 } from 'roosterjs-content-model-types';
 
 const HtmlRoleAttribute = 'role';
@@ -26,15 +28,45 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
     const { nodeStack } = context.listFormat;
-
-    const listParent = nodeStack?.[nodeStack?.length - 1]?.node || parent;
-    const li = doc.createElement('li');
+    const leafLevel: Partial<ModelToDomListStackItem> = nodeStack?.[nodeStack.length - 1] ?? {};
+    const itemRefNode = leafLevel.refNode || null;
+    const listParent = leafLevel.node || parent;
     const level = listItem.levels[listItem.levels.length - 1];
 
-    // It is possible listParent is the same with parent param.
-    // This happens when outdent a list item to cause it has no list level
-    listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
-    context.rewriteFromModel.addedBlockElements.push(li);
+    let li: HTMLLIElement;
+    let isNewlyCreated = false;
+
+    if (context.allowCacheListItem && listItem.cachedElement) {
+        li = listItem.cachedElement;
+
+        // Check if the cached LI is used as refNode under another list level,
+        // since we know we are going to move it under the current listParent,
+        // we need to update the refNode of the previous list level to avoid removing it later
+        for (let i = 0; i < nodeStack.length - 1; i++) {
+            if (nodeStack[i].refNode === li) {
+                nodeStack[i].refNode = li.nextSibling;
+            }
+        }
+
+        leafLevel.refNode = reuseCachedElement(
+            listParent,
+            li,
+            itemRefNode,
+            context.rewriteFromModel
+        );
+    } else {
+        li = doc.createElement('li');
+        isNewlyCreated = true;
+
+        // It is possible listParent is the same with parent param.
+        // This happens when outdent a list item to cause it has no list level
+        listParent.insertBefore(li, itemRefNode?.parentNode == listParent ? itemRefNode : null);
+        context.rewriteFromModel.addedBlockElements.push(li);
+
+        if (context.allowCacheListItem) {
+            listItem.cachedElement = li;
+        }
+    }
 
     if (level) {
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
@@ -69,7 +101,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         }
     }
 
-    context.onNodeCreated?.(listItem, li);
+    if (isNewlyCreated) {
+        context.onNodeCreated?.(listItem, li);
+    }
 
     return refNode;
 };

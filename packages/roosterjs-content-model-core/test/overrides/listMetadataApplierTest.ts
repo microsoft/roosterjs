@@ -32,9 +32,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -52,9 +54,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -65,9 +69,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -87,9 +93,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -101,9 +109,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -121,9 +131,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -137,9 +149,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -156,9 +170,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -170,9 +186,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -191,9 +209,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -205,9 +225,11 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -226,9 +248,11 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -241,10 +265,12 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'UL',
+                refNode: null,
             },
         ];
 
@@ -262,10 +288,12 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
             ],
         });
@@ -278,14 +306,17 @@ describe('listItemMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'UL',
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'OL',
+                refNode: null,
             },
         ];
         context.listFormat.threadItemCounts = [2, 3, 4];
@@ -304,14 +335,17 @@ describe('listItemMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'OL',
+                    refNode: null,
                 },
             ],
         });
@@ -325,9 +359,11 @@ describe('listItemMetadataApplier', () => {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ];
             context.listFormat.threadItemCounts = [itemNum];
@@ -422,10 +458,12 @@ describe('listItemMetadataApplier', () => {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
             ];
 
@@ -468,9 +506,11 @@ describe('listItemMetadataApplier', () => {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ];
             context.listFormat.threadItemCounts = [];
@@ -514,9 +554,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -534,9 +576,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -549,9 +593,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -571,9 +617,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -587,9 +635,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -607,9 +657,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -621,9 +673,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -640,9 +694,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -656,9 +712,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -677,9 +735,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -693,9 +753,11 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -714,9 +776,11 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -729,10 +793,12 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'UL',
+                refNode: null,
             },
         ];
 
@@ -750,10 +816,12 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
             ],
         });
@@ -764,14 +832,17 @@ describe('listLevelMetadataApplier', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'UL',
+                refNode: null,
             },
             {
                 node: {} as Node,
                 listType: 'OL',
+                refNode: null,
             },
         ];
         context.listFormat.threadItemCounts = [2, 3, 4];
@@ -790,14 +861,17 @@ describe('listLevelMetadataApplier', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'OL',
+                    refNode: null,
                 },
             ],
         });
@@ -809,9 +883,11 @@ describe('listLevelMetadataApplier', () => {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ];
             context.listFormat.threadItemCounts = [itemNum];
@@ -871,10 +947,12 @@ describe('listLevelMetadataApplier', () => {
             context.listFormat.nodeStack = [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
                     listType: 'UL',
+                    refNode: null,
                 },
             ];
 
