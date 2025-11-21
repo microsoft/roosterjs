@@ -211,6 +211,102 @@ describe('processPastedContentFromWordDesktopTest', () => {
         });
     });
 
+    it('Set line height to 120% when line-height is normal', () => {
+        let source = '<p style="line-height:normal">Test</p>';
+        runTest(source, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    decorator: {
+                        format: {},
+                        tagName: 'p',
+                    },
+                    format: { marginTop: '1em', marginBottom: '1em', lineHeight: '120%' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Set line height to 120% when line-height is NORMAL (uppercase) - case insensitive', () => {
+        let source = '<p style="line-height:NORMAL">Test</p>';
+        runTest(source, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    decorator: {
+                        format: {},
+                        tagName: 'p',
+                    },
+                    format: { marginTop: '1em', marginBottom: '1em', lineHeight: '120%' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Line height with percentage should adjust percentage calculation', () => {
+        let source = '<p style="line-height:50%">Test</p>';
+        runTest(source, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    decorator: {
+                        format: {},
+                        tagName: 'p',
+                    },
+                    format: { marginTop: '1em', marginBottom: '1em', lineHeight: '0.6' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Line height with invalid percentage should not be modified', () => {
+        let source = '<p style="line-height:abc%">Test</p>';
+        runTest(source, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    decorator: {
+                        format: {},
+                        tagName: 'p',
+                    },
+                    format: { marginTop: '1em', marginBottom: '1em' },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Adjust Line height, percentage greater than default 2', () => {
         let source = '<p style="line-height:122%">Test</p>';
         runTest(source, {

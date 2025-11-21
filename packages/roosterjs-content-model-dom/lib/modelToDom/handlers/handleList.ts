@@ -52,7 +52,12 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
-        nodeStack.push({ node: newList, ...level });
+        nodeStack.push({
+            node: newList,
+            listType: level.listType,
+            format: { ...level.format },
+            dataset: { ...level.dataset },
+        });
 
         applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
 

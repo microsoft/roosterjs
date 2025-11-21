@@ -14,7 +14,7 @@ const trustedHTMLHandler = (val: string) => val;
 const domCreator: DOMCreator = {
     htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
 };
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 5;
 
 describe('Content Model Paste Plugin Test', () => {
     let editor: IEditor;
