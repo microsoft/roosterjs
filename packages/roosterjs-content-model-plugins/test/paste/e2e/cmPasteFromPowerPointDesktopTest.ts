@@ -1,5 +1,5 @@
 import * as addParserF from '../../../lib/paste/utils/addParser';
-import * as getPasteSourceF from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as ppt from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/paste/utils/setProcessor';
 import { expectEqual, initEditor } from './testUtils';
@@ -23,7 +23,7 @@ describe('PowerPoint', () => {
     beforeEach(() => {
         editor = initEditor('PowerPoint');
         spyOn(ppt, 'processPastedContentFromPowerPoint').and.callThrough();
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('powerPointDesktop');
         spyOn(addParserF, 'addParser').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
     });

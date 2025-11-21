@@ -1,5 +1,5 @@
 import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import type { GetSourceFunction } from './getDocumentSource';
 
 const ONE_NOTE_ATTRIBUTE_VALUE = 'OneNote.File';
 

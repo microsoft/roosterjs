@@ -1,6 +1,5 @@
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent } from 'roosterjs-content-model-types';
 
 const FORMATING_REGEX = /[\n\t'{}"]+/g;
 const STYLE_TAG = '<style';
@@ -57,9 +56,12 @@ function extractHtmlIndexes(html: string, startIndex: number = 0) {
  * 5. Save data in record and only use the required information.
  *
  */
-export function getStyleMetadata(ev: BeforePasteEvent) {
+export function getStyleMetadata(htmlString: string) {
     const metadataMap: Map<string, WordMetadata> = new Map();
-    const headStyles = extractStyleTagsFromHtml(ev.htmlBefore || ev.clipboardData.rawHtml || '');
+    if (!htmlString) {
+        return metadataMap;
+    }
+    const headStyles = extractStyleTagsFromHtml(htmlString);
 
     headStyles.forEach(text => {
         let index = 0;

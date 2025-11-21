@@ -1,5 +1,5 @@
 import { WAC_IDENTIFY_SELECTOR } from '../WacComponents/constants';
-import type { GetSourceFunction } from './getPasteSource';
+import type { GetSourceFunction } from './getDocumentSource';
 
 /**
  * @internal

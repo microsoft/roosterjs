@@ -1,4 +1,4 @@
-import type { GetSourceFunction } from './getPasteSource';
+import type { GetSourceFunction } from './getDocumentSource';
 
 /**
  * @internal
@@ -8,10 +8,10 @@ import type { GetSourceFunction } from './getPasteSource';
  * @returns
  */
 export const shouldConvertToSingleImage: GetSourceFunction = props => {
-    const { shouldConvertSingleImage, clipboardData } = props;
-    return (
+    const { shouldConvertSingleImage, htmlFirstLevelChildTags } = props;
+    return !!(
         shouldConvertSingleImage &&
-        clipboardData.htmlFirstLevelChildTags?.length == 1 &&
-        clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
+        htmlFirstLevelChildTags?.length == 1 &&
+        htmlFirstLevelChildTags[0] == 'IMG'
     );
 };

@@ -1,5 +1,5 @@
 import { EXCEL_ATTRIBUTE_VALUE } from './pasteTestUtils';
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { isExcelDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isExcelDesktopDocument';
 
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';

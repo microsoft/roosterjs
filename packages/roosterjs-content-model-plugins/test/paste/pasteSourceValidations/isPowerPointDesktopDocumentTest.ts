@@ -1,4 +1,4 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { isPowerPointDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isPowerPointDesktopDocument';
 import { POWERPOINT_ATTRIBUTE_VALUE } from './pasteTestUtils';
 

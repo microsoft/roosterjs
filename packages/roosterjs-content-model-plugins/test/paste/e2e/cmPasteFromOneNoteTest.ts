@@ -1,5 +1,5 @@
 import * as addParserF from '../../../lib/paste/utils/addParser';
-import * as getPasteSourceF from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as oneNote from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as setProcessorF from '../../../lib/paste/utils/setProcessor';
 import { expectEqual, initEditor } from './testUtils';
@@ -17,7 +17,7 @@ describe('OneNote', () => {
     beforeEach(() => {
         editor = initEditor('OneNote');
         spyOn(oneNote, 'processPastedContentFromOneNote').and.callThrough();
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('oneNoteDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('oneNoteDesktop');
         spyOn(addParserF, 'addParser').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
     });

@@ -1,5 +1,5 @@
 import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import type { GetSourceFunction } from './getDocumentSource';
 
 const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 

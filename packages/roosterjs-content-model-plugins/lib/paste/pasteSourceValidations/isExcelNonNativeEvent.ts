@@ -1,4 +1,4 @@
-import type { GetSourceFunction, GetSourceInputParams } from './getPasteSource';
+import type { GetSourceFunction, GetSourceInputParams } from './getDocumentSource';
 
 const ShadowWorkbookClipboardType = 'web data/shadow-workbook';
 
@@ -8,11 +8,12 @@ const ShadowWorkbookClipboardType = 'web data/shadow-workbook';
  * attributes we use to determine if the content is from Excel. This function is used to handle that case.
  */
 export const isExcelNotNativeEvent: GetSourceFunction = (props: GetSourceInputParams) => {
-    const { clipboardData } = props;
+    const { clipboardItemTypes, htmlFirstLevelChildTags } = props;
 
-    return (
-        clipboardData.types.includes(ShadowWorkbookClipboardType) &&
-        clipboardData.htmlFirstLevelChildTags?.length == 1 &&
-        clipboardData.htmlFirstLevelChildTags[0] == 'TABLE'
+    return !!(
+        clipboardItemTypes &&
+        clipboardItemTypes.includes(ShadowWorkbookClipboardType) &&
+        htmlFirstLevelChildTags?.length == 1 &&
+        htmlFirstLevelChildTags[0] == 'TABLE'
     );
 };
