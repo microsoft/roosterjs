@@ -1,8 +1,10 @@
+import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     DarkColorHandler,
     Colors,
     ColorTransformFunction,
+    BorderFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -59,14 +61,26 @@ export function getColor(
     darkColorHandler?: DarkColorHandler,
     fallback?: string
 ): string | undefined {
-    let color =
+    const color =
         (isBackground ? element.style.backgroundColor : element.style.color) ||
         element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
         fallback;
 
-    if (color && DeprecatedColors.indexOf(color) > -1) {
-        color = isBackground ? undefined : BlackColor;
-    } else if (darkColorHandler && color) {
+    return color ? getColorInternal(color, isBackground, isDarkMode, darkColorHandler) : undefined;
+}
+
+/**
+ * @internal
+ */
+export function getColorInternal(
+    color: string,
+    isBackground: boolean,
+    isDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler
+) {
+    if (DeprecatedColors.indexOf(color) > -1) {
+        return isBackground ? undefined : BlackColor;
+    } else if (darkColorHandler) {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 
         if (match) {
@@ -75,10 +89,9 @@ export function getColor(
             // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
             // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
             // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
-            color = findLightColorFromDarkColor(color, darkColorHandler.knownColors) || '';
+            return findLightColorFromDarkColor(color, darkColorHandler.knownColors) || '';
         }
     }
-
     return color;
 }
 
@@ -91,6 +104,55 @@ export function getColor(
  * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
  */
 export function setColor(
+    element: HTMLElement,
+    color: string | null | undefined,
+    isBackground: boolean,
+    isDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler
+) {
+    const newColor = generateColor(element, color, isBackground, isDarkMode, darkColorHandler);
+
+    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
+    element.style.setProperty(isBackground ? 'background-color' : 'color', newColor || null);
+}
+
+/**
+ * Set the given color to the table border
+ * @param element The element to set color to
+ * @param borderKey the style attribute of the border, ex: borderTop
+ * @param border the border values with the color in light mode
+ * @param isDarkMode Whether element is in dark mode now
+ * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
+ */
+export function setColorOnBorder(
+    element: HTMLElement,
+    borderKey: keyof BorderFormat,
+    border: string,
+    isDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler
+) {
+    const borderValues = extractBorderValues(border);
+    if (borderValues.color) {
+        const color = generateColor(
+            element,
+            borderValues.color,
+            false,
+            !!isDarkMode,
+            darkColorHandler
+        );
+        const combinedValues = combineBorderValue({
+            ...borderValues,
+            color,
+        });
+        element.style[borderKey] = combinedValues;
+    }
+    element.style[borderKey] = border;
+}
+
+/**s
+ * @internal
+ */
+export function generateColor(
     element: HTMLElement,
     color: string | null | undefined,
     isBackground: boolean,
@@ -119,8 +181,7 @@ export function setColor(
         color = isDarkMode ? `${VARIABLE_PREFIX}${key}, ${color}${VARIABLE_POSTFIX}` : color;
     }
 
-    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
-    element.style.setProperty(isBackground ? 'background-color' : 'color', color || null);
+    return color;
 }
 
 /**

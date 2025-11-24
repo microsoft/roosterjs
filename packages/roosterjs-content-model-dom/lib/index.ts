@@ -96,6 +96,7 @@ export {
     setColor,
     parseColor,
     defaultGenerateColorKey,
+    setColorOnBorder,
 } from './formatHandlers/utils/color';
 
 export {

@@ -1,3 +1,5 @@
+import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
+import { getColorInternal, setColorOnBorder } from '../utils/color';
 import type { BorderFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
@@ -32,7 +34,7 @@ const AllKeys = BorderKeys.concat(BorderRadiusKeys);
  * @internal
  */
 export const borderFormatHandler: FormatHandler<BorderFormat> = {
-    parse: (format, element, _, defaultStyle) => {
+    parse: (format, element, context, defaultStyle) => {
         BorderKeys.forEach((key, i) => {
             const value = element.style[key];
             const defaultWidth = defaultStyle[BorderWidthKeys[i]] ?? '0px';
@@ -44,6 +46,20 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
 
             if (value && width != defaultWidth) {
                 format[key] = value == 'none' ? '' : value;
+            }
+
+            const borderValues = extractBorderValues(format[key]);
+            if (borderValues.color) {
+                const color = getColorInternal(
+                    borderValues.color,
+                    false,
+                    !!context.isDarkMode,
+                    context.darkColorHandler
+                );
+                format[key] = combineBorderValue({
+                    ...borderValues,
+                    color,
+                });
             }
         });
 
@@ -61,12 +77,17 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             });
         }
     },
-    apply: (format, element) => {
+    apply: (format, element, context) => {
         AllKeys.forEach(key => {
             const value = format[key];
-
             if (value) {
-                element.style[key] = value;
+                setColorOnBorder(
+                    element,
+                    key,
+                    value,
+                    !!context.isDarkMode,
+                    context.darkColorHandler
+                );
             }
         });
 

@@ -1087,7 +1087,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
 
     it('BlockQuotes', () => {
         runTest(
-            '<div style="color:red"><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); border-left: 3px solid rgb(200, 200, 200); padding-left: 10px;"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); margin: 0 40px"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div></div>',
+            '<div style="color:red"><div>aaaa</div><blockquote style="color: rgba(138, 111, 111, 1); border-left: 3px solid rgb(200,200,200); padding-left: 10px;"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); margin: 0 40px"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [
