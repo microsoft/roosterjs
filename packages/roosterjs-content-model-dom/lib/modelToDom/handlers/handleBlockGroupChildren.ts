@@ -1,4 +1,4 @@
-import { isNodeOfType } from '../../domUtils/isNodeOfType';
+import { cleanUpRestNodes } from '../utils/cleanUpRestNodes';
 import type {
     ContentModelBlockGroup,
     ContentModelHandler,
@@ -62,18 +62,5 @@ function cleanUpNodeState(nodeStack: ModelToDomListStackItem[], rewriteContext: 
         const node = nodeStack.pop()?.refNode ?? null;
 
         cleanUpRestNodes(node, rewriteContext);
-    }
-}
-
-function cleanUpRestNodes(refNode: Node | null, rewriteContext: RewriteFromModel) {
-    while (refNode) {
-        const next = refNode.nextSibling;
-
-        if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
-            rewriteContext.removedBlockElements.push(refNode);
-        }
-
-        refNode.parentNode?.removeChild(refNode);
-        refNode = next;
     }
 }

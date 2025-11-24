@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { cleanUpRestNodes } from '../utils/cleanUpRestNodes';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
@@ -45,6 +46,15 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
     }
 
     // Cut off remained list levels that we can't reuse
+    if (context.allowCacheListItem) {
+        // Clean up all rest nodes in the reused list levels
+        for (let i = layer + 1; i < nodeStack.length; i++) {
+            const stackLevel = nodeStack[i];
+
+            cleanUpRestNodes(stackLevel.refNode, context.rewriteFromModel);
+        }
+    }
+
     nodeStack.splice(layer + 1);
 
     // Create new list levels that are after reused ones
