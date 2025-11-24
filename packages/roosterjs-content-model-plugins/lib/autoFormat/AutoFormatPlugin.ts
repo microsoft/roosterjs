@@ -112,17 +112,29 @@ export class AutoFormatPlugin implements EditorPlugin {
             selection.range.collapsed &&
             rawEvent.data == ' '
         ) {
-            formatTextSegmentBeforeSelectionMarker(editor, (model, previousSegment, paragraph) => {
-                const { autoLink, autoTel, autoMailto, autoBullet, autoNumbering } = this.options;
-                const list = getListTypeStyle(model, autoBullet, autoNumbering);
-                const link = promoteLink(previousSegment, paragraph, {
-                    autoLink,
-                    autoTel,
-                    autoMailto,
-                });
-                shouldHandle = !!link || !!list;
-                return false;
-            });
+            formatTextSegmentBeforeSelectionMarker(
+                editor,
+                (model, previousSegment, paragraph, _markerFormat, context) => {
+                    const {
+                        autoLink,
+                        autoTel,
+                        autoMailto,
+                        autoBullet,
+                        autoNumbering,
+                    } = this.options;
+                    const list = getListTypeStyle(model, autoBullet, autoNumbering);
+                    const link = promoteLink(previousSegment, paragraph, {
+                        autoLink,
+                        autoTel,
+                        autoMailto,
+                    });
+                    shouldHandle = !!link || !!list;
+                    if (shouldHandle) {
+                        context.clearModelCache = true;
+                    }
+                    return false;
+                }
+            );
         }
         return shouldHandle;
     }
@@ -251,6 +263,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                             paragraph,
                             context
                         );
+
                         if (result) {
                             if (typeof result !== 'boolean') {
                                 formatOptions.getChangeData = () => result;
