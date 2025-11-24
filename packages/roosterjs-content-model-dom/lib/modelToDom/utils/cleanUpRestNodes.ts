@@ -11,11 +11,14 @@ export function cleanUpRestNodes(refNode: Node | null, rewriteContext: RewriteFr
     while (refNode) {
         const next = refNode.nextSibling;
 
-        if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
-            rewriteContext.removedBlockElements.push(refNode);
+        if (refNode.parentNode) {
+            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
+                rewriteContext.removedBlockElements.push(refNode);
+            }
+
+            refNode.parentNode.removeChild(refNode);
         }
 
-        refNode.parentNode?.removeChild(refNode);
         refNode = next;
     }
 }
