@@ -7,7 +7,4 @@ export const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = (f
     if (format.textIndent?.startsWith('-')) {
         delete format.textIndent;
     }
-    if (element.style.textIndent.startsWith('-')) {
-        element.style.textIndent = '';
-    }
 };
