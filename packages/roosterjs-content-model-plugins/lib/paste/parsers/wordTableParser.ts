@@ -1,4 +1,3 @@
-import { wordContainerParser } from './wordContainerParser';
 import type { ContentModelTableFormat, FormatParser } from 'roosterjs-content-model-types';
 
 /**
@@ -15,5 +14,3 @@ export const wordTableParser: FormatParser<ContentModelTableFormat> = (format, e
         delete format.htmlAlign;
     }
 };
-
-export { wordContainerParser };

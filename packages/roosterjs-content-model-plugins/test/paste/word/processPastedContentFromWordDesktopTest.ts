@@ -34,10 +34,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
             createDomToModelContext(undefined, event.domToModelOption)
         );
 
-        if (!expectedModel && !htmlBefore) {
-            navigator.clipboard.writeText(JSON.stringify(model));
-        }
-
         if (expectedModel) {
             if (removeUndefinedValues) {
                 expectEqual(model, expectedModel);
