@@ -10,9 +10,12 @@ const MAILTO_REGEX = `(M|m)ailto:${COMMON_REGEX}`;
  */
 export function getLinkUrl(text: string, autoLinkOptions?: AutoLinkOptions): string | undefined {
     const { autoLink, autoMailto, autoTel } = autoLinkOptions ?? {};
+    const mailtoMatch = matchMailTo(text);
+    if (mailtoMatch && !autoMailto) {
+        return undefined;
+    }
     const linkMatch = autoLink ? matchLink(text)?.normalizedUrl : undefined;
     const telMatch = autoTel ? matchTel(text) : undefined;
-    const mailtoMatch = autoMailto ? matchMailTo(text) : undefined;
 
     return linkMatch || telMatch || mailtoMatch;
 }
