@@ -60,7 +60,7 @@ export class EditPlugin implements EditorPlugin {
 
     /**
      * @param options An optional parameter that takes in an object of type EditOptions, which includes the following properties:
-     * handleTabKey: A boolean that enables or disables Tab key handling. Defaults to true.
+     * handleTabKey: A boolean or HandleTabOptions object that controls Tab key handling. When a boolean, true enables all features and false disables all. When an object, individual features can be controlled. Defaults to all enabled.
      */
     constructor(options: EditOptions = DefaultOptions) {
         const tabOptions =
