@@ -33,6 +33,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
             fragment,
             createDomToModelContext(undefined, event.domToModelOption)
         );
+
+        if (!expectedModel && !htmlBefore) {
+            navigator.clipboard.writeText(JSON.stringify(model));
+        }
+
         if (expectedModel) {
             if (removeUndefinedValues) {
                 expectEqual(model, expectedModel);
@@ -372,6 +377,24 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         format: {},
                         widths: [],
                         dataset: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Preserve the htmlAlign from Format container', () => {
+        runTest(
+            '<div align="center"><table style="margin-left: -5px;"><tbody><tr><td>Test</td></tr><tbody></table></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: jasmine.any(Array),
+                        format: { htmlAlign: 'center' },
                     },
                 ],
             }
