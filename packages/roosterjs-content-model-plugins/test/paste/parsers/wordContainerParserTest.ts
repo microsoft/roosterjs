@@ -1,8 +1,8 @@
+import { wordContainerParser } from '../../../lib/paste/parsers/wordContainerParser';
 import {
     DomToModelContext,
     ContentModelFormatContainerFormat,
 } from 'roosterjs-content-model-types';
-import { wordContainerParser } from '../../../lib/paste/parsers/wordContainerParser';
 
 describe('wordContainerParser', () => {
     let format: ContentModelFormatContainerFormat;
