@@ -1,5 +1,5 @@
 import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
-import { getPasteSource } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { getDocumentSource } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
 
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
@@ -14,63 +14,120 @@ const getWacElement = (): HTMLElement => {
 
 describe('getPasteSourceTest | ', () => {
     it('Is Word', () => {
-        const result = getPasteSource(wordParam(), false /* shouldConvertSingleImage */, <any>{});
+        const mockEvent = wordParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData.rawHtml,
+        });
         expect(result).toBe('wordDesktop');
     });
     it('Is Wac Doc', () => {
-        const result = getPasteSource(wacParam(), false /* shouldConvertSingleImage */, <any>{});
+        const mockEvent = wacParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('wacComponents');
     });
     it('Is Excel Doc', () => {
-        const result = getPasteSource(excelParam(), false /* shouldConvertSingleImage */, <any>{});
+        const mockEvent = excelParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('excelDesktop');
     });
     it('Is GoogleSheet Doc', () => {
-        const result = getPasteSource(
-            googleSheetParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = googleSheetParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('googleSheets');
     });
     it('Is PowerPoint Doc', () => {
-        const result = getPasteSource(
-            powerPointParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = powerPointParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('powerPointDesktop');
     });
     it('Is SingleImage', () => {
-        const result = getPasteSource(
-            converSingleImageParam(),
-            true /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = converSingleImageParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: true,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('singleImage');
     });
     it('Is SingleImage, but should not convert single image', () => {
-        const result = getPasteSource(
-            converSingleImageParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = converSingleImageParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('default');
     });
     it('Is Default', () => {
-        const result = getPasteSource(
-            defaultParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = defaultParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('default');
     });
     it('Is Excel Non-Native Event', () => {
-        const result = getPasteSource(
-            excelNonNativeEventParam(),
-            false /* shouldConvertSingleImage */,
-            <any>{}
-        );
+        const mockEvent = excelNonNativeEventParam();
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: false,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
         expect(result).toBe('excelNonNativeEvent');
     });
     it('should return "oneNoteDesktop" when isOneNoteDesktopDocument returns true', () => {
@@ -85,7 +142,15 @@ describe('getPasteSourceTest | ', () => {
         };
         const shouldConvertSingleImage = false;
 
-        const result = getPasteSource(mockEvent, shouldConvertSingleImage, <any>{});
+        const result = getDocumentSource({
+            htmlAttributes: mockEvent.htmlAttributes,
+            fragment: mockEvent.fragment,
+            shouldConvertSingleImage: shouldConvertSingleImage,
+            clipboardItemTypes: mockEvent.clipboardData?.types,
+            htmlFirstLevelChildTags: mockEvent.clipboardData?.htmlFirstLevelChildTags,
+            environment: <any>{},
+            rawHtml: mockEvent.clipboardData?.rawHtml,
+        });
 
         expect(result).toBe('oneNoteDesktop');
     });

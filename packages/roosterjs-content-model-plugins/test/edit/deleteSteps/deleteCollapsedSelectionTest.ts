@@ -1,3 +1,4 @@
+import * as normalizeContentModelModule from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { getDeleteCollapsedSelection } from '../../../lib/edit/deleteSteps/deleteCollapsedSelection';
 import {
     createBr,
@@ -25,6 +26,12 @@ const forwardDeleteCollapsedSelection = getDeleteCollapsedSelection('forward', {
 const backwardDeleteCollapsedSelection = getDeleteCollapsedSelection('backward', {});
 
 describe('deleteSelection - forward', () => {
+    let normalizeContentModelSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        normalizeContentModelSpy = spyOn(normalizeContentModelModule, 'normalizeContentModel');
+    });
+
     it('empty selection', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
@@ -46,6 +53,7 @@ describe('deleteSelection - forward', () => {
 
         expect(result.deleteResult).toBe('notDeleted');
         expect(result.insertPoint).toBeNull();
+        expect(normalizeContentModelSpy).not.toHaveBeenCalled();
     });
 
     it('Single selection marker', () => {
@@ -3238,6 +3246,8 @@ describe('deleteSelection - backward', () => {
         const para = createParagraph();
         const marker = createSelectionMarker();
 
+        spyOn(normalizeContentModelModule, 'normalizeContentModel');
+
         para.format.marginLeft = '40px';
 
         para.segments.push(marker);
@@ -3274,7 +3284,7 @@ describe('deleteSelection - backward', () => {
         });
     });
 
-    it('Dont outdent from empty paragraph nested in list', () => {
+    it('Do not outdent from empty paragraph nested in list', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
@@ -3330,7 +3340,7 @@ describe('deleteSelection - backward', () => {
         });
     });
 
-    it('Dont outdent empty para with no margins', () => {
+    it('Do not outdent empty para with no margins', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
         const marker = createSelectionMarker();
@@ -3371,7 +3381,7 @@ describe('deleteSelection - backward', () => {
         });
     });
 
-    it('Dont outdent empty para with no margins and delete', () => {
+    it('Do not outdent empty para with no margins and delete', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
         const para0 = createParagraph();
@@ -3430,6 +3440,8 @@ describe('deleteSelection - backward', () => {
         para.format.marginLeft = '40px';
         para.segments.push(marker);
         model.blocks.push(list);
+
+        spyOn(normalizeContentModelModule, 'normalizeContentModel');
 
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
 

@@ -59,7 +59,13 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     editPluginOptions: {
-        handleTabKey: true,
+        handleTabKey: {
+            indentMultipleBlocks: true,
+            indentTable: true,
+            appendTableRow: true,
+            indentList: true,
+            indentParagraph: true,
+        },
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
