@@ -7,7 +7,8 @@ import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
-import { wordContainerParser, wordTableParser } from '../parsers/wordTableParser';
+import { wordContainerParser } from '../parsers/wordContainerParser';
+import { wordTableParser } from '../parsers/wordTableParser';
 import type { WordMetadata } from './WordMetadata';
 import type { DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
