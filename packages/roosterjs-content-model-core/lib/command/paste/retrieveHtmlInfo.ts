@@ -1,5 +1,10 @@
-import { isBlockElement, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import { retrieveCssRules } from '../createModelFromHtml/convertInlineCss';
+import {
+    isBlockElement,
+    isNodeOfType,
+    retrieveDocumentMetadata,
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type { ClipboardData } from 'roosterjs-content-model-types';
 import type { CssRule } from '../createModelFromHtml/convertInlineCss';
 
@@ -33,7 +38,7 @@ export function retrieveHtmlInfo(
         result = {
             ...retrieveHtmlStrings(clipboardData),
             globalCssRules: retrieveCssRules(doc),
-            metadata: retrieveMetadata(doc),
+            metadata: retrieveDocumentMetadata(doc),
             containsBlockElements: checkBlockElements(doc),
         };
 
@@ -59,21 +64,6 @@ function retrieveTopLevelTags(doc: Document): string[] {
     }
 
     return topLevelTags;
-}
-
-function retrieveMetadata(doc: Document): Record<string, string> {
-    const result: Record<string, string> = {};
-    const attributes = doc.querySelector('html')?.attributes;
-
-    (attributes ? toArray(attributes) : []).forEach(attr => {
-        result[attr.name] = attr.value;
-    });
-
-    toArray(doc.querySelectorAll('meta')).forEach(meta => {
-        result[meta.name] = meta.content;
-    });
-
-    return result;
 }
 
 function retrieveHtmlStrings(

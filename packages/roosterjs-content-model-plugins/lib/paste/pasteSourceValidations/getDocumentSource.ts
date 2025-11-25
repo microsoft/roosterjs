@@ -7,21 +7,41 @@ import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type {
-    BeforePasteEvent,
-    ClipboardData,
-    EditorEnvironment,
-} from 'roosterjs-content-model-types';
+import type { EditorEnvironment } from 'roosterjs-content-model-types';
 
 /**
  * @internal
+ * The input parameters for getDocumentSource function
  */
 export type GetSourceInputParams = {
+    /**
+     * HTML attributes from the content that is being checked
+     */
     htmlAttributes: Record<string, string>;
-    fragment: DocumentFragment;
-    shouldConvertSingleImage: boolean;
-    clipboardData: ClipboardData;
-    environment: EditorEnvironment;
+    /**
+     * Document fragment of the checked content
+     */
+    fragment: DocumentFragment | Document;
+    /**
+     * Whether convert single image is enabled
+     */
+    shouldConvertSingleImage?: boolean;
+    /**
+     * Array of tag names of the first level child nodes
+     */
+    htmlFirstLevelChildTags?: string[];
+    /**
+     * The clipboard item types
+     */
+    clipboardItemTypes?: string[];
+    /**
+     * The editor environment
+     */
+    environment: Omit<EditorEnvironment, 'domToModelSettings' | 'modelToDomSettings'>;
+    /**
+     * The raw HTML string from clipboard
+     */
+    rawHtml?: string | null;
 };
 
 /**
@@ -64,21 +84,8 @@ const getSourceFunctions = new Map<KnownPasteSourceType, GetSourceFunction>([
  * @param shouldConvertSingleImage Whether convert single image is enabled.
  * @returns The Type of pasted content, if no type found will return {KnownSourceType.Default}
  */
-export function getPasteSource(
-    event: BeforePasteEvent,
-    shouldConvertSingleImage: boolean,
-    environment: EditorEnvironment
-): KnownPasteSourceType {
-    const { htmlAttributes, clipboardData, fragment } = event;
-
+export function getDocumentSource(param: GetSourceInputParams): KnownPasteSourceType {
     let result: KnownPasteSourceType | null = null;
-    const param: GetSourceInputParams = {
-        htmlAttributes,
-        fragment,
-        shouldConvertSingleImage,
-        clipboardData,
-        environment,
-    };
 
     getSourceFunctions.forEach((func, key) => {
         if (!result && func(param)) {
