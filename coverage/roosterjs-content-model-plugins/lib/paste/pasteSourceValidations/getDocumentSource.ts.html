@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource.ts</title>
+    <title>Code coverage report for roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getDocumentSource.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/paste/pasteSourceValidations</a> getPasteSource.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-plugins/lib/paste/pasteSourceValidations</a> getDocumentSource.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -147,7 +147,14 @@
 <a name='L88'></a><a href='#L88'>88</a>
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -194,6 +201,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,20 +241,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">75x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">225x</span>
@@ -246,21 +260,41 @@ import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type {
-    BeforePasteEvent,
-    ClipboardData,
-    EditorEnvironment,
-} from 'roosterjs-content-model-types';
+import type { EditorEnvironment } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
+ * The input parameters for getDocumentSource function
  */
 export type GetSourceInputParams = {
+    /**
+     * HTML attributes from the content that is being checked
+     */
     htmlAttributes: Record&lt;string, string&gt;;
-    fragment: DocumentFragment;
-    shouldConvertSingleImage: boolean;
-    clipboardData: ClipboardData;
-    environment: EditorEnvironment;
+    /**
+     * Document fragment of the checked content
+     */
+    fragment: DocumentFragment | Document;
+    /**
+     * Whether convert single image is enabled
+     */
+    shouldConvertSingleImage?: boolean;
+    /**
+     * Array of tag names of the first level child nodes
+     */
+    htmlFirstLevelChildTags?: string[];
+    /**
+     * The clipboard item types
+     */
+    clipboardItemTypes?: string[];
+    /**
+     * The editor environment
+     */
+    environment: Omit&lt;EditorEnvironment, 'domToModelSettings' | 'modelToDomSettings'&gt;;
+    /**
+     * The raw HTML string from clipboard
+     */
+    rawHtml?: string | null;
 };
 &nbsp;
 /**
@@ -303,21 +337,8 @@ const getSourceFunctions = new Map&lt;KnownPasteSourceType, GetSourceFunction&gt
  * @param shouldConvertSingleImage Whether convert single image is enabled.
  * @returns The Type of pasted content, if no type found will return {KnownSourceType.Default}
  */
-export function getPasteSource(
-    event: BeforePasteEvent,
-    shouldConvertSingleImage: boolean,
-    environment: EditorEnvironment
-): KnownPasteSourceType {
-    const { htmlAttributes, clipboardData, fragment } = event;
-&nbsp;
+export function getDocumentSource(param: GetSourceInputParams): KnownPasteSourceType {
     let result: KnownPasteSourceType | null = null;
-    const param: GetSourceInputParams = {
-        htmlAttributes,
-        fragment,
-        shouldConvertSingleImage,
-        clipboardData,
-        environment,
-    };
 &nbsp;
     getSourceFunctions.forEach((func, key) =&gt; {
         if (!result &amp;&amp; func(param)) {
@@ -334,7 +355,7 @@ export function getPasteSource(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 24 2025 19:07:44 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 25 2025 17:10:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

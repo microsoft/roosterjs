@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.33% </span>
+                <span class="strong">97.37% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>73/75</span>
+                <span class='fraction'>74/76</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.67% </span>
+                <span class="strong">92.59% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>22/24</span>
+                <span class='fraction'>25/27</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.26% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>71/73</span>
+                <span class='fraction'>72/74</span>
             </div>
         
             
@@ -238,7 +238,15 @@
 <a name='L179'></a><a href='#L179'>179</a>
 <a name='L180'></a><a href='#L180'>180</a>
 <a name='L181'></a><a href='#L181'>181</a>
-<a name='L182'></a><a href='#L182'>182</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -336,7 +344,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">135x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -346,6 +359,9 @@
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
@@ -424,8 +440,8 @@ import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
+import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { imageSizeParser } from './parsers/imageSizeParser';
 import { parseLink } from './parsers/linkParser';
 import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
@@ -517,16 +533,24 @@ export class PastePlugin implements EditorPlugin {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
 &nbsp;
-        const pasteSource = getPasteSource(
-            event,
-            false /* shouldConvertSingleImage */,
-            this.editor.getEnvironment()
-        );
+        const { htmlAttributes, clipboardData, fragment } = event;
+&nbsp;
+        const pasteSource = getDocumentSource({
+            htmlAttributes,
+            fragment,
+            clipboardItemTypes: clipboardData.types,
+            htmlFirstLevelChildTags: clipboardData.htmlFirstLevelChildTags,
+            environment: this.editor.getEnvironment(),
+            rawHtml: clipboardData.rawHtml,
+        });
         const pasteType = event.pasteType;
 &nbsp;
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event);
+                processPastedContentFromWordDesktop(
+                    event.domToModelOption,
+                    event.htmlBefore || event.clipboardData.rawHtml || ''
+                );
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
@@ -607,7 +631,7 @@ export class PastePlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 24 2025 19:07:44 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 25 2025 17:10:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

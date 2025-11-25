@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/41</span>
+                <span class='fraction'>34/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/28</span>
+                <span class='fraction'>20/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>32/32</span>
             </div>
         
             
@@ -153,18 +153,13 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -227,21 +222,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">46x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -269,8 +249,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isBlockElement, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
-import { retrieveCssRules } from '../createModelFromHtml/convertInlineCss';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { retrieveCssRules } from '../createModelFromHtml/convertInlineCss';
+import {
+    isBlockElement,
+    isNodeOfType,
+    retrieveDocumentMetadata,
+    toArray,
+} from 'roosterjs-content-model-dom';
 import type { ClipboardData } from 'roosterjs-content-model-types';
 import type { CssRule } from '../createModelFromHtml/convertInlineCss';
 &nbsp;
@@ -304,7 +289,7 @@ export function retrieveHtmlInfo(
         result = {
             ...retrieveHtmlStrings(clipboardData),
             globalCssRules: retrieveCssRules(doc),
-            metadata: retrieveMetadata(doc),
+            metadata: retrieveDocumentMetadata(doc),
             containsBlockElements: checkBlockElements(doc),
         };
 &nbsp;
@@ -330,21 +315,6 @@ function retrieveTopLevelTags(doc: Document): string[] {
     }
 &nbsp;
     return topLevelTags;
-}
-&nbsp;
-function retrieveMetadata(doc: Document): Record&lt;string, string&gt; {
-    const result: Record&lt;string, string&gt; = {};
-    const attributes = doc.querySelector('html')<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ttributes;
-&nbsp;
-    (attributes ? toArray(attributes) : <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>.forEach(attr =&gt; {
-        result[attr.name] = attr.value;
-    });
-&nbsp;
-    toArray(doc.querySelectorAll('meta')).forEach(meta =&gt; {
-        result[meta.name] = meta.content;
-    });
-&nbsp;
-    return result;
 }
 &nbsp;
 function retrieveHtmlStrings(
@@ -382,7 +352,7 @@ function checkBlockElements(doc: Document): boolean {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 24 2025 19:07:44 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 25 2025 17:10:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
