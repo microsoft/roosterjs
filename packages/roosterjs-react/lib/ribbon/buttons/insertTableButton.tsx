@@ -57,11 +57,19 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
     },
     onClick: (editor, key) => {
         const { row, col } = parseKey(key);
-        insertTable(editor, col, row, {
-            verticalBorderColor: '#000000',
-            bottomBorderColor: '#000000',
-            topBorderColor: '#000000',
-        });
+        insertTable(
+            editor,
+            col,
+            row,
+            {
+                verticalBorderColor: '#000000',
+                bottomBorderColor: '#000000',
+                topBorderColor: '#000000',
+            },
+            {
+                marginBottom: '1px',
+            }
+        );
     },
 };
 

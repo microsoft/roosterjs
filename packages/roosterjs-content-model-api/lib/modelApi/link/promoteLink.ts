@@ -3,6 +3,7 @@ import { splitTextSegment } from '../../publicApi/segment/splitTextSegment';
 import type {
     AutoLinkOptions,
     ContentModelText,
+    PromotedLink,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
@@ -25,20 +26,19 @@ export function promoteLink(
     if (segment.link) {
         return null;
     }
-    const link = segment.text.split(' ').pop();
-    const url = link?.trim();
-    let linkUrl: string | undefined = undefined;
 
-    if (url && link && (linkUrl = getLinkUrl(url, autoLinkOptions))) {
+    const promotedLink = getPromoteLink(segment, autoLinkOptions);
+
+    if (promotedLink) {
         const linkSegment = splitTextSegment(
             segment,
             paragraph,
-            segment.text.length - link.trimLeft().length,
+            segment.text.length - promotedLink.label.trimLeft().length,
             segment.text.trimRight().length
         );
         linkSegment.link = {
             format: {
-                href: linkUrl,
+                href: promotedLink.href,
                 underline: true,
             },
             dataset: {},
@@ -48,4 +48,26 @@ export function promoteLink(
     }
 
     return null;
+}
+
+/**
+ * Verify if the link can be promoted
+ * @param segment The text segment to search link text from
+ * @param options Options of auto link
+ * @returns if a link can be promoted
+ */
+export function getPromoteLink(
+    segment: ContentModelText,
+    autoLinkOptions: AutoLinkOptions
+): PromotedLink | undefined {
+    const link = segment.text.split(' ').pop();
+    const url = link?.trim();
+    let linkUrl: string | undefined = undefined;
+    if (url && link && (linkUrl = getLinkUrl(url, autoLinkOptions))) {
+        return {
+            label: link,
+            href: linkUrl,
+        };
+    }
+    return undefined;
 }

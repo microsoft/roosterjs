@@ -333,7 +333,7 @@ export {
 export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IEditor } from './editor/IEditor';
-export { ExperimentalFeature } from './editor/ExperimentalFeature';
+export { ExperimentalFeature, GraduatedExperimentalFeature } from './editor/ExperimentalFeature';
 export {
     EditorOptions,
     ColorOptions,
@@ -459,6 +459,7 @@ export {
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export { TextAndHtmlContentForCopy } from './parameter/TextAndHtmlContentForCopy';
+export { PromotedLink } from './parameter/PromotedLink';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';

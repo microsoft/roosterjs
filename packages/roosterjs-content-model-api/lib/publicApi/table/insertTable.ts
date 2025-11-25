@@ -41,7 +41,7 @@ export function insertTable(
                 const doc = createContentModelDocument();
                 const table = createTableStructure(doc, columns, rows);
                 if (format) {
-                    table.format = format;
+                    table.format = { ...format };
                 }
 
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
