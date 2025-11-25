@@ -120,7 +120,7 @@ export class AutoFormatPlugin implements EditorPlugin {
 
             formatTextSegmentBeforeSelectionMarker(
                 editor,
-                (model, previousSegment, _paragraph, _markerFormat, context) => {
+                (model, previousSegment, _paragraph, _markerFormat) => {
                     const list = getListTypeStyle(model, autoBullet, autoNumbering);
                     const promotedLink = getPromoteLink(previousSegment, {
                         autoLink,
