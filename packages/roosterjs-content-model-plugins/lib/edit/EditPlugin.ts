@@ -211,7 +211,7 @@ export class EditPlugin implements EditorPlugin {
                     break;
 
                 case 'Tab':
-                    if (this.options.handleTabKey && !hasCtrlOrMetaKey) {
+                    if (!hasCtrlOrMetaKey) {
                         keyboardTab(editor, rawEvent, this.options.handleTabKey);
                     }
                     break;

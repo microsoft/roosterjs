@@ -41,7 +41,10 @@ export interface HandleTabOptions {
 
 export type EditOptions = {
     /**
-     * Whether to handle Tab key in keyboard. @default true
+     * Whether to handle Tab key in keyboard, or an object to control specific Tab key behaviors.
+     * When true, all Tab features are enabled. When false, all are disabled.
+     * When an object, individual features can be controlled via HandleTabOptions.
+     * @default true
      */
     handleTabKey?: HandleTabOptions | boolean;
 
