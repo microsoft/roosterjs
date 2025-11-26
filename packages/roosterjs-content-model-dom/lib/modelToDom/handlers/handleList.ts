@@ -30,6 +30,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
     // Skip existing list levels that has same properties so we can reuse them
     for (; layer < listItem.levels.length && layer + 1 < nodeStack.length; layer++) {
+        const parentLevel = nodeStack[layer];
         const stackLevel = nodeStack[layer + 1];
         const itemLevel = listItem.levels[layer];
 
@@ -42,6 +43,15 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
                 itemLevel.format.listStyleType != stackLevel.format?.listStyleType)
         ) {
             break;
+        }
+
+        if (
+            context.allowCacheListItem &&
+            parentLevel.refNode &&
+            itemLevel.cachedElement == parentLevel.refNode
+        ) {
+            // Move refNode to next node since we are reusing this cached element
+            parentLevel.refNode = parentLevel.refNode.nextSibling;
         }
     }
 

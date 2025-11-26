@@ -1,3 +1,4 @@
+import * as reuseCachedElement from '../../../lib/domUtils/reuseCachedElement';
 import { BulletListType } from '../../../lib/constants/BulletListType';
 import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
@@ -610,5 +611,398 @@ describe('handleList handles metadata', () => {
             ],
         });
         expect(listItem.levels[0].format.listStyleType).toBe('disc');
+    });
+});
+
+describe('handleList with cache', () => {
+    let reuseCachedElementSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        reuseCachedElementSpy = spyOn(reuseCachedElement, 'reuseCachedElement').and.callThrough();
+    });
+
+    it('Single level list without cached element', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedUL = document.createElement('ul');
+        const listItem = createListItem([
+            {
+                listType: 'UL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        parent.appendChild(cachedUL);
+        context.allowCacheListItem = true;
+
+        const newRefNode = handleList(document, parent, listItem, context, cachedUL);
+
+        expect(parent.outerHTML).toBe('<div><ul></ul><ul></ul></div>');
+        expect(parent.firstChild).not.toBe(cachedUL);
+        expect(parent.lastChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: cachedUL,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'UL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(reuseCachedElementSpy).not.toHaveBeenCalled();
+        expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
+        expect(newRefNode).toBe(cachedUL);
+    });
+
+    it('Single level list with cached element', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedUL = document.createElement('ul');
+        const listItem = createListItem([
+            {
+                listType: 'UL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        listItem.levels[0].cachedElement = cachedUL;
+        parent.appendChild(cachedUL);
+        context.allowCacheListItem = true;
+
+        const newRefNode = handleList(document, parent, listItem, context, cachedUL);
+
+        expect(parent.outerHTML).toBe('<div><ul></ul></div>');
+        expect(parent.firstChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'UL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(reuseCachedElementSpy).toHaveBeenCalledWith(
+            parent,
+            cachedUL,
+            cachedUL,
+            context.rewriteFromModel
+        );
+        expect(listItem.levels[0].cachedElement).toBe(cachedUL);
+        expect(newRefNode).toBeNull();
+    });
+
+    it('Single level list with cached element which does not match existing refNode', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedUL = document.createElement('ul');
+        const refNode = document.createElement('br');
+        const listItem = createListItem([
+            {
+                listType: 'UL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        listItem.levels[0].cachedElement = cachedUL;
+        parent.appendChild(refNode);
+        context.allowCacheListItem = true;
+
+        const newRefNode = handleList(document, parent, listItem, context, refNode);
+
+        expect(parent.outerHTML).toBe('<div><ul></ul><br></div>');
+        expect(parent.firstChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: refNode,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'UL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(reuseCachedElementSpy).toHaveBeenCalledWith(
+            parent,
+            cachedUL,
+            refNode,
+            context.rewriteFromModel
+        );
+        expect(listItem.levels[0].cachedElement).toBe(cachedUL);
+        expect(newRefNode).toBe(refNode);
+    });
+
+    it('Cached element needs to be formatted again', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedUL = document.createElement('ol');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: { listStyleType: 'circle', startNumberOverride: 2 },
+                dataset: {},
+            },
+        ]);
+        listItem.levels[0].cachedElement = cachedUL;
+
+        parent.appendChild(cachedUL);
+        context.allowCacheListItem = true;
+
+        const newRefNode = handleList(document, parent, listItem, context, cachedUL);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ol start="2" style="list-style-type: circle;"></ol></div>'
+        );
+        expect(parent.firstChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'OL',
+                    dataset: {},
+                    format: { listStyleType: 'circle', startNumberOverride: 2 },
+                    refNode: null,
+                },
+            ],
+        });
+
+        expect(listItem.levels[0].cachedElement).toBe(cachedUL);
+        expect(newRefNode).toBeNull();
+    });
+
+    it('Multiple level list with cached elements', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedOL = document.createElement('ol');
+        const cachedUL = document.createElement('ul');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+            {
+                listType: 'UL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+        listItem.levels[0].cachedElement = cachedOL;
+        listItem.levels[1].cachedElement = cachedUL;
+        parent.appendChild(cachedOL);
+        cachedOL.appendChild(cachedUL);
+        context.allowCacheListItem = true;
+        const newRefNode = handleList(document, parent, listItem, context, cachedUL);
+
+        expect(parent.outerHTML).toBe('<div><ol start="1"><ul></ul></ol></div>');
+        expect(parent.firstChild).toBe(cachedOL);
+        expect(cachedOL.firstChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: cachedOL,
+                    listType: 'OL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'UL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(listItem.levels[0].cachedElement).toBe(cachedOL);
+        expect(listItem.levels[1].cachedElement).toBe(cachedUL);
+        expect(newRefNode).toBeNull();
+    });
+
+    it('Multiple level list with partial cached elements', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const cachedUL = document.createElement('ul');
+        const refNode = document.createElement('br');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+            {
+                listType: 'UL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        parent.appendChild(refNode);
+        listItem.levels[1].cachedElement = cachedUL;
+        context.allowCacheListItem = true;
+        const newRefNode = handleList(document, parent, listItem, context, refNode);
+
+        expect(parent.outerHTML).toBe('<div><ol start="1"><ul></ul></ol><br></div>');
+        expect(parent.firstChild!.firstChild).toBe(cachedUL);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: refNode,
+                },
+                {
+                    node: parent.firstChild as HTMLElement,
+                    listType: 'OL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+                {
+                    node: cachedUL,
+                    listType: 'UL',
+                    dataset: {},
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
+        expect(listItem.levels[1].cachedElement).toBe(cachedUL);
+        expect(newRefNode).toBe(refNode);
+    });
+
+    it('Existing list is deeper than list item levels - 1', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const existingOL1 = document.createElement('ol');
+        const existingOL2 = document.createElement('ol');
+        const existingLI = document.createElement('li');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        listItem.levels[0].cachedElement = existingOL1;
+        parent.appendChild(existingOL1);
+        existingOL1.appendChild(existingLI);
+        existingOL1.appendChild(existingOL2);
+        context.allowCacheListItem = true;
+
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: existingOL1 },
+            { node: existingOL1, listType: 'OL', refNode: existingOL2 },
+            { node: existingOL2, listType: 'OL', refNode: null },
+        ];
+
+        const newRefNode = handleList(document, parent, listItem, context, existingOL1);
+
+        // We will just create new list item here but not remove existing ones, they should be removed in handleBlockGroupChildren()
+        expect(parent.outerHTML).toBe('<div><ol><li></li><ol></ol></ol></div>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: existingOL1,
+                    listType: 'OL',
+                    refNode: existingOL2,
+                },
+            ],
+        });
+        expect(newRefNode).toBeNull();
+    });
+
+    it('Existing list is deeper than list item levels - 2', () => {
+        const context = createModelToDomContext();
+        const parent = document.createElement('div');
+        const existingOL1 = document.createElement('ol');
+        const existingOL2 = document.createElement('ol');
+        const existingLI1 = document.createElement('li');
+        const existingLI2 = document.createElement('li');
+        const existingLI3 = document.createElement('li');
+
+        existingOL1.appendChild(existingLI1);
+        existingOL2.appendChild(existingLI2);
+        existingOL2.appendChild(existingLI3);
+        existingOL1.appendChild(existingOL2);
+        parent.appendChild(existingOL1);
+
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        listItem.levels[0].cachedElement = existingOL1;
+        context.allowCacheListItem = true;
+
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'OL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: existingLI3 },
+        ];
+
+        const newRefNode = handleList(document, parent, listItem, context, null);
+
+        // We will just create new list item here but not remove existing ones, they should be removed in handleBlockGroupChildren()
+        expect(parent.outerHTML).toBe('<div><ol><li></li><ol><li></li></ol></ol></div>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: existingOL1,
+                    listType: 'OL',
+                    refNode: null,
+                },
+            ],
+        });
+        expect(newRefNode).toBeNull();
     });
 });
