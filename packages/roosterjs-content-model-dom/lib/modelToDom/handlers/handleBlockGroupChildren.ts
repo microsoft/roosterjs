@@ -4,7 +4,6 @@ import type {
     ContentModelHandler,
     ModelToDomContext,
     ModelToDomListStackItem,
-    RewriteFromModel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -31,11 +30,11 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 childBlock.blockType != 'BlockGroup' ||
                 childBlock.blockGroupType != 'ListItem'
             ) {
-                if (context.allowCacheListItem) {
-                    cleanUpNodeState(listFormat.nodeStack, context.rewriteFromModel);
-                }
+                cleanUpNodeStack(listFormat.nodeStack, context);
 
-                listFormat.nodeStack = [];
+                if (listFormat.nodeStack.length > 0) {
+                    listFormat.nodeStack = [];
+                }
             }
 
             refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
@@ -45,9 +44,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             }
         });
 
-        if (context.allowCacheListItem) {
-            cleanUpNodeState(listFormat.nodeStack, context.rewriteFromModel);
-        }
+        cleanUpNodeStack(listFormat.nodeStack, context);
 
         // Remove all rest node if any since they don't appear in content model
         cleanUpRestNodes(refNode, context.rewriteFromModel);
@@ -56,11 +53,13 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
     }
 };
 
-function cleanUpNodeState(nodeStack: ModelToDomListStackItem[], rewriteContext: RewriteFromModel) {
-    // Clear list stack, only run to nodeState[1] because nodeState[0] is the parent node
-    for (let i = nodeStack.length - 1; i > 0; i--) {
-        const node = nodeStack.pop()?.refNode ?? null;
+function cleanUpNodeStack(nodeStack: ModelToDomListStackItem[], context: ModelToDomContext) {
+    if (context.allowCacheListItem && nodeStack.length > 0) {
+        // Clear list stack, only run to nodeState[1] because nodeState[0] is the parent node
+        for (let i = nodeStack.length - 1; i > 0; i--) {
+            const node = nodeStack.pop()?.refNode ?? null;
 
-        cleanUpRestNodes(node, rewriteContext);
+            cleanUpRestNodes(node, context.rewriteFromModel);
+        }
     }
 }
