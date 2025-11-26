@@ -145,8 +145,9 @@ export function setColorOnBorder(
             color,
         });
         element.style[borderKey] = combinedValues;
+    } else {
+        element.style[borderKey] = border;
     }
-    element.style[borderKey] = border;
 }
 
 /**s
