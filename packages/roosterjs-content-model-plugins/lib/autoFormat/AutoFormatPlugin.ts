@@ -1,13 +1,17 @@
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { checkAndInsertHorizontalLine } from './horizontalLine/checkAndInsertHorizontalLine';
 import { createLink } from './link/createLink';
-import { formatTextSegmentBeforeSelectionMarker, promoteLink } from 'roosterjs-content-model-api';
 import { getListTypeStyle } from './list/getListTypeStyle';
 import { keyboardListTrigger } from './list/keyboardListTrigger';
 import { transformFraction } from './numbers/transformFraction';
 import { transformHyphen } from './hyphen/transformHyphen';
 import { transformOrdinals } from './numbers/transformOrdinals';
 import { unlink } from './link/unlink';
+import {
+    formatTextSegmentBeforeSelectionMarker,
+    promoteLink,
+    getPromoteLink,
+} from 'roosterjs-content-model-api';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
     ContentChangedEvent,
@@ -112,17 +116,22 @@ export class AutoFormatPlugin implements EditorPlugin {
             selection.range.collapsed &&
             rawEvent.data == ' '
         ) {
-            formatTextSegmentBeforeSelectionMarker(editor, (model, previousSegment, paragraph) => {
-                const { autoLink, autoTel, autoMailto, autoBullet, autoNumbering } = this.options;
-                const list = getListTypeStyle(model, autoBullet, autoNumbering);
-                const link = promoteLink(previousSegment, paragraph, {
-                    autoLink,
-                    autoTel,
-                    autoMailto,
-                });
-                shouldHandle = !!link || !!list;
-                return false;
-            });
+            const { autoLink, autoTel, autoMailto, autoBullet, autoNumbering } = this.options;
+
+            formatTextSegmentBeforeSelectionMarker(
+                editor,
+                (model, previousSegment, _paragraph, _markerFormat) => {
+                    const list = getListTypeStyle(model, autoBullet, autoNumbering);
+                    const promotedLink = getPromoteLink(previousSegment, {
+                        autoLink,
+                        autoTel,
+                        autoMailto,
+                    });
+                    shouldHandle = !!promotedLink || !!list;
+
+                    return false;
+                }
+            );
         }
         return shouldHandle;
     }
@@ -251,6 +260,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                             paragraph,
                             context
                         );
+
                         if (result) {
                             if (typeof result !== 'boolean') {
                                 formatOptions.getChangeData = () => result;
