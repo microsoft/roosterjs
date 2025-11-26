@@ -55,7 +55,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
 
 function cleanUpNodeStack(nodeStack: ModelToDomListStackItem[], context: ModelToDomContext) {
     if (context.allowCacheListItem && nodeStack.length > 0) {
-        // Clear list stack, only run to nodeState[1] because nodeState[0] is the parent node
+        // Clear list stack, only run to nodeStack[1] because nodeStack[0] is the parent node
         for (let i = nodeStack.length - 1; i > 0; i--) {
             const node = nodeStack.pop()?.refNode ?? null;
 
