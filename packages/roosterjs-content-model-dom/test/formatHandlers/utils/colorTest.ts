@@ -2,8 +2,10 @@ import { Colors, DarkColorHandler } from 'roosterjs-content-model-types';
 import {
     defaultGenerateColorKey,
     getColor,
+    getColorInternal,
     parseColor,
     setColor,
+    setColorOnBorder,
 } from '../../../lib/formatHandlers/utils/color';
 
 describe('getColor without darkColorHandler', () => {
@@ -624,5 +626,166 @@ describe('parseColor', () => {
     it('rgba 3', () => {
         const result = parseColor('rgba(1.1, 2.2, 3.3, 4.4)');
         expect(result).toEqual([1, 2, 3]);
+    });
+});
+
+describe('getColorInternal', () => {
+    let knownColors: Record<string, Colors>;
+    let getDarkColorSpy: jasmine.Spy;
+    let updateKnownColorSpy: jasmine.Spy;
+    let darkColorHandler: DarkColorHandler;
+
+    beforeEach(() => {
+        knownColors = {};
+        getDarkColorSpy = jasmine
+            .createSpy('getDarkColor')
+            .and.callFake((color: string) => '--dark_' + color);
+        updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
+
+        darkColorHandler = {
+            knownColors,
+            getDarkColor: getDarkColorSpy,
+            updateKnownColor: updateKnownColorSpy,
+            reset: null!,
+            generateColorKey: defaultGenerateColorKey,
+        };
+    });
+
+    it('should return undefined for deprecated background color', () => {
+        const result = getColorInternal('window', true, false);
+        expect(result).toBeUndefined();
+    });
+
+    it('should return black color for deprecated text color', () => {
+        const result = getColorInternal('windowtext', false, false);
+        expect(result).toBe('rgb(0, 0, 0)');
+    });
+
+    it('should handle CSS variable with fallback', () => {
+        const result = getColorInternal('var(--test-color, red)', false, false, darkColorHandler);
+        expect(result).toBe('red');
+    });
+
+    it('should handle CSS variable without fallback', () => {
+        const result = getColorInternal('var(--test-color)', false, false, darkColorHandler);
+        expect(result).toBe('');
+    });
+
+    it('should find light color from known dark colors in dark mode', () => {
+        knownColors['--test'] = {
+            lightModeColor: 'blue',
+            darkModeColor: 'rgb(100, 150, 200)',
+        };
+
+        const result = getColorInternal('rgb(100, 150, 200)', false, true, darkColorHandler);
+        expect(result).toBe('blue');
+    });
+
+    it('should return empty string for unknown dark color in dark mode', () => {
+        const result = getColorInternal('rgb(255, 255, 255)', false, true, darkColorHandler);
+        expect(result).toBe('');
+    });
+
+    it('should return color as-is for normal color without dark color handler', () => {
+        const result = getColorInternal('red', false, false);
+        expect(result).toBe('red');
+    });
+
+    it('should return color as-is for normal color in light mode with dark color handler', () => {
+        const result = getColorInternal('red', false, false, darkColorHandler);
+        expect(result).toBe('red');
+    });
+});
+
+describe('setColorOnBorder', () => {
+    let element: HTMLElement;
+    let knownColors: Record<string, Colors>;
+    let getDarkColorSpy: jasmine.Spy;
+    let updateKnownColorSpy: jasmine.Spy;
+    let generateColorKeySpy: jasmine.Spy;
+    let darkColorHandler: DarkColorHandler;
+
+    beforeEach(() => {
+        element = document.createElement('div');
+        knownColors = {};
+        getDarkColorSpy = jasmine
+            .createSpy('getDarkColor')
+            .and.callFake((color: string) => '--dark_' + color);
+        updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
+        generateColorKeySpy = jasmine
+            .createSpy('generateColorKey')
+            .and.callFake(defaultGenerateColorKey);
+
+        darkColorHandler = {
+            knownColors,
+            getDarkColor: getDarkColorSpy,
+            updateKnownColor: updateKnownColorSpy,
+            reset: null!,
+            generateColorKey: generateColorKeySpy,
+        };
+    });
+
+    it('should set border with color', () => {
+        const borderValue = '1px solid red';
+        setColorOnBorder(element, 'borderTop', borderValue, false, darkColorHandler);
+
+        expect(element.style.borderTop).toBe('1px solid red');
+    });
+
+    it('should set border without color', () => {
+        const borderValue = '2px dashed';
+        setColorOnBorder(element, 'borderTop', borderValue, false, darkColorHandler);
+
+        expect(element.style.borderTop).toBe('2px dashed');
+    });
+
+    it('should handle border with color in dark mode', () => {
+        const borderValue = '1px solid blue';
+        setColorOnBorder(element, 'borderLeft', borderValue, true, darkColorHandler);
+
+        expect(element.style.borderLeft).toBe('1px solid var(--darkColor_blue, blue)');
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: '--dark_blue',
+        });
+    });
+
+    it('should handle border with color in light mode', () => {
+        const borderValue = '2px dotted green';
+        setColorOnBorder(element, 'borderRight', borderValue, false, darkColorHandler);
+
+        expect(element.style.borderRight).toBe('2px dotted green');
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_green', {
+            lightModeColor: 'green',
+            darkModeColor: '--dark_green',
+        });
+    });
+
+    it('should handle border without dark color handler', () => {
+        const borderValue = '1px solid red';
+        setColorOnBorder(element, 'borderBottom', borderValue, false);
+
+        expect(element.style.borderBottom).toBe('1px solid red');
+    });
+
+    it('should handle complex border with hex color', () => {
+        const borderValue = '3px groove #ff5733';
+        setColorOnBorder(element, 'borderTop', borderValue, true, darkColorHandler);
+
+        expect(element.style.borderTop).toBe('3px groove var(--darkColor__ff5733, #ff5733)');
+    });
+
+    it('should handle border with rgb color', () => {
+        const borderValue = '1px inset rgb(255, 0, 0)';
+        setColorOnBorder(element, 'borderLeft', borderValue, false, darkColorHandler);
+
+        expect(element.style.borderLeft).toBe('1px inset rgb(255, 0, 0)');
+    });
+
+    it('should handle border with existing CSS variable color', () => {
+        const borderValue = '2px outset var(--custom-color, red)';
+        setColorOnBorder(element, 'borderRight', borderValue, true, darkColorHandler);
+
+        expect(element.style.borderRight).toBe('2px outset var(--custom-color, red)');
     });
 });

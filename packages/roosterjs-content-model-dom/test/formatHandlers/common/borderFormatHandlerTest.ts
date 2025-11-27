@@ -2,6 +2,7 @@ import { BorderFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-co
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { defaultGenerateColorKey } from '../../../lib/formatHandlers/utils/color';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;
@@ -143,6 +144,107 @@ describe('borderFormatHandler.parse', () => {
             borderBottomRightRadius: '10px',
         });
     });
+
+    it('Has border color in dark mode - parse', () => {
+        const td = document.createElement('td');
+        td.style.borderColor = 'rgb(50, 100, 150)';
+        td.style.borderStyle = 'solid';
+        td.style.borderWidth = '1px';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {
+                '--darkColor_red': {
+                    lightModeColor: 'red',
+                    darkModeColor: 'rgb(50, 100, 150)',
+                },
+            },
+        } as any;
+
+        borderFormatHandler.parse(format, td, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px solid red',
+            borderBottom: '1px solid red',
+            borderLeft: '1px solid red',
+        });
+    });
+
+    it('Has border color in dark mode for non-table element - parse (no color transformation)', () => {
+        div.style.borderColor = 'red';
+        div.style.borderStyle = 'solid';
+        div.style.borderWidth = '1px';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px solid red',
+            borderBottom: '1px solid red',
+            borderLeft: '1px solid red',
+        });
+    });
+
+    it('Has border color that matches known dark color in dark mode - parse', () => {
+        const td = document.createElement('td');
+        td.style.borderColor = 'rgb(50, 100, 150)';
+        td.style.borderStyle = 'solid';
+        td.style.borderWidth = '1px';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {
+                '--darkColor_green': {
+                    lightModeColor: 'green',
+                    darkModeColor: 'rgb(50, 100, 150)',
+                },
+            },
+        } as any;
+
+        borderFormatHandler.parse(format, td, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid green',
+            borderRight: '1px solid green',
+            borderBottom: '1px solid green',
+            borderLeft: '1px solid green',
+        });
+    });
+
+    it('Has border color that does not match known dark color in dark mode - parse', () => {
+        const th = document.createElement('th');
+        th.style.borderColor = 'rgb(255, 255, 255)';
+        th.style.borderStyle = 'solid';
+        th.style.borderWidth = '1px';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.parse(format, th, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid',
+            borderRight: '1px solid',
+            borderBottom: '1px solid',
+            borderLeft: '1px solid',
+        });
+    });
 });
 
 describe('borderFormatHandler.apply', () => {
@@ -196,5 +298,140 @@ describe('borderFormatHandler.apply', () => {
         borderFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div style="border-radius: 50%;"></div>');
+    });
+
+    it('Has border color in dark mode - apply', () => {
+        const td = document.createElement('td');
+        format.borderTop = '1px solid red';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.apply(format, td, context);
+
+        expect(td.outerHTML).toEqual(
+            '<td style="border-top: 1px solid var(--darkColor_red, red);"></td>'
+        );
+        expect(context.darkColorHandler!.updateKnownColor).toHaveBeenCalledWith(
+            true,
+            '--darkColor_red',
+            {
+                lightModeColor: 'red',
+                darkModeColor: 'dark_red',
+            }
+        );
+    });
+
+    it('Has border color in dark mode for non-table element - apply (no color transformation)', () => {
+        format.borderTop = '1px solid red';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="border-top: 1px solid red;"></div>');
+        expect(context.darkColorHandler!.updateKnownColor).not.toHaveBeenCalled();
+    });
+
+    it('Has border color in light mode - apply', () => {
+        const th = document.createElement('th');
+        format.borderBottom = '2px dotted blue';
+        context.isDarkMode = false;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.apply(format, th, context);
+
+        expect(th.outerHTML).toEqual('<th style="border-bottom: 2px dotted blue;"></th>');
+        expect(context.darkColorHandler!.updateKnownColor).toHaveBeenCalledWith(
+            false,
+            '--darkColor_blue',
+            {
+                lightModeColor: 'blue',
+                darkModeColor: 'dark_blue',
+            }
+        );
+    });
+
+    it('Has multiple border colors in dark mode - apply', () => {
+        const td = document.createElement('td');
+        format.borderTop = '1px solid red';
+        format.borderRight = '2px dashed green';
+        format.borderBottom = '3px double blue';
+        format.borderLeft = '1px solid yellow';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.apply(format, td, context);
+
+        expect(td.outerHTML).toEqual(
+            '<td style="border-top: 1px solid var(--darkColor_red, red); border-right: 2px dashed var(--darkColor_green, green); border-bottom: 3px double var(--darkColor_blue, blue); border-left: 1px solid var(--darkColor_yellow, yellow);"></td>'
+        );
+    });
+
+    it('Has border without color in dark mode - apply', () => {
+        const th = document.createElement('th');
+        format.borderTop = '1px solid';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {},
+        } as any;
+
+        borderFormatHandler.apply(format, th, context);
+
+        expect(th.outerHTML).toEqual('<th style="border-top: 1px solid;"></th>');
+        expect(context.darkColorHandler!.updateKnownColor).not.toHaveBeenCalled();
+    });
+
+    it('Has border with existing CSS variable in dark mode - apply', () => {
+        const td = document.createElement('td');
+        format.borderTop = '1px solid red';
+        context.isDarkMode = true;
+        context.darkColorHandler = {
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            getDarkColor: (lightColor: string) => `dark_${lightColor}`,
+            generateColorKey: defaultGenerateColorKey,
+            knownColors: {
+                '--darkColor_red': {
+                    lightModeColor: 'red',
+                    darkModeColor: 'rgb(200, 50, 50)',
+                },
+            },
+        } as any;
+
+        borderFormatHandler.apply(format, td, context);
+
+        expect(td.outerHTML).toEqual(
+            '<td style="border-top: 1px solid var(--darkColor_red, red);"></td>'
+        );
+        expect(context.darkColorHandler!.updateKnownColor).toHaveBeenCalledWith(
+            true,
+            '--darkColor_red',
+            {
+                lightModeColor: 'red',
+                darkModeColor: 'rgb(200, 50, 50)',
+            }
+        );
     });
 });
