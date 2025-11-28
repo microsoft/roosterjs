@@ -783,7 +783,7 @@ describe('ImageEditPlugin', () => {
     });
 
     it('contentChanged - should remove isEditing', () => {
-        const plugin = new ImageEditPlugin();
+        const plugin = new TestPlugin();
         const editor = initEditor('image_edit', [plugin], model);
         plugin.initialize(editor);
         const image = document.createElement('img');
@@ -803,6 +803,33 @@ describe('ImageEditPlugin', () => {
         const marker = getImageState(newSelection!.image);
         expect(marker).toBe('');
         expect(newSelection!.type).toBe('image');
+        expect(cleanInfoSpy).toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('contentChanged - image not selected - should remove isEditing', () => {
+        const plugin = new TestPlugin();
+        const editor = initEditor('image_edit', [plugin], model);
+        plugin.initialize(editor);
+        const image = document.createElement('img');
+        setImageState(image, 'isEditing');
+
+        // Set the selectedImage to the mocked image
+        plugin.setSelectedImage(image);
+
+        // Mock the DOM selection to return null (no selection)
+        spyOn(editor, 'getDOMSelection').and.returnValue(null);
+
+        const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
+        const event = {
+            eventType: 'contentChanged',
+            source: ChangeSource.SetContent,
+        } as any;
+        plugin.onPluginEvent(event);
+
+        // Check the image state directly on the image element since cleanInfo() nullifies selectedImage
+        const marker = getImageState(image);
+        expect(marker).toBe('');
         expect(cleanInfoSpy).toHaveBeenCalled();
         plugin.dispose();
     });
@@ -853,6 +880,14 @@ describe('ImageEditPlugin', () => {
 class TestPlugin extends ImageEditPlugin {
     public setIsEditing(isEditing: boolean) {
         this.isEditing = isEditing;
+    }
+
+    public setSelectedImage(image: HTMLImageElement | null) {
+        (this as any).selectedImage = image;
+    }
+
+    public getSelectedImage() {
+        return (this as any).selectedImage;
     }
 
     public setEditingInfo(image: HTMLImageElement) {

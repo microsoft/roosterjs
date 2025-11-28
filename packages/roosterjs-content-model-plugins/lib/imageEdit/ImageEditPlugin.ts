@@ -299,9 +299,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private setContentHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
-        if (selection?.type == 'image') {
+        const image = selection?.type == 'image' ? selection.image : this.selectedImage;
+        if (image) {
             this.cleanInfo();
-            setImageState(selection.image, '');
+            setImageState(image, '');
             this.isEditing = false;
             this.isCropMode = false;
         }
