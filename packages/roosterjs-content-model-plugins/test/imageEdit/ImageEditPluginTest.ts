@@ -889,10 +889,6 @@ class TestPlugin extends ImageEditPlugin {
         (this as any).selectedImage = image;
     }
 
-    public getSelectedImage() {
-        return (this as any).selectedImage;
-    }
-
     public setEditingInfo(image: HTMLImageElement) {
         this.imageEditInfo = {
             src: image.getAttribute('src') || '',
