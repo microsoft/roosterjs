@@ -792,6 +792,9 @@ describe('ImageEditPlugin', () => {
             type: 'image',
             image,
         } as DOMSelection;
+        // Set the selectedImage to the mocked image
+        plugin.setSelectedImage(image);
+
         spyOn(editor, 'getDOMSelection').and.returnValue(selection);
         const cleanInfoSpy = spyOn(plugin, 'cleanInfo');
         const event = {
