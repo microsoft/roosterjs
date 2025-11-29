@@ -1277,11 +1277,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
             text: 't',
-            format: {
-                fontSize: '10pt',
-                fontFamily: 'Arial',
-            },
-            isSelected: true,
+            format: {},
         };
         expect(textNode.__roosterjsContentModel).toEqual({
             paragraph,
@@ -1290,7 +1286,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1],
+            segments: [segment1, oldSelectionMarker],
         });
     });
 });
