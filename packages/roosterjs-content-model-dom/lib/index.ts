@@ -38,6 +38,7 @@ export {
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
+export { scrollRectIntoView } from './domUtils/scrollRectIntoView';
 
 export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
 
@@ -116,6 +117,7 @@ export { combineBorderValue, extractBorderValues } from './domUtils/style/border
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
+export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
 export { transformColor } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
@@ -125,6 +127,7 @@ export {
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
 export { setImageState, getImageState } from './domUtils/hiddenProperties/imageState';
+export { getRangesByText } from './domUtils/getRangesByText';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 

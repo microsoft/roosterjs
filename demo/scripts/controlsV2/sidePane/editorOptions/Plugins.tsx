@@ -205,10 +205,40 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                         'Edit',
                         <>
                             {this.renderCheckBox(
-                                'Handle Tab Key',
+                                'Tab to indent multiple blocks',
                                 this.handleTabKey,
-                                this.props.state.editPluginOptions.handleTabKey,
-                                (state, value) => (state.editPluginOptions.handleTabKey = value)
+                                this.props.state.editPluginOptions.handleTabKey
+                                    .indentMultipleBlocks,
+                                (state, value) =>
+                                    (state.editPluginOptions.handleTabKey.indentMultipleBlocks = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Tab to indent table',
+                                this.handleTabKey,
+                                this.props.state.editPluginOptions.handleTabKey.indentTable,
+                                (state, value) =>
+                                    (state.editPluginOptions.handleTabKey.indentTable = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Tab to append table row',
+                                this.handleTabKey,
+                                this.props.state.editPluginOptions.handleTabKey.appendTableRow,
+                                (state, value) =>
+                                    (state.editPluginOptions.handleTabKey.appendTableRow = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Tab to indent list items',
+                                this.handleTabKey,
+                                this.props.state.editPluginOptions.handleTabKey.indentList,
+                                (state, value) =>
+                                    (state.editPluginOptions.handleTabKey.indentList = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Tab to indent paragraph',
+                                this.handleTabKey,
+                                this.props.state.editPluginOptions.handleTabKey.indentParagraph,
+                                (state, value) =>
+                                    (state.editPluginOptions.handleTabKey.indentParagraph = value)
                             )}
                             {this.renderCheckBox(
                                 'Handle Enter Key',
@@ -329,6 +359,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     )}
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
                     {this.renderPluginItem('touch', 'Touch')}
+                    {this.renderPluginItem('announce', 'Announce')}
                 </tbody>
             </table>
         );

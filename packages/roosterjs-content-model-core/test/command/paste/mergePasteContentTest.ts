@@ -24,6 +24,7 @@ import {
     InsertPoint,
     IEditor,
     ClipboardData,
+    DOMHelper,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -33,6 +34,7 @@ describe('mergePasteContent', () => {
     let sourceModel: ContentModelDocument;
     let editor: IEditor;
     let mockedClipboard: ClipboardData;
+    let mockedDOMHelper: DOMHelper;
 
     beforeEach(() => {
         formatResult = undefined;
@@ -54,12 +56,17 @@ describe('mergePasteContent', () => {
                 expect(changedData).toBe(mockedClipboard);
             });
 
+        mockedDOMHelper = {
+            getClientWidth: () => 800,
+        } as any;
+
         editor = {
             formatContentModel,
             getEnvironment: () => ({
                 domToModelSettings: {},
             }),
             getDocument: () => document,
+            getDOMHelper: () => mockedDOMHelper,
         } as any;
     });
 
@@ -420,7 +427,8 @@ describe('mergePasteContent', () => {
             document,
             undefined,
             mockedDomToModelOptions,
-            mockedDefaultDomToModelOptions
+            mockedDefaultDomToModelOptions,
+            mockedDOMHelper
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
     });

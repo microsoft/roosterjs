@@ -1,9 +1,11 @@
 import { addParser } from './utils/addParser';
-import { BorderKeys, getObjectKeys } from 'roosterjs-content-model-dom';
+import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
-import { getPasteSource } from './pasteSourceValidations/getPasteSource';
+import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
+import { getObjectKeys } from 'roosterjs-content-model-dom';
+import { imageSizeParser } from './parsers/imageSizeParser';
 import { parseLink } from './parsers/linkParser';
 import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
 import { PastePropertyNames } from './pasteSourceValidations/constants';
@@ -13,14 +15,11 @@ import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedCo
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import { setProcessor } from './utils/setProcessor';
+import { tableBorderParser } from './parsers/tableBorderParser';
 import type {
     BeforePasteEvent,
-    BorderFormat,
-    ContentModelBlockFormat,
-    ContentModelTableCellFormat,
     DomToModelOptionForSanitizing,
     EditorPlugin,
-    FormatParser,
     IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
@@ -97,16 +96,24 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const pasteSource = getPasteSource(
-            event,
-            false /* shouldConvertSingleImage */,
-            this.editor.getEnvironment()
-        );
+        const { htmlAttributes, clipboardData, fragment } = event;
+
+        const pasteSource = getDocumentSource({
+            htmlAttributes,
+            fragment,
+            clipboardItemTypes: clipboardData.types,
+            htmlFirstLevelChildTags: clipboardData.htmlFirstLevelChildTags,
+            environment: this.editor.getEnvironment(),
+            rawHtml: clipboardData.rawHtml,
+        });
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event);
+                processPastedContentFromWordDesktop(
+                    event.domToModelOption,
+                    event.htmlBefore || event.clipboardData.rawHtml || ''
+                );
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);
@@ -142,6 +149,7 @@ export class PastePlugin implements EditorPlugin {
         addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);
         addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
+        addParser(event.domToModelOption, 'image', imageSizeParser);
         setProcessor(event.domToModelOption, 'button', pasteButtonProcessor);
 
         if (pasteType === 'mergeFormat') {
@@ -178,47 +186,4 @@ export class PastePlugin implements EditorPlugin {
             event.domToModelOption.additionalDisallowedTags.push(...additionalDisallowedTags);
         }
     }
-}
-
-/**
- * For block elements that have background color style, remove the background color when user selects the merge current format
- * paste option
- */
-const blockElementParser: FormatParser<ContentModelBlockFormat> = (
-    format: ContentModelBlockFormat,
-    element: HTMLElement
-) => {
-    if (element.style.backgroundColor) {
-        delete format.backgroundColor;
-    }
-};
-
-const ElementBorderKeys = new Map<
-    keyof BorderFormat,
-    {
-        c: keyof CSSStyleDeclaration;
-        s: keyof CSSStyleDeclaration;
-        w: keyof CSSStyleDeclaration;
-    }
->([
-    ['borderTop', { w: 'borderTopWidth', s: 'borderTopStyle', c: 'borderTopColor' }],
-    ['borderRight', { w: 'borderRightWidth', s: 'borderRightStyle', c: 'borderRightColor' }],
-    ['borderBottom', { w: 'borderBottomWidth', s: 'borderBottomStyle', c: 'borderBottomColor' }],
-    ['borderLeft', { w: 'borderLeftWidth', s: 'borderLeftStyle', c: 'borderLeftColor' }],
-]);
-
-function tableBorderParser(format: ContentModelTableCellFormat, element: HTMLElement): void {
-    BorderKeys.forEach(key => {
-        if (!format[key]) {
-            const styleSet = ElementBorderKeys.get(key);
-            if (
-                styleSet &&
-                element.style[styleSet.w] &&
-                element.style[styleSet.s] &&
-                !element.style[styleSet.c]
-            ) {
-                format[key] = `${element.style[styleSet.w]} ${element.style[styleSet.s]}`;
-            }
-        }
-    });
 }

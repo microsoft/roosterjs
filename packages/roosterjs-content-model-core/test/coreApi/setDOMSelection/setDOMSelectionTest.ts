@@ -765,6 +765,7 @@ describe('setDOMSelection', () => {
                 firstRow,
                 lastColumn,
                 lastRow,
+                tableSelectionInfo: undefined,
             } as any;
             const selectNodeSpy = jasmine.createSpy('selectNode');
             const collapseSpy = jasmine.createSpy('collapse');
@@ -948,13 +949,14 @@ describe('setDOMSelection', () => {
 
             setDOMSelection(core, mockedSelection);
 
-            const resultSelection = {
+            const resultSelection: DOMSelection = {
                 type: 'table',
                 table: table,
                 firstColumn: 0,
                 firstRow: 0,
                 lastColumn: 3,
                 lastRow: 3,
+                tableSelectionInfo: undefined,
             };
 
             expect(core.selection).toEqual({

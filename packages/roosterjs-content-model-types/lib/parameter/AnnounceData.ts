@@ -20,7 +20,52 @@ export type KnownAnnounceStrings =
     /**
      * String announced when cursor is moved to the last cell in a table
      */
-    | 'announceOnFocusLastCell';
+    | 'announceOnFocusLastCell'
+
+    /**
+     * String announced when bold formatting is applied
+     */
+    | 'announceBoldOn'
+
+    /**
+     * String announced when bold formatting is removed
+     */
+    | 'announceBoldOff'
+
+    /**
+     * String announced when italic formatting is applied
+     */
+    | 'announceItalicOn'
+
+    /**
+     * String announced when italic formatting is removed
+     */
+    | 'announceItalicOff'
+
+    /**
+     * String announced when underline formatting is applied
+     */
+    | 'announceUnderlineOn'
+
+    /**
+     * String announced when underline formatting is removed
+     */
+    | 'announceUnderlineOff'
+
+    /**
+     * String announced when text is selected in the editor
+     * @example
+     * {0}, selected
+     * Where {0} is the selected text content
+     */
+    | 'selected'
+
+    /**
+     * String announced when text is unselected in the editor.
+     * @example
+     * {0}, unselected
+     */
+    | 'unselected';
 
 /**
  * Represents data, that can be used to announce text to screen reader.

@@ -1,9 +1,11 @@
 import { formatTextSegmentBeforeSelectionMarker } from 'roosterjs-content-model-api';
-import { promoteLink } from '../../../lib/modelApi/link/promoteLink';
+import { getPromoteLink, promoteLink } from '../../../lib/modelApi/link/promoteLink';
 import {
+    AutoLinkOptions,
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelText,
+    PromotedLink,
 } from 'roosterjs-content-model-types';
 
 describe('promoteLink', () => {
@@ -895,5 +897,154 @@ describe('formatTextSegmentBeforeSelectionMarker - createLinkAfterSpace', () => 
             format: {},
         };
         runTest(input, expected, false);
+    });
+});
+
+describe('getPromoteLink', () => {
+    function runTest(
+        text: string,
+        autoLinkOptions: AutoLinkOptions,
+        expectedResult: PromotedLink | undefined
+    ) {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: text,
+            format: {},
+        };
+
+        const result = getPromoteLink(segment, autoLinkOptions);
+        expect(result).toEqual(expectedResult);
+    }
+
+    it('with http link', () => {
+        runTest(
+            'test http://bing.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'http://bing.com', href: 'http://bing.com' }
+        );
+    });
+
+    it('with https link', () => {
+        runTest(
+            'test https://bing.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'https://bing.com', href: 'https://bing.com' }
+        );
+    });
+
+    it('with www link', () => {
+        runTest(
+            'test www.bing.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'www.bing.com', href: 'http://www.bing.com' }
+        );
+    });
+
+    it('with mailto link', () => {
+        runTest(
+            'test mailto:test@example.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'mailto:test@example.com', href: 'mailto:test@example.com' }
+        );
+    });
+
+    it('with tel link', () => {
+        runTest(
+            'test tel:123-456-7890',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'tel:123-456-7890', href: 'tel:123-456-7890' }
+        );
+    });
+
+    it('with Tel link (uppercase)', () => {
+        runTest(
+            'test Tel:123-456-7890',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'Tel:123-456-7890', href: 'tel:123-456-7890' }
+        );
+    });
+
+    it('with Mailto link (uppercase)', () => {
+        runTest(
+            'test Mailto:test@example.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'Mailto:test@example.com', href: 'Mailto:test@example.com' }
+        );
+    });
+
+    it('no link in text', () => {
+        runTest('just plain text', { autoLink: true, autoMailto: true, autoTel: true }, undefined);
+    });
+
+    it('link in middle of text', () => {
+        runTest(
+            'http://bing.com followed by text',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            undefined
+        );
+    });
+
+    it('only link text', () => {
+        runTest(
+            'http://bing.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            { label: 'http://bing.com', href: 'http://bing.com' }
+        );
+    });
+
+    it('autoLink disabled', () => {
+        runTest(
+            'test http://bing.com',
+            { autoLink: false, autoMailto: true, autoTel: true },
+            undefined
+        );
+    });
+
+    it('autoMailto disabled', () => {
+        runTest(
+            'test mailto:testdisabled@example.com',
+            { autoLink: true, autoMailto: false, autoTel: true },
+            undefined
+        );
+    });
+
+    it('autoTel disabled', () => {
+        runTest(
+            'test tel:123-456-7890',
+            { autoLink: true, autoMailto: true, autoTel: false },
+            undefined
+        );
+    });
+
+    it('empty text', () => {
+        runTest('', { autoLink: true, autoMailto: true, autoTel: true }, undefined);
+    });
+
+    it('only spaces', () => {
+        runTest('   ', { autoLink: true, autoMailto: true, autoTel: true }, undefined);
+    });
+
+    it('tel with space (should not match)', () => {
+        runTest(
+            'test tel: 123-456-7890',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            undefined
+        );
+    });
+
+    it('mailto with space (should not match)', () => {
+        runTest(
+            'test mailto: test@example.com',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            undefined
+        );
+    });
+
+    it('invalid tel format', () => {
+        runTest(
+            'test tels:123-456-7890',
+            { autoLink: true, autoMailto: true, autoTel: true },
+            undefined
+        );
     });
 });

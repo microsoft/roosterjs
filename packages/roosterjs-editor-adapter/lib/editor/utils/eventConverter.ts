@@ -43,10 +43,22 @@ const KnownAnnounceStringsOldToNew: Record<OldKnownAnnounceStrings, NewKnownAnno
     [OldKnownAnnounceStrings.AnnounceOnFocusLastCell]: 'announceOnFocusLastCell',
 };
 
-const KnownAnnounceStringsNewToOld: Record<NewKnownAnnounceStrings, OldKnownAnnounceStrings> = {
+const KnownAnnounceStringsNewToOld: Record<
+    NewKnownAnnounceStrings,
+    OldKnownAnnounceStrings | undefined
+> = {
     announceListItemBullet: OldKnownAnnounceStrings.AnnounceListItemBullet,
     announceListItemNumbering: OldKnownAnnounceStrings.AnnounceListItemNumbering,
     announceOnFocusLastCell: OldKnownAnnounceStrings.AnnounceOnFocusLastCell,
+    // New formatting announce strings don't exist in the old system
+    announceBoldOn: undefined,
+    announceBoldOff: undefined,
+    announceItalicOn: undefined,
+    announceItalicOff: undefined,
+    announceUnderlineOn: undefined,
+    announceUnderlineOff: undefined,
+    selected: undefined,
+    unselected: undefined,
 };
 
 const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | undefined> = {
@@ -561,13 +573,23 @@ function announceDataOldToNew(data: OldAnnounceData | undefined): NewAnnounceDat
 }
 
 function announceDataNewToOld(data: NewAnnounceData | undefined): OldAnnounceData | undefined {
-    return data
-        ? {
-              defaultStrings: data.defaultStrings
-                  ? KnownAnnounceStringsNewToOld[data.defaultStrings]
-                  : undefined,
-              formatStrings: data.formatStrings,
-              text: data.text,
-          }
+    if (!data) {
+        return undefined;
+    }
+
+    const oldDefaultStrings = data.defaultStrings
+        ? KnownAnnounceStringsNewToOld[data.defaultStrings]
         : undefined;
+
+    // If the new announce string doesn't exist in the old system (undefined), return undefined for the whole announce data
+    // This means formatting announcements won't be available in the legacy editor adapter
+    if (data.defaultStrings && oldDefaultStrings === undefined) {
+        return undefined;
+    }
+
+    return {
+        defaultStrings: oldDefaultStrings,
+        formatStrings: data.formatStrings,
+        text: data.text,
+    };
 }

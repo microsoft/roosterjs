@@ -3,7 +3,7 @@ import * as createPasteFragmentFile from '../../../lib/command/paste/createPaste
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
-import * as getPasteSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getPasteSource';
+import * as getDocumentSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getDocumentSource';
 import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
 import * as mergePasteContentFile from '../../../lib/command/paste/mergePasteContent';
@@ -26,7 +26,7 @@ import {
 
 let clipboardData: ClipboardData;
 
-const DEFAULT_TIMES_ADD_PARSER_CALLED = 4;
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 5; // The number of times addParser is called in PastePlugin initialization
 
 describe('Paste ', () => {
     let editor: IEditor;
@@ -162,18 +162,18 @@ describe('paste with content model & paste plugin', () => {
     });
 
     it('Word Desktop', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
     it('Word Online', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
         paste(editor!, clipboardData);
@@ -184,7 +184,7 @@ describe('paste with content model & paste plugin', () => {
     });
 
     it('Excel Online', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor!, clipboardData);
@@ -195,7 +195,7 @@ describe('paste with content model & paste plugin', () => {
     });
 
     it('Excel Desktop', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor!, clipboardData);
@@ -206,7 +206,7 @@ describe('paste with content model & paste plugin', () => {
     });
 
     it('PowerPoint', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
         paste(editor!, clipboardData);
@@ -218,57 +218,57 @@ describe('paste with content model & paste plugin', () => {
 
     // Plain Text
     it('Word Desktop | Plain Text', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wordDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('wordDesktop');
         spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(9);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(11);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
     it('Word Online | Plain Text', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('wacComponents');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('wacComponents');
         spyOn(WacComponents, 'processPastedContentWacComponents').and.callThrough();
 
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(3);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(11);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(12);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
     it('Excel Online | Plain Text', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelOnline');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('excelOnline');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(4);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(0);
     });
 
     it('Excel Desktop | Plain Text', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('excelDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('excelDesktop');
         spyOn(ExcelF, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(4);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(0);
     });
 
     it('PowerPoint | Plain Text', () => {
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('powerPointDesktop');
         spyOn(PPT, 'processPastedContentFromPowerPoint').and.callThrough();
 
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(6);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
 
