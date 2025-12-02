@@ -92,7 +92,13 @@ export function formatSegmentWithContentModel(
 
             segmentAndParagraphs.forEach(item => {
                 if (item[0].segmentType == 'Entity') {
-                    expandEntitySelections(editor, item[0], formatsAndSegments, modelsFromEntities);
+                    expandEntitySelections(
+                        editor,
+                        item[0],
+                        formatsAndSegments,
+                        modelsFromEntities,
+                        item[1]
+                    );
                 } else {
                     formatsAndSegments.push([item[0].format, item[0], item[1]]);
                 }
@@ -148,7 +154,8 @@ function expandEntitySelections(
         ShallowMutableContentModelSegment | null,
         ShallowMutableContentModelParagraph | null
     ][],
-    modelsFromEntities: [ContentModelEntity, FormattableRoot, ContentModelDocument][]
+    modelsFromEntities: [ContentModelEntity, FormattableRoot, ContentModelDocument][],
+    paragraph: ShallowMutableContentModelParagraph | null
 ) {
     const { id, entityType: type, isReadonly } = entity.entityFormat;
 
@@ -185,6 +192,9 @@ function expandEntitySelections(
                 modelsFromEntities.push([entity, root, model]);
             }
         });
+        if (formattableRoots.length > 0) {
+            formatsAndSegments.push([entity.format, entity, paragraph]);
+        }
     }
 }
 
