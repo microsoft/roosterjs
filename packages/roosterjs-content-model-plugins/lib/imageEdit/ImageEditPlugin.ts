@@ -297,11 +297,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         }
     }
 
-    private setContentHandler(editor: IEditor) {
-        const selection = editor.getDOMSelection();
-        if (selection?.type == 'image') {
+    private setContentHandler() {
+        if (this.selectedImage) {
             this.cleanInfo();
-            setImageState(selection.image, '');
+            setImageState(this.selectedImage, '');
             this.isEditing = false;
             this.isCropMode = false;
         }
@@ -318,7 +317,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private contentChangedHandler(editor: IEditor, event: ContentChangedEvent) {
         switch (event.source) {
             case ChangeSource.SetContent:
-                this.setContentHandler(editor);
+                this.setContentHandler();
                 break;
             case ChangeSource.Format:
                 this.formatEventHandler(event);
