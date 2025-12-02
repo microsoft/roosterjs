@@ -2,6 +2,7 @@ import { createCellResizer } from './features/CellResizer';
 import { createTableInserter } from './features/TableInserter';
 import { createTableMover } from './features/TableMover';
 import { createTableResizer } from './features/TableResizer';
+import { createTableRowColumnSelector } from './features/TableRowColumnSelector';
 import { disposeTableEditFeature } from './features/TableEditFeature';
 import { isNodeOfType, normalizeRect, parseTableCells } from 'roosterjs-content-model-dom';
 import type { OnTableEditorCreatedCallback } from '../OnTableEditorCreatedCallback';
@@ -58,6 +59,10 @@ export class TableEditor {
     // 6 - Move as well as select whole table
     private tableMover: TableEditFeature | null = null;
 
+    // 7 - Select whole column or row
+    private tableColumnSelector: TableEditFeature | null = null;
+    private tableRowSelector: TableEditFeature | null = null;
+
     private isRTL: boolean;
     private range: Range | null = null;
     private isCurrentlyEditing: boolean;
@@ -82,6 +87,7 @@ export class TableEditor {
         this.disposeCellResizers();
         this.disposeTableInserter();
         this.disposeTableMover();
+        this.disposeTableSelector();
     }
 
     isEditing(): boolean {
@@ -96,9 +102,11 @@ export class TableEditor {
             this.verticalInserter,
             this.horizontalResizer,
             this.verticalResizer,
+            this.tableColumnSelector,
+            this.tableRowSelector,
         ]
             .filter(feature => !!feature?.div)
-            .some(feature => feature?.div == node);
+            .some(feature => feature?.div == node || (feature?.div && feature.div.contains(node)));
     }
 
     /**
@@ -156,6 +164,13 @@ export class TableEditor {
                                 isOnRightHalf ? td : tr.cells[j - 1],
                                 false /*isHorizontal*/
                             );
+                        !this.isFeatureDisabled('TableColumnSelector') &&
+                            this.setSelectorRowColumn(
+                                td,
+                                j,
+                                this.table.rows.length,
+                                false /*isRow*/
+                            );
                     } else if (j === 0 && topOrSide == TOP_OR_SIDE.side) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
@@ -175,8 +190,18 @@ export class TableEditor {
                                     : td,
                                 true /*isHorizontal*/
                             );
+                        !this.isFeatureDisabled('TableColumnSelector') &&
+                            this.setSelectorRowColumn(
+                                y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
+                                    ? tdAbove
+                                    : td,
+                                i,
+                                tr.cells.length,
+                                true /*isRow*/
+                            );
                     } else {
                         this.setInserterTd(null);
+                        this.setSelectorRowColumn(null);
                     }
 
                     !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
@@ -303,6 +328,38 @@ export class TableEditor {
         }
     }
 
+    private setSelectorRowColumn(
+        td: HTMLTableCellElement | null,
+        index: number = 0,
+        length: number = 0,
+        isRow?: boolean
+    ) {
+        const selector = isRow ? this.tableRowSelector : this.tableColumnSelector;
+        if (td === null || (selector && selector.node != td)) {
+            this.disposeTableSelector();
+        }
+
+        if (!this.tableColumnSelector && !this.tableRowSelector && td) {
+            const newSelector = createTableRowColumnSelector(
+                this.editor,
+                td,
+                this.table,
+                index,
+                length,
+                !!isRow,
+                this.onBeforeEditTable,
+                this.onAfterInsert,
+                this.anchorContainer,
+                this.onEditorCreated
+            );
+            if (isRow) {
+                this.tableRowSelector = newSelector;
+            } else {
+                this.tableColumnSelector = newSelector;
+            }
+        }
+    }
+
     private disposeTableResizer() {
         if (this.tableResizer) {
             disposeTableEditFeature(this.tableResizer);
@@ -318,6 +375,17 @@ export class TableEditor {
         if (this.verticalInserter) {
             disposeTableEditFeature(this.verticalInserter);
             this.verticalInserter = null;
+        }
+    }
+
+    private disposeTableSelector() {
+        if (this.tableColumnSelector) {
+            disposeTableEditFeature(this.tableColumnSelector);
+            this.tableColumnSelector = null;
+        }
+        if (this.tableRowSelector) {
+            disposeTableEditFeature(this.tableRowSelector);
+            this.tableRowSelector = null;
         }
     }
 
@@ -371,6 +439,7 @@ export class TableEditor {
         this.disposeTableResizer();
         this.disposeTableInserter();
         this.disposeCellResizers();
+        this.disposeTableSelector();
     };
 
     private onStartResize() {
