@@ -16,7 +16,6 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlockFormat,
-    ContentModelListItem,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
     ReadonlyContentModelListItem,
@@ -36,21 +35,22 @@ export function setListType(
 ) {
     splitSelectedParagraphByBr(model);
 
-    const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
+    const paragraphOrListItems = getOperationalBlocks<ReadonlyContentModelListItem>(
         model,
         ['ListItem'],
         [] // Set stop types to be empty so we can find list items even cross the boundary of table, then we can always operation on the list item if any
     );
     const alreadyInExpectedType = paragraphOrListItems.every(({ block }) =>
-        isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')
+        isBlockGroupOfType<ReadonlyContentModelListItem>(block, 'ListItem')
             ? block.levels[block.levels.length - 1]?.listType == listType
             : shouldIgnoreBlock(block)
     );
     let existingListItems: ReadonlyContentModelListItem[] = [];
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
-        if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            const level = block.levels.pop();
+        if (isBlockGroupOfType<ReadonlyContentModelListItem>(block, 'ListItem')) {
+            const mutableBlock = mutateBlock(block);
+            const level = mutableBlock.levels.pop();
 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
@@ -61,7 +61,7 @@ export function setListType(
                     })
                 );
 
-                block.levels.push(level);
+                mutableBlock.levels.push(level);
             } else if (block.blocks.length == 1) {
                 setParagraphNotImplicit(block.blocks[0]);
             }
