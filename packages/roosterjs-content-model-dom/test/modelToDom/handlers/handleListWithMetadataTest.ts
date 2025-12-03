@@ -36,6 +36,7 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
             ],
         });
@@ -52,12 +53,14 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -75,12 +78,14 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -91,7 +96,10 @@ describe('handleList with metadata', () => {
         const listItem = createListItem([createListLevel('OL')]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -103,10 +111,12 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL,
+                    refNode: null,
                 },
             ],
         });
@@ -119,7 +129,10 @@ describe('handleList with metadata', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -133,12 +146,14 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: parent.childNodes[1],
                     dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -152,7 +167,10 @@ describe('handleList with metadata', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -166,16 +184,19 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -197,7 +218,10 @@ describe('handleList with metadata', () => {
         ]);
 
         context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+        context.listFormat.nodeStack = [
+            { node: parent, refNode: null },
+            { node: existingOL, listType: 'OL', refNode: null },
+        ];
 
         parent.appendChild(existingOL);
 
@@ -212,18 +236,21 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) },
                     format: {},
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -239,9 +266,9 @@ describe('handleList with metadata', () => {
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'OL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'OL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -252,10 +279,12 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL1,
+                    refNode: null,
                 },
             ],
         });
@@ -271,9 +300,9 @@ describe('handleList with metadata', () => {
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'UL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'UL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -286,12 +315,14 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
                     dataset: {},
                     format: {},
+                    refNode: null,
                 },
             ],
         });
@@ -310,9 +341,9 @@ describe('handleList with metadata', () => {
 
         context.listFormat.threadItemCounts = [1, 1];
         context.listFormat.nodeStack = [
-            { node: parent },
-            { node: existingOL1, listType: 'UL' },
-            { node: existingOL2, listType: 'OL' },
+            { node: parent, refNode: null },
+            { node: existingOL1, listType: 'UL', refNode: null },
+            { node: existingOL2, listType: 'OL', refNode: null },
         ];
 
         handleList(document, parent, listItem, context, null);
@@ -326,10 +357,12 @@ describe('handleList with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     listType: 'UL',
                     node: existingOL1,
+                    refNode: null,
                 },
                 {
                     listType: 'OL',
@@ -338,6 +371,7 @@ describe('handleList with metadata', () => {
                     format: {
                         startNumberOverride: 3,
                     },
+                    refNode: null,
                 },
             ],
         });
