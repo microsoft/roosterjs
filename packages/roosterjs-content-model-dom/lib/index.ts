@@ -89,14 +89,13 @@ export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr
 export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
-export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
+export { BorderKeys } from './formatHandlers/utils/borderKeys';
 export {
     DeprecatedColors,
     getColor,
     setColor,
     parseColor,
     defaultGenerateColorKey,
-    setColorOnBorder,
 } from './formatHandlers/utils/color';
 
 export {

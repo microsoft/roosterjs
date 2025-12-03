@@ -1,11 +1,5 @@
+import { ChangeSource, getObjectKeys, setColor } from 'roosterjs-content-model-dom';
 import { createAriaLiveElement } from '../../utils/createAriaLiveElement';
-import {
-    BorderKeys,
-    ChangeSource,
-    getObjectKeys,
-    setColor,
-    setColorOnBorder,
-} from 'roosterjs-content-model-dom';
 import type {
     IEditor,
     LifecyclePluginState,
@@ -13,7 +7,6 @@ import type {
     PluginWithState,
     EditorOptions,
     RewriteFromModel,
-    DarkColorHandler,
 } from 'roosterjs-content-model-types';
 
 const ContentEditableAttributeName = 'contenteditable';
@@ -163,30 +156,6 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
                 isDarkMode,
                 darkColorHandler
             );
-            this.adjustTableColor(contentDiv, isDarkMode, darkColorHandler);
-        }
-    }
-
-    private adjustTableColor(
-        contentDiv: HTMLElement,
-        isDarkMode: boolean,
-        darkColorHandler: DarkColorHandler
-    ) {
-        const tables = contentDiv.querySelectorAll('table');
-        if (tables.length > 0) {
-            tables.forEach(table => {
-                const cells = table.querySelectorAll<HTMLElement>('td, th');
-                if (cells.length > 0) {
-                    cells.forEach(cell => {
-                        BorderKeys.forEach(key => {
-                            const border = cell.style[key];
-                            if (border) {
-                                setColorOnBorder(cell, key, border, isDarkMode, darkColorHandler);
-                            }
-                        });
-                    });
-                }
-            });
         }
     }
 }

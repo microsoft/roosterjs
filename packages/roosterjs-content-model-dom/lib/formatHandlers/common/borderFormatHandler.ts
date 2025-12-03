@@ -1,18 +1,10 @@
+import { adaptColor, getLightModeColor, retrieveElementColor } from '../utils/color';
+import { BorderKeys } from '../utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { getColorInternal, setColorOnBorder } from '../utils/color';
-import { isElementOfType } from '../../domUtils/isElementOfType';
 import type { BorderFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
-/**
- * Keys of border items
- */
-export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
-    'borderTop',
-    'borderRight',
-    'borderBottom',
-    'borderLeft',
-];
+const COLOR_VARIABLE_PREFIX = 'var(';
 
 // This array needs to match BorderKeys array
 const BorderWidthKeys: (keyof CSSStyleDeclaration)[] = [
@@ -29,7 +21,7 @@ const BorderRadiusKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderBottomRightRadius',
 ];
 
-const AllKeys = BorderKeys.concat(BorderRadiusKeys);
+const AllKeys = BorderRadiusKeys.concat(BorderKeys);
 
 /**
  * @internal
@@ -49,20 +41,18 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
                 format[key] = value == 'none' ? '' : value;
             }
 
-            if (isElementOfType(element, 'th') || isElementOfType(element, 'td')) {
-                const borderValues = extractBorderValues(format[key]);
-
-                if (borderValues.color) {
-                    const color = getColorInternal(
-                        borderValues.color,
-                        false,
+            if (value?.includes(COLOR_VARIABLE_PREFIX)) {
+                const borderColor = retrieveElementColor(element, key);
+                if (borderColor) {
+                    const lightModeColor = getLightModeColor(
+                        borderColor,
+                        false /*isBackground*/,
                         !!context.isDarkMode,
                         context.darkColorHandler
                     );
-
                     format[key] = combineBorderValue({
-                        ...borderValues,
-                        color,
+                        ...extractBorderValues(value),
+                        color: lightModeColor,
                     });
                 }
             }
@@ -75,7 +65,6 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
         } else {
             BorderRadiusKeys.forEach(key => {
                 const value = element.style[key];
-
                 if (value) {
                     format[key] = value;
                 }
@@ -87,23 +76,26 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             const value = format[key];
             if (value) {
                 element.style[key] = value;
-            }
-        });
+                if (!BorderRadiusKeys.includes(key) && !BorderWidthKeys.includes(key)) {
+                    const borderValues = extractBorderValues(value);
+                    if (borderValues.color) {
+                        const transformedColor = adaptColor(
+                            element,
+                            borderValues.color,
+                            'border',
+                            !!context.isDarkMode,
+                            context.darkColorHandler
+                        );
 
-        if (isElementOfType(element, 'th') || isElementOfType(element, 'td')) {
-            for (const key of BorderKeys) {
-                const value = format[key];
-                if (value) {
-                    setColorOnBorder(
-                        element,
-                        key,
-                        value,
-                        !!context.isDarkMode,
-                        context.darkColorHandler
-                    );
+                        const borderStyles = combineBorderValue({
+                            ...borderValues,
+                            color: transformedColor,
+                        });
+                        element.style[key] = borderStyles;
+                    }
                 }
             }
-        }
+        });
 
         if (format.borderRadius) {
             element.style.borderRadius = format.borderRadius;

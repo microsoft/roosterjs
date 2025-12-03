@@ -1,10 +1,10 @@
-import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
+import { BorderColorKeyMap } from './borderKeys';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     DarkColorHandler,
     Colors,
     ColorTransformFunction,
-    BorderFormat,
+    BorderKey,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -61,18 +61,15 @@ export function getColor(
     darkColorHandler?: DarkColorHandler,
     fallback?: string
 ): string | undefined {
-    const color =
-        (isBackground ? element.style.backgroundColor : element.style.color) ||
-        element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
-        fallback;
+    const color = retrieveElementColor(element, isBackground ? 'background' : 'text', fallback);
 
-    return color ? getColorInternal(color, isBackground, isDarkMode, darkColorHandler) : undefined;
+    return color ? getLightModeColor(color, isBackground, isDarkMode, darkColorHandler) : undefined;
 }
 
 /**
  * @internal
  */
-export function getColorInternal(
+export function getLightModeColor(
     color: string,
     isBackground: boolean,
     isDarkMode: boolean,
@@ -96,6 +93,26 @@ export function getColorInternal(
 }
 
 /**
+ * @internal
+ */
+export function retrieveElementColor(
+    element: HTMLElement,
+    source: 'text' | 'background' | BorderKey,
+    fallback?: string
+): string | undefined {
+    switch (source) {
+        case 'text':
+            return element.style.color || element.getAttribute('color') || fallback;
+
+        case 'background':
+            return element.style.backgroundColor || element.getAttribute('bgcolor') || fallback;
+
+        default:
+            return element.style.getPropertyValue(BorderColorKeyMap[source]) || fallback;
+    }
+}
+
+/**
  * Set color to given HTML element
  * @param element The element to set color to
  * @param color The color to set, always pass in color in light mode
@@ -110,53 +127,25 @@ export function setColor(
     isDarkMode: boolean,
     darkColorHandler?: DarkColorHandler
 ) {
-    const newColor = generateColor(element, color, isBackground, isDarkMode, darkColorHandler);
+    const newColor = adaptColor(
+        element,
+        color,
+        isBackground ? 'background' : 'text',
+        isDarkMode,
+        darkColorHandler
+    );
 
     element.removeAttribute(isBackground ? 'bgcolor' : 'color');
     element.style.setProperty(isBackground ? 'background-color' : 'color', newColor || null);
 }
 
 /**
- * Set the given color to the table border
- * @param element The element to set color to
- * @param borderKey the style attribute of the border, ex: borderTop
- * @param border the border values with the color in light mode
- * @param isDarkMode Whether element is in dark mode now
- * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
- */
-export function setColorOnBorder(
-    element: HTMLElement,
-    borderKey: keyof BorderFormat,
-    border: string,
-    isDarkMode: boolean,
-    darkColorHandler?: DarkColorHandler
-) {
-    const borderValues = extractBorderValues(border);
-    if (borderValues.color) {
-        const color = generateColor(
-            element,
-            borderValues.color,
-            false,
-            !!isDarkMode,
-            darkColorHandler
-        );
-        const combinedValues = combineBorderValue({
-            ...borderValues,
-            color,
-        });
-        element.style[borderKey] = combinedValues;
-    } else {
-        element.style[borderKey] = border;
-    }
-}
-
-/**s
  * @internal
  */
-export function generateColor(
+export function adaptColor(
     element: HTMLElement,
     color: string | null | undefined,
-    isBackground: boolean,
+    colorType: 'text' | 'background' | 'border',
     isDarkMode: boolean,
     darkColorHandler?: DarkColorHandler
 ) {
@@ -166,7 +155,6 @@ export function generateColor(
     color = fallbackColor ?? color;
 
     if (darkColorHandler && color) {
-        const colorType = isBackground ? 'background' : 'text';
         const key =
             existingKey ||
             darkColorHandler.generateColorKey(color, undefined /*baseLValue*/, colorType, element);
