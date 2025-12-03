@@ -46,7 +46,7 @@ export function createTableRowColumnSelector(
         const createElementData = getInsertElementData(rect, isRowSelector);
         const div = createElement(createElementData, document) as HTMLDivElement;
         div.id = isRowSelector ? ROW_SELECTOR_ID : COLUMN_SELECTOR_ID;
-        const context: TableSelectorContext = {
+        const context: TableRowColumnSelectorContext = {
             table,
             zoomScale,
             editor,
@@ -79,7 +79,7 @@ export function createTableRowColumnSelector(
  * @internal
  * Exported for testing
  */
-export interface TableSelectorContext {
+export interface TableRowColumnSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     editor: IEditor;
@@ -90,7 +90,7 @@ export interface TableSelectorContext {
 /**
  *  @internal
  */
-export interface TableSelectorInitValue {
+export interface TableRowColumnSelectorInitValue {
     cmTable: ReadonlyContentModelTable | undefined;
     initialSelection: DOMSelection | null;
     parsedTable: ParsedTable;
@@ -100,14 +100,14 @@ export interface TableSelectorInitValue {
  *  @internal
  */
 export class TableSelectorHandler
-    extends DragAndDropHelper<TableSelectorContext, TableSelectorInitValue>
+    extends DragAndDropHelper<TableRowColumnSelectorContext, TableRowColumnSelectorInitValue>
     implements Disposable {
     private disposer: undefined | (() => void);
     constructor(
         div: HTMLDivElement,
         private isRow: boolean,
-        context: TableSelectorContext,
-        handler: DragAndDropHandler<TableSelectorContext, TableSelectorInitValue>,
+        context: TableRowColumnSelectorContext,
+        handler: DragAndDropHandler<TableRowColumnSelectorContext, TableRowColumnSelectorInitValue>,
         zoomScale: number,
         onTableEditorCreated?: OnTableEditorCreatedCallback,
         forceMobile?: boolean | undefined
@@ -169,9 +169,9 @@ function getCurrentIndexFromMouse(
  * Exported for testing
  */
 export function onDragStart(
-    context: TableSelectorContext,
+    context: TableRowColumnSelectorContext,
     event: MouseEvent
-): TableSelectorInitValue {
+): TableRowColumnSelectorInitValue {
     const { table, editor, isRow } = context;
     editor.setDOMSelection(null);
 
@@ -223,9 +223,9 @@ export function onDragStart(
  * Exported for testing
  */
 export function onDragging(
-    context: TableSelectorContext,
+    context: TableRowColumnSelectorContext,
     event: MouseEvent,
-    initValue: TableSelectorInitValue | undefined
+    initValue: TableRowColumnSelectorInitValue | undefined
 ): boolean {
     if (!initValue) {
         return false;
@@ -272,9 +272,9 @@ export function onDragging(
  * Exported for testing
  */
 export function onDragEnd(
-    context: TableSelectorContext,
+    context: TableRowColumnSelectorContext,
     event: MouseEvent,
-    initValue: TableSelectorInitValue | undefined
+    initValue: TableRowColumnSelectorInitValue | undefined
 ): boolean {
     if (!initValue) {
         return false;

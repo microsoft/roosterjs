@@ -1,10 +1,9 @@
 import { afterTableTest, beforeTableTest } from './TableEditTestHelper';
-import { Editor } from 'roosterjs-content-model-core';
 import { IEditor, TableSelection } from 'roosterjs-content-model-types';
 import { OnTableEditorCreatedCallback } from '../../lib/tableEdit/OnTableEditorCreatedCallback';
 import {
-    TableSelectorContext,
-    TableSelectorInitValue,
+    TableRowColumnSelectorContext,
+    TableRowColumnSelectorInitValue,
     createTableRowColumnSelector,
     onDragEnd,
     onDragStart,
@@ -189,7 +188,7 @@ describe('TableRowColumnSelector Tests', () => {
 
     describe('onDragStart', () => {
         let table: HTMLTableElement;
-        let context: TableSelectorContext;
+        let context: TableRowColumnSelectorContext;
         let mockEvent: MouseEvent;
 
         beforeEach(() => {
@@ -296,8 +295,8 @@ describe('TableRowColumnSelector Tests', () => {
 
     describe('onDragging', () => {
         let table: HTMLTableElement;
-        let context: TableSelectorContext;
-        let initValue: TableSelectorInitValue;
+        let context: TableRowColumnSelectorContext;
+        let initValue: TableRowColumnSelectorInitValue;
         let mockEvent: MouseEvent;
 
         beforeEach(() => {
@@ -416,8 +415,8 @@ describe('TableRowColumnSelector Tests', () => {
 
     describe('onDragEnd', () => {
         let table: HTMLTableElement;
-        let context: TableSelectorContext;
-        let initValue: TableSelectorInitValue;
+        let context: TableRowColumnSelectorContext;
+        let initValue: TableRowColumnSelectorInitValue;
         let mockEvent: MouseEvent;
 
         beforeEach(() => {
