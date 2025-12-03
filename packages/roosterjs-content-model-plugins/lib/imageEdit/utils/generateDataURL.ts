@@ -10,7 +10,6 @@ import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
  * If there are rotate/crop/resize info in the edit info, the generated image will also reflect the result.
  * It is possible to throw exception since the original image may not be able to read its content from
  * the code, so better check canRegenerateImage() of the image first.
- * @throws Exception when fail to generate dataURL from canvas
  */
 export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadataFormat): string {
     const generatedImageSize = getGeneratedImageSize(editInfo);

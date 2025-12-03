@@ -164,13 +164,6 @@ export class TableEditor {
                                 isOnRightHalf ? td : tr.cells[j - 1],
                                 false /*isHorizontal*/
                             );
-                        !this.isFeatureDisabled('TableColumnSelector') &&
-                            this.setSelectorRowColumn(
-                                td,
-                                j,
-                                this.table.rows.length,
-                                false /*isRow*/
-                            );
                     } else if (j === 0 && topOrSide == TOP_OR_SIDE.side) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
@@ -190,24 +183,20 @@ export class TableEditor {
                                     : td,
                                 true /*isHorizontal*/
                             );
-                        !this.isFeatureDisabled('TableColumnSelector') &&
-                            this.setSelectorRowColumn(
-                                y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
-                                    ? tdAbove
-                                    : td,
-                                i,
-                                tr.cells.length,
-                                true /*isRow*/
-                            );
                     } else {
                         this.setInserterTd(null);
-                        this.setSelectorRowColumn(null);
                     }
 
                     !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
-
-                    //Cell found
-                    break;
+                }
+                if (topOrSide == TOP_OR_SIDE.top) {
+                    !this.isFeatureDisabled('TableColumnSelector') &&
+                        this.setSelectorRowColumn(td, false /*isRow*/);
+                } else if (topOrSide == TOP_OR_SIDE.side) {
+                    !this.isFeatureDisabled('TableRowSelector') &&
+                        this.setSelectorRowColumn(td, true /*isRow*/);
+                } else {
+                    this.setSelectorRowColumn(null);
                 }
             }
 
@@ -328,27 +317,16 @@ export class TableEditor {
         }
     }
 
-    private setSelectorRowColumn(
-        td: HTMLTableCellElement | null,
-        index: number = 0,
-        length: number = 0,
-        isRow?: boolean
-    ) {
-        const selector = isRow ? this.tableRowSelector : this.tableColumnSelector;
-        if (td === null || (selector && selector.node != td)) {
+    private setSelectorRowColumn(td: HTMLTableCellElement | null, isRow?: boolean) {
+        if (td == null) {
             this.disposeTableSelector();
         }
 
         if (!this.tableColumnSelector && !this.tableRowSelector && td) {
             const newSelector = createTableRowColumnSelector(
                 this.editor,
-                td,
                 this.table,
-                index,
-                length,
                 !!isRow,
-                this.onBeforeEditTable,
-                this.onAfterInsert,
                 this.anchorContainer,
                 this.onEditorCreated
             );
