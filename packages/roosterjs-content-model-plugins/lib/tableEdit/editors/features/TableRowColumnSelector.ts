@@ -56,7 +56,7 @@ export function createTableRowColumnSelector(
         };
 
         (anchorContainer || document.body).appendChild(div);
-        const handler = new TableSelectorHandler(
+        const handler = new TableRowColumnSelectorHandler(
             div,
             isRowSelector,
             context,
@@ -96,10 +96,8 @@ export interface TableRowColumnSelectorInitValue {
     parsedTable: ParsedTable;
     startIndex: number;
 }
-/**
- *  @internal
- */
-export class TableSelectorHandler
+
+class TableRowColumnSelectorHandler
     extends DragAndDropHelper<TableRowColumnSelectorContext, TableRowColumnSelectorInitValue>
     implements Disposable {
     private disposer: undefined | (() => void);
