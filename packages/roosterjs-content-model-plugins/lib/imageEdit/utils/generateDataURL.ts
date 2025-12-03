@@ -69,7 +69,8 @@ export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadata
                 height
             );
         }
-    } finally {
         return canvas.toDataURL('image/png', 1.0);
+    } catch {
+        return image.src;
     }
 }
