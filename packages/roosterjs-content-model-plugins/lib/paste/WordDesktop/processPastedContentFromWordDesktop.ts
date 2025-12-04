@@ -7,6 +7,7 @@ import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
+import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import type { WordMetadata } from './WordMetadata';
 import type { DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
@@ -28,7 +29,7 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listLevel', listLevelParser);
-    addParser(domToModelOption, 'container', wordTableParser);
+    addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
 }
 

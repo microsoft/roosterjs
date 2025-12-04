@@ -19,16 +19,19 @@ export function stackFormat(
 
     if (newFormat) {
         const implicitFormat = context.implicitFormat;
+        const nodeStack = context.listFormat.nodeStack;
 
         try {
             context.implicitFormat = {
                 ...implicitFormat,
                 ...newFormat,
             };
+            context.listFormat.nodeStack = [];
 
             callback();
         } finally {
             context.implicitFormat = implicitFormat;
+            context.listFormat.nodeStack = nodeStack;
         }
     } else {
         callback();

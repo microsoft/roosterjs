@@ -303,7 +303,8 @@ export class DomIndexerImpl implements DomIndexer {
                         return !!this.reconcileNodeSelection(
                             startContainer,
                             startOffset,
-                            model.format
+                            model.format,
+                            selectionMarker
                         );
                     } else if (
                         startContainer == endContainer &&
@@ -419,11 +420,12 @@ export class DomIndexerImpl implements DomIndexer {
     private reconcileNodeSelection(
         node: Node,
         offset: number,
-        defaultFormat?: ContentModelSegmentFormat
+        defaultFormat?: ContentModelSegmentFormat,
+        selectionMarker?: ContentModelSelectionMarker
     ): Selectable | undefined {
         if (isNodeOfType(node, 'TEXT_NODE')) {
             if (isIndexedSegment(node)) {
-                return this.reconcileTextSelection(node, offset);
+                return this.reconcileTextSelection(node, offset, undefined, selectionMarker);
             } else if (isIndexedDelimiter(node)) {
                 return this.reconcileDelimiterSelection(node, defaultFormat);
             } else {
