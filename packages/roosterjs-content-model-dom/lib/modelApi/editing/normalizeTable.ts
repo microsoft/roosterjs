@@ -36,10 +36,11 @@ export function normalizeTable(
 ) {
     const table = mutateBlock(readonlyTable);
 
-    // Always collapse border and use border box for table in roosterjs to make layout simpler
+    // Collapse border and use border box for table in roosterjs to make layout simpler
+    // But if this is a legacy style table (table with deprecated border attributes), we should not change its border model
     const format = table.format;
 
-    if (!format.borderCollapse || !format.useBorderBox) {
+    if (!format.cellSpacing && !format.cellpadding && !format.legacyTableBorder) {
         format.borderCollapse = true;
         format.useBorderBox = true;
     }

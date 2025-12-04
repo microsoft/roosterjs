@@ -16,6 +16,7 @@ import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
@@ -72,6 +73,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     id: idFormatHandler,
     imageState: imageStateFormatHandler,
     italic: italicFormatHandler,
+    legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
@@ -183,7 +185,7 @@ export const defaultFormatKeysPerCategory: {
         'direction',
         'role',
     ],
-    tableBorder: ['borderBox', 'tableSpacing'],
+    tableBorder: ['borderBox', 'tableSpacing', 'legacyTableBorder'],
     tableCellBorder: ['borderBox'],
     image: [
         'id',
