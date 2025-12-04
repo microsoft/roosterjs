@@ -178,8 +178,12 @@ export class AutoFormatPlugin implements EditorPlugin {
                 autoMailto,
             });
 
-            if (linkSegment) {
-                return createAnchor(linkSegment.link?.format.href || '', linkSegment.text);
+            if (linkSegment && this.editor) {
+                return createAnchor(
+                    this.editor.getDocument(),
+                    linkSegment.link?.format.href || '',
+                    linkSegment.text
+                );
             }
             return false;
         },
@@ -339,8 +343,8 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 }
 
-const createAnchor = (url: string, text: string) => {
-    const anchor = document.createElement('a');
+const createAnchor = (doc: HTMLDocument, url: string, text: string) => {
+    const anchor = doc.createElement('a');
     anchor.href = url;
     anchor.textContent = text;
     return anchor;

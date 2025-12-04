@@ -105,11 +105,14 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
     const theme = useTheme();
     const classNames = getPasteOptionClassNames(theme);
     const [selectedKey, setSelectedKey] = React.useState<PasteOptionButtonKeys | null>(null);
+    const win = useWindow();
 
-    const rect = getDOMInsertPointRect((useWindow() ?? window).document, {
-        node: container,
-        offset,
-    });
+    const rect = win
+        ? getDOMInsertPointRect(win.document, {
+              node: container,
+              offset,
+          })
+        : null;
     const target = rect && { x: props.isRtl ? rect.left : rect.right, y: rect.bottom };
 
     React.useImperativeHandle(

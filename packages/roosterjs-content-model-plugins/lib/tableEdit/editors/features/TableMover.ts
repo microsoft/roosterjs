@@ -2,6 +2,7 @@ import { createElement } from '../../../pluginUtils/CreateElement/createElement'
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import { getNodePositionFromEvent } from '../../../utils/getNodePositionFromEvent';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
@@ -24,7 +25,6 @@ import type {
     Rect,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
-import { getNodePositionFromEvent } from '../../../utils/getNodePositionFromEvent';
 
 const TABLE_MOVER_LENGTH = 12;
 /**
@@ -199,7 +199,8 @@ export function onDragStart(context: TableMoverContext): TableMoverInitValue {
         tag: 'div',
         style: 'position: fixed; user-select: none; border: 1px solid #808080',
     };
-    const tableRect = createElement(createElementData, document) as HTMLDivElement;
+    const tableRect = createElement(createElementData, editor.getDocument()) as HTMLDivElement;
+
     tableRect.style.width = `${trect.width}px`;
     tableRect.style.height = `${trect.height}px`;
     tableRect.style.top = `${trect.top}px`;

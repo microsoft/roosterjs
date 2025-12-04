@@ -151,6 +151,17 @@ module.exports = {
         'no-var': 'error',
         'etc/no-const-enum': ['error', { allowLocal: true }],
         'import/no-default-export': 'error',
+        'no-restricted-globals': [
+            'error',
+            {
+                name: 'window',
+                message: 'Do not use global window',
+            },
+            {
+                name: 'document',
+                message: 'Do not use global document',
+            },
+        ],
     },
     overrides: [
         {

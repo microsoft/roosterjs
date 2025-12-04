@@ -38,6 +38,7 @@ export const defaultTrustHtmlHandler: LegacyTrustedHTMLHandler = (html: string) 
 
 function trustedHTMLHandlerToDOMCreator(trustedHTMLHandler?: LegacyTrustedHTMLHandler): DOMCreator {
     const handler = trustedHTMLHandler || defaultTrustHtmlHandler;
+
     return {
         htmlToDOM: (html: string) => new DOMParser().parseFromString(handler(html), 'text/html'),
         isBypassed: !trustedHTMLHandler,

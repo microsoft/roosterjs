@@ -1,8 +1,8 @@
 import { createContentModelDocument } from '../creators/createContentModelDocument';
+import { createDomToModelContextWithConfig } from '../../domToModel/context/createDomToModelContext';
+import { createModelToDomContextWithConfig } from '../../modelToDom/context/createModelToDomContext';
 import { createText } from '../creators/createText';
 import { ensureParagraph } from './ensureParagraph';
-import { createModelToDomContextWithConfig } from '../../modelToDom/context/createModelToDomContext';
-import { createDomToModelContextWithConfig } from '../../domToModel/context/createDomToModelContext';
 import type {
     ContentModelSegmentFormat,
     DomToModelContext,
@@ -17,10 +17,11 @@ import type {
  * @return Normalized format
  */
 export function normalizeSegmentFormat(
+    doc: HTMLDocument,
     format: ContentModelSegmentFormat,
     environment: EditorEnvironment
 ): ContentModelSegmentFormat {
-    const span = document.createElement('span');
+    const span = doc.createElement('span');
     const segment = createText('text', format);
 
     const domToModelContext: DomToModelContext = createDomToModelContextWithConfig(
@@ -31,13 +32,7 @@ export function normalizeSegmentFormat(
     );
     const model = createContentModelDocument();
 
-    modelToDomContext.modelHandlers.segment(
-        span.ownerDocument,
-        span,
-        segment,
-        modelToDomContext,
-        []
-    );
+    modelToDomContext.modelHandlers.segment(doc, span, segment, modelToDomContext, []);
 
     domToModelContext.elementProcessors.element(model, span, domToModelContext);
 
