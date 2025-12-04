@@ -50,6 +50,7 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
                         !!context.isDarkMode,
                         context.darkColorHandler
                     );
+
                     format[key] = combineBorderValue({
                         ...extractBorderValues(value),
                         color: lightModeColor,
@@ -59,7 +60,6 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
         });
 
         const borderRadius = element.style.borderRadius;
-
         if (borderRadius) {
             format.borderRadius = borderRadius;
         } else {
@@ -86,7 +86,6 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
                             !!context.isDarkMode,
                             context.darkColorHandler
                         );
-
                         const borderStyles = combineBorderValue({
                             ...borderValues,
                             color: transformedColor,

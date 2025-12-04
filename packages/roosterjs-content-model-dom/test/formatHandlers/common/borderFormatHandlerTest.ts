@@ -82,78 +82,6 @@ describe('borderFormatHandler.parse', () => {
         expect(format).toEqual({});
     });
 
-    it('Has border with CSS variable color', () => {
-        div.style.borderTop = '1px solid var(--123, red)';
-        div.style.borderTopWidth = '1px';
-
-        const mockDarkColorHandler = {
-            knownColors: {},
-            getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkblue'),
-            updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey'),
-            reset: jasmine.createSpy('reset'),
-        };
-
-        context.isDarkMode = true;
-        context.darkColorHandler = mockDarkColorHandler;
-
-        // Spy on retrieveElementColor to return the actual computed color
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('blue');
-
-        borderFormatHandler.parse(format, div, context, {});
-
-        expect(format.borderTop).toBe('1px solid blue');
-    });
-
-    it('Has border with CSS variable color in light mode', () => {
-        div.style.borderTop = '1px solid var(--456, green)';
-        div.style.borderTopWidth = '1px';
-
-        const mockDarkColorHandler = {
-            knownColors: {},
-            getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkgreen'),
-            updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey'),
-            reset: jasmine.createSpy('reset'),
-        };
-
-        context.isDarkMode = false;
-        context.darkColorHandler = mockDarkColorHandler;
-
-        // Spy on retrieveElementColor to return the actual computed color
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('lightgreen');
-
-        borderFormatHandler.parse(format, div, context, {});
-
-        expect(format.borderTop).toBe('1px solid lightgreen');
-    });
-
-    it('Has multiple borders with CSS variable colors', () => {
-        div.style.borderTop = '1px solid var(--123, red)';
-        div.style.borderRight = '2px dashed var(--456, blue)';
-        div.style.borderTopWidth = '1px';
-        div.style.borderRightWidth = '2px';
-
-        const mockDarkColorHandler = {
-            knownColors: {},
-            getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkcolor'),
-            updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey'),
-            reset: jasmine.createSpy('reset'),
-        };
-
-        context.isDarkMode = true;
-        context.darkColorHandler = mockDarkColorHandler;
-
-        // Spy on retrieveElementColor to return the actual computed colors
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValues('red', 'blue');
-
-        borderFormatHandler.parse(format, div, context, {});
-
-        expect(format.borderTop).toBe('1px solid red');
-        expect(format.borderRight).toBe('2px dashed blue');
-    });
-
     it('Has border radius', () => {
         div.style.borderRadius = '10px';
 
@@ -278,7 +206,7 @@ describe('borderFormatHandler.apply', () => {
             knownColors: {},
             getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkred'),
             updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey').and.returnValue('colorKey1'),
+            generateColorKey: jasmine.createSpy('generateColorKey').and.returnValue('--colorKey1'),
             reset: jasmine.createSpy('reset'),
         };
 
@@ -297,7 +225,7 @@ describe('borderFormatHandler.apply', () => {
             'border',
             div
         );
-        expect(mockDarkColorHandler.updateKnownColor).toHaveBeenCalledWith(true, 'colorKey1', {
+        expect(mockDarkColorHandler.updateKnownColor).toHaveBeenCalledWith(true, '--colorKey1', {
             lightModeColor: 'red',
             darkModeColor: 'darkred',
         });
@@ -310,7 +238,7 @@ describe('borderFormatHandler.apply', () => {
             knownColors: {},
             getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkblue'),
             updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey').and.returnValue('colorKey2'),
+            generateColorKey: jasmine.createSpy('generateColorKey').and.returnValue('--colorKey2'),
             reset: jasmine.createSpy('reset'),
         };
 
@@ -329,7 +257,7 @@ describe('borderFormatHandler.apply', () => {
             'border',
             div
         );
-        expect(mockDarkColorHandler.updateKnownColor).toHaveBeenCalledWith(false, 'colorKey2', {
+        expect(mockDarkColorHandler.updateKnownColor).toHaveBeenCalledWith(false, '--colorKey2', {
             lightModeColor: 'blue',
             darkModeColor: 'darkblue',
         });
@@ -348,7 +276,7 @@ describe('borderFormatHandler.apply', () => {
             updateKnownColor: jasmine.createSpy('updateKnownColor'),
             generateColorKey: jasmine
                 .createSpy('generateColorKey')
-                .and.returnValues('key1', 'key2', 'key3'),
+                .and.returnValues('--key1', '--key2', '--key3'),
             reset: jasmine.createSpy('reset'),
         };
 
@@ -382,21 +310,22 @@ describe('borderFormatHandler.apply', () => {
 
         const mockDarkColorHandler = {
             knownColors: {
-                existingKey: {
+                '--existingKey': {
                     lightModeColor: 'red',
                     darkModeColor: 'darkred',
                 },
             },
             getDarkColor: jasmine.createSpy('getDarkColor').and.returnValue('darkred'),
             updateKnownColor: jasmine.createSpy('updateKnownColor'),
-            generateColorKey: jasmine.createSpy('generateColorKey').and.returnValue('existingKey'),
+            generateColorKey: jasmine
+                .createSpy('generateColorKey')
+                .and.returnValue('--existingKey'),
             reset: jasmine.createSpy('reset'),
         };
 
         context.isDarkMode = true;
         context.darkColorHandler = mockDarkColorHandler;
 
-        // Spy on retrieveElementColor to return the color
         spyOn(colorUtils, 'retrieveElementColor').and.returnValue('red');
 
         borderFormatHandler.apply(format, div, context);

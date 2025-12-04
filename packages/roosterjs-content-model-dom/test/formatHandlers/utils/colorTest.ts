@@ -881,4 +881,138 @@ describe('adaptColor', () => {
             darkModeColor: 'dark_red',
         });
     });
+
+    it('should handle text color in light mode', () => {
+        const result = adaptColor(element, 'red', 'text', false, darkColorHandler);
+        expect(result).toBe('red');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color in dark mode', () => {
+        const result = adaptColor(element, 'red', 'text', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_red, red)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color in light mode', () => {
+        const result = adaptColor(element, 'blue', 'background', false, darkColorHandler);
+        expect(result).toBe('blue');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color in dark mode', () => {
+        const result = adaptColor(element, 'blue', 'background', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_blue, blue)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color with CSS variable in light mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--text-color, black)',
+            'text',
+            false,
+            darkColorHandler
+        );
+        expect(result).toBe('black');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--text-color', {
+            lightModeColor: 'black',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color with CSS variable in dark mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--text-color, black)',
+            'text',
+            true,
+            darkColorHandler
+        );
+        expect(result).toBe('var(--text-color, black)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--text-color', {
+            lightModeColor: 'black',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color with CSS variable in light mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--bg-color, white)',
+            'background',
+            false,
+            darkColorHandler
+        );
+        expect(result).toBe('white');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--bg-color', {
+            lightModeColor: 'white',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color with CSS variable in dark mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--bg-color, white)',
+            'background',
+            true,
+            darkColorHandler
+        );
+        expect(result).toBe('var(--bg-color, white)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--bg-color', {
+            lightModeColor: 'white',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should use known text color in dark mode', () => {
+        darkColorHandler.knownColors['--darkColor_orange'] = {
+            lightModeColor: 'orange',
+            darkModeColor: 'existing_dark_orange',
+        };
+
+        const result = adaptColor(element, 'orange', 'text', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_orange, orange)');
+        expect(getDarkColorSpy).not.toHaveBeenCalled();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_orange', {
+            lightModeColor: 'orange',
+            darkModeColor: 'existing_dark_orange',
+        });
+    });
+
+    it('should use known background color in dark mode', () => {
+        darkColorHandler.knownColors['--darkColor_gray'] = {
+            lightModeColor: 'gray',
+            darkModeColor: 'existing_dark_gray',
+        };
+
+        const result = adaptColor(element, 'gray', 'background', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_gray, gray)');
+        expect(getDarkColorSpy).not.toHaveBeenCalled();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_gray', {
+            lightModeColor: 'gray',
+            darkModeColor: 'existing_dark_gray',
+        });
+    });
 });
