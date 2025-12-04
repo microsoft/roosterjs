@@ -67,6 +67,11 @@ export interface FormatHandlerTypeMap {
     borderBox: BorderBoxFormat;
 
     /**
+     * Format for the Border Colors
+     */
+    borderColor: BorderFormat;
+
+    /**
      * Format for BoxShadowFormat
      */
     boxShadow: BoxShadowFormat;

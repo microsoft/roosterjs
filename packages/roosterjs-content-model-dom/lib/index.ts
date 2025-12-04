@@ -118,7 +118,7 @@ export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
 export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
-export { transformColor } from './domUtils/style/transformColor';
+export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';

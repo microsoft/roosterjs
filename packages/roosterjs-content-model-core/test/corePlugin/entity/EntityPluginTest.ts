@@ -3,6 +3,7 @@ import * as entityUtils from 'roosterjs-content-model-dom/lib/domUtils/entityUti
 import * as transformColor from 'roosterjs-content-model-dom/lib/domUtils/style/transformColor';
 import { createContentModelDocument, createEntity } from 'roosterjs-content-model-dom';
 import { createEntityPlugin } from '../../../lib/corePlugin/entity/EntityPlugin';
+import { table } from 'console';
 import {
     ContentModelDocument,
     DarkColorHandler,
@@ -42,6 +43,7 @@ describe('EntityPlugin', () => {
                 isNodeInEditor: isNodeInEditorSpy,
             }),
             getColorManager: () => mockedDarkColorHandler,
+            isExperimentalFeatureEnabled: () => false,
         } as any;
         plugin = createEntityPlugin();
         plugin.initialize(editor);
@@ -258,7 +260,10 @@ describe('EntityPlugin', () => {
                 wrapper,
                 true,
                 'lightToDark',
-                mockedDarkColorHandler
+                mockedDarkColorHandler,
+                {
+                    tableBorders: false,
+                }
             );
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });
