@@ -1,4 +1,3 @@
-import * as colorUtils from '../../../lib/formatHandlers/utils/color';
 import { createDarkColorHandler } from 'roosterjs-content-model-core/lib/editor/core/DarkColorHandlerImpl';
 import { transformColor } from '../../../lib/domUtils/style/transformColor';
 

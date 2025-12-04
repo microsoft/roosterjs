@@ -1,4 +1,3 @@
-import * as colorUtils from '../../../lib/formatHandlers/utils/color';
 import { BorderFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-content-model-types';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
