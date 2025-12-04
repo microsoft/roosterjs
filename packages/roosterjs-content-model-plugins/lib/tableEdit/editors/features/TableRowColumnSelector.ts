@@ -15,6 +15,17 @@ import type {
     TableSelection,
 } from 'roosterjs-content-model-types';
 
+/**
+ * @internal
+ * ONLY FOR TESTING
+ */
+export const ROW_SELECTOR_ID = 'rowSelector';
+/**
+ * @internal
+ * ONLY FOR TESTING
+ */
+export const COLUMN_SELECTOR_ID = 'columnSelector';
+
 const STABLE_DOWN_ARROW_CURSOR =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48dGV4dCB4PSI4IiB5PSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCIgZmlsbD0iYmxhY2siPiYjMTI5MDk1OzwvdGV4dD48L3N2Zz4=';
 
@@ -38,12 +49,13 @@ export function createTableRowColumnSelector(
         const zoomScale = editor.getDOMHelper().calculateZoomScale();
         const createElementData = getInsertElementData(rect, isRowSelector);
         const div = createElement(createElementData, doc) as HTMLDivElement;
-
+        div.id = isRowSelector ? ROW_SELECTOR_ID : COLUMN_SELECTOR_ID;
         const context: TableRowColumnSelectorContext = {
             table,
             zoomScale,
             editor,
             div,
+
             isRow: isRowSelector,
         };
 

@@ -13,6 +13,10 @@ import {
     HORIZONTAL_RESIZER_ID,
     VERTICAL_RESIZER_ID,
 } from '../../lib/tableEdit/editors/features/CellResizer';
+import {
+    ROW_SELECTOR_ID,
+    COLUMN_SELECTOR_ID,
+} from '../../lib/tableEdit/editors/features/TableRowColumnSelector';
 
 describe('TableEditor', () => {
     xdescribe('disableFeatures', () => {

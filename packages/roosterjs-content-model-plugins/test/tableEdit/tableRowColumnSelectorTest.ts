@@ -87,6 +87,7 @@ describe('TableRowColumnSelector Tests', () => {
             expect(result!.featureHandler).toBeDefined();
             expect(result!.node).toBe(table);
             if (result!.div) {
+                expect(result!.div.id).toBe('rowSelector');
                 expect(onTableEditorCreated).toHaveBeenCalledWith('TableRowSelector', result!.div);
             }
         });
@@ -109,6 +110,7 @@ describe('TableRowColumnSelector Tests', () => {
             expect(result!.featureHandler).toBeDefined();
             expect(result!.node).toBe(table);
             if (result!.div) {
+                expect(result!.div.id).toBe('columnSelector');
                 expect(onTableEditorCreated).toHaveBeenCalledWith(
                     'TableColumnSelector',
                     result!.div
