@@ -50,23 +50,27 @@ export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadata
     canvas.height = targetHeight * devicePixelRatio;
 
     const context = canvas.getContext('2d');
-    if (context) {
-        context.scale(devicePixelRatio, devicePixelRatio);
-        context.translate(targetWidth / 2, targetHeight / 2);
-        context.rotate(angle);
-        context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
-        context.drawImage(
-            image,
-            nWidth * left,
-            nHeight * top,
-            imageWidth,
-            imageHeight,
-            -width / 2,
-            -height / 2,
-            width,
-            height
-        );
-    }
 
-    return canvas.toDataURL('image/png', 1.0);
+    try {
+        if (context) {
+            context.scale(devicePixelRatio, devicePixelRatio);
+            context.translate(targetWidth / 2, targetHeight / 2);
+            context.rotate(angle);
+            context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
+            context.drawImage(
+                image,
+                nWidth * left,
+                nHeight * top,
+                imageWidth,
+                imageHeight,
+                -width / 2,
+                -height / 2,
+                width,
+                height
+            );
+        }
+        return canvas.toDataURL('image/png', 1.0);
+    } catch {
+        return image.src;
+    }
 }
