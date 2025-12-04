@@ -20,7 +20,7 @@ describe('normalizeSegmentFormat', () => {
     it('empty format', () => {
         const format: ContentModelSegmentFormat = {};
 
-        const result = normalizeSegmentFormat(format, environment);
+        const result = normalizeSegmentFormat(document, format, environment);
 
         expect(result).toEqual({});
     });
@@ -32,7 +32,7 @@ describe('normalizeSegmentFormat', () => {
             textColor: 'red',
         };
 
-        const result = normalizeSegmentFormat(format, environment);
+        const result = normalizeSegmentFormat(document, format, environment);
 
         expect(result).toEqual({
             fontFamily: 'Font1',
@@ -49,7 +49,7 @@ describe('normalizeSegmentFormat', () => {
             backgroundColor: '#654321',
         };
 
-        const result = normalizeSegmentFormat(format, environment);
+        const result = normalizeSegmentFormat(document, format, environment);
 
         expect(result).toEqual({
             fontFamily: 'Font1, Font2, "Font 3"',
@@ -67,7 +67,7 @@ describe('normalizeSegmentFormat', () => {
             letterSpacing: '2px',
         };
 
-        const result = normalizeSegmentFormat(format, environment);
+        const result = normalizeSegmentFormat(document, format, environment);
 
         expect(result).toEqual({
             letterSpacing: '2px',

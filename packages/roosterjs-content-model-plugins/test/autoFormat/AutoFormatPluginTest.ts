@@ -38,6 +38,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 } as any), // Force return invalid range to go through content model code
             formatContentModel: () => {},
             triggerEvent: triggerEventSpy,
+            getDocument: () => document,
         } as any) as IEditor;
     });
 

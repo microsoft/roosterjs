@@ -900,16 +900,18 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * @returns a function to cancel this async run
      */
     runAsync(callback: (editor: ILegacyEditor & IEditor) => void) {
-        const win = this.getCore().physicalRoot.ownerDocument.defaultView || window;
-        const handle = win.requestAnimationFrame(() => {
+        const win = this.getCore().physicalRoot.ownerDocument.defaultView;
+        const handle = win?.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
             }
         });
 
-        return () => {
-            win.cancelAnimationFrame(handle);
-        };
+        return typeof handle == 'undefined'
+            ? () => {}
+            : () => {
+                  win?.cancelAnimationFrame(handle);
+              };
     }
 
     /**

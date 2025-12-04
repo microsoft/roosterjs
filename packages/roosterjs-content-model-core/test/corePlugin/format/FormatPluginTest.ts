@@ -51,6 +51,7 @@ describe('FormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         plugin.initialize(editor);
@@ -73,6 +74,7 @@ describe('FormatPlugin', () => {
             isInIME: () => false,
             cacheContentModel: () => {},
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const model = createContentModelDocument();
@@ -116,6 +118,7 @@ describe('FormatPlugin', () => {
             triggerEvent,
             getVisibleViewport,
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
@@ -142,6 +145,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
@@ -175,6 +179,7 @@ describe('FormatPlugin', () => {
             },
             cacheContentModel: () => {},
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
 
         const plugin = createFormatPlugin({});
@@ -205,6 +210,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
 
@@ -235,6 +241,7 @@ describe('FormatPlugin', () => {
             createContentModel: () => model,
             cacheContentModel: () => {},
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
         const plugin = createFormatPlugin({});
         const state = plugin.getState();
@@ -289,6 +296,7 @@ describe('FormatPlugin for default format', () => {
             cacheContentModel: cacheContentModelSpy,
             formatContentModel: formatContentModelSpy,
             getEnvironment: () => mockedEnvironment,
+            getDocument: () => document,
         } as any) as IEditor;
     });
 

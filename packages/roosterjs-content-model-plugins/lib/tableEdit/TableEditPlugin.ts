@@ -104,14 +104,14 @@ export class TableEditPlugin implements EditorPlugin {
 
     private onMouseMove = (event: Event) => {
         const e = event as MouseEvent;
+        const editorWindow = this.editor?.getDocument().defaultView;
 
-        if (e.buttons > 0 || !this.editor) {
+        if (e.buttons > 0 || !this.editor || !editorWindow) {
             return;
         }
 
         this.ensureTableRects();
 
-        const editorWindow = this.editor.getDocument().defaultView || window;
         const x = e.pageX - editorWindow.scrollX;
         const y = e.pageY - editorWindow.scrollY;
         let currentTable: TableWithRoot | null = null;

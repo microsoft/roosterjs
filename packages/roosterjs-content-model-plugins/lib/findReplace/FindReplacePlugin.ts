@@ -47,10 +47,12 @@ export class FindReplacePlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
 
-        const win = editor.getDocument().defaultView ?? window;
+        const win = editor.getDocument().defaultView;
 
-        this.context.findHighlight.initialize(win);
-        this.context.replaceHighlight.initialize(win);
+        if (win) {
+            this.context.findHighlight.initialize(win);
+            this.context.replaceHighlight.initialize(win);
+        }
 
         this.editor.setEditorStyle(FindHighlightRuleKey, this.findHighlightStyle, [
             FindHighlightSelector,

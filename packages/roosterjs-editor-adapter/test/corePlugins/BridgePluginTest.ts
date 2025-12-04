@@ -79,6 +79,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -180,6 +181,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -479,6 +481,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
         const createDarkColorHandlerSpy = spyOn(
@@ -606,6 +609,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
         spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkColorHandler);
@@ -709,6 +713,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
         const mockedDarkColorHandler = 'COLOR' as any;
         spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue(mockedDarkColorHandler);
@@ -807,6 +812,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
 
         spyOn(DarkColorHandler, 'createDarkColorHandler').and.returnValue('COLOR' as any);
@@ -881,6 +887,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(
@@ -985,6 +992,7 @@ describe('BridgePlugin', () => {
                     },
                 };
             },
+            getDocument: () => document,
         } as any;
 
         const createDarkColorHandlerSpy = spyOn(

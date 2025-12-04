@@ -88,6 +88,7 @@ class FormatPlugin implements PluginWithState<FormatPluginState> {
         this.editor = editor;
 
         this.state.defaultFormat = normalizeSegmentFormat(
+            this.editor.getDocument(),
             this.state.defaultFormat,
             editor.getEnvironment()
         );

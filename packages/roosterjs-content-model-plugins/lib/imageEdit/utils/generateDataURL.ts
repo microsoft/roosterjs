@@ -41,10 +41,12 @@ export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadata
 
     const imageWidth = nWidth * (1 - left - right);
     const imageHeight = nHeight * (1 - top - bottom);
+    const doc = image.ownerDocument;
+    const win = doc.defaultView;
 
     // Adjust the canvas size and scaling for high display resolution
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    const canvas = document.createElement('canvas');
+    const devicePixelRatio = win?.devicePixelRatio ?? 1;
+    const canvas = doc.createElement('canvas');
     const { targetWidth, targetHeight } = generatedImageSize;
     canvas.width = targetWidth * devicePixelRatio;
     canvas.height = targetHeight * devicePixelRatio;

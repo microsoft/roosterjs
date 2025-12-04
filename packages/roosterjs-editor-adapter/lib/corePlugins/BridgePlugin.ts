@@ -67,6 +67,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     private edit: EditPluginState;
     private contextMenuProviders: LegacyContextMenuProvider<any>[];
     private checkExclusivelyHandling: boolean;
+    private doc: HTMLDocument | null = null;
 
     constructor(
         private onInitialize: (core: EditorAdapterCore) => ILegacyEditor,
@@ -100,6 +101,7 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     initialize(editor: IEditor) {
         const outerEditor = this.onInitialize(this.createEditorCore(editor));
         this.editor = editor;
+        this.doc = editor.getDocument();
         this.legacyPlugins.forEach(plugin => {
             plugin.initialize(outerEditor);
 
@@ -122,13 +124,21 @@ export class BridgePlugin implements ContextMenuProvider<any> {
     }
 
     willHandleEventExclusively(event: PluginEvent) {
-        return this.checkExclusivelyHandling && !!this.cacheGetExclusivelyHandlePlugin(event);
+        return (
+            !!this.doc &&
+            this.checkExclusivelyHandling &&
+            !!this.cacheGetExclusivelyHandlePlugin(this.doc, event)
+        );
     }
 
     onPluginEvent(event: PluginEvent) {
-        const oldEvent = this.cacheGetOldEvent(event);
+        if (!this.doc) {
+            return;
+        }
 
-        const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(event);
+        const oldEvent = this.cacheGetOldEvent(this.doc, event);
+
+        const exclusivelyHandleEventPlugin = this.cacheGetExclusivelyHandlePlugin(this.doc, event);
 
         if (exclusivelyHandleEventPlugin) {
             this.handleEvent(exclusivelyHandleEventPlugin, oldEvent, event);
@@ -181,9 +191,9 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         return allItems;
     }
 
-    private cacheGetExclusivelyHandlePlugin(event: PluginEvent) {
+    private cacheGetExclusivelyHandlePlugin(doc: HTMLDocument, event: PluginEvent) {
         return cacheGetEventData(event, ExclusivelyHandleEventPluginKey, event => {
-            const oldEvent = this.cacheGetOldEvent(event);
+            const oldEvent = this.cacheGetOldEvent(doc, event);
 
             for (let i = 0; i < this.legacyPlugins.length; i++) {
                 const plugin = this.legacyPlugins[i];
@@ -201,8 +211,8 @@ export class BridgePlugin implements ContextMenuProvider<any> {
         });
     }
 
-    private cacheGetOldEvent(event: PluginEvent) {
-        return cacheGetEventData(event, OldEventKey, newEventToOldEvent);
+    private cacheGetOldEvent(doc: HTMLDocument, event: PluginEvent) {
+        return cacheGetEventData(event, OldEventKey, e => newEventToOldEvent(e));
     }
 
     private createEditorCore(editor: IEditor): EditorAdapterCore {
