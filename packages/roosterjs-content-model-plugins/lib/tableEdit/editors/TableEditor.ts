@@ -2,6 +2,7 @@ import { createCellResizer } from './features/CellResizer';
 import { createTableInserter } from './features/TableInserter';
 import { createTableMover } from './features/TableMover';
 import { createTableResizer } from './features/TableResizer';
+import { createTableRowColumnSelector } from './features/TableRowColumnSelector';
 import { disposeTableEditFeature } from './features/TableEditFeature';
 import { isNodeOfType, normalizeRect, parseTableCells } from 'roosterjs-content-model-dom';
 import type { OnTableEditorCreatedCallback } from '../OnTableEditorCreatedCallback';
@@ -58,6 +59,10 @@ export class TableEditor {
     // 6 - Move as well as select whole table
     private tableMover: TableEditFeature | null = null;
 
+    // 7 - Select whole column or row
+    private tableColumnSelector: TableEditFeature | null = null;
+    private tableRowSelector: TableEditFeature | null = null;
+
     private isRTL: boolean;
     private range: Range | null = null;
     private isCurrentlyEditing: boolean;
@@ -82,6 +87,7 @@ export class TableEditor {
         this.disposeCellResizers();
         this.disposeTableInserter();
         this.disposeTableMover();
+        this.disposeTableSelector();
     }
 
     isEditing(): boolean {
@@ -96,9 +102,11 @@ export class TableEditor {
             this.verticalInserter,
             this.horizontalResizer,
             this.verticalResizer,
+            this.tableColumnSelector,
+            this.tableRowSelector,
         ]
             .filter(feature => !!feature?.div)
-            .some(feature => feature?.div == node);
+            .some(feature => feature?.div == node || (feature?.div && feature.div.contains(node)));
     }
 
     /**
@@ -180,9 +188,15 @@ export class TableEditor {
                     }
 
                     !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
-
-                    //Cell found
-                    break;
+                }
+                if (topOrSide == TOP_OR_SIDE.top) {
+                    !this.isFeatureDisabled('TableColumnSelector') &&
+                        this.setSelectorRowColumn(td, false /*isRow*/);
+                } else if (topOrSide == TOP_OR_SIDE.side) {
+                    !this.isFeatureDisabled('TableRowSelector') &&
+                        this.setSelectorRowColumn(td, true /*isRow*/);
+                } else {
+                    this.setSelectorRowColumn(null);
                 }
             }
 
@@ -303,6 +317,27 @@ export class TableEditor {
         }
     }
 
+    private setSelectorRowColumn(td: HTMLTableCellElement | null, isRow?: boolean) {
+        if (td == null) {
+            this.disposeTableSelector();
+        }
+
+        if (!this.tableColumnSelector && !this.tableRowSelector && td) {
+            const newSelector = createTableRowColumnSelector(
+                this.editor,
+                this.table,
+                !!isRow,
+                this.anchorContainer,
+                this.onEditorCreated
+            );
+            if (isRow) {
+                this.tableRowSelector = newSelector;
+            } else {
+                this.tableColumnSelector = newSelector;
+            }
+        }
+    }
+
     private disposeTableResizer() {
         if (this.tableResizer) {
             disposeTableEditFeature(this.tableResizer);
@@ -318,6 +353,17 @@ export class TableEditor {
         if (this.verticalInserter) {
             disposeTableEditFeature(this.verticalInserter);
             this.verticalInserter = null;
+        }
+    }
+
+    private disposeTableSelector() {
+        if (this.tableColumnSelector) {
+            disposeTableEditFeature(this.tableColumnSelector);
+            this.tableColumnSelector = null;
+        }
+        if (this.tableRowSelector) {
+            disposeTableEditFeature(this.tableRowSelector);
+            this.tableRowSelector = null;
         }
     }
 
@@ -371,6 +417,7 @@ export class TableEditor {
         this.disposeTableResizer();
         this.disposeTableInserter();
         this.disposeCellResizers();
+        this.disposeTableSelector();
     };
 
     private onStartResize() {

@@ -7,4 +7,6 @@ export type TableEditFeatureName =
     | 'TableMover'
     | 'TableResizer'
     | 'TableSelector'
-    | 'CellResizer';
+    | 'CellResizer'
+    | 'TableRowSelector'
+    | 'TableColumnSelector';
