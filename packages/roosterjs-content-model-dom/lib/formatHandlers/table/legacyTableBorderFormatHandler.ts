@@ -19,7 +19,7 @@ export const legacyTableBorderFormatHandler: FormatHandler<LegacyTableBorderForm
         }
 
         if (cellpadding) {
-            format.cellpadding = cellpadding;
+            format.cellPadding = cellpadding;
         }
     },
 
@@ -32,8 +32,8 @@ export const legacyTableBorderFormatHandler: FormatHandler<LegacyTableBorderForm
             element.setAttribute('cellspacing', format.cellSpacing);
         }
 
-        if (format.cellpadding) {
-            element.setAttribute('cellpadding', format.cellpadding);
+        if (format.cellPadding) {
+            element.setAttribute('cellpadding', format.cellPadding);
         }
     },
 };

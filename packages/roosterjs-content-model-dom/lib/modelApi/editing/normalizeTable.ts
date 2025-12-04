@@ -40,7 +40,7 @@ export function normalizeTable(
     // But if this is a legacy style table (table with deprecated border attributes), we should not change its border model
     const format = table.format;
 
-    if (!format.cellSpacing && !format.cellpadding && !format.legacyTableBorder) {
+    if (!format.cellSpacing && !format.cellPadding && !format.legacyTableBorder) {
         format.borderCollapse = true;
         format.useBorderBox = true;
     }

@@ -22,5 +22,5 @@ export type LegacyTableBorderFormat = {
      * This attribute is deprecated in HTML5, but still used in some legacy scenarios.
      * https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableElement/cellPadding
      */
-    cellpadding?: string;
+    cellPadding?: string;
 };
