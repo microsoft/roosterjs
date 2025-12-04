@@ -135,6 +135,7 @@ describe('Editor', () => {
             format: {
                 defaultFormat: {},
             },
+            experimentalFeatures: [],
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -170,6 +171,7 @@ describe('Editor', () => {
             format: {
                 defaultFormat: {},
             },
+            experimentalFeatures: [],
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -224,7 +226,10 @@ describe('Editor', () => {
             clonedNode,
             true,
             'darkToLight',
-            mockedCore.darkColorHandler
+            mockedCore.darkColorHandler,
+            {
+                tableBorders: false,
+            }
         );
         expect(clonedNode).toEqual({
             style: {
@@ -985,6 +990,7 @@ describe('Editor', () => {
             format: {
                 defaultFormat: {},
             },
+            experimentalFeatures: [],
         } as any;
 
         createEditorCoreSpy.and.returnValue(mockedCore);
@@ -1007,7 +1013,10 @@ describe('Editor', () => {
             div,
             false,
             'lightToDark',
-            mockedColorHandler
+            mockedColorHandler,
+            {
+                tableBorders: false,
+            }
         );
         expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
@@ -1029,7 +1038,10 @@ describe('Editor', () => {
             div,
             false,
             'darkToLight',
-            mockedColorHandler
+            mockedColorHandler,
+            {
+                tableBorders: false,
+            }
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(

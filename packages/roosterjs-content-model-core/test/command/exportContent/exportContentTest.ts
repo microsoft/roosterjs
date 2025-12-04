@@ -15,6 +15,7 @@ describe('exportContent', () => {
             getDOMHelper: () => ({
                 getTextContent: getTextContentSpy,
             }),
+            isExperimentalFeatureEnabled: () => false,
         } as any;
 
         const text = exportContent(editor, 'PlainTextFast');
@@ -30,6 +31,7 @@ describe('exportContent', () => {
             .and.returnValue(mockedModel);
         const editor: IEditor = {
             getContentModelCopy: getContentModelCopySpy,
+            isExperimentalFeatureEnabled: () => false,
         } as any;
         const mockedText = 'TEXT';
         const contentModelToTextSpy = spyOn(
@@ -213,6 +215,7 @@ describe('exportContent', () => {
             getDOMHelper: getDOMHelperSpy,
             isDarkMode: () => true,
             getColorManager: () => mockedColorManager,
+            isExperimentalFeatureEnabled: () => false,
         } as any;
 
         const html = exportContent(editor, 'HTMLFast');
@@ -228,7 +231,10 @@ describe('exportContent', () => {
             mockedClonedRoot,
             false,
             'darkToLight',
-            mockedColorManager
+            mockedColorManager,
+            {
+                tableBorders: false,
+            }
         );
     });
 });

@@ -1,4 +1,4 @@
-import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
+import { BorderKeys } from '../../formatHandlers/utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
 import { mutateBlock, mutateSegment } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';

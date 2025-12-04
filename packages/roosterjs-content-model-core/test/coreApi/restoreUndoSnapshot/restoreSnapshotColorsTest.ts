@@ -23,6 +23,7 @@ describe('restoreSnapshotColors', () => {
                 isDarkMode: false,
             },
             darkColorHandler,
+            experimentalFeatures: [],
         } as any;
     });
 
@@ -54,7 +55,10 @@ describe('restoreSnapshotColors', () => {
             mockedDiv,
             false,
             'lightToDark',
-            darkColorHandler
+            darkColorHandler,
+            {
+                tableBorders: false,
+            }
         );
     });
 
@@ -85,7 +89,10 @@ describe('restoreSnapshotColors', () => {
             mockedDiv,
             false,
             'darkToLight',
-            darkColorHandler
+            darkColorHandler,
+            {
+                tableBorders: false,
+            }
         );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false);
     });

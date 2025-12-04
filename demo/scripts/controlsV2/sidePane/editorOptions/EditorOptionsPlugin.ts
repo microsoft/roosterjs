@@ -73,6 +73,7 @@ const initialState: OptionState = {
         'HandleEnterKey',
         'CloneIndependentRoot',
         'CacheList',
+        'TransformTableBorderColors',
     ]),
 };
 

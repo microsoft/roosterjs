@@ -15,6 +15,7 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
                 {this.renderFeature('KeepSelectionMarkerWhenEnteringTextNode')}
                 {this.renderFeature('CloneIndependentRoot')}
                 {this.renderFeature('CacheList')}
+                {this.renderFeature('TransformTableBorderColors')}
             </>
         );
     }

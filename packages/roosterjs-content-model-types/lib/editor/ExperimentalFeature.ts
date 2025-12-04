@@ -56,4 +56,9 @@ export type ExperimentalFeature =
     /**
      * Allow caching list item elements.
      */
-    | 'CacheList';
+    | 'CacheList'
+
+    /**
+     * Transform the table border colors when switching from light to dark mode
+     */
+    | 'TransformTableBorderColors';
