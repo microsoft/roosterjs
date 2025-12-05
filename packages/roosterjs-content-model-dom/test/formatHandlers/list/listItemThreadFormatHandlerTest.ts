@@ -244,9 +244,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -258,9 +260,11 @@ describe('listItemThreadFormatHandler.parse', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -275,9 +279,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -289,9 +295,11 @@ describe('listItemThreadFormatHandler.parse', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -306,9 +314,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -322,9 +332,11 @@ describe('listItemThreadFormatHandler.parse', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -339,12 +351,15 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -358,12 +373,15 @@ describe('listItemThreadFormatHandler.parse', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });
@@ -378,6 +396,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.nodeStack = [
             {
                 node: {} as Node,
+                refNode: null,
             },
         ];
 
@@ -392,6 +411,7 @@ describe('listItemThreadFormatHandler.parse', () => {
             nodeStack: [
                 {
                     node: {} as Node,
+                    refNode: null,
                 },
             ],
         });

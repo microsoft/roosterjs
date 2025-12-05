@@ -58,6 +58,7 @@ describe('handleListItem with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
             ],
         });
@@ -84,12 +85,14 @@ describe('handleListItem with metadata', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'OL',
                 dataset: {},
                 format: {},
+                refNode: null,
             },
         ];
 
@@ -101,12 +104,14 @@ describe('handleListItem with metadata', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'OL',
                     format: {},
                     dataset: {},
+                    refNode: null,
                 },
             ],
         });
@@ -150,10 +155,12 @@ describe('handleListItem with metadata', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'UL',
+                refNode: null,
             },
         ];
 
@@ -165,10 +172,12 @@ describe('handleListItem with metadata', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'UL',
+                    refNode: null,
                 },
             ],
         });
@@ -219,6 +228,7 @@ describe('handleListItem with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: br,
                 },
             ],
         });
@@ -253,12 +263,14 @@ describe('handleListItem with metadata', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
                 {
                     node: parent.firstChild as HTMLOListElement,
                     listType: 'OL',
                     format: {},
                     dataset: {},
+                    refNode: null,
                 },
             ],
         });

@@ -3,8 +3,8 @@ import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
+import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
-import { getPasteSource } from './pasteSourceValidations/getPasteSource';
 import { imageSizeParser } from './parsers/imageSizeParser';
 import { parseLink } from './parsers/linkParser';
 import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
@@ -96,16 +96,24 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const pasteSource = getPasteSource(
-            event,
-            false /* shouldConvertSingleImage */,
-            this.editor.getEnvironment()
-        );
+        const { htmlAttributes, clipboardData, fragment } = event;
+
+        const pasteSource = getDocumentSource({
+            htmlAttributes,
+            fragment,
+            clipboardItemTypes: clipboardData.types,
+            htmlFirstLevelChildTags: clipboardData.htmlFirstLevelChildTags,
+            environment: this.editor.getEnvironment(),
+            rawHtml: clipboardData.rawHtml,
+        });
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
             case 'wordDesktop':
-                processPastedContentFromWordDesktop(event);
+                processPastedContentFromWordDesktop(
+                    event.domToModelOption,
+                    event.htmlBefore || event.clipboardData.rawHtml || ''
+                );
                 break;
             case 'wacComponents':
                 processPastedContentWacComponents(event);

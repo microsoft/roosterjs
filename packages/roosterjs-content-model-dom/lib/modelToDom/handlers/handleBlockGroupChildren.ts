@@ -1,8 +1,9 @@
-import { isNodeOfType } from '../../domUtils/isNodeOfType';
+import { cleanUpRestNodes } from '../utils/cleanUpRestNodes';
 import type {
     ContentModelBlockGroup,
     ContentModelHandler,
     ModelToDomContext,
+    ModelToDomListStackItem,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -29,7 +30,11 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 childBlock.blockType != 'BlockGroup' ||
                 childBlock.blockGroupType != 'ListItem'
             ) {
-                listFormat.nodeStack = [];
+                cleanUpNodeStack(listFormat.nodeStack, context);
+
+                if (listFormat.nodeStack.length > 0) {
+                    listFormat.nodeStack = [];
+                }
             }
 
             refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
@@ -39,18 +44,22 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             }
         });
 
+        cleanUpNodeStack(listFormat.nodeStack, context);
+
         // Remove all rest node if any since they don't appear in content model
-        while (refNode) {
-            const next = refNode.nextSibling;
-
-            if (isNodeOfType(refNode, 'ELEMENT_NODE')) {
-                context.rewriteFromModel.removedBlockElements.push(refNode);
-            }
-
-            refNode.parentNode?.removeChild(refNode);
-            refNode = next;
-        }
+        cleanUpRestNodes(refNode, context.rewriteFromModel);
     } finally {
         listFormat.nodeStack = nodeStack;
     }
 };
+
+function cleanUpNodeStack(nodeStack: ModelToDomListStackItem[], context: ModelToDomContext) {
+    if (context.allowCacheListItem && nodeStack.length > 0) {
+        // Clear list stack, only run to nodeStack[1] because nodeStack[0] is the parent node
+        for (let i = nodeStack.length - 1; i > 0; i--) {
+            const node = nodeStack.pop()?.refNode ?? null;
+
+            cleanUpRestNodes(node, context.rewriteFromModel);
+        }
+    }
+}
