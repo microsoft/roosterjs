@@ -1,7 +1,16 @@
 import * as setModelIndentation from '../../../roosterjs-content-model-api/lib/modelApi/block/setModelIndentation';
 import { ContentModelDocument, FormatContentModelContext } from 'roosterjs-content-model-types';
 import { editingTestCommon } from './editingTestCommon';
+import { HandleTabOptions } from '../../lib/edit/EditOptions';
 import { keyboardTab } from '../../lib/edit/keyboardTab';
+
+const DefaultHandleTabOptions: Required<HandleTabOptions> = {
+    indentMultipleBlocks: true,
+    indentTable: true,
+    appendTableRow: true,
+    indentList: true,
+    indentParagraph: true,
+};
 
 describe('keyboardTab', () => {
     let takeSnapshotSpy: jasmine.Spy;
@@ -50,7 +59,8 @@ describe('keyboardTab', () => {
                 key: 'Tab',
                 shiftKey: shiftKey,
                 preventDefault: () => {},
-            } as KeyboardEvent
+            } as KeyboardEvent,
+            DefaultHandleTabOptions
         );
 
         expect(formatWithContentModelSpy).toHaveBeenCalled();
@@ -1086,7 +1096,7 @@ describe('keyboardTab - handleTabOnParagraph -', () => {
                     },
                 });
 
-                keyboardTab(editor, mockedEvent);
+                keyboardTab(editor, mockedEvent, DefaultHandleTabOptions);
             },
             input,
             expectedResult,

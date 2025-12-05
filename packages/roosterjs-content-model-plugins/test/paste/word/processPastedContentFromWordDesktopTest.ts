@@ -27,12 +27,13 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event);
+        processPastedContentFromWordDesktop(event.domToModelOption, htmlBefore || source || '');
 
         const model = domToContentModel(
             fragment,
             createDomToModelContext(undefined, event.domToModelOption)
         );
+
         if (expectedModel) {
             if (removeUndefinedValues) {
                 expectEqual(model, expectedModel);
@@ -372,6 +373,24 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         format: {},
                         widths: [],
                         dataset: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Preserve the htmlAlign from Format container', () => {
+        runTest(
+            '<div align="center"><table style="margin-left: -5px;"><tbody><tr><td>Test</td></tr><tbody></table></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: jasmine.any(Array),
+                        format: { htmlAlign: 'center' },
                     },
                 ],
             }

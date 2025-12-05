@@ -440,7 +440,9 @@ describe('formatSegmentWithContentModel', () => {
                 {
                     segmentType: 'Entity',
                     blockType: 'Entity',
-                    format: {},
+                    format: {
+                        fontFamily: 'test',
+                    },
                     entityFormat: { id: 'TestEntity1', entityType: 'TestEntity', isReadonly: true },
                     wrapper: div,
                     isSelected: true,
@@ -449,7 +451,7 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(formatContentModel).toHaveBeenCalledTimes(1);
         expect(formatResult).toBeTrue();
-        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledTimes(2);
         expect(triggerEvent).toHaveBeenCalledTimes(1);
         expect(triggerEvent).toHaveBeenCalledWith('entityOperation', {
             entity: { id: 'TestEntity1', type: 'TestEntity', isReadonly: true, wrapper: div },
