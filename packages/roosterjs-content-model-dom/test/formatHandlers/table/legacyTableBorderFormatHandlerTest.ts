@@ -36,7 +36,7 @@ describe('legacyTableBorderFormatHandler.parse', () => {
     it('With cellpadding attribute', () => {
         table.setAttribute('cellpadding', '3');
         legacyTableBorderFormatHandler.parse(format, table, context, {});
-        expect(format.cellpadding).toBe('3');
+        expect(format.cellPadding).toBe('3');
     });
 });
 
@@ -69,7 +69,7 @@ describe('legacyTableBorderFormatHandler.apply', () => {
     });
 
     it('With cellpadding format', () => {
-        format.cellpadding = '5';
+        format.cellPadding = '5';
         legacyTableBorderFormatHandler.apply(format, table, context);
         expect(table.getAttribute('cellpadding')).toBe('5');
     });
