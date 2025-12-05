@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const fs = require('fs');
 const exec = require('child_process').execSync;
 const { distPath, readPackageJson, packages } = require('./common');
 
