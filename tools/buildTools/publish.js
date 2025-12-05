@@ -1,14 +1,12 @@
 'use strict';
 
 const path = require('path');
-const fs = require('fs');
 const exec = require('child_process').execSync;
 const { distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
-const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
-function publish(options) {
+function publish() {
     packages.forEach(packageName => {
         const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
         const localVersion = json.version;
@@ -29,12 +27,6 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            let npmrcName = path.join(distPath, packageName, '.npmrc');
-            if (options.token) {
-                const npmrc = `${NpmrcContent}${options.token}\n`;
-                fs.writeFileSync(npmrcName, npmrc);
-            }
-
             try {
                 const basePublishString = `npm publish`;
                 const publishString = basePublishString + ` --tag ${tagname}`;
@@ -45,10 +37,6 @@ function publish(options) {
             } catch (e) {
                 // Do not treat publish failure as build failure
                 console.log(e);
-            } finally {
-                if (options.token) {
-                    fs.unlinkSync(npmrcName);
-                }
             }
         }
     });
