@@ -1,3 +1,4 @@
+import type { LegacyTableBorderFormat } from './formatParts/LegacyTableBorderFormat';
 import type { AriaFormat } from './formatParts/AriaFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
@@ -25,4 +26,5 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     DisplayFormat &
     TableLayoutFormat &
     SizeFormat &
-    RoleFormat;
+    RoleFormat &
+    LegacyTableBorderFormat;

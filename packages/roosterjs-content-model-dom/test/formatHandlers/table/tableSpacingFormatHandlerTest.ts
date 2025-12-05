@@ -30,12 +30,6 @@ describe('tableSpacingFormatHandler.parse', () => {
         tableSpacingFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({ borderSeparate: true });
     });
-
-    it('Set border collapsed if element contains cellpadding attribute', () => {
-        div.setAttribute('cellPadding', '0');
-        tableSpacingFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({ borderCollapse: true });
-    });
 });
 
 describe('tableSpacingFormatHandler.apply', () => {

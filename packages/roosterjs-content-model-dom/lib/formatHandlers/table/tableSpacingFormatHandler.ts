@@ -3,7 +3,6 @@ import type { SpacingFormat } from 'roosterjs-content-model-types';
 
 const BorderCollapsed = 'collapse';
 const BorderSeparate = 'separate';
-const CellPadding = 'cellPadding';
 
 /**
  * @internal
@@ -12,11 +11,6 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
     parse: (format, element) => {
         if (element.style.borderCollapse == BorderCollapsed) {
             format.borderCollapse = true;
-        } else {
-            const cellPadding = element.getAttribute(CellPadding);
-            if (cellPadding) {
-                format.borderCollapse = true;
-            }
         }
 
         if (element.style.borderCollapse == BorderSeparate) {

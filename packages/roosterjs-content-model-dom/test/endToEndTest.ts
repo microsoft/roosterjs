@@ -2539,4 +2539,57 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<dl><dt>term</dt><dd>definition</dd></dl>'
         );
     });
+
+    it('Table with border, cellspacing and padding', () => {
+        runTest(
+            '<table border="1" cellspacing="2" cellpadding="3"><tr><td>test</td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 0,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                isImplicit: true,
+                                                segments: [
+                                                    {
+                                                        text: 'test',
+                                                        segmentType: 'Text',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            legacyTableBorder: '1',
+                            cellSpacing: '2',
+                            cellPadding: '3',
+                        },
+                        dataset: {},
+                        widths: [],
+                    },
+                ],
+            },
+            'test',
+            '<table border="1" cellspacing="2" cellpadding="3"><tbody><tr><td>test</td></tr></tbody></table>'
+        );
+    });
 });

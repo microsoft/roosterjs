@@ -15,6 +15,7 @@ import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
 import type { ImageStateFormat } from './formatParts/ImageStateFormat';
+import type { LegacyTableBorderFormat } from './formatParts/LegacyTableBorderFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { LinkFormat } from './formatParts/LinkFormat';
@@ -125,6 +126,11 @@ export interface FormatHandlerTypeMap {
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LegacyTableBorderFormat
+     */
+    legacyTableBorder: LegacyTableBorderFormat;
 
     /**
      * Format for LetterSpacingFormat

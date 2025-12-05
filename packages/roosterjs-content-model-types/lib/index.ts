@@ -60,6 +60,7 @@ export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFo
 export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 export { ImageStateFormat } from './contentModel/format/formatParts/ImageStateFormat';
 export { RoleFormat } from './contentModel/format/formatParts/RoleFormat';
+export { LegacyTableBorderFormat } from './contentModel/format/formatParts/LegacyTableBorderFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
