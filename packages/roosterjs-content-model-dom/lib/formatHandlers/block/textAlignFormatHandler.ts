@@ -10,7 +10,7 @@ export const textAlignFormatHandler: FormatHandler<DirectionFormat & TextAlignFo
     parse: (format, element, context, defaultStyle) => {
         directionFormatHandler.parse(format, element, context, defaultStyle);
 
-        let textAlign = element.style.textAlign || defaultStyle.textAlign;
+        const textAlign = element.style.textAlign || defaultStyle.textAlign;
 
         if (textAlign && element.parentElement?.style.display !== 'flex') {
             format.textAlign = calcAlign(textAlign, format.direction);
