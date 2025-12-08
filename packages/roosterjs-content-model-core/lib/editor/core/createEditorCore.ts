@@ -75,7 +75,7 @@ function createEditorEnvironment(
         isAndroid: /android/i.test(userAgent),
         isIOS: /iPad|iPhone/.test(userAgent),
         isSafari:
-            userAgent.indexOf('AppleWebKit') >= 0 &&
+            userAgent.indexOf('Safari') >= 0 &&
             userAgent.indexOf('Chrome') < 0 &&
             userAgent.indexOf('Android') < 0,
         isMobileOrTablet: getIsMobileOrTablet(userAgent),
