@@ -5,7 +5,6 @@ import {
     ContentModelTable,
     ContentModelTableCellFormat,
     ContentModelTableFormat,
-    ReadonlyContentModelTable,
 } from 'roosterjs-content-model-types';
 import {
     createParagraph as originalCreateParagraph,
@@ -49,7 +48,7 @@ describe('normalizeTable', () => {
     it('Normalize an empty table', () => {
         const table = createTable(0);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -68,7 +67,7 @@ describe('normalizeTable', () => {
 
         table.rows[0].cells.push(createTableCell(1, 1, false));
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -104,7 +103,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120],
+            widths: [],
             dataset: {},
         });
     });
@@ -124,7 +123,7 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell1);
         table.rows[1].cells.push(cell2);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -178,7 +177,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120],
+            widths: [],
             dataset: {},
         });
     });
@@ -337,7 +336,9 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell2);
         table.rows[0].cells.push(cell3);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        table.widths = [120, 120, 120];
+
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -429,7 +430,7 @@ describe('normalizeTable', () => {
         table.rows[0].cells.push(cell1);
         table.rows[0].cells.push(cell2);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -461,7 +462,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [240],
+            widths: [],
             dataset: {},
         });
     });
@@ -494,7 +495,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -552,7 +553,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
+            widths: [],
             dataset: {},
         });
     });
@@ -585,7 +586,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -669,7 +670,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
+            widths: [],
             dataset: {},
         });
     });
@@ -702,7 +703,7 @@ describe('normalizeTable', () => {
         table.rows[1].cells.push(cell3);
         table.rows[1].cells.push(cell4);
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -776,7 +777,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [240],
+            widths: [],
             dataset: {},
         });
     });
@@ -789,7 +790,7 @@ describe('normalizeTable', () => {
 
         table.rows[0].cells.push(createTableCell(1, 1, false));
 
-        normalizeTable(table as ReadonlyContentModelTable, format);
+        normalizeTable(table, format);
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -828,7 +829,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120],
+            widths: [],
             dataset: {},
         });
     });
@@ -848,7 +849,7 @@ describe('normalizeTable', () => {
         table.rows[0].height = 200;
         table.rows[1].height = 200;
 
-        normalizeTable(table as ReadonlyContentModelTable);
+        normalizeTable(table);
 
         const block: ContentModelParagraph = {
             blockType: 'Paragraph',
@@ -918,6 +919,24 @@ describe('normalizeTable', () => {
                 useBorderBox: true,
             },
             widths: [100, 100],
+            dataset: {},
+        });
+    });
+
+    it('Do not set borderCollapse if there is legacy border', () => {
+        const table = createTable(1, {
+            legacyTableBorder: '1',
+        });
+
+        normalizeTable(table);
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            rows: [{ height: 22, format: {}, cells: [] }],
+            format: {
+                legacyTableBorder: '1',
+            },
+            widths: [],
             dataset: {},
         });
     });
