@@ -456,4 +456,56 @@ describe('handleBlockGroupChildren', () => {
             removedBlockElements: [],
         });
     });
+
+    it('Allow list cache: clean up node stack at the end', () => {
+        const group = createContentModelDocument();
+        const paragraph = createParagraph();
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+        const node1 = document.createElement('br');
+        const node2 = document.createElement('p');
+        const nodeStack = [
+            { a: 'b' } as any,
+            {
+                node: ol,
+                refNode: node1,
+            },
+        ];
+
+        listItem.cachedElement = li;
+        listItem.levels[0].cachedElement = ol;
+
+        li.appendChild(node1);
+        ol.appendChild(li);
+        parent.appendChild(ol);
+        parent.appendChild(node2);
+
+        group.blocks.push(listItem, paragraph);
+        context.listFormat.nodeStack = nodeStack;
+        context.allowCacheListItem = true;
+
+        expect(parent.outerHTML).toBe('<div><ol><li><br></li></ol><p></p></div>');
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(context.listFormat.nodeStack).toEqual([{ a: 'b' } as any]);
+
+        expect(parent.outerHTML).toBe('<div><ol start="1"><li></li></ol><div></div></div>');
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [parent.lastChild as HTMLElement],
+            removedBlockElements: [node1, node2],
+        });
+        expect(context.rewriteFromModel.addedBlockElements[0]).toBe(
+            parent.lastChild as HTMLElement
+        );
+        expect(node1.parentNode).toBeNull();
+        expect(node2.parentNode).toBeNull();
+    });
 });

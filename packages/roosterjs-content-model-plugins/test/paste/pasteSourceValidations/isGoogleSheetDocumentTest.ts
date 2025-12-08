@@ -1,4 +1,4 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import { getWacElement } from './pasteTestUtils';
 import { isGoogleSheetDocument } from '../../../lib/paste/pasteSourceValidations/isGoogleSheetDocument';
 import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';

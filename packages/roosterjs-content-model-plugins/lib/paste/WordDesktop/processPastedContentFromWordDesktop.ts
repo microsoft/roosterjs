@@ -7,24 +7,30 @@ import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
+import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import type { WordMetadata } from './WordMetadata';
-import type { BeforePasteEvent, ElementProcessor } from 'roosterjs-content-model-types';
+import type { DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Handles Pasted content when source is Word Desktop
- * @param ev BeforePasteEvent
+ * Handles pasted content when the source is Word Desktop.
+ * @param domToModelOption Options for DOM to Content Model conversion
+ * @param htmlString The HTML string to process
  */
-export function processPastedContentFromWordDesktop(ev: BeforePasteEvent) {
-    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(ev);
+export function processPastedContentFromWordDesktop(
+    domToModelOption: DomToModelOption,
+    htmlString: string
+) {
+    const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
-    setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
-    addParser(ev.domToModelOption, 'block', adjustPercentileLineHeight);
-    addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
-    addParser(ev.domToModelOption, 'listLevel', listLevelParser);
-    addParser(ev.domToModelOption, 'container', wordTableParser);
-    addParser(ev.domToModelOption, 'table', wordTableParser);
+    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
+    addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
+    addParser(domToModelOption, 'listLevel', listLevelParser);
+    addParser(domToModelOption, 'container', wordContainerParser);
+    addParser(domToModelOption, 'table', wordTableParser);
 }
 
 const wordDesktopElementProcessor = (

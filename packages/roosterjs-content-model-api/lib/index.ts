@@ -59,7 +59,7 @@ export { setModelListStartNumber } from './modelApi/list/setModelListStartNumber
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
 export { matchLink } from './modelApi/link/matchLink';
-export { promoteLink } from './modelApi/link/promoteLink';
+export { promoteLink, getPromoteLink } from './modelApi/link/promoteLink';
 export { getListAnnounceData } from './modelApi/list/getListAnnounceData';
 export { queryContentModelBlocks } from './modelApi/common/queryContentModelBlocks';
 export { adjustWordSelection } from './modelApi/selection/adjustWordSelection';
