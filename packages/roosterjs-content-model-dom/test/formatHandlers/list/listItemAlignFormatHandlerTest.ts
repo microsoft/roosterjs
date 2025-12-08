@@ -91,13 +91,11 @@ describe('listItemAlignFormatHandler.parse', () => {
 
 describe('listItemAlignFormatHandler.apply', () => {
     let div: HTMLElement;
-    let li: HTMLLIElement;
     let format: TextAlignFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
-        li = document.createElement('li');
         format = {};
         context = createModelToDomContext();
     });
