@@ -20,6 +20,7 @@ import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatH
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
+import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
@@ -77,6 +78,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
+    listItemAlign: listItemAlignFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
     listStyle: listStyleFormatHandler,
@@ -135,14 +137,7 @@ export const defaultFormatKeysPerCategory: {
     block: sharedBlockFormats,
     listItemThread: ['listItemThread'],
     listLevelThread: ['listLevelThread'],
-    listItemElement: [
-        ...sharedBlockFormats,
-        'direction',
-        'textAlign',
-        'lineHeight',
-        'margin',
-        'listStyle',
-    ],
+    listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
