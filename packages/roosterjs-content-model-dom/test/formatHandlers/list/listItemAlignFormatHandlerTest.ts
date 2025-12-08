@@ -59,7 +59,7 @@ describe('listItemAlignFormatHandler.parse', () => {
         context.blockFormat.direction = 'rtl';
         li.style.textAlign = 'start';
         listItemAlignFormatHandler.parse(format, li, context, {});
-        expect(format.textAlign).toBe('start');
+        expect(format.textAlign).toBe('end');
     });
 
     it('RTL, align in CSS - textAlign (absolute, flex)', () => {

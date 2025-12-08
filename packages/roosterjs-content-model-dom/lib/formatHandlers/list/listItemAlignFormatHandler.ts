@@ -18,7 +18,7 @@ export const listItemAlignFormatHandler: FormatHandler<TextAlignFormat & Directi
                 align = align == 'start' ? 'end' : 'start';
             }
 
-            format.textAlign = calcAlign(element.style.textAlign, context.blockFormat.direction);
+            format.textAlign = calcAlign(align, context.blockFormat.direction);
         }
     },
     apply: (format, element) => {
