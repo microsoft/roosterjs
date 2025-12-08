@@ -54,4 +54,17 @@ describe('stackFormat', () => {
         expect(callback).toHaveBeenCalled();
         expect(context.implicitFormat).toEqual({});
     });
+
+    it('has nodeStack', () => {
+        const context = createModelToDomContext();
+        context.listFormat.nodeStack = ['testNode'] as any;
+        const callback = jasmine.createSpy().and.callFake(() => {
+            expect(context.listFormat.nodeStack).toEqual([]);
+            context.listFormat.nodeStack.push('innerNode' as any);
+        });
+        stackFormat(context, 'a', callback);
+
+        expect(callback).toHaveBeenCalled();
+        expect(context.listFormat.nodeStack).toEqual(['testNode'] as any);
+    });
 });
