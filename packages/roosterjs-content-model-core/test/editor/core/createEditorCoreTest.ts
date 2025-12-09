@@ -240,7 +240,7 @@ describe('createEditorCore', () => {
             ownerDocument: {
                 defaultView: {
                     navigator: {
-                        userAgent: 'Android Safari',
+                        userAgent: 'Android AppleWebKit',
                     },
                 },
             },
@@ -310,7 +310,7 @@ describe('createEditorCore', () => {
             ownerDocument: {
                 defaultView: {
                     navigator: {
-                        userAgent: 'Safari',
+                        userAgent: 'AppleWebKit',
                     },
                 },
             },
@@ -345,7 +345,7 @@ describe('createEditorCore', () => {
             ownerDocument: {
                 defaultView: {
                     navigator: {
-                        userAgent: 'Safari Chrome',
+                        userAgent: 'AppleWebKit Chrome',
                     },
                 },
             },
@@ -396,7 +396,7 @@ describe('createEditorCore', () => {
                 isMac: false,
                 isAndroid: false,
                 isIOS: true,
-                isSafari: false,
+                isSafari: true,
                 isMobileOrTablet: true,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
