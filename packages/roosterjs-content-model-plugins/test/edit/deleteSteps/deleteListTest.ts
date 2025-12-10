@@ -1,6 +1,15 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteList } from '../../../lib/edit/deleteSteps/deleteList';
-import { deleteSelection, normalizeContentModel } from 'roosterjs-content-model-dom';
+import {
+    createContentModelDocument,
+    createListItem,
+    createListLevel,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+    deleteSelection,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
 
 describe('deleteList', () => {
     it('deletes the list item when there is only one list item', () => {
@@ -54,50 +63,27 @@ describe('deleteList', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'ListItem',
-                    format: {
-                        listStyleType: '"1. "',
-                    },
-                    blocks: [
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
                         {
-                            blockType: 'Paragraph',
+                            segmentType: 'SelectionMarker',
                             format: {},
-                            segments: [
-                                {
-                                    segmentType: 'SelectionMarker',
-                                    format: {},
-                                    isSelected: true,
-                                },
-                                {
-                                    segmentType: 'Br',
-                                    format: {},
-                                },
-                            ],
-                            isImplicit: true,
+                            isSelected: true,
                         },
-                    ],
-                    levels: [
                         {
-                            listType: 'OL',
-                            format: {
-                                displayForDummyItem: 'block',
-                            },
-                            dataset: {},
+                            segmentType: 'Br',
+                            format: {},
                         },
                     ],
-                    formatHolder: {
-                        segmentType: 'SelectionMarker',
-                        isSelected: false,
-                        format: {},
-                    },
+                    isImplicit: true,
                 },
             ],
         });
 
         const result2 = deleteSelection(model, [deleteList]);
         normalizeContentModel(model);
-        expect(result2.deleteResult).toEqual('range');
+        expect(result2.deleteResult).toEqual('notDeleted');
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -116,33 +102,7 @@ describe('deleteList', () => {
                             format: {},
                         },
                     ],
-                    isImplicit: false,
-                },
-            ],
-        });
-
-        const result3 = deleteSelection(model, [deleteList]);
-        normalizeContentModel(model);
-        expect(result3.deleteResult).toEqual('notDeleted');
-
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
-                    ],
-                    isImplicit: false,
+                    isImplicit: true,
                 },
             ],
         });
@@ -492,44 +452,20 @@ describe('deleteList', () => {
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
-                                            blockType: 'BlockGroup',
-                                            blockGroupType: 'ListItem',
-                                            blocks: [
+                                            blockType: 'Paragraph',
+                                            segments: [
                                                 {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'SelectionMarker',
-                                                            isSelected: true,
-                                                            format: {},
-                                                        },
-                                                        {
-                                                            segmentType: 'Br',
-                                                            format: {},
-                                                        },
-                                                    ],
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
                                                     format: {},
-                                                    isImplicit: false,
                                                 },
-                                            ],
-                                            levels: [
                                                 {
-                                                    listType: 'UL',
-                                                    format: {
-                                                        marginTop: '0px',
-                                                        marginBottom: '0px',
-                                                        listStyleType: 'disc',
-                                                        displayForDummyItem: 'block',
-                                                    },
-                                                    dataset: {},
+                                                    segmentType: 'Br',
+                                                    format: {},
                                                 },
                                             ],
-                                            formatHolder: {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: false,
-                                                format: {},
-                                            },
                                             format: {},
+                                            isImplicit: false,
                                         },
                                     ],
                                     format: {},
@@ -558,7 +494,7 @@ describe('deleteList', () => {
         const result2 = deleteSelection(model, [deleteList]);
         normalizeContentModel(model);
 
-        expect(result2.deleteResult).toBe('range');
+        expect(result2.deleteResult).toBe('notDeleted');
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -668,11 +604,49 @@ describe('deleteList', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'text',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Delete list with displayForDummyItem', () => {
+        const list = createListItem([createListLevel('UL', { displayForDummyItem: 'block' })]);
+        const paragraph = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(SelectionMarker);
+        list.blocks.push(paragraph);
+        model.blocks.push(list);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    format: {
-                        listStyleType: '"1. "',
-                    },
+                    format: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -683,25 +657,65 @@ describe('deleteList', () => {
                                     format: {},
                                     isSelected: true,
                                 },
+                            ],
+                        },
+                    ],
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                },
+            ],
+        });
+        expect(result.deleteResult).toBe('range');
+    });
+
+    it('Delete at beginning of list item with previous list item', () => {
+        const list1 = createListItem([createListLevel('UL')]);
+        const paragraph1 = createParagraph();
+        const list2 = createListItem([createListLevel('UL')]);
+        const paragraph2 = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph2.segments.push(SelectionMarker);
+        list1.blocks.push(paragraph1);
+        list2.blocks.push(paragraph2);
+        model.blocks.push(list1, list2);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [],
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
                                 {
-                                    segmentType: 'Text',
-                                    text: 'text',
+                                    segmentType: 'SelectionMarker',
                                     format: {},
-                                },
-                                {
-                                    segmentType: 'Br',
-                                    format: {},
+                                    isSelected: true,
                                 },
                             ],
-                            isImplicit: true,
                         },
                     ],
                     levels: [
                         {
-                            listType: 'OL',
-                            format: {
-                                displayForDummyItem: 'block',
-                            },
+                            listType: 'UL',
+                            format: {},
                             dataset: {},
                         },
                     ],
@@ -713,14 +727,74 @@ describe('deleteList', () => {
                 },
             ],
         });
+        expect(result.deleteResult).toBe('range');
+    });
 
-        const result2 = deleteSelection(model, [deleteList]);
-        normalizeContentModel(model);
-        expect(result2.deleteResult).toEqual('range');
+    it('Delete at beginning of list item with previous list item with different levels', () => {
+        const list1 = createListItem([createListLevel('UL'), createListLevel('OL')]);
+        const paragraph1 = createParagraph();
+        const list2 = createListItem([createListLevel('UL')]);
+        const paragraph2 = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph2.segments.push(SelectionMarker);
+        list1.blocks.push(paragraph1);
+        list2.blocks.push(paragraph2);
+        model.blocks.push(list1, list2);
+
+        const result = deleteSelection(model, [deleteList]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
                 {
                     blockType: 'Paragraph',
                     segments: [
@@ -729,16 +803,219 @@ describe('deleteList', () => {
                             isSelected: true,
                             format: {},
                         },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(result.deleteResult).toBe('range');
+    });
+
+    it('Delete at beginning of a paragraph in middle of list item', () => {
+        const list1 = createListItem([createListLevel('UL')]);
+        const paragraph1 = createParagraph();
+        const paragraph2 = createParagraph();
+        const paragraph3 = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph2.segments.push(SelectionMarker);
+        list1.blocks.push(paragraph1, paragraph2, paragraph3);
+        model.blocks.push(list1);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
                         {
-                            segmentType: 'Text',
-                            text: 'text',
+                            blockType: 'Paragraph',
+                            segments: [],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
                             format: {},
                         },
                     ],
                     format: {},
-                    isImplicit: false,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
                 },
             ],
         });
+        expect(result.deleteResult).toBe('range');
+    });
+
+    it('Delete at beginning of a paragraph in middle of list item with multiple levels', () => {
+        const list1 = createListItem([createListLevel('UL'), createListLevel('OL')]);
+        const paragraph1 = createParagraph();
+        const paragraph2 = createParagraph();
+        const paragraph3 = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph2.segments.push(SelectionMarker);
+        list1.blocks.push(paragraph1, paragraph2, paragraph3);
+        model.blocks.push(list1);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(result.deleteResult).toBe('range');
+    });
+
+    it('Delete under a list in middle of a paragraph', () => {
+        const list1 = createListItem([createListLevel('UL')]);
+        const paragraph1 = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph1.segments.push(createText('text1'), SelectionMarker, createText('text2'));
+        list1.blocks.push(paragraph1);
+        model.blocks.push(list1);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'text1',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'text2',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(result.deleteResult).toBe('notDeleted');
     });
 });
