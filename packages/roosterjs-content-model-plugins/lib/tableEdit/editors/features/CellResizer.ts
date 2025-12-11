@@ -154,18 +154,25 @@ export function onDragStart(context: CellResizerContext, event: MouseEvent): Cel
                 const cell = cmTable.rows[r].cells[c];
 
                 if (cell.cachedElement == td) {
+                    // Target cell found, record its position
                     rowIndex = r;
                     columnIndex = c;
                 } else if (rowIndex != undefined && columnIndex != undefined) {
+                    // rowIndex and columnIndex are already found, we can find nextColumnIndex now
                     if (!cell.cachedElement) {
+                        // No cached element means this cell is merged, so this could potentially be the right side of column
+                        // We are trying to find the last merged cell so we can modify its width later
                         columnIndex = c;
                     } else {
+                        // Since we already found the target cell, the first cell with cachedElement after that must be the next column
                         nextColumnIndex = c;
                         break;
                     }
                 }
             }
 
+            // As long as rowIndex is found, we can break here, no matter if nextColumnIndex is found or not
+            // because for the last column case, nextColumnIndex will be -1
             if (rowIndex != undefined) {
                 break;
             }
@@ -291,7 +298,8 @@ export function onDraggingVertical(
                     lastWidth = cmTable.widths[col];
                 } else if (lastTd && tableRow[col].spanLeft) {
                     lastWidth += cmTable.widths[col];
-                } else {
+                } else if (tableRow[col].spanAbove) {
+                    // For span above case, we don't need to adjust width, just clear lastTd and lastWidth
                     lastTd = null;
                     lastWidth = 0;
                 }
