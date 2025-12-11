@@ -206,7 +206,6 @@ export function onDraggingHorizontal(
     deltaX: number,
     deltaY: number
 ) {
-    // const { table } = context;
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
     // Assign new widths and heights to the CM table
