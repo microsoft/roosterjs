@@ -48,7 +48,7 @@ describe('borderColorFormatHandler.parse', () => {
             true,
             mockDarkColorHandler
         );
-        expect(format.borderTop).toBeDefined();
+        expect(format.borderTop).toBe('1px solid red');
     });
 
     it('Parse border with CSS variable in light mode', () => {
@@ -82,7 +82,7 @@ describe('borderColorFormatHandler.parse', () => {
             false,
             mockDarkColorHandler
         );
-        expect(format.borderBottom).toBeDefined();
+        expect(format.borderBottom).toBe('2px dashed blue');
     });
 
     it('Parse multiple borders with CSS variables', () => {
@@ -119,13 +119,13 @@ describe('borderColorFormatHandler.parse', () => {
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledTimes(4);
         expect(colorUtils.getLightModeColor).toHaveBeenCalledTimes(4);
-        expect(format.borderTop).toBeDefined();
-        expect(format.borderRight).toBeDefined();
-        expect(format.borderBottom).toBeDefined();
-        expect(format.borderLeft).toBeDefined();
+        expect(format.borderTop).toBe('1px solid red');
+        expect(format.borderRight).toBe('2px dashed green');
+        expect(format.borderBottom).toBe('3px dotted blue');
+        expect(format.borderLeft).toBe('4px double yellow');
     });
 
-    it('Parse border without CSS variable - should not parse', () => {
+    it('Parse border without CSS variable', () => {
         div.style.borderTop = '1px solid red';
 
         context.isDarkMode = false;
@@ -136,7 +136,7 @@ describe('borderColorFormatHandler.parse', () => {
 
         borderColorFormatHandler.parse(format, div, context, {});
 
-        expect(colorUtils.retrieveElementColor).not.toHaveBeenCalled();
+        expect(colorUtils.retrieveElementColor).toHaveBeenCalled();
         expect(colorUtils.getLightModeColor).not.toHaveBeenCalled();
         expect(format.borderTop).toBeUndefined();
     });
@@ -178,7 +178,7 @@ describe('borderColorFormatHandler.parse', () => {
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalled();
         expect(colorUtils.getLightModeColor).toHaveBeenCalledWith('red', false, false, undefined);
-        expect(format.borderTop).toBeDefined();
+        expect(format.borderTop).toBe('1px solid red');
     });
 });
 
@@ -220,7 +220,7 @@ describe('borderColorFormatHandler.apply', () => {
             true,
             mockDarkColorHandler
         );
-        expect(div.style.borderTop).toBe('1px solid var(--colorKey1, red)');
+        expect(div.style.borderTopColor).toBe('var(--colorKey1, red)');
     });
 
     it('Apply border with dark mode color handler in light mode', () => {
@@ -248,7 +248,7 @@ describe('borderColorFormatHandler.apply', () => {
             false,
             mockDarkColorHandler
         );
-        expect(div.style.borderBottom).toBe('2px dashed blue');
+        expect(div.style.borderBottomColor).toBe('blue');
     });
 
     it('Apply multiple borders with dark mode color handler', () => {
@@ -282,10 +282,10 @@ describe('borderColorFormatHandler.apply', () => {
         borderColorFormatHandler.apply(format, div, context);
 
         expect(colorUtils.adaptColor).toHaveBeenCalledTimes(4);
-        expect(div.style.borderTop).toBe('1px solid var(--key1, red)');
-        expect(div.style.borderRight).toBe('2px dashed var(--key2, green)');
-        expect(div.style.borderBottom).toBe('3px dotted var(--key3, blue)');
-        expect(div.style.borderLeft).toBe('4px double var(--key4, yellow)');
+        expect(div.style.borderTopColor).toBe('var(--key1, red)');
+        expect(div.style.borderRightColor).toBe('var(--key2, green)');
+        expect(div.style.borderBottomColor).toBe('var(--key3, blue)');
+        expect(div.style.borderLeftColor).toBe('var(--key4, yellow)');
     });
 
     it('Apply border without dark mode color handler', () => {
@@ -299,7 +299,7 @@ describe('borderColorFormatHandler.apply', () => {
         borderColorFormatHandler.apply(format, div, context);
 
         expect(colorUtils.adaptColor).toHaveBeenCalledWith(div, 'red', 'border', false, undefined);
-        expect(div.style.borderTop).toBe('1px solid red');
+        expect(div.style.borderTopColor).toBe('red');
     });
 
     it('Apply border with existing CSS variable color', () => {
@@ -334,7 +334,7 @@ describe('borderColorFormatHandler.apply', () => {
             true,
             mockDarkColorHandler
         );
-        expect(div.style.borderTop).toBe('1px solid var(--existingKey, red)');
+        expect(div.style.borderTopColor).toBe('var(--existingKey, red)');
     });
 
     it('Apply border without color - should not apply', () => {
@@ -348,7 +348,7 @@ describe('borderColorFormatHandler.apply', () => {
         borderColorFormatHandler.apply(format, div, context);
 
         expect(colorUtils.adaptColor).not.toHaveBeenCalled();
-        expect(div.style.borderTop).toBe('');
+        expect(div.style.borderTopColor).toBe('');
     });
 
     it('Apply border with only width and style, no color', () => {
@@ -370,7 +370,7 @@ describe('borderColorFormatHandler.apply', () => {
         borderColorFormatHandler.apply(format, div, context);
 
         expect(colorUtils.adaptColor).not.toHaveBeenCalled();
-        expect(div.style.borderTop).toBe('');
+        expect(div.style.borderTopColor).toBe('');
     });
 
     it('Apply empty format - should not apply anything', () => {
@@ -382,10 +382,10 @@ describe('borderColorFormatHandler.apply', () => {
         borderColorFormatHandler.apply(format, div, context);
 
         expect(colorUtils.adaptColor).not.toHaveBeenCalled();
-        expect(div.style.borderTop).toBe('');
-        expect(div.style.borderRight).toBe('');
-        expect(div.style.borderBottom).toBe('');
-        expect(div.style.borderLeft).toBe('');
+        expect(div.style.borderTopColor).toBe('');
+        expect(div.style.borderRightColor).toBe('');
+        expect(div.style.borderBottomColor).toBe('');
+        expect(div.style.borderLeftColor).toBe('');
     });
 
     it('Apply border with hex color value', () => {
@@ -413,7 +413,7 @@ describe('borderColorFormatHandler.apply', () => {
             true,
             mockDarkColorHandler
         );
-        expect(div.style.borderTop).toBe('1px solid var(--hexColor, #FF0000)');
+        expect(div.style.borderTopColor).toBe('var(--hexColor, #FF0000)');
     });
 
     it('Apply border with rgb color value', () => {
@@ -441,6 +441,6 @@ describe('borderColorFormatHandler.apply', () => {
             true,
             mockDarkColorHandler
         );
-        expect(div.style.borderBottom).toBe('2px dashed var(--rgbColor, rgb(0, 128, 255))');
+        expect(div.style.borderBottomColor).toBe('var(--rgbColor, rgb(0, 128, 255))');
     });
 });

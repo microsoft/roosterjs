@@ -14,10 +14,10 @@ export const BorderKeys: (BorderKey & keyof BorderFormat & keyof CSSStyleDeclara
  * @internal
  */
 export const BorderColorKeyMap: {
-    [key in BorderKey]: string & keyof CSSStyleDeclaration;
+    [key in BorderKey]: string;
 } = {
-    borderTop: 'borderTopColor',
-    borderRight: 'borderRightColor',
-    borderBottom: 'borderBottomColor',
-    borderLeft: 'borderLeftColor',
+    borderTop: 'border-top-color',
+    borderRight: 'border-right-color',
+    borderBottom: 'border-bottom-color',
+    borderLeft: 'border-left-color',
 };

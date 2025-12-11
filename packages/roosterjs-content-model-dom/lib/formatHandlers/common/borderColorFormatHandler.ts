@@ -1,10 +1,8 @@
 import { adaptColor, getLightModeColor, retrieveElementColor } from '../utils/color';
-import { BorderKeys } from '../utils/borderKeys';
+import { BorderColorKeyMap, BorderKeys } from '../utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
 import type { BorderFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
-
-const COLOR_VARIABLE_PREFIX = 'var(';
 
 /**
  * @internal
@@ -17,20 +15,21 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
         ) {
             BorderKeys.forEach(key => {
                 const value = element.style[key];
-                if (value?.includes(COLOR_VARIABLE_PREFIX)) {
-                    const borderColor = retrieveElementColor(element, key);
-                    if (borderColor) {
-                        const lightModeColor = getLightModeColor(
-                            borderColor,
-                            false /*isBackground*/,
-                            !!context.isDarkMode,
-                            context.darkColorHandler
-                        );
-                        format[key] = combineBorderValue({
-                            ...extractBorderValues(value),
-                            color: lightModeColor,
-                        });
-                    }
+                const borderColor = retrieveElementColor(element, key);
+
+                if (borderColor) {
+                    const lightModeColor = getLightModeColor(
+                        borderColor,
+                        false /*isBackground*/,
+                        !!context.isDarkMode,
+                        context.darkColorHandler
+                    );
+                    const borderValues = extractBorderValues(value);
+                    format[key] = combineBorderValue({
+                        width: borderValues?.width || '1px',
+                        style: borderValues?.style || 'solid',
+                        color: lightModeColor,
+                    });
                 }
             });
         }
@@ -52,11 +51,10 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
                             !!context.isDarkMode,
                             context.darkColorHandler
                         );
-                        const borderStyles = combineBorderValue({
-                            ...borderValues,
-                            color: transformedColor,
-                        });
-                        element.style[key] = borderStyles;
+                        if (transformedColor) {
+                            const borderColorProperty = BorderColorKeyMap[key];
+                            element.style.setProperty(borderColorProperty, transformedColor);
+                        }
                     }
                 }
             });

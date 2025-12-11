@@ -1,5 +1,4 @@
-import { BorderKeys } from '../../formatHandlers/utils/borderKeys';
-import { combineBorderValue, extractBorderValues } from './borderValues';
+import { BorderColorKeyMap, BorderKeys } from '../../formatHandlers/utils/borderKeys';
 import { isElementOfType } from '../isElementOfType';
 import {
     adaptColor,
@@ -57,30 +56,25 @@ function transformBorderColor(
 ) {
     if (isElementOfType(element, 'td') || isElementOfType(element, 'th')) {
         BorderKeys.forEach(key => {
-            const style = element.style[key];
+            const borderColorProperty = BorderColorKeyMap[key];
+            const style = element.style.getPropertyValue(borderColorProperty);
             if (style) {
-                const border = extractBorderValues(style);
-                if (border.color) {
-                    const lightColor = getLightModeColor(
-                        border.color,
-                        false /*isBackground*/,
-                        !toDarkMode,
+                const lightColor = getLightModeColor(
+                    style,
+                    false /*isBackground*/,
+                    !toDarkMode,
+                    darkColorHandler
+                );
+                if (lightColor) {
+                    const transformedColor = adaptColor(
+                        element,
+                        lightColor,
+                        'border',
+                        toDarkMode,
                         darkColorHandler
                     );
-                    if (lightColor) {
-                        const transformedColor = adaptColor(
-                            element,
-                            lightColor,
-                            'border',
-                            toDarkMode,
-                            darkColorHandler
-                        );
-                        if (transformedColor) {
-                            element.style[key] = combineBorderValue({
-                                ...border,
-                                color: transformedColor,
-                            });
-                        }
+                    if (transformedColor) {
+                        element.style.setProperty(borderColorProperty, transformedColor);
                     }
                 }
             }

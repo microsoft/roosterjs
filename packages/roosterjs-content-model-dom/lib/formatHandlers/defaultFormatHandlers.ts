@@ -169,7 +169,6 @@ export const defaultFormatKeysPerCategory: {
         'textColor',
         'htmlAlign',
         'size',
-        'borderColor',
     ],
     tableRow: ['backgroundColor'],
     tableColumn: ['size'],

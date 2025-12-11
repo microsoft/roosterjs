@@ -115,7 +115,7 @@ describe('transform to dark mode', () => {
         transformColor(element, true, 'lightToDark', colorManager, { tableBorders: true });
 
         expect(element.outerHTML).toBe(
-            '<td style="border-top: 1px solid var(--darkColor_red, red); border-right: 2px dashed var(--darkColor_green, green);"></td>'
+            '<td style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--darkColor_red, red); border-right-width: 2px; border-right-style: dashed; border-right-color: var(--darkColor_green, green);"></td>'
         );
         expect(div.outerHTML).toBe(
             '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
@@ -136,7 +136,7 @@ describe('transform to dark mode', () => {
         transformColor(element, true, 'lightToDark', colorManager, { tableBorders: true });
 
         expect(element.outerHTML).toBe(
-            '<th style="border-top: 1px solid var(--darkColor_red, red); border-right: 1px solid var(--darkColor_green, green); border-bottom: 1px solid var(--darkColor_red, red); border-left: 1px solid var(--darkColor_green, green);"></th>'
+            '<th style="border-width: 1px; border-style: solid; border-top-color: var(--darkColor_red, red); border-right-color: var(--darkColor_green, green); border-bottom-color: var(--darkColor_red, red); border-left-color: var(--darkColor_green, green);"></th>'
         );
         expect(div.outerHTML).toBe(
             '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
