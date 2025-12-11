@@ -23,7 +23,7 @@ export const MIN_ALLOWED_TABLE_CELL_HEIGHT: number = 22;
  * Normalize a Content Model table, make sure:
  * 1. Fist cells are not spanned
  * 2. Only first column and row can have headers
- * 3. All cells have content and width
+ * 3. All cells have content
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
  * 6. default format is correctly applied
@@ -36,10 +36,11 @@ export function normalizeTable(
 ) {
     const table = mutateBlock(readonlyTable);
 
-    // Always collapse border and use border box for table in roosterjs to make layout simpler
+    // Collapse border and use border box for table in roosterjs to make layout simpler
+    // But if this is a legacy style table (table with deprecated border attributes), we should not change its border model
     const format = table.format;
 
-    if (!format.borderCollapse || !format.useBorderBox) {
+    if (!format.cellSpacing && !format.cellPadding && !format.legacyTableBorder) {
         format.borderCollapse = true;
         format.useBorderBox = true;
     }
@@ -84,16 +85,6 @@ export function normalizeTable(
         }
     });
 
-    const columns = Math.max(...table.rows.map(row => row.cells.length));
-
-    for (let i = 0; i < columns; i++) {
-        if (table.widths[i] === undefined) {
-            table.widths[i] = getTableCellWidth(columns);
-        } else if (table.widths[i] < MIN_ALLOWED_TABLE_CELL_WIDTH) {
-            table.widths[i] = MIN_ALLOWED_TABLE_CELL_WIDTH;
-        }
-    }
-
     // Move blocks from spanned cell to its main cell if any,
     // and remove rows/columns if all cells in it are spanned
     const colCount = table.rows[0]?.cells.length || 0;
@@ -109,11 +100,19 @@ export function normalizeTable(
 
         if (table.rows.every(row => row.cells[colIndex]?.spanLeft)) {
             table.rows.forEach(row => row.cells.splice(colIndex, 1));
-            table.widths.splice(
-                colIndex - 1,
-                2,
-                table.widths[colIndex - 1] + table.widths[colIndex]
-            );
+
+            if (
+                typeof table.widths[colIndex] === 'number' &&
+                typeof table.widths[colIndex - 1] === 'number'
+            ) {
+                table.widths.splice(
+                    colIndex - 1,
+                    2,
+                    table.widths[colIndex - 1] + table.widths[colIndex]
+                );
+            } else {
+                table.widths.splice(colIndex, 1);
+            }
         }
     }
 
@@ -131,16 +130,6 @@ export function normalizeTable(
             table.rows[rowIndex - 1].height += row.height;
             table.rows.splice(rowIndex, 1);
         }
-    }
-}
-
-function getTableCellWidth(columns: number): number {
-    if (columns <= 4) {
-        return 120;
-    } else if (columns <= 6) {
-        return 100;
-    } else {
-        return 70;
     }
 }
 
