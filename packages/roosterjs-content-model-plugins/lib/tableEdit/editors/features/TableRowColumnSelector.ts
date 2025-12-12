@@ -15,17 +15,6 @@ import type {
     TableSelection,
 } from 'roosterjs-content-model-types';
 
-/**
- * @internal
- * ONLY FOR TESTING
- */
-export const ROW_SELECTOR_ID = 'rowSelector';
-/**
- * @internal
- * ONLY FOR TESTING
- */
-export const COLUMN_SELECTOR_ID = 'columnSelector';
-
 const STABLE_DOWN_ARROW_CURSOR =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48dGV4dCB4PSI4IiB5PSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCIgZmlsbD0iYmxhY2siPiYjMTI5MDk1OzwvdGV4dD48L3N2Zz4=';
 
@@ -42,41 +31,61 @@ export function createTableRowColumnSelector(
     anchorContainer?: HTMLElement,
     onTableEditorCreated?: OnTableEditorCreatedCallback
 ): TableEditFeature | null {
-    const rect = normalizeRect(table.getBoundingClientRect());
+    const doc = editor.getDocument();
+    const zoomScale = editor.getDOMHelper().calculateZoomScale();
 
-    if (rect) {
-        const doc = editor.getDocument();
-        const zoomScale = editor.getDOMHelper().calculateZoomScale();
-        const createElementData = getInsertElementData(rect, isRowSelector);
-        const div = createElement(createElementData, doc) as HTMLDivElement;
-        div.id = isRowSelector ? ROW_SELECTOR_ID : COLUMN_SELECTOR_ID;
-        const context: TableRowColumnSelectorContext = {
-            table,
-            zoomScale,
-            editor,
-            div,
+    const containerDiv = doc.createElement('div');
+    containerDiv.style.cssText = 'position: fixed; pointer-events: none;';
 
-            isRow: isRowSelector,
-        };
+    const cells = isRowSelector
+        ? Array.from(table.rows)
+              .map(row => row.cells[0])
+              .filter(cell => cell)
+        : Array.from(table.rows[0]?.cells || []);
 
-        (anchorContainer || doc.body).appendChild(div);
-        const handler = new TableRowColumnSelectorHandler(
-            div,
-            isRowSelector,
-            context,
-            {
-                onDragStart,
-                onDragging,
-                onDragEnd,
-            },
-            context.zoomScale,
-            onTableEditorCreated,
-            editor.getEnvironment().isMobileOrTablet
-        );
-        return { div, featureHandler: handler, node: table };
-    }
+    const handlers: TableRowColumnSelectorHandler[] = [];
 
-    return null;
+    cells.forEach(cell => {
+        const cellRect = normalizeRect(cell.getBoundingClientRect());
+        if (cellRect) {
+            const createElementData = getInsertElementData(cellRect, isRowSelector);
+            const cellDiv = createElement(createElementData, doc) as HTMLDivElement;
+            containerDiv.appendChild(cellDiv);
+
+            const context: TableRowColumnSelectorContext = {
+                table,
+                zoomScale,
+                editor,
+                div: cellDiv,
+                isRow: isRowSelector,
+            };
+
+            const handler = new TableRowColumnSelectorHandler(
+                cellDiv,
+                isRowSelector,
+                context,
+                {
+                    onDragStart,
+                    onDragging,
+                    onDragEnd,
+                },
+                zoomScale,
+                onTableEditorCreated,
+                editor.getEnvironment().isMobileOrTablet
+            );
+            handlers.push(handler);
+        }
+    });
+
+    (anchorContainer || doc.body).appendChild(containerDiv);
+
+    const compositeHandler: Disposable = {
+        dispose: () => {
+            handlers.forEach(h => h.dispose());
+        },
+    };
+
+    return { div: containerDiv, featureHandler: compositeHandler, node: table };
 }
 
 /**
@@ -293,16 +302,28 @@ export function onDragEnd(
 }
 
 function getInsertElementData(rect: Rect, isRowSelector: boolean): CreateElementData {
-    const length = isRowSelector ? rect.bottom - rect.top : rect.right - rect.left;
+    const MIN_DISTANCE_FROM_BOUNDARY = 5;
+    const GAP_FROM_CELL = 5;
+    const cellLength = isRowSelector ? rect.bottom - rect.top : rect.right - rect.left;
+
+    const maxSelectorSize = Math.max(16, cellLength - MIN_DISTANCE_FROM_BOUNDARY * 2);
+    const SELECTOR_SIZE = cellLength >= 32 ? Math.min(cellLength - 16, maxSelectorSize) : 16;
+
+    const centerOffset = (cellLength - SELECTOR_SIZE) / 2;
+
     const size = isRowSelector
-        ? `width: 16px; height: ${length}px; top: ${rect.top}px; left: ${rect.left - 16}px`
-        : `width: ${length - 5}px; height: 16px; top: ${rect.top - 16}px; left: ${rect.left}px`;
+        ? `width: 5px; height: ${SELECTOR_SIZE}px; top: ${rect.top + centerOffset}px; left: ${
+              rect.left - 5 - GAP_FROM_CELL
+          }px`
+        : `width: ${SELECTOR_SIZE}px; height: 5px; top: ${rect.top - 5 - GAP_FROM_CELL}px; left: ${
+              rect.left + centerOffset
+          }px`;
 
     const cursor = isRowSelector
         ? `url("${STABLE_RIGHT_ARROW_CURSOR}"), auto`
         : `url("${STABLE_DOWN_ARROW_CURSOR}") , auto`;
 
-    const outerDivStyle = `position: fixed; ${size}; background-color: transparent; cursor: ${cursor}; pointer-events: auto; z-index: 1000;`;
+    const outerDivStyle = `position: fixed; ${size}; background-color: transparent; cursor: ${cursor}; pointer-events: auto;`;
     return {
         tag: 'div',
         style: outerDivStyle,

@@ -86,10 +86,19 @@ describe('TableRowColumnSelector Tests', () => {
             expect(result!.div).toBeDefined();
             expect(result!.featureHandler).toBeDefined();
             expect(result!.node).toBe(table);
+
+            // The div should be a container with child divs (one per row)
             if (result!.div) {
-                expect(result!.div.id).toBe('rowSelector');
-                expect(onTableEditorCreated).toHaveBeenCalledWith('TableRowSelector', result!.div);
+                expect(result!.div.children.length).toBe(3); // 3 rows
             }
+
+            // Each child div should trigger the callback
+            expect(onTableEditorCreated).toHaveBeenCalledTimes(3);
+            expect(
+                (onTableEditorCreated as jasmine.Spy).calls
+                    .allArgs()
+                    .every((args: any[]) => args[0] === 'TableRowSelector')
+            ).toBe(true);
         });
 
         it('should create column selector successfully', () => {
@@ -109,13 +118,19 @@ describe('TableRowColumnSelector Tests', () => {
             expect(result!.div).toBeDefined();
             expect(result!.featureHandler).toBeDefined();
             expect(result!.node).toBe(table);
+
+            // The div should be a container with child divs (one per column)
             if (result!.div) {
-                expect(result!.div.id).toBe('columnSelector');
-                expect(onTableEditorCreated).toHaveBeenCalledWith(
-                    'TableColumnSelector',
-                    result!.div
-                );
+                expect(result!.div.children.length).toBe(3); // 3 columns
             }
+
+            // Each child div should trigger the callback
+            expect(onTableEditorCreated).toHaveBeenCalledTimes(3);
+            expect(
+                (onTableEditorCreated as jasmine.Spy).calls
+                    .allArgs()
+                    .every((args: any[]) => args[0] === 'TableColumnSelector')
+            ).toBe(true);
         });
 
         it('should append selector to anchorContainer', () => {
@@ -140,9 +155,23 @@ describe('TableRowColumnSelector Tests', () => {
             // Create a table that's not in the DOM
             const hiddenTable = document.createElement('table');
 
+            // Add rows and cells so the structure exists but getBoundingClientRect returns null
+            for (let i = 0; i < 3; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < 3; j++) {
+                    const td = document.createElement('td');
+                    tr.appendChild(td);
+                }
+                hiddenTable.appendChild(tr);
+            }
+
             const result = createTableRowColumnSelector(editor, hiddenTable, true, anchorContainer);
 
-            expect(result).toBeNull();
+            // Should return container with no children since normalizeRect returns null
+            expect(result).not.toBeNull();
+            if (result!.div) {
+                expect(result!.div.children.length).toBe(0);
+            }
         });
 
         it('should set correct styles for row selector', () => {
@@ -153,15 +182,23 @@ describe('TableRowColumnSelector Tests', () => {
                 anchorContainer
             );
 
-            const div = result?.div;
-            expect(div).toBeDefined();
+            const containerDiv = result?.div;
+            expect(containerDiv).toBeDefined();
 
-            const style = div!.style;
+            // Container should have pointer-events: none
+            const containerStyle = containerDiv!.style;
+            expect(containerStyle.position).toBe('fixed');
+            expect(containerStyle.pointerEvents).toBe('none');
+
+            // Check first child div (individual selector)
+            const childDiv = containerDiv!.children[0] as HTMLElement;
+            expect(childDiv).toBeDefined();
+
+            const style = childDiv.style;
             expect(style.position).toBe('fixed');
-            expect(style.width).toBe('16px');
+            expect(style.width).toBe('5px'); // Thin selector
             expect(style.backgroundColor).toBe('transparent');
             expect(style.pointerEvents).toBe('auto');
-            expect(style.zIndex).toBe('1000');
             expect(style.cursor).toContain('url("data:image/svg+xml;base64,');
         });
 
@@ -173,15 +210,23 @@ describe('TableRowColumnSelector Tests', () => {
                 anchorContainer
             );
 
-            const div = result?.div;
-            expect(div).toBeDefined();
+            const containerDiv = result?.div;
+            expect(containerDiv).toBeDefined();
 
-            const style = div!.style;
+            // Container should have pointer-events: none
+            const containerStyle = containerDiv!.style;
+            expect(containerStyle.position).toBe('fixed');
+            expect(containerStyle.pointerEvents).toBe('none');
+
+            // Check first child div (individual selector)
+            const childDiv = containerDiv!.children[0] as HTMLElement;
+            expect(childDiv).toBeDefined();
+
+            const style = childDiv.style;
             expect(style.position).toBe('fixed');
-            expect(style.height).toBe('16px');
+            expect(style.height).toBe('5px'); // Thin selector
             expect(style.backgroundColor).toBe('transparent');
             expect(style.pointerEvents).toBe('auto');
-            expect(style.zIndex).toBe('1000');
             expect(style.cursor).toContain('url("data:image/svg+xml;base64,');
         });
     });

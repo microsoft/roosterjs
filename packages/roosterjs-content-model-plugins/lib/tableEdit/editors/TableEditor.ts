@@ -108,7 +108,6 @@ export class TableEditor {
             .filter(feature => !!feature?.div)
             .some(feature => feature?.div == node || (feature?.div && feature.div.contains(node)));
     }
-
     /**
      * public only for testing purposes
      */
@@ -188,21 +187,25 @@ export class TableEditor {
                     }
 
                     !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
-                }
-                if (topOrSide == TOP_OR_SIDE.top) {
-                    !this.isFeatureDisabled('TableColumnSelector') &&
-                        this.setSelectorRowColumn(td, false /*isRow*/);
-                } else if (topOrSide == TOP_OR_SIDE.side) {
-                    !this.isFeatureDisabled('TableRowSelector') &&
-                        this.setSelectorRowColumn(td, true /*isRow*/);
-                } else {
-                    this.setSelectorRowColumn(null);
+
+                    //Cell found
+                    break;
                 }
             }
 
             if (j < tr.cells.length) {
                 break;
             }
+        }
+
+        if (topOrSide == TOP_OR_SIDE.top) {
+            !this.isFeatureDisabled('TableColumnSelector') &&
+                this.setSelectorRowColumn(false /*isRow*/);
+        } else if (topOrSide == TOP_OR_SIDE.side) {
+            !this.isFeatureDisabled('TableRowSelector') &&
+                this.setSelectorRowColumn(true /*isRow*/);
+        } else {
+            this.setSelectorRowColumn(null);
         }
 
         // Create Mover and Resizer
@@ -317,24 +320,17 @@ export class TableEditor {
         }
     }
 
-    private setSelectorRowColumn(td: HTMLTableCellElement | null, isRow?: boolean) {
-        if (td == null) {
-            this.disposeTableSelector();
-        }
-
-        if (!this.tableColumnSelector && !this.tableRowSelector && td) {
-            const newSelector = createTableRowColumnSelector(
+    private setSelectorRowColumn(isRowSelector: boolean | null /*undefined means to clear both*/) {
+        if (isRowSelector !== null && !this.tableRowSelector && !this.tableColumnSelector) {
+            this.tableRowSelector = createTableRowColumnSelector(
                 this.editor,
                 this.table,
-                !!isRow,
+                !!isRowSelector,
                 this.anchorContainer,
                 this.onEditorCreated
             );
-            if (isRow) {
-                this.tableRowSelector = newSelector;
-            } else {
-                this.tableColumnSelector = newSelector;
-            }
+        } else {
+            this.disposeTableSelector();
         }
     }
 
