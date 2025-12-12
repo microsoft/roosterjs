@@ -13,10 +13,6 @@ import {
     HORIZONTAL_RESIZER_ID,
     VERTICAL_RESIZER_ID,
 } from '../../lib/tableEdit/editors/features/CellResizer';
-import {
-    ROW_SELECTOR_ID,
-    COLUMN_SELECTOR_ID,
-} from '../../lib/tableEdit/editors/features/TableRowColumnSelector';
 
 describe('TableEditor', () => {
     xdescribe('disableFeatures', () => {
@@ -144,79 +140,6 @@ describe('TableEditor', () => {
             const featureV = editor.getDocument().getElementById(VERTICAL_INSERTER_ID);
             expect(!!featureH).toBe(true);
             expect(!!featureV).toBe(false);
-        });
-
-        /************************ Table Row Column Selector tests ************************/
-
-        it('Disable Table Row Selector', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), ['TableRowSelector']);
-            // Move mouse to left side of table (row selector area)
-            tEditor.onMouseMove(
-                tableRect.left - insideTheOffset,
-                tableRect.top + tableRect.height / 2
-            );
-            const feature = editor.getDocument().getElementById(ROW_SELECTOR_ID);
-            expect(!!feature).toBe(false);
-        });
-
-        it('Disable Table Column Selector', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), ['TableColumnSelector']);
-            // Move mouse to top side of table (column selector area)
-            tEditor.onMouseMove(
-                tableRect.left + tableRect.width / 2,
-                tableRect.top - insideTheOffset
-            );
-            const feature = editor.getDocument().getElementById(COLUMN_SELECTOR_ID);
-            expect(!!feature).toBe(false);
-        });
-
-        it('Add table row selector if cursor on left side', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), []);
-            // Move mouse to left side of table
-            tEditor.onMouseMove(
-                tableRect.left - insideTheOffset,
-                tableRect.top + tableRect.height / 2
-            );
-            const rowFeature = editor.getDocument().getElementById(ROW_SELECTOR_ID);
-            const columnFeature = editor.getDocument().getElementById(COLUMN_SELECTOR_ID);
-            expect(!!rowFeature).toBe(true);
-            expect(!!columnFeature).toBe(false);
-        });
-
-        it('Add table column selector if cursor on top side', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), []);
-            // Move mouse to top side of table
-            tEditor.onMouseMove(
-                tableRect.left + tableRect.width / 2,
-                tableRect.top - insideTheOffset
-            );
-            const rowFeature = editor.getDocument().getElementById(ROW_SELECTOR_ID);
-            const columnFeature = editor.getDocument().getElementById(COLUMN_SELECTOR_ID);
-            expect(!!rowFeature).toBe(false);
-            expect(!!columnFeature).toBe(true);
-        });
-
-        it('Not add table row/column selector if cursor in middle of table', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), []);
-            // Move mouse to center of table
-            tEditor.onMouseMove(
-                tableRect.left + tableRect.width / 2,
-                tableRect.top + tableRect.height / 2
-            );
-            const rowFeature = editor.getDocument().getElementById(ROW_SELECTOR_ID);
-            const columnFeature = editor.getDocument().getElementById(COLUMN_SELECTOR_ID);
-            expect(!!rowFeature).toBe(false);
-            expect(!!columnFeature).toBe(false);
-        });
-
-        it('Not add table row/column selector if cursor on top left corner', () => {
-            const tableRect = runDisableFeatureSetup(getModelTable(), []);
-            // Move mouse to top left corner of table
-            tEditor.onMouseMove(tableRect.left - insideTheOffset, tableRect.top - insideTheOffset);
-            const rowFeature = editor.getDocument().getElementById(ROW_SELECTOR_ID);
-            const columnFeature = editor.getDocument().getElementById(COLUMN_SELECTOR_ID);
-            expect(!!rowFeature).toBe(false);
-            expect(!!columnFeature).toBe(false);
         });
 
         afterEach(() => {
