@@ -18,7 +18,7 @@ describe('Cell Resizer tests', () => {
     let targetId = 'tableCellResizerTestId';
     let tableEdit: TableEditPlugin;
     let node: HTMLDivElement;
-    const cmTable: ContentModelTable = getModelTable(targetId);
+    let cmTable: ContentModelTable;
 
     beforeEach(() => {
         document.body.innerHTML = '';
@@ -26,6 +26,7 @@ describe('Cell Resizer tests', () => {
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
         tableEdit = new TableEditPlugin();
+        cmTable = getModelTable(targetId);
 
         let options: EditorOptions = {
             plugins: [tableEdit],
@@ -88,7 +89,12 @@ describe('Cell Resizer tests', () => {
     describe('Resize - onDragging', () => {
         /************************ Resizing row related tests ************************/
 
-        function resizeRowTest(growth: number, cellRow: number, cellColumn: number) {
+        function resizeRowTest(
+            growth: number,
+            cellRow: number,
+            cellColumn: number,
+            nextColumn: number
+        ) {
             //Arrange
             node.style.height = '500px';
             node.style.width = '500px';
@@ -108,6 +114,7 @@ describe('Cell Resizer tests', () => {
                 anchorRow: cellRow,
                 anchorRowHeight: cmTable.rows[cellRow].height,
                 allWidths: cmTable.widths,
+                nextColumn,
             };
 
             const targetTd = (target as HTMLTableElement).rows[cellRow].cells[cellColumn];
@@ -145,26 +152,31 @@ describe('Cell Resizer tests', () => {
         }
 
         it('increases the height of the first row', () => {
-            resizeRowTest(1, 0, 0);
+            resizeRowTest(1, 0, 0, 1);
         });
 
         it('increases the height of the last row', () => {
             const MODEL_TABLE = cmTable;
-            resizeRowTest(1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1);
+            resizeRowTest(1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1, -1);
         });
 
         it('decreases the height of the first row', () => {
-            resizeRowTest(-1, 0, 0);
+            resizeRowTest(-1, 0, 0, 1);
         });
 
         it('decreases the height of the last row', () => {
             const MODEL_TABLE = cmTable;
-            resizeRowTest(-1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1);
+            resizeRowTest(-1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1, -1);
         });
 
         /************************ Resizing column related tests ************************/
 
-        function resizeColumnTest(growth: number, cellRow: number, cellColumn: number) {
+        function resizeColumnTest(
+            growth: number,
+            cellRow: number,
+            cellColumn: number,
+            nextColumn: number
+        ) {
             //Arrange
             node.style.height = '500px';
             node.style.width = '500px';
@@ -184,6 +196,7 @@ describe('Cell Resizer tests', () => {
                 anchorRow: cellRow,
                 anchorRowHeight: cmTable.rows[cellRow].height,
                 allWidths: cmTable.widths,
+                nextColumn,
             };
 
             const targetTd = (target as HTMLTableElement).rows[cellRow].cells[cellColumn];
@@ -235,21 +248,21 @@ describe('Cell Resizer tests', () => {
         }
 
         it('increases the width of the first column', () => {
-            resizeColumnTest(1, 0, 0);
+            resizeColumnTest(1, 0, 0, 1);
         });
 
         it('increases the width of the last column', () => {
             const MODEL_TABLE = cmTable;
-            resizeColumnTest(1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1);
+            resizeColumnTest(1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1, -1);
         });
 
         it('decreases the width of the first column', () => {
-            resizeColumnTest(-1, 0, 0);
+            resizeColumnTest(-1, 0, 0, 1);
         });
 
         it('decreases the width of the last column', () => {
             const MODEL_TABLE = cmTable;
-            resizeColumnTest(-1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1);
+            resizeColumnTest(-1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1, -1);
         });
     });
 });
