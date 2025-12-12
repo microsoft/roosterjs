@@ -148,6 +148,11 @@ export interface FormatHandlerTypeMap {
     link: LinkFormat;
 
     /**
+     * Format for TextAlignFormat under list item
+     */
+    listItemAlign: TextAlignFormat;
+
+    /**
      * Format for ListThreadFormat (used by list item)
      */
     listItemThread: ListThreadFormat;
