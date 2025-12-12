@@ -20,14 +20,13 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
                 if (borderColor) {
                     const lightModeColor = getLightModeColor(
                         borderColor,
-                        false /*isBackground*/,
                         !!context.isDarkMode,
                         context.darkColorHandler
                     );
                     const borderValues = extractBorderValues(value);
                     format[key] = combineBorderValue({
-                        width: borderValues?.width || '1px',
-                        style: borderValues?.style || 'solid',
+                        width: borderValues.width || '1px',
+                        style: borderValues.style || 'solid',
                         color: lightModeColor,
                     });
                 }

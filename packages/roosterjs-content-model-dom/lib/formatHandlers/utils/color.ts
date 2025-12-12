@@ -63,7 +63,14 @@ export function getColor(
 ): string | undefined {
     const color = retrieveElementColor(element, isBackground ? 'background' : 'text', fallback);
 
-    return color ? getLightModeColor(color, isBackground, isDarkMode, darkColorHandler) : undefined;
+    return color
+        ? getLightModeColor(
+              color,
+              isDarkMode,
+              darkColorHandler,
+              isBackground ? undefined : BlackColor
+          )
+        : undefined;
 }
 
 /**
@@ -71,12 +78,12 @@ export function getColor(
  */
 export function getLightModeColor(
     color: string,
-    isBackground: boolean,
     isDarkMode: boolean,
-    darkColorHandler?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler,
+    fallback?: string
 ) {
     if (DeprecatedColors.indexOf(color) > -1) {
-        return isBackground ? undefined : BlackColor;
+        return fallback;
     } else if (darkColorHandler) {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 

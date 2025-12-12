@@ -632,17 +632,17 @@ describe('parseColor', () => {
 
 describe('getLightModeColor', () => {
     it('should return undefined for background deprecated colors', () => {
-        const result = getLightModeColor('windowtext', true, false);
+        const result = getLightModeColor('windowtext', false, undefined, undefined);
         expect(result).toBeUndefined();
     });
 
     it('should return black color for text deprecated colors', () => {
-        const result = getLightModeColor('windowtext', false, false);
+        const result = getLightModeColor('windowtext', false, undefined, 'rgb(0, 0, 0)');
         expect(result).toBe('rgb(0, 0, 0)');
     });
 
     it('should return color as-is for normal colors without dark color handler', () => {
-        const result = getLightModeColor('red', false, false);
+        const result = getLightModeColor('red', false, undefined);
         expect(result).toBe('red');
     });
 
@@ -655,7 +655,7 @@ describe('getLightModeColor', () => {
             generateColorKey: defaultGenerateColorKey,
         };
 
-        const result = getLightModeColor('var(--test, red)', false, false, darkColorHandler);
+        const result = getLightModeColor('var(--test, red)', false, darkColorHandler);
         expect(result).toBe('red');
     });
 
@@ -668,7 +668,7 @@ describe('getLightModeColor', () => {
             generateColorKey: defaultGenerateColorKey,
         };
 
-        const result = getLightModeColor('var(--test)', false, false, darkColorHandler);
+        const result = getLightModeColor('var(--test)', false, darkColorHandler);
         expect(result).toBe('');
     });
 
@@ -681,7 +681,7 @@ describe('getLightModeColor', () => {
             generateColorKey: defaultGenerateColorKey,
         };
 
-        const result = getLightModeColor('rgb(100, 100, 100)', false, true, darkColorHandler);
+        const result = getLightModeColor('rgb(100, 100, 100)', true, darkColorHandler);
         expect(result).toBe('');
     });
 
@@ -699,7 +699,7 @@ describe('getLightModeColor', () => {
             generateColorKey: defaultGenerateColorKey,
         };
 
-        const result = getLightModeColor('rgb(100, 100, 100)', false, true, darkColorHandler);
+        const result = getLightModeColor('rgb(100, 100, 100)', true, darkColorHandler);
         expect(result).toBe('red');
     });
 });

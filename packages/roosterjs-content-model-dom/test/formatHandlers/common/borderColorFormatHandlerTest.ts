@@ -44,7 +44,6 @@ describe('borderColorFormatHandler.parse', () => {
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledWith(div, 'borderTop');
         expect(colorUtils.getLightModeColor).toHaveBeenCalledWith(
             'red',
-            false,
             true,
             mockDarkColorHandler
         );
@@ -78,7 +77,6 @@ describe('borderColorFormatHandler.parse', () => {
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledWith(div, 'borderBottom');
         expect(colorUtils.getLightModeColor).toHaveBeenCalledWith(
             'blue',
-            false,
             false,
             mockDarkColorHandler
         );
@@ -177,7 +175,7 @@ describe('borderColorFormatHandler.parse', () => {
         borderColorFormatHandler.parse(format, div, context, {});
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalled();
-        expect(colorUtils.getLightModeColor).toHaveBeenCalledWith('red', false, false, undefined);
+        expect(colorUtils.getLightModeColor).toHaveBeenCalledWith('red', false, undefined);
         expect(format.borderTop).toBe('1px solid red');
     });
 });

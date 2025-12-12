@@ -59,12 +59,7 @@ function transformBorderColor(
             const borderColorProperty = BorderColorKeyMap[key];
             const style = element.style.getPropertyValue(borderColorProperty);
             if (style) {
-                const lightColor = getLightModeColor(
-                    style,
-                    false /*isBackground*/,
-                    !toDarkMode,
-                    darkColorHandler
-                );
+                const lightColor = getLightModeColor(style, !toDarkMode, darkColorHandler);
                 if (lightColor) {
                     const transformedColor = adaptColor(
                         element,
