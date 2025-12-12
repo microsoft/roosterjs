@@ -90,6 +90,14 @@ describe('textAlignFormatHandler.parse', () => {
     it('Align=justify', () => {
         runTest(div, 'justify', null, null, 'justify', undefined);
     });
+
+    it('Ignore text-align when parent is flex', () => {
+        const parent = document.createElement('div');
+        parent.style.display = 'flex';
+        parent.style.flexDirection = 'column';
+        parent.appendChild(div);
+        runTest(div, 'left', null, null, undefined, undefined);
+    });
 });
 
 describe('textAlignFormatHandler.apply', () => {
@@ -174,9 +182,7 @@ describe('textAlignFormatHandler.apply', () => {
 
         format.textAlign = 'start';
         textAlignFormatHandler.apply(format, li, context);
-        expect(ol.outerHTML).toBe(
-            '<ol style="flex-direction: column; display: flex;"><li style="align-self: start;"></li></ol>'
-        );
+        expect(ol.outerHTML).toBe('<ol><li style="text-align: left;"></li></ol>');
     });
 
     it('Align center - list with OL parent', () => {
@@ -184,9 +190,7 @@ describe('textAlignFormatHandler.apply', () => {
         ol.appendChild(li);
         format.textAlign = 'center';
         textAlignFormatHandler.apply(format, li, context);
-        expect(ol.outerHTML).toBe(
-            '<ol style="flex-direction: column; display: flex;"><li style="align-self: center;"></li></ol>'
-        );
+        expect(ol.outerHTML).toBe('<ol><li style="text-align: center;"></li></ol>');
     });
 
     it('Align right - list with OL parent', () => {
@@ -195,9 +199,7 @@ describe('textAlignFormatHandler.apply', () => {
 
         format.textAlign = 'end';
         textAlignFormatHandler.apply(format, li, context);
-        expect(ol.outerHTML).toBe(
-            '<ol style="flex-direction: column; display: flex;"><li style="align-self: end;"></li></ol>'
-        );
+        expect(ol.outerHTML).toBe('<ol><li style="text-align: right;"></li></ol>');
     });
 
     it('Align justify', () => {
