@@ -123,7 +123,10 @@ describe('setModelDirection', () => {
                     {
                         blockType: 'BlockGroup',
                         blockGroupType: 'ListItem',
-                        format: {},
+                        format: {
+                            textAlign: 'start',
+                            direction: 'ltr',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {},
