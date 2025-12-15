@@ -4,6 +4,9 @@ import { combineBorderValue, extractBorderValues } from '../../domUtils/style/bo
 import type { BorderFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
+const WIDTH_KEY = 'borderWidth';
+const STYLE_KEY = 'borderStyle';
+
 /**
  * @internal
  */
@@ -14,7 +17,8 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
             context.experimentalFeatures.indexOf('TransformTableBorderColors') > -1
         ) {
             BorderKeys.forEach(key => {
-                const value = element.style[key];
+                const width = element.style[WIDTH_KEY];
+                const style = element.style[STYLE_KEY];
                 const borderColor = retrieveElementColor(element, key);
 
                 if (borderColor) {
@@ -23,10 +27,10 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
                         !!context.isDarkMode,
                         context.darkColorHandler
                     );
-                    const borderValues = extractBorderValues(value);
+
                     format[key] = combineBorderValue({
-                        width: borderValues.width || '1px',
-                        style: borderValues.style || 'solid',
+                        width,
+                        style,
                         color: lightModeColor,
                     });
                 }

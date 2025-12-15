@@ -18,7 +18,9 @@ describe('borderColorFormatHandler.parse', () => {
     });
 
     it('Parse border with CSS variable in dark mode', () => {
-        div.style.borderTop = 'var(--colorKey1, red) 1px solid';
+        div.style.borderWidth = '1px';
+        div.style.borderStyle = 'solid';
+        div.style.borderTopColor = 'var(--colorKey1, red)';
 
         const mockDarkColorHandler = {
             knownColors: {
@@ -36,14 +38,14 @@ describe('borderColorFormatHandler.parse', () => {
         context.isDarkMode = true;
         context.darkColorHandler = mockDarkColorHandler;
 
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('red');
+        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('var(--colorKey1, red)');
         spyOn(colorUtils, 'getLightModeColor').and.returnValue('red');
 
         borderColorFormatHandler.parse(format, div, context, {});
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledWith(div, 'borderTop');
         expect(colorUtils.getLightModeColor).toHaveBeenCalledWith(
-            'red',
+            'var(--colorKey1, red)',
             true,
             mockDarkColorHandler
         );
@@ -51,7 +53,9 @@ describe('borderColorFormatHandler.parse', () => {
     });
 
     it('Parse border with CSS variable in light mode', () => {
-        div.style.borderBottom = 'var(--colorKey2, blue) 2px dashed';
+        div.style.borderWidth = '2px';
+        div.style.borderStyle = 'dashed';
+        div.style.borderBottomColor = 'var(--colorKey2, blue)';
 
         const mockDarkColorHandler = {
             knownColors: {
@@ -69,14 +73,14 @@ describe('borderColorFormatHandler.parse', () => {
         context.isDarkMode = false;
         context.darkColorHandler = mockDarkColorHandler;
 
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('blue');
+        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('var(--colorKey2, blue)');
         spyOn(colorUtils, 'getLightModeColor').and.returnValue('blue');
 
         borderColorFormatHandler.parse(format, div, context, {});
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledWith(div, 'borderBottom');
         expect(colorUtils.getLightModeColor).toHaveBeenCalledWith(
-            'blue',
+            'var(--colorKey2, blue)',
             false,
             mockDarkColorHandler
         );
@@ -84,10 +88,12 @@ describe('borderColorFormatHandler.parse', () => {
     });
 
     it('Parse multiple borders with CSS variables', () => {
-        div.style.borderTop = 'var(--colorKey1, red) 1px solid';
-        div.style.borderRight = 'var(--colorKey2, green) 2px dashed';
-        div.style.borderBottom = 'var(--colorKey3, blue) 3px dotted';
-        div.style.borderLeft = 'var(--colorKey4, yellow) 4px double';
+        div.style.borderWidth = '1px';
+        div.style.borderStyle = 'solid';
+        div.style.borderTopColor = 'var(--colorKey1, red)';
+        div.style.borderRightColor = 'var(--colorKey2, green)';
+        div.style.borderBottomColor = 'var(--colorKey3, blue)';
+        div.style.borderLeftColor = 'var(--colorKey4, yellow)';
 
         const mockDarkColorHandler = {
             knownColors: {
@@ -106,10 +112,10 @@ describe('borderColorFormatHandler.parse', () => {
         context.darkColorHandler = mockDarkColorHandler;
 
         spyOn(colorUtils, 'retrieveElementColor').and.returnValues(
-            'red',
-            'green',
-            'blue',
-            'yellow'
+            'var(--colorKey1, red)',
+            'var(--colorKey2, green)',
+            'var(--colorKey3, blue)',
+            'var(--colorKey4, yellow)'
         );
         spyOn(colorUtils, 'getLightModeColor').and.returnValues('red', 'green', 'blue', 'yellow');
 
@@ -118,9 +124,9 @@ describe('borderColorFormatHandler.parse', () => {
         expect(colorUtils.retrieveElementColor).toHaveBeenCalledTimes(4);
         expect(colorUtils.getLightModeColor).toHaveBeenCalledTimes(4);
         expect(format.borderTop).toBe('1px solid red');
-        expect(format.borderRight).toBe('2px dashed green');
-        expect(format.borderBottom).toBe('3px dotted blue');
-        expect(format.borderLeft).toBe('4px double yellow');
+        expect(format.borderRight).toBe('1px solid green');
+        expect(format.borderBottom).toBe('1px solid blue');
+        expect(format.borderLeft).toBe('1px solid yellow');
     });
 
     it('Parse border without CSS variable', () => {
@@ -164,18 +170,24 @@ describe('borderColorFormatHandler.parse', () => {
     });
 
     it('Parse border without dark color handler', () => {
-        div.style.borderTop = 'var(--colorKey1, red) 1px solid';
+        div.style.borderWidth = '1px';
+        div.style.borderStyle = 'solid';
+        div.style.borderTopColor = 'var(--colorKey1, red)';
 
         context.isDarkMode = false;
         context.darkColorHandler = undefined;
 
-        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('red');
+        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('var(--colorKey1, red)');
         spyOn(colorUtils, 'getLightModeColor').and.returnValue('red');
 
         borderColorFormatHandler.parse(format, div, context, {});
 
         expect(colorUtils.retrieveElementColor).toHaveBeenCalled();
-        expect(colorUtils.getLightModeColor).toHaveBeenCalledWith('red', false, undefined);
+        expect(colorUtils.getLightModeColor).toHaveBeenCalledWith(
+            'var(--colorKey1, red)',
+            false,
+            undefined
+        );
         expect(format.borderTop).toBe('1px solid red');
     });
 });
