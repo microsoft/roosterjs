@@ -25,7 +25,25 @@ export const ContextStyles: (keyof (MarginFormat & PaddingFormat))[] = [
 ];
 
 /**
- * @internal
+ * Content Model Element Processor for format container
+ *
+ * This processor converts DOM elements into FormatContainer blocks in the content model.
+ * It can be used in processorOverride to force certain elements (like blockquote with zero margins)
+ * to always be processed as format containers, even when they don't meet the default criteria.
+ *
+ * @example
+ * ```typescript
+ * // Force blockquote elements to always use formatContainerProcessor
+ * const domToModelOption: DomToModelOption = {
+ *   processorOverride: {
+ *     blockquote: formatContainerProcessor
+ *   }
+ * };
+ * ```
+ *
+ * @param group The parent block group
+ * @param element Parent DOM node to process
+ * @param context DOM to Content Model context
  */
 export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
     group,
