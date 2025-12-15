@@ -1,11 +1,32 @@
 import { adaptColor, getLightModeColor, retrieveElementColor } from '../utils/color';
 import { BorderColorKeyMap, BorderKeys } from '../utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import type { BorderFormat } from 'roosterjs-content-model-types';
+import type { BorderFormat, BorderKey } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
-const WIDTH_KEY = 'borderWidth';
-const STYLE_KEY = 'borderStyle';
+/**
+ * Keys of border width
+ */
+const BorderWidthKeyMap: {
+    [key in BorderKey]: string;
+} = {
+    borderTop: 'border-top-width',
+    borderRight: 'border-right-width',
+    borderBottom: 'border-bottom-width',
+    borderLeft: 'border-left-width',
+};
+
+/**
+ * Keys of border styles
+ */
+const BorderStyleKeyMap: {
+    [key in BorderKey]: string;
+} = {
+    borderTop: 'border-top-style',
+    borderRight: 'border-right-style',
+    borderBottom: 'border-bottom-style',
+    borderLeft: 'border-left-style',
+};
 
 /**
  * @internal
@@ -17,8 +38,8 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
             context.experimentalFeatures.indexOf('TransformTableBorderColors') > -1
         ) {
             BorderKeys.forEach(key => {
-                const width = element.style[WIDTH_KEY];
-                const style = element.style[STYLE_KEY];
+                const width = element.style.getPropertyValue(BorderWidthKeyMap[key]);
+                const style = element.style.getPropertyValue(BorderStyleKeyMap[key]);
                 const borderColor = retrieveElementColor(element, key);
 
                 if (borderColor) {
