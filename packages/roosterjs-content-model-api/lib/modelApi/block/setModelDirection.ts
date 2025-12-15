@@ -55,6 +55,12 @@ export function setModelDirection(
                     level.format.direction = calcDirection;
                 });
 
+                // We already set direction on levels, no need to keep it on list item level
+                delete item.format.direction;
+
+                // Remove textAlign to let it be calculated based on direction change
+                delete item.format.textAlign;
+
                 item.blocks.forEach(block => internalSetDirection(block, calcDirection));
             });
         } else if (block) {

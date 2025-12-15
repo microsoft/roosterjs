@@ -10,6 +10,7 @@ export function getCMTableFromTable(editor: IEditor, table: HTMLTableElement) {
     const context = createDomToModelContext({
         zoomScale: editor.getDOMHelper().calculateZoomScale(),
         recalculateTableSize: true,
+        allowCacheElement: true, // We need this cache so we can retrieve TD element and update TD width and height when resizing table
     });
 
     context.elementProcessors.element(model, table, context);
