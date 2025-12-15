@@ -2,6 +2,7 @@ import { ariaFormatHandler } from './common/ariaFormatHandler';
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
+import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
@@ -62,6 +63,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    borderColor: borderColorFormatHandler,
     boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
     direction: directionFormatHandler,
@@ -156,6 +158,7 @@ export const defaultFormatKeysPerCategory: {
     ],
     tableCell: [
         'border',
+        'borderColor',
         'backgroundColor',
         'padding',
         'verticalAlign',

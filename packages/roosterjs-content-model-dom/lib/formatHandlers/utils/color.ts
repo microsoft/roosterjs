@@ -1,8 +1,10 @@
+import { BorderColorKeyMap } from './borderKeys';
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     DarkColorHandler,
     Colors,
     ColorTransformFunction,
+    BorderKey,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -59,14 +61,30 @@ export function getColor(
     darkColorHandler?: DarkColorHandler,
     fallback?: string
 ): string | undefined {
-    let color =
-        (isBackground ? element.style.backgroundColor : element.style.color) ||
-        element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
-        fallback;
+    const color = retrieveElementColor(element, isBackground ? 'background' : 'text', fallback);
 
-    if (color && DeprecatedColors.indexOf(color) > -1) {
-        color = isBackground ? undefined : BlackColor;
-    } else if (darkColorHandler && color) {
+    return color
+        ? getLightModeColor(
+              color,
+              isDarkMode,
+              darkColorHandler,
+              isBackground ? undefined : BlackColor
+          )
+        : undefined;
+}
+
+/**
+ * @internal
+ */
+export function getLightModeColor(
+    color: string,
+    isDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler,
+    fallback?: string
+) {
+    if (DeprecatedColors.indexOf(color) > -1) {
+        return fallback;
+    } else if (darkColorHandler) {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 
         if (match) {
@@ -75,11 +93,30 @@ export function getColor(
             // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
             // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
             // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
-            color = findLightColorFromDarkColor(color, darkColorHandler.knownColors) || '';
+            return findLightColorFromDarkColor(color, darkColorHandler.knownColors) || '';
         }
     }
-
     return color;
+}
+
+/**
+ * @internal
+ */
+export function retrieveElementColor(
+    element: HTMLElement,
+    source: 'text' | 'background' | BorderKey,
+    fallback?: string
+): string | undefined {
+    switch (source) {
+        case 'text':
+            return element.style.color || element.getAttribute('color') || fallback;
+
+        case 'background':
+            return element.style.backgroundColor || element.getAttribute('bgcolor') || fallback;
+
+        default:
+            return element.style.getPropertyValue(BorderColorKeyMap[source]) || fallback;
+    }
 }
 
 /**
@@ -97,13 +134,34 @@ export function setColor(
     isDarkMode: boolean,
     darkColorHandler?: DarkColorHandler
 ) {
+    const newColor = adaptColor(
+        element,
+        color,
+        isBackground ? 'background' : 'text',
+        isDarkMode,
+        darkColorHandler
+    );
+
+    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
+    element.style.setProperty(isBackground ? 'background-color' : 'color', newColor || null);
+}
+
+/**
+ * @internal
+ */
+export function adaptColor(
+    element: HTMLElement,
+    color: string | null | undefined,
+    colorType: 'text' | 'background' | 'border',
+    isDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler
+) {
     const match = color && color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
     const [_, existingKey, fallbackColor] = match ?? [];
 
     color = fallbackColor ?? color;
 
     if (darkColorHandler && color) {
-        const colorType = isBackground ? 'background' : 'text';
         const key =
             existingKey ||
             darkColorHandler.generateColorKey(color, undefined /*baseLValue*/, colorType, element);
@@ -119,8 +177,7 @@ export function setColor(
         color = isDarkMode ? `${VARIABLE_PREFIX}${key}, ${color}${VARIABLE_POSTFIX}` : color;
     }
 
-    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
-    element.style.setProperty(isBackground ? 'background-color' : 'color', color || null);
+    return color;
 }
 
 /**

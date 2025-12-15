@@ -1,29 +1,80 @@
-import { getColor, setColor } from '../../formatHandlers/utils/color';
+import { BorderColorKeyMap, BorderKeys } from '../../formatHandlers/utils/borderKeys';
+import { isElementOfType } from '../isElementOfType';
+import {
+    adaptColor,
+    getColor,
+    getLightModeColor,
+    setColor,
+} from '../../formatHandlers/utils/color';
 import type { DarkColorHandler } from 'roosterjs-content-model-types';
 
 /**
+ * Configuration options for controlling which elements and styles undergo color transformation.
+ * By default, text and background colors are transformed for all elements.
+ */
+export interface TransformColorOptions {
+    tableBorders: boolean;
+}
+
+/**
  * Edit and transform color of elements between light mode and dark mode
+ * By default, text and background colors are transformed for all elements.
  * @param rootNode The root DOM node to transform
  * @param includeSelf True to transform the root node as well, otherwise false
  * @param direction To specify the transform direction, light to dark, or dark to light
  * @param darkColorHandler The dark color handler object to help do color transformation
+ * @param transformColorOptions Configuration options for controlling which elements and styles undergo color transformation.
  */
 export function transformColor(
     rootNode: Node,
     includeSelf: boolean,
     direction: 'lightToDark' | 'darkToLight',
-    darkColorHandler?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler,
+    transformColorOptions?: TransformColorOptions
 ) {
     const toDarkMode = direction == 'lightToDark';
+    const tableBorders = transformColorOptions?.tableBorders || false;
     const transformer = (element: HTMLElement) => {
         const textColor = getColor(element, false /*isBackground*/, !toDarkMode, darkColorHandler);
         const backColor = getColor(element, true /*isBackground*/, !toDarkMode, darkColorHandler);
 
         setColor(element, textColor, false /*isBackground*/, toDarkMode, darkColorHandler);
         setColor(element, backColor, true /*isBackground*/, toDarkMode, darkColorHandler);
+
+        if (tableBorders) {
+            transformBorderColor(element, toDarkMode, darkColorHandler);
+        }
     };
 
     iterateElements(rootNode, transformer, includeSelf);
+}
+
+function transformBorderColor(
+    element: HTMLElement,
+    toDarkMode: boolean,
+    darkColorHandler?: DarkColorHandler
+) {
+    if (isElementOfType(element, 'td') || isElementOfType(element, 'th')) {
+        BorderKeys.forEach(key => {
+            const borderColorProperty = BorderColorKeyMap[key];
+            const style = element.style.getPropertyValue(borderColorProperty);
+            if (style) {
+                const lightColor = getLightModeColor(style, !toDarkMode, darkColorHandler);
+                if (lightColor) {
+                    const transformedColor = adaptColor(
+                        element,
+                        lightColor,
+                        'border',
+                        toDarkMode,
+                        darkColorHandler
+                    );
+                    if (transformedColor) {
+                        element.style.setProperty(borderColorProperty, transformedColor);
+                    }
+                }
+            }
+        });
+    }
 }
 
 function iterateElements(
