@@ -43,4 +43,18 @@ describe('createTableStructure', () => {
         expect(table.rows.length).toBe(2);
         expect(table.rows[0].cells.length).toBe(3);
     });
+
+    it('Create 2*3 table with cell format', () => {
+        const doc = createContentModelDocument();
+
+        createTableStructure(doc, 3, 2, {
+            minWidth: '15px',
+        });
+
+        const table = doc.blocks[0] as ContentModelTable;
+
+        expect(table.rows.length).toBe(2);
+        expect(table.rows[0].cells.length).toBe(3);
+        expect(table.rows[0].cells[0].format.minWidth).toBe('15px');
+    });
 });

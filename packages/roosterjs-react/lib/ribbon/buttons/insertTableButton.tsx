@@ -70,7 +70,8 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
                 : {},
             {
                 marginBottom: '1px',
-            }
+            },
+            15
         );
     },
 };

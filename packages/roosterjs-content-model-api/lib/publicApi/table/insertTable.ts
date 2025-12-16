@@ -25,13 +25,15 @@ import type {
  * @param rows Number of rows in table
  * @param tableMetadataFormat (Optional) The table format that are stored as metadata. If not passed, the default format will be applied: background color: #FFF; border color: #ABABAB
  * @param format (Optional) The table format used for style attributes
+ * @param cellMinWidth (Optional) the minimum width in px a cell can be auto resized
  */
 export function insertTable(
     editor: IEditor,
     columns: number,
     rows: number,
     tableMetadataFormat?: Partial<TableMetadataFormat>,
-    format?: ContentModelTableFormat
+    format?: ContentModelTableFormat,
+    cellMinWidth?: number
 ) {
     editor.focus();
 
@@ -41,7 +43,9 @@ export function insertTable(
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
-                const table = createTableStructure(doc, columns, rows);
+                const table = createTableStructure(doc, columns, rows, {
+                    minWidth: cellMinWidth + 'px',
+                });
                 if (format) {
                     table.format = { ...format };
                 }
