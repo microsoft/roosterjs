@@ -366,7 +366,9 @@ describe('insertTable', () => {
                 {
                     marginBottom: '1px',
                 },
-                15
+                {
+                    minWidth: '15px',
+                }
             );
 
             // Assert

@@ -12,6 +12,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
+    CustomTableCellFormat,
     ContentModelTableFormat,
     IEditor,
     TableMetadataFormat,
@@ -25,7 +26,7 @@ import type {
  * @param rows Number of rows in table
  * @param tableMetadataFormat (Optional) The table format that are stored as metadata. If not passed, the default format will be applied: background color: #FFF; border color: #ABABAB
  * @param format (Optional) The table format used for style attributes
- * @param cellMinWidth (Optional) the minimum width in px a cell can be auto resized
+ * @param cellFormat (Optional) custom format for table cells
  */
 export function insertTable(
     editor: IEditor,
@@ -33,7 +34,7 @@ export function insertTable(
     rows: number,
     tableMetadataFormat?: Partial<TableMetadataFormat>,
     format?: ContentModelTableFormat,
-    cellMinWidth?: number
+    customCellFormat?: CustomTableCellFormat
 ) {
     editor.focus();
 
@@ -43,9 +44,7 @@ export function insertTable(
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
-                const table = createTableStructure(doc, columns, rows, {
-                    minWidth: cellMinWidth + 'px',
-                });
+                const table = createTableStructure(doc, columns, rows, customCellFormat);
                 if (format) {
                     table.format = { ...format };
                 }
