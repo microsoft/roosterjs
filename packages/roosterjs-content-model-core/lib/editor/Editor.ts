@@ -225,7 +225,7 @@ export class Editor implements IEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document {
-        return this.getCore().physicalRoot.ownerDocument;
+        return this.getCore().environment.document;
     }
 
     /**
