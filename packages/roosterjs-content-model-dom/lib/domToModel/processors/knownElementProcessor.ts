@@ -6,6 +6,7 @@ import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { isBlockEntityContainer } from '../../domUtils/entityUtils';
 import { parseFormat } from '../utils/parseFormat';
+import { parseValueAndUnit } from '../../domUtils/parseValueAndUnit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelSegmentFormat,
@@ -13,7 +14,11 @@ import type {
     ElementProcessor,
 } from 'roosterjs-content-model-types';
 
-const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
+type StringKeys<T> = {
+    [K in keyof T]: T[K] extends string ? K : never;
+}[keyof T];
+
+const FormatContainerTriggerStyles: StringKeys<CSSStyleDeclaration>[] = [
     'marginBottom',
     'marginTop',
     'paddingBottom',
@@ -118,7 +123,7 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     // we need to use format container
     if (
         FormatContainerTriggerStyles.some(
-            key => parseInt((style[key] as string) || (defaultStyle[key] as string) || '') > 0
+            key => hasMeaningfulValue(style[key]) || hasMeaningfulValue(defaultStyle[key])
         ) ||
         FormatContainerTriggerAttributes.some(attr => element.hasAttribute(attr))
     ) {
@@ -136,4 +141,14 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     }
 
     return false;
+}
+
+function hasMeaningfulValue(value: string | null | undefined): boolean {
+    if (!value) {
+        return false;
+    }
+
+    const parsedValue = parseValueAndUnit(value);
+
+    return !parsedValue || parsedValue.value > 0;
 }

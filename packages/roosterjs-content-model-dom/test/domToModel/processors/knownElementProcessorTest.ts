@@ -172,30 +172,27 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Paragraph',
-                    format: {
-                        marginRight: '40px',
-                        marginLeft: '40px',
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                    },
-                    segmentFormat: { textColor: 'red' },
-                    segments: [
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
                         {
-                            segmentType: 'Text',
-                            format: {
-                                textColor: 'red',
-                            },
-                            text: 'test',
+                            blockType: 'Paragraph',
+                            segments: [
+                                { segmentType: 'Text', text: 'test', format: { textColor: 'red' } },
+                            ],
+                            format: {},
+                            isImplicit: true,
                         },
                     ],
+                    format: {
+                        marginTop: '0px',
+                        marginRight: '40px',
+                        marginBottom: '0px',
+                        marginLeft: '40px',
+                    },
                 },
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [],
-                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -442,20 +439,29 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Paragraph',
-                    format: {
-                        marginLeft: '40px',
-                        marginRight: '40px',
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                    },
-                    segments: [
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
                         {
-                            segmentType: 'Text',
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                },
+                            ],
                             format: {},
-                            text: 'test1',
+                            isImplicit: true,
                         },
                     ],
+                    format: {
+                        marginTop: '0px',
+                        marginRight: '40px',
+                        marginBottom: '0px',
+                        marginLeft: '40px',
+                    },
                 },
                 {
                     blockType: 'Paragraph',
@@ -482,21 +488,30 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Paragraph',
-                    format: {
-                        marginLeft: '40px',
-                        marginRight: '40px',
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                    },
-                    segments: [
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
                         {
-                            segmentType: 'Text',
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
                             format: {},
-                            text: 'test1',
-                            isSelected: true,
+                            isImplicit: true,
                         },
                     ],
+                    format: {
+                        marginTop: '0px',
+                        marginRight: '40px',
+                        marginBottom: '0px',
+                        marginLeft: '40px',
+                    },
                 },
                 {
                     blockType: 'Paragraph',

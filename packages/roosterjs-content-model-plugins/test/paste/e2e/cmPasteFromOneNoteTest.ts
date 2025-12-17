@@ -4989,6 +4989,10 @@ describe('OneNote', () => {
                                 },
                             },
                         ],
+                        segmentFormat: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                        },
                         blockType: 'Paragraph',
                         format: {
                             direction: 'ltr',
@@ -5014,6 +5018,10 @@ describe('OneNote', () => {
                                 },
                             },
                         ],
+                        segmentFormat: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                        },
                         blockType: 'Paragraph',
                         format: {
                             direction: 'ltr',
@@ -5039,6 +5047,10 @@ describe('OneNote', () => {
                                 },
                             },
                         ],
+                        segmentFormat: {
+                            fontFamily: 'Calibri',
+                            fontSize: '11pt',
+                        },
                         blockType: 'Paragraph',
                         format: {
                             direction: 'ltr',

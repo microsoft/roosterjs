@@ -1,4 +1,4 @@
-const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
+import { parseValueAndUnit } from '../../domUtils/parseValueAndUnit';
 
 // According to https://developer.mozilla.org/en-US/docs/Glossary/CSS_pixel, 1in = 96px
 const PixelPerInch = 96;
@@ -16,12 +16,11 @@ export function parseValueWithUnit(
     currentSizePxOrElement?: number | HTMLElement,
     resultUnit: 'px' | 'pt' = 'px'
 ): number {
-    const match = MarginValueRegex.exec(value);
+    const parseResult = parseValueAndUnit(value);
     let result = 0;
 
-    if (match) {
-        const [_, numStr, __, unit] = match;
-        const num = parseFloat(numStr);
+    if (parseResult) {
+        const { value: num, unit } = parseResult;
 
         switch (unit) {
             case 'px':

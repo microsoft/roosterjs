@@ -689,12 +689,21 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         },
                     },
                     {
-                        blockType: 'Paragraph',
-                        segments: [
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
+                        blocks: [
                             {
-                                segmentType: 'Text',
-                                text: 'aa',
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aa',
+                                        format: {},
+                                    },
+                                ],
                                 format: {},
+                                isImplicit: true,
                             },
                         ],
                         format: {
@@ -707,7 +716,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'aa\r\naa',
-            '<blockquote style="margin: 20px;">aa</blockquote><div style="margin: 0px 20px;">aa</div>'
+            '<blockquote style="margin: 20px;">aa</blockquote><blockquote style="margin: 0px 20px;">aa</blockquote>'
         );
     });
 
@@ -1169,12 +1178,25 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         segmentFormat: { textColor: 'red' },
                     },
                     {
-                        blockType: 'Paragraph',
-                        segments: [
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
+                        blocks: [
                             {
-                                segmentType: 'Text',
-                                text: 'bbbbbb',
-                                format: {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'bbbbbb',
+                                        format: {
+                                            fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                                            fontSize: '12pt',
+                                            textColor: 'rgb(102, 102, 102)',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                segmentFormat: {
                                     fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
                                     fontSize: '12pt',
                                     textColor: 'rgb(102, 102, 102)',
@@ -1184,11 +1206,8 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                         format: {
                             marginRight: '40px',
                             marginLeft: '40px',
-                        },
-                        segmentFormat: {
-                            fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
-                            fontSize: '12pt',
-                            textColor: 'rgb(102, 102, 102)',
+                            marginTop: '0px',
+                            marginBottom: '0px',
                         },
                     },
                     {
@@ -1210,7 +1229,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'aaaa\r\nbbbbbb\r\ncccc\r\naaaa\r\nbbbbbb\r\ncccc',
-            '<div style="color: red;">aaaa</div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div></blockquote><div style="color: red;">cccc</div><div style="color: red;">aaaa</div><div style="margin-right: 40px; margin-left: 40px; font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div><div style="color: red;">cccc</div>'
+            '<div style="color: red;">aaaa</div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div></blockquote><div style="color: red;">cccc</div><div style="color: red;">aaaa</div><blockquote style="margin-top: 0px; margin-bottom: 0px;"><div style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</div></blockquote><div style="color: red;">cccc</div>'
         );
     });
 
@@ -2673,6 +2692,44 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             },
             'test',
             '<div style="direction: rtl;">test</div>'
+        );
+    });
+
+    it('Blockquote with margin set to 0', () => {
+        runTest(
+            '<blockquote style="margin-top: 0; margin-bottom: 0;">test</blockquote>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            marginRight: '40px',
+                            marginLeft: '40px',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                        },
+                    },
+                ],
+            },
+            'test',
+            '<blockquote style="margin-top: 0px; margin-bottom: 0px;">test</blockquote>'
         );
     });
 });
