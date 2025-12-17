@@ -73,6 +73,7 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
             },
             {
                 minWidth: '15px',
+                borderBottom: '1px dotted red',
             }
         );
     },
