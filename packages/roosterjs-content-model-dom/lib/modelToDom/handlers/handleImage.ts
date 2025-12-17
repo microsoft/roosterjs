@@ -14,7 +14,7 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
     segmentNodes
 ) => {
     const img = doc.createElement('img');
-    const element = document.createElement('span');
+    const element = doc.createElement('span');
 
     parent.appendChild(element);
     element.appendChild(img);
