@@ -462,6 +462,7 @@ export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export { TextAndHtmlContentForCopy } from './parameter/TextAndHtmlContentForCopy';
 export { PromotedLink } from './parameter/PromotedLink';
 export { BorderKey } from './parameter/BorderKey';
+export { ValueAndUnit } from './parameter/ValueAndUnit';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';
