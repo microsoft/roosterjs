@@ -118,8 +118,6 @@ describe('formatContentModel', () => {
                 undefined,
                 undefined,
                 undefined,
-                undefined,
-                undefined,
                 undefined
             );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
@@ -162,8 +160,6 @@ describe('formatContentModel', () => {
             expect(setContentModel).toHaveBeenCalledWith(
                 core,
                 mockedModel,
-                undefined,
-                undefined,
                 undefined,
                 undefined,
                 undefined,
@@ -886,6 +882,7 @@ describe('formatContentModel', () => {
                 {
                     ignoreSelection: true,
                 },
+                undefined,
                 undefined,
                 undefined
             );

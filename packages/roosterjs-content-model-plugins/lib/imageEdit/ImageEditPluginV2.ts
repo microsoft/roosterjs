@@ -65,6 +65,7 @@ const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
 const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
 
 /**
+ * @internal
  * ImageEdit plugin handles the following image editing features:
  * - Resize image
  * - Crop image

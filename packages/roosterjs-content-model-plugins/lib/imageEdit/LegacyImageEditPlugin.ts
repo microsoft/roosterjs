@@ -62,6 +62,7 @@ const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
 const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
 
 /**
+ * @internal
  * ImageEdit plugin handles the following image editing features:
  * - Resize image
  * - Crop image
@@ -299,9 +300,10 @@ export class LegacyImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private setContentHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
-        if (selection?.type == 'image') {
+        const image = selection?.type == 'image' ? selection.image : this.selectedImage;
+        if (image) {
             this.cleanInfo();
-            setImageState(selection.image, '');
+            setImageState(image, '');
             this.isEditing = false;
             this.isCropMode = false;
         }
