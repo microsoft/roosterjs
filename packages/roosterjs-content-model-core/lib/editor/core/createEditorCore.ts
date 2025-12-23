@@ -69,6 +69,7 @@ function createEditorEnvironment(
     const appVersion = navigator?.appVersion ?? '';
 
     return {
+        document: contentDiv.ownerDocument,
         domToModelSettings: createDomToModelSettings(options),
         modelToDomSettings: createModelToDomSettings(options),
         isMac: appVersion.indexOf('Mac') != -1,

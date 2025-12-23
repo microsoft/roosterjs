@@ -1,5 +1,9 @@
 import { addBlock, createTable, createTableCell } from 'roosterjs-content-model-dom';
-import type { ContentModelBlockGroup, ContentModelTable } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockGroup,
+    ContentModelTable,
+    ContentModelTableCellFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -7,7 +11,8 @@ import type { ContentModelBlockGroup, ContentModelTable } from 'roosterjs-conten
 export function createTableStructure(
     parent: ContentModelBlockGroup,
     columns: number,
-    rows: number
+    rows: number,
+    cellFormat?: ContentModelTableCellFormat
 ): ContentModelTable {
     const table = createTable(rows);
 
@@ -15,7 +20,12 @@ export function createTableStructure(
 
     table.rows.forEach(row => {
         for (let i = 0; i < columns; i++) {
-            const cell = createTableCell();
+            const cell = createTableCell(
+                undefined /*spanLeftOrColSpan */,
+                undefined /*spanAboveOrRowSpan */,
+                undefined /* isHeader */,
+                cellFormat
+            );
 
             row.cells.push(cell);
         }

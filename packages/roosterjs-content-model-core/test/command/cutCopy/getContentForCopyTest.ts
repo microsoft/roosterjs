@@ -36,6 +36,7 @@ describe('getContentForCopy', () => {
             getContentModelCopy: (): ContentModelDocument => createContentModelDocument(),
             getEnvironment: (): EditorEnvironment => {
                 return {
+                    document: mockDocument,
                     isSafari: false,
                     domToModelSettings: {} as ContentModelSettings<
                         DomToModelOption,

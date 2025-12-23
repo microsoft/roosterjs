@@ -142,6 +142,48 @@ describe('transformOrdinals', () => {
         runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
     });
 
+    it('with 20th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '20th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 30th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '30th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
+    it('with 40th', () => {
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: '40th',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(segment, paragraph, { canUndoByBackspace: true } as any, true);
+    });
+
     it('with 11th', () => {
         const segment: ContentModelText = {
             segmentType: 'Text',

@@ -30,6 +30,11 @@ export interface ContentModelSettings<OptionType, ConfigType> {
  */
 export interface EditorEnvironment {
     /**
+     * Document object of the editor
+     */
+    readonly document: Document;
+
+    /**
      * Whether editor is running on Mac
      */
     readonly isMac?: boolean;

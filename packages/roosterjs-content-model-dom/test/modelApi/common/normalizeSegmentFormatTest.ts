@@ -14,6 +14,7 @@ describe('normalizeSegmentFormat', () => {
             modelToDomSettings: {
                 calculated: createModelToDomConfig([]),
             },
+            document: document,
         } as EditorEnvironment;
     });
 

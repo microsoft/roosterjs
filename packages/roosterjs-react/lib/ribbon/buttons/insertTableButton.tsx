@@ -70,6 +70,10 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
                 : {},
             {
                 marginBottom: '1px',
+            },
+            {
+                minWidth: '15px',
+                borderBottom: '1px dotted red',
             }
         );
     },
