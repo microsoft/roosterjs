@@ -44,6 +44,9 @@ export interface FormatContentModelOptions {
      */
     scrollCaretIntoView?: boolean;
 
+    /**
+     * When true, selection change event will not be triggered bt formatContentModel function
+     */
     skipSelectionChangedEvent?: boolean;
 }
 
