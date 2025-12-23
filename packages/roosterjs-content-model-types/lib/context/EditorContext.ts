@@ -50,6 +50,11 @@ export interface EditorContext {
     allowCacheElement?: boolean;
 
     /**
+     * Whether to allow caching list item elements separately.
+     */
+    allowCacheListItem?: boolean;
+
+    /**
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: DomIndexer;
@@ -73,4 +78,10 @@ export interface EditorContext {
      * When set to true, size of table will be recalculated when converting from DOM to Content Model.
      */
     recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
+
+    /**
+     * Width of the editor's editable area in pixels, excluding padding.
+     * This value is typically used for layout calculations such as constraining pasted image sizes.
+     */
+    editorViewWidth?: number;
 }

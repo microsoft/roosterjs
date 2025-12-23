@@ -975,9 +975,7 @@ describe('keyboardEnter', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: {
-                                    startNumberOverride: undefined,
-                                },
+                                format: {},
                                 dataset: {},
                             },
                         ],

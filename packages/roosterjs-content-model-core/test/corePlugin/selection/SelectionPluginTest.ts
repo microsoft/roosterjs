@@ -1073,6 +1073,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
     });
 
@@ -1155,6 +1156,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 1,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table,
@@ -1178,6 +1180,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 1,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table,
@@ -1259,6 +1262,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table: table1,
@@ -1290,6 +1294,7 @@ describe('SelectionPlugin handle table selection', () => {
             firstColumn: 0,
             lastRow: 0,
             lastColumn: 0,
+            tableSelectionInfo: jasmine.any(Object),
         });
         expect(state.tableSelection).toEqual({
             table: table2,
@@ -2167,8 +2172,8 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down', () => {
@@ -2235,8 +2240,8 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Range, Press Shift+Down to ouside of table', () => {
@@ -2457,9 +2462,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 0,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Press Shift+Up', () => {
@@ -2516,9 +2521,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 0,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Format, Press Shift+Left', () => {
@@ -2529,6 +2534,16 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 1,
                 lastRow: 1,
                 table,
+                tableSelectionInfo: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    startNode: td2,
+                    firstCo: { row: 0, col: 1 },
+                    lastCo: { row: 1, col: 1 },
+                },
             });
 
             spyOn(parseTableCells, 'parseTableCells').and.returnValue([
@@ -2595,9 +2610,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 1,
                 lastRow: 1,
                 lastColumn: 0,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).not.toHaveBeenCalled();
         });
 
         it('From Table, Format, Press Shift+Up', () => {
@@ -2608,6 +2623,16 @@ describe('SelectionPlugin handle table selection', () => {
                 lastColumn: 1,
                 lastRow: 1,
                 table,
+                tableSelectionInfo: {
+                    table,
+                    parsedTable: [
+                        [td1, td2],
+                        [td3, td4],
+                    ],
+                    startNode: td3,
+                    firstCo: { row: 1, col: 0 },
+                    lastCo: { row: 1, col: 1 },
+                },
             });
 
             spyOn(parseTableCells, 'parseTableCells').and.returnValue([
@@ -2674,9 +2699,9 @@ describe('SelectionPlugin handle table selection', () => {
                 firstColumn: 0,
                 lastRow: 0,
                 lastColumn: 1,
+                tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
-            expect(announceSpy).not.toHaveBeenCalled();
         });
     });
 });

@@ -1,9 +1,7 @@
 /**
- * Predefined experiment features
- * By default these features are not enabled. To enable them, pass the feature name into EditorOptions.experimentalFeatures
- * when create editor
+ * Predefined experiment features (Graduated, only keep them for backward compatibility)
  */
-export type ExperimentalFeature =
+export type GraduatedExperimentalFeature =
     /**
      * @deprecated When this feature is enabled, we will persist a content model in memory as long as we can,
      * and use cached element when write back if it is not changed.
@@ -14,17 +12,28 @@ export type ExperimentalFeature =
      * Workaround for the Legacy Image Edit
      */
     | 'LegacyImageSelection'
-    /**
-     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
-     * Use Content Model handle ENTER key
-     */
-    | 'HandleEnterKey'
+
     /**
      * @deprecated
      * Prevent default browser behavior for copy/cut event,
      * and set the clipboard data with custom implementation.
      */
-    | 'CustomCopyCut'
+    | 'CustomCopyCut';
+
+/**
+ * Predefined experiment features
+ * By default these features are not enabled. To enable them, pass the feature name into EditorOptions.experimentalFeatures
+ * when create editor
+ */
+export type ExperimentalFeature =
+    | GraduatedExperimentalFeature
+
+    /**
+     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
+     * Use Content Model handle ENTER key
+     */
+    | 'HandleEnterKey'
+
     /**
      * For CJK keyboard input on mobile, if the user toggles bold/italic/underline on an empty div,
      * the pending format will be applied on the selection marker. When typing text, the selection moves to the text node and the
@@ -47,4 +56,14 @@ export type ExperimentalFeature =
     /**
      * Use selection change event instead of mouse up to insert the image edit handles
      */
-    | 'ImageEditV2';
+    | 'ImageEditV2'
+
+    /*
+     * Allow caching list item elements.
+     */
+    | 'CacheList'
+
+    /**
+     * Transform the table border colors when switching from light to dark mode
+     */
+    | 'TransformTableBorderColors';

@@ -41,32 +41,38 @@ export function generateDataURL(image: HTMLImageElement, editInfo: ImageMetadata
 
     const imageWidth = nWidth * (1 - left - right);
     const imageHeight = nHeight * (1 - top - bottom);
+    const doc = image.ownerDocument;
+    const win = doc.defaultView;
 
     // Adjust the canvas size and scaling for high display resolution
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    const canvas = document.createElement('canvas');
+    const devicePixelRatio = win?.devicePixelRatio || 1;
+    const canvas = doc.createElement('canvas');
     const { targetWidth, targetHeight } = generatedImageSize;
     canvas.width = targetWidth * devicePixelRatio;
     canvas.height = targetHeight * devicePixelRatio;
 
     const context = canvas.getContext('2d');
-    if (context) {
-        context.scale(devicePixelRatio, devicePixelRatio);
-        context.translate(targetWidth / 2, targetHeight / 2);
-        context.rotate(angle);
-        context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
-        context.drawImage(
-            image,
-            nWidth * left,
-            nHeight * top,
-            imageWidth,
-            imageHeight,
-            -width / 2,
-            -height / 2,
-            width,
-            height
-        );
-    }
 
-    return canvas.toDataURL('image/png', 1.0);
+    try {
+        if (context) {
+            context.scale(devicePixelRatio, devicePixelRatio);
+            context.translate(targetWidth / 2, targetHeight / 2);
+            context.rotate(angle);
+            context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
+            context.drawImage(
+                image,
+                nWidth * left,
+                nHeight * top,
+                imageWidth,
+                imageHeight,
+                -width / 2,
+                -height / 2,
+                width,
+                height
+            );
+        }
+        return canvas.toDataURL('image/png', 1.0);
+    } catch {
+        return image.src;
+    }
 }

@@ -161,4 +161,9 @@ export type PluginEventType =
     /**
      * HTML double click event
      */
-    | 'doubleClick';
+    | 'doubleClick'
+
+    /**
+     * Find result changed event
+     */
+    | 'findResultChanged';

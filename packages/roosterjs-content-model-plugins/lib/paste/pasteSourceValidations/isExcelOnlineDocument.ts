@@ -1,5 +1,5 @@
 import { PastePropertyNames } from './constants';
-import type { GetSourceFunction } from './getPasteSource';
+import type { GetSourceFunction } from './getDocumentSource';
 
 // Excel Desktop also has this attribute
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';

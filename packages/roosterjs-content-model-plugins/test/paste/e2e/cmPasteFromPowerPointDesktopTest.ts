@@ -1,5 +1,5 @@
 import * as addParserF from '../../../lib/paste/utils/addParser';
-import * as getPasteSourceF from '../../../lib/paste/pasteSourceValidations/getPasteSource';
+import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as ppt from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/paste/utils/setProcessor';
 import { expectEqual, initEditor } from './testUtils';
@@ -23,7 +23,7 @@ describe('PowerPoint', () => {
     beforeEach(() => {
         editor = initEditor('PowerPoint');
         spyOn(ppt, 'processPastedContentFromPowerPoint').and.callThrough();
-        spyOn(getPasteSourceF, 'getPasteSource').and.returnValue('powerPointDesktop');
+        spyOn(getDocumentSourceF, 'getDocumentSource').and.returnValue('powerPointDesktop');
         spyOn(addParserF, 'addParser').and.callThrough();
         spyOn(setProcessorF, 'setProcessor').and.callThrough();
     });
@@ -37,7 +37,7 @@ describe('PowerPoint', () => {
         paste(editor!, pptClipboardContent1, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(6);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
         const model = editor?.getContentModelCopy('connected');
@@ -1850,7 +1850,7 @@ describe('PowerPoint', () => {
         paste(editor!, pptClipboardContent2, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(6);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
         const model = editor?.getContentModelCopy('connected');
@@ -2171,7 +2171,7 @@ describe('PowerPoint', () => {
         paste(editor!, pptClipboardContent3, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(6);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
         const model = editor?.getContentModelCopy('connected');
@@ -2598,7 +2598,7 @@ describe('PowerPoint', () => {
         paste(editor!, pptClipboardContent4, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(5);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(6);
         expect(ppt.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
 
         const model = editor?.getContentModelCopy('connected');

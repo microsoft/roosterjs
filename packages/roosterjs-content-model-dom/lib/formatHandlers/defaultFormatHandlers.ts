@@ -2,6 +2,7 @@ import { ariaFormatHandler } from './common/ariaFormatHandler';
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
+import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
@@ -16,9 +17,11 @@ import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
+import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
@@ -60,6 +63,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    borderColor: borderColorFormatHandler,
     boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
     direction: directionFormatHandler,
@@ -72,9 +76,11 @@ const defaultFormatHandlerMap: FormatHandlers = {
     id: idFormatHandler,
     imageState: imageStateFormatHandler,
     italic: italicFormatHandler,
+    legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
+    listItemAlign: listItemAlignFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
     listStyle: listStyleFormatHandler,
@@ -133,14 +139,7 @@ export const defaultFormatKeysPerCategory: {
     block: sharedBlockFormats,
     listItemThread: ['listItemThread'],
     listLevelThread: ['listLevelThread'],
-    listItemElement: [
-        ...sharedBlockFormats,
-        'direction',
-        'textAlign',
-        'lineHeight',
-        'margin',
-        'listStyle',
-    ],
+    listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
@@ -159,6 +158,7 @@ export const defaultFormatKeysPerCategory: {
     ],
     tableCell: [
         'border',
+        'borderColor',
         'backgroundColor',
         'padding',
         'verticalAlign',
@@ -183,7 +183,7 @@ export const defaultFormatKeysPerCategory: {
         'direction',
         'role',
     ],
-    tableBorder: ['borderBox', 'tableSpacing'],
+    tableBorder: ['borderBox', 'tableSpacing', 'legacyTableBorder'],
     tableCellBorder: ['borderBox'],
     image: [
         'id',

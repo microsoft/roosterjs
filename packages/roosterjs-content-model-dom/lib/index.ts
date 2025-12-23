@@ -38,6 +38,7 @@ export {
 export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
+export { scrollRectIntoView } from './domUtils/scrollRectIntoView';
 
 export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
 
@@ -88,7 +89,7 @@ export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr
 export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
-export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
+export { BorderKeys } from './formatHandlers/utils/borderKeys';
 export {
     DeprecatedColors,
     getColor,
@@ -116,7 +117,8 @@ export { combineBorderValue, extractBorderValues } from './domUtils/style/border
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
-export { transformColor } from './domUtils/style/transformColor';
+export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
+export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
@@ -125,6 +127,7 @@ export {
     getParagraphMarker,
 } from './domUtils/hiddenProperties/paragraphMarker';
 export { setImageState, getImageState } from './domUtils/hiddenProperties/imageState';
+export { getRangesByText } from './domUtils/getRangesByText';
 
 export { isBlockGroupOfType } from './modelApi/typeCheck/isBlockGroupOfType';
 

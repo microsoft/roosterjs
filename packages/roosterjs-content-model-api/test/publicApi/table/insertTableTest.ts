@@ -261,5 +261,183 @@ describe('insertTable', () => {
                 ],
             });
         });
+
+        it('should insert table with format', () => {
+            // Arrange
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            let resultModel: ContentModelDocument | null = null;
+
+            formatContentModelSpy.and.callFake((callback: any) => {
+                const result = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+                resultModel = model;
+                return result;
+            });
+
+            // Act
+            insertTable(editor, 3, 3, undefined, {
+                marginBottom: '1px',
+            });
+
+            // Assert
+            expect(resultModel!).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: jasmine.any(Array),
+                        format: {
+                            borderCollapse: true,
+                            useBorderBox: true,
+                            marginBottom: '1px',
+                        },
+                        widths: jasmine.any(Array),
+                        dataset: jasmine.any(Object),
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            });
+        });
+        it('should insert table with minimum width', () => {
+            // Arrange
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            let resultModel: ContentModelDocument | null = null;
+
+            formatContentModelSpy.and.callFake((callback: any) => {
+                const result = callback(model, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
+                resultModel = model;
+                return result;
+            });
+
+            // Act
+            insertTable(
+                editor,
+                1,
+                1,
+                undefined,
+                {
+                    marginBottom: '1px',
+                },
+                {
+                    minWidth: '15px',
+                }
+            );
+
+            // Assert
+            expect(resultModel!).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: jasmine.any(Number),
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'SelectionMarker',
+                                                        isSelected: true,
+                                                        format: {},
+                                                    },
+                                                    {
+                                                        segmentType: 'Br',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {
+                                            minWidth: '15px',
+                                            useBorderBox: true,
+                                            borderTop: '1px solid #ABABAB',
+                                            borderRight: '1px solid #ABABAB',
+                                            borderBottom: '1px solid #ABABAB',
+                                            borderLeft: '1px solid #ABABAB',
+                                            verticalAlign: 'top',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: {
+                            borderCollapse: true,
+                            useBorderBox: true,
+                            marginBottom: '1px',
+                        },
+                        widths: jasmine.any(Array),
+                        dataset: jasmine.any(Object),
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            });
+        });
     });
 });

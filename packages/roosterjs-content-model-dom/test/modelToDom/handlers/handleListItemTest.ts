@@ -63,6 +63,7 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: parent,
+                    refNode: null,
                 },
             ],
         });
@@ -93,10 +94,12 @@ describe('handleListItem without format handler', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'OL',
+                refNode: null,
             },
         ];
 
@@ -108,10 +111,12 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'OL',
+                    refNode: null,
                 },
             ],
         });
@@ -160,10 +165,12 @@ describe('handleListItem without format handler', () => {
         context.listFormat.nodeStack = [
             {
                 node: fragment,
+                refNode: null,
             },
             {
                 node: parent,
                 listType: 'UL',
+                refNode: null,
             },
         ];
 
@@ -175,10 +182,12 @@ describe('handleListItem without format handler', () => {
             nodeStack: [
                 {
                     node: fragment,
+                    refNode: null,
                 },
                 {
                     node: parent,
                     listType: 'UL',
+                    refNode: null,
                 },
             ],
         });
@@ -423,5 +432,381 @@ describe('handleListItem without format handler', () => {
         expect(parent.innerHTML).toEqual(
             '<ol start="1"><li><div role="presentation">test1</div><div role="presentation">test2</div><div role="presentation">test3</div><table><tbody><tr><td></td><td></td></tr></tbody></table><div role="presentation">test4</div></li></ol>'
         );
+    });
+});
+
+describe('handleListItem with cache', () => {
+    let context: ModelToDomContext;
+    let handleBlockGroupChildrenSpy: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleListSpy: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
+    let listItemMetadataApplier: jasmine.Spy<ApplyMetadata<
+        ListMetadataFormat,
+        ContentModelListItemFormat
+    >>;
+    let onNodeCreatedSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        handleBlockGroupChildrenSpy = spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
+        handleListSpy = spyOn(handleList, 'handleList').and.callThrough();
+        onNodeCreatedSpy = jasmine.createSpy('onNodeCreated');
+        listItemMetadataApplier = jasmine.createSpy('listItemMetadataApplier');
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: handleBlockGroupChildrenSpy,
+                list: handleListSpy,
+            },
+            formatApplierOverride: {
+                listItemThread: null,
+            },
+            metadataAppliers: {
+                listItem: { applierFunction: listItemMetadataApplier },
+            },
+        });
+        context.allowCacheListItem = true;
+        context.onNodeCreated = onNodeCreatedSpy;
+        spyOn(applyFormat, 'applyFormat').and.callThrough();
+    });
+
+    it('Reuse cached LI', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const listItem = createListItem([createListLevel('OL')]);
+        const cachedLI = document.createElement('li');
+
+        listItem.cachedElement = cachedLI;
+        fragment.appendChild(parent);
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+                refNode: null,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+                refNode: null,
+            },
+        ];
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe('<ol><li></li></ol>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: fragment,
+                    refNode: null,
+                },
+                {
+                    node: parent,
+                    listType: 'OL',
+                    refNode: null,
+                },
+            ],
+        });
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.segment,
+            listItem.formatHolder.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemThread,
+            listItem.levels[0].format,
+            context
+        );
+        expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
+            document,
+            parent.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(onNodeCreatedSpy).not.toHaveBeenCalled();
+    });
+
+    it('No cached LI', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const listItem = createListItem([createListLevel('OL')]);
+
+        fragment.appendChild(parent);
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+                refNode: null,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+                refNode: null,
+            },
+        ];
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe('<ol><li></li></ol>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: fragment,
+                    refNode: null,
+                },
+                {
+                    node: parent,
+                    listType: 'OL',
+                    refNode: null,
+                },
+            ],
+        });
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.segment,
+            listItem.formatHolder.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemThread,
+            listItem.levels[0].format,
+            context
+        );
+        expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
+            document,
+            parent.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [parent.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
+        expect(onNodeCreatedSpy).toHaveBeenCalledWith(listItem, parent.firstChild as HTMLElement);
+        expect(listItem.cachedElement).toBe(parent.firstChild as HTMLLIElement);
+    });
+
+    it('Reuse cached LI when LI is in DOM', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const listItem = createListItem([createListLevel('OL')]);
+        const cachedLI = document.createElement('li');
+
+        listItem.cachedElement = cachedLI;
+        fragment.appendChild(parent);
+        parent.appendChild(cachedLI);
+
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+                refNode: null,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+                refNode: cachedLI,
+            },
+        ];
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe('<ol><li></li></ol>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: fragment,
+                    refNode: null,
+                },
+                {
+                    node: parent,
+                    listType: 'OL',
+                    refNode: cachedLI.nextSibling,
+                },
+            ],
+        });
+
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.segment,
+            listItem.formatHolder.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemThread,
+            listItem.levels[0].format,
+            context
+        );
+        expect(listItemMetadataApplier).toHaveBeenCalledWith(null, listItem.format, context);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildrenSpy).toHaveBeenCalledWith(
+            document,
+            parent.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(onNodeCreatedSpy).not.toHaveBeenCalled();
+    });
+
+    it('Reuse cached LI when LI is not in current place', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const child = document.createElement('ul');
+        const listItem = createListItem([createListLevel('OL')]);
+        const cachedLI = document.createElement('li');
+
+        listItem.cachedElement = cachedLI;
+        fragment.appendChild(parent);
+        parent.appendChild(child);
+        parent.appendChild(cachedLI);
+
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+                refNode: null,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+                refNode: child,
+            },
+        ];
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe('<ol><li></li></ol>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: fragment,
+                    refNode: null,
+                },
+                {
+                    node: parent,
+                    listType: 'OL',
+                    refNode: cachedLI.nextSibling,
+                },
+            ],
+        });
+
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [child],
+        });
+        expect(onNodeCreatedSpy).not.toHaveBeenCalled();
+    });
+
+    it('Reuse cached LI when LI is already in a different level', () => {
+        const fragment = document.createDocumentFragment();
+        const parent = document.createElement('ol');
+        const child = document.createElement('ul');
+        const listItem = createListItem([createListLevel('OL'), createListLevel('UL')]);
+        const cachedLI = document.createElement('li');
+        const li2 = document.createElement('li');
+
+        cachedLI.textContent = 'level 1 item';
+        li2.textContent = 'level 2 item';
+
+        listItem.cachedElement = cachedLI;
+        fragment.appendChild(parent);
+        parent.appendChild(child);
+        parent.appendChild(cachedLI);
+        parent.appendChild(li2);
+
+        context.listFormat.threadItemCounts = [0];
+        context.listFormat.nodeStack = [
+            {
+                node: fragment,
+                refNode: null,
+            },
+            {
+                node: parent,
+                listType: 'OL',
+                refNode: cachedLI,
+            },
+            {
+                node: child,
+                listType: 'UL',
+                refNode: null,
+            },
+        ];
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<ol><ul><li>level 1 item</li></ul><li>level 2 item</li></ol>'
+        );
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: fragment,
+                    refNode: null,
+                },
+                {
+                    node: parent,
+                    listType: 'OL',
+                    refNode: li2,
+                },
+                {
+                    node: child,
+                    listType: 'UL',
+                    refNode: null,
+                },
+            ],
+        });
+
+        expect(handleListSpy).toHaveBeenCalledTimes(1);
+        expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+        expect(onNodeCreatedSpy).not.toHaveBeenCalled();
     });
 });

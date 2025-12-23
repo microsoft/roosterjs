@@ -60,6 +60,7 @@ export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFo
 export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 export { ImageStateFormat } from './contentModel/format/formatParts/ImageStateFormat';
 export { RoleFormat } from './contentModel/format/formatParts/RoleFormat';
+export { LegacyTableBorderFormat } from './contentModel/format/formatParts/LegacyTableBorderFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
@@ -333,7 +334,7 @@ export {
 export { DarkColorHandler, Colors, ColorTransformFunction } from './context/DarkColorHandler';
 
 export { IEditor } from './editor/IEditor';
-export { ExperimentalFeature } from './editor/ExperimentalFeature';
+export { ExperimentalFeature, GraduatedExperimentalFeature } from './editor/ExperimentalFeature';
 export {
     EditorOptions,
     ColorOptions,
@@ -429,6 +430,7 @@ export { DOMEventHandlerFunction, DOMEventRecord } from './parameter/DOMEventRec
 export { EdgeLinkPreview } from './parameter/EdgeLinkPreview';
 export { ClipboardData } from './parameter/ClipboardData';
 export { AnnounceData, KnownAnnounceStrings } from './parameter/AnnounceData';
+export { AnnouncingOption } from './parameter/AnnouncingOption';
 export {
     TrustedHTMLHandler,
     DOMCreator,
@@ -458,6 +460,8 @@ export {
 export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export { TextAndHtmlContentForCopy } from './parameter/TextAndHtmlContentForCopy';
+export { PromotedLink } from './parameter/PromotedLink';
+export { BorderKey } from './parameter/BorderKey';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';
@@ -498,3 +502,4 @@ export { SelectionChangedEvent } from './event/SelectionChangedEvent';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
 export { PointerDownEvent, PointerUpEvent } from './event/PointerEvent';
+export { FindResultChangedEvent } from './event/FindResultChangedEvent';

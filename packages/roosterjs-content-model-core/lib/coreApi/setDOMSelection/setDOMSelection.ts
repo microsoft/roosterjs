@@ -107,6 +107,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     firstColumn: firstCell.col,
                     lastRow: lastCell.row,
                     lastColumn: lastCell.col,
+                    tableSelectionInfo: selection.tableSelectionInfo,
                 };
 
                 const tableId = ensureUniqueId(table, TABLE_ID);

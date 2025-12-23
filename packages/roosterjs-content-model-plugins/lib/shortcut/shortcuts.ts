@@ -37,7 +37,10 @@ export const ShortcutBold: ShortcutCommand = {
         shiftKey: false,
         which: Keys.B,
     },
-    onClick: editor => toggleBold(editor),
+    onClick: editor =>
+        toggleBold(editor, {
+            announceFormatChange: true,
+        }),
 };
 
 /**
@@ -51,7 +54,10 @@ export const ShortcutItalic: ShortcutCommand = {
         shiftKey: false,
         which: Keys.I,
     },
-    onClick: editor => toggleItalic(editor),
+    onClick: editor =>
+        toggleItalic(editor, {
+            announceFormatChange: true,
+        }),
 };
 
 /**
@@ -65,7 +71,10 @@ export const ShortcutUnderline: ShortcutCommand = {
         shiftKey: false,
         which: Keys.U,
     },
-    onClick: editor => toggleUnderline(editor),
+    onClick: editor =>
+        toggleUnderline(editor, {
+            announceFormatChange: true,
+        }),
 };
 
 /**

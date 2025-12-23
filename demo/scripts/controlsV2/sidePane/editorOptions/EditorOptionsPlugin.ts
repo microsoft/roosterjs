@@ -23,6 +23,7 @@ const initialState: OptionState = {
         customReplace: true,
         hiddenProperty: true,
         touch: true,
+        announce: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -58,16 +59,22 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     editPluginOptions: {
-        handleTabKey: true,
+        handleTabKey: {
+            indentMultipleBlocks: true,
+            indentTable: true,
+            appendTableRow: true,
+            indentList: true,
+            indentParagraph: true,
+        },
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
     experimentalFeatures: new Set<ExperimentalFeature>([
-        'PersistCache',
         'HandleEnterKey',
-        'CustomCopyCut',
         'CloneIndependentRoot',
         'ImageEditV2',
+        'CacheList',
+        'TransformTableBorderColors',
     ]),
 };
 

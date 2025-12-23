@@ -77,7 +77,12 @@ export function exportContent(
                     clonedRoot,
                     false /*includeSelf*/,
                     'darkToLight',
-                    editor.getColorManager()
+                    editor.getColorManager(),
+                    {
+                        tableBorders: editor.isExperimentalFeatureEnabled(
+                            'TransformTableBorderColors'
+                        ),
+                    }
                 );
             }
 

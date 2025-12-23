@@ -1,3 +1,5 @@
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
+import { createEditorContextForEntity } from './createEditorContextForEntity';
 import {
     contentModelToDom,
     createDomToModelContext,
@@ -10,6 +12,7 @@ import type {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelSegmentFormat,
+    FormatContentModelContext,
     FormattableRoot,
     IEditor,
     PluginEventData,
@@ -17,8 +20,6 @@ import type {
     ShallowMutableContentModelParagraph,
     ShallowMutableContentModelSegment,
 } from 'roosterjs-content-model-types';
-import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { createEditorContextForEntity } from './createEditorContextForEntity';
 
 /**
  * Invoke a callback to format the selected segment using Content Model
@@ -44,7 +45,11 @@ export function formatSegmentWithContentModel(
         paragraph: ShallowMutableContentModelParagraph | null
     ) => boolean,
     includingFormatHolder?: boolean,
-    afterFormatCallback?: (model: ReadonlyContentModelDocument) => void
+    afterFormatCallback?: (
+        model: ReadonlyContentModelDocument,
+        isTurningOff: boolean,
+        context: FormatContentModelContext
+    ) => void
 ) {
     editor.formatContentModel(
         (model, context) => {
@@ -87,7 +92,13 @@ export function formatSegmentWithContentModel(
 
             segmentAndParagraphs.forEach(item => {
                 if (item[0].segmentType == 'Entity') {
-                    expandEntitySelections(editor, item[0], formatsAndSegments, modelsFromEntities);
+                    expandEntitySelections(
+                        editor,
+                        item[0],
+                        formatsAndSegments,
+                        modelsFromEntities,
+                        item[1]
+                    );
                 } else {
                     formatsAndSegments.push([item[0].format, item[0], item[1]]);
                 }
@@ -107,7 +118,7 @@ export function formatSegmentWithContentModel(
             });
 
             // 5. after format is applied to all selections, invoke another callback to do some clean up before write the change back
-            afterFormatCallback?.(model);
+            afterFormatCallback?.(model, isTurningOff, context);
 
             // 6. finally merge segments if possible, to avoid fragmentation
             formatsAndSegments.forEach(([_, __, paragraph]) => {
@@ -143,7 +154,8 @@ function expandEntitySelections(
         ShallowMutableContentModelSegment | null,
         ShallowMutableContentModelParagraph | null
     ][],
-    modelsFromEntities: [ContentModelEntity, FormattableRoot, ContentModelDocument][]
+    modelsFromEntities: [ContentModelEntity, FormattableRoot, ContentModelDocument][],
+    paragraph: ShallowMutableContentModelParagraph | null
 ) {
     const { id, entityType: type, isReadonly } = entity.entityFormat;
 
@@ -180,6 +192,9 @@ function expandEntitySelections(
                 modelsFromEntities.push([entity, root, model]);
             }
         });
+        if (formattableRoots.length > 0) {
+            formatsAndSegments.push([entity.format, entity, paragraph]);
+        }
     }
 }
 

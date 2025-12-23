@@ -2539,4 +2539,140 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<dl><dt>term</dt><dd>definition</dd></dl>'
         );
     });
+
+    it('Table with border, cellspacing and padding', () => {
+        runTest(
+            '<table border="1" cellspacing="2" cellpadding="3"><tr><td>test</td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                height: 0,
+                                cells: [
+                                    {
+                                        spanAbove: false,
+                                        spanLeft: false,
+                                        isHeader: false,
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                isImplicit: true,
+                                                segments: [
+                                                    {
+                                                        text: 'test',
+                                                        segmentType: 'Text',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                blockType: 'Paragraph',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        dataset: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            legacyTableBorder: '1',
+                            cellSpacing: '2',
+                            cellPadding: '3',
+                        },
+                        dataset: {},
+                        widths: [],
+                    },
+                ],
+            },
+            'test',
+            '<table border="1" cellspacing="2" cellpadding="3"><tbody><tr><td>test</td></tr></tbody></table>'
+        );
+    });
+
+    it('List item in RTL with text-align', () => {
+        runTest(
+            '<ol><li style="text-align:right;direction:rtl">aaa</li></ol>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { startNumberOverride: 1 },
+                                dataset: {},
+                            },
+                        ],
+                        format: {
+                            textAlign: 'end',
+                            direction: 'rtl',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aaa',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            'aaa',
+            '<ol start="1" style="flex-direction: column; display: flex;"><li style="direction: rtl; align-self: end;">aaa</li></ol>'
+        );
+    });
+
+    it('Parent is RTL, not flex, child has text-align: end', () => {
+        runTest(
+            '<div style="direction:rtl"><div style="text-align: end">test</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        format: { direction: 'rtl', textAlign: 'end' },
+                    },
+                ],
+            },
+            'test',
+            '<div style="direction: rtl; text-align: left;">test</div>'
+        );
+    });
+
+    it('Parent is RTL, flex, child has text-align: end', () => {
+        runTest(
+            '<div style="direction:rtl; display: flex;"><div style="text-align: end">test</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                        format: { direction: 'rtl' },
+                    },
+                ],
+            },
+            'test',
+            '<div style="direction: rtl;">test</div>'
+        );
+    });
 });

@@ -1,5 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { cleanUpRestNodes } from '../utils/cleanUpRestNodes';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -22,11 +24,13 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
     if (nodeStack.length == 0) {
         nodeStack.push({
             node: parent,
+            refNode,
         });
     }
 
     // Skip existing list levels that has same properties so we can reuse them
     for (; layer < listItem.levels.length && layer + 1 < nodeStack.length; layer++) {
+        const parentLevel = nodeStack[layer];
         const stackLevel = nodeStack[layer + 1];
         const itemLevel = listItem.levels[layer];
 
@@ -40,19 +44,71 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         ) {
             break;
         }
+
+        if (
+            context.allowCacheListItem &&
+            parentLevel.refNode &&
+            itemLevel.cachedElement == parentLevel.refNode
+        ) {
+            // Move refNode to next node since we are reusing this cached element
+            parentLevel.refNode = parentLevel.refNode.nextSibling;
+        }
     }
 
     // Cut off remained list levels that we can't reuse
+    if (context.allowCacheListItem) {
+        // Clean up all rest nodes in the reused list levels
+        for (let i = layer + 1; i < nodeStack.length; i++) {
+            const stackLevel = nodeStack[i];
+
+            cleanUpRestNodes(stackLevel.refNode, context.rewriteFromModel);
+        }
+    }
+
     nodeStack.splice(layer + 1);
 
     // Create new list levels that are after reused ones
     for (; layer < listItem.levels.length; layer++) {
         const level = listItem.levels[layer];
-        const newList = doc.createElement(level.listType || 'UL');
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
-        lastParent.insertBefore(newList, layer == 0 ? refNode : null);
-        nodeStack.push({ node: newList, ...level });
+        let newList: HTMLOListElement | HTMLUListElement;
+        let isNewlyCreated = false;
+        const levelRefNode = nodeStack[layer].refNode ?? null;
+
+        if (context.allowCacheListItem && level.cachedElement) {
+            newList = level.cachedElement;
+
+            nodeStack[layer].refNode = reuseCachedElement(
+                lastParent,
+                level.cachedElement,
+                levelRefNode,
+                context.rewriteFromModel
+            );
+            nodeStack.push({
+                node: newList,
+                refNode: newList.firstChild,
+                listType: level.listType,
+                format: { ...level.format },
+                dataset: { ...level.dataset },
+            });
+        } else {
+            newList = doc.createElement(level.listType == 'OL' ? 'ol' : 'ul');
+            isNewlyCreated = true;
+
+            lastParent.insertBefore(newList, levelRefNode);
+            nodeStack.push({
+                node: newList,
+                refNode: null,
+                listType: level.listType,
+                format: { ...level.format },
+                dataset: { ...level.dataset },
+            });
+
+            if (context.allowCacheListItem) {
+                level.cachedElement = newList;
+            }
+        }
 
         applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
 
@@ -63,8 +119,10 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
         applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 
-        context.onNodeCreated?.(level, newList);
+        if (isNewlyCreated) {
+            context.onNodeCreated?.(level, newList);
+        }
     }
 
-    return refNode;
+    return nodeStack[0].refNode;
 };

@@ -32,6 +32,7 @@ export function handleTabOnList(
             context
         );
         rawEvent.preventDefault();
+
         return true;
     }
 }

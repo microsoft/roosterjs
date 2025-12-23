@@ -1069,7 +1069,6 @@ describe('handleEnterOnList', () => {
                                 marginTop: '0px',
                                 marginBottom: '0px',
                                 listStyleType: 'decimal',
-                                startNumberOverride: undefined,
                             },
                             dataset: {
                                 editingInfo: '{"orderedStyleType":1}',
@@ -2841,9 +2840,7 @@ describe('handleEnterOnList - keyboardEnter', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: {
-                                startNumberOverride: undefined,
-                            },
+                            format: {},
                             dataset: {},
                         },
                     ],
@@ -3157,7 +3154,6 @@ describe('handleEnterOnList - keyboardEnter', () => {
                             listType: 'OL',
                             format: {
                                 listStyleType: 'decimal',
-                                startNumberOverride: undefined,
                             },
                             dataset: {
                                 editingInfo:
@@ -3168,7 +3164,6 @@ describe('handleEnterOnList - keyboardEnter', () => {
                             listType: 'OL',
                             format: {
                                 listStyleType: 'lower-alpha',
-                                startNumberOverride: 2,
                             },
                             dataset: {
                                 editingInfo: '{"applyListStyleFromLevel":true}',
@@ -3494,7 +3489,6 @@ describe('handleEnterOnList - keyboardEnter', () => {
                             listType: 'OL',
                             format: {
                                 listStyleType: 'decimal',
-                                startNumberOverride: 3,
                             },
                             dataset: {
                                 editingInfo:
@@ -4061,7 +4055,6 @@ describe('handleEnterOnList - keyboardEnter', () => {
                             listType: 'OL',
                             format: {
                                 listStyleType: 'decimal',
-                                startNumberOverride: 6,
                             },
                             dataset: {
                                 editingInfo:

@@ -1,15 +1,6 @@
+import { BorderKeys } from '../utils/borderKeys';
 import type { BorderFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
-
-/**
- * Keys of border items
- */
-export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
-    'borderTop',
-    'borderRight',
-    'borderBottom',
-    'borderLeft',
-];
 
 // This array needs to match BorderKeys array
 const BorderWidthKeys: (keyof CSSStyleDeclaration)[] = [
@@ -26,7 +17,7 @@ const BorderRadiusKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderBottomRightRadius',
 ];
 
-const AllKeys = BorderKeys.concat(BorderRadiusKeys);
+const AllKeys = [...BorderKeys, ...BorderRadiusKeys];
 
 /**
  * @internal

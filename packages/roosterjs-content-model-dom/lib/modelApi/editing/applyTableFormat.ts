@@ -1,6 +1,6 @@
-import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
+import { BorderKeys } from '../../formatHandlers/utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { mutateBlock } from '../common/mutate';
+import { mutateBlock, mutateSegment } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -247,36 +247,26 @@ export function setFirstColumnFormatBorders(
     rows: ShallowMutableContentModelTableRow[],
     format: Partial<TableMetadataFormat>
 ) {
-    // Exit early hasFirstColumn is not set
-    if (!format.hasFirstColumn) {
-        return;
-    }
-
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((readonlyCell, cellIndex) => {
             const cell = mutateBlock(readonlyCell);
 
             if (cellIndex === 0) {
-                cell.isHeader = true;
-
-                switch (rowIndex) {
-                    case 0:
-                        cell.isHeader = !!format.hasHeaderRow;
-
-                        if (cell.isHeader) {
-                            cell.format.fontWeight = 'bold';
+                if (rowIndex == 0) {
+                    cell.isHeader = !!format.hasHeaderRow;
+                }
+                for (const block of cell.blocks) {
+                    if (block.blockType == 'Paragraph') {
+                        for (const segment of block.segments) {
+                            mutateSegment(block, segment, cellSegment => {
+                                if (format.hasFirstColumn) {
+                                    cellSegment.format.fontWeight = 'bold';
+                                } else if (cellSegment.format.fontWeight == 'bold') {
+                                    delete cellSegment.format.fontWeight;
+                                }
+                            });
                         }
-                        break;
-                    case rows.length - 1:
-                        setBorderColor(cell.format, 'borderTop');
-                        break;
-                    case 1:
-                        setBorderColor(cell.format, 'borderBottom');
-                        break;
-                    default:
-                        setBorderColor(cell.format, 'borderTop');
-                        setBorderColor(cell.format, 'borderBottom');
-                        break;
+                    }
                 }
             }
         });

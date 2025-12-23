@@ -42,6 +42,7 @@ describe('createEditorCore', () => {
         htmlToDOM: mockedDOMHelper,
     };
     const mockedTrustHtmlHandler = 'TRUSTED' as any;
+    const mockedDocument: Document = 'DOCUMENT' as any;
 
     beforeEach(() => {
         spyOn(createEditorCorePlugins, 'createEditorCorePlugins').and.returnValue(mockedPlugins);
@@ -83,6 +84,7 @@ describe('createEditorCore', () => {
                 mockedLifeCyclePlugin,
             ],
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: false,
                 isIOS: false,
@@ -120,7 +122,7 @@ describe('createEditorCore', () => {
 
     it('No options', () => {
         const mockedDiv = {
-            ownerDocument: {},
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -143,7 +145,7 @@ describe('createEditorCore', () => {
 
     it('With options', () => {
         const mockedDiv = {
-            ownerDocument: {},
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -201,14 +203,15 @@ describe('createEditorCore', () => {
     });
 
     it('Android', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent: 'Android',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    userAgent: 'Android',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -217,6 +220,7 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: true,
                 isIOS: false,
@@ -236,14 +240,15 @@ describe('createEditorCore', () => {
     });
 
     it('Android+Safari', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent: 'Android Safari',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    userAgent: 'Android AppleWebKit',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -252,6 +257,7 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: true,
                 isIOS: false,
@@ -271,14 +277,15 @@ describe('createEditorCore', () => {
     });
 
     it('Mac', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        appVersion: 'Mac',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    appVersion: 'Mac',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -287,6 +294,7 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: true,
                 isAndroid: false,
                 isIOS: false,
@@ -306,14 +314,15 @@ describe('createEditorCore', () => {
     });
 
     it('Safari', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent: 'Safari',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    userAgent: 'AppleWebKit',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -322,6 +331,7 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: false,
                 isIOS: false,
@@ -341,14 +351,15 @@ describe('createEditorCore', () => {
     });
 
     it('Chrome', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent: 'Safari Chrome',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    userAgent: 'AppleWebKit Chrome',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -357,6 +368,7 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: false,
                 isIOS: false,
@@ -376,15 +388,16 @@ describe('createEditorCore', () => {
     });
 
     it('iOS iPhone Safari', () => {
-        const mockedDiv = {
-            ownerDocument: {
-                defaultView: {
-                    navigator: {
-                        userAgent:
-                            'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
-                    },
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    userAgent:
+                        'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
                 },
             },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
             attributes: {
                 a: 'b',
             },
@@ -393,10 +406,11 @@ describe('createEditorCore', () => {
 
         runTest(mockedDiv, mockedOptions, {
             environment: {
+                document: mockedDocument,
                 isMac: false,
                 isAndroid: false,
                 isIOS: true,
-                isSafari: false,
+                isSafari: true,
                 isMobileOrTablet: true,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
