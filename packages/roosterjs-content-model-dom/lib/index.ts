@@ -9,6 +9,7 @@ export {
 } from './domToModel/processors/childProcessor';
 export { entityProcessor } from './domToModel/processors/entityProcessor';
 export { tableProcessor } from './domToModel/processors/tableProcessor';
+export { formatContainerProcessor } from './domToModel/processors/formatContainerProcessor';
 export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelectionOffsets';
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
