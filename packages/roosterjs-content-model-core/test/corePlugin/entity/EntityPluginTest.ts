@@ -42,6 +42,7 @@ describe('EntityPlugin', () => {
                 isNodeInEditor: isNodeInEditorSpy,
             }),
             getColorManager: () => mockedDarkColorHandler,
+            isExperimentalFeatureEnabled: () => false,
         } as any;
         plugin = createEntityPlugin();
         plugin.initialize(editor);
@@ -258,7 +259,10 @@ describe('EntityPlugin', () => {
                 wrapper,
                 true,
                 'lightToDark',
-                mockedDarkColorHandler
+                mockedDarkColorHandler,
+                {
+                    tableBorders: false,
+                }
             );
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();
         });

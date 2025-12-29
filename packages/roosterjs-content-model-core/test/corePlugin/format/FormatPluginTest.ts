@@ -20,6 +20,7 @@ describe('FormatPlugin', () => {
     const mockedEnvironment = {
         domToModelSettings: createDomToModelSettings({}),
         modelToDomSettings: createModelToDomSettings({}),
+        document,
     } as EditorEnvironment;
 
     beforeEach(() => {
@@ -271,6 +272,7 @@ describe('FormatPlugin for default format', () => {
     const mockedEnvironment = {
         domToModelSettings: createDomToModelSettings({}),
         modelToDomSettings: createModelToDomSettings({}),
+        document,
     } as EditorEnvironment;
 
     beforeEach(() => {

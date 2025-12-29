@@ -225,7 +225,7 @@ export class Editor implements IEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document {
-        return this.getCore().physicalRoot.ownerDocument;
+        return this.getCore().environment.document;
     }
 
     /**
@@ -307,7 +307,10 @@ export class Editor implements IEditor {
                 core.physicalRoot,
                 false /*includeSelf*/,
                 isDarkMode ? 'lightToDark' : 'darkToLight',
-                core.darkColorHandler
+                core.darkColorHandler,
+                {
+                    tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
+                }
             );
 
             core.lifecycle.isDarkMode = !!isDarkMode;
@@ -452,7 +455,9 @@ export class Editor implements IEditor {
         if (this.isDarkMode()) {
             const colorHandler = this.getColorManager();
 
-            transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler);
+            transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler, {
+                tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
+            });
 
             result.style.color = result.style.color || 'inherit';
             result.style.backgroundColor = result.style.backgroundColor || 'inherit';

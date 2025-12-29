@@ -3,7 +3,6 @@ import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropH
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
 import type { TableEditFeature } from './TableEditFeature';
 import {
-    isElementOfType,
     normalizeRect,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     mutateBlock,
@@ -125,6 +124,7 @@ export interface CellResizerContext {
 export interface CellResizerInitValue {
     cmTable: ReadonlyContentModelTable | undefined;
     anchorColumn: number | undefined;
+    nextColumn: number;
     anchorRow: number | undefined;
     anchorRowHeight: number;
     allWidths: number[];
@@ -139,20 +139,9 @@ export function onDragStart(context: CellResizerContext, event: MouseEvent): Cel
     const rect = normalizeRect(td.getBoundingClientRect());
 
     // Get cell coordinates
-    const columnIndex = td.cellIndex;
-    const row =
-        td.parentElement && isElementOfType(td.parentElement, 'tr') ? td.parentElement : undefined;
-    const rowIndex = row?.rowIndex;
-
-    if (rowIndex == undefined) {
-        return {
-            cmTable: undefined,
-            anchorColumn: undefined,
-            anchorRow: undefined,
-            anchorRowHeight: -1,
-            allWidths: [],
-        }; // Just a fallback
-    }
+    let rowIndex: number | undefined;
+    let columnIndex: number | undefined;
+    let nextColumnIndex = -1;
 
     const { editor, table } = context;
 
@@ -160,24 +149,57 @@ export function onDragStart(context: CellResizerContext, event: MouseEvent): Cel
     const cmTable = getCMTableFromTable(editor, table);
 
     if (rect && cmTable) {
+        for (let r = 0; r < cmTable?.rows.length; r++) {
+            for (let c = 0; c < cmTable.rows[r].cells.length; c++) {
+                const cell = cmTable.rows[r].cells[c];
+
+                if (cell.cachedElement == td) {
+                    // Target cell found, record its position
+                    rowIndex = r;
+                    columnIndex = c;
+                } else if (rowIndex != undefined && columnIndex != undefined) {
+                    // rowIndex and columnIndex are already found, we can find nextColumnIndex now
+                    if (!cell.cachedElement) {
+                        // No cached element means this cell is merged, so this could potentially be the right side of column
+                        // We are trying to find the last merged cell so we can modify its width later
+                        columnIndex = c;
+                    } else {
+                        // Since we already found the target cell, the first cell with cachedElement after that must be the next column
+                        nextColumnIndex = c;
+                        break;
+                    }
+                }
+            }
+
+            // As long as rowIndex is found, we can break here, no matter if nextColumnIndex is found or not
+            // because for the last column case, nextColumnIndex will be -1
+            if (rowIndex != undefined) {
+                break;
+            }
+        }
+
         onStart();
 
-        return {
-            cmTable,
-            anchorColumn: columnIndex,
-            anchorRow: rowIndex,
-            anchorRowHeight: cmTable.rows[rowIndex].height,
-            allWidths: [...cmTable.widths],
-        };
-    } else {
-        return {
-            cmTable,
-            anchorColumn: undefined,
-            anchorRow: undefined,
-            anchorRowHeight: -1,
-            allWidths: [],
-        }; // Just a fallback
+        if (rowIndex !== undefined) {
+            return {
+                cmTable,
+                anchorColumn: columnIndex,
+                nextColumn: nextColumnIndex,
+                anchorRow: rowIndex,
+                anchorRowHeight: cmTable.rows[rowIndex].height,
+                allWidths: [...cmTable.widths],
+            };
+        }
     }
+
+    return {
+        cmTable,
+        anchorColumn: undefined,
+        anchorRow: undefined,
+        anchorRowHeight: -1,
+        allWidths: [],
+        nextColumn: -1,
+    }; // Just a fallback
 }
 
 /**
@@ -191,7 +213,6 @@ export function onDraggingHorizontal(
     deltaX: number,
     deltaY: number
 ) {
-    const { table } = context;
     const { cmTable, anchorRow, anchorRowHeight } = initValue;
 
     // Assign new widths and heights to the CM table
@@ -203,11 +224,15 @@ export function onDraggingHorizontal(
         const newHeight = Math.max(cmTable.rows[anchorRow].height, MIN_ALLOWED_TABLE_CELL_HEIGHT);
 
         // Writeback CM Table size changes to DOM Table
-        const tableRow = table.rows[anchorRow];
-        for (let col = 0; col < tableRow.cells.length; col++) {
-            const td = tableRow.cells[col];
-            td.style.height = newHeight + 'px';
-            td.style.boxSizing = 'border-box';
+        const tableRow = cmTable.rows[anchorRow].cells;
+
+        for (let col = 0; col < tableRow.length; col++) {
+            const td = tableRow[col].cachedElement;
+
+            if (td) {
+                td.style.height = newHeight + 'px';
+                td.style.boxSizing = 'border-box';
+            }
         }
 
         return true;
@@ -227,17 +252,15 @@ export function onDraggingVertical(
     deltaX: number
 ) {
     const { table, isRTL } = context;
-    const { cmTable, anchorColumn, allWidths } = initValue;
+    const { cmTable, anchorColumn, nextColumn, allWidths } = initValue;
 
     // Assign new widths and heights to the CM table
     if (cmTable && anchorColumn != undefined) {
         const mutableTable = mutateBlock(cmTable);
 
-        // Modify the CM Table size
-        const lastColumn = anchorColumn == cmTable.widths.length - 1;
         const change = deltaX * (isRTL ? -1 : 1);
         // This is the last column
-        if (lastColumn) {
+        if (nextColumn == -1) {
             // Only the last column changes
             // Normalize the new width value
             const newWidth = Math.max(
@@ -248,25 +271,42 @@ export function onDraggingVertical(
         } else {
             // Any other two columns
             const anchorChange = allWidths[anchorColumn] + change;
-            const nextAnchorChange = allWidths[anchorColumn + 1] - change;
+            const nextAnchorChange = allWidths[nextColumn] - change;
             if (
                 anchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH ||
                 nextAnchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH
             ) {
                 return false;
             }
+
             mutableTable.widths[anchorColumn] = anchorChange;
-            mutableTable.widths[anchorColumn + 1] = nextAnchorChange;
+            mutableTable.widths[nextColumn] = nextAnchorChange;
         }
 
-        // Writeback CM Table size changes to DOM Table
-        for (let row = 0; row < table.rows.length; row++) {
-            const tableRow = table.rows[row];
-            for (let col = 0; col < tableRow.cells.length; col++) {
-                const td = tableRow.cells[col];
+        // Write back CM Table size changes to DOM Table
+        for (let row = 0; row < cmTable.rows.length; row++) {
+            const tableRow = cmTable.rows[row].cells;
+            let lastTd: HTMLTableCellElement | null = null;
+            let lastWidth = 0;
 
-                td.style.width = cmTable.widths[col] + 'px';
-                td.style.boxSizing = 'border-box';
+            for (let col = 0; col < tableRow.length; col++) {
+                const td = tableRow[col].cachedElement;
+
+                if (td) {
+                    td.style.boxSizing = 'border-box';
+                    lastTd = td;
+                    lastWidth = cmTable.widths[col];
+                } else if (lastTd && tableRow[col].spanLeft) {
+                    lastWidth += cmTable.widths[col];
+                } else if (tableRow[col].spanAbove) {
+                    // For span above case, we don't need to adjust width, just clear lastTd and lastWidth
+                    lastTd = null;
+                    lastWidth = 0;
+                }
+
+                if (lastTd) {
+                    lastTd.style.width = lastWidth + 'px';
+                }
             }
         }
 

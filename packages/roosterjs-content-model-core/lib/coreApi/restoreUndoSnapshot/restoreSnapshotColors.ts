@@ -14,7 +14,10 @@ export function restoreSnapshotColors(core: EditorCore, snapshot: Snapshot) {
             core.physicalRoot,
             false /*includeSelf*/,
             isDarkMode ? 'lightToDark' : 'darkToLight',
-            core.darkColorHandler
+            core.darkColorHandler,
+            {
+                tableBorders: core.experimentalFeatures.indexOf('TransformTableBorderColors') > -1,
+            }
         );
     }
 }

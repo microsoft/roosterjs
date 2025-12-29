@@ -8,11 +8,14 @@ import {
     mergeModel,
     normalizeTable,
     setSelection,
+    MIN_ALLOWED_TABLE_CELL_WIDTH,
 } from 'roosterjs-content-model-dom';
 import type {
+    ContentModelTable,
     ContentModelTableFormat,
     IEditor,
     TableMetadataFormat,
+    ContentModelTableCellFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -23,13 +26,15 @@ import type {
  * @param rows Number of rows in table
  * @param tableMetadataFormat (Optional) The table format that are stored as metadata. If not passed, the default format will be applied: background color: #FFF; border color: #ABABAB
  * @param format (Optional) The table format used for style attributes
+ * @param cellFormat (Optional) custom format for table cells, except for borders styles, for borders use tableMetadataFormat
  */
 export function insertTable(
     editor: IEditor,
     columns: number,
     rows: number,
     tableMetadataFormat?: Partial<TableMetadataFormat>,
-    format?: ContentModelTableFormat
+    format?: ContentModelTableFormat,
+    customCellFormat?: ContentModelTableCellFormat
 ) {
     editor.focus();
 
@@ -39,12 +44,13 @@ export function insertTable(
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
-                const table = createTableStructure(doc, columns, rows);
+                const table = createTableStructure(doc, columns, rows, customCellFormat);
                 if (format) {
                     table.format = { ...format };
                 }
 
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
+                initCellWidth(table);
 
                 adjustTableIndentation(insertPosition, table);
 
@@ -73,4 +79,26 @@ export function insertTable(
             apiName: 'insertTable',
         }
     );
+}
+
+function initCellWidth(table: ContentModelTable) {
+    const columns = Math.max(...table.rows.map(row => row.cells.length));
+
+    for (let i = 0; i < columns; i++) {
+        if (table.widths[i] === undefined) {
+            table.widths[i] = getTableCellWidth(columns);
+        } else if (table.widths[i] < MIN_ALLOWED_TABLE_CELL_WIDTH) {
+            table.widths[i] = MIN_ALLOWED_TABLE_CELL_WIDTH;
+        }
+    }
+}
+
+function getTableCellWidth(columns: number): number {
+    if (columns <= 4) {
+        return 120;
+    } else if (columns <= 6) {
+        return 100;
+    } else {
+        return 70;
+    }
 }

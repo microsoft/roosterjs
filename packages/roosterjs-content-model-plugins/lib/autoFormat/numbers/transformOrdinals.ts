@@ -40,7 +40,8 @@ const ORDINAL_LENGTH = 2;
             if (
                 numberSegment &&
                 numberSegment.segmentType == 'Text' &&
-                (numericValue = getNumericValue(numberSegment.text, true /* checkFullText */)) &&
+                (numericValue = getNumericValue(numberSegment.text, true /* checkFullText */)) !==
+                    null &&
                 getOrdinal(numericValue) === value
             ) {
                 shouldAddSuperScript = true;
@@ -48,7 +49,7 @@ const ORDINAL_LENGTH = 2;
         } else {
             const ordinal = value.substring(value.length - ORDINAL_LENGTH); // This value  is equal st, nd, rd, th
             const numericValue = getNumericValue(value); //This is the numeric part. Ex: 10th, numeric value =
-            if (numericValue && getOrdinal(numericValue) === ordinal) {
+            if (numericValue !== null && getOrdinal(numericValue) === ordinal) {
                 shouldAddSuperScript = true;
             }
         }
