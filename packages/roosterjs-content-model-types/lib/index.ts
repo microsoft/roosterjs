@@ -60,6 +60,7 @@ export { EntityInfoFormat } from './contentModel/format/formatParts/EntityInfoFo
 export { UndeletableFormat } from './contentModel/format/formatParts/UndeletableFormat';
 export { ImageStateFormat } from './contentModel/format/formatParts/ImageStateFormat';
 export { RoleFormat } from './contentModel/format/formatParts/RoleFormat';
+export { LegacyTableBorderFormat } from './contentModel/format/formatParts/LegacyTableBorderFormat';
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
@@ -460,6 +461,7 @@ export { ConflictFormatSolution } from './parameter/ConflictFormatSolution';
 export { ParagraphMap, ParagraphIndexer } from './parameter/ParagraphMap';
 export { TextAndHtmlContentForCopy } from './parameter/TextAndHtmlContentForCopy';
 export { PromotedLink } from './parameter/PromotedLink';
+export { BorderKey } from './parameter/BorderKey';
 
 export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';

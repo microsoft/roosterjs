@@ -9,6 +9,7 @@ export {
 } from './domToModel/processors/childProcessor';
 export { entityProcessor } from './domToModel/processors/entityProcessor';
 export { tableProcessor } from './domToModel/processors/tableProcessor';
+export { formatContainerProcessor } from './domToModel/processors/formatContainerProcessor';
 export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelectionOffsets';
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
@@ -89,7 +90,7 @@ export { getOrderedListNumberStr } from './modelApi/list/getOrderedListNumberStr
 export { getAutoListStyleType } from './modelApi/list/getAutoListStyleType';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
-export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
+export { BorderKeys } from './formatHandlers/utils/borderKeys';
 export {
     DeprecatedColors,
     getColor,
@@ -118,7 +119,7 @@ export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
 export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
-export { transformColor } from './domUtils/style/transformColor';
+export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';

@@ -11,8 +11,13 @@ export function retrieveStringFromParsedTable(tsInfo: TableSelectionInfo): strin
     let result = '';
 
     if (lastCo) {
-        for (let r = firstCo.row; r <= lastCo.row; r++) {
-            for (let c = firstCo.col; c <= lastCo.col; c++) {
+        const firstCol = Math.min(firstCo.col, lastCo.col);
+        const lastCol = Math.max(firstCo.col, lastCo.col);
+        const firstRow = Math.min(firstCo.row, lastCo.row);
+        const lastRow = Math.max(firstCo.row, lastCo.row);
+
+        for (let r = firstRow; r <= lastRow; r++) {
+            for (let c = firstCol; c <= lastCol; c++) {
                 const cell = parsedTable[r] && parsedTable[r][c];
                 if (cell && typeof cell != 'string') {
                     result += ' ' + cell.innerText + ',';
@@ -80,15 +85,4 @@ export function getIsSelectingOrUnselecting(
         // Same area but different positions
         return 'selecting';
     }
-
-    if (
-        prevFirstColumn !== newFirstColumn ||
-        prevFirstRow !== newFirstRow ||
-        prevLastColumn !== newLastColumn ||
-        prevLastRow !== newLastRow
-    ) {
-        return 'selecting';
-    }
-
-    return null;
 }

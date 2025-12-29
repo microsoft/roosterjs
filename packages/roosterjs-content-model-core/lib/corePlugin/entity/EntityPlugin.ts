@@ -150,7 +150,12 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                             wrapper,
                             true /*includeSelf*/,
                             'lightToDark',
-                            editor.getColorManager()
+                            editor.getColorManager(),
+                            {
+                                tableBorders: editor.isExperimentalFeatureEnabled(
+                                    'TransformTableBorderColors'
+                                ),
+                            }
                         );
                     }
                 } else if (id) {

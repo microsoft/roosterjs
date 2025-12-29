@@ -410,5 +410,66 @@ describe('tableSelectionUtils', () => {
             const result = getIsSelectingOrUnselecting(null, newTableSelection);
             expect(result).toBe('selecting');
         });
+
+        it('should work with actual parsed table when lastCo is before firstCo', () => {
+            // Create actual table cells with content
+            const td1 = document.createElement('td');
+            td1.innerText = 'A1';
+            const td2 = document.createElement('td');
+            td2.innerText = 'B1';
+            const td3 = document.createElement('td');
+            td3.innerText = 'C1';
+            const td4 = document.createElement('td');
+            td4.innerText = 'A2';
+            const td5 = document.createElement('td');
+            td5.innerText = 'B2';
+            const td6 = document.createElement('td');
+            td6.innerText = 'C2';
+            const td7 = document.createElement('td');
+            td7.innerText = 'A3';
+            const td8 = document.createElement('td');
+            td8.innerText = 'B3';
+            const td9 = document.createElement('td');
+            td9.innerText = 'C3';
+
+            const mockTableSelectionInfo: TableSelectionInfo = {
+                parsedTable: [
+                    [td1, td2, td3],
+                    [td4, td5, td6],
+                    [td7, td8, td9],
+                ],
+                firstCo: { row: 2, col: 2 }, // C3
+                lastCo: { row: 0, col: 0 }, // A1 - lastCo before firstCo
+                table: document.createElement('table'),
+                startNode: td1,
+            };
+
+            // Test that retrieveStringFromParsedTable works with reversed coordinates
+            const extractedText = retrieveStringFromParsedTable(mockTableSelectionInfo);
+            expect(extractedText).toBe(' A1, B1, C1, A2, B2, C2, A3, B3, C3,');
+
+            const prevTableSelection: TableSelection = {
+                type: 'table',
+                table: document.createElement('table'),
+                firstRow: 2,
+                firstColumn: 2,
+                lastRow: 0,
+                lastColumn: 0,
+                tableSelectionInfo: mockTableSelectionInfo,
+            }; // 3x3 selection with lastCo before firstCo (area = 9)
+
+            const newTableSelection: TableSelection = {
+                type: 'table',
+                table: document.createElement('table'),
+                firstRow: 1,
+                firstColumn: 1,
+                lastRow: 1,
+                lastColumn: 1,
+                tableSelectionInfo: mockTableSelectionInfo,
+            }; // Single cell selection (area = 1)
+
+            const result = getIsSelectingOrUnselecting(prevTableSelection, newTableSelection);
+            expect(result).toBe('unselecting'); // Area decreased from 9 to 1
+        });
     });
 });

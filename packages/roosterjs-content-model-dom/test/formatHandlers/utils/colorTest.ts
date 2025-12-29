@@ -2,7 +2,10 @@ import { Colors, DarkColorHandler } from 'roosterjs-content-model-types';
 import {
     defaultGenerateColorKey,
     getColor,
+    getLightModeColor,
     parseColor,
+    retrieveElementColor,
+    adaptColor,
     setColor,
 } from '../../../lib/formatHandlers/utils/color';
 
@@ -624,5 +627,392 @@ describe('parseColor', () => {
     it('rgba 3', () => {
         const result = parseColor('rgba(1.1, 2.2, 3.3, 4.4)');
         expect(result).toEqual([1, 2, 3]);
+    });
+});
+
+describe('getLightModeColor', () => {
+    it('should return undefined for background deprecated colors', () => {
+        const result = getLightModeColor('windowtext', false, undefined, undefined);
+        expect(result).toBeUndefined();
+    });
+
+    it('should return black color for text deprecated colors', () => {
+        const result = getLightModeColor('windowtext', false, undefined, 'rgb(0, 0, 0)');
+        expect(result).toBe('rgb(0, 0, 0)');
+    });
+
+    it('should return color as-is for normal colors without dark color handler', () => {
+        const result = getLightModeColor('red', false, undefined);
+        expect(result).toBe('red');
+    });
+
+    it('should extract fallback color from CSS variable', () => {
+        const darkColorHandler: DarkColorHandler = {
+            knownColors: {},
+            getDarkColor: jasmine.createSpy('getDarkColor'),
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            reset: jasmine.createSpy('reset'),
+            generateColorKey: defaultGenerateColorKey,
+        };
+
+        const result = getLightModeColor('var(--test, red)', false, darkColorHandler);
+        expect(result).toBe('red');
+    });
+
+    it('should extract empty string when no fallback in CSS variable', () => {
+        const darkColorHandler: DarkColorHandler = {
+            knownColors: {},
+            getDarkColor: jasmine.createSpy('getDarkColor'),
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            reset: jasmine.createSpy('reset'),
+            generateColorKey: defaultGenerateColorKey,
+        };
+
+        const result = getLightModeColor('var(--test)', false, darkColorHandler);
+        expect(result).toBe('');
+    });
+
+    it('should return empty string for unknown dark color in dark mode', () => {
+        const darkColorHandler: DarkColorHandler = {
+            knownColors: {},
+            getDarkColor: jasmine.createSpy('getDarkColor'),
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            reset: jasmine.createSpy('reset'),
+            generateColorKey: defaultGenerateColorKey,
+        };
+
+        const result = getLightModeColor('rgb(100, 100, 100)', true, darkColorHandler);
+        expect(result).toBe('');
+    });
+
+    it('should find light color from known dark colors in dark mode', () => {
+        const darkColorHandler: DarkColorHandler = {
+            knownColors: {
+                '--darkColor_red': {
+                    lightModeColor: 'red',
+                    darkModeColor: 'rgb(100, 100, 100)',
+                },
+            },
+            getDarkColor: jasmine.createSpy('getDarkColor'),
+            updateKnownColor: jasmine.createSpy('updateKnownColor'),
+            reset: jasmine.createSpy('reset'),
+            generateColorKey: defaultGenerateColorKey,
+        };
+
+        const result = getLightModeColor('rgb(100, 100, 100)', true, darkColorHandler);
+        expect(result).toBe('red');
+    });
+});
+
+describe('retrieveElementColor', () => {
+    let element: HTMLElement;
+
+    beforeEach(() => {
+        element = document.createElement('div');
+    });
+
+    it('should retrieve text color from style', () => {
+        element.style.color = 'red';
+        const result = retrieveElementColor(element, 'text');
+        expect(result).toBe('red');
+    });
+
+    it('should retrieve text color from attribute if no style', () => {
+        element.setAttribute('color', 'blue');
+        const result = retrieveElementColor(element, 'text');
+        expect(result).toBe('blue');
+    });
+
+    it('should prefer style over attribute for text color', () => {
+        element.style.color = 'red';
+        element.setAttribute('color', 'blue');
+        const result = retrieveElementColor(element, 'text');
+        expect(result).toBe('red');
+    });
+
+    it('should return fallback for text if no color found', () => {
+        const result = retrieveElementColor(element, 'text', 'fallback');
+        expect(result).toBe('fallback');
+    });
+
+    it('should retrieve background color from style', () => {
+        element.style.backgroundColor = 'green';
+        const result = retrieveElementColor(element, 'background');
+        expect(result).toBe('green');
+    });
+
+    it('should retrieve background color from attribute if no style', () => {
+        element.setAttribute('bgcolor', 'yellow');
+        const result = retrieveElementColor(element, 'background');
+        expect(result).toBe('yellow');
+    });
+
+    it('should prefer style over attribute for background color', () => {
+        element.style.backgroundColor = 'green';
+        element.setAttribute('bgcolor', 'yellow');
+        const result = retrieveElementColor(element, 'background');
+        expect(result).toBe('green');
+    });
+
+    it('should return fallback for background if no color found', () => {
+        const result = retrieveElementColor(element, 'background', 'fallback');
+        expect(result).toBe('fallback');
+    });
+
+    it('should return undefined if no text color and no fallback', () => {
+        const result = retrieveElementColor(element, 'text');
+        expect(result).toBeUndefined();
+    });
+
+    it('should return undefined if no background color and no fallback', () => {
+        const result = retrieveElementColor(element, 'background');
+        expect(result).toBeUndefined();
+    });
+});
+
+describe('adaptColor', () => {
+    let element: HTMLElement;
+    let darkColorHandler: DarkColorHandler;
+    let getDarkColorSpy: jasmine.Spy;
+    let updateKnownColorSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        element = document.createElement('div');
+        getDarkColorSpy = jasmine.createSpy('getDarkColor').and.returnValue('dark_red');
+        updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
+
+        darkColorHandler = {
+            knownColors: {},
+            getDarkColor: getDarkColorSpy,
+            updateKnownColor: updateKnownColorSpy,
+            reset: jasmine.createSpy('reset'),
+            generateColorKey: defaultGenerateColorKey,
+        };
+    });
+
+    it('should return null for null color', () => {
+        const result = adaptColor(element, null, 'border', false);
+        expect(result).toBeNull();
+    });
+
+    it('should return undefined for undefined color', () => {
+        const result = adaptColor(element, undefined, 'border', false);
+        expect(result).toBeUndefined();
+    });
+
+    it('should return color as-is without dark color handler', () => {
+        const result = adaptColor(element, 'red', 'border', false);
+        expect(result).toBe('red');
+    });
+
+    it('should return color as-is in light mode with dark color handler', () => {
+        const result = adaptColor(element, 'red', 'border', false, darkColorHandler);
+        expect(result).toBe('red');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'border', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should wrap color with CSS variable in dark mode', () => {
+        const result = adaptColor(element, 'blue', 'border', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_blue, blue)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'border', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should extract fallback color from existing CSS variable', () => {
+        const result = adaptColor(
+            element,
+            'var(--existing, green)',
+            'border',
+            false,
+            darkColorHandler
+        );
+        expect(result).toBe('green');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'border', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--existing', {
+            lightModeColor: 'green',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should use existing key from CSS variable in dark mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--existing, green)',
+            'border',
+            true,
+            darkColorHandler
+        );
+        expect(result).toBe('var(--existing, green)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'border', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--existing', {
+            lightModeColor: 'green',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should use known dark color when available', () => {
+        darkColorHandler.knownColors['--darkColor_red'] = {
+            lightModeColor: 'red',
+            darkModeColor: 'existing_dark_red',
+        };
+
+        const result = adaptColor(element, 'red', 'border', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_red, red)');
+        expect(getDarkColorSpy).not.toHaveBeenCalled();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'existing_dark_red',
+        });
+    });
+
+    it('should generate new dark color when not in known colors', () => {
+        const result = adaptColor(element, 'purple', 'border', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_purple, purple)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('purple', undefined, 'border', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_purple', {
+            lightModeColor: 'purple',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color in light mode', () => {
+        const result = adaptColor(element, 'red', 'text', false, darkColorHandler);
+        expect(result).toBe('red');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color in dark mode', () => {
+        const result = adaptColor(element, 'red', 'text', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_red, red)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red', {
+            lightModeColor: 'red',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color in light mode', () => {
+        const result = adaptColor(element, 'blue', 'background', false, darkColorHandler);
+        expect(result).toBe('blue');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color in dark mode', () => {
+        const result = adaptColor(element, 'blue', 'background', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_blue, blue)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
+            lightModeColor: 'blue',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color with CSS variable in light mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--text-color, black)',
+            'text',
+            false,
+            darkColorHandler
+        );
+        expect(result).toBe('black');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--text-color', {
+            lightModeColor: 'black',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle text color with CSS variable in dark mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--text-color, black)',
+            'text',
+            true,
+            darkColorHandler
+        );
+        expect(result).toBe('var(--text-color, black)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--text-color', {
+            lightModeColor: 'black',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color with CSS variable in light mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--bg-color, white)',
+            'background',
+            false,
+            darkColorHandler
+        );
+        expect(result).toBe('white');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--bg-color', {
+            lightModeColor: 'white',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should handle background color with CSS variable in dark mode', () => {
+        const result = adaptColor(
+            element,
+            'var(--bg-color, white)',
+            'background',
+            true,
+            darkColorHandler
+        );
+        expect(result).toBe('var(--bg-color, white)');
+        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--bg-color', {
+            lightModeColor: 'white',
+            darkModeColor: 'dark_red',
+        });
+    });
+
+    it('should use known text color in dark mode', () => {
+        darkColorHandler.knownColors['--darkColor_orange'] = {
+            lightModeColor: 'orange',
+            darkModeColor: 'existing_dark_orange',
+        };
+
+        const result = adaptColor(element, 'orange', 'text', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_orange, orange)');
+        expect(getDarkColorSpy).not.toHaveBeenCalled();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_orange', {
+            lightModeColor: 'orange',
+            darkModeColor: 'existing_dark_orange',
+        });
+    });
+
+    it('should use known background color in dark mode', () => {
+        darkColorHandler.knownColors['--darkColor_gray'] = {
+            lightModeColor: 'gray',
+            darkModeColor: 'existing_dark_gray',
+        };
+
+        const result = adaptColor(element, 'gray', 'background', true, darkColorHandler);
+        expect(result).toBe('var(--darkColor_gray, gray)');
+        expect(getDarkColorSpy).not.toHaveBeenCalled();
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_gray', {
+            lightModeColor: 'gray',
+            darkModeColor: 'existing_dark_gray',
+        });
     });
 });
