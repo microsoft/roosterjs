@@ -236,6 +236,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     resetEditorPlugin(pluginState: OptionState) {
         this.updateContentPlugin.update();
+        this.imageEditPlugin = new ImageEditPlugin({
+            disableSideResize: pluginState.disableSideResize,
+        });
         this.setState({
             initState: pluginState,
         });
@@ -552,7 +555,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
-            imageEditPlugin,
+            pluginList.imageEditPlugin && imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

@@ -70,7 +70,7 @@ const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
  * - Flip image
  */
 export class LegacyImageEditPlugin implements ImageEditor, EditorPlugin {
-    protected editor: IEditor | null = null;
+    public editor: IEditor | null = null;
     private shadowSpan: HTMLSpanElement | null = null;
     private selectedImage: HTMLImageElement | null = null;
     protected wrapper: HTMLSpanElement | null = null;
@@ -86,7 +86,7 @@ export class LegacyImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
-    protected isEditing = false;
+    public isEditing = false;
     protected options: ImageEditOptions;
 
     constructor(options?: ImageEditOptions) {
@@ -334,7 +334,7 @@ export class LegacyImageEditPlugin implements ImageEditor, EditorPlugin {
     /**
      * EXPOSED FOR TESTING PURPOSE ONLY
      */
-    protected applyFormatWithContentModel(
+    public applyFormatWithContentModel(
         editor: IEditor,
         isCropMode: boolean,
         shouldSelectImage?: boolean,

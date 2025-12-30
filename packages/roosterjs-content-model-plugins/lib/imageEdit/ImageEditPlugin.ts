@@ -42,6 +42,18 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     /**
+     * @deprecated
+     * When ImageEditV2 is enabled, this will always be false
+     */
+    protected get isEditing() {
+        return this.imageEditPlugin?.isEditing;
+    }
+
+    protected get editor() {
+        return this.imageEditPlugin?.editor;
+    }
+
+    /**
      * The first method that editor will call to a plugin when editor is initializing.
      * It will pass in the editor instance, plugin should take this chance to save the
      * editor reference so that it can call to any editor method or format API later.
@@ -92,5 +104,19 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     isOperationAllowed(operation: ImageEditOperation): boolean {
         return !!this.imageEditPlugin?.isOperationAllowed(operation);
+    }
+
+    protected applyFormatWithContentModel(
+        editor: IEditor,
+        isCropMode: boolean,
+        shouldSelectImage?: boolean,
+        isApiOperation?: boolean
+    ) {
+        this.imageEditPlugin?.applyFormatWithContentModel(
+            editor,
+            isCropMode,
+            shouldSelectImage,
+            isApiOperation
+        );
     }
 }
