@@ -4,12 +4,11 @@ on:
         branches:
             - release
 
-permissions:
-    id-token: write # Required for OIDC
-    contents: read
-
 jobs:
     build-and-deploy:
+        permissions:
+            id-token: write # Required for OIDC
+            contents: read
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
