@@ -12,7 +12,7 @@ import type {
 
 const TextAlignValueMap: Record<
     TableCellHorizontalAlignOperation,
-    Record<'ltr' | 'rtl', 'start' | 'center' | 'end' | 'initial' | 'justify'>
+    Partial<Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>>
 > = {
     alignCellLeft: {
         ltr: 'start',
