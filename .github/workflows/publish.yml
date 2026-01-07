@@ -28,4 +28,6 @@ jobs:
               run: npm run-script build:ci
 
             - name: Publish
-              run: node tools/build.js publish
+              uses: author/action-publish@stable
+              with:
+                  scan: './dist'
