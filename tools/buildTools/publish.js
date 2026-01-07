@@ -32,6 +32,7 @@ function publish(options) {
             const targetNpmrcName = path.join(distPath, packageName, '.npmrc');
 
             if (fs.existsSync(rootNpmrcName)) {
+                console.log(`Copying .npmrc to ${packageName} folder`);
                 fs.copyFileSync(rootNpmrcName, targetNpmrcName);
             }
 
