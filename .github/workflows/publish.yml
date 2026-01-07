@@ -29,4 +29,5 @@ jobs:
               run: npm run-script build:ci
 
             - name: Publish
-              run: node tools/build.js publish
+              working-directory: ./dist/roosterjs-content-model-types
+              run: npm publish
