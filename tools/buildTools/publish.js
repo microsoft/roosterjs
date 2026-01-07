@@ -22,10 +22,10 @@ function publish() {
             console.log(
                 `Skip publishing package ${packageName}, because version (${localVersion}) is not ready to publish`
             );
-            // } else if (localVersion == npmVersion) {
-            //     console.log(
-            //         `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
-            //     );
+        } else if (localVersion == npmVersion) {
+            console.log(
+                `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
+            );
         } else {
             try {
                 const basePublishString = `npm publish`;

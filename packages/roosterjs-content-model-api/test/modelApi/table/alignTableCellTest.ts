@@ -12,15 +12,82 @@ import {
 describe('alignTableCellHorizontally', () => {
     function runTest(
         operation: TableCellHorizontalAlignOperation,
-        expectedFormat: ContentModelTableCellFormat
+        expectedFormat: ContentModelTableCellFormat,
+        isRTL?: boolean
     ) {
         const table = createTable(2);
-        table.rows[0].cells.push(createTableCell(1, 1, false));
-        table.rows[0].cells.push(createTableCell(1, 1, false));
-        table.rows[0].cells.push(createTableCell(1, 1, false));
-        table.rows[1].cells.push(createTableCell(1, 1, false));
-        table.rows[1].cells.push(createTableCell(1, 1, false));
-        table.rows[1].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
+        table.rows[0].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
+        table.rows[0].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
+        table.rows[1].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
+        table.rows[1].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
+        table.rows[1].cells.push(
+            createTableCell(
+                1,
+                1,
+                false,
+                isRTL
+                    ? {
+                          direction: 'rtl',
+                      }
+                    : undefined
+            )
+        );
         table.rows[0].cells[1].isSelected = true;
         table.rows[0].cells[2].isSelected = true;
         table.rows[1].cells[1].isSelected = true;
@@ -36,12 +103,20 @@ describe('alignTableCellHorizontally', () => {
         alignTableCellHorizontally(table, operation);
 
         expect(table.rows[0].cells.map(c => c.format)).toEqual([
-            {},
+            isRTL
+                ? {
+                      direction: 'rtl',
+                  }
+                : {},
             expectedFormat,
             expectedFormat,
         ]);
         expect(table.rows[1].cells.map(c => c.format)).toEqual([
-            {},
+            isRTL
+                ? {
+                      direction: 'rtl',
+                  }
+                : {},
             expectedFormat,
             expectedFormat,
         ]);
@@ -86,6 +161,28 @@ describe('alignTableCellHorizontally', () => {
         runTest('alignCellRight', {
             textAlign: 'end',
         });
+    });
+
+    it('align to left - RTL', () => {
+        runTest(
+            'alignCellLeft',
+            {
+                direction: 'rtl',
+                textAlign: 'end',
+            },
+            true /* isRTL */
+        );
+    });
+
+    it('align to right - RTL ', () => {
+        runTest(
+            'alignCellRight',
+            {
+                direction: 'rtl',
+                textAlign: 'start',
+            },
+            true /* isRTL */
+        );
     });
 });
 
