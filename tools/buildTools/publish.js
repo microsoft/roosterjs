@@ -31,6 +31,9 @@ function publish() {
                 const basePublishString = `npm publish`;
                 const publishString = basePublishString + ` --tag ${tagname}`;
                 exec(publishString, {
+                    env: {
+                        ...process.env,
+                    },
                     stdio: 'inherit',
                     cwd: path.join(distPath, packageName),
                 });
