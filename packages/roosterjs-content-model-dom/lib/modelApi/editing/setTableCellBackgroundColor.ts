@@ -64,16 +64,16 @@ function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
 
             if (
                 block.segmentFormat?.textColor &&
-                (isSameColor(block.segmentFormat.textColor, White) ||
-                    isSameColor(block.segmentFormat.textColor, Black))
+                (areSameColor(block.segmentFormat.textColor, White) ||
+                    areSameColor(block.segmentFormat.textColor, Black))
             ) {
                 delete block.segmentFormat.textColor;
             }
             block.segments.forEach(segment => {
                 if (
                     segment.format.textColor &&
-                    (isSameColor(segment.format.textColor, White) ||
-                        isSameColor(segment.format.textColor, Black))
+                    (areSameColor(segment.format.textColor, White) ||
+                        areSameColor(segment.format.textColor, Black))
                 ) {
                     delete segment.format.textColor;
                 }
@@ -90,7 +90,7 @@ function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell, backgro
 
                 if (
                     !block.segmentFormat?.textColor ||
-                    isSameColor(backgroundColor, block.segmentFormat.textColor)
+                    areSameColor(backgroundColor, block.segmentFormat.textColor)
                 ) {
                     block.segmentFormat = {
                         ...block.segmentFormat,
@@ -100,7 +100,7 @@ function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell, backgro
                 block.segments.forEach(segment => {
                     if (
                         !segment.format?.textColor ||
-                        isSameColor(backgroundColor, segment.format.textColor)
+                        areSameColor(backgroundColor, segment.format.textColor)
                     ) {
                         segment.format = {
                             ...segment.format,
@@ -133,7 +133,7 @@ function calculateLightness(color: string) {
 /**
  * Check if two colors are the same by comparing their RGB values
  */
-function isSameColor(color1: string, color2: string): boolean {
+function areSameColor(color1: string, color2: string): boolean {
     const rgb1 = parseColor(color1);
     const rgb2 = parseColor(color2);
 
