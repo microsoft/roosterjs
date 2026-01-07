@@ -6,9 +6,11 @@ import { parseFormat } from '../utils/parseFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
+    ContentModelBlockGroup,
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
     ContentModelParagraph,
+    DomToModelContext,
     ElementProcessor,
     MarginFormat,
     PaddingFormat,
@@ -37,6 +39,33 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
     element,
     context
 ) => {
+    formatContainerProcessorInternal(group, element, context, false /* forceFormatContainer */);
+};
+
+/**
+ * @internal
+ * Content Model Element Processor for format container elements (e.g., blockquote, div)
+ * Processes elements that create FormatContainer blocks in the content model.
+ * This processor can be used in processorOverride to customize how specific elements are processed.
+ * This processor will always add FormatContainer block
+ * @param group The parent block group
+ * @param element The DOM element to process
+ * @param context DOM to Content Model context
+ */
+export const forceFormatContainerProcessor: ElementProcessor<HTMLElement> = (
+    group,
+    element,
+    context
+) => {
+    formatContainerProcessorInternal(group, element, context, true /* forceFormatContainer */);
+};
+
+const formatContainerProcessorInternal = (
+    group: ContentModelBlockGroup,
+    element: HTMLElement,
+    context: DomToModelContext,
+    forceFormatContainer: boolean
+) => {
     stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
         parseFormat(element, context.formatParsers.block, context.blockFormat, context);
         parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
@@ -64,7 +93,7 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
             formatContainer.zeroFontSize = true;
         }
 
-        if (shouldFallbackToParagraph(formatContainer)) {
+        if (shouldFallbackToParagraph(formatContainer) && !forceFormatContainer) {
             // For DIV container that only has one paragraph child, container style can be merged into paragraph
             // and no need to have this container
             const paragraph = formatContainer.blocks[0] as ContentModelParagraph;
