@@ -10,13 +10,22 @@ import type {
     TableCellVerticalAlignOperation,
 } from 'roosterjs-content-model-types';
 
-const TextAlignValueMap: Partial<Record<
+const TextAlignValueMap: Record<
     TableCellHorizontalAlignOperation,
-    'start' | 'center' | 'end'
->> = {
-    alignCellLeft: 'start',
-    alignCellCenter: 'center',
-    alignCellRight: 'end',
+    Partial<Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>>
+> = {
+    alignCellLeft: {
+        ltr: 'start',
+        rtl: 'end',
+    },
+    alignCellCenter: {
+        ltr: 'center',
+        rtl: 'center',
+    },
+    alignCellRight: {
+        ltr: 'end',
+        rtl: 'start',
+    },
 };
 
 const VerticalAlignValueMap: Partial<Record<
@@ -36,7 +45,8 @@ export function alignTableCellHorizontally(
     operation: TableCellHorizontalAlignOperation
 ) {
     alignTableCellInternal(table, cell => {
-        cell.format.textAlign = TextAlignValueMap[operation];
+        cell.format.textAlign =
+            TextAlignValueMap[operation][cell.format.direction == 'rtl' ? 'rtl' : 'ltr'];
     });
 }
 
