@@ -6,7 +6,6 @@ const exec = require('child_process').execSync;
 const { distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
-const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
 function publish(options) {
     packages.forEach(packageName => {
@@ -30,10 +29,8 @@ function publish(options) {
             );
         } else {
             let npmrcName = path.join(distPath, packageName, '.npmrc');
-            if (options.token) {
-                const npmrc = `${NpmrcContent}${options.token}\n`;
-                fs.writeFileSync(npmrcName, npmrc);
-            }
+
+            fs.copyFileSync('./.npmrc', npmrcName);
 
             try {
                 const basePublishString = `npm publish`;

@@ -29,4 +29,4 @@ jobs:
               run: npm run-script build:ci
 
             - name: Publish
-              run: node tools/build.js publish --token ${{ NODE_AUTH_TOKEN }}
+              run: node tools/build.js publish
