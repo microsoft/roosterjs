@@ -132,7 +132,12 @@ function parseOptions(additionalParams) {
     var params = [...process.argv, ...additionalParams];
     var options = {};
     for (var i = 0; i < params.length; i++) {
-        if (params[i] == '--noProgressBar') {
+        if (params[i] == '--token') {
+            options.token = params[++i];
+            console.log(
+                'Found token: ****' + (options.token ?? '').substr(options.token.length - 4)
+            );
+        } else if (params[i] == '--noProgressBar') {
             options.noProgressBar = true;
         } else {
             var index = commands.indexOf(params[i]);

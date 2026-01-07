@@ -29,5 +29,4 @@ jobs:
               run: npm run-script build:ci
 
             - name: Publish
-              working-directory: ./dist/roosterjs-content-model-types
-              run: npm publish
+              run: node tools/build.js publish --token ${{ NODE_AUTH_TOKEN }}
