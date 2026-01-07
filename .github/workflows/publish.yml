@@ -18,7 +18,6 @@ jobs:
 
             - name: Set Node Version
               uses: actions/setup-node@v4
-              working-directory: ./dist/roosterjs-content-model-types
               with:
                   node-version: '24'
                   registry-url: 'https://registry.npmjs.org'
