@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const exec = require('child_process').execSync;
-const { distPath, readPackageJson, packages } = require('./common');
+const { rootPath, distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
 
@@ -28,9 +28,12 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            let npmrcName = path.join(distPath, packageName, '.npmrc');
+            const rootNpmrcName = path.join(rootPath, '.npmrc');
+            const targetNpmrcName = path.join(distPath, packageName, '.npmrc');
 
-            fs.copyFileSync('./.npmrc', npmrcName);
+            if (fs.existsSync(rootNpmrcName)) {
+                fs.copyFileSync(rootNpmrcName, targetNpmrcName);
+            }
 
             try {
                 const basePublishString = `npm publish`;
@@ -46,8 +49,8 @@ function publish(options) {
                 // Do not treat publish failure as build failure
                 console.log(e);
             } finally {
-                if (options.token) {
-                    fs.unlinkSync(npmrcName);
+                if (fs.existsSync(targetNpmrcName)) {
+                    fs.unlinkSync(targetNpmrcName);
                 }
             }
         }
