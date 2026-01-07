@@ -6,6 +6,7 @@ const exec = require('child_process').execSync;
 const { rootPath, distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
+const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
 function publish(options) {
     packages.forEach(packageName => {
@@ -28,13 +29,10 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            const rootNpmrcName = path.join(rootPath, '.npmrc');
-            const targetNpmrcName = path.join(distPath, packageName, '.npmrc');
+            let npmrcName = path.join(distPath, packageName, '.npmrc');
 
-            if (fs.existsSync(rootNpmrcName)) {
-                console.log(`Copying .npmrc to ${packageName} folder`);
-                fs.copyFileSync(rootNpmrcName, targetNpmrcName);
-            }
+            const npmrc = `${NpmrcContent}${NODE_AUTH_TOKEN}\n`;
+            fs.writeFileSync(npmrcName, npmrc);
 
             try {
                 const basePublishString = `npm publish`;
@@ -50,8 +48,8 @@ function publish(options) {
                 // Do not treat publish failure as build failure
                 console.log(e);
             } finally {
-                if (fs.existsSync(targetNpmrcName)) {
-                    fs.unlinkSync(targetNpmrcName);
+                if (fs.existsSync(npmrcName)) {
+                    fs.unlinkSync(npmrcName);
                 }
             }
         }
