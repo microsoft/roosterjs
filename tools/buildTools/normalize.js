@@ -55,6 +55,10 @@ function normalize() {
             packageJson.version = version;
         }
 
+        if (packageJson.version == '0.0.0') {
+            packageJson.private = true;
+        }
+
         knownCustomizedPackages[packageName] = packageJson.version;
 
         packageJson.typings = './lib/index.d.ts';
