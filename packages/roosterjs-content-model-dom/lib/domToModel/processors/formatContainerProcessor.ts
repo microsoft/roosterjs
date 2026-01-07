@@ -44,13 +44,6 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
 
 /**
  * @internal
- * Content Model Element Processor for format container elements (e.g., blockquote, div)
- * Processes elements that create FormatContainer blocks in the content model.
- * This processor can be used in processorOverride to customize how specific elements are processed.
- * This processor will always add FormatContainer block
- * @param group The parent block group
- * @param element The DOM element to process
- * @param context DOM to Content Model context
  */
 export const forceFormatContainerProcessor: ElementProcessor<HTMLElement> = (
     group,
