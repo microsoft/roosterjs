@@ -672,6 +672,85 @@ describe('deleteList', () => {
         expect(result.deleteResult).toBe('range');
     });
 
+    it('Delete at beginning of list item with list item format', () => {
+        const list = createListItem([createListLevel('UL'), createListLevel('OL')], {
+            textColor: 'red',
+        });
+        const paragraph = createParagraph();
+        const SelectionMarker = createSelectionMarker();
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(SelectionMarker);
+        list.blocks.push(paragraph);
+        model.blocks.push(list);
+
+        const result = deleteSelection(model, [deleteList]);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            listType: 'OL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {
+                            textColor: 'red',
+                        },
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {
+                            textColor: 'red',
+                        },
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(result.deleteResult).toBe('range');
+    });
+
     it('Delete at beginning of list item with previous list item', () => {
         const list1 = createListItem([createListLevel('UL')]);
         const paragraph1 = createParagraph();
