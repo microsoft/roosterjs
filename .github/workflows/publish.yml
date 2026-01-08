@@ -4,12 +4,13 @@ on:
         branches:
             - releasetest
 
+permissions:
+    id-token: write # Required for OIDC
+    contents: read
+
 jobs:
     publish:
         runs-on: ubuntu-latest
-        permissions:
-            id-token: write # Required for OIDC
-            contents: read
         steps:
             - name: Checkout
               uses: actions/checkout@v4
