@@ -10,28 +10,24 @@ const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com
 
 function publish(options) {
     const rootNpmrc = path.join(rootPath, '.npmrc');
+    const NODE_AUTH_TOKEN = options.token;
 
-    console.log(`Reading npm token from ${rootNpmrc}...`);
+    // if (fs.existsSync(rootNpmrc)) {
+    //     console.log(`Found .npmrc file, reading auth token...`);
+    //     const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
 
-    let NODE_AUTH_TOKEN = '';
+    //     for (const line of lines) {
+    //         console.log(line);
 
-    if (fs.existsSync(rootNpmrc)) {
-        console.log(`Found .npmrc file, reading auth token...`);
-        const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
-
-        for (const line of lines) {
-            console.log(line);
-
-            if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
-                NODE_AUTH_TOKEN = line.replace('//registry.npmjs.com/:_authToken=', '').trim();
-                break;
-            }
-        }
-    } else {
-        console.log(`.npmrc file not found at ${rootNpmrc}`);
-        console.log('Using token from environment variable GITHUB_TOKEN');
-        NODE_AUTH_TOKEN = options.token || '';
-    }
+    //         if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
+    //             NODE_AUTH_TOKEN = line.replace('//registry.npmjs.com/:_authToken=', '').trim();
+    //             break;
+    //         }
+    //     }
+    // } else {
+    // console.log(`.npmrc file not found at ${rootNpmrc}`);
+    // console.log('Using token from environment variable GITHUB_TOKEN');
+    // }
 
     packages.forEach(packageName => {
         const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
@@ -59,7 +55,7 @@ function publish(options) {
             console.log(`npm view ${packageName}@${tagname} version: ${npmVersion}`);
             console.log(`Local version: ${localVersion}`);
             console.log(
-                `Token: ${NODE_AUTH_TOKEN ? '***' + NODE_AUTH_TOKEN.slice(-4) : '(not found)'}`
+                !!NODE_AUTH_TOKEN ? 'Using provided auth token.' : 'No auth token provided!'
             );
 
             const targetNpmrc = path.join(distPath, packageName, '.npmrc');
@@ -75,10 +71,10 @@ function publish(options) {
 
                 console.log(`Executing: ${publishString} in ${path.join(distPath, packageName)}`);
 
-                // exec(publishString, {
-                //     stdio: 'inherit',
-                //     cwd: path.join(distPath, packageName),
-                // });
+                exec(publishString, {
+                    stdio: 'inherit',
+                    cwd: path.join(distPath, packageName),
+                });
             } catch (e) {
                 // Do not treat publish failure as build failure
                 console.log(e);

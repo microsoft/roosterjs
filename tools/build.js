@@ -134,9 +134,7 @@ function parseOptions(additionalParams) {
     for (var i = 0; i < params.length; i++) {
         if (params[i] == '--token') {
             options.token = params[++i];
-            console.log(
-                'Found token: ****' + (options.token ?? '').substr(options.token.length - 4)
-            );
+            console.log('Found token');
         } else if (params[i] == '--noProgressBar') {
             options.noProgressBar = true;
         } else {

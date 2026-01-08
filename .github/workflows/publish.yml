@@ -27,7 +27,7 @@ jobs:
               run: yarn
 
             - name: Build
-              run: npm run-script normalize
+              run: npm run-script build:ci
 
             - name: Publish
               run: node tools/build.js publish --token ${{ secrets.GITHUB_TOKEN }}
