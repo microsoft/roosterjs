@@ -1,7 +1,10 @@
 import { ContentModelBlockFormat, DomToModelContext } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { formatContainerProcessor } from '../../../lib/domToModel/processors/formatContainerProcessor';
+import {
+    formatContainerProcessor,
+    forceFormatContainerProcessor,
+} from '../../../lib/domToModel/processors/formatContainerProcessor';
 
 describe('formatContainerProcessor', () => {
     let context: DomToModelContext;
@@ -443,6 +446,194 @@ describe('formatContainerProcessor', () => {
                     ],
                     format: {
                         id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+});
+
+describe('forceFormatContainerProcessor', () => {
+    let context: DomToModelContext;
+
+    beforeEach(() => {
+        context = createDomToModelContext();
+    });
+
+    it('div with single paragraph child should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test'));
+
+        forceFormatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {},
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with id and single paragraph child should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+
+        forceFormatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with zero font size and single paragraph child should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+        div.appendChild(document.createTextNode('test'));
+
+        forceFormatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: { fontSize: '0px' },
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {},
+                    zeroFontSize: true,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('Empty BLOCKQUOTE tag', () => {
+        const doc = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+
+        forceFormatContainerProcessor(doc, quote, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with max-width and display:inline-block should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.display = 'inline-block';
+        div.style.maxWidth = '50%';
+        div.appendChild(document.createTextNode('test'));
+
+        forceFormatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        maxWidth: '50%',
+                        display: 'inline-block',
                     },
                 },
                 { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
