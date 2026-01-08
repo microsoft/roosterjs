@@ -4,24 +4,23 @@ on:
         branches:
             - release
 
-permissions:
-    id-token: write # Required for OIDC
-    contents: read
-
 jobs:
-    build-and-deploy:
+    publish:
+        permissions:
+            id-token: write # Required for OIDC
+            contents: read
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2.3.1
+              uses: actions/checkout@v4
               with:
                   ref: release
-                  persist-credentials: false
 
             - name: Set Node Version
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
-                  node-version: 'v18.16.0'
+                  node-version: '24'
+                  registry-url: 'https://registry.npmjs.org'
 
             - name: Install dependencies
               run: yarn
