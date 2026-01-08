@@ -34,6 +34,7 @@ function publish(options) {
             if (fs.existsSync(rootNpmrc)) {
                 const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
                 for (const line of lines) {
+                    console.log(line);
                     if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
                         NODE_AUTH_TOKEN = line
                             .replace('//registry.npmjs.com/:_authToken=', '')
