@@ -30,4 +30,4 @@ jobs:
               run: npm run-script normalize
 
             - name: Publish
-              run: node tools/build.js publish
+              run: node tools/build.js publish --token ${{ secrets.GITHUB_TOKEN }}

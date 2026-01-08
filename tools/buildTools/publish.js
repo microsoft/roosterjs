@@ -29,6 +29,8 @@ function publish(options) {
         }
     } else {
         console.log(`.npmrc file not found at ${rootNpmrc}`);
+        console.log('Using token from environment variable GITHUB_TOKEN');
+        NODE_AUTH_TOKEN = options.token || '';
     }
 
     packages.forEach(packageName => {
