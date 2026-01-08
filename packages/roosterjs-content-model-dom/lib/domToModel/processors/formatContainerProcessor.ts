@@ -6,9 +6,11 @@ import { parseFormat } from '../utils/parseFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
 import type {
+    ContentModelBlockGroup,
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
     ContentModelParagraph,
+    DomToModelContext,
     ElementProcessor,
     MarginFormat,
     PaddingFormat,
@@ -37,6 +39,26 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
     element,
     context
 ) => {
+    formatContainerProcessorInternal(group, element, context, false /* forceFormatContainer */);
+};
+
+/**
+ * @internal
+ */
+export const forceFormatContainerProcessor: ElementProcessor<HTMLElement> = (
+    group,
+    element,
+    context
+) => {
+    formatContainerProcessorInternal(group, element, context, true /* forceFormatContainer */);
+};
+
+const formatContainerProcessorInternal = (
+    group: ContentModelBlockGroup,
+    element: HTMLElement,
+    context: DomToModelContext,
+    forceFormatContainer: boolean
+) => {
     stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
         parseFormat(element, context.formatParsers.block, context.blockFormat, context);
         parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
@@ -64,7 +86,7 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
             formatContainer.zeroFontSize = true;
         }
 
-        if (shouldFallbackToParagraph(formatContainer)) {
+        if (shouldFallbackToParagraph(formatContainer) && !forceFormatContainer) {
             // For DIV container that only has one paragraph child, container style can be merged into paragraph
             // and no need to have this container
             const paragraph = formatContainer.blocks[0] as ContentModelParagraph;
