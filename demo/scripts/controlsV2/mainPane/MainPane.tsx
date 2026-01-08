@@ -114,6 +114,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private markdownPanePlugin: MarkdownPanePlugin;
+    private imageEditPlugin: ImageEditPlugin;
     private findReplacePlugin: FindReplacePlugin;
     private findReplaceContext: FindReplaceContext;
 
@@ -173,26 +174,24 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             },
             activeTab: 'all',
         };
+
+        this.imageEditPlugin = new ImageEditPlugin({
+            disableSideResize: this.state.initState.disableSideResize,
+        });
     }
 
     render() {
         const theme = getTheme(this.state.isDarkMode);
 
-        const imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
-            ? new ImageEditPlugin({
-                  disableSideResize: this.state.initState.disableSideResize,
-              })
-            : null;
-
         return (
             <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>
                 {this.renderTitleBar()}
                 {!this.state.popoutWindow && this.renderTabs()}
-                {!this.state.popoutWindow && this.renderRibbon(imageEditPlugin)}
+                {!this.state.popoutWindow && this.renderRibbon(this.imageEditPlugin)}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow
-                        ? this.renderPopout(imageEditPlugin)
-                        : this.renderMainPane(imageEditPlugin)}
+                        ? this.renderPopout(this.imageEditPlugin)
+                        : this.renderMainPane(this.imageEditPlugin)}
                 </div>
             </ThemeProvider>
         );
@@ -237,6 +236,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     resetEditorPlugin(pluginState: OptionState) {
         this.updateContentPlugin.update();
+        this.imageEditPlugin = new ImageEditPlugin({
+            disableSideResize: pluginState.disableSideResize,
+        });
         this.setState({
             initState: pluginState,
         });
@@ -553,7 +555,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
-            imageEditPlugin,
+            pluginList.imageEditPlugin && imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),

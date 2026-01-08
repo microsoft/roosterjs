@@ -84,7 +84,7 @@ describe('setContentModel', () => {
             mockedModel,
             mockedContext
         );
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange, undefined);
         expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(flushMutationsSpy).toHaveBeenCalledWith(true);
     });
@@ -108,7 +108,7 @@ describe('setContentModel', () => {
             mockedModel,
             mockedContext
         );
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange, undefined);
     });
 
     it('with default option, no shadow edit, with additional option', () => {
@@ -138,7 +138,7 @@ describe('setContentModel', () => {
             mockedModel,
             mockedContext
         );
-        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange, undefined);
         expect(mockedOnFixUpModel).toHaveBeenCalledWith(mockedModel);
         expect(mockedOnFixUpModel).toHaveBeenCalledBefore(contentModelToDomSpy);
     });
