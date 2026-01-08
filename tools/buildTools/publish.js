@@ -9,6 +9,28 @@ const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
 const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
 function publish(options) {
+    const rootNpmrc = path.join(rootPath, '.npmrc');
+
+    console.log(`Reading npm token from ${rootNpmrc}...`);
+
+    let NODE_AUTH_TOKEN = '';
+
+    if (fs.existsSync(rootNpmrc)) {
+        console.log(`Found .npmrc file, reading auth token...`);
+        const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
+
+        for (const line of lines) {
+            console.log(line);
+
+            if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
+                NODE_AUTH_TOKEN = line.replace('//registry.npmjs.com/:_authToken=', '').trim();
+                break;
+            }
+        }
+    } else {
+        console.log(`.npmrc file not found at ${rootNpmrc}`);
+    }
+
     packages.forEach(packageName => {
         const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
         const localVersion = json.version;
@@ -29,21 +51,6 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            const rootNpmrc = path.join(rootPath, '.npmrc');
-            let NODE_AUTH_TOKEN = '';
-            if (fs.existsSync(rootNpmrc)) {
-                const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
-                for (const line of lines) {
-                    console.log(line);
-                    if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
-                        NODE_AUTH_TOKEN = line
-                            .replace('//registry.npmjs.com/:_authToken=', '')
-                            .trim();
-                        break;
-                    }
-                }
-            }
-
             console.log(
                 `Publishing package ${packageName}, version ${localVersion}, tag ${tagname}...`
             );
@@ -54,20 +61,22 @@ function publish(options) {
             );
 
             const targetNpmrc = path.join(distPath, packageName, '.npmrc');
+            const npmrcContent = `${NpmrcContent}${NODE_AUTH_TOKEN}\n`;
 
-            const npmrc = `${NpmrcContent}${NODE_AUTH_TOKEN}\n`;
-            fs.writeFileSync(targetNpmrc, npmrc);
+            console.log(`Writing temporary .npmrc to ${targetNpmrc}...`);
+
+            fs.writeFileSync(targetNpmrc, npmrcContent);
 
             try {
                 const basePublishString = `npm publish`;
                 const publishString = basePublishString + ` --tag ${tagname}`;
-                exec(publishString, {
-                    env: {
-                        ...process.env,
-                    },
-                    stdio: 'inherit',
-                    cwd: path.join(distPath, packageName),
-                });
+
+                console.log(`Executing: ${publishString} in ${path.join(distPath, packageName)}`);
+
+                // exec(publishString, {
+                //     stdio: 'inherit',
+                //     cwd: path.join(distPath, packageName),
+                // });
             } catch (e) {
                 // Do not treat publish failure as build failure
                 console.log(e);

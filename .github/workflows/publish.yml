@@ -26,7 +26,7 @@ jobs:
               run: yarn
 
             - name: Build
-              run: npm run-script build:ci
+              run: npm run-script normalize
 
             - name: Publish
               run: node tools/build.js publish
