@@ -29,10 +29,33 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            let npmrcName = path.join(distPath, packageName, '.npmrc');
+            const rootNpmrc = path.join(rootPath, '.npmrc');
+            let NODE_AUTH_TOKEN = '';
+            if (fs.existsSync(rootNpmrc)) {
+                const lines = fs.readFileSync(rootNpmrc, 'utf-8').split('\n');
+                for (const line of lines) {
+                    if (line.startsWith('//registry.npmjs.com/:_authToken=')) {
+                        NODE_AUTH_TOKEN = line
+                            .replace('//registry.npmjs.com/:_authToken=', '')
+                            .trim();
+                        break;
+                    }
+                }
+            }
+
+            console.log(
+                `Publishing package ${packageName}, version ${localVersion}, tag ${tagname}...`
+            );
+            console.log(`npm view ${packageName}@${tagname} version: ${npmVersion}`);
+            console.log(`Local version: ${localVersion}`);
+            console.log(
+                `Token: ${NODE_AUTH_TOKEN ? '***' + NODE_AUTH_TOKEN.slice(-4) : '(not found)'}`
+            );
+
+            const targetNpmrc = path.join(distPath, packageName, '.npmrc');
 
             const npmrc = `${NpmrcContent}${NODE_AUTH_TOKEN}\n`;
-            fs.writeFileSync(npmrcName, npmrc);
+            fs.writeFileSync(targetNpmrc, npmrc);
 
             try {
                 const basePublishString = `npm publish`;
@@ -48,8 +71,8 @@ function publish(options) {
                 // Do not treat publish failure as build failure
                 console.log(e);
             } finally {
-                if (fs.existsSync(npmrcName)) {
-                    fs.unlinkSync(npmrcName);
+                if (fs.existsSync(targetNpmrc)) {
+                    fs.unlinkSync(targetNpmrc);
                 }
             }
         }
