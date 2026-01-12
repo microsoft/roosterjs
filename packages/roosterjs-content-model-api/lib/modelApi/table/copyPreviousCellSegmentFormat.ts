@@ -1,5 +1,5 @@
-import { createBr, createParagraph, mutateBlock } from 'roosterjs-content-model-dom/lib';
-import { ReadonlyContentModelTableCell } from 'roosterjs-content-model-types/lib';
+import { createBr, createParagraph, mutateBlock } from 'roosterjs-content-model-dom';
+import type { ReadonlyContentModelTableCell } from 'roosterjs-content-model-types';
 
 /**
  * @internal
