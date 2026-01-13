@@ -1,3 +1,5 @@
+import { isElementOfType, isNodeOfType } from 'roosterjs-content-model-dom';
+
 /**
  * @internal
  * Check if we can regenerate edited image from the source image.
@@ -6,17 +8,19 @@
  * @returns True when we can regenerate the edited image, otherwise false
  */
 export function canRegenerateImage(img: HTMLImageElement | null): boolean {
-    if (!img) {
+    const image = img && isElementOfType(img, 'span') ? getWrappedImage(img) : img;
+    // CHECK INSIDE WRAPPER
+    if (!image) {
         return false;
     }
 
     try {
-        const canvas = img.ownerDocument.createElement('canvas');
+        const canvas = image.ownerDocument.createElement('canvas');
         canvas.width = 10;
         canvas.height = 10;
         const context = canvas.getContext('2d');
         if (context) {
-            context.drawImage(img, 0, 0);
+            context.drawImage(image, 0, 0);
             context.getImageData(0, 0, 1, 1);
             return true;
         }
@@ -26,3 +30,11 @@ export function canRegenerateImage(img: HTMLImageElement | null): boolean {
         return false;
     }
 }
+
+const getWrappedImage = (wrapper: HTMLSpanElement) => {
+    const image = wrapper.firstElementChild;
+    if (image && isNodeOfType(image, 'ELEMENT_NODE') && isElementOfType(image, 'img')) {
+        return image;
+    }
+    return null;
+};

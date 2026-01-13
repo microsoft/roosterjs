@@ -40,7 +40,8 @@ const ORDINAL_LENGTH = 2;
             if (
                 numberSegment &&
                 numberSegment.segmentType == 'Text' &&
-                ((numericValue = getNumericValue(numberSegment.text, true /* checkFullText */)) !== null) &&
+                (numericValue = getNumericValue(numberSegment.text, true /* checkFullText */)) !==
+                    null &&
                 getOrdinal(numericValue) === value
             ) {
                 shouldAddSuperScript = true;
