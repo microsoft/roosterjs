@@ -9,6 +9,10 @@ import {
     normalizeTable,
     setSelection,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
+    cloneModel,
+    iterateSelections,
+    createTableCell,
+    createTableRow,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
@@ -16,6 +20,8 @@ import type {
     IEditor,
     TableMetadataFormat,
     ContentModelTableCellFormat,
+    ContentModelDocument,
+    ContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -40,13 +46,22 @@ export function insertTable(
 
     editor.formatContentModel(
         (model, context) => {
-            const insertPosition = deleteSelection(model, [], context).insertPoint;
+            const copiedModel = cloneModel(model);
+            const deleteSelectionResult = deleteSelection(model, [], context);
+            const insertPosition = deleteSelectionResult.insertPoint;
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
+                const hasSelection = deleteSelectionResult.deleteResult == 'range';
+
                 const table = createTableStructure(doc, columns, rows, customCellFormat);
+
                 if (format) {
                     table.format = { ...format };
+                }
+
+                if (hasSelection) {
+                    insertTableContent(copiedModel, table, columns, customCellFormat);
                 }
 
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
@@ -101,4 +116,43 @@ function getTableCellWidth(columns: number): number {
     } else {
         return 70;
     }
+}
+
+function insertTableContent(
+    model: ContentModelDocument,
+    table: ContentModelTable,
+    colNumber: number,
+    customCellFormat?: ContentModelTableCellFormat
+) {
+    let index = 0;
+    let lastBlock: ContentModelBlockGroup | undefined = undefined;
+    iterateSelections(model, (path, _tableContext, block) => {
+        if (!table.rows[index]) {
+            const row = createTableRow();
+            for (let i = 0; i < colNumber; i++) {
+                const cell = createTableCell(
+                    undefined /*spanLeftOrColSpan */,
+                    undefined /*spanAboveOrRowSpan */,
+                    undefined /* isHeader */,
+                    customCellFormat
+                );
+                row.cells.push(cell);
+            }
+            table.rows.push(row);
+        }
+
+        if (path.length == 1 && block) {
+            table.rows[index].cells[0].blocks = [block];
+            index++;
+        } else if (
+            block &&
+            path[0].blockGroupType !== 'TableCell' &&
+            path[0].blockGroupType !== 'Document' &&
+            path[0] !== lastBlock
+        ) {
+            table.rows[index].cells[0].blocks = [path[0]];
+            lastBlock = path[0];
+            index++;
+        }
+    });
 }
