@@ -261,8 +261,13 @@ export function setFirstColumnFormatBorders(
                             mutateSegment(block, segment, cellSegment => {
                                 if (format.hasFirstColumn) {
                                     cellSegment.format.fontWeight = 'bold';
-                                } else if (cellSegment.format.fontWeight == 'bold') {
+                                    cell.format.fontWeight = 'bold';
+                                } else if (
+                                    cellSegment.format.fontWeight == 'bold' &&
+                                    cell.format.fontWeight == 'bold'
+                                ) {
                                     delete cellSegment.format.fontWeight;
+                                    delete cell.format.fontWeight;
                                 }
                             });
                         }
