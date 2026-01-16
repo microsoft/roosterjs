@@ -41,54 +41,65 @@ export function createTableInserter(
 ): TableEditFeature | null {
     const tdRect = normalizeRect(td.getBoundingClientRect());
     const viewPort = editor.getVisibleViewport();
-    const tableRect = table && viewPort ? getIntersectedRect([table], [viewPort]) : null;
+    if (tdRect && viewPort) {
+        const isOutsideTop = tdRect.top <= viewPort.top;
+        const isOutsideBottom = tdRect.bottom >= viewPort.bottom;
 
-    // set inserter position
-    if (tdRect && tableRect) {
-        const document = td.ownerDocument;
-        const createElementData = getInsertElementData(
-            isHorizontal,
-            editor.isDarkMode(),
-            isRTL,
-            editor.getDOMHelper().getDomStyle('backgroundColor') || 'white'
-        );
-
-        const div = createElement(createElementData, document) as HTMLDivElement;
-
-        if (isHorizontal) {
-            // tableRect.left/right is used because the Inserter is always intended to be on the side
-            div.id = HORIZONTAL_INSERTER_ID;
-            div.style.left = `${
-                isRTL
-                    ? tableRect.right
-                    : tableRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
-            }px`;
-            div.style.top = `${tdRect.bottom - 8}px`;
-            (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
-        } else {
-            div.id = VERTICAL_INSERTER_ID;
-            div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
-            // tableRect.top is used because the Inserter is always intended to be on top
-            div.style.top = `${
-                tableRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
-            }px`;
-            (div.firstChild as HTMLElement).style.height = `${tableRect.bottom - tableRect.top}px`;
+        if (isOutsideBottom || isOutsideTop) {
+            return null;
         }
+        const tableRect = table ? getIntersectedRect([table], [viewPort]) : null;
+        // set inserter position
+        if (tableRect) {
+            const document = td.ownerDocument;
+            const createElementData = getInsertElementData(
+                isHorizontal,
+                editor.isDarkMode(),
+                isRTL,
+                editor.getDOMHelper().getDomStyle('backgroundColor') || 'white'
+            );
 
-        (anchorContainer || document.body).appendChild(div);
+            const div = createElement(createElementData, document) as HTMLDivElement;
 
-        const handler = new TableInsertHandler(
-            div,
-            td,
-            table,
-            isHorizontal,
-            editor,
-            onBeforeInsert,
-            onAfterInserted,
-            onTableEditorCreated
-        );
+            if (isHorizontal) {
+                // tableRect.left/right is used because the Inserter is always intended to be on the side
+                div.id = HORIZONTAL_INSERTER_ID;
+                div.style.left = `${
+                    isRTL
+                        ? tableRect.right
+                        : tableRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                }px`;
+                div.style.top = `${tdRect.bottom - 8}px`;
+                (div.firstChild as HTMLElement).style.width = `${
+                    tableRect.right - tableRect.left
+                }px`;
+            } else {
+                div.id = VERTICAL_INSERTER_ID;
+                div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
+                // tableRect.top is used because the Inserter is always intended to be on top
+                div.style.top = `${
+                    tableRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                }px`;
+                (div.firstChild as HTMLElement).style.height = `${
+                    tableRect.bottom - tableRect.top
+                }px`;
+            }
 
-        return { div, featureHandler: handler, node: td };
+            (anchorContainer || document.body).appendChild(div);
+
+            const handler = new TableInsertHandler(
+                div,
+                td,
+                table,
+                isHorizontal,
+                editor,
+                onBeforeInsert,
+                onAfterInserted,
+                onTableEditorCreated
+            );
+
+            return { div, featureHandler: handler, node: td };
+        }
     }
 
     return null;
