@@ -255,6 +255,7 @@ export function setFirstColumnFormatBorders(
                 if (rowIndex == 0) {
                     cell.isHeader = !!format.hasHeaderRow;
                 }
+
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {
                         for (const segment of block.segments) {
