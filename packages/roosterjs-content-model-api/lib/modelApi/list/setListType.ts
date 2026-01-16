@@ -47,7 +47,7 @@ export function setListType(
     );
     let existingListItems: ReadonlyContentModelListItem[] = [];
 
-    paragraphOrListItems.forEach(({ block, parent, path }, itemIndex) => {
+    paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ReadonlyContentModelListItem>(block, 'ListItem')) {
             const mutableBlock = mutateBlock(block);
             const level = mutableBlock.levels.pop();
