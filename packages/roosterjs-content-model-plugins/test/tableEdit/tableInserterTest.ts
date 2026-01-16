@@ -212,4 +212,161 @@ describe('Table Inserter tests', () => {
         expect(disposer).toHaveBeenCalled();
         expect(changeCb).not.toHaveBeenCalled();
     });
+
+    it('should return null when table cell is outside the top of viewport', () => {
+        initialize(getModelTable(targetId));
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 100,
+            left: 10,
+            right: 100,
+            top: 10,
+        });
+        spyOn(editor, 'getVisibleViewport').and.returnValue({
+            top: 50,
+            bottom: 200,
+            left: 0,
+            right: 200,
+        });
+
+        //Act
+        const result = createTableInserter(
+            editor,
+            <any>(<HTMLTableCellElement>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 40,
+                        height: 30,
+                        left: 10,
+                        right: 100,
+                        top: 10, // top (10) <= viewport.top (50)
+                    };
+                },
+                ownerDocument: document,
+            }),
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 100,
+                        height: 90,
+                        left: 10,
+                        right: 100,
+                        top: 10,
+                    };
+                },
+            },
+            false,
+            false,
+            () => {},
+            () => {},
+            undefined,
+            undefined
+        );
+
+        expect(result).toBeNull();
+    });
+
+    it('should return null when table cell is outside the bottom of viewport', () => {
+        initialize(getModelTable(targetId));
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 100,
+            left: 10,
+            right: 100,
+            top: 10,
+        });
+        spyOn(editor, 'getVisibleViewport').and.returnValue({
+            top: 0,
+            bottom: 100,
+            left: 0,
+            right: 200,
+        });
+
+        //Act
+        const result = createTableInserter(
+            editor,
+            <any>(<HTMLTableCellElement>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 150, // bottom (150) >= viewport.bottom (100)
+                        height: 30,
+                        left: 10,
+                        right: 100,
+                        top: 120,
+                    };
+                },
+                ownerDocument: document,
+            }),
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 200,
+                        height: 190,
+                        left: 10,
+                        right: 100,
+                        top: 10,
+                    };
+                },
+            },
+            false,
+            false,
+            () => {},
+            () => {},
+            undefined,
+            undefined
+        );
+
+        expect(result).toBeNull();
+    });
+
+    it('should create inserter when table cell is within viewport bounds', () => {
+        initialize(getModelTable(targetId));
+        spyOn(getIntersectedRect, 'getIntersectedRect').and.returnValue({
+            bottom: 100,
+            left: 10,
+            right: 100,
+            top: 10,
+        });
+        spyOn(editor, 'getVisibleViewport').and.returnValue({
+            top: 0,
+            bottom: 200,
+            left: 0,
+            right: 200,
+        });
+
+        //Act
+        const result = createTableInserter(
+            editor,
+            <any>(<HTMLTableCellElement>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 80, // within viewport (0 < 50 and 80 < 200)
+                        height: 30,
+                        left: 10,
+                        right: 100,
+                        top: 50,
+                    };
+                },
+                ownerDocument: document,
+            }),
+            <any>{
+                getBoundingClientRect: () => {
+                    return {
+                        bottom: 100,
+                        height: 90,
+                        left: 10,
+                        right: 100,
+                        top: 10,
+                    };
+                },
+            },
+            false,
+            false,
+            () => {},
+            () => {},
+            undefined,
+            undefined
+        );
+
+        expect(result).not.toBeNull();
+        result?.featureHandler?.dispose();
+    });
 });
