@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">16.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>2/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">16.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>2/12</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -133,21 +133,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { normalizeRect } from 'roosterjs-content-model-dom';
 import type { Rect } from 'roosterjs-content-model-types';
@@ -177,23 +177,23 @@ import type { Rect } from 'roosterjs-content-model-types';
  * @param additionalRects additional rects to use
  * @returns If the Rect is valid return the rect, if not, return null.
  */
-export function getIntersectedRect(
+export function <span class="fstat-no" title="function not covered" >getIntersectedRect(</span>
     elements: HTMLElement[],
-    <span class="missing-if-branch" title="if path not taken" >I</span>additionalRects: Rect[] = []
+<span class="cstat-no" title="statement not covered" >    additionalRects: Rect[] = []</span>
 ): Rect | null {
-    const rects = elements
-        .map(element =&gt; normalizeRect(element.getBoundingClientRect()))
+    const rects = <span class="cstat-no" title="statement not covered" >elements</span>
+        .map(<span class="fstat-no" title="function not covered" >element </span>=&gt; <span class="cstat-no" title="statement not covered" >normalizeRect(element.getBoundingClientRect()))</span>
         .concat(additionalRects)
-        .filter(element =&gt; !!element) as Rect[];
+        .filter(<span class="fstat-no" title="function not covered" >element </span>=&gt; <span class="cstat-no" title="statement not covered" >!!element) as Rect[];</span>
 &nbsp;
-    const result: Rect = {
-        top: Math.max(...rects.map(r =&gt; r.top)),
-        bottom: Math.min(...rects.map(r =&gt; r.bottom)),
-        left: Math.max(...rects.map(r =&gt; r.left)),
-        right: Math.min(...rects.map(r =&gt; r.right)),
+    const result: Rect = <span class="cstat-no" title="statement not covered" >{</span>
+        top: Math.max(...rects.map(<span class="fstat-no" title="function not covered" >r </span>=&gt; <span class="cstat-no" title="statement not covered" >r.top))</span>,
+        bottom: Math.min(...rects.map(<span class="fstat-no" title="function not covered" >r </span>=&gt; <span class="cstat-no" title="statement not covered" >r.bottom))</span>,
+        left: Math.max(...rects.map(<span class="fstat-no" title="function not covered" >r </span>=&gt; <span class="cstat-no" title="statement not covered" >r.left))</span>,
+        right: Math.min(...rects.map(<span class="fstat-no" title="function not covered" >r </span>=&gt; <span class="cstat-no" title="statement not covered" >r.right))</span>,
     };
 &nbsp;
-    return result.top &lt; result.bottom &amp;&amp; result.left &lt; result.right ? result : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+<span class="cstat-no" title="statement not covered" >    return result.top &lt; result.bottom &amp;&amp; result.left &lt; result.right ? result : null;</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -202,7 +202,7 @@ export function getIntersectedRect(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 13 2026 15:05:01 GMT+0000 (Coordinated Universal Time)
+                at Fri Jan 16 2026 23:00:24 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
