@@ -827,7 +827,7 @@ describe('textProcessor', () => {
             format.fontWeight = 'bold';
         });
         const parser2Spy = jasmine.createSpy('parser2').and.callFake((format: any) => {
-            format.fontStyle = 'italic';
+            format.fontFamily = 'italic';
         });
 
         context.formatParsers.text = [parser1Spy, parser2Spy];
@@ -851,7 +851,7 @@ describe('textProcessor', () => {
                             text: 'test1',
                             format: {
                                 fontWeight: 'bold',
-                                fontStyle: 'italic',
+                                fontFamily: 'italic',
                             },
                         },
                     ],
