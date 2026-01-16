@@ -47,7 +47,7 @@ export function setListType(
     );
     let existingListItems: ReadonlyContentModelListItem[] = [];
 
-    paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
+    paragraphOrListItems.forEach(({ block, parent, path }, itemIndex) => {
         if (isBlockGroupOfType<ReadonlyContentModelListItem>(block, 'ListItem')) {
             const mutableBlock = mutateBlock(block);
             const level = mutableBlock.levels.pop();
@@ -76,7 +76,11 @@ export function setListType(
             const index = parent.blocks.indexOf(block);
 
             if (index >= 0) {
-                if (paragraphOrListItems.length == 1 || !shouldIgnoreBlock(block)) {
+                if (
+                    paragraphOrListItems.length == 1 ||
+                    !shouldIgnoreBlock(block) ||
+                    parent.blockGroupType == 'TableCell'
+                ) {
                     const prevBlock = parent.blocks[index - 1];
                     const segmentFormat =
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
@@ -84,6 +88,7 @@ export function setListType(
                         [
                             createListLevel(listType, {
                                 startNumberOverride:
+                                    parent.blockGroupType == 'TableCell' ||
                                     itemIndex > 0 ||
                                     (prevBlock?.blockType == 'BlockGroup' &&
                                         prevBlock.blockGroupType == 'ListItem' &&
