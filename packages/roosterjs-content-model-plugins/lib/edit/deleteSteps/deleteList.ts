@@ -67,7 +67,7 @@ export const deleteList: DeleteSelectionStep = context => {
             if (mutableList.levels.length > 1) {
                 const newListItem = createListItem(
                     mutableList.levels.slice(0, -1),
-                    mutableList.format
+                    mutableList.formatHolder.format
                 );
 
                 newListItem.blocks = removedBlocks.map(

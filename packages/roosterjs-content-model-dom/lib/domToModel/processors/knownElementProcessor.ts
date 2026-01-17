@@ -1,12 +1,15 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
-import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { isBlockEntityContainer } from '../../domUtils/entityUtils';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import {
+    forceFormatContainerProcessor,
+    formatContainerProcessor,
+} from './formatContainerProcessor';
 import type {
     ContentModelSegmentFormat,
     DomToModelContext,
@@ -40,11 +43,14 @@ const SegmentDecoratorTags = ['A', 'CODE'];
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element);
+    const isBlockContainer = isBlock || element.style.display == 'inline-block';
 
     if (
-        (isBlock || element.style.display == 'inline-block') && // For inline-block here, we will also check if it should be represented as Format Container
-        shouldUseFormatContainer(element, context)
+        isBlockContainer && // For inline-block here, we will also check if it should be represented as Format Container
+        shouldForceUseFormatContainer(element, context)
     ) {
+        forceFormatContainerProcessor(group, element, context);
+    } else if (isBlockContainer && shouldUseFormatContainer(element, context)) {
         formatContainerProcessor(group, element, context);
     } else if (isBlockEntityContainer(element)) {
         context.elementProcessors.child(group, element, context);
@@ -98,6 +104,10 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
     }
 };
 
+function shouldForceUseFormatContainer(element: HTMLElement, context: DomToModelContext) {
+    return FormatContainerTriggerAttributes.some(attr => element.hasAttribute(attr));
+}
+
 function shouldUseFormatContainer(element: HTMLElement, context: DomToModelContext) {
     // For those tags that we know we should not use format container, just return false
     if (ByPassFormatContainerTags.indexOf(element.tagName) >= 0) {
@@ -119,8 +129,7 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     if (
         FormatContainerTriggerStyles.some(
             key => parseInt((style[key] as string) || (defaultStyle[key] as string) || '') > 0
-        ) ||
-        FormatContainerTriggerAttributes.some(attr => element.hasAttribute(attr))
+        )
     ) {
         return true;
     }

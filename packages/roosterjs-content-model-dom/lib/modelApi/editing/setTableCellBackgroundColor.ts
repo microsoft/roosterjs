@@ -46,7 +46,7 @@ export function setTableCellBackgroundColor(
         }
 
         if (applyToSegments) {
-            setAdaptiveCellColor(cell);
+            setAdaptiveCellColor(cell, color);
         }
     } else {
         delete cell.format.backgroundColor;
@@ -64,14 +64,16 @@ function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
 
             if (
                 block.segmentFormat?.textColor &&
-                shouldRemoveColor(block.segmentFormat?.textColor, cell.format.backgroundColor || '')
+                (areSameColor(block.segmentFormat.textColor, White) ||
+                    areSameColor(block.segmentFormat.textColor, Black))
             ) {
                 delete block.segmentFormat.textColor;
             }
             block.segments.forEach(segment => {
                 if (
                     segment.format.textColor &&
-                    shouldRemoveColor(segment.format.textColor, cell.format.backgroundColor || '')
+                    (areSameColor(segment.format.textColor, White) ||
+                        areSameColor(segment.format.textColor, Black))
                 ) {
                     delete segment.format.textColor;
                 }
@@ -80,20 +82,26 @@ function removeAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
     });
 }
 
-function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
+function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell, backgroundColor: string) {
     if (cell.format.textColor) {
         cell.blocks.forEach(readonlyBlock => {
             if (readonlyBlock.blockType == 'Paragraph') {
                 const block = mutateBlock(readonlyBlock);
 
-                if (!block.segmentFormat?.textColor) {
+                if (
+                    !block.segmentFormat?.textColor ||
+                    areSameColor(backgroundColor, block.segmentFormat.textColor)
+                ) {
                     block.segmentFormat = {
                         ...block.segmentFormat,
                         textColor: cell.format.textColor,
                     };
                 }
                 block.segments.forEach(segment => {
-                    if (!segment.format?.textColor) {
+                    if (
+                        !segment.format?.textColor ||
+                        areSameColor(backgroundColor, segment.format.textColor)
+                    ) {
                         segment.format = {
                             ...segment.format,
                             textColor: cell.format.textColor,
@@ -103,25 +111,6 @@ function setAdaptiveCellColor(cell: ShallowMutableContentModelTableCell) {
             }
         });
     }
-}
-
-/**
- * If the cell background color is too dark or too bright, and the text color is white or black, we should remove the text color
- * @param textColor the segment or block text color
- * @param cellBackgroundColor the cell background color
- * @returns
- */
-function shouldRemoveColor(textColor: string, cellBackgroundColor: string) {
-    const lightness = calculateLightness(cellBackgroundColor);
-    if (
-        ([White, 'rgb(255,255,255)'].indexOf(textColor) > -1 &&
-            (lightness > BRIGHT_COLORS_LIGHTNESS || cellBackgroundColor == '')) ||
-        ([Black, 'rgb(0,0,0)'].indexOf(textColor) > -1 &&
-            (lightness < DARK_COLORS_LIGHTNESS || cellBackgroundColor == ''))
-    ) {
-        return true;
-    }
-    return false;
 }
 
 function calculateLightness(color: string) {
@@ -139,4 +128,17 @@ function calculateLightness(color: string) {
     } else {
         return 255;
     }
+}
+
+/**
+ * Check if two colors are the same by comparing their RGB values
+ */
+function areSameColor(color1: string, color2: string): boolean {
+    const rgb1 = parseColor(color1);
+    const rgb2 = parseColor(color2);
+
+    if (rgb1 && rgb2) {
+        return rgb1[0] === rgb2[0] && rgb1[1] === rgb2[1] && rgb1[2] === rgb2[2];
+    }
+    return false;
 }

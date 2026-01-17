@@ -255,14 +255,20 @@ export function setFirstColumnFormatBorders(
                 if (rowIndex == 0) {
                     cell.isHeader = !!format.hasHeaderRow;
                 }
+
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {
                         for (const segment of block.segments) {
                             mutateSegment(block, segment, cellSegment => {
                                 if (format.hasFirstColumn) {
                                     cellSegment.format.fontWeight = 'bold';
-                                } else if (cellSegment.format.fontWeight == 'bold') {
+                                    cell.format.fontWeight = 'bold';
+                                } else if (
+                                    cellSegment.format.fontWeight == 'bold' &&
+                                    cell.format.fontWeight == 'bold'
+                                ) {
                                     delete cellSegment.format.fontWeight;
+                                    delete cell.format.fontWeight;
                                 }
                             });
                         }

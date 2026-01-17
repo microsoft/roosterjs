@@ -659,4 +659,132 @@ describe('knownElementProcessor', () => {
         expect(childProcessorSpy).toHaveBeenCalledWith(group, div, context);
         expect(blockProcessorSpy).not.toHaveBeenCalled();
     });
+
+    it('div with id attribute should use forceFormatContainerProcessor', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+
+        const forceFormatContainerSpy = spyOn(
+            formatContainerProcessor,
+            'forceFormatContainerProcessor'
+        ).and.callThrough();
+
+        knownElementProcessor(group, div, context);
+
+        expect(forceFormatContainerSpy).toHaveBeenCalledWith(group, div, context);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with id attribute and multiple children should use forceFormatContainerProcessor', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        const child = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+        div.appendChild(child);
+        child.appendChild(document.createTextNode('test2'));
+
+        const forceFormatContainerSpy = spyOn(
+            formatContainerProcessor,
+            'forceFormatContainerProcessor'
+        ).and.callThrough();
+
+        knownElementProcessor(group, div, context);
+
+        expect(forceFormatContainerSpy).toHaveBeenCalledWith(group, div, context);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                            format: {},
+                            isImplicit: true,
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test2', format: {} }],
+                            format: {},
+                        },
+                        { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+                    ],
+                    format: {
+                        id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('inline-block div with id attribute should use forceFormatContainerProcessor', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.id = 'testId';
+        div.style.display = 'inline-block';
+        div.appendChild(document.createTextNode('test'));
+
+        const forceFormatContainerSpy = spyOn(
+            formatContainerProcessor,
+            'forceFormatContainerProcessor'
+        ).and.callThrough();
+
+        knownElementProcessor(group, div, context);
+
+        expect(forceFormatContainerSpy).toHaveBeenCalledWith(group, div, context);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        id: 'testId',
+                        display: 'inline-block',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
 });
