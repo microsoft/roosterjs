@@ -19,8 +19,8 @@ export const textProcessor: ElementProcessor<Text> = (
         stackFormat(context, { segment: 'shallowClone' }, () => {
             context.formatParsers.text.forEach(parser => {
                 parser(context.segmentFormat, textNode, context);
-                internalTextProcessor(group, textNode, context);
             });
+            internalTextProcessor(group, textNode, context);
         });
     } else {
         internalTextProcessor(group, textNode, context);
