@@ -8,6 +8,7 @@ import type {
     PluginWithState,
     EditorOptions,
     UndoPluginState,
+    DOMSelection,
 } from 'roosterjs-content-model-types';
 
 const Backspace = 'Backspace';
@@ -167,6 +168,11 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
             if (snapshotsManager.hasNewContent) {
                 this.addUndoSnapshot();
             }
+        } else if (evt.key == 'Tab' && snapshotsManager.hasNewContent) {
+            const selection = editor.getDOMSelection();
+            if (this.isInsideTableCell(editor, selection)) {
+                this.addUndoSnapshot();
+            }
         }
     }
 
@@ -197,6 +203,14 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
 
         this.state.lastKeyPress = evt.key;
     }
+
+    private isInsideTableCell = (editor: IEditor, selection: DOMSelection | null) => {
+        if (selection?.type == 'range' && selection?.range.collapsed) {
+            const startContainer = selection.range.startContainer;
+            return editor.getDOMHelper().findClosestElementAncestor(startContainer, 'td, th');
+        }
+        return false;
+    };
 
     private onBeforeKeyboardEditing(event: KeyboardEvent) {
         // For keyboard event (triggered from Content Model), we can get its keycode from event.data
