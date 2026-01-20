@@ -1072,4 +1072,211 @@ describe('indent', () => {
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(2);
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
+
+    it('turn on list for empty paragraph inside table cell', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const br = createBr();
+
+        br.isSelected = true;
+        para.segments.push(br);
+        cell.blocks.push(para);
+        table.rows[0].cells.push(cell);
+        group.blocks.push(table);
+
+        const result = setListType(group, 'OL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [para],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        startNumberOverride: undefined,
+                                                        direction: undefined,
+                                                        marginBottom: undefined,
+                                                        marginTop: undefined,
+                                                        textAlign: undefined,
+                                                    },
+                                                    dataset: {
+                                                        editingInfo:
+                                                            '{"applyListStyleFromLevel":true}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {
+                                                    fontFamily: undefined,
+                                                    fontSize: undefined,
+                                                    textColor: undefined,
+                                                },
+                                            },
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
+    });
+
+    it('turn on list for multiple empty paragraphs inside table cells', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const br1 = createBr();
+        const br2 = createBr();
+
+        br1.isSelected = true;
+        br2.isSelected = true;
+        para1.segments.push(br1);
+        para2.segments.push(br2);
+        cell1.blocks.push(para1);
+        cell2.blocks.push(para2);
+        table.rows[0].cells.push(cell1, cell2);
+        group.blocks.push(table);
+
+        const result = setListType(group, 'OL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [para1],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        startNumberOverride: undefined,
+                                                        direction: undefined,
+                                                        marginBottom: undefined,
+                                                        marginTop: undefined,
+                                                        textAlign: undefined,
+                                                    },
+                                                    dataset: {
+                                                        editingInfo:
+                                                            '{"applyListStyleFromLevel":true}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {
+                                                    fontFamily: undefined,
+                                                    fontSize: undefined,
+                                                    textColor: undefined,
+                                                },
+                                            },
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'ListItem',
+                                            blocks: [para2],
+                                            levels: [
+                                                {
+                                                    listType: 'OL',
+                                                    format: {
+                                                        startNumberOverride: undefined,
+                                                        direction: undefined,
+                                                        marginBottom: undefined,
+                                                        marginTop: undefined,
+                                                        textAlign: undefined,
+                                                    },
+                                                    dataset: {
+                                                        editingInfo:
+                                                            '{"applyListStyleFromLevel":true}',
+                                                    },
+                                                },
+                                            ],
+                                            formatHolder: {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: false,
+                                                format: {
+                                                    fontFamily: undefined,
+                                                    fontSize: undefined,
+                                                    textColor: undefined,
+                                                },
+                                            },
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        });
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledTimes(1);
+        expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
+    });
 });

@@ -713,4 +713,53 @@ describe('applyTableFormat', () => {
             });
         });
     });
+
+    it('Apply format with segments with bold', () => {
+        const table = createTable(1, 1);
+        table.rows.forEach(row => {
+            row.cells.forEach((cell, index) => {
+                if (index == 0) {
+                    cell.blocks.forEach(block => {
+                        if (block.blockType == 'Paragraph') {
+                            block.segments.forEach(segment => {
+                                segment.format.fontWeight = 'bold';
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+        };
+
+        // Try to apply default format black
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        table.rows.forEach(row => {
+            row.cells.forEach((cell, index) => {
+                if (index == 0) {
+                    cell.blocks.forEach(block => {
+                        if (block.blockType == 'Paragraph') {
+                            block.segments.forEach(segment => {
+                                expect(segment.format.fontWeight).toEqual('bold');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
 });
