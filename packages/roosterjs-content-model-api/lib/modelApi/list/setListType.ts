@@ -74,9 +74,14 @@ export function setListType(
             }
         } else {
             const index = parent.blocks.indexOf(block);
+            const isInsideTableCell = parent.blockGroupType == 'TableCell';
 
             if (index >= 0) {
-                if (paragraphOrListItems.length == 1 || !shouldIgnoreBlock(block)) {
+                if (
+                    paragraphOrListItems.length == 1 ||
+                    !shouldIgnoreBlock(block) ||
+                    isInsideTableCell
+                ) {
                     const prevBlock = parent.blocks[index - 1];
                     const segmentFormat =
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
@@ -84,6 +89,7 @@ export function setListType(
                         [
                             createListLevel(listType, {
                                 startNumberOverride:
+                                    isInsideTableCell ||
                                     itemIndex > 0 ||
                                     (prevBlock?.blockType == 'BlockGroup' &&
                                         prevBlock.blockGroupType == 'ListItem' &&
