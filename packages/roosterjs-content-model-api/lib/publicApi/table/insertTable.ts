@@ -1,5 +1,6 @@
 import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
+import { insertTableContent } from '../../modelApi/table/insertTableContent';
 import {
     createContentModelDocument,
     createSelectionMarker,
@@ -10,9 +11,6 @@ import {
     setSelection,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
     cloneModel,
-    iterateSelections,
-    createTableCell,
-    createTableRow,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
@@ -20,8 +18,6 @@ import type {
     IEditor,
     TableMetadataFormat,
     ContentModelTableCellFormat,
-    ContentModelDocument,
-    ContentModelBlockGroup,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -52,7 +48,6 @@ export function insertTable(
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
-                const hasSelection = deleteSelectionResult.deleteResult == 'range';
 
                 const table = createTableStructure(doc, columns, rows, customCellFormat);
 
@@ -60,18 +55,19 @@ export function insertTable(
                     table.format = { ...format };
                 }
 
-                if (hasSelection) {
-                    insertTableContent(copiedModel, table, columns, customCellFormat);
-                }
-
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
                 initCellWidth(table);
+
+                if (deleteSelectionResult.deleteResult == 'range') {
+                    insertTableContent(copiedModel, table, columns, customCellFormat);
+                }
 
                 adjustTableIndentation(insertPosition, table);
 
                 // Assign default vertical align
                 tableMetadataFormat = tableMetadataFormat || { verticalAlign: 'top' };
                 applyTableFormat(table, tableMetadataFormat);
+
                 mergeModel(model, doc, context, {
                     insertPosition,
                     mergeFormat: 'mergeAll',
@@ -116,43 +112,4 @@ function getTableCellWidth(columns: number): number {
     } else {
         return 70;
     }
-}
-
-function insertTableContent(
-    model: ContentModelDocument,
-    table: ContentModelTable,
-    colNumber: number,
-    customCellFormat?: ContentModelTableCellFormat
-) {
-    let index = 0;
-    let lastBlock: ContentModelBlockGroup | undefined = undefined;
-    iterateSelections(model, (path, _tableContext, block) => {
-        if (!table.rows[index]) {
-            const row = createTableRow();
-            for (let i = 0; i < colNumber; i++) {
-                const cell = createTableCell(
-                    undefined /*spanLeftOrColSpan */,
-                    undefined /*spanAboveOrRowSpan */,
-                    undefined /* isHeader */,
-                    customCellFormat
-                );
-                row.cells.push(cell);
-            }
-            table.rows.push(row);
-        }
-
-        if (path.length == 1 && block) {
-            table.rows[index].cells[0].blocks = [block];
-            index++;
-        } else if (
-            block &&
-            path[0].blockGroupType !== 'TableCell' &&
-            path[0].blockGroupType !== 'Document' &&
-            path[0] !== lastBlock
-        ) {
-            table.rows[index].cells[0].blocks = [path[0]];
-            lastBlock = path[0];
-            index++;
-        }
-    });
 }
