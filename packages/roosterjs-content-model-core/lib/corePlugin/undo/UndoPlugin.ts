@@ -254,7 +254,7 @@ class UndoPlugin implements PluginWithState<UndoPluginState> {
     private isInsideTableCell = (editor: IEditor, selection: DOMSelection | null) => {
         if (selection?.type == 'range' && selection.range.collapsed) {
             const startContainer = selection.range.startContainer;
-            return editor.getDOMHelper().findClosestElementAncestor(startContainer, 'td, th');
+            return !!editor.getDOMHelper().findClosestElementAncestor(startContainer, 'td, th');
         }
         return false;
     };
