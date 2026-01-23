@@ -9,6 +9,7 @@ import * as insertTableRow from '../../../lib/modelApi/table/insertTableRow';
 import * as mergeTableCells from '../../../lib/modelApi/table/mergeTableCells';
 import * as mergeTableColumn from '../../../lib/modelApi/table/mergeTableColumn';
 import * as mergeTableRow from '../../../lib/modelApi/table/mergeTableRow';
+import * as shiftCells from '../../../lib/modelApi/table/shiftCells';
 import * as splitTableCellHorizontally from '../../../lib/modelApi/table/splitTableCellHorizontally';
 import * as splitTableCellVertically from '../../../lib/modelApi/table/splitTableCellVertically';
 import { editTable } from '../../../lib/publicApi/table/editTable';
@@ -249,6 +250,22 @@ describe('editTable', () => {
 
         it('splitVertically', () => {
             runTest('splitVertically', spy);
+        });
+    });
+
+    describe('shiftCells', () => {
+        let spy: jasmine.Spy;
+
+        beforeEach(() => {
+            spy = spyOn(shiftCells, 'shiftCells');
+        });
+
+        it('shiftCellsLeft', () => {
+            runTest('shiftCellsLeft', spy, 'shiftCellsLeft');
+        });
+
+        it('shiftCellsUp', () => {
+            runTest('shiftCellsUp', spy, 'shiftCellsUp');
         });
     });
 
