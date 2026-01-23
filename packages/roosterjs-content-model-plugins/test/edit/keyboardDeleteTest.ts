@@ -637,6 +637,32 @@ describe('keyboardDelete', () => {
         expect(formatWithContentModelSpy).not.toHaveBeenCalled();
     });
 
+    it('No need to delete - Delete with shiftKey should not delete with content model', () => {
+        const rawEvent = { key: 'Delete', shiftKey: true } as any;
+        const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
+        const node = document.createTextNode('test');
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: false,
+                startContainer: node,
+                endContainer: node,
+                startOffset: 0,
+                endOffset: 4,
+            } as any) as Range,
+            isReverted: false,
+        };
+        const editor = {
+            formatContentModel: formatWithContentModelSpy,
+            getDOMSelection: () => range,
+            getEnvironment: () => ({}),
+        } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(formatWithContentModelSpy).not.toHaveBeenCalled();
+    });
+
     it('No need to delete - handleExpandedSelection disabled', () => {
         const rawEvent = { key: 'Backspace' } as any;
         const formatWithContentModelSpy = jasmine.createSpy('formatContentModel');
