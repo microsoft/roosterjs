@@ -1842,6 +1842,134 @@ describe('SelectionPlugin handle table selection', () => {
             expect(time).toBe(2);
         });
 
+        it('From Range, Press Tab - take undo snapshot when hasNewContent', () => {
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
+
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+            const mockedRange = {
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
+                collapse: collapseSpy,
+            } as any;
+            const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+            const getSnapshotsManagerSpy = jasmine
+                .createSpy('getSnapshotsManager')
+                .and.returnValue({
+                    hasNewContent: true,
+                });
+
+            (editor as any).getSnapshotsManager = getSnapshotsManagerSpy;
+            (editor as any).takeSnapshot = takeSnapshotSpy;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('From Range, Press Tab - do not take undo snapshot when no new content', () => {
+            let time = 0;
+            getDOMSelectionSpy.and.callFake(() => {
+                time++;
+
+                return time == 1
+                    ? {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                          },
+                          isReverted: false,
+                      }
+                    : {
+                          type: 'range',
+                          range: {
+                              startContainer: td1,
+                              startOffset: 0,
+                              endContainer: td1,
+                              endOffset: 0,
+                              commonAncestorContainer: tr1,
+                              collapsed: true,
+                          },
+                          isReverted: false,
+                      };
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+            const mockedRange = {
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
+                collapse: collapseSpy,
+            } as any;
+            const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+            const getSnapshotsManagerSpy = jasmine
+                .createSpy('getSnapshotsManager')
+                .and.returnValue({
+                    hasNewContent: false,
+                });
+
+            (editor as any).getSnapshotsManager = getSnapshotsManagerSpy;
+            (editor as any).takeSnapshot = takeSnapshotSpy;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'Tab',
+                    preventDefault: preventDefaultSpy,
+                } as any,
+            });
+
+            expect(takeSnapshotSpy).not.toHaveBeenCalled();
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+        });
+
         it('From Range, Press Down', () => {
             getDOMSelectionSpy.and.returnValue({
                 type: 'range',
