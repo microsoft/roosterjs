@@ -115,7 +115,7 @@ describe('EditPlugin', () => {
                 rawEvent,
             });
 
-            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
             expect(keyboardEnterSpy).not.toHaveBeenCalled();
             expect(keyboardTabSpy).not.toHaveBeenCalled();
