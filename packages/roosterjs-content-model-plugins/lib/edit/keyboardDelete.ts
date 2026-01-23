@@ -41,9 +41,9 @@ export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent, options
     let handled = false;
     const selection = editor.getDOMSelection();
     const { handleExpandedSelectionOnDelete } = options;
-    let tableDeleteType: TableDeleteOperation | undefined = undefined;
+    const tableDeleteType = shouldDeleteTableWithContentModel(selection, rawEvent);
 
-    if ((tableDeleteType = shouldDeleteTableWithContentModel(selection, rawEvent))) {
+    if (tableDeleteType) {
         editTable(editor, tableDeleteType);
         handled = true;
     } else if (
