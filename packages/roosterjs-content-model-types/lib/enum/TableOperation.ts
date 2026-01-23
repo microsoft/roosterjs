@@ -154,6 +154,20 @@ export type TableCellVerticalAlignOperation =
     | 'alignCellBottom';
 
 /**
+ * Operations used by editTable() API for shift up or left the table cell content
+ */
+export type TableCellShiftOperation =
+    /**
+     * Move the table cell content to the cell at left
+     */
+    | 'shiftCellsLeft'
+
+    /**
+     * Move the table cell content to the cell at above
+     */
+    | 'shiftCellsUp';
+
+/**
  * Operations used by editTable() API
  */
 export type TableOperation =
@@ -166,4 +180,5 @@ export type TableOperation =
     | TableSplitOperation
     | TableAlignOperation
     | TableCellHorizontalAlignOperation
-    | TableCellVerticalAlignOperation;
+    | TableCellVerticalAlignOperation
+    | TableCellShiftOperation;
