@@ -782,6 +782,9 @@ describe('SelectionPlugin handle table selection', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
+            getSnapshotsManager: () => {
+                return { hasNewContent: false };
+            },
         } as any;
         plugin = createSelectionPlugin({});
         plugin.initialize(editor);
