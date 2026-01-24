@@ -1,5 +1,6 @@
 import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
+import { insertTableContent } from '../../modelApi/table/insertTableContent';
 import {
     createContentModelDocument,
     createSelectionMarker,
@@ -9,6 +10,7 @@ import {
     normalizeTable,
     setSelection,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
+    cloneModel,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
@@ -40,11 +42,15 @@ export function insertTable(
 
     editor.formatContentModel(
         (model, context) => {
-            const insertPosition = deleteSelection(model, [], context).insertPoint;
+            const copiedModel = cloneModel(model);
+            const deleteSelectionResult = deleteSelection(model, [], context);
+            const insertPosition = deleteSelectionResult.insertPoint;
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
+
                 const table = createTableStructure(doc, columns, rows, customCellFormat);
+
                 if (format) {
                     table.format = { ...format };
                 }
@@ -52,11 +58,16 @@ export function insertTable(
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
                 initCellWidth(table);
 
+                if (deleteSelectionResult.deleteResult == 'range') {
+                    insertTableContent(copiedModel, table, columns, customCellFormat);
+                }
+
                 adjustTableIndentation(insertPosition, table);
 
                 // Assign default vertical align
                 tableMetadataFormat = tableMetadataFormat || { verticalAlign: 'top' };
                 applyTableFormat(table, tableMetadataFormat);
+
                 mergeModel(model, doc, context, {
                     insertPosition,
                     mergeFormat: 'mergeAll',
