@@ -54,6 +54,11 @@ export type ExperimentalFeature =
     | 'CloneIndependentRoot'
 
     /**
+     * Use selection change event instead of mouse up to insert the image edit handles
+     */
+    | 'ImageEditV2'
+
+    /*
      * Allow caching list item elements.
      */
     | 'CacheList'

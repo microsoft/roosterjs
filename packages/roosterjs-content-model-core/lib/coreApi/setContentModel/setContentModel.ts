@@ -21,7 +21,8 @@ export const setContentModel: SetContentModel = (
     model,
     option,
     onNodeCreated,
-    isInitializing
+    isInitializing,
+    skipSelectionChangedEvent
 ) => {
     const editorContext = core.api.createEditorContext(core, true /*saveIndex*/);
     const modelToDomContext = option
@@ -54,7 +55,7 @@ export const setContentModel: SetContentModel = (
         updateCache(core.cache, model, selection);
 
         if (!option?.ignoreSelection && selection) {
-            core.api.setDOMSelection(core, selection);
+            core.api.setDOMSelection(core, selection, skipSelectionChangedEvent);
         } else {
             core.selection.selection = selection;
         }

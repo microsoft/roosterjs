@@ -112,7 +112,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -150,7 +157,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -189,7 +203,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -228,7 +249,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -267,7 +295,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -306,7 +341,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -341,7 +383,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -384,7 +433,14 @@ describe('formatContentModel', () => {
             expect(createContentModel).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).not.toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -423,7 +479,9 @@ describe('formatContentModel', () => {
                 core,
                 mockedModel,
                 undefined,
-                onNodeCreated
+                onNodeCreated,
+                undefined,
+                undefined
             );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -476,7 +534,14 @@ describe('formatContentModel', () => {
             );
 
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -539,7 +604,14 @@ describe('formatContentModel', () => {
 
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -581,7 +653,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(createContentModel).toHaveBeenCalledWith(core, undefined, range);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -615,7 +694,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(createContentModel).toHaveBeenCalledWith(core, options, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -653,7 +739,14 @@ describe('formatContentModel', () => {
             expect(getClientWidth).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -686,7 +779,14 @@ describe('formatContentModel', () => {
 
             expect(addUndoSnapshot).toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -782,6 +882,8 @@ describe('formatContentModel', () => {
                 {
                     ignoreSelection: true,
                 },
+                undefined,
+                undefined,
                 undefined
             );
             expect(triggerEvent).toHaveBeenCalled();
@@ -1114,7 +1216,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 snapshotsManager: {
                     hasNewContent: true,
@@ -1153,7 +1262,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, mockedEntityState);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -1189,7 +1305,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, false, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -1233,7 +1356,14 @@ describe('formatContentModel', () => {
             expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
             expect(addUndoSnapshot).toHaveBeenCalledWith(core, true, undefined);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 isNested: false,
                 snapshotsManager: {},
@@ -1268,7 +1398,14 @@ describe('formatContentModel', () => {
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 isNested: true,
                 snapshotsManager: {},
@@ -1301,7 +1438,14 @@ describe('formatContentModel', () => {
             expect(callback).toHaveBeenCalledTimes(1);
             expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
+            expect(setContentModel).toHaveBeenCalledWith(
+                core,
+                mockedModel,
+                undefined,
+                undefined,
+                undefined,
+                undefined
+            );
             expect(core.undo).toEqual({
                 isNested: true,
                 snapshotsManager: {},
