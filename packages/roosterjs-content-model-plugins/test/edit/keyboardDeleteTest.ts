@@ -1041,4 +1041,419 @@ describe('keyboardDelete - table selection', () => {
         expect(editTableSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).not.toHaveBeenCalled();
     });
+
+    it('Backspace on entire table selection should delete table', () => {
+        const table = createMockTable(3, 3);
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteTable');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Shift+Delete on entire table selection should delete table', () => {
+        const table = createMockTable(3, 3);
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Delete', shiftKey: true } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteTable');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe('keyboardDelete - table selection with colspan and rowspan', () => {
+    let editTableSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        editTableSpy = spyOn(editTableModule, 'editTable');
+    });
+
+    // Creates a table with colspan in first row:
+    // | col1 (colspan=2) | col3 |
+    // | col1 | col2      | col3 |
+    // | col1 | col2      | col3 |
+    function createTableWithColspan(): HTMLTableElement {
+        const table = document.createElement('table');
+
+        const row1 = document.createElement('tr');
+        const cell1_1 = document.createElement('td');
+        cell1_1.colSpan = 2;
+        const cell1_2 = document.createElement('td');
+        row1.appendChild(cell1_1);
+        row1.appendChild(cell1_2);
+
+        const row2 = document.createElement('tr');
+        for (let j = 0; j < 3; j++) {
+            row2.appendChild(document.createElement('td'));
+        }
+
+        const row3 = document.createElement('tr');
+        for (let j = 0; j < 3; j++) {
+            row3.appendChild(document.createElement('td'));
+        }
+
+        table.appendChild(row1);
+        table.appendChild(row2);
+        table.appendChild(row3);
+        return table;
+    }
+
+    // Creates a table with rowspan in first column:
+    // | col1 (rowspan=2) | col2 | col3 |
+    // |                  | col2 | col3 |
+    // | col1             | col2 | col3 |
+    function createTableWithRowspan(): HTMLTableElement {
+        const table = document.createElement('table');
+
+        const row1 = document.createElement('tr');
+        const cell1_1 = document.createElement('td');
+        cell1_1.rowSpan = 2;
+        row1.appendChild(cell1_1);
+        row1.appendChild(document.createElement('td'));
+        row1.appendChild(document.createElement('td'));
+
+        const row2 = document.createElement('tr');
+        row2.appendChild(document.createElement('td'));
+        row2.appendChild(document.createElement('td'));
+
+        const row3 = document.createElement('tr');
+        for (let j = 0; j < 3; j++) {
+            row3.appendChild(document.createElement('td'));
+        }
+
+        table.appendChild(row1);
+        table.appendChild(row2);
+        table.appendChild(row3);
+        return table;
+    }
+
+    // Creates a table with both colspan and rowspan:
+    // | col1 (colspan=2, rowspan=2) | col3 |
+    // |                             | col3 |
+    // | col1 | col2                 | col3 |
+    function createTableWithColspanAndRowspan(): HTMLTableElement {
+        const table = document.createElement('table');
+
+        const row1 = document.createElement('tr');
+        const cell1_1 = document.createElement('td');
+        cell1_1.colSpan = 2;
+        cell1_1.rowSpan = 2;
+        row1.appendChild(cell1_1);
+        row1.appendChild(document.createElement('td'));
+
+        const row2 = document.createElement('tr');
+        row2.appendChild(document.createElement('td'));
+
+        const row3 = document.createElement('tr');
+        for (let j = 0; j < 3; j++) {
+            row3.appendChild(document.createElement('td'));
+        }
+
+        table.appendChild(row1);
+        table.appendChild(row2);
+        table.appendChild(row3);
+        return table;
+    }
+
+    it('Backspace on table with colspan - whole row selected should delete row', () => {
+        const table = createTableWithColspan();
+        // Table has 3 logical columns, select all columns in row 0
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 0,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteRow');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan - whole column selected should delete column', () => {
+        const table = createTableWithColspan();
+        // Select all rows for column 2
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 2,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteColumn');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan - partial row selection should not delete row', () => {
+        const table = createTableWithColspan();
+        // Select only 2 columns (not all 3)
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 0,
+            firstColumn: 0,
+            lastColumn: 1,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Backspace on table with rowspan - whole row selected should delete row', () => {
+        const table = createTableWithRowspan();
+        // Select all columns in row 2 (row without rowspan)
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 2,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteRow');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with rowspan - whole column selected should delete column', () => {
+        const table = createTableWithRowspan();
+        // Select all rows for column 0 (column with rowspan)
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 0,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteColumn');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan and rowspan - entire table selected should delete table', () => {
+        const table = createTableWithColspanAndRowspan();
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteTable');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Shift+Delete on table with colspan and rowspan - entire table selected should delete table', () => {
+        const table = createTableWithColspanAndRowspan();
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Delete', shiftKey: true } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteTable');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan and rowspan - whole row selected should delete row', () => {
+        const table = createTableWithColspanAndRowspan();
+        // Select all columns in row 2
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 2,
+            lastRow: 2,
+            firstColumn: 0,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteRow');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan and rowspan - whole column selected should delete column', () => {
+        const table = createTableWithColspanAndRowspan();
+        // Select all rows for column 2
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 2,
+            firstColumn: 2,
+            lastColumn: 2,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).toHaveBeenCalledWith(editor, 'deleteColumn');
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace on table with colspan - partial selection should not delete', () => {
+        const table = createTableWithColspanAndRowspan();
+        // Partial selection
+        const tableSelection: DOMSelection = {
+            type: 'table',
+            table,
+            firstRow: 0,
+            lastRow: 1,
+            firstColumn: 0,
+            lastColumn: 1,
+        };
+
+        const formatContentModelSpy = jasmine.createSpy('formatContentModel');
+        const editor = {
+            formatContentModel: formatContentModelSpy,
+            getDOMSelection: () => tableSelection,
+            getEnvironment: () => ({}),
+        } as any;
+
+        const rawEvent = { key: 'Backspace' } as any;
+
+        keyboardDelete(editor, rawEvent, {});
+
+        expect(editTableSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+    });
 });

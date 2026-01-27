@@ -174,7 +174,6 @@ function shouldDeleteTableWithContentModel(
     selection: DOMSelection | null,
     rawEvent: KeyboardEvent
 ): TableDeleteOperation | undefined {
-    let type: TableDeleteOperation | undefined = undefined;
     if (
         selection?.type == 'table' &&
         (rawEvent.key == 'Backspace' || (rawEvent.key == 'Delete' && rawEvent.shiftKey))
@@ -182,17 +181,22 @@ function shouldDeleteTableWithContentModel(
         const { lastRow, lastColumn, table, firstColumn, firstRow } = selection;
         const rowNumber = table.rows.length;
         const isWholeColumnSelected = firstRow == 0 && lastRow == rowNumber - 1;
-        if (isWholeColumnSelected) {
-            type = 'deleteColumn';
-        }
-
-        const columnNumber = table.rows[firstRow].childElementCount;
+        const columnNumber = Array.from(table.rows[firstRow].cells).reduce(
+            (sum, cell) => sum + (cell.colSpan || 1),
+            0
+        );
         const isWholeRowSelected = firstColumn == 0 && lastColumn == columnNumber - 1;
-        if (isWholeRowSelected) {
-            type = 'deleteRow';
+        if (isWholeRowSelected && isWholeColumnSelected) {
+            return 'deleteTable';
         }
 
-        type = isWholeRowSelected && isWholeColumnSelected ? 'deleteTable' : type;
+        if (isWholeRowSelected) {
+            return 'deleteRow';
+        }
+
+        if (isWholeColumnSelected) {
+            return 'deleteColumn';
+        }
     }
-    return type;
+    return undefined;
 }
