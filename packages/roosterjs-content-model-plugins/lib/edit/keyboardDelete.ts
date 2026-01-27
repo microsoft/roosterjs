@@ -2,6 +2,7 @@ import { deleteAllSegmentBefore } from './deleteSteps/deleteAllSegmentBefore';
 import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { deleteList } from './deleteSteps/deleteList';
 import { deleteParagraphStyle } from './deleteSteps/deleteParagraphStyle';
+import { editTable } from 'roosterjs-content-model-api';
 import { getDeleteCollapsedSelection } from './deleteSteps/deleteCollapsedSelection';
 import {
     ChangeSource,
@@ -20,7 +21,12 @@ import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
 } from './deleteSteps/deleteWordSelection';
-import type { DOMSelection, DeleteSelectionStep, IEditor } from 'roosterjs-content-model-types';
+import type {
+    DOMSelection,
+    DeleteSelectionStep,
+    IEditor,
+    TableDeleteOperation,
+} from 'roosterjs-content-model-types';
 import type { EditOptions } from './EditOptions';
 
 /**
@@ -35,8 +41,14 @@ export function keyboardDelete(editor: IEditor, rawEvent: KeyboardEvent, options
     let handled = false;
     const selection = editor.getDOMSelection();
     const { handleExpandedSelectionOnDelete } = options;
+    const tableDeleteType = shouldDeleteTableWithContentModel(selection, rawEvent);
 
-    if (shouldDeleteWithContentModel(selection, rawEvent, !!handleExpandedSelectionOnDelete)) {
+    if (tableDeleteType) {
+        editTable(editor, tableDeleteType);
+        handled = true;
+    } else if (
+        shouldDeleteWithContentModel(selection, rawEvent, !!handleExpandedSelectionOnDelete)
+    ) {
         editor.formatContentModel(
             (model, context) => {
                 const result = deleteSelection(
@@ -96,8 +108,8 @@ function shouldDeleteWithContentModel(
     rawEvent: KeyboardEvent,
     handleExpandedSelection: boolean
 ) {
-    if (!selection) {
-        return false; // Nothing to delete
+    if (!selection || (rawEvent.key == 'Delete' && rawEvent.shiftKey)) {
+        return false; // Nothing to delete or leave it to browser when delete and shift key is pressed so that browser will trigger cut event
     } else if (selection.type != 'range') {
         return true;
     } else if (!selection.range.collapsed) {
@@ -156,4 +168,35 @@ function canDeleteBefore(rawEvent: KeyboardEvent, text: Text, offset: number) {
 
 function canDeleteAfter(rawEvent: KeyboardEvent, text: Text, offset: number) {
     return rawEvent.key == 'Delete' && offset < (text.nodeValue?.length ?? 0) - 1;
+}
+
+function shouldDeleteTableWithContentModel(
+    selection: DOMSelection | null,
+    rawEvent: KeyboardEvent
+): TableDeleteOperation | undefined {
+    if (
+        selection?.type == 'table' &&
+        (rawEvent.key == 'Backspace' || (rawEvent.key == 'Delete' && rawEvent.shiftKey))
+    ) {
+        const { lastRow, lastColumn, table, firstColumn, firstRow } = selection;
+        const rowNumber = table.rows.length;
+        const isWholeColumnSelected = firstRow == 0 && lastRow == rowNumber - 1;
+        const columnNumber = Array.from(table.rows[firstRow].cells).reduce(
+            (sum, cell) => sum + (cell.colSpan || 1),
+            0
+        );
+        const isWholeRowSelected = firstColumn == 0 && lastColumn == columnNumber - 1;
+        if (isWholeRowSelected && isWholeColumnSelected) {
+            return 'deleteTable';
+        }
+
+        if (isWholeRowSelected) {
+            return 'deleteRow';
+        }
+
+        if (isWholeColumnSelected) {
+            return 'deleteColumn';
+        }
+    }
+    return undefined;
 }
