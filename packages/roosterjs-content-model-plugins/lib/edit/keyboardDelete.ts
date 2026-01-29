@@ -11,6 +11,7 @@ import {
     isLinkUndeletable,
     isModifierKey,
     isNodeOfType,
+    parseTableCells,
 } from 'roosterjs-content-model-dom';
 import {
     handleKeyboardEventResult,
@@ -179,12 +180,10 @@ function shouldDeleteTableWithContentModel(
         (rawEvent.key == 'Backspace' || (rawEvent.key == 'Delete' && rawEvent.shiftKey))
     ) {
         const { lastRow, lastColumn, table, firstColumn, firstRow } = selection;
-        const rowNumber = table.rows.length;
+        const parsedTable = parseTableCells(table);
+        const rowNumber = parsedTable.length;
         const isWholeColumnSelected = firstRow == 0 && lastRow == rowNumber - 1;
-        const columnNumber = Array.from(table.rows[firstRow].cells).reduce(
-            (sum, cell) => sum + (cell.colSpan || 1),
-            0
-        );
+        const columnNumber = parsedTable[lastRow].length;
         const isWholeRowSelected = firstColumn == 0 && lastColumn == columnNumber - 1;
         if (isWholeRowSelected && isWholeColumnSelected) {
             return 'deleteTable';
