@@ -34,6 +34,9 @@ describe('switchShadowEdit', () => {
             },
             lifecycle: {},
             cache: {},
+            selection: {
+                selection: null,
+            },
         } as any) as EditorCore;
     });
 
