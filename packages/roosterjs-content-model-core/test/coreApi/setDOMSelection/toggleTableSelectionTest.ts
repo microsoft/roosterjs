@@ -68,10 +68,7 @@ describe('toggleTableSelection', () => {
 
         toggleTableSelection(core, true);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '', [
-            '#testTable',
-            '#testTable *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '');
 
         document.body.removeChild(table);
     });
@@ -167,7 +164,7 @@ describe('toggleTableSelection', () => {
 
         toggleTableSelection(core, true);
 
-        expect(setEditorStyleSpy).toHaveBeenCalled();
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '');
 
         document.body.removeChild(table);
     });
@@ -197,7 +194,7 @@ describe('toggleTableSelection', () => {
         toggleTableSelection(core, true);
 
         // Should still work because the function normalizes coordinates
-        expect(setEditorStyleSpy).toHaveBeenCalled();
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '');
 
         document.body.removeChild(table);
     });
@@ -225,9 +222,8 @@ describe('toggleTableSelection', () => {
 
         toggleTableSelection(core, true);
 
-        // Table should now have an id
-        expect(table.id).toBeTruthy();
-        expect(setEditorStyleSpy).toHaveBeenCalled();
+        // Table should not need an id when hiding (removeTableCellsStyle doesn't use selectors)
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '');
 
         document.body.removeChild(table);
     });

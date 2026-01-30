@@ -102,18 +102,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 core.selection.selection = selection;
 
-                const tableSelectionColor = isDarkMode
-                    ? core.selection.tableCellSelectionBackgroundColorDark
-                    : core.selection.tableCellSelectionBackgroundColor;
-
-                setTableCellsStyle(
-                    core,
-                    table,
-                    parsedTable,
-                    firstCell,
-                    lastCell,
-                    `background-color:${tableSelectionColor}!important;`
-                );
+                setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
                 core.api.setEditorStyle(
                     core,
                     HIDE_SELECTION_CSS_KEY,

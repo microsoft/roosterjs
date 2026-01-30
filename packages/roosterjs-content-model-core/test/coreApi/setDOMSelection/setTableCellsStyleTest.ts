@@ -7,6 +7,8 @@ import {
 } from 'roosterjs-content-model-types';
 
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
+const DEFAULT_SELECTION_COLOR = '#C6C6C6';
+const DEFAULT_SELECTION_COLOR_DARK = '#666666';
 
 describe('setTableCellsStyle', () => {
     let core: EditorCore;
@@ -17,6 +19,13 @@ describe('setTableCellsStyle', () => {
         core = {
             api: {
                 setEditorStyle: setEditorStyleSpy,
+            },
+            lifecycle: {
+                isDarkMode: false,
+            },
+            selection: {
+                tableCellSelectionBackgroundColor: DEFAULT_SELECTION_COLOR,
+                tableCellSelectionBackgroundColorDark: DEFAULT_SELECTION_COLOR_DARK,
             },
         } as any;
     });
@@ -57,14 +66,18 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 0, col: 0 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
+            ]
+        );
     });
 
     it('should apply style to multiple cells in a row', () => {
@@ -79,18 +92,22 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 0, col: 2 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3) *',
+            ]
+        );
     });
 
     it('should apply style to multiple cells in a column', () => {
@@ -106,18 +123,22 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 2, col: 0 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(1) *',
-            '#testTable>TBODY> tr:nth-child(3)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(3)>TD:nth-child(1) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(1) *',
+                '#testTable>TBODY> tr:nth-child(3)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(3)>TD:nth-child(1) *',
+            ]
+        );
     });
 
     it('should apply style to a rectangular selection', () => {
@@ -133,20 +154,24 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 1 };
         const lastCell: TableCellCoordinate = { row: 1, col: 2 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3) *',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(2)',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(3)',
-            '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(3) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(3) *',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(2)',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(2) *',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(3)',
+                '#testTable>TBODY> tr:nth-child(2)>TD:nth-child(3) *',
+            ]
+        );
     });
 
     it('should use table selector for full table selection', () => {
@@ -161,14 +186,15 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 1, col: 1 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable',
-            '#testTable *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            ['#testTable', '#testTable *']
+        );
     });
 
     it('should handle table with thead and tbody', () => {
@@ -186,16 +212,20 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 0, col: 1 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(1)',
-            '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(1) *',
-            '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(2)',
-            '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(2) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(1)',
+                '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(1) *',
+                '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(2)',
+                '#testTable>THEAD> tr:nth-child(1)>TH:nth-child(2) *',
+            ]
+        );
     });
 
     it('should handle table with thead, tbody and tfoot - select from tbody', () => {
@@ -224,19 +254,24 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 1, col: 0 };
         const lastCell: TableCellCoordinate = { row: 1, col: 1 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, [
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
-            '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            [
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(1) *',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2)',
+                '#testTable>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
+            ]
+        );
     });
 
-    it('should remove style when empty string is passed', () => {
+    it('should use dark mode color when isDarkMode is true', () => {
+        core.lifecycle.isDarkMode = true;
         const table = createTable(`
             <table id="testTable">
                 <tbody>
@@ -249,12 +284,14 @@ describe('setTableCellsStyle', () => {
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 1, col: 1 };
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, '');
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, '', [
-            '#testTable',
-            '#testTable *',
-        ]);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR_DARK}!important;`,
+            ['#testTable', '#testTable *']
+        );
     });
 
     it('should handle selection outside table bounds', () => {
@@ -268,11 +305,15 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 5, col: 5 };
         const lastCell: TableCellCoordinate = { row: 6, col: 6 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
-        expect(setEditorStyleSpy).toHaveBeenCalledWith(core, DOM_SELECTION_CSS_KEY, style, []);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            core,
+            DOM_SELECTION_CSS_KEY,
+            `background-color:${DEFAULT_SELECTION_COLOR}!important;`,
+            []
+        );
     });
 
     it('should generate unique id for table without id', () => {
@@ -287,9 +328,8 @@ describe('setTableCellsStyle', () => {
         const parsedTable = createParsedTable(table);
         const firstCell: TableCellCoordinate = { row: 0, col: 0 };
         const lastCell: TableCellCoordinate = { row: 1, col: 1 };
-        const style = 'background-color:#C6C6C6!important;';
 
-        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell, style);
+        setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
 
         expect(setEditorStyleSpy).toHaveBeenCalled();
         expect(table.id).toBeTruthy();

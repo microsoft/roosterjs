@@ -13,16 +13,30 @@ const TABLE_ID = 'table';
  * @param style The CSS style to apply, or empty string to remove style
  * @param parsedTable Optional pre-parsed table to avoid parsing twice
  */
+export function removeTableCellsStyle(core: EditorCore) {
+    core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, '');
+}
+
+/**
+ * @internal
+ * Set style for table cells in the selection
+ * @param core The EditorCore object
+ * @param selection The table selection
+ * @param style The CSS style to apply, or empty string to remove style
+ * @param parsedTable Optional pre-parsed table to avoid parsing twice
+ */
 export function setTableCellsStyle(
     core: EditorCore,
     table: HTMLTableElement,
     parsedTable: ParsedTable,
     firstCell: TableCellCoordinate,
-    lastCell: TableCellCoordinate,
-    style: string
+    lastCell: TableCellCoordinate
 ) {
     const tableId = ensureUniqueId(table, TABLE_ID);
     const tableSelector = getSafeIdSelector(tableId);
+    const tableSelectionColor = core.lifecycle.isDarkMode
+        ? core.selection.tableCellSelectionBackgroundColorDark
+        : core.selection.tableCellSelectionBackgroundColor;
 
     const tableSelectors =
         firstCell.row == 0 &&
@@ -32,7 +46,12 @@ export function setTableCellsStyle(
             ? [tableSelector, `${tableSelector} *`]
             : buildTableSelectors(parsedTable, tableSelector, table, firstCell, lastCell);
 
-    core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, style, tableSelectors);
+    core.api.setEditorStyle(
+        core,
+        DOM_SELECTION_CSS_KEY,
+        `background-color:${tableSelectionColor}!important;`,
+        tableSelectors
+    );
 }
 
 /**

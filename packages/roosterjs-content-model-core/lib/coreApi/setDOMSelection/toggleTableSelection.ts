@@ -1,5 +1,5 @@
 import { parseTableCells } from 'roosterjs-content-model-dom';
-import { setTableCellsStyle } from './setTableCellsStyle';
+import { removeTableCellsStyle, setTableCellsStyle } from './setTableCellsStyle';
 
 import type { EditorCore, TableCellCoordinate } from 'roosterjs-content-model-types';
 
@@ -13,28 +13,21 @@ export function toggleTableSelection(core: EditorCore, isHiding: boolean) {
     const selection = core.selection.selection;
 
     if (selection?.type === 'table') {
-        const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
-        const parsedTable = parseTableCells(table);
-        const firstCell: TableCellCoordinate = {
-            row: Math.min(firstRow, lastRow),
-            col: Math.min(firstColumn, lastColumn),
-        };
-        const lastCell: TableCellCoordinate = {
-            row: Math.max(firstRow, lastRow),
-            col: Math.max(firstColumn, lastColumn),
-        };
+        if (isHiding) {
+            removeTableCellsStyle(core);
+        } else {
+            const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
+            const parsedTable = parseTableCells(table);
+            const firstCell: TableCellCoordinate = {
+                row: Math.min(firstRow, lastRow),
+                col: Math.min(firstColumn, lastColumn),
+            };
+            const lastCell: TableCellCoordinate = {
+                row: Math.max(firstRow, lastRow),
+                col: Math.max(firstColumn, lastColumn),
+            };
 
-        const tableSelectionColor = core.lifecycle.isDarkMode
-            ? core.selection.tableCellSelectionBackgroundColorDark
-            : core.selection.tableCellSelectionBackgroundColor;
-
-        setTableCellsStyle(
-            core,
-            table,
-            parsedTable,
-            firstCell,
-            lastCell,
-            isHiding ? '' : `background-color:${tableSelectionColor}!important;`
-        );
+            setTableCellsStyle(core, table, parsedTable, firstCell, lastCell);
+        }
     }
 }
