@@ -1,4 +1,10 @@
-import { createTable, createTableCell } from 'roosterjs-content-model-dom';
+import {
+    createListItem,
+    createListLevel,
+    createParagraph,
+    createTable,
+    createTableCell,
+} from 'roosterjs-content-model-dom';
 import {
     ContentModelTableCellFormat,
     TableCellHorizontalAlignOperation,
@@ -183,6 +189,107 @@ describe('alignTableCellHorizontally', () => {
             },
             true /* isRTL */
         );
+    });
+
+    it('align to left with ListItem block', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false);
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellLeft');
+
+        expect(cell.format.textAlign).toEqual('start');
+        expect(listItem.format.textAlign).toEqual('start');
+    });
+
+    it('align to center with ListItem block', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false);
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellCenter');
+
+        expect(cell.format.textAlign).toEqual('center');
+        expect(listItem.format.textAlign).toEqual('center');
+    });
+
+    it('align to right with ListItem block', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false);
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellRight');
+
+        expect(cell.format.textAlign).toEqual('end');
+        expect(listItem.format.textAlign).toEqual('end');
+    });
+
+    it('align to left with ListItem block - RTL', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false, { direction: 'rtl' });
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellLeft');
+
+        expect(cell.format.textAlign).toEqual('end');
+        expect(listItem.format.textAlign).toEqual('end');
+    });
+
+    it('align to right with ListItem block - RTL', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false, { direction: 'rtl' });
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellRight');
+
+        expect(cell.format.textAlign).toEqual('start');
+        expect(listItem.format.textAlign).toEqual('start');
+    });
+
+    it('align with mixed Paragraph and ListItem blocks', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false);
+        const paragraph = createParagraph(false, { textAlign: 'end' });
+        const listItem = createListItem([createListLevel('OL')]);
+        cell.blocks.push(paragraph);
+        cell.blocks.push(listItem);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellCenter');
+
+        expect(cell.format.textAlign).toEqual('center');
+        expect(paragraph.format.textAlign).toBeUndefined();
+        expect(listItem.format.textAlign).toEqual('center');
+    });
+
+    it('paragraph without textAlign should remain unchanged', () => {
+        const table = createTable(1);
+        const cell = createTableCell(1, 1, false);
+        const paragraph = createParagraph();
+        cell.blocks.push(paragraph);
+        table.rows[0].cells.push(cell);
+        cell.isSelected = true;
+
+        alignTableCellHorizontally(table, 'alignCellCenter');
+
+        expect(cell.format.textAlign).toEqual('center');
+        expect(paragraph.format.textAlign).toBeUndefined();
     });
 });
 
