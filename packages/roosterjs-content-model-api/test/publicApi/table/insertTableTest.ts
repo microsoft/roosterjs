@@ -728,7 +728,7 @@ describe('insertTable', () => {
             const table = firstListItem.blocks[0];
 
             // Table should have the expected structure
-            expect(table.rows.length).toBe(3);
+            expect(table.rows.length).toBe(2);
             expect(table.rows[0].cells.length).toBe(2);
         });
 

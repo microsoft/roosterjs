@@ -1,6 +1,6 @@
 import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { insertTableContent } from '../../modelApi/table/insertTableContent';
+import { getSelectedContent, insertTableContent } from '../../modelApi/table/tableContent';
 import {
     createContentModelDocument,
     createSelectionMarker,
@@ -10,7 +10,6 @@ import {
     normalizeTable,
     setSelection,
     MIN_ALLOWED_TABLE_CELL_WIDTH,
-    cloneModel,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelTable,
@@ -42,7 +41,7 @@ export function insertTable(
 
     editor.formatContentModel(
         (model, context) => {
-            const copiedModel = cloneModel(model);
+            const blocks = getSelectedContent(model);
             const deleteSelectionResult = deleteSelection(model, [], context);
             const insertPosition = deleteSelectionResult.insertPoint;
 
@@ -58,9 +57,7 @@ export function insertTable(
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
                 initCellWidth(table);
 
-                if (deleteSelectionResult.deleteResult == 'range') {
-                    insertTableContent(copiedModel, table, columns, customCellFormat);
-                }
+                insertTableContent(table, blocks, columns, customCellFormat);
 
                 adjustTableIndentation(insertPosition, table);
 
