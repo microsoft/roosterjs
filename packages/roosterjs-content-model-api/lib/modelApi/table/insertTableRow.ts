@@ -1,4 +1,5 @@
 import { clearSelectedCells } from './clearSelectedCells';
+import { copyPreviousCellSegmentFormat } from './copyPreviousCellSegmentFormat';
 import { createTableCell, getSelectedCells } from 'roosterjs-content-model-dom';
 import type {
     ShallowMutableContentModelTable,
@@ -33,6 +34,7 @@ export function insertTableRow(
                         cell.format,
                         cell.dataset
                     );
+                    copyPreviousCellSegmentFormat(cell, newCell);
                     newCell.isSelected = true;
                     return newCell;
                 }),

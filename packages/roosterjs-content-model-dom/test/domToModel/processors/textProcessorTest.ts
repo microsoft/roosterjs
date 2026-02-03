@@ -747,6 +747,122 @@ describe('textProcessor', () => {
         expect(parserSpy).toHaveBeenCalledWith({}, text, context);
     });
 
+    it('process with multiple text format parsers (more than 2)', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test1');
+        const parser1Spy = jasmine.createSpy('parser1');
+        const parser2Spy = jasmine.createSpy('parser2');
+        const parser3Spy = jasmine.createSpy('parser3');
+
+        context.formatParsers.text = [parser1Spy, parser2Spy, parser3Spy];
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(parser1Spy).toHaveBeenCalledTimes(1);
+        expect(parser1Spy).toHaveBeenCalledWith({}, text, context);
+        expect(parser2Spy).toHaveBeenCalledTimes(1);
+        expect(parser2Spy).toHaveBeenCalledWith({}, text, context);
+        expect(parser3Spy).toHaveBeenCalledTimes(1);
+        expect(parser3Spy).toHaveBeenCalledWith({}, text, context);
+    });
+
+    it('process with empty formatParsers.text array', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test1');
+
+        context.formatParsers.text = [];
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('process with text format parsers that modify segmentFormat', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test1');
+        const parser1Spy = jasmine.createSpy('parser1').and.callFake((format: any) => {
+            format.fontWeight = 'bold';
+        });
+        const parser2Spy = jasmine.createSpy('parser2').and.callFake((format: any) => {
+            format.fontFamily = 'italic';
+        });
+
+        context.formatParsers.text = [parser1Spy, parser2Spy];
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+        });
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {
+                                fontWeight: 'bold',
+                                fontFamily: 'italic',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(parser1Spy).toHaveBeenCalledTimes(1);
+        expect(parser2Spy).toHaveBeenCalledTimes(1);
+    });
+
     it('With pending format, match collapsed selection', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('test');
