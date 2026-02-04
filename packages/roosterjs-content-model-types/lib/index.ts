@@ -96,6 +96,7 @@ export {
     TableAlignOperation,
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
+    TableCellShiftOperation,
 } from './enum/TableOperation';
 export { PasteType } from './enum/PasteType';
 export { BorderOperations } from './enum/BorderOperations';
