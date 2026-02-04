@@ -7,11 +7,8 @@ const TABLE_ID = 'table';
 
 /**
  * @internal
- * Set style for table cells in the selection
+ * Remove table cell selection styles
  * @param core The EditorCore object
- * @param selection The table selection
- * @param style The CSS style to apply, or empty string to remove style
- * @param parsedTable Optional pre-parsed table to avoid parsing twice
  */
 export function removeTableCellsStyle(core: EditorCore) {
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, '');
@@ -21,9 +18,10 @@ export function removeTableCellsStyle(core: EditorCore) {
  * @internal
  * Set style for table cells in the selection
  * @param core The EditorCore object
- * @param selection The table selection
- * @param style The CSS style to apply, or empty string to remove style
- * @param parsedTable Optional pre-parsed table to avoid parsing twice
+ * @param table The HTML table element
+ * @param parsedTable The parsed table structure
+ * @param firstCell The coordinates of the first selected cell
+ * @param lastCell The coordinates of the last selected cell
  */
 export function setTableCellsStyle(
     core: EditorCore,
