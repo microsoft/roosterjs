@@ -1,17 +1,11 @@
 import { getSelectedContent, insertTableContent } from '../../../lib/modelApi/table/tableContent';
-import {
-    ContentModelBlock,
-    ContentModelDocument,
-    ContentModelTable,
-} from 'roosterjs-content-model-types';
+import { ContentModelBlock, ContentModelDocument } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createParagraph,
     createTable,
     createTableCell,
-    createTableRow,
     createText,
-    createBr,
     createListItem,
     createListLevel,
     createFormatContainer,
