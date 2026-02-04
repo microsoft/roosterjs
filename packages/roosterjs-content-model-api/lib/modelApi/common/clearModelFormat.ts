@@ -139,10 +139,13 @@ function clearTableCellFormat(
         if (cell.isSelected) {
             const mutableCell = mutateBlock(cell);
 
-            updateTableCellMetadata(mutableCell, () => null);
+            updateTableCellMetadata(mutableCell, metadata => {
+                return (metadata = metadata ? { vAlignOverride: metadata.vAlignOverride } : null);
+            });
             mutableCell.isHeader = false;
             mutableCell.format = {
                 useBorderBox: cell.format.useBorderBox,
+                verticalAlign: cell.format.verticalAlign,
             };
         }
 
