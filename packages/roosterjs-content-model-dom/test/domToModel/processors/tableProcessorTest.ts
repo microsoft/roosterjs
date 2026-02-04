@@ -1419,6 +1419,344 @@ describe('tableProcessor', () => {
             ],
         });
     });
+
+    it('Process a table with rows having fewer cells - extends short rows with spanLeft cells', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        div.innerHTML =
+            '<table><tr><td id="td1"></td><td id="td2"></td><td id="td3"></td></tr><tr><td id="td4"></td></tr></table>';
+
+        tableProcessor(group, div.firstChild as HTMLTableElement, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [100, 100, 100],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a table with header cell in short row - extends with spanLeft header cells', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        div.innerHTML =
+            '<table><tr><td id="td1"></td><td id="td2"></td></tr><tr><th id="th1"></th></tr></table>';
+
+        tableProcessor(group, div.firstChild as HTMLTableElement, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: true,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: true,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [100, 100],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a table with colspan in first row and fewer cells in second row', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        div.innerHTML =
+            '<table><tr><td colspan="3" id="td1"></td></tr><tr><td id="td2"></td></tr></table>';
+
+        tableProcessor(group, div.firstChild as HTMLTableElement, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [100, 0, 0],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a table with colspan in short row', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+        div.innerHTML =
+            '<table><tr><td id="td1"></td><td id="td2"></td><td id="td3"></td></tr><tr><td colspan="2" id="td4"></td></tr></table>';
+
+        tableProcessor(group, div.firstChild as HTMLTableElement, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [100, 100, 100],
+                    dataset: {},
+                },
+            ],
+        });
+    });
 });
 
 describe('tableProcessor without recalculateTableSize', () => {
@@ -1634,26 +1972,11 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     isHeader: false,
                                     dataset: {},
                                 },
-                            ],
-                        },
-                        {
-                            height: 0,
-                            format: {},
-                            cells: [
                                 {
                                     blockGroupType: 'TableCell',
                                     blocks: [],
                                     format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [],
-                                    format: {},
-                                    spanLeft: false,
+                                    spanLeft: true,
                                     spanAbove: false,
                                     isHeader: false,
                                     dataset: {},
@@ -1678,6 +2001,48 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blocks: [],
                                     format: {},
                                     spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
                                     spanAbove: false,
                                     isHeader: false,
                                     dataset: {},
@@ -1735,6 +2100,15 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blocks: [],
                                     format: {},
                                     spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
                                     spanAbove: false,
                                     isHeader: false,
                                     dataset: {},
@@ -1840,6 +2214,24 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     isHeader: false,
                                     dataset: {},
                                 },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
                             ],
                         },
                         {
@@ -1878,6 +2270,24 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blocks: [],
                                     format: {},
                                     spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
                                     spanAbove: false,
                                     isHeader: false,
                                     dataset: {},
@@ -1933,6 +2343,15 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     isHeader: false,
                                     dataset: {},
                                 },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
                             ],
                         },
                         {
@@ -2031,6 +2450,24 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blocks: [],
                                     format: {},
                                     spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanLeft: true,
                                     spanAbove: false,
                                     isHeader: false,
                                     dataset: {},
@@ -2204,6 +2641,24 @@ describe('tableProcessor without recalculateTableSize', () => {
                                     blockGroupType: 'TableCell',
                                     spanAbove: false,
                                     spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    isHeader: false,
+                                    blocks: [],
+                                    format: {},
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: true,
                                     isHeader: false,
                                     blocks: [],
                                     format: {},
