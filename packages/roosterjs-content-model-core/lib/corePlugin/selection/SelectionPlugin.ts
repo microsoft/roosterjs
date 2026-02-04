@@ -520,6 +520,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             break;
                         }
                     }
+                    if (this.editor.getSnapshotsManager().hasNewContent) {
+                        this.editor.takeSnapshot();
+                    }
                 } else {
                     this.state.tableSelection = null;
                 }
