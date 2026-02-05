@@ -20,11 +20,6 @@ import {
     createTable,
     createTableCell,
     createText,
-    createListItem,
-    createListLevel,
-    createFormatContainer,
-    createImage,
-    createDivider,
 } from 'roosterjs-content-model-dom';
 
 describe('getSelectedContentForTable', () => {
