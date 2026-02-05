@@ -32,8 +32,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
-            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green_red, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
         );
     });
 
@@ -44,8 +44,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
-            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green_red, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
         );
     });
 
@@ -58,8 +58,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></div>',
-            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green_red, green);"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
         );
     });
 
@@ -98,8 +98,8 @@ describe('transform to dark mode', () => {
 
         runTest(
             element,
-            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green); border-top: 1px solid red; border-bottom: 2px dashed green;"></div>',
-            '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
+            '<div style="color: var(--darkColor_red, red); background-color: var(--darkColor_green_red, green); border-top: 1px solid red; border-bottom: 2px dashed green;"></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
         );
     });
 
@@ -140,6 +140,21 @@ describe('transform to dark mode', () => {
         );
         expect(div.outerHTML).toBe(
             '<div style="--darkColor_red: blue; --darkColor_green: yellow;"></div>'
+        );
+    });
+
+    it('Has text color on parent element and background color on child element, transform with dark color handler', () => {
+        const element = document.createElement('div');
+        element.style.color = 'red';
+
+        const child = document.createElement('div');
+        child.style.backgroundColor = 'green';
+        element.appendChild(child);
+
+        runTest(
+            element,
+            '<div style="color: var(--darkColor_red, red);"><div style="background-color: var(--darkColor_green_red, green);"></div></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
         );
     });
 });
