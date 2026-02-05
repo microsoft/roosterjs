@@ -6,18 +6,41 @@ describe('insertTable', () => {
     let focusSpy: jasmine.Spy;
     let formatContentModelSpy: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let getContentModelCopySpy: jasmine.Spy;
+    let mockDocument: Document;
 
     beforeEach(() => {
+        mockDocument = document.implementation.createHTMLDocument('test');
         focusSpy = jasmine.createSpy('focus');
         formatContentModelSpy = jasmine.createSpy('formatContentModel');
         getPendingFormatSpy = jasmine.createSpy('getPendingFormat');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(null);
+        getContentModelCopySpy = jasmine.createSpy('getContentModelCopy');
 
         editor = {
             focus: focusSpy,
             formatContentModel: formatContentModelSpy,
             getPendingFormat: getPendingFormatSpy,
+            getDOMSelection: getDOMSelectionSpy,
+            getContentModelCopy: getContentModelCopySpy,
         } as any;
     });
+
+    function setupRangeSelection(model: ContentModelDocument) {
+        const div = mockDocument.createElement('div');
+        div.textContent = 'selected';
+        mockDocument.body.appendChild(div);
+        const range = mockDocument.createRange();
+        range.selectNodeContents(div);
+
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range,
+            isReverted: false,
+        });
+        getContentModelCopySpy.and.returnValue(model);
+    }
 
     describe('insertTable with indentation', () => {
         it('should insert table with proper indentation when cursor is in indented text', () => {
@@ -444,6 +467,51 @@ describe('insertTable', () => {
     describe('insertTable with range selection (insertTableContent)', () => {
         it('should insert table with selected paragraphs content into first column cells', () => {
             // Arrange - Multiple paragraphs with selected text (range selection)
+            const selectedModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 1',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 2',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 3',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            // Setup the range selection mock
+            setupRangeSelection(selectedModel);
+
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
@@ -544,6 +612,63 @@ describe('insertTable', () => {
 
         it('should add extra rows when more selected paragraphs than requested rows', () => {
             // Arrange - 4 paragraphs selected but only 2 rows requested
+            const selectedModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 1',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 2',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 3',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Line 4',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            // Setup the range selection mock
+            setupRangeSelection(selectedModel);
+
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
@@ -814,6 +939,58 @@ describe('insertTable', () => {
 
         it('should insert table with mixed selected content (paragraph and list)', () => {
             // Arrange - Mix of paragraph and list item
+            const selectedModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Paragraph',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'List Item',
+                                        format: {},
+                                        isSelected: true,
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            };
+
+            // Setup the range selection mock
+            setupRangeSelection(selectedModel);
+
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
@@ -894,6 +1071,27 @@ describe('insertTable', () => {
 
         it('should insert table with fewer selected items than rows', () => {
             // Arrange - Only 1 paragraph selected, but 3 rows requested
+            const selectedModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Only one line',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            // Setup the range selection mock
+            setupRangeSelection(selectedModel);
+
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
@@ -946,6 +1144,39 @@ describe('insertTable', () => {
 
         it('should preserve custom cell format when inserting content', () => {
             // Arrange
+            const selectedModel: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Content 1',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Content 2',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            };
+
+            // Setup the range selection mock
+            setupRangeSelection(selectedModel);
+
             const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [

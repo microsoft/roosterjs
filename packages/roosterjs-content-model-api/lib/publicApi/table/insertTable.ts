@@ -1,6 +1,6 @@
 import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { getSelectedContent, insertTableContent } from '../../modelApi/table/tableContent';
+import { getSelectedContentForTable, insertTableContent } from '../../modelApi/table/tableContent';
 import {
     createContentModelDocument,
     createSelectionMarker,
@@ -39,9 +39,10 @@ export function insertTable(
 ) {
     editor.focus();
 
+    const blocks = getSelectedContentForTable(editor);
+
     editor.formatContentModel(
         (model, context) => {
-            const blocks = getSelectedContent(model);
             const deleteSelectionResult = deleteSelection(model, [], context);
             const insertPosition = deleteSelectionResult.insertPoint;
 

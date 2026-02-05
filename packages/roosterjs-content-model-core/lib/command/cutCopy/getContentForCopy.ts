@@ -1,23 +1,21 @@
 import { adjustImageSelectionOnSafari } from './adjustImageSelectionOnSafari';
 import { adjustSelectionForCopyCut } from './adjustSelectionForCopyCut';
 import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParser';
-import { preprocessTable } from './preprocessTable';
-import { pruneUnselectedModel } from './pruneUnselectedModel';
+import {
+    contentModelToDom,
+    contentModelToText,
+    createModelToDomContext,
+    getSelectedModel,
+    isElementOfType,
+    isNodeOfType,
+    wrap,
+} from 'roosterjs-content-model-dom';
 import type {
     DOMSelection,
     IEditor,
     OnNodeCreated,
     TextAndHtmlContentForCopy,
 } from 'roosterjs-content-model-types';
-import {
-    contentModelToDom,
-    contentModelToText,
-    createModelToDomContext,
-    isElementOfType,
-    isNodeOfType,
-    iterateSelections,
-    wrap,
-} from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -47,23 +45,15 @@ export function getContentForCopy(
 ): TextAndHtmlContentForCopy | null {
     const selection = editor.getDOMSelection();
     adjustImageSelectionOnSafari(editor, selection);
-    if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
-        const pasteModel = editor.getContentModelCopy('disconnected');
-        pruneUnselectedModel(pasteModel);
 
-        if (selection.type === 'table') {
-            iterateSelections(pasteModel, (_, tableContext) => {
-                if (tableContext?.table) {
-                    preprocessTable(tableContext.table);
+    if (selection && (selection.type !== 'range' || !selection.range.collapsed)) {
+        const model = editor.getContentModelCopy('disconnected');
+        const context = createModelToDomContext();
+        const pasteModel = getSelectedModel(model, selection);
 
-                    return true;
-                }
-                return false;
-            });
-        } else if (selection.type === 'range') {
+        if (selection.type === 'range') {
             adjustSelectionForCopyCut(pasteModel);
         }
-        const context = createModelToDomContext();
 
         context.onNodeCreated = onNodeCreated;
         const doc = editor.getDocument();

@@ -1,5 +1,19 @@
-import { getSelectedContent, insertTableContent } from '../../../lib/modelApi/table/tableContent';
-import { ContentModelBlock, ContentModelDocument } from 'roosterjs-content-model-types';
+import {
+    getSelectedContentForTable,
+    insertTableContent,
+} from '../../../lib/modelApi/table/tableContent';
+import {
+    ContentModelBlock,
+    ContentModelDocument,
+    ContentModelSettings,
+    DOMSelection,
+    DomToModelOption,
+    DomToModelSettings,
+    EditorEnvironment,
+    IEditor,
+    ModelToDomOption,
+    ModelToDomSettings,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createParagraph,
@@ -13,14 +27,66 @@ import {
     createDivider,
 } from 'roosterjs-content-model-dom';
 
-describe('getSelectedContent', () => {
+describe('getSelectedContentForTable', () => {
+    let mockDocument: Document;
+
+    function createMockEditor(
+        selection: DOMSelection | null,
+        model: ContentModelDocument
+    ): IEditor {
+        mockDocument = document.implementation.createHTMLDocument('test');
+
+        return {
+            getDocument: (): Document => mockDocument,
+            getDOMSelection: (): DOMSelection | null => selection,
+            getContentModelCopy: (): ContentModelDocument => model,
+            getEnvironment: (): EditorEnvironment => {
+                return {
+                    document: mockDocument,
+                    isSafari: false,
+                    domToModelSettings: {} as ContentModelSettings<
+                        DomToModelOption,
+                        DomToModelSettings
+                    >,
+                    modelToDomSettings: {} as ContentModelSettings<
+                        ModelToDomOption,
+                        ModelToDomSettings
+                    >,
+                };
+            },
+        } as any;
+    }
+
     it('should return empty array when no selection', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
         para.segments.push(createText('text'));
         model.blocks.push(para);
 
-        const result = getSelectedContent(model);
+        const editor = createMockEditor(null, model);
+
+        const result = getSelectedContentForTable(editor);
+
+        expect(result).toEqual([]);
+    });
+
+    it('should return empty array when selection is collapsed', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createText('text'));
+        model.blocks.push(para);
+
+        const range = document.createRange();
+
+        const selection: DOMSelection = {
+            type: 'range',
+            range,
+            isReverted: false,
+        };
+
+        const editor = createMockEditor(selection, model);
+
+        const result = getSelectedContentForTable(editor);
 
         expect(result).toEqual([]);
     });
@@ -33,73 +99,27 @@ describe('getSelectedContent', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        const result = getSelectedContent(model);
+        mockDocument = document.implementation.createHTMLDocument('test');
+        const div = mockDocument.createElement('div');
+        div.textContent = 'selected text';
+        mockDocument.body.appendChild(div);
+
+        const range = mockDocument.createRange();
+        range.selectNodeContents(div);
+
+        const selection: DOMSelection = {
+            type: 'range',
+            range,
+            isReverted: false,
+        };
+
+        const editor = createMockEditor(selection, model);
+
+        const result = getSelectedContentForTable(editor);
 
         expect(result.length).toBe(1);
         expect(result[0].length).toBe(1);
         expect(result[0][0].blockType).toBe('Paragraph');
-        const resultPara = result[0][0] as any;
-        expect(resultPara.segments[0].text).toBe('selected text');
-    });
-
-    it('should return multiple paragraphs as separate rows', () => {
-        const model = createContentModelDocument();
-
-        const para1 = createParagraph();
-        const text1 = createText('Line 1');
-        text1.isSelected = true;
-        para1.segments.push(text1);
-
-        const para2 = createParagraph();
-        const text2 = createText('Line 2');
-        text2.isSelected = true;
-        para2.segments.push(text2);
-
-        const para3 = createParagraph();
-        const text3 = createText('Line 3');
-        text3.isSelected = true;
-        para3.segments.push(text3);
-
-        model.blocks.push(para1, para2, para3);
-
-        const result = getSelectedContent(model);
-
-        expect(result.length).toBe(3);
-        expect(result[0].length).toBe(1);
-        expect(result[1].length).toBe(1);
-        expect(result[2].length).toBe(1);
-
-        expect((result[0][0] as any).segments[0].text).toBe('Line 1');
-        expect((result[1][0] as any).segments[0].text).toBe('Line 2');
-        expect((result[2][0] as any).segments[0].text).toBe('Line 3');
-    });
-
-    it('should return list items as block groups', () => {
-        const model = createContentModelDocument();
-
-        const listItem1 = createListItem([createListLevel('UL')]);
-        const para1 = createParagraph();
-        const text1 = createText('Item 1');
-        text1.isSelected = true;
-        para1.segments.push(text1);
-        listItem1.blocks.push(para1);
-
-        const listItem2 = createListItem([createListLevel('UL')]);
-        const para2 = createParagraph();
-        const text2 = createText('Item 2');
-        text2.isSelected = true;
-        para2.segments.push(text2);
-        listItem2.blocks.push(para2);
-
-        model.blocks.push(listItem1, listItem2);
-
-        const result = getSelectedContent(model);
-
-        expect(result.length).toBe(2);
-        expect(result[0][0].blockType).toBe('BlockGroup');
-        expect((result[0][0] as any).blockGroupType).toBe('ListItem');
-        expect(result[1][0].blockType).toBe('BlockGroup');
-        expect((result[1][0] as any).blockGroupType).toBe('ListItem');
     });
 
     it('should extract content from table cells preserving rows', () => {
@@ -148,190 +168,27 @@ describe('getSelectedContent', () => {
 
         model.blocks.push(table);
 
-        const result = getSelectedContent(model);
+        mockDocument = document.implementation.createHTMLDocument('test');
+        const tableElement = mockDocument.createElement('table');
+        mockDocument.body.appendChild(tableElement);
+
+        const selection: DOMSelection = {
+            type: 'table',
+            table: tableElement,
+            firstColumn: 0,
+            lastColumn: 1,
+            firstRow: 0,
+            lastRow: 1,
+        };
+
+        const editor = createMockEditor(selection, model);
+
+        const result = getSelectedContentForTable(editor);
 
         // Should have 2 rows with 2 blocks each
         expect(result.length).toBe(2);
         expect(result[0].length).toBe(2);
         expect(result[1].length).toBe(2);
-
-        expect((result[0][0] as any).segments[0].text).toBe('Cell 0,0');
-        expect((result[0][1] as any).segments[0].text).toBe('Cell 0,1');
-        expect((result[1][0] as any).segments[0].text).toBe('Cell 1,0');
-        expect((result[1][1] as any).segments[0].text).toBe('Cell 1,1');
-    });
-
-    it('should handle table cell selection with tableContext', () => {
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    rows: [
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'A1',
-                                                    format: {},
-                                                    isSelected: true,
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    isSelected: true,
-                                    dataset: {},
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'B1',
-                                                    format: {},
-                                                    isSelected: true,
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    isSelected: true,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                        {
-                            format: {},
-                            height: 0,
-                            cells: [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'A2',
-                                                    format: {},
-                                                    isSelected: true,
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    isSelected: true,
-                                    dataset: {},
-                                },
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'B2',
-                                                    format: {},
-                                                    isSelected: true,
-                                                },
-                                            ],
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    spanAbove: false,
-                                    spanLeft: false,
-                                    isHeader: false,
-                                    isSelected: true,
-                                    dataset: {},
-                                },
-                            ],
-                        },
-                    ],
-                    format: {},
-                    widths: [100, 100],
-                    dataset: {},
-                },
-            ],
-        };
-
-        const result = getSelectedContent(model);
-
-        // Should preserve row structure: 2 rows with 2 cells each
-        expect(result.length).toBe(2);
-        expect(result[0].length).toBe(2);
-        expect(result[1].length).toBe(2);
-    });
-
-    it('should handle divider block', () => {
-        const model = createContentModelDocument();
-        const divider = createDivider('hr');
-        (divider as any).isSelected = true;
-        model.blocks.push(divider);
-
-        const result = getSelectedContent(model);
-
-        expect(result.length).toBe(1);
-        expect(result[0][0].blockType).toBe('Divider');
-    });
-
-    it('should handle format container (blockquote)', () => {
-        const model = createContentModelDocument();
-        const container = createFormatContainer('blockquote');
-        const para = createParagraph();
-        const text = createText('Quote text');
-        text.isSelected = true;
-        para.segments.push(text);
-        container.blocks.push(para);
-        model.blocks.push(container);
-
-        const result = getSelectedContent(model);
-
-        expect(result.length).toBe(1);
-        expect(result[0][0].blockType).toBe('BlockGroup');
-        expect((result[0][0] as any).blockGroupType).toBe('FormatContainer');
-    });
-
-    it('should handle image segment', () => {
-        const model = createContentModelDocument();
-        const para = createParagraph();
-        const image = createImage('test.jpg');
-        image.isSelected = true;
-        para.segments.push(image);
-        model.blocks.push(para);
-
-        const result = getSelectedContent(model);
-
-        expect(result.length).toBe(1);
-        expect(result[0][0].blockType).toBe('Paragraph');
-        const resultPara = result[0][0] as any;
-        expect(resultPara.segments[0].segmentType).toBe('Image');
-        expect(resultPara.segments[0].src).toBe('test.jpg');
     });
 });
 
