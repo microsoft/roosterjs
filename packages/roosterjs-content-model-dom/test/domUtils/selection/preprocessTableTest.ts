@@ -1,4 +1,4 @@
-import { preprocessTable } from '../../../lib/command/cutCopy/preprocessTable';
+import { preprocessTable } from '../../../lib/domUtils/selection/preprocessTable';
 import {
     createTable,
     createTableCell,
