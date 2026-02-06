@@ -147,14 +147,26 @@ describe('transform to dark mode', () => {
         const element = document.createElement('div');
         element.style.color = 'red';
 
-        const child = document.createElement('div');
-        child.style.backgroundColor = 'green';
-        element.appendChild(child);
+        const child1 = document.createElement('div');
+        child1.style.color = 'green';
+        element.appendChild(child1);
+
+        const span1 = document.createElement('span');
+        span1.style.backgroundColor = 'red';
+        child1.appendChild(span1);
+
+        const child2 = document.createElement('div');
+        child2.style.color = 'yellow';
+        element.appendChild(child2);
+
+        const span2 = document.createElement('span');
+        span2.style.backgroundColor = 'gray';
+        child2.appendChild(span2);
 
         runTest(
             element,
-            '<div style="color: var(--darkColor_red, red);"><div style="background-color: var(--darkColor_green_red, green);"></div></div>',
-            '<div style="--darkColor_red: blue; --darkColor_green_red: yellow;"></div>'
+            '<div style="color: var(--darkColor_red, red);"><div style="color: var(--darkColor_green, green);"><span style="background-color: var(--darkColor_red_green, red);"></span></div><div style="color: var(--darkColor_yellow, yellow);"><span style="background-color: var(--darkColor_gray_yellow, gray);"></span></div></div>',
+            '<div style="--darkColor_red: blue; --darkColor_green: yellow; --darkColor_red_green: blue;"></div>'
         );
     });
 });
