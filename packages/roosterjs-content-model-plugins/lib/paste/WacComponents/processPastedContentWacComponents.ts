@@ -81,7 +81,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
 
     if (
         TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className)) ||
-        // This is needed to remove some temporary End of paragraph elements that WAC sometimes preserve
+        // This is needed to remove some temporary End of paragraph elements that WAC sometimes preserves
         (element.classList.contains(SELECTED_CLASS) && element.classList.contains(END_OF_PARAGRAPH))
     ) {
         return;
