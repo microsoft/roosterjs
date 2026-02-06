@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model-core/lib/command/cutCopy/preprocessTable.ts</title>
+    <title>Code coverage report for roosterjs-content-model-dom/lib/domUtils/selection/trimModelForSelection.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-core/lib/command/cutCopy</a> preprocessTable.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model-dom/lib/domUtils/selection</a> trimModelForSelection.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>10/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>10/11</span>
             </div>
         
             
@@ -80,51 +80,54 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getSelectedCells } from 'roosterjs-content-model-dom';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { preprocessTable } from './preprocessTable';
+import { pruneUnselectedModel } from './pruneUnselectedModel';
+import type { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 &nbsp;
 /**
- * @internal
- */
-export function preprocessTable(table: ContentModelTable) {
-    const sel = getSelectedCells(table);
-    table.rows = table.rows
-        .map(row =&gt; {
-            return {
-                ...row,
-                cells: row.cells.filter(cell =&gt; cell.isSelected),
-            };
-        })
-        .filter(row =&gt; row.cells.length &gt; 0);
+ * Remove the unselected content from the model
+ * @param model the model document
+ * @param selection The editor selection
+ * */
+export function trimModelForSelection(model: ContentModelDocument, selection: DOMSelection) {
+    pruneUnselectedModel(model);
 &nbsp;
-    delete table.format.width;
+    if (selection.type === 'table') {
+        iterateSelections(model, (_, tableContext) =&gt; {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (tableContext<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>able) {
+                preprocessTable(tableContext.table);
 &nbsp;
-    table.widths = sel
-        ? table.widths.filter((_, index) =&gt; index &gt;= sel<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>irstColumn &amp;&amp; index &lt;= sel<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>astColumn)
-        : [];
+                return true;
+            }
+<span class="cstat-no" title="statement not covered" >            return false;</span>
+        });
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -133,7 +136,7 @@ export function preprocessTable(table: ContentModelTable) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Feb 05 2026 16:43:55 GMT+0000 (Coordinated Universal Time)
+                at Fri Feb 06 2026 19:01:32 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
