@@ -2296,8 +2296,10 @@ describe('SelectionPlugin handle table selection', () => {
 
             expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
             expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
-            // Since textOffset (5) > td4_text.length (1), it should use normalizePos offset (0)
-            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
+            // Since textOffset (5) > td4_text.length (1), it should use normalizePos offset
+            // normalizePos(td4, 5) clamps offset to 1 (childNodes.length), then traverses to lastChild
+            // and sets offset to td4_text.length (1)
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 1);
         });
 
         it('From Range, Press Down in the last row and move focus outside of table.', () => {
