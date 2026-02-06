@@ -198,7 +198,8 @@ function mergeTables(
                 if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
                     for (let k = 0; k < table.rows.length; k++) {
                         const leftCell = table.rows[k]?.cells[colIndex + j - 1];
-                        table.rows[k].cells[colIndex + j] = createTableCell(
+                        const index = leftCell.spanLeft ? colIndex + j + 1 : colIndex + j;
+                        table.rows[k].cells[index] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -218,7 +219,8 @@ function mergeTables(
 
                     for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
                         const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
-                        table.rows[rowIndex + i].cells[k] = createTableCell(
+                        const index = aboveCell.spanAbove ? rowIndex + i + 1 : rowIndex + i;
+                        table.rows[index].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -228,7 +230,10 @@ function mergeTables(
                 }
 
                 const oldCell = table.rows[rowIndex + i].cells[colIndex + j];
-                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
+                const cellIndex = oldCell.spanLeft ? colIndex + j + 1 : colIndex + j;
+                const index = oldCell.spanAbove ? rowIndex + i + 1 : rowIndex + i;
+
+                table.rows[index].cells[cellIndex] = newCell;
 
                 if (i == 0 && j == 0) {
                     const newMarker = createSelectionMarker(marker.format);
