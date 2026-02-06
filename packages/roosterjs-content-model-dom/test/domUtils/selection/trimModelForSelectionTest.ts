@@ -1,5 +1,5 @@
-import { getSelectedModel } from '../../../lib/domUtils/selection/getSelectedModel';
 import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
+import { trimModelForSelection } from '../../../lib/domUtils/selection/trimModelForSelection';
 import {
     createContentModelDocument,
     createImage,
@@ -10,7 +10,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('getSelectedModel', () => {
+describe('trimModelForSelection', () => {
     it('should return model for non-collapsed range selection', () => {
         const model = createContentModelDocument();
         const para = createParagraph();
@@ -33,7 +33,7 @@ describe('getSelectedModel', () => {
             isReverted: false,
         };
 
-        const result = getSelectedModel(model, selection);
+        trimModelForSelection(model, selection);
 
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -54,7 +54,7 @@ describe('getSelectedModel', () => {
             ],
         };
 
-        expect(result).toEqual(expectedModel);
+        expect(model).toEqual(expectedModel);
     });
 
     it('should return model for table selection', () => {
@@ -113,7 +113,7 @@ describe('getSelectedModel', () => {
             lastRow: 1,
         };
 
-        const result = getSelectedModel(model, selection);
+        trimModelForSelection(model, selection);
 
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -233,7 +233,7 @@ describe('getSelectedModel', () => {
             ],
         };
 
-        expect(result).toEqual(expectedModel);
+        expect(model).toEqual(expectedModel);
     });
 
     it('should return model for image selection', () => {
@@ -259,7 +259,7 @@ describe('getSelectedModel', () => {
             isReverted: false,
         };
 
-        const result = getSelectedModel(model, selection);
+        trimModelForSelection(model, selection);
 
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -281,7 +281,7 @@ describe('getSelectedModel', () => {
             ],
         };
 
-        expect(result).toEqual(expectedModel);
+        expect(model).toEqual(expectedModel);
     });
 
     it('should prune unselected content from model', () => {
@@ -314,7 +314,7 @@ describe('getSelectedModel', () => {
             isReverted: false,
         };
 
-        const result = getSelectedModel(model, selection);
+        trimModelForSelection(model, selection);
 
         const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -335,6 +335,6 @@ describe('getSelectedModel', () => {
             ],
         };
 
-        expect(result).toEqual(expectedModel);
+        expect(model).toEqual(expectedModel);
     });
 });

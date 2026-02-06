@@ -5,7 +5,7 @@ import {
     contentModelToDom,
     contentModelToText,
     createModelToDomContext,
-    getSelectedModel,
+    trimModelForSelection,
     isElementOfType,
     isNodeOfType,
     wrap,
@@ -47,9 +47,9 @@ export function getContentForCopy(
     adjustImageSelectionOnSafari(editor, selection);
 
     if (selection && (selection.type !== 'range' || !selection.range.collapsed)) {
-        const model = editor.getContentModelCopy('disconnected');
+        const pasteModel = editor.getContentModelCopy('disconnected');
         const context = createModelToDomContext();
-        const pasteModel = getSelectedModel(model, selection);
+        trimModelForSelection(pasteModel, selection);
 
         if (selection.type === 'range') {
             adjustSelectionForCopyCut(pasteModel);

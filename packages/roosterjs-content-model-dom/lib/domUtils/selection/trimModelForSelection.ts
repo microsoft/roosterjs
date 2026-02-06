@@ -4,14 +4,11 @@ import { pruneUnselectedModel } from './pruneUnselectedModel';
 import type { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 
 /**
- * Get the content model containing only the selection
+ * Remove the unselected content from the model
  * @param model the model document
  * @param selection The editor selection
  * */
-export function getSelectedModel(
-    model: ContentModelDocument,
-    selection: DOMSelection
-): ContentModelDocument {
+export function trimModelForSelection(model: ContentModelDocument, selection: DOMSelection) {
     pruneUnselectedModel(model);
 
     if (selection.type === 'table') {
@@ -24,5 +21,4 @@ export function getSelectedModel(
             return false;
         });
     }
-    return model;
 }

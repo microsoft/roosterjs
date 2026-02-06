@@ -1,4 +1,8 @@
-import { createTableCell, createTableRow, getSelectedModel } from 'roosterjs-content-model-dom';
+import {
+    createTableCell,
+    createTableRow,
+    trimModelForSelection,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
     ContentModelTable,
@@ -14,8 +18,8 @@ export function getSelectedContentForTable(editor: IEditor): ContentModelBlock[]
     const selectedRows: ContentModelBlock[][] = [];
     const selection = editor.getDOMSelection();
     if (selection && (selection?.type !== 'range' || !selection.range.collapsed)) {
-        const model = editor.getContentModelCopy('disconnected');
-        const selectedModel = getSelectedModel(model, selection);
+        const selectedModel = editor.getContentModelCopy('disconnected');
+        trimModelForSelection(selectedModel, selection);
 
         for (const block of selectedModel.blocks) {
             if (block.blockType === 'Table') {
