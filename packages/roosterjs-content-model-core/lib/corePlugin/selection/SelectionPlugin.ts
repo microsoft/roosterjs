@@ -364,7 +364,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             this.handleSelectionInTable(this.getTabKey(rawEvent));
                             rawEvent.preventDefault();
                         } else {
-                            win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                            const textOffset =
+                                selection.range.collapsed &&
+                                isNodeOfType(selection.range.startContainer, 'TEXT_NODE')
+                                    ? selection.range.startOffset
+                                    : undefined;
+                            win?.requestAnimationFrame(() =>
+                                this.handleSelectionInTable(key, textOffset)
+                            );
                         }
                     }
                 }
@@ -423,7 +430,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private handleSelectionInTable(
-        key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight'
+        key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight',
+        textOffset?: number
     ) {
         if (!this.editor || !this.state.tableSelection) {
             return;
@@ -470,7 +478,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     if (collapsed && td) {
                         this.setRangeSelectionInTable(
                             td,
-                            key == Up ? td.childNodes.length : 0,
+                            textOffset && (key == Up || key == Down) ? textOffset : 0,
                             this.editor
                         );
                     } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
@@ -569,8 +577,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         } else {
             // Get deepest editable position in the cell
             const { node, offset } = normalizePos(cell, nodeOffset);
+            const useTextOffset = isNodeOfType(node, 'TEXT_NODE') && node.length >= nodeOffset;
 
-            range.setStart(node, offset);
+            range.setStart(node, useTextOffset ? nodeOffset : offset);
             range.collapse(true /* toStart */);
         }
 

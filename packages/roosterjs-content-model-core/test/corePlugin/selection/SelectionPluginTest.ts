@@ -2040,6 +2040,266 @@ describe('SelectionPlugin handle table selection', () => {
             });
         });
 
+        it('From Range with text offset, Press Down - preserves text offset', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 1,
+                    endContainer: td2_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 1);
+        });
+
+        it('From Range with text offset, Press Up - preserves text offset', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td4_text,
+                    startOffset: 1,
+                    endContainer: td4_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr2,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setStartSpy).toHaveBeenCalledWith(td2_text, 1);
+        });
+
+        it('From Range with element container (not text node), Press Down - uses offset 0', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2,
+                    startOffset: 0,
+                    endContainer: td2,
+                    endOffset: 0,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
+        });
+
+        it('From Range with non-collapsed selection, Press Down - does not preserve offset', () => {
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 0,
+                    endContainer: td2_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr1,
+                    collapsed: false,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('From Range with text offset larger than target text length, Press Down - uses normalizePos offset', () => {
+            // td2_text has length 1 ("2"), we'll use offset 5 which is larger
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 5, // larger than text length
+                    endContainer: td2_text,
+                    endOffset: 5,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            // Since textOffset (5) > td4_text.length (1), it should use normalizePos offset (0)
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
+        });
+
         it('From Range, Press Down in the last row and move focus outside of table.', () => {
             getDOMSelectionSpy.and.returnValue({
                 type: 'range',
