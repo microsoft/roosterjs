@@ -486,7 +486,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             0,
                             this.editor,
                             false /* selectAll */,
-                            key == Up || key == Down ? textOffset : 0
+                            key == Up || key == Down ? textOffset : undefined
                         );
                     } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
                         this.selectBeforeOrAfterElement(
@@ -583,9 +583,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (range.toString() === '') {
                 range.collapse(true /* toStart */);
             }
-        } else if (textOffset && textOffset > 0) {
+        } else if (textOffset) {
             const firstBlock = this.findFirstBlockElement(cell);
-            const pos = findPositionByTextOffset(doc, firstBlock ?? cell, textOffset);
+            const pos = findPositionByTextOffset(doc, firstBlock, textOffset);
             range.setStart(pos.node, pos.offset);
             range.collapse(true /* toStart */);
         } else {
@@ -605,7 +605,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         );
     }
 
-    private findFirstBlockElement(cell: Node): Node | undefined {
+    private findFirstBlockElement(cell: Node): Node {
         for (let i = 0; i < cell.childNodes.length; i++) {
             const child = cell.childNodes[i];
             if (
@@ -615,7 +615,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 return child;
             }
         }
-        return undefined;
+        return cell;
     }
 
     private updateTableSelectionFromKeyboard(rowChange: number, colChange: number) {
