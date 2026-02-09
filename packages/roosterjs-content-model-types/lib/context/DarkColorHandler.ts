@@ -20,12 +20,14 @@ export interface Colors {
  * @param baseLValue Base value of light used for dark value calculation
  * @param colorType @optional Type of color, can be text, background, or border
  * @param element @optional Source HTML element of the color
+ * @param comparingColor @optional When generating dark color for background color, we can provide text color as comparingColor to make sure the generated dark border color has enough contrast with text color in dark mode
  */
 export type ColorTransformFunction = (
     lightColor: string,
     baseLValue?: number,
     colorType?: 'text' | 'background' | 'border',
-    element?: HTMLElement
+    element?: HTMLElement,
+    comparingColor?: string
 ) => string;
 
 /**

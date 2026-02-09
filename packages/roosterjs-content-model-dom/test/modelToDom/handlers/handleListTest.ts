@@ -1,3 +1,5 @@
+import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
+import * as applyMetadata from '../../../lib/modelToDom/utils/applyMetadata';
 import * as reuseCachedElement from '../../../lib/domUtils/reuseCachedElement';
 import { BulletListType } from '../../../lib/constants/BulletListType';
 import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
@@ -603,6 +605,96 @@ describe('handleList handles metadata', () => {
                 },
                 {
                     node: parent.firstChild as HTMLElement,
+                    listType: 'UL',
+                    dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                    format: {},
+                    refNode: null,
+                },
+            ],
+        });
+        expect(listItem.levels[0].format.listStyleType).toBe('disc');
+    });
+
+    it('List style type should be changed by metadata when there is existing UL to reuse', () => {
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {},
+                    dataset: {
+                        editingInfo: '{"applyListStyleFromLevel":true}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
+
+        context = createModelToDomContext(undefined, {
+            metadataAppliers: {
+                listLevel: listLevelMetadataApplier,
+            },
+        });
+
+        const existingUL = document.createElement('ul');
+        context.listFormat.nodeStack = [
+            {
+                node: parent,
+                refNode: null,
+            },
+            {
+                node: existingUL,
+                listType: 'UL',
+                dataset: {
+                    editingInfo: '{"applyListStyleFromLevel":true}',
+                },
+                format: {},
+                refNode: null,
+            },
+        ];
+
+        const applyFormatSpy = spyOn(applyFormat, 'applyFormat').and.callThrough();
+        const applyMetadataSpy = spyOn(applyMetadata, 'applyMetadata').and.callThrough();
+
+        handleList(document, parent, listItem, context, null);
+
+        expect(applyMetadataSpy).toHaveBeenCalledTimes(1);
+        expect(applyMetadataSpy).toHaveBeenCalledWith(
+            listItem.levels[0],
+            context.metadataAppliers.listLevel as any,
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormatSpy).not.toHaveBeenCalled();
+
+        expectHtml(parent.outerHTML, ['<div></div>']);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: existingUL,
                     listType: 'UL',
                     dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
                     format: {},
