@@ -310,7 +310,8 @@ export class Editor implements IEditor {
                 core.darkColorHandler,
                 {
                     tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
-                }
+                },
+                core.format.defaultFormat.textColor
             );
 
             core.lifecycle.isDarkMode = !!isDarkMode;

@@ -1016,7 +1016,8 @@ describe('Editor', () => {
             mockedColorHandler,
             {
                 tableBorders: false,
-            }
+            },
+            undefined
         );
         expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
@@ -1041,7 +1042,8 @@ describe('Editor', () => {
             mockedColorHandler,
             {
                 tableBorders: false,
-            }
+            },
+            undefined
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(

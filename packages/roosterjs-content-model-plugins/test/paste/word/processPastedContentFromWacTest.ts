@@ -6112,4 +6112,69 @@ describe('wordOnlineHandler', () => {
             true
         );
     });
+
+    it('Should skip elements with both Selected and EOP classes', () => {
+        runTest(
+            '<div>Hello<span class="Selected EOP"></span>World</div>',
+            '<div>HelloWorld</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'Hello', format: {} },
+                            { segmentType: 'Text', text: 'World', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('Should not skip elements with only Selected class', () => {
+        runTest(
+            '<div>Hello<span class="Selected">!</span>World</div>',
+            '<div>Hello!World</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'Hello', format: {} },
+                            { segmentType: 'Text', text: '!', format: {} },
+                            { segmentType: 'Text', text: 'World', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
+
+    it('Should not skip elements with only EOP class', () => {
+        runTest(
+            '<div>Hello<span class="EOP">!</span>World</div>',
+            '<div>Hello!World</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'Hello', format: {} },
+                            { segmentType: 'Text', text: '!', format: {} },
+                            { segmentType: 'Text', text: 'World', format: {} },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            true
+        );
+    });
 });
