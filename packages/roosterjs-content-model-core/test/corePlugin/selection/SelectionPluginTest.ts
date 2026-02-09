@@ -737,6 +737,7 @@ describe('SelectionPlugin handle table selection', () => {
     let getComputedStyleSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let announceSpy: jasmine.Spy;
+    let createTreeWalkerSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -747,8 +748,14 @@ describe('SelectionPlugin handle table selection', () => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         announceSpy = jasmine.createSpy('announce');
+        createTreeWalkerSpy = jasmine
+            .createSpy('createTreeWalker')
+            .and.callFake((root: Node, whatToShow?: number) =>
+                document.createTreeWalker(root, whatToShow)
+            );
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
+            createTreeWalker: createTreeWalkerSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
                 getComputedStyle: getComputedStyleSpy,
@@ -2300,6 +2307,146 @@ describe('SelectionPlugin handle table selection', () => {
             // normalizePos(td4, 5) clamps offset to 1 (childNodes.length), then traverses to lastChild
             // and sets offset to td4_text.length (1)
             expect(setStartSpy).toHaveBeenCalledWith(td4_text, 1);
+        });
+
+        it('From Range with formatted text (bold), Press Down - preserves text offset across formatting', () => {
+            // Setup: td2 contains <b>he</b>llo (cursor at position 3, which is in "llo" text node)
+            td2.innerHTML = '';
+            const bold = document.createElement('b');
+            const boldText = document.createTextNode('he');
+            const plainText = document.createTextNode('llo');
+            bold.appendChild(boldText);
+            td2.appendChild(bold);
+            td2.appendChild(plainText);
+
+            // Setup: td4 contains <i>wor</i>ld
+            td4.innerHTML = '';
+            const italic = document.createElement('i');
+            const italicText = document.createTextNode('wor');
+            const plainText4 = document.createTextNode('ld');
+            italic.appendChild(italicText);
+            td4.appendChild(italic);
+            td4.appendChild(plainText4);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: plainText,
+                    startOffset: 1, // cursor at "l|lo" which is text offset 3 ("he" + "l")
+                    endContainer: plainText,
+                    endOffset: 1,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            // Text offset 3 in td4 should be in italicText at offset 3 ("wor|")
+            expect(setStartSpy).toHaveBeenCalledWith(italicText, 3);
+        });
+
+        it('From Range with nested formatted text, Press Up - preserves text offset', () => {
+            // Setup: td4 contains <b><i>hel</i></b>lo (cursor at position 4, in "lo" text node)
+            td4.innerHTML = '';
+            const bold = document.createElement('b');
+            const italic = document.createElement('i');
+            const nestedText = document.createTextNode('hel');
+            const plainText4 = document.createTextNode('lo');
+            italic.appendChild(nestedText);
+            bold.appendChild(italic);
+            td4.appendChild(bold);
+            td4.appendChild(plainText4);
+
+            // Setup: td2 contains plain text "world"
+            td2.innerHTML = '';
+            const td2Text = document.createTextNode('world');
+            td2.appendChild(td2Text);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: plainText4,
+                    startOffset: 1, // cursor at "l|o" which is text offset 4 ("hel" + "l")
+                    endContainer: plainText4,
+                    endOffset: 1,
+                    commonAncestorContainer: tr2,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const mockedRange = {
+                setStart: setStartSpy,
+                collapse: collapseSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            // Text offset 4 in td2 should be "worl|d" at offset 4
+            expect(setStartSpy).toHaveBeenCalledWith(td2Text, 4);
         });
 
         it('From Range, Press Down in the last row and move focus outside of table.', () => {

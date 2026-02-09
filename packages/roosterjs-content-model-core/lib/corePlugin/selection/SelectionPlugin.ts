@@ -1,5 +1,7 @@
 import { findCoordinate } from './findCoordinate';
+import { findPositionByTextOffset } from './findPositionByTextOffset';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import { getTextOffset } from './getTextOffset';
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
@@ -364,13 +366,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             this.handleSelectionInTable(this.getTabKey(rawEvent));
                             rawEvent.preventDefault();
                         } else {
-                            const textOffset =
-                                selection.range.collapsed &&
-                                isNodeOfType(selection.range.startContainer, 'TEXT_NODE')
-                                    ? selection.range.startOffset
-                                    : undefined;
                             win?.requestAnimationFrame(() =>
-                                this.handleSelectionInTable(key, textOffset)
+                                this.handleSelectionInTable(key, selection.range)
                             );
                         }
                     }
@@ -431,7 +428,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private handleSelectionInTable(
         key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight',
-        textOffset?: number
+        selectionBeforeChange?: Range
     ) {
         if (!this.editor || !this.state.tableSelection) {
             return;
@@ -476,10 +473,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
 
                     if (collapsed && td) {
+                        const textOffset = selectionBeforeChange
+                            ? getTextOffset(
+                                  this.editor.getDocument(),
+                                  selectionBeforeChange,
+                                  domHelper
+                              )
+                            : 0;
+
                         this.setRangeSelectionInTable(
                             td,
-                            textOffset && (key == Up || key == Down) ? textOffset : 0,
-                            this.editor
+                            0,
+                            this.editor,
+                            false /* selectAll */,
+                            key == Up || key == Down ? textOffset : 0
                         );
                     } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
                         this.selectBeforeOrAfterElement(
@@ -557,9 +564,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         cell: Node,
         nodeOffset: number,
         editor: IEditor,
-        selectAll?: boolean
+        selectAll?: boolean,
+        textOffset?: number
     ) {
-        const range = editor.getDocument().createRange();
+        const doc = editor.getDocument();
+        const range = doc.createRange();
         if (selectAll && cell.firstChild && cell.lastChild) {
             const cellStart = cell.firstChild;
             const cellEnd = cell.lastChild;
@@ -574,12 +583,15 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (range.toString() === '') {
                 range.collapse(true /* toStart */);
             }
+        } else if (textOffset && textOffset > 0) {
+            const firstBlock = this.findFirstBlockElement(cell);
+            const pos = findPositionByTextOffset(doc, firstBlock ?? cell, textOffset);
+            range.setStart(pos.node, pos.offset);
+            range.collapse(true /* toStart */);
         } else {
-            // Get deepest editable position in the cell
+            // Get deepest editable position at the start of the cell
             const { node, offset } = normalizePos(cell, nodeOffset);
-            const useTextOffset = isNodeOfType(node, 'TEXT_NODE') && node.length >= nodeOffset;
-
-            range.setStart(node, useTextOffset ? nodeOffset : offset);
+            range.setStart(node, offset);
             range.collapse(true /* toStart */);
         }
 
@@ -591,6 +603,19 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             },
             null /*tableSelection*/
         );
+    }
+
+    private findFirstBlockElement(cell: Node): Node | undefined {
+        for (let i = 0; i < cell.childNodes.length; i++) {
+            const child = cell.childNodes[i];
+            if (
+                isNodeOfType(child, 'ELEMENT_NODE') &&
+                (isElementOfType(child, 'div') || isElementOfType(child, 'p'))
+            ) {
+                return child;
+            }
+        }
+        return undefined;
     }
 
     private updateTableSelectionFromKeyboard(rowChange: number, colChange: number) {
