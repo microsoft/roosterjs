@@ -589,7 +589,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             range.setStart(pos.node, pos.offset);
             range.collapse(true /* toStart */);
         } else {
-            // Get deepest editable position at the start of the cell
+            // Get deepest editable position in the cell
             const { node, offset } = normalizePos(cell, nodeOffset);
             range.setStart(node, offset);
             range.collapse(true /* toStart */);
