@@ -84,12 +84,12 @@ export function getLightModeColor(
 ) {
     if (DeprecatedColors.indexOf(color) > -1) {
         return fallback;
-    } else if (darkColorHandler) {
+    } else {
         const match = color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
 
         if (match) {
             color = match[2] || '';
-        } else if (isDarkMode) {
+        } else if (isDarkMode && darkColorHandler) {
             // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
             // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
             // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
@@ -126,20 +126,23 @@ export function retrieveElementColor(
  * @param isBackground True to set background color, false to set text color
  * @param isDarkMode Whether element is in dark mode now
  * @param darkColorHandler @optional The dark color handler object to help manager dark mode color
+ * @param comparingColor @optional When generating dark color for background color, we can provide text color as comparingColor to make sure the generated dark border color has enough contrast with text color in dark mode
  */
 export function setColor(
     element: HTMLElement,
     color: string | null | undefined,
     isBackground: boolean,
     isDarkMode: boolean,
-    darkColorHandler?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler,
+    comparingColor?: string
 ) {
     const newColor = adaptColor(
         element,
         color,
         isBackground ? 'background' : 'text',
         isDarkMode,
-        darkColorHandler
+        darkColorHandler,
+        comparingColor
     );
 
     element.removeAttribute(isBackground ? 'bgcolor' : 'color');
@@ -154,7 +157,8 @@ export function adaptColor(
     color: string | null | undefined,
     colorType: 'text' | 'background' | 'border',
     isDarkMode: boolean,
-    darkColorHandler?: DarkColorHandler
+    darkColorHandler?: DarkColorHandler,
+    comparingColor?: string
 ) {
     const match = color && color.startsWith(VARIABLE_PREFIX) ? VARIABLE_REGEX.exec(color) : null;
     const [_, existingKey, fallbackColor] = match ?? [];
@@ -164,10 +168,22 @@ export function adaptColor(
     if (darkColorHandler && color) {
         const key =
             existingKey ||
-            darkColorHandler.generateColorKey(color, undefined /*baseLValue*/, colorType, element);
+            darkColorHandler.generateColorKey(
+                color,
+                undefined /*baseLValue*/,
+                colorType,
+                element,
+                comparingColor
+            );
         const darkModeColor =
             darkColorHandler.knownColors?.[key]?.darkModeColor ||
-            darkColorHandler.getDarkColor(color, undefined /*baseLValue*/, colorType, element);
+            darkColorHandler.getDarkColor(
+                color,
+                undefined /*baseLValue*/,
+                colorType,
+                element,
+                comparingColor
+            );
 
         darkColorHandler.updateKnownColor(isDarkMode, key, {
             lightModeColor: color,
@@ -185,8 +201,15 @@ export function adaptColor(
  * @param lightColor The input light color
  * @returns Key of the color
  */
-export const defaultGenerateColorKey: ColorTransformFunction = lightColor => {
-    return `${COLOR_VAR_PREFIX}_${lightColor.replace(/[^\d\w]/g, '_')}`;
+export const defaultGenerateColorKey: ColorTransformFunction = (
+    lightColor,
+    _1,
+    _2,
+    _3,
+    comparingColor
+) => {
+    const comparingColorKey = comparingColor ? `_${comparingColor.replace(/[^\d\w]/g, '_')}` : '';
+    return `${COLOR_VAR_PREFIX}_${lightColor.replace(/[^\d\w]/g, '_')}${comparingColorKey}`;
 };
 
 /**
