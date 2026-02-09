@@ -10,7 +10,7 @@ import { adjustSelectionForCopyCut } from '../../../lib/command/cutCopy/adjustSe
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { onNodeCreated } from '../../../lib/command/cutCopy/getContentForCopy';
-import { preprocessTable } from '../../../lib/command/cutCopy/preprocessTable';
+import { preprocessTable } from 'roosterjs-content-model-dom/lib/domUtils/selection/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,

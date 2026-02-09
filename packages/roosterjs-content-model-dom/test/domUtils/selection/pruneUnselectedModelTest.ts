@@ -1,4 +1,4 @@
-import { pruneUnselectedModel } from '../../../lib/command/cutCopy/pruneUnselectedModel';
+import { pruneUnselectedModel } from '../../../lib/domUtils/selection/pruneUnselectedModel';
 import {
     createBr,
     createContentModelDocument,
