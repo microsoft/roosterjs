@@ -2,15 +2,12 @@ import { createElement } from '../../../pluginUtils/CreateElement/createElement'
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
-import { getNodePositionFromEvent } from '../../../utils/getNodePositionFromEvent';
-import type { TableEditFeature } from './TableEditFeature';
-import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
     cloneModel,
     createContentModelDocument,
     createSelectionMarker,
     getFirstSelectedTable,
+    getNodePositionFromEvent,
     isNodeOfType,
     mergeModel,
     mutateBlock,
@@ -18,6 +15,9 @@ import {
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';
+import type { TableEditFeature } from './TableEditFeature';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type {
     DOMSelection,
     IEditor,
@@ -235,7 +235,12 @@ export function onDragging(
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
 
-    const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+    const pos = getNodePositionFromEvent(
+        editor.getDocument(),
+        editor.getDOMHelper(),
+        event.clientX,
+        event.clientY
+    );
     if (pos) {
         const range = editor.getDocument().createRange();
         range.setStart(pos.node, pos.offset);
@@ -285,7 +290,12 @@ export function onDragEnd(
         let insertionSuccess: boolean = false;
 
         // Get position to insert table
-        const insertPosition = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+        const insertPosition = getNodePositionFromEvent(
+            editor.getDocument(),
+            editor.getDOMHelper(),
+            event.clientX,
+            event.clientY
+        );
         if (insertPosition) {
             // Move table to new position
             formatInsertPointWithContentModel(

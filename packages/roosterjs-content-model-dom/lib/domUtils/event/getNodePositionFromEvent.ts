@@ -1,16 +1,18 @@
-import type { DOMInsertPoint, IEditor } from 'roosterjs-content-model-types';
+import type { DOMHelper, DOMInsertPoint } from 'roosterjs-content-model-types';
 
 /**
- * @internal Get insertion point from coordinate.
+ * Get insertion point from coordinate.
+ * @param doc Parent document object
+ * @param domHelper The DOM helper of the editor
+ * @param x The cursor coordinate for the x-axis
+ * @param y The cursor coordinate for the y-axis
  */
 export function getNodePositionFromEvent(
-    editor: IEditor,
+    doc: Document,
+    domHelper: DOMHelper,
     x: number,
     y: number
 ): DOMInsertPoint | null {
-    const doc = editor.getDocument();
-    const domHelper = editor.getDOMHelper();
-
     if ('caretPositionFromPoint' in doc) {
         // Firefox, Chrome, Edge, Safari, Opera
         const pos = (doc as any).caretPositionFromPoint(x, y);
