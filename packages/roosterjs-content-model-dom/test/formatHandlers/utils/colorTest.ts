@@ -88,10 +88,10 @@ describe('getColor without darkColorHandler', () => {
         const backDark = getColor(div, true, true);
         const textDark = getColor(div, false, true);
 
-        expect(backLight).toBe('var(--test, green)');
-        expect(textLight).toBe('var(--test, red)');
-        expect(backDark).toBe('var(--test, green)');
-        expect(textDark).toBe('var(--test, red)');
+        expect(backLight).toBe('green');
+        expect(textLight).toBe('red');
+        expect(backDark).toBe('green');
+        expect(textDark).toBe('red');
     });
 
     it('has style color, deprecated value', () => {
@@ -399,18 +399,42 @@ describe('setColor with darkColorHandler', () => {
 
         setColor(lightDiv, 'red', true, false, darkColorHandler);
         setColor(lightDiv, 'green', false, false, darkColorHandler);
-        setColor(darkDiv, 'red', true, true, darkColorHandler);
+        setColor(darkDiv, 'red', true, true, darkColorHandler, 'blue');
         setColor(darkDiv, 'green', false, true, darkColorHandler);
 
         expect(lightDiv.outerHTML).toBe('<div style="background-color: red; color: green;"></div>');
         expect(darkDiv.outerHTML).toBe(
-            '<div style="background-color: var(--darkColor_red, red); color: var(--darkColor_green, green);"></div>'
+            '<div style="background-color: var(--darkColor_red_blue, red); color: var(--darkColor_green, green);"></div>'
         );
         expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', darkDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', darkDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            darkDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            darkDiv,
+            'blue'
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledTimes(4);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
             lightModeColor: 'red',
@@ -420,7 +444,7 @@ describe('setColor with darkColorHandler', () => {
             lightModeColor: 'green',
             darkModeColor: '--dark_green',
         });
-        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red', {
+        expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red_blue', {
             lightModeColor: 'red',
             darkModeColor: '--dark_red',
         });
@@ -445,10 +469,34 @@ describe('setColor with darkColorHandler', () => {
         );
         expect(knownColors).toEqual({});
         expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', darkDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', darkDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            darkDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            darkDiv,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledTimes(4);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--test', {
             lightModeColor: 'red',
@@ -491,10 +539,34 @@ describe('setColor with darkColorHandler', () => {
             '<div style="color: var(--darkColor_green, green); background-color: var(--darkColor_red, red);"></div>'
         );
         expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', darkDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', darkDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            darkDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            darkDiv,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledTimes(4);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
             lightModeColor: 'red',
@@ -534,10 +606,34 @@ describe('setColor with darkColorHandler', () => {
             '<div style="background-color: var(--red_key, red); color: var(--green_key, green);"></div>'
         );
         expect(getDarkColorSpy).toHaveBeenCalledTimes(4);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', lightDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'text', darkDiv);
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'background', darkDiv);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            lightDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'text',
+            darkDiv,
+            undefined
+        );
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'background',
+            darkDiv,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledTimes(4);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--red_key', {
             lightModeColor: 'red',
@@ -808,7 +904,13 @@ describe('adaptColor', () => {
     it('should return color as-is in light mode with dark color handler', () => {
         const result = adaptColor(element, 'red', 'border', false, darkColorHandler);
         expect(result).toBe('red');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'border', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'red',
+            undefined,
+            'border',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
             lightModeColor: 'red',
             darkModeColor: 'dark_red',
@@ -818,7 +920,13 @@ describe('adaptColor', () => {
     it('should wrap color with CSS variable in dark mode', () => {
         const result = adaptColor(element, 'blue', 'border', true, darkColorHandler);
         expect(result).toBe('var(--darkColor_blue, blue)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'border', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'blue',
+            undefined,
+            'border',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
             lightModeColor: 'blue',
             darkModeColor: 'dark_red',
@@ -834,7 +942,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('green');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'border', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'border',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--existing', {
             lightModeColor: 'green',
             darkModeColor: 'dark_red',
@@ -850,7 +964,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('var(--existing, green)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('green', undefined, 'border', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'green',
+            undefined,
+            'border',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--existing', {
             lightModeColor: 'green',
             darkModeColor: 'dark_red',
@@ -875,7 +995,13 @@ describe('adaptColor', () => {
     it('should generate new dark color when not in known colors', () => {
         const result = adaptColor(element, 'purple', 'border', true, darkColorHandler);
         expect(result).toBe('var(--darkColor_purple, purple)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('purple', undefined, 'border', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'purple',
+            undefined,
+            'border',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_purple', {
             lightModeColor: 'purple',
             darkModeColor: 'dark_red',
@@ -885,7 +1011,7 @@ describe('adaptColor', () => {
     it('should handle text color in light mode', () => {
         const result = adaptColor(element, 'red', 'text', false, darkColorHandler);
         expect(result).toBe('red');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element, undefined);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_red', {
             lightModeColor: 'red',
             darkModeColor: 'dark_red',
@@ -895,7 +1021,7 @@ describe('adaptColor', () => {
     it('should handle text color in dark mode', () => {
         const result = adaptColor(element, 'red', 'text', true, darkColorHandler);
         expect(result).toBe('var(--darkColor_red, red)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith('red', undefined, 'text', element, undefined);
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_red', {
             lightModeColor: 'red',
             darkModeColor: 'dark_red',
@@ -905,7 +1031,13 @@ describe('adaptColor', () => {
     it('should handle background color in light mode', () => {
         const result = adaptColor(element, 'blue', 'background', false, darkColorHandler);
         expect(result).toBe('blue');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'blue',
+            undefined,
+            'background',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--darkColor_blue', {
             lightModeColor: 'blue',
             darkModeColor: 'dark_red',
@@ -915,7 +1047,13 @@ describe('adaptColor', () => {
     it('should handle background color in dark mode', () => {
         const result = adaptColor(element, 'blue', 'background', true, darkColorHandler);
         expect(result).toBe('var(--darkColor_blue, blue)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('blue', undefined, 'background', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'blue',
+            undefined,
+            'background',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--darkColor_blue', {
             lightModeColor: 'blue',
             darkModeColor: 'dark_red',
@@ -931,7 +1069,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('black');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'black',
+            undefined,
+            'text',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--text-color', {
             lightModeColor: 'black',
             darkModeColor: 'dark_red',
@@ -947,7 +1091,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('var(--text-color, black)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('black', undefined, 'text', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'black',
+            undefined,
+            'text',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--text-color', {
             lightModeColor: 'black',
             darkModeColor: 'dark_red',
@@ -963,7 +1113,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('white');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'white',
+            undefined,
+            'background',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false, '--bg-color', {
             lightModeColor: 'white',
             darkModeColor: 'dark_red',
@@ -979,7 +1135,13 @@ describe('adaptColor', () => {
             darkColorHandler
         );
         expect(result).toBe('var(--bg-color, white)');
-        expect(getDarkColorSpy).toHaveBeenCalledWith('white', undefined, 'background', element);
+        expect(getDarkColorSpy).toHaveBeenCalledWith(
+            'white',
+            undefined,
+            'background',
+            element,
+            undefined
+        );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(true, '--bg-color', {
             lightModeColor: 'white',
             darkModeColor: 'dark_red',

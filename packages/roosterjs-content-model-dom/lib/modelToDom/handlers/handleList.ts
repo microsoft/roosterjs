@@ -43,6 +43,9 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
                 itemLevel.format.listStyleType != stackLevel.format?.listStyleType)
         ) {
             break;
+        } else if (itemLevel.listType == 'UL') {
+            // Apply metadata to list level to make sure list style is correct after rendering
+            applyMetadata(itemLevel, context.metadataAppliers.listLevel, itemLevel.format, context);
         }
 
         if (
