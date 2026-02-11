@@ -27,6 +27,7 @@ import type {
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
+    ReadonlyContentModelTable,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
 
@@ -191,44 +192,64 @@ function mergeTables(
         const { table: readonlyTable, colIndex, rowIndex } = tableContext;
         const table = mutateBlock(readonlyTable);
 
+        const newTableColCount = newTable.rows[0]?.cells.length || 0;
+        const newTableRowCount = newTable.rows.length;
+
+        const lastTargetColIndex = getTargetColIndex(table, rowIndex, colIndex, newTableColCount);
+        const extraColsNeeded = lastTargetColIndex - table.rows[0].cells.length;
+
+        if (extraColsNeeded > 0) {
+            const currentColCount = table.rows[0].cells.length;
+            for (let col = 0; col < extraColsNeeded; col++) {
+                const newColIndex = currentColCount + col;
+                for (let k = 0; k < table.rows.length; k++) {
+                    const leftCell = table.rows[k]?.cells[newColIndex - 1];
+                    table.rows[k].cells[newColIndex] = createTableCell(
+                        false /*spanLeft*/,
+                        false /*spanAbove*/,
+                        leftCell?.isHeader,
+                        leftCell?.format
+                    );
+                }
+            }
+        }
+
+        const lastTargetRowIndex = getTargetRowIndex(table, rowIndex, newTableRowCount, colIndex);
+        const extraRowsNeeded = lastTargetRowIndex - table.rows.length;
+
+        if (extraRowsNeeded > 0) {
+            const currentRowCount = table.rows.length;
+            const colCount = table.rows[0]?.cells.length || 0;
+            for (let row = 0; row < extraRowsNeeded; row++) {
+                const newRowIndex = currentRowCount + row;
+                table.rows[newRowIndex] = {
+                    cells: [],
+                    format: {},
+                    height: 0,
+                };
+                for (let k = 0; k < colCount; k++) {
+                    const aboveCell = table.rows[newRowIndex - 1]?.cells[k];
+                    table.rows[newRowIndex].cells[k] = createTableCell(
+                        false /*spanLeft*/,
+                        false /*spanAbove*/,
+                        false /*isHeader*/,
+                        aboveCell?.format
+                    );
+                }
+            }
+        }
+
         for (let i = 0; i < newTable.rows.length; i++) {
+            const targetRowIndex = getTargetRowIndex(table, rowIndex, i, colIndex);
+
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
                 const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
-                    for (let k = 0; k < table.rows.length; k++) {
-                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
-                        table.rows[k].cells[colIndex + j] = createTableCell(
-                            false /*spanLeft*/,
-                            false /*spanAbove*/,
-                            leftCell?.isHeader,
-                            leftCell?.format
-                        );
-                    }
-                }
+                const targetColIndex = getTargetColIndex(table, targetRowIndex, colIndex, j);
 
-                if (j == 0 && rowIndex + i >= table.rows.length) {
-                    if (!table.rows[rowIndex + i]) {
-                        table.rows[rowIndex + i] = {
-                            cells: [],
-                            format: {},
-                            height: 0,
-                        };
-                    }
+                const oldCell = table.rows[targetRowIndex]?.cells[targetColIndex];
 
-                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
-                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
-                        table.rows[rowIndex + i].cells[k] = createTableCell(
-                            false /*spanLeft*/,
-                            false /*spanAbove*/,
-                            false /*isHeader*/,
-                            aboveCell?.format
-                        );
-                    }
-                }
-
-                const oldCell = table.rows[rowIndex + i].cells[colIndex + j];
-                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
+                table.rows[targetRowIndex].cells[targetColIndex] = newCell;
 
                 if (i == 0 && j == 0) {
                     const newMarker = createSelectionMarker(marker.format);
@@ -494,6 +515,7 @@ function getFormatWithoutSegmentFormat(
     KeysOfSegmentFormat.forEach(key => delete resultFormat[key]);
     return resultFormat;
 }
+
 function getHyperlinkTextColor(sourceFormat: ContentModelHyperLinkFormat) {
     const result: ContentModelHyperLinkFormat = {};
     if (sourceFormat.textColor) {
@@ -501,4 +523,61 @@ function getHyperlinkTextColor(sourceFormat: ContentModelHyperLinkFormat) {
     }
 
     return result;
+}
+
+function getTargetColIndex(
+    table: ReadonlyContentModelTable,
+    rowIndex: number,
+    startColIndex: number,
+    offset: number
+): number {
+    const row = table.rows[rowIndex];
+    if (!row) {
+        return startColIndex + offset;
+    }
+
+    if (offset === 0) {
+        return startColIndex;
+    }
+
+    let targetColIndex = startColIndex;
+    let logicalCellsToSkip = offset;
+
+    while (logicalCellsToSkip > 0) {
+        targetColIndex++;
+
+        if (targetColIndex >= row.cells.length) {
+            logicalCellsToSkip--;
+        } else if (!row.cells[targetColIndex].spanLeft) {
+            logicalCellsToSkip--;
+        }
+    }
+
+    return targetColIndex;
+}
+
+function getTargetRowIndex(
+    table: ReadonlyContentModelTable,
+    startRowIndex: number,
+    offset: number,
+    colIndex: number
+): number {
+    if (offset === 0) {
+        return startRowIndex;
+    }
+
+    let targetRowIndex = startRowIndex;
+    let logicalRowsToSkip = offset;
+
+    while (logicalRowsToSkip > 0) {
+        targetRowIndex++;
+
+        if (targetRowIndex >= table.rows.length) {
+            logicalRowsToSkip--;
+        } else if (!table.rows[targetRowIndex]?.cells[colIndex]?.spanAbove) {
+            logicalRowsToSkip--;
+        }
+    }
+
+    return targetRowIndex;
 }

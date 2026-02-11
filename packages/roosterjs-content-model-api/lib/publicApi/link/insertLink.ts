@@ -1,4 +1,5 @@
 import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
+import { checkXss } from '../utils/checkXss';
 import { matchLink } from '../../modelApi/link/matchLink';
 import {
     addLink,
@@ -157,8 +158,4 @@ function applyLinkPrefix(url: string): string {
     }
 
     return prefix + url;
-}
-
-function checkXss(link: string): string {
-    return link.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) ? '' : link;
 }

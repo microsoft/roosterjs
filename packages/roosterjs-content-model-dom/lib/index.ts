@@ -113,6 +113,7 @@ export {
 export { isBold } from './domUtils/style/isBold';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
 export { getDOMInsertPointRect } from './domUtils/selection/getDOMInsertPointRect';
+export { trimModelForSelection } from './domUtils/selection/trimModelForSelection';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
