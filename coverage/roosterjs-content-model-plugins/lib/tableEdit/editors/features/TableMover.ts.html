@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.12% </span>
+                <span class="strong">99.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>112/113</span>
+                <span class='fraction'>111/112</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">99.09% </span>
+                <span class="strong">99.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>109/110</span>
+                <span class='fraction'>108/109</span>
             </div>
         
             
@@ -408,7 +408,17 @@
 <a name='L349'></a><a href='#L349'>349</a>
 <a name='L350'></a><a href='#L350'>350</a>
 <a name='L351'></a><a href='#L351'>351</a>
-<a name='L352'></a><a href='#L352'>352</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -416,7 +426,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -646,6 +656,11 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -696,6 +711,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -763,15 +783,12 @@
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
-import { getNodePositionFromEvent } from '../../../utils/getNodePositionFromEvent';
-import type { TableEditFeature } from './TableEditFeature';
-import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import {
     cloneModel,
     createContentModelDocument,
     createSelectionMarker,
     getFirstSelectedTable,
+    getNodePositionFromEvent,
     isNodeOfType,
     mergeModel,
     mutateBlock,
@@ -779,6 +796,9 @@ import {
     setParagraphNotImplicit,
     setSelection,
 } from 'roosterjs-content-model-dom';
+import type { TableEditFeature } from './TableEditFeature';
+import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
+import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type {
     DOMSelection,
     IEditor,
@@ -996,7 +1016,12 @@ export function onDragging(
     tableRect.style.top = `${event.clientY + TABLE_MOVER_LENGTH}px`;
     tableRect.style.left = `${event.clientX + TABLE_MOVER_LENGTH}px`;
 &nbsp;
-    const pos = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+    const pos = getNodePositionFromEvent(
+        editor.getDocument(),
+        editor.getDOMHelper(),
+        event.clientX,
+        event.clientY
+    );
     if (pos) {
         const range = editor.getDocument().createRange();
         range.setStart(pos.node, pos.offset);
@@ -1046,7 +1071,12 @@ export function onDragEnd(
         let insertionSuccess: boolean = false;
 &nbsp;
         // Get position to insert table
-        const insertPosition = getNodePositionFromEvent(editor, event.clientX, event.clientY);
+        const insertPosition = getNodePositionFromEvent(
+            editor.getDocument(),
+            editor.getDOMHelper(),
+            event.clientX,
+            event.clientY
+        );
         <span class="missing-if-branch" title="else path not taken" >E</span>if (insertPosition) {
             // Move table to new position
             formatInsertPointWithContentModel(
@@ -1117,7 +1147,7 @@ export function onDragEnd(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Feb 09 2026 19:52:50 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 12 2026 20:20:26 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
