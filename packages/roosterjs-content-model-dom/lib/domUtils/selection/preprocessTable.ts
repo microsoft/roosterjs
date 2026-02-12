@@ -1,4 +1,4 @@
-import { getSelectedCells } from 'roosterjs-content-model-dom';
+import { getSelectedCells } from '../../modelApi/selection/getSelectedCells';
 import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**
