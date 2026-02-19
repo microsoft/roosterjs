@@ -115,6 +115,7 @@ export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode'
 export { getDOMInsertPointRect } from './domUtils/selection/getDOMInsertPointRect';
 export { trimModelForSelection } from './domUtils/selection/trimModelForSelection';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
+export { getNodePositionFromEvent } from './domUtils/event/getNodePositionFromEvent';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';

@@ -1,4 +1,6 @@
 import * as findTableCellElement from '../../../lib/coreApi/setDOMSelection/findTableCellElement';
+import * as getDOMInsertPointRectFile from 'roosterjs-content-model-dom/lib/domUtils/selection/getDOMInsertPointRect';
+import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/domUtils/event/getNodePositionFromEvent';
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
 import * as parseTableCells from 'roosterjs-content-model-dom/lib/domUtils/table/parseTableCells';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
@@ -737,6 +739,7 @@ describe('SelectionPlugin handle table selection', () => {
     let getComputedStyleSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let announceSpy: jasmine.Spy;
+    let createTreeWalkerSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
@@ -747,8 +750,14 @@ describe('SelectionPlugin handle table selection', () => {
         getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
         announceSpy = jasmine.createSpy('announce');
+        createTreeWalkerSpy = jasmine
+            .createSpy('createTreeWalker')
+            .and.callFake((root: Node, whatToShow?: number) =>
+                document.createTreeWalker(root, whatToShow)
+            );
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
+            createTreeWalker: createTreeWalkerSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
                 getComputedStyle: getComputedStyleSpy,
@@ -2004,10 +2013,16 @@ describe('SelectionPlugin handle table selection', () => {
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 10, right: 20, top: 10, bottom: 20 });
             const mockedRange = {
                 setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
             } as any;
 
             createRangeSpy.and.returnValue(mockedRange);
@@ -2038,6 +2053,310 @@ describe('SelectionPlugin handle table selection', () => {
             expect(announceSpy).toHaveBeenCalledWith({
                 defaultStrings: 'announceOnFocusLastCell',
             });
+        });
+
+        it('From Range, Press Down - preserves cursor horizontal position', () => {
+            // Setup: cursor is at position in td2, moving down to td4
+            // The test verifies that the position returned by getNodePositionFromEvent is used for setStart
+
+            // Mock getDOMInsertPointRect to return a cursor rect so getNodePositionFromEvent gets called
+            spyOn(getDOMInsertPointRectFile, 'getDOMInsertPointRect').and.returnValue({
+                left: 50,
+                right: 60,
+                top: 10,
+                bottom: 20,
+            });
+
+            // Mock getNodePositionFromEvent to return a specific position
+            const targetNode = td4_text;
+            const targetOffset = 1;
+            spyOn(getNodePositionFromEventFile, 'getNodePositionFromEvent').and.returnValue({
+                node: targetNode,
+                offset: targetOffset,
+            });
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 1,
+                    endContainer: td2_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 50, right: 60, top: 10, bottom: 20 });
+            const mockedRange = {
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
+                collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
+                startContainer: td2_text,
+                startOffset: 1,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            // Mock td4's getBoundingClientRect to return cell position
+            spyOn(td4, 'getBoundingClientRect').and.returnValue({
+                left: 40,
+                right: 100,
+                top: 30,
+                bottom: 50,
+            } as DOMRect);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            // Verify that setStart is called with the position returned by getNodePositionFromEvent
+            expect(setStartSpy).toHaveBeenCalledWith(targetNode, targetOffset);
+        });
+
+        it('From Range, Press Up - preserves cursor horizontal position', () => {
+            // Setup: cursor is at position in td4, moving up to td2
+
+            // Mock getDOMInsertPointRect to return a cursor rect so getNodePositionFromEvent gets called
+            spyOn(getDOMInsertPointRectFile, 'getDOMInsertPointRect').and.returnValue({
+                left: 50,
+                right: 60,
+                top: 30,
+                bottom: 40,
+            });
+
+            // Mock getNodePositionFromEvent to return a specific position
+            const targetNode = td2_text;
+            const targetOffset = 1;
+            spyOn(getNodePositionFromEventFile, 'getNodePositionFromEvent').and.returnValue({
+                node: targetNode,
+                offset: targetOffset,
+            });
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td4_text,
+                    startOffset: 1,
+                    endContainer: td4_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr2,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 50, right: 60, top: 30, bottom: 40 });
+            const mockedRange = {
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
+                collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
+                startContainer: td4_text,
+                startOffset: 1,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            // Mock td2's getBoundingClientRect
+            spyOn(td2, 'getBoundingClientRect').and.returnValue({
+                left: 40,
+                right: 100,
+                top: 5,
+                bottom: 25,
+            } as DOMRect);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowUp',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            // Verify that setStart is called with the position returned by getNodePositionFromEvent
+            expect(setStartSpy).toHaveBeenCalledWith(targetNode, targetOffset);
+        });
+
+        it('From Range, Press Down - falls back to offset 0 when getNodePositionFromEvent returns null', () => {
+            // When getNodePositionFromEvent returns null, fall back to offset 0
+
+            // Mock getNodePositionFromEvent to return null
+            const getNodePositionFromEventSpy = spyOn(
+                getNodePositionFromEventFile,
+                'getNodePositionFromEvent'
+            ).and.returnValue(null);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 1,
+                    endContainer: td2_text,
+                    endOffset: 1,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td3,
+                        startOffset: 0,
+                        endContainer: td3,
+                        endOffset: 0,
+                        commonAncestorContainer: tr2,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
+            const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 50, right: 60, top: 10, bottom: 20 });
+            const mockedRange = {
+                setStart: setStartSpy,
+                setEnd: setEndSpy,
+                collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
+            } as any;
+
+            createRangeSpy.and.returnValue(mockedRange);
+
+            // Mock td4's getBoundingClientRect to return cell position
+            spyOn(td4, 'getBoundingClientRect').and.returnValue({
+                left: 40,
+                right: 100,
+                top: 30,
+                bottom: 50,
+            } as DOMRect);
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowDown',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(getNodePositionFromEventSpy).toHaveBeenCalled();
+            // When getNodePositionFromEvent returns null, fall back to offset 0
+            expect(setStartSpy).toHaveBeenCalledWith(td4_text, 0);
+        });
+
+        it('From Range, Press Left - does not use cursor position preservation', () => {
+            // ArrowLeft should NOT use getNodePositionFromEvent, only ArrowUp/ArrowDown do
+
+            // Spy on getNodePositionFromEvent to verify it's not called
+            const getNodePositionFromEventSpy = spyOn(
+                getNodePositionFromEventFile,
+                'getNodePositionFromEvent'
+            );
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: td2_text,
+                    startOffset: 0,
+                    endContainer: td2_text,
+                    endOffset: 0,
+                    commonAncestorContainer: tr1,
+                    collapsed: true,
+                },
+                isReverted: false,
+            });
+
+            requestAnimationFrameSpy.and.callFake((func: Function) => {
+                getDOMSelectionSpy.and.returnValue({
+                    type: 'range',
+                    range: {
+                        startContainer: td1,
+                        startOffset: 0,
+                        endContainer: td1,
+                        endOffset: 0,
+                        commonAncestorContainer: tr1,
+                        collapsed: true,
+                    },
+                    isReverted: false,
+                });
+
+                func();
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'ArrowLeft',
+                } as any,
+            });
+
+            expect(requestAnimationFrameSpy).toHaveBeenCalledTimes(1);
+            // For ArrowLeft within the same row, getNodePositionFromEvent should NOT be called
+            expect(getNodePositionFromEventSpy).not.toHaveBeenCalled();
+            // setDOMSelection is not called for ArrowLeft within same row - browser handles it
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(0);
         });
 
         it('From Range, Press Down in the last row and move focus outside of table.', () => {
@@ -2071,10 +2390,16 @@ describe('SelectionPlugin handle table selection', () => {
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 10, right: 20, top: 10, bottom: 20 });
             const mockedRange = {
                 setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
             } as any;
 
             createRangeSpy.and.returnValue(mockedRange);
@@ -2135,10 +2460,16 @@ describe('SelectionPlugin handle table selection', () => {
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 10, right: 20, top: 10, bottom: 20 });
             const mockedRange = {
                 setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
             } as any;
 
             createRangeSpy.and.returnValue(mockedRange);
@@ -2199,13 +2530,19 @@ describe('SelectionPlugin handle table selection', () => {
             });
 
             const setStartSpy = jasmine.createSpy('setStart');
+            const setEndSpy = jasmine.createSpy('setEnd');
             const collapseSpy = jasmine.createSpy('collapse');
             const selectNodeContentsSpy = jasmine.createSpy('selectNodeContents');
+            const getBoundingClientRectSpy = jasmine
+                .createSpy('getBoundingClientRect')
+                .and.returnValue({ left: 10, right: 20, top: 10, bottom: 20 });
 
             const mockedRange = {
                 setStart: setStartSpy,
+                setEnd: setEndSpy,
                 collapse: collapseSpy,
                 selectNodeContents: selectNodeContentsSpy,
+                getBoundingClientRect: getBoundingClientRectSpy,
             } as any;
 
             const div = document.createElement('div');

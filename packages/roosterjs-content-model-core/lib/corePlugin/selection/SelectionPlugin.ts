@@ -3,6 +3,8 @@ import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCel
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
+    getDOMInsertPointRect,
+    getNodePositionFromEvent,
     isCharacterValue,
     isElementOfType,
     isModifierKey,
@@ -364,7 +366,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             this.handleSelectionInTable(this.getTabKey(rawEvent));
                             rawEvent.preventDefault();
                         } else {
-                            win?.requestAnimationFrame(() => this.handleSelectionInTable(key));
+                            win?.requestAnimationFrame(() =>
+                                this.handleSelectionInTable(key, selection.range)
+                            );
                         }
                     }
                 }
@@ -423,7 +427,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     private handleSelectionInTable(
-        key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight'
+        key: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'TabLeft' | 'TabRight',
+        rangeBeforeChange?: Range
     ) {
         if (!this.editor || !this.state.tableSelection) {
             return;
@@ -468,11 +473,30 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     }
 
                     if (collapsed && td) {
-                        this.setRangeSelectionInTable(
-                            td,
-                            key == Up ? td.childNodes.length : 0,
-                            this.editor
-                        );
+                        const textOffset =
+                            (key == 'ArrowUp' || key == 'ArrowDown') && rangeBeforeChange
+                                ? this.getTextOffset(
+                                      this.editor,
+                                      rangeBeforeChange,
+                                      td,
+                                      key == 'ArrowUp'
+                                  )
+                                : null;
+                        if (textOffset) {
+                            this.setRangeSelectionInTable(
+                                textOffset.node,
+                                textOffset.offset,
+                                this.editor,
+                                false /* selectAll */
+                            );
+                        } else {
+                            this.setRangeSelectionInTable(
+                                td,
+                                0,
+                                this.editor,
+                                false /* selectAll */
+                            );
+                        }
                     } else if (!td && (lastCo.row == -1 || lastCo.row <= parsedTable.length)) {
                         this.selectBeforeOrAfterElement(
                             this.editor,
@@ -545,13 +569,35 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
+    private getTextOffset(editor: IEditor, range: Range, td: HTMLElement, isKeyUp: boolean) {
+        const doc = editor.getDocument();
+        const cursorRect = range
+            ? getDOMInsertPointRect(doc, {
+                  node: range.startContainer,
+                  offset: range.startOffset,
+              })
+            : undefined;
+        const rect = td?.getBoundingClientRect();
+        const textOffset =
+            cursorRect && rect
+                ? getNodePositionFromEvent(
+                      doc,
+                      editor.getDOMHelper(),
+                      cursorRect.left,
+                      isKeyUp ? rect.top - 1 : rect.top + 1
+                  )
+                : null;
+        return textOffset;
+    }
+
     private setRangeSelectionInTable(
         cell: Node,
         nodeOffset: number,
         editor: IEditor,
         selectAll?: boolean
     ) {
-        const range = editor.getDocument().createRange();
+        const doc = editor.getDocument();
+        const range = doc.createRange();
         if (selectAll && cell.firstChild && cell.lastChild) {
             const cellStart = cell.firstChild;
             const cellEnd = cell.lastChild;
@@ -569,7 +615,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         } else {
             // Get deepest editable position in the cell
             const { node, offset } = normalizePos(cell, nodeOffset);
-
             range.setStart(node, offset);
             range.collapse(true /* toStart */);
         }
