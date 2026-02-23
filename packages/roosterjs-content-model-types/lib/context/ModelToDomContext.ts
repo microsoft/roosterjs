@@ -13,3 +13,13 @@ export interface ModelToDomContext
         ModelToDomFormatContext,
         ModelToDomSettings,
         RewriteFromModelContext {}
+
+/**
+ * Extended context used by segment and text handlers to carry per-paragraph segment state
+ */
+export interface ModelToDomSegmentContext extends ModelToDomContext {
+    /**
+     * Whether the current segment being processed is the last segment in its paragraph
+     */
+    isLastSegment?: boolean;
+}

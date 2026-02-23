@@ -1,15 +1,15 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
-import { ContentModelText, ModelToDomContext } from 'roosterjs-content-model-types';
+import { ContentModelText, ModelToDomSegmentContext } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
 
 describe('handleText', () => {
     let parent: HTMLElement;
-    let context: ModelToDomContext;
+    let context: ModelToDomSegmentContext;
 
     beforeEach(() => {
         parent = document.createElement('div');
-        context = createModelToDomContext();
+        context = { ...createModelToDomContext(), isLastSegment: false };
     });
 
     it('Text segment', () => {
@@ -156,5 +156,47 @@ describe('handleText', () => {
         expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
         expect(applierSpy).toHaveBeenCalledTimes(1);
         expect(applierSpy).toHaveBeenCalledWith(text.format, segmentNodes[0], context);
+    });
+
+    it('Last segment ending with space is converted to nbsp', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'hello ',
+            format: {},
+        };
+
+        context.isLastSegment = true;
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<span>hello&nbsp;</span>');
+    });
+
+    it('Last segment not ending with space is unchanged', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'hello',
+            format: {},
+        };
+
+        context.isLastSegment = true;
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<span>hello</span>');
+    });
+
+    it('Non-last segment ending with space is unchanged', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'hello ',
+            format: {},
+        };
+
+        context.isLastSegment = false;
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<span>hello </span>');
     });
 });
