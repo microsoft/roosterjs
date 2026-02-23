@@ -5,6 +5,7 @@ import { getStyles } from '../utils/getStyles';
 import { listLevelParser } from '../parsers/listLevelParser';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
+import { adjustWordListMarginParser } from '../parsers/adjustWordListMarginParser';
 import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextIndentParser';
 import { setProcessor } from '../utils/setProcessor';
 import { wordContainerParser } from '../parsers/wordContainerParser';
@@ -28,6 +29,7 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
+    addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);
     addParser(domToModelOption, 'listLevel', listLevelParser);
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
