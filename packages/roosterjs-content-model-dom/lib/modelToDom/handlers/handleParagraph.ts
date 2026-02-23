@@ -56,7 +56,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 if (parent) {
                     const firstSegment = paragraph.segments[0];
 
-                    const segmentContext = context as ModelToDomSegmentContext;
+                    const segmentContext: ModelToDomSegmentContext = context;
 
                     if (firstSegment?.segmentType == 'SelectionMarker') {
                         // Make sure there is a segment created before selection marker.
@@ -75,9 +75,21 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                         );
                     }
 
+                    // Find the last logical inline segment to be treated as the "last" one.
+                    // Skip SelectionMarker since it is not rendered as visible content.
+                    let lastSegmentIndex = -1;
+
+                    for (let i = paragraph.segments.length - 1; i >= 0; i--) {
+                        const seg = paragraph.segments[i];
+
+                        if (seg.segmentType != 'SelectionMarker') {
+                            lastSegmentIndex = i;
+                            break;
+                        }
+                    }
+
                     paragraph.segments.forEach((segment, index) => {
-                        segmentContext.isLastSegment =
-                            index === paragraph.segments.length - 1;
+                        segmentContext.isLastSegment = index === lastSegmentIndex;
 
                         const newSegments: Node[] = [];
                         context.modelHandlers.segment(
