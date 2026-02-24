@@ -14,7 +14,7 @@ export const handleText: ContentModelSegmentHandler<ContentModelText> = (
     segmentNodes
 ) => {
     const textContent =
-        context.isLastSegment && segment.text.endsWith(' ')
+        context.noFollowingTextSegmentOrLast && segment.text.endsWith(' ')
             ? segment.text.slice(0, -1) + nonBreakingSpace
             : segment.text;
     const txt = doc.createTextNode(textContent);

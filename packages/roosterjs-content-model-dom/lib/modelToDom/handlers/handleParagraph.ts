@@ -7,6 +7,7 @@ import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
+    ContentModelSegment,
     ModelToDomContext,
     ModelToDomSegmentContext,
 } from 'roosterjs-content-model-types';
@@ -75,21 +76,12 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                         );
                     }
 
-                    // Find the last logical inline segment to be treated as the "last" one.
-                    // Skip SelectionMarker since it is not rendered as visible content.
-                    let lastSegmentIndex = -1;
+                    for (let i = 0; i < paragraph.segments.length; i++) {
+                        const segment = paragraph.segments[i];
 
-                    for (let i = paragraph.segments.length - 1; i >= 0; i--) {
-                        const seg = paragraph.segments[i];
-
-                        if (seg.segmentType != 'SelectionMarker') {
-                            lastSegmentIndex = i;
-                            break;
-                        }
-                    }
-
-                    paragraph.segments.forEach((segment, index) => {
-                        segmentContext.isLastSegment = index === lastSegmentIndex;
+                        segmentContext.noFollowingTextSegmentOrLast =
+                            i === paragraph.segments.length - 1 ||
+                            !hasTextSegmentAfter(paragraph.segments, i);
 
                         const newSegments: Node[] = [];
                         context.modelHandlers.segment(
@@ -100,12 +92,12 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                             newSegments
                         );
 
-                        newSegments.forEach(node => {
+                        for (const node of newSegments) {
                             context.domIndexer?.onSegment(node, paragraph, [segment]);
-                        });
-                    });
+                        }
+                    }
 
-                    delete segmentContext.isLastSegment;
+                    delete segmentContext.noFollowingTextSegmentOrLast;
                 }
             };
 
@@ -156,3 +148,18 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
     return refNode;
 };
+
+function hasTextSegmentAfter(segments: ReadonlyArray<ContentModelSegment>, index: number): boolean {
+    for (let i = index + 1; i < segments.length; i++) {
+        const type = segments[i].segmentType;
+        if (type === 'SelectionMarker') {
+            continue;
+        }
+        if (type === 'Text') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}

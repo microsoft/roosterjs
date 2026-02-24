@@ -9,7 +9,7 @@ describe('handleText', () => {
 
     beforeEach(() => {
         parent = document.createElement('div');
-        context = { ...createModelToDomContext(), isLastSegment: false };
+        context = { ...createModelToDomContext() };
     });
 
     it('Text segment', () => {
@@ -165,7 +165,7 @@ describe('handleText', () => {
             format: {},
         };
 
-        context.isLastSegment = true;
+        context.noFollowingTextSegmentOrLast = true;
 
         handleText(document, parent, text, context, []);
 
@@ -179,7 +179,7 @@ describe('handleText', () => {
             format: {},
         };
 
-        context.isLastSegment = true;
+        context.noFollowingTextSegmentOrLast = true;
 
         handleText(document, parent, text, context, []);
 
@@ -193,7 +193,19 @@ describe('handleText', () => {
             format: {},
         };
 
-        context.isLastSegment = false;
+        context.noFollowingTextSegmentOrLast = false;
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<span>hello </span>');
+    });
+
+    it('Text ending with space without noFollowingTextSegmentOrLast set keeps space', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'hello ',
+            format: {},
+        };
 
         handleText(document, parent, text, context, []);
 

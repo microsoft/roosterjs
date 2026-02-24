@@ -19,7 +19,9 @@ export interface ModelToDomContext
  */
 export interface ModelToDomSegmentContext extends ModelToDomContext {
     /**
-     * Whether the current segment being processed is the last segment in its paragraph
+     * Whether the current segment is the last segment in the paragraph,
+     * or there are no more Text segments after it (excluding SelectionMarkers).
+     * When true, trailing spaces should be converted to &amp;nbsp;.
      */
-    isLastSegment?: boolean;
+    noFollowingTextSegmentOrLast?: boolean;
 }
