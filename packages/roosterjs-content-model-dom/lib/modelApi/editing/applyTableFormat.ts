@@ -12,7 +12,7 @@ import type {
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
-const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
+const DEFAULT_FORMAT: TableMetadataFormat = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -25,8 +25,6 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.Default,
     verticalAlign: null,
-    headerRowCustomStyles: null,
-    firstColumnCustomStyles: null,
 };
 
 type MetaOverrides = {
@@ -61,13 +59,6 @@ export function applyTableFormat(
         formatCells(rows, effectiveMetadata, metaOverrides);
         setFirstColumnFormatBorders(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
-
-        if (!effectiveMetadata.headerRowCustomStyles) {
-            delete effectiveMetadata.headerRowCustomStyles;
-        }
-        if (!effectiveMetadata.firstColumnCustomStyles) {
-            delete effectiveMetadata.firstColumnCustomStyles;
-        }
 
         return effectiveMetadata;
     });
@@ -274,22 +265,10 @@ export function setFirstColumnFormatBorders(
 
                 if (format.hasFirstColumn && customStyles) {
                     cell.format.textAlign = customStyles.textAlign;
-                    setBorderColorIfProvided(cell.format, 'borderTop', customStyles.borderTopColor);
-                    setBorderColorIfProvided(
-                        cell.format,
-                        'borderRight',
-                        customStyles.borderRightColor
-                    );
-                    setBorderColorIfProvided(
-                        cell.format,
-                        'borderBottom',
-                        customStyles.borderBottomColor
-                    );
-                    setBorderColorIfProvided(
-                        cell.format,
-                        'borderLeft',
-                        customStyles.borderLeftColor
-                    );
+                    setBorderColor(cell.format, 'borderTop', customStyles.borderTopColor);
+                    setBorderColor(cell.format, 'borderRight', customStyles.borderRightColor);
+                    setBorderColor(cell.format, 'borderBottom', customStyles.borderBottomColor);
+                    setBorderColor(cell.format, 'borderLeft', customStyles.borderLeftColor);
                     if (customStyles.backgroundColor) {
                         setTableCellBackgroundColor(
                             cell,
@@ -337,11 +316,6 @@ function setHeaderRowFormat(
     const rowIndex = 0;
     const customStyles = format.headerRowCustomStyles;
 
-    const borderTopColor = customStyles?.borderTopColor ?? format.headerRowColor;
-    const borderRightColor = customStyles?.borderRightColor ?? format.headerRowColor;
-    const borderBottomColor = customStyles?.borderBottomColor;
-    const borderLeftColor = customStyles?.borderLeftColor ?? format.headerRowColor;
-
     rows[rowIndex]?.cells.forEach((readonlyCell, cellIndex) => {
         const cell = mutateBlock(readonlyCell);
 
@@ -357,14 +331,26 @@ function setHeaderRowFormat(
                     true /*applyToSegments*/
                 );
             }
-            setBorderColorIfProvided(cell.format, 'borderTop', borderTopColor);
-            setBorderColorIfProvided(cell.format, 'borderRight', borderRightColor);
-            setBorderColorIfProvided(cell.format, 'borderBottom', borderBottomColor);
-            setBorderColorIfProvided(cell.format, 'borderLeft', borderLeftColor);
+            setBorderColor(
+                cell.format,
+                'borderTop',
+                customStyles?.borderTopColor ?? format.headerRowColor
+            );
+            setBorderColor(
+                cell.format,
+                'borderRight',
+                customStyles?.borderRightColor ?? format.headerRowColor
+            );
+            setBorderColor(
+                cell.format,
+                'borderLeft',
+                customStyles?.borderLeftColor ?? format.headerRowColor
+            );
         }
 
         if (customStyles) {
             cell.format.textAlign = customStyles.textAlign;
+            setBorderColor(cell.format, 'borderBottom', customStyles.borderBottomColor);
             for (const block of cell.blocks) {
                 if (block.blockType == 'Paragraph') {
                     for (const segment of block.segments) {
@@ -376,16 +362,6 @@ function setHeaderRowFormat(
             }
         }
     });
-}
-
-function setBorderColorIfProvided(
-    format: BorderFormat,
-    key: keyof BorderFormat,
-    value: string | null | undefined
-) {
-    if (value !== undefined) {
-        setBorderColor(format, key, value ?? undefined);
-    }
 }
 
 /**
