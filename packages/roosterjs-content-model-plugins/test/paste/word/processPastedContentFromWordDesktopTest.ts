@@ -1252,7 +1252,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             ],
                             blockType: 'BlockGroup',
                             format: {
-                                marginLeft: '1.5in',
+                                marginLeft: '104px',
                             },
                             blockGroupType: 'ListItem',
                             blocks: [
@@ -1439,6 +1439,76 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginRight: '0in',
                                 marginBottom: '0in',
                                 marginLeft: '0.5in',
+                            },
+                        },
+                    ],
+                },
+                true /* removeUndefinedValues */
+            );
+        });
+
+        it('adjustWordListMarginParser subtracts default list padding from MsoListParagraph margin', () => {
+            // margin-left: 1in = 96px; parser subtracts 40px (default list paddingInlineStart) → 56px
+            const source =
+                '<p style="margin:0in 0in 0in 1in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1" class="MsoListParagraph"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
+                new Map<string, WordMetadata>().set('l0:level1', {
+                    'mso-level-number-format': 'bullet',
+                    'mso-level-start-at': '1',
+                })
+            );
+
+            runTest(
+                source,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'TEST',
+                                            format: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '12pt',
+                                            },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                    segmentFormat: {
+                                        fontFamily: 'Calibri, sans-serif',
+                                        fontSize: '12pt',
+                                    },
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'UL',
+                                    format: {
+                                        marginTop: '0in',
+                                        marginRight: '0in',
+                                        paddingLeft: '0px',
+                                        wordList: 'l0',
+                                    },
+                                    dataset: {},
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Symbol', fontSize: '12pt' },
+                            },
+                            format: {
+                                marginTop: '0in',
+                                marginRight: '0in',
+                                marginBottom: '0in',
+                                marginLeft: '56px',
                             },
                         },
                     ],

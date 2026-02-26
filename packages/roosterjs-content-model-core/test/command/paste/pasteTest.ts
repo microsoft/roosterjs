@@ -168,7 +168,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -224,7 +224,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(11);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(12);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 

@@ -384,4 +384,55 @@ describe('TextMutationObserverImpl', () => {
         expect(onMutation).toHaveBeenCalledTimes(1);
         expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
     });
+
+    it('Ignore changes that is not in editor - add node', () => {
+        const div = document.createElement('div');
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+
+        div.appendChild(span1);
+
+        const onMutation = jasmine.createSpy('onMutation');
+
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+        observer.startObserving();
+
+        span1.textContent = 'test1';
+        span2.textContent = 'test2';
+
+        observer.flushMutations();
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [span1.firstChild],
+            removedNodes: [],
+        });
+    });
+
+    it('Ignore changes that is not in editor - remove node', () => {
+        const div = document.createElement('div');
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+
+        span1.appendChild(span2);
+        div.appendChild(span1);
+
+        const onMutation = jasmine.createSpy('onMutation');
+
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+        observer.startObserving();
+
+        div.removeChild(span1);
+        span1.removeChild(span2);
+
+        observer.flushMutations();
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'childList',
+            addedNodes: [],
+            removedNodes: [span1],
+        });
+    });
 });
