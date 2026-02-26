@@ -295,7 +295,7 @@ export {
     DomToModelDecoratorContext,
     DomToModelListFormat,
 } from './context/DomToModelFormatContext';
-export { ModelToDomContext } from './context/ModelToDomContext';
+export { ModelToDomContext, ModelToDomSegmentContext } from './context/ModelToDomContext';
 export {
     ModelToDomBlockAndSegmentNode,
     ModelToDomRegularSelection,
