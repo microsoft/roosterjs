@@ -38,7 +38,7 @@ const TableSpecialCellFormatDefinition = createObjectDefinition<
         backgroundColor: OptionalStringDefinition,
     },
     true /* isOptional */,
-    false /** allowNull */
+    true /** allowNull */
 );
 
 const TableFormatDefinition = createObjectDefinition<Required<TableMetadataFormat>>(

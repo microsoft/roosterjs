@@ -264,11 +264,20 @@ export function setFirstColumnFormatBorders(
                 }
 
                 if (format.hasFirstColumn && customStyles) {
-                    cell.format.textAlign = customStyles.textAlign;
-                    setBorderColor(cell.format, 'borderTop', customStyles.borderTopColor);
-                    setBorderColor(cell.format, 'borderRight', customStyles.borderRightColor);
-                    setBorderColor(cell.format, 'borderBottom', customStyles.borderBottomColor);
-                    setBorderColor(cell.format, 'borderLeft', customStyles.borderLeftColor);
+                    setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
+
+                    setBorderColorIfExists(cell.format, 'borderTop', customStyles.borderTopColor);
+                    setBorderColorIfExists(
+                        cell.format,
+                        'borderRight',
+                        customStyles.borderRightColor
+                    );
+                    setBorderColorIfExists(
+                        cell.format,
+                        'borderBottom',
+                        customStyles.borderBottomColor
+                    );
+                    setBorderColorIfExists(cell.format, 'borderLeft', customStyles.borderLeftColor);
                     if (customStyles.backgroundColor) {
                         setTableCellBackgroundColor(
                             cell,
@@ -284,10 +293,26 @@ export function setFirstColumnFormatBorders(
                         for (const segment of block.segments) {
                             mutateSegment(block, segment, cellSegment => {
                                 if (format.hasFirstColumn && customStyles) {
-                                    cellSegment.format.fontWeight = customStyles.fontWeight;
-                                    cell.format.textAlign = customStyles.textAlign;
-                                    cell.format.fontWeight = customStyles.fontWeight;
-                                    cellSegment.format.italic = customStyles.italic;
+                                    setStyleIfDefined(
+                                        cellSegment.format,
+                                        'fontWeight',
+                                        customStyles.fontWeight
+                                    );
+                                    setStyleIfDefined(
+                                        cell.format,
+                                        'textAlign',
+                                        customStyles.textAlign
+                                    );
+                                    setStyleIfDefined(
+                                        cell.format,
+                                        'fontWeight',
+                                        customStyles.fontWeight
+                                    );
+                                    setStyleIfDefined(
+                                        cellSegment.format,
+                                        'italic',
+                                        customStyles.italic
+                                    );
                                 } else if (
                                     cellSegment.format.fontWeight == 'bold' &&
                                     cell.format.fontWeight == 'bold'
@@ -302,6 +327,18 @@ export function setFirstColumnFormatBorders(
             }
         });
     });
+}
+
+function setBorderColorIfExists(format: BorderFormat, key: keyof BorderFormat, value?: string) {
+    if (value) {
+        setBorderColor(format, key, value);
+    }
+}
+
+function setStyleIfDefined<T, K extends keyof T>(format: T, key: K, value: T[K] | undefined) {
+    if (value !== undefined) {
+        format[key] = value;
+    }
 }
 
 function setHeaderRowFormat(
@@ -349,8 +386,8 @@ function setHeaderRowFormat(
         }
 
         if (customStyles) {
-            cell.format.textAlign = customStyles.textAlign;
-            setBorderColor(cell.format, 'borderBottom', customStyles.borderBottomColor);
+            setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
+            setBorderColorIfExists(cell.format, 'borderBottom', customStyles.borderBottomColor);
             if (customStyles.italic) {
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {

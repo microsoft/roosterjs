@@ -1,6 +1,5 @@
 /**
  * Customization options for a header row or first column in a table.
- * When used instead of `true`, allows per-property overrides for text and borders.
  */
 export type TableSpecialCellMetadataFormat = {
     /**

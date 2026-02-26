@@ -993,4 +993,219 @@ describe('applyTableFormat', () => {
             }
         });
     });
+
+    describe('Banded rows and columns background color logic', () => {
+        it('should apply bgColorOdd to odd rows when hasBandedRows is true (no header)', () => {
+            const table = createTable(4, 2);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: false,
+                hasFirstColumn: false,
+                hasBandedRows: true,
+                hasBandedColumns: false,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // With hasHeaderRow: false, bandedRowMod = 1
+            // Row 0: rowIndex % 2 != 1 => 0 != 1 => true => bgColorOdd
+            // Row 1: rowIndex % 2 != 1 => 0 != 1 => false => bgColorEven
+            // Row 2: rowIndex % 2 != 1 => 0 != 1 => true => bgColorOdd
+            // Row 3: rowIndex % 2 != 1 => 1 != 1 => false => bgColorEven
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[2].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[2].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[3].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[3].cells[1].format.backgroundColor).toBe(bgColorEven);
+        });
+
+        it('should apply bgColorOdd starting from row 1 when hasBandedRows and hasHeaderRow are true', () => {
+            const table = createTable(4, 2);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: true,
+                hasFirstColumn: false,
+                hasBandedRows: true,
+                hasBandedColumns: false,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // With hasHeaderRow: true, bandedRowMod = 0
+            // Row 0: is header row, gets headerRowColor (#ABABAB)
+            // Row 1: rowIndex % 2 != 0 => 1 != 0 => true => bgColorOdd
+            // Row 2: rowIndex % 2 != 0 => 0 != 0 => false => bgColorEven
+            // Row 3: rowIndex % 2 != 0 => 1 != 0 => true => bgColorOdd
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe('#ABABAB'); // header row
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[2].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[2].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[3].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[3].cells[1].format.backgroundColor).toBe(bgColorOdd);
+        });
+
+        it('should apply bgColorOdd to odd columns when hasBandedColumns is true (no first column)', () => {
+            const table = createTable(2, 4);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: false,
+                hasFirstColumn: false,
+                hasBandedRows: false,
+                hasBandedColumns: true,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // With hasFirstColumn: false, bandedColumnMod = 1
+            // Col 0: colIndex % 2 != 1 => 0 != 1 => true => bgColorOdd
+            // Col 1: colIndex % 2 != 1 => 1 != 1 => false => bgColorEven
+            // Col 2: colIndex % 2 != 1 => 0 != 1 => true => bgColorOdd
+            // Col 3: colIndex % 2 != 1 => 1 != 1 => false => bgColorEven
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[0].cells[2].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[3].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[2].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[3].format.backgroundColor).toBe(bgColorEven);
+        });
+
+        it('should apply bgColorOdd starting from col 1 when hasBandedColumns and hasFirstColumn are true', () => {
+            const table = createTable(2, 4);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: false,
+                hasFirstColumn: true,
+                hasBandedRows: false,
+                hasBandedColumns: true,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // With hasFirstColumn: true, bandedColumnMod = 0
+            // Col 0: colIndex % 2 != 0 => 0 != 0 => false => bgColorEven
+            // Col 1: colIndex % 2 != 0 => 1 != 0 => true => bgColorOdd
+            // Col 2: colIndex % 2 != 0 => 0 != 0 => false => bgColorEven
+            // Col 3: colIndex % 2 != 0 => 1 != 0 => true => bgColorOdd
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[0].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[2].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[0].cells[3].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[2].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[3].format.backgroundColor).toBe(bgColorOdd);
+        });
+
+        it('should combine banded rows and columns (bgColorOdd if either condition is true)', () => {
+            const table = createTable(3, 3);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: false,
+                hasFirstColumn: false,
+                hasBandedRows: true,
+                hasBandedColumns: true,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // With hasHeaderRow: false, bandedRowMod = 1
+            // With hasFirstColumn: false, bandedColumnMod = 1
+            // Cell gets bgColorOdd if (colIndex % 2 != 1) OR (rowIndex % 2 != 1)
+            //
+            // Row 0: rowIndex % 2 != 1 => true
+            //   Col 0: (0 % 2 != 1) || true => true => bgColorOdd
+            //   Col 1: (1 % 2 != 1) || true => true => bgColorOdd
+            //   Col 2: (0 % 2 != 1) || true => true => bgColorOdd
+            // Row 1: rowIndex % 2 != 1 => false
+            //   Col 0: true || false => true => bgColorOdd
+            //   Col 1: false || false => false => bgColorEven
+            //   Col 2: true || false => true => bgColorOdd
+            // Row 2: rowIndex % 2 != 1 => true
+            //   Col 0: true || true => true => bgColorOdd
+            //   Col 1: false || true => true => bgColorOdd
+            //   Col 2: true || true => true => bgColorOdd
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[0].cells[2].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[2].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[2].cells[0].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[2].cells[1].format.backgroundColor).toBe(bgColorOdd);
+            expect(table.rows[2].cells[2].format.backgroundColor).toBe(bgColorOdd);
+        });
+
+        it('should use bgColorEven as default when neither banded rows nor columns', () => {
+            const table = createTable(2, 2);
+            const bgColorOdd = '#FF0000';
+            const bgColorEven = '#00FF00';
+
+            applyTableFormat(table as ReadonlyContentModelTable, {
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+                hasHeaderRow: false,
+                hasFirstColumn: false,
+                hasBandedRows: false,
+                hasBandedColumns: false,
+                bgColorEven: bgColorEven,
+                bgColorOdd: bgColorOdd,
+                headerRowColor: '#ABABAB',
+                tableBorderFormat: TableBorderFormat.Default,
+                verticalAlign: null,
+            });
+
+            // When hasBandedRows and hasBandedColumns are both false, bgColorEven is used
+            expect(table.rows[0].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[0].cells[1].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[0].format.backgroundColor).toBe(bgColorEven);
+            expect(table.rows[1].cells[1].format.backgroundColor).toBe(bgColorEven);
+        });
+    });
 });
