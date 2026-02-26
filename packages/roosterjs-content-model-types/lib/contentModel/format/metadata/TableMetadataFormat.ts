@@ -30,7 +30,7 @@ export type TableMetadataFormat = {
     headerRowColor?: string | null;
 
     /**
-     * Custom styles for the header row cells (font weight, font style, border colors).
+     * Custom styles for the header row cells (font weight, font style, border colors, textAlign, backgroundColor).
      * Only applied when hasHeaderRow is true.
      */
     headerRowCustomStyles?: TableSpecialCellMetadataFormat | null;
@@ -41,7 +41,7 @@ export type TableMetadataFormat = {
     hasFirstColumn?: boolean;
 
     /**
-     * Custom styles for the first column cells (font weight, font style, border colors).
+     * Custom styles for the first column cells (font weight, font style, border colors, textAlign, backgroundColor).
      * Only applied when hasFirstColumn is true.
      */
     firstColumnCustomStyles?: TableSpecialCellMetadataFormat | null;

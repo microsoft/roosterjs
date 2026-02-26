@@ -292,26 +292,26 @@ export function setFirstColumnFormatBorders(
                     if (block.blockType == 'Paragraph') {
                         for (const segment of block.segments) {
                             mutateSegment(block, segment, cellSegment => {
-                                if (format.hasFirstColumn && customStyles) {
+                                if (format.hasFirstColumn) {
                                     setStyleIfDefined(
                                         cellSegment.format,
                                         'fontWeight',
-                                        customStyles.fontWeight
+                                        customStyles?.fontWeight ?? 'bold'
                                     );
                                     setStyleIfDefined(
                                         cell.format,
                                         'textAlign',
-                                        customStyles.textAlign
+                                        customStyles?.textAlign
                                     );
                                     setStyleIfDefined(
                                         cell.format,
                                         'fontWeight',
-                                        customStyles.fontWeight
+                                        customStyles?.fontWeight ?? 'bold'
                                     );
                                     setStyleIfDefined(
                                         cellSegment.format,
                                         'italic',
-                                        customStyles.italic
+                                        customStyles?.italic
                                     );
                                 } else if (
                                     cellSegment.format.fontWeight == 'bold' &&
@@ -330,7 +330,7 @@ export function setFirstColumnFormatBorders(
 }
 
 function setBorderColorIfExists(format: BorderFormat, key: keyof BorderFormat, value?: string) {
-    if (value) {
+    if (value !== undefined) {
         setBorderColor(format, key, value);
     }
 }
@@ -388,14 +388,16 @@ function setHeaderRowFormat(
         if (customStyles) {
             setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
             setBorderColorIfExists(cell.format, 'borderBottom', customStyles.borderBottomColor);
-            if (customStyles.italic) {
-                for (const block of cell.blocks) {
-                    if (block.blockType == 'Paragraph') {
-                        for (const segment of block.segments) {
-                            mutateSegment(block, segment, cellSegment => {
+            for (const block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    for (const segment of block.segments) {
+                        mutateSegment(block, segment, cellSegment => {
+                            if (customStyles.italic) {
                                 cellSegment.format.italic = customStyles.italic;
-                            });
-                        }
+                            } else if (cellSegment.format.italic) {
+                                delete cellSegment.format.italic;
+                            }
+                        });
                     }
                 }
             }

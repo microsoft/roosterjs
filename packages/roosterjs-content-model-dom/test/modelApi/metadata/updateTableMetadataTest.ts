@@ -602,7 +602,7 @@ describe('updateTableMetadata', () => {
                 ...format,
                 firstColumnCustomStyles: {
                     fontWeight: 'normal',
-                    textAlign: 'right',
+                    textAlign: 'end',
                     borderTopColor: 'red',
                     borderBottomColor: 'red',
                 },
@@ -617,7 +617,7 @@ describe('updateTableMetadata', () => {
             ...tableFormat,
             firstColumnCustomStyles: {
                 fontWeight: 'normal',
-                textAlign: 'right',
+                textAlign: 'end',
                 borderTopColor: 'red',
                 borderBottomColor: 'red',
             },

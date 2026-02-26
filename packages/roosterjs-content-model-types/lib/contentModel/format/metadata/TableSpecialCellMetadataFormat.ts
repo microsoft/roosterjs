@@ -3,7 +3,7 @@
  */
 export type TableSpecialCellMetadataFormat = {
     /**
-     * Font weight for the cells. Defaults to 'bold' when not specified.
+     * Font weight for the cells.
      */
     fontWeight?: string;
 
