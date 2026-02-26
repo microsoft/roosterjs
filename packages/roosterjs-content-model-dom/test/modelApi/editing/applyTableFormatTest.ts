@@ -236,9 +236,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.NoSideBorders,
             },
             [
-                [TC, TC, TC, TC],
                 [BC2, BC2, BC2, BC2],
                 [TC, TC, TC, TC],
+                [BC2, BC2, BC2, BC2],
             ],
             [
                 [

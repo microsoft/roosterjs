@@ -25,7 +25,7 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
     ),
     createCheckboxFormatRenderer<TableMetadataFormat>(
         'HasHeaderRow',
-        format => format.hasHeaderRow,
+        format => !!format.hasHeaderRow,
         (format, value) => (format.hasHeaderRow = value)
     ),
     createColorFormatRenderer<TableMetadataFormat>(
@@ -35,7 +35,7 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
     ),
     createCheckboxFormatRenderer<TableMetadataFormat>(
         'HasFirstColumn',
-        format => format.hasFirstColumn,
+        format => !!format.hasFirstColumn,
         (format, value) => (format.hasFirstColumn = value)
     ),
     createCheckboxFormatRenderer<TableMetadataFormat>(

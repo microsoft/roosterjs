@@ -1,3 +1,5 @@
+import type { TableSpecialCellMetadataFormat } from './TableSpecialCellMetadataFormat';
+
 /**
  * Format of table that stored as metadata
  */
@@ -28,9 +30,21 @@ export type TableMetadataFormat = {
     headerRowColor?: string | null;
 
     /**
+     * Custom styles for the header row cells (font weight, font style, border colors).
+     * Only applied when hasHeaderRow is true.
+     */
+    headerRowCustomStyles?: TableSpecialCellMetadataFormat | null;
+
+    /**
      * Set first column
      */
     hasFirstColumn?: boolean;
+
+    /**
+     * Custom styles for the first column cells (font weight, font style, border colors).
+     * Only applied when hasFirstColumn is true.
+     */
+    firstColumnCustomStyles?: TableSpecialCellMetadataFormat | null;
 
     /**
      * Set banded columns

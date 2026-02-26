@@ -10,6 +10,7 @@ import type {
     ReadonlyContentModelTable,
     ShallowMutableContentModelTable,
     TableMetadataFormat,
+    TableSpecialCellMetadataFormat,
 } from 'roosterjs-content-model-types';
 
 const NullStringDefinition = createStringDefinition(
@@ -18,7 +19,27 @@ const NullStringDefinition = createStringDefinition(
     true /** allowNull */
 );
 
+const OptionalStringDefinition = createStringDefinition(true /** isOptional */);
+const OptionalBooleanDefinition = createBooleanDefinition(true /** isOptional */);
+
 const BooleanDefinition = createBooleanDefinition(false /** isOptional */);
+
+const TableSpecialCellFormatDefinition = createObjectDefinition<
+    Required<TableSpecialCellMetadataFormat>
+>(
+    {
+        fontWeight: OptionalStringDefinition,
+        italic: OptionalBooleanDefinition,
+        borderTopColor: OptionalStringDefinition,
+        borderRightColor: OptionalStringDefinition,
+        borderBottomColor: OptionalStringDefinition,
+        borderLeftColor: OptionalStringDefinition,
+        textAlign: OptionalStringDefinition,
+        backgroundColor: OptionalStringDefinition,
+    },
+    true /* isOptional */,
+    false /** allowNull */
+);
 
 const TableFormatDefinition = createObjectDefinition<Required<TableMetadataFormat>>(
     {
@@ -27,7 +48,9 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
         verticalBorderColor: NullStringDefinition,
         hasHeaderRow: BooleanDefinition,
         headerRowColor: NullStringDefinition,
+        headerRowCustomStyles: TableSpecialCellFormatDefinition,
         hasFirstColumn: BooleanDefinition,
+        firstColumnCustomStyles: TableSpecialCellFormatDefinition,
         hasBandedColumns: BooleanDefinition,
         hasBandedRows: BooleanDefinition,
         bgColorEven: NullStringDefinition,
