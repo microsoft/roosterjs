@@ -13,6 +13,7 @@ import {
     ContentModelSegment,
     ContentModelSegmentHandler,
     ModelToDomContext,
+    ModelToDomSegmentContext,
 } from 'roosterjs-content-model-types';
 
 describe('handleParagraph', () => {
@@ -1169,5 +1170,232 @@ describe('Handle paragraph and adjust selections', () => {
             null,
             context.rewriteFromModel
         );
+    });
+
+    describe('noFollowingTextSegmentOrLast', () => {
+        let parent: HTMLElement;
+        let context: ModelToDomContext;
+        let handleSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelSegment>>;
+
+        beforeEach(() => {
+            parent = document.createElement('div');
+            handleSegment = jasmine.createSpy('handleSegment');
+            context = createModelToDomContext(
+                {
+                    allowCacheElement: true,
+                },
+                {
+                    modelHandlerOverride: {
+                        segment: handleSegment,
+                    },
+                }
+            );
+        });
+
+        it('should be true for the only text segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [{ segmentType: 'Text', text: 'hello', format: {} }],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect(captured).toEqual([true]);
+        });
+
+        it('should be false for text before another text segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'first', format: {} },
+                    { segmentType: 'Text', text: 'second', format: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect(captured).toEqual([false, true]);
+        });
+
+        it('should be true for text followed by a Br segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'hello', format: {} },
+                    { segmentType: 'Br', format: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            // Text is followed by Br (non-text), so noFollowingTextSegmentOrLast is true for text; also true for Br
+            expect(captured).toEqual([true, true]);
+        });
+
+        it('should be true for text followed by an Image segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'hello', format: {} },
+                    { segmentType: 'Image', src: 'test.png', format: {}, dataset: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect(captured).toEqual([true, true]);
+        });
+
+        it('should skip SelectionMarker when determining next text segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'first', format: {} },
+                    { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    { segmentType: 'Text', text: 'second', format: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            // first text -> marker -> second text: first=false, marker=false, second=true
+            expect(captured).toEqual([false, false, true]);
+        });
+
+        it('should be true when text is followed by SelectionMarker only', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'hello', format: {} },
+                    { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            // text -> marker (no text after): both should be true
+            expect(captured).toEqual([true, true]);
+        });
+
+        it('should be true for text followed by Entity segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const wrapper = document.createElement('span');
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'hello', format: {} },
+                    {
+                        segmentType: 'Entity',
+                        blockType: 'Entity',
+                        entityFormat: { entityType: 'test', id: 'e1', isReadonly: true },
+                        format: {},
+                        wrapper,
+                    },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect(captured).toEqual([true, true]);
+        });
+
+        it('should handle text followed by General segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'hello', format: {} },
+                    {
+                        segmentType: 'General',
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'General',
+                        blocks: [],
+                        element: document.createElement('span'),
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect(captured).toEqual([true, true]);
+        });
+
+        it('should be false for text when text comes after non-text segment', () => {
+            const captured: (boolean | undefined)[] = [];
+            handleSegment.and.callFake((_doc, _parent, _seg, ctx) => {
+                captured.push((ctx as ModelToDomSegmentContext).noFollowingTextSegmentOrLast);
+            });
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    { segmentType: 'Text', text: 'first', format: {} },
+                    { segmentType: 'Br', format: {} },
+                    { segmentType: 'Text', text: 'second', format: {} },
+                ],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            // first text: Br is next non-marker -> false (Br breaks, no text immediately), but actually
+            // hasTextSegmentAfter looks past Br to find Text, Br is not Text so returns false at index 0
+            // Br at index 1: next is Text -> false? No, hasTextSegmentAfter checks if type === 'Text'
+            // Actually: index 0 -> next is Br (not SelectionMarker, not Text) -> false -> noFollowingTextSegmentOrLast=true
+            // index 1 (Br) -> next is Text -> true -> noFollowingTextSegmentOrLast=false
+            // index 2 (Text) -> no more -> noFollowingTextSegmentOrLast=true
+            expect(captured).toEqual([true, false, true]);
+        });
+
+        it('should be cleaned up after processing paragraph', () => {
+            handleSegment.and.callFake(() => {});
+
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [{ segmentType: 'Text', text: 'hello', format: {} }],
+                format: {},
+            };
+            handleParagraph(document, parent, paragraph, context, null);
+
+            expect((context as ModelToDomSegmentContext).noFollowingTextSegmentOrLast).toBeUndefined();
+        });
     });
 });
