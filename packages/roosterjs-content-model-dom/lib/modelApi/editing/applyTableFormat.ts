@@ -351,12 +351,14 @@ function setHeaderRowFormat(
         if (customStyles) {
             cell.format.textAlign = customStyles.textAlign;
             setBorderColor(cell.format, 'borderBottom', customStyles.borderBottomColor);
-            for (const block of cell.blocks) {
-                if (block.blockType == 'Paragraph') {
-                    for (const segment of block.segments) {
-                        mutateSegment(block, segment, cellSegment => {
-                            cellSegment.format.italic = customStyles.italic;
-                        });
+            if (customStyles.italic) {
+                for (const block of cell.blocks) {
+                    if (block.blockType == 'Paragraph') {
+                        for (const segment of block.segments) {
+                            mutateSegment(block, segment, cellSegment => {
+                                cellSegment.format.italic = customStyles.italic;
+                            });
+                        }
                     }
                 }
             }

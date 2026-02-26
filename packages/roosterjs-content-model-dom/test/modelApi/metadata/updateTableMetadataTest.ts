@@ -366,4 +366,270 @@ describe('updateTableMetadata', () => {
             },
         });
     });
+
+    it('Full valid value with headerRowCustomStyles', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: true,
+            headerRowColor: 'orange',
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+                textAlign: 'center',
+                backgroundColor: 'lightblue',
+            },
+            hasFirstColumn: false,
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const callback = jasmine.createSpy('callback').and.callFake(format => format);
+
+        updateTableMetadata(table, callback);
+
+        expect(callback).toHaveBeenCalledWith(tableFormat);
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        });
+    });
+
+    it('Full valid value with firstColumnCustomStyles', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: false,
+            headerRowColor: 'orange',
+            hasFirstColumn: true,
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                italic: false,
+                borderLeftColor: 'black',
+                borderRightColor: 'gray',
+            },
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const callback = jasmine.createSpy('callback').and.callFake(format => format);
+
+        updateTableMetadata(table, callback);
+
+        expect(callback).toHaveBeenCalledWith(tableFormat);
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        });
+    });
+
+    it('Full valid value with both headerRowCustomStyles and firstColumnCustomStyles', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: true,
+            headerRowColor: 'orange',
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+                backgroundColor: 'lightgray',
+                borderBottomColor: 'black',
+            },
+            hasFirstColumn: true,
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+                textAlign: 'end',
+            },
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const callback = jasmine.createSpy('callback').and.callFake(format => format);
+
+        updateTableMetadata(table, callback);
+
+        expect(callback).toHaveBeenCalledWith(tableFormat);
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        });
+    });
+
+    it('Update headerRowCustomStyles value', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: true,
+            headerRowColor: 'orange',
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+            },
+            hasFirstColumn: false,
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const callback = jasmine.createSpy('callback').and.callFake(format => {
+            return {
+                ...format,
+                headerRowCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: true,
+                    backgroundColor: 'white',
+                },
+            };
+        });
+
+        updateTableMetadata(table, callback);
+
+        expect(callback).toHaveBeenCalledWith(tableFormat);
+
+        const expectedFormat = {
+            ...tableFormat,
+            headerRowCustomStyles: {
+                fontWeight: 'normal',
+                italic: true,
+                backgroundColor: 'white',
+            },
+        };
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(expectedFormat),
+            },
+        });
+    });
+
+    it('Update firstColumnCustomStyles value', () => {
+        const tableFormat: TableMetadataFormat = {
+            topBorderColor: 'red',
+            bottomBorderColor: 'blue',
+            verticalBorderColor: 'green',
+            hasHeaderRow: false,
+            headerRowColor: 'orange',
+            hasFirstColumn: true,
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+            },
+            hasBandedColumns: false,
+            hasBandedRows: true,
+            bgColorEven: 'yellow',
+            bgColorOdd: 'gray',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: 'top',
+        };
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(tableFormat),
+            },
+        };
+        const callback = jasmine.createSpy('callback').and.callFake(format => {
+            return {
+                ...format,
+                firstColumnCustomStyles: {
+                    fontWeight: 'normal',
+                    textAlign: 'right',
+                    borderTopColor: 'red',
+                    borderBottomColor: 'red',
+                },
+            };
+        });
+
+        updateTableMetadata(table, callback);
+
+        expect(callback).toHaveBeenCalledWith(tableFormat);
+
+        const expectedFormat = {
+            ...tableFormat,
+            firstColumnCustomStyles: {
+                fontWeight: 'normal',
+                textAlign: 'right',
+                borderTopColor: 'red',
+                borderBottomColor: 'red',
+            },
+        };
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [],
+            widths: [],
+            dataset: {
+                editingInfo: JSON.stringify(expectedFormat),
+            },
+        });
+    });
 });

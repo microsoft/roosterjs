@@ -762,4 +762,235 @@ describe('applyTableFormat', () => {
             });
         });
     });
+
+    it('Apply headerRowCustomStyles', () => {
+        const table = createTable(2, 2);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: true,
+            hasFirstColumn: false,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+            headerRowCustomStyles: {
+                fontWeight: 'normal',
+                italic: true,
+                textAlign: 'center',
+                borderBottomColor: 'red',
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        // Check header row cells have custom styles applied
+        table.rows[0].cells.forEach(cell => {
+            expect(cell.format.fontWeight).toBe('normal');
+            expect(cell.format.textAlign).toBe('center');
+            expect(cell.format.borderBottom).toBe('1px solid red');
+            cell.blocks.forEach(block => {
+                if (block.blockType == 'Paragraph') {
+                    block.segments.forEach(segment => {
+                        expect(segment.format.italic).toBe(true);
+                    });
+                }
+            });
+        });
+
+        // Check non-header row cells don't have custom styles
+        table.rows[1].cells.forEach(cell => {
+            expect(cell.format.fontWeight).not.toBe('normal');
+            expect(cell.format.textAlign).not.toBe('center');
+        });
+    });
+
+    it('Apply firstColumnCustomStyles', () => {
+        const table = createTable(2, 2);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+                textAlign: 'end',
+                borderRightColor: 'blue',
+                backgroundColor: 'lightgray',
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        // Check first column cells have custom styles applied
+        table.rows.forEach(row => {
+            const firstCell = row.cells[0];
+            expect(firstCell.format.textAlign).toBe('end');
+            expect(firstCell.format.borderRight).toBe('1px solid blue');
+            expect(firstCell.format.backgroundColor).toBe('lightgray');
+            firstCell.blocks.forEach(block => {
+                if (block.blockType == 'Paragraph') {
+                    block.segments.forEach(segment => {
+                        expect(segment.format.fontWeight).toBe('bold');
+                        expect(segment.format.italic).toBe(true);
+                    });
+                }
+            });
+        });
+
+        // Check non-first column cells don't have custom styles
+        table.rows.forEach(row => {
+            const secondCell = row.cells[1];
+            expect(secondCell.format.textAlign).not.toBe('end');
+            expect(secondCell.format.backgroundColor).not.toBe('lightgray');
+        });
+    });
+
+    it('Apply both headerRowCustomStyles and firstColumnCustomStyles', () => {
+        const table = createTable(2, 2);
+
+        const format: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: true,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+                textAlign: 'center',
+            },
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                textAlign: 'end',
+                backgroundColor: 'lightblue',
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        // Check header row (row 0) has header styles
+        expect(table.rows[0].cells[0].isHeader).toBe(true);
+        expect(table.rows[0].cells[1].isHeader).toBe(true);
+        expect(table.rows[0].cells[0].format.fontWeight).toBe('bold');
+        expect(table.rows[0].cells[1].format.fontWeight).toBe('bold');
+
+        // Check first column cells have first column styles
+        expect(table.rows[0].cells[0].format.backgroundColor).toBe('#000000');
+        expect(table.rows[1].cells[0].format.backgroundColor).toBe('lightblue');
+        expect(table.rows[1].cells[0].format.textAlign).toBe('end');
+    });
+
+    it('Remove headerRowCustomStyles when hasHeaderRow is false', () => {
+        const table = createTable(2, 2);
+
+        const formatWithHeader: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: true,
+            hasFirstColumn: false,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, formatWithHeader);
+
+        // Verify header row has custom styles
+        expect(table.rows[0].cells[0].format.fontWeight).toBe('bold');
+        expect(table.rows[0].cells[0].isHeader).toBe(true);
+
+        // Now apply format without header row
+        const formatWithoutHeader: TableMetadataFormat = {
+            ...formatWithHeader,
+            hasHeaderRow: false,
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, formatWithoutHeader);
+
+        // Verify header styles are removed
+        expect(table.rows[0].cells[0].isHeader).toBe(false);
+    });
+
+    it('Remove firstColumnCustomStyles when hasFirstColumn is false', () => {
+        const table = createTable(2, 2);
+
+        const formatWithFirstColumn: TableMetadataFormat = {
+            topBorderColor: '#000000',
+            bottomBorderColor: '#000000',
+            verticalBorderColor: '#000000',
+            hasHeaderRow: false,
+            hasFirstColumn: true,
+            hasBandedRows: false,
+            hasBandedColumns: false,
+            bgColorEven: null,
+            bgColorOdd: '#00000020',
+            headerRowColor: '#000000',
+            tableBorderFormat: TableBorderFormat.Default,
+            verticalAlign: null,
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                textAlign: 'start',
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, formatWithFirstColumn);
+
+        // Verify first column has custom styles
+        expect(table.rows[0].cells[0].format.textAlign).toBe('start');
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                block.segments.forEach(segment => {
+                    expect(segment.format.fontWeight).toBe('bold');
+                });
+            }
+        });
+
+        // Now apply format without first column
+        const formatWithoutFirstColumn: TableMetadataFormat = {
+            ...formatWithFirstColumn,
+            hasFirstColumn: false,
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, formatWithoutFirstColumn);
+
+        // Verify first column styles are removed
+        table.rows[0].cells[0].blocks.forEach(block => {
+            if (block.blockType == 'Paragraph') {
+                block.segments.forEach(segment => {
+                    expect(segment.format.fontWeight).not.toBe('bold');
+                });
+            }
+        });
+    });
 });
