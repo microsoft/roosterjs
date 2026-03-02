@@ -1,4 +1,4 @@
-import { getNodePositionFromEvent } from '../utils/getNodePositionFromEvent';
+import { getNodePositionFromEvent } from 'roosterjs-content-model-dom';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
 const MAX_TOUCH_MOVE_DISTANCE = 6; // the max number of offsets for the touch selection to move
@@ -75,7 +75,8 @@ export class TouchPlugin implements EditorPlugin {
                             if (!this.isDblClicked) {
                                 this.editor.focus();
                                 const caretPosition = getNodePositionFromEvent(
-                                    this.editor,
+                                    this.editor.getDocument(),
+                                    this.editor.getDOMHelper(),
                                     event.rawEvent.x,
                                     event.rawEvent.y
                                 );
@@ -141,7 +142,8 @@ export class TouchPlugin implements EditorPlugin {
 
                     this.isDblClicked = true;
                     const caretPosition = getNodePositionFromEvent(
-                        this.editor,
+                        this.editor.getDocument(),
+                        this.editor.getDOMHelper(),
                         event.rawEvent.x,
                         event.rawEvent.y
                     );

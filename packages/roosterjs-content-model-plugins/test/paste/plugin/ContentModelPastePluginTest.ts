@@ -58,7 +58,7 @@ describe('Content Model Paste Plugin Test', () => {
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+            expect(addParser.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(2);
         });
 
