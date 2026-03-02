@@ -28,8 +28,8 @@ export interface ContentModelFormatMap {
     styleBasedSegment: ContentModelSegmentFormat;
 
     /**
-     * Format type for super or sub script format.
-     * Keep this separated from other element based segment format because it has special handling when apply format on a hyperlink.
+     * Format type for superscript/subscript format.
+     * Keep this separated from other element based segment format because it has special handling when applying format to a hyperlink.
      * We need to make sure it is applied after all other formats are applied, so it can override other formats if needed.
      */
     superOrSubScript: ContentModelSegmentFormat;
