@@ -376,4 +376,15 @@ describe('sanitizeHtml', () => {
 
         expect(result!.getAttribute('title')).toBe('Test\u200BTitle');
     });
+
+    it('should block script: XSS hidden behind invisible Unicode in href', () => {
+        const element = document.createElement('a');
+        // script: with zero-width spaces between characters - should be stripped first, then blocked
+        element.setAttribute('href', 's\u200Bc\u200Cr\u200Di\u200Ep\u200Ft:alert(1)');
+        element.textContent = 'Click';
+
+        const result = sanitizeElement(element, AllowedTags, DisallowedTags);
+
+        expect(result!.hasAttribute('href')).toBeFalse();
+    });
 });

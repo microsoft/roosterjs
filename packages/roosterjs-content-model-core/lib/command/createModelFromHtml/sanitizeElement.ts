@@ -339,12 +339,14 @@ export function createSanitizedElement(
                 ? value
                 : null;
 
-        if (
-            newValue !== null &&
-            newValue !== undefined &&
-            !newValue.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
-        ) {
-            element.setAttribute(name, name == 'href' ? stripInvisibleUnicode(newValue) : newValue);
+        if (newValue !== null && newValue !== undefined) {
+            const valueToSet = name === 'href' ? stripInvisibleUnicode(newValue) : newValue;
+
+            if (
+                !valueToSet.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
+            ) {
+                element.setAttribute(name, valueToSet);
+            }
         }
     }
 
