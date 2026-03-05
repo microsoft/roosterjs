@@ -52,6 +52,7 @@ describe('createEditorContext', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 
@@ -105,6 +106,7 @@ describe('createEditorContext', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 
@@ -155,6 +157,7 @@ describe('createEditorContext', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 
@@ -208,6 +211,7 @@ describe('createEditorContext', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 });
@@ -267,6 +271,7 @@ describe('createEditorContext - checkZoomScale', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 });
@@ -326,6 +331,7 @@ describe('createEditorContext - checkRootDir', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 
@@ -348,6 +354,7 @@ describe('createEditorContext - checkRootDir', () => {
             paragraphMap: mockedParagraphMap,
             editorViewWidth: 800,
             allowCacheListItem: false,
+            rewriteMutatedBlocksOnly: false,
         });
     });
 });

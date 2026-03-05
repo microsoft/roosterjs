@@ -18,6 +18,7 @@ export const createEditorContext: CreateEditorContext = (core, saveIndex) => {
         addDelimiterForEntity: true,
         allowCacheElement: true,
         allowCacheListItem: !!core.experimentalFeatures?.includes('CacheList'),
+        rewriteMutatedBlocksOnly: !!core.experimentalFeatures?.includes('RewriteMutatedBlocksOnly'),
         domIndexer: saveIndex ? cache.domIndexer : undefined,
         zoomScale: domHelper.calculateZoomScale(),
         experimentalFeatures: core.experimentalFeatures ?? [],
