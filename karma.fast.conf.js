@@ -6,10 +6,16 @@ const runCoverage = typeof argv.coverage !== 'undefined';
 const runFirefox = typeof argv.firefox !== 'undefined';
 const runChrome = typeof argv.chrome !== 'undefined';
 
+const FailOnlyReporter = function (baseReporterDecorator) {
+    baseReporterDecorator(this);
+    this.specSuccess = function () {}; // suppress success output
+};
+FailOnlyReporter.$inject = ['baseReporterDecorator'];
+
 const rootPath = __dirname;
 
 module.exports = function (config) {
-    const plugins = ['karma-webpack', 'karma-jasmine', 'karma-sourcemap-loader'];
+    const plugins = ['karma-webpack', 'karma-jasmine', 'karma-sourcemap-loader', {'reporter:failOnly': ['type', FailOnlyReporter]}];
     const launcher = [];
 
     if (runCoverage) {
@@ -69,6 +75,7 @@ module.exports = function (config) {
     const settings = {
         basePath: '.',
         plugins,
+        reporters: runCoverage ? ['coverage-istanbul'] : ['failOnly'],
         client: {
             components: components,
             testPathPattern: testPathPattern,
@@ -135,7 +142,6 @@ module.exports = function (config) {
     };
 
     if (runCoverage) {
-        settings.reporters = ['coverage-istanbul'];
         settings.coverageIstanbulReporter = {
             reports: ['html', 'lcovonly', 'text-summary'],
             dir: './dist/deploy/coverage',

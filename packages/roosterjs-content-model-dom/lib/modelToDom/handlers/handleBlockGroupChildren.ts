@@ -1,5 +1,8 @@
 import { cleanUpRestNodes } from '../utils/cleanUpRestNodes';
+import { isBlockFullyCached } from '../utils/isBlockFullyCached';
+import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import type {
+    ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelHandler,
     ModelToDomContext,
@@ -37,10 +40,45 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 }
             }
 
-            refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
+            // Fast path: if the block and all its descendants are fully cached (not mutated),
+            // reuse the cached element directly without calling the full handler.
+            // List items are excluded because their <li> is nested inside <ul>/<ol> and requires
+            // list stack management that only the list handler can provide.
+            if (
+                context.allowCacheElement &&
+                context.rewriteMutatedBlocksOnly &&
+                !(
+                    childBlock.blockType === 'BlockGroup' &&
+                    childBlock.blockGroupType === 'ListItem'
+                ) &&
+                childBlock.blockType !== 'Entity' &&
+                isBlockFullyCached(childBlock)
+            ) {
+                refNode = reuseCachedElement(
+                    parent,
+                    getCachedElement(childBlock)!,
+                    refNode,
+                    context.rewriteFromModel
+                );
+                // Call callbacks that the individual handlers would call for cached elements
+                if (childBlock.blockType === 'Table') {
+                    context.onNodeCreated?.(childBlock, childBlock.cachedElement!);
+                    context.domIndexer?.onTable(childBlock.cachedElement!, childBlock);
+                } else if (childBlock.blockType === 'Divider') {
+                    context.onNodeCreated?.(childBlock, childBlock.cachedElement!);
+                } else if (
+                    childBlock.blockType === 'BlockGroup' &&
+                    childBlock.blockGroupType === 'FormatContainer'
+                ) {
+                    context.onNodeCreated?.(childBlock, childBlock.cachedElement!);
+                }
+                // Paragraphs: no callbacks when reusing (matches existing handleParagraph behavior)
+            } else {
+                refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
 
-            if (childBlock.blockType == 'Entity') {
-                context.domIndexer?.onBlockEntity(childBlock, group);
+                if (childBlock.blockType == 'Entity') {
+                    context.domIndexer?.onBlockEntity(childBlock, group);
+                }
             }
         });
 
@@ -52,6 +90,20 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
         listFormat.nodeStack = nodeStack;
     }
 };
+
+function getCachedElement(block: ContentModelBlock): HTMLElement | undefined {
+    switch (block.blockType) {
+        case 'Paragraph':
+        case 'Table':
+        case 'Divider':
+            return block.cachedElement;
+        case 'BlockGroup':
+            // FormatContainer has cachedElement; ListItem is excluded from fast path
+            return block.blockGroupType === 'FormatContainer' ? block.cachedElement : undefined;
+        default:
+            return undefined;
+    }
+}
 
 function cleanUpNodeStack(nodeStack: ModelToDomListStackItem[], context: ModelToDomContext) {
     if (context.allowCacheListItem && nodeStack.length > 0) {

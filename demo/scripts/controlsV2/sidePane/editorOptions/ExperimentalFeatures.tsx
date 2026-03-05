@@ -16,6 +16,7 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
                 {this.renderFeature('CloneIndependentRoot')}
                 {this.renderFeature('CacheList')}
                 {this.renderFeature('TransformTableBorderColors')}
+                {this.renderFeature('RewriteMutatedBlocksOnly')}
             </>
         );
     }
