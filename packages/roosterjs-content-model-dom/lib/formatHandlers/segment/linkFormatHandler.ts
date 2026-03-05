@@ -22,7 +22,11 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
             }
 
             if (href) {
-                format.href = stripInvisibleUnicode(href);
+                const sanitizedHref = stripInvisibleUnicode(href);
+
+                if (sanitizedHref) {
+                    format.href = sanitizedHref;
+                }
             }
 
             if (target) {
