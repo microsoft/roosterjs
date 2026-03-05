@@ -55,6 +55,14 @@ export interface EditorContext {
     allowCacheListItem?: boolean;
 
     /**
+     * When writing content model back to DOM, skip blocks that are fully cached (not mutated)
+     * and reuse their DOM elements directly without calling the full handler.
+     * Requires allowCacheElement to be true.
+     * @see ExperimentalFeature 'RewriteMutatedBlocksOnly'
+     */
+    rewriteMutatedBlocksOnly?: boolean;
+
+    /**
      * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
      */
     domIndexer?: DomIndexer;

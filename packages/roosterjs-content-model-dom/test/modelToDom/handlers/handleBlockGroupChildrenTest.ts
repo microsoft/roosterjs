@@ -457,6 +457,209 @@ describe('handleBlockGroupChildren', () => {
         });
     });
 
+    it('fast path: skips handleBlock for a fully-cached paragraph', () => {
+        context.rewriteMutatedBlocksOnly = true;
+
+        const div = document.createElement('div');
+        div.textContent = 'cached';
+        parent.appendChild(div);
+
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [{ segmentType: 'Text', text: 'cached', format: {} }],
+                    cachedElement: div,
+                },
+            ],
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.outerHTML).toBe('<div><div>cached</div></div>');
+        expect(parent.firstChild).toBe(div);
+        // handleBlock must NOT be called because the fast path reuses the cached element directly
+        expect(handleBlock).not.toHaveBeenCalled();
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+    });
+
+    it('fast path: skips handleBlock for a fully-cached table', () => {
+        context.rewriteMutatedBlocksOnly = true;
+
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        parent.appendChild(table);
+
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    rows: [
+                        {
+                            format: {},
+                            height: 20,
+                            cachedElement: tr,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            segments: [],
+                                            cachedElement: div,
+                                        },
+                                    ],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
+                    ],
+                    cachedElement: table,
+                },
+            ],
+        };
+
+        const onTable = jasmine.createSpy('onTable');
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        context.domIndexer = { onTable } as any;
+        context.onNodeCreated = onNodeCreated;
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.firstChild).toBe(table);
+        // handleBlock must NOT be called for the fully-cached table
+        expect(handleBlock).not.toHaveBeenCalled();
+        // Callbacks that the table handler would normally call must still fire
+        expect(onTable).toHaveBeenCalledWith(table, group.blocks[0]);
+        expect(onNodeCreated).toHaveBeenCalledWith(group.blocks[0], table);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+    });
+
+    it('fast path: falls through to handleBlock when table has a mutated cell', () => {
+        context.rewriteMutatedBlocksOnly = true;
+
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+        parent.appendChild(table);
+
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    rows: [
+                        {
+                            format: {},
+                            height: 20,
+                            cachedElement: tr,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            segments: [],
+                                            // No cachedElement: this paragraph was mutated
+                                        },
+                                    ],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
+                    ],
+                    cachedElement: table,
+                },
+            ],
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        // handleBlock is called for the table (fast path not taken — mutated paragraph inside),
+        // and again for the mutated paragraph inside the cell (via handleTable → blockGroupChildren)
+        expect(handleBlock).toHaveBeenCalledTimes(2);
+        expect(handleBlock).toHaveBeenCalledWith(document, parent, group.blocks[0], context, table);
+    });
+
+    it('fast path: skips handleBlock for a fully-cached FormatContainer', () => {
+        context.rewriteMutatedBlocksOnly = true;
+
+        const bq = document.createElement('blockquote');
+        const div = document.createElement('div');
+        div.textContent = 'inside';
+        bq.appendChild(div);
+        parent.appendChild(bq);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        context.onNodeCreated = onNodeCreated;
+
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [],
+                            cachedElement: div,
+                        },
+                    ],
+                    cachedElement: bq,
+                },
+            ],
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.firstChild).toBe(bq);
+        // handleBlock must NOT be called (fully cached container)
+        expect(handleBlock).not.toHaveBeenCalled();
+        // onNodeCreated must still be called for the container
+        expect(onNodeCreated).toHaveBeenCalledWith(group.blocks[0], bq);
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [],
+            removedBlockElements: [],
+        });
+    });
+
     it('Allow list cache: clean up node stack at the end', () => {
         const group = createContentModelDocument();
         const paragraph = createParagraph();

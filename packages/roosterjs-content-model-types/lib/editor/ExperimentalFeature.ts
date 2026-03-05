@@ -61,4 +61,11 @@ export type ExperimentalFeature =
     /**
      * Transform the table border colors when switching from light to dark mode
      */
-    | 'TransformTableBorderColors';
+    | 'TransformTableBorderColors'
+
+    /**
+     * When writing back content model to DOM, skip blocks that are fully cached (not mutated)
+     * instead of re-running their handlers. This improves performance for large documents where
+     * only a small portion of the model changes between edits.
+     */
+    | 'RewriteMutatedBlocksOnly';
