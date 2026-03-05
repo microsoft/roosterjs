@@ -1,4 +1,5 @@
 import { isElementOfType } from '../../domUtils/isElementOfType';
+import { stripInvisibleUnicode } from '../../domUtils/stripInvisibleUnicode';
 import type { FormatHandler } from '../FormatHandler';
 import type { LinkFormat } from 'roosterjs-content-model-types';
 
@@ -21,7 +22,13 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
             }
 
             if (href) {
-                format.href = href;
+                // Defense-in-depth: strip invisible Unicode even if already handled elsewhere
+                const sanitizedHref = stripInvisibleUnicode(href);
+
+                // Drop the link entirely if href was only invisible characters
+                if (sanitizedHref) {
+                    format.href = sanitizedHref;
+                }
             }
 
             if (target) {

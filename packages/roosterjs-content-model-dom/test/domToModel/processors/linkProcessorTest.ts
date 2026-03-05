@@ -434,4 +434,69 @@ describe('linkProcessor', () => {
             dataset: {},
         });
     });
+
+    it('Anchor element with invisible Unicode in href', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.setAttribute('href', 'mailto:\u200Buser@example.com');
+        a.textContent = 'Send email';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { href: 'mailto:user@example.com', underline: true },
+                                dataset: {},
+                            },
+                            text: 'Send email',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Anchor element with Unicode Tags in href', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        // U+E0061 = \uDB40\uDC61 (Tag Latin Small Letter A)
+        a.setAttribute('href', 'mailto:\uDB40\uDC61user@example.com');
+        a.textContent = 'Click';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { href: 'mailto:user@example.com', underline: true },
+                                dataset: {},
+                            },
+                            text: 'Click',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

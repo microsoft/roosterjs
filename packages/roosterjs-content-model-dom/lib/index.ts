@@ -118,6 +118,7 @@ export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/e
 export { getNodePositionFromEvent } from './domUtils/event/getNodePositionFromEvent';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
+export { stripInvisibleUnicode } from './domUtils/stripInvisibleUnicode';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
 export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
