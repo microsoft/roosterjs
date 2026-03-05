@@ -7,8 +7,6 @@ import { stripInvisibleUnicode } from 'roosterjs-content-model-dom';
  * @remarks This function strips invisible Unicode characters (zero-width chars, Unicode Tags, etc.)
  * and checks for patterns like s\nc\nr\ni\np\nt: to prevent XSS attacks. This may block some valid links,
  * but it is necessary for security reasons. We treat the word "script" as safe if there are "/" before it.
- * Note: URL-encoded invisible characters (e.g. %E2%80%8B) are not handled here; callers are
- * responsible for decoding percent-encoded input before calling this function.
  */
 export function checkXss(link: string): string {
     // Defense-in-depth: strip invisible Unicode even if already handled elsewhere
