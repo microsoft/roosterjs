@@ -1,4 +1,5 @@
 import { isElementOfType } from '../../domUtils/isElementOfType';
+import { stripInvisibleUnicode } from '../../domUtils/stripInvisibleUnicode';
 import type { FormatHandler } from '../FormatHandler';
 import type { LinkFormat } from 'roosterjs-content-model-types';
 
@@ -21,7 +22,7 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
             }
 
             if (href) {
-                format.href = href;
+                format.href = stripInvisibleUnicode(href);
             }
 
             if (target) {

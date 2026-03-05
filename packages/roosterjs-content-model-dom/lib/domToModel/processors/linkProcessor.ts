@@ -3,6 +3,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { knownElementProcessor } from './knownElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import { stripInvisibleUnicode } from '../../domUtils/stripInvisibleUnicode';
 import type { StackFormatOptions } from '../utils/stackFormat';
 import type { ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -11,7 +12,8 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
  */
 export const linkProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const name = element.getAttribute('name');
-    const href = element.getAttribute('href');
+    const rawHref = element.getAttribute('href');
+    const href = rawHref ? stripInvisibleUnicode(rawHref) : rawHref;
 
     if (name || href) {
         const isAnchor = !!name && !href;

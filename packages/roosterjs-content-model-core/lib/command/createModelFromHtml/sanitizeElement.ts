@@ -1,4 +1,4 @@
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { isNodeOfType, stripInvisibleUnicode } from 'roosterjs-content-model-dom';
 import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
 /**
@@ -344,7 +344,7 @@ export function createSanitizedElement(
             newValue !== undefined &&
             !newValue.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
         ) {
-            element.setAttribute(name, newValue);
+            element.setAttribute(name, name == 'href' ? stripInvisibleUnicode(newValue) : newValue);
         }
     }
 
