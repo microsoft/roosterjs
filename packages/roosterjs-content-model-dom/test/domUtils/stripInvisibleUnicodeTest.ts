@@ -177,4 +177,31 @@ describe('stripInvisibleUnicode', () => {
             'mailto:user@example.com'
         );
     });
+
+    it('should strip Mongolian free variation selectors (U+180B-U+180D)', () => {
+        expect(stripInvisibleUnicode('mailto:\u180B\u180C\u180Duser@example.com')).toBe(
+            'mailto:user@example.com'
+        );
+    });
+
+    it('should strip interlinear annotation anchors (U+FFF9-U+FFFB)', () => {
+        expect(stripInvisibleUnicode('mailto:\uFFF9\uFFFA\uFFFBuser@example.com')).toBe(
+            'mailto:user@example.com'
+        );
+    });
+
+    it('should strip extended Unicode Tags beyond U+E007F (U+E0080-U+E00FF)', () => {
+        // U+E0080 = surrogate pair \uDB40\uDC80
+        // U+E00FF = surrogate pair \uDB40\uDCFF
+        expect(stripInvisibleUnicode('mailto:\uDB40\uDC80\uDB40\uDCFFuser@example.com')).toBe(
+            'mailto:user@example.com'
+        );
+    });
+
+    it('should not strip URL-encoded invisible characters (caller must decode first)', () => {
+        // %E2%80%8B is the URL-encoded form of U+200B (zero-width space)
+        // This documents the known limitation: callers should decode before calling
+        const link = 'mailto:%E2%80%8Buser@example.com';
+        expect(stripInvisibleUnicode(link)).toBe(link);
+    });
 });

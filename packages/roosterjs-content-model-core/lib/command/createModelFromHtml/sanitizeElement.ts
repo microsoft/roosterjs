@@ -340,6 +340,7 @@ export function createSanitizedElement(
                 : null;
 
         if (newValue !== null && newValue !== undefined) {
+            // Defense-in-depth: strip invisible Unicode from href even if already handled elsewhere
             const valueToSet = name === 'href' ? stripInvisibleUnicode(newValue) : newValue;
 
             if (

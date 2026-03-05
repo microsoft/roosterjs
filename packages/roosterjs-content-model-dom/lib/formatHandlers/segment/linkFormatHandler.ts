@@ -22,8 +22,10 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
             }
 
             if (href) {
+                // Defense-in-depth: strip invisible Unicode even if already handled elsewhere
                 const sanitizedHref = stripInvisibleUnicode(href);
 
+                // Drop the link entirely if href was only invisible characters
                 if (sanitizedHref) {
                     format.href = sanitizedHref;
                 }

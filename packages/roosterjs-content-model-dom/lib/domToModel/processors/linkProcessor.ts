@@ -13,6 +13,7 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
 export const linkProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const name = element.getAttribute('name');
     const rawHref = element.getAttribute('href');
+    // Defense-in-depth: strip invisible Unicode even if already handled elsewhere
     const href = rawHref ? stripInvisibleUnicode(rawHref) : rawHref;
 
     if (name || href) {
