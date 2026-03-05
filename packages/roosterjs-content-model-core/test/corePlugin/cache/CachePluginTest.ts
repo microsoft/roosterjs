@@ -501,14 +501,14 @@ describe('CachePlugin', () => {
             });
 
             expect(state).toEqual({
-                cachedModel: undefined,
+                cachedModel: model,
                 cachedSelection: undefined,
                 paragraphMap: mockedParagraphMap,
                 domIndexer: new DomIndexerImpl(),
                 textMutationObserver: mockedObserver,
             });
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
-            expect(resetMapSpy).toHaveBeenCalledTimes(1);
+            expect(resetMapSpy).not.toHaveBeenCalled();
         });
 
         it('No domIndexer, has model in event', () => {

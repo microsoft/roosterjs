@@ -59,6 +59,7 @@ class TextMutationObserverImpl implements TextMutationObserver {
                 continue;
             } else if (!includedNodes.has(target)) {
                 if (
+                    !this.domHelper.isNodeInEditor(target) ||
                     findClosestEntityWrapper(target, this.domHelper) ||
                     findClosestBlockEntityContainer(target, this.domHelper)
                 ) {

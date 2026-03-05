@@ -64,6 +64,7 @@ export { LegacyTableBorderFormat } from './contentModel/format/formatParts/Legac
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
+export { TableSpecialCellMetadataFormat } from './contentModel/format/metadata/TableSpecialCellMetadataFormat';
 export { ListMetadataFormat } from './contentModel/format/metadata/ListMetadataFormat';
 export {
     ImageResizeMetadataFormat,
