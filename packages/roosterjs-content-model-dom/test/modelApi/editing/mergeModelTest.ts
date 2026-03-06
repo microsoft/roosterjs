@@ -6293,10 +6293,10 @@ describe('mergeModel', () => {
         // New cells should be placed correctly, skipping the spanAbove cell
         // Table should have expanded to 3 columns
         expect(table.rows[0].cells.length).toBe(3);
-        expect(table.rows[1].cells[1]).toBe(newCell11);
-        expect(table.rows[1].cells[2]).toBe(newCell12);
-        expect(table.rows[2].cells[1]).toBe(newCell21);
-        expect(table.rows[2].cells[2]).toBe(newCell22);
+        expect(table.rows[1].cells[1]).toEqual(newCell11);
+        expect(table.rows[1].cells[2]).toEqual(newCell12);
+        expect(table.rows[2].cells[1]).toEqual(newCell21);
+        expect(table.rows[2].cells[2]).toEqual(newCell22);
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
     });
 

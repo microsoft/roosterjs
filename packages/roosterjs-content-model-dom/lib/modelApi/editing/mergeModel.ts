@@ -241,25 +241,28 @@ function mergeTables(
 
         for (let i = 0; i < newTable.rows.length; i++) {
             const targetRowIndex = getTargetRowIndex(table, rowIndex, i, colIndex);
+            if (table.rows[targetRowIndex]) {
+                for (let j = 0; j < newTable.rows[i].cells.length; j++) {
+                    const newCell = newTable.rows[i].cells[j];
 
-            for (let j = 0; j < newTable.rows[i].cells.length; j++) {
-                const newCell = newTable.rows[i].cells[j];
+                    const targetColIndex = getTargetColIndex(table, targetRowIndex, colIndex, j);
 
-                const targetColIndex = getTargetColIndex(table, targetRowIndex, colIndex, j);
+                    const oldCell = table.rows[targetRowIndex]?.cells[targetColIndex];
 
-                const oldCell = table.rows[targetRowIndex]?.cells[targetColIndex];
+                    if (table.rows[targetRowIndex].cells[targetColIndex]) {
+                        table.rows[targetRowIndex].cells[targetColIndex] = newCell;
 
-                table.rows[targetRowIndex].cells[targetColIndex] = newCell;
+                        if (i == 0 && j == 0) {
+                            const newMarker = createSelectionMarker(marker.format);
+                            const newPara = addSegment(newCell, newMarker);
 
-                if (i == 0 && j == 0) {
-                    const newMarker = createSelectionMarker(marker.format);
-                    const newPara = addSegment(newCell, newMarker);
-
-                    if (markerPosition.path[0] == oldCell) {
-                        // Update insert point to match the change result
-                        markerPosition.path[0] = newCell;
-                        markerPosition.marker = newMarker;
-                        markerPosition.paragraph = newPara;
+                            if (markerPosition.path[0] == oldCell) {
+                                // Update insert point to match the change result
+                                markerPosition.path[0] = newCell;
+                                markerPosition.marker = newMarker;
+                                markerPosition.paragraph = newPara;
+                            }
+                        }
                     }
                 }
             }
@@ -547,8 +550,10 @@ function getTargetColIndex(
         targetColIndex++;
 
         if (targetColIndex >= row.cells.length) {
-            logicalCellsToSkip--;
-        } else if (!row.cells[targetColIndex].spanLeft) {
+            return targetColIndex + logicalCellsToSkip - 1;
+        }
+
+        if (!row.cells[targetColIndex].spanLeft) {
             logicalCellsToSkip--;
         }
     }
@@ -567,15 +572,15 @@ function getTargetRowIndex(
     }
 
     let targetRowIndex = startRowIndex;
-    let logicalRowsToSkip = offset;
 
-    while (logicalRowsToSkip > 0) {
+    for (let i = 0; i < offset; i++) {
         targetRowIndex++;
 
-        if (targetRowIndex >= table.rows.length) {
-            logicalRowsToSkip--;
-        } else if (!table.rows[targetRowIndex]?.cells[colIndex]?.spanAbove) {
-            logicalRowsToSkip--;
+        while (
+            targetRowIndex < table.rows.length &&
+            table.rows[targetRowIndex].cells[colIndex]?.spanAbove
+        ) {
+            targetRowIndex++;
         }
     }
 
