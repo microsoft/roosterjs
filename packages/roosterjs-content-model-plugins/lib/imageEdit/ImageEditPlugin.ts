@@ -688,7 +688,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     public canRegenerateImage(image: HTMLImageElement): boolean {
-        return canRegenerateImage(image);
+        return canRegenerateImage(image, this.options.resolveImageSource);
     }
 
     private startCropMode(editor: IEditor, image: HTMLImageElement, isRTL: boolean) {
