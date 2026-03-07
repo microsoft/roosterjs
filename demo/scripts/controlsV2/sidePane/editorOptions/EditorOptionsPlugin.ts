@@ -72,6 +72,7 @@ const initialState: OptionState = {
     experimentalFeatures: new Set<ExperimentalFeature>([
         'HandleEnterKey',
         'CloneIndependentRoot',
+        'ImageEditV2',
         'CacheList',
         'TransformTableBorderColors',
     ]),

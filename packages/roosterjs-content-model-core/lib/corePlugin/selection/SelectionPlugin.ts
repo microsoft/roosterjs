@@ -186,6 +186,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // Image selection
         if (
+            !editor.isExperimentalFeatureEnabled('ImageEditV2') &&
             selection?.type == 'image' &&
             (rawEvent.button == MouseLeftButton ||
                 (rawEvent.button == MouseRightButton &&
@@ -739,6 +740,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
             const selection = this.editor.getDocument().getSelection();
+
             if (selection && selection.focusNode) {
                 const image = isSingleImageInSelection(selection);
                 if (newSelection?.type == 'image' && !image) {
