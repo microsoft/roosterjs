@@ -30,14 +30,36 @@ export function createMarkdownBlockGroup(
             }
             break;
         case 'FormatContainer':
-            markdownString += createMarkdownBlockQuote(blockGroup, newLinePattern, listCounter);
-            break;
-        default:
-            const { blocks } = blockGroup;
-            for (const block of blocks) {
-                markdownString += createMarkdownBlock(block, newLinePattern, listCounter);
+            if (blockGroup.tagName == 'blockquote') {
+                markdownString += createMarkdownBlockQuote(blockGroup, newLinePattern, listCounter);
+            } else {
+                markdownString += createDefaultMarkdownString(
+                    blockGroup,
+                    newLinePattern,
+                    listCounter
+                );
             }
             break;
+        default:
+            markdownString += createDefaultMarkdownString(blockGroup, newLinePattern, listCounter);
+            break;
+    }
+    return markdownString;
+}
+
+function createDefaultMarkdownString(
+    blockGroup: ContentModelBlockGroup,
+    newLinePattern: MarkdownLineBreaks,
+    listCounter: ListCounter
+): string {
+    let markdownString = '';
+    const { blocks } = blockGroup;
+    for (const block of blocks) {
+        markdownString += createMarkdownBlock(block, newLinePattern, listCounter, {
+            table: newLinePattern.newLine,
+            paragraph: newLinePattern.lineBreak,
+            divider: newLinePattern.lineBreak,
+        });
     }
     return markdownString;
 }
@@ -92,17 +114,14 @@ function createMarkdownBlockQuote(
     listCounter: ListCounter
 ): string {
     let markdownString = '';
-    if (blockquote.tagName == 'blockquote') {
-        const { blocks } = blockquote;
-        for (const block of blocks) {
-            markdownString +=
-                '> ' +
-                createMarkdownBlock(block, newLinePattern, listCounter, undefined /* newLines */, {
-                    ignoreLineBreaks: true,
-                }) +
-                newLinePattern.newLine;
-        }
+    const { blocks } = blockquote;
+    for (const block of blocks) {
+        markdownString +=
+            '> ' +
+            createMarkdownBlock(block, newLinePattern, listCounter, undefined /* newLines */, {
+                ignoreLineBreaks: true,
+            }) +
+            newLinePattern.newLine;
     }
-
     return `${markdownString}\n`;
 }
