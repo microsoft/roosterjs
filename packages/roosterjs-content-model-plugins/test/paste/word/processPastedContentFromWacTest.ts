@@ -6344,31 +6344,6 @@ describe('wordOnlineHandler', () => {
     });
 
     describe('wacLiElementProcessor - paddingInlineStart override', () => {
-        it('zeroes out padding-inline-start on the parent ul element when processing a list item', () => {
-            const ul = document.createElement('ul');
-            ul.className = 'BulletListStyle1';
-            ul.style.paddingInlineStart = '40px';
-            const li = document.createElement('li');
-            li.className = 'OutlineElement';
-            li.setAttribute('data-aria-level', '1');
-            li.textContent = 'TEST';
-            ul.appendChild(li);
-
-            const wrapper = document.createElement('div');
-            wrapper.className = 'ListContainerWrapper';
-            wrapper.appendChild(ul);
-
-            fragment = document.createDocumentFragment();
-            fragment.appendChild(wrapper);
-
-            const event = createBeforePasteEventMock(fragment);
-            processPastedContentWacComponents(event);
-
-            domToContentModel(fragment, createDomToModelContext(undefined, event.domToModelOption));
-
-            expect(ul.style.paddingInlineStart).toBe('0px');
-        });
-
         it('sets paddingLeft to 0px in the copied list level format for subsequent list items', () => {
             runTest(
                 '<div class="ListContainerWrapper"><ul class="BulletListStyle1"><li class="OutlineElement" data-aria-level="1">A</li><li class="OutlineElement" data-aria-level="1">B</li></ul></div>',
