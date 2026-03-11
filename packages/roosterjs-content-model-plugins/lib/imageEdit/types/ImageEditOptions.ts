@@ -62,4 +62,23 @@ export interface ImageEditOptions {
      * @default resizeAndRotate
      */
     onSelectState?: ImageEditOperation[];
+
+    /**
+     * Optional callback to resolve an image `src` into a canvas-safe URL (e.g., a data URL).
+     * Use this when the original image source (e.g., cid: protocol URLs) cannot be drawn on a canvas.
+     *
+     * Return `undefined` to keep the original source.
+     *
+     * If you need to map the edited URL back to the original protocol, handle the `editImage`
+     * event and replace the new src as appropriate.
+     *
+     * @example
+     * ```typescript
+     * new ImageEditPlugin({
+     *     resolveImageSource: src =>
+     *         src.startsWith('cid:') ? getBase64DataFromCid(src) : undefined,
+     * });
+     * ```
+     */
+    resolveImageSource?: (src: string) => string | undefined;
 }
