@@ -36,7 +36,7 @@ export function createImageWrapper(
     htmlOptions: ImageHtmlOptions,
     operation: ImageEditOperation[]
 ): WrapperElements {
-    const imageClone = cloneImage(image, editInfo);
+    const imageClone = cloneImage(image, editInfo, options.resolveImageSource);
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
@@ -136,11 +136,15 @@ const createBorder = (editor: IEditor, borderColor?: string) => {
     return resizeBorder;
 };
 
-const cloneImage = (image: HTMLImageElement, editInfo: ImageMetadataFormat) => {
+const cloneImage = (
+    image: HTMLImageElement,
+    editInfo: ImageMetadataFormat,
+    resolveImageSource?: (src: string) => string | undefined
+) => {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
     if (editInfo.src) {
-        imageClone.src = editInfo.src;
+        imageClone.src = resolveImageSource?.(editInfo.src) ?? editInfo.src;
         imageClone.removeAttribute('id');
         imageClone.style.removeProperty('max-width');
         imageClone.style.removeProperty('max-height');

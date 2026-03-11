@@ -2675,4 +2675,356 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<div style="direction: rtl;">test</div>'
         );
     });
+
+    it('Link with bold', () => {
+        runTest(
+            '<a href="http://www.bing.com" style="font-weight: bold;">www.bing.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { fontWeight: 'bold' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><b>www.bing.com</b></a>'
+        );
+    });
+
+    it('Link with partial bold', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<b>bing</b>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { fontWeight: 'bold' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<b>bing</b>.com</a>'
+        );
+    });
+
+    it('Link with italic', () => {
+        runTest(
+            '<i><a href="http://www.bing.com">www.bing.com</a></i>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { italic: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><i>www.bing.com</i></a>'
+        );
+    });
+
+    it('Link with partial italic', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<i>bing</i>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { italic: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<i>bing</i>.com</a>'
+        );
+    });
+
+    it('Link with underline', () => {
+        runTest(
+            '<a href="http://www.bing.com"><u>www.bing.com</u></a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { underline: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><u>www.bing.com</u></a>'
+        );
+    });
+
+    it('Link with partial underline', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<u>bing</u>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { underline: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<u>bing</u>.com</a>'
+        );
+    });
+
+    it('Link with partial no underline', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.</a><a href="http://www.bing.com" style="text-decoration: none">bing</a><a href="http://www.bing.com">.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { underline: false },
+                                link: {
+                                    format: {
+                                        underline: false,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.</a><a href="http://www.bing.com" style="text-decoration: none;">bing</a><a href="http://www.bing.com">.com</a>'
+        );
+    });
+
+    it('Link with superscript', () => {
+        runTest(
+            '<sup><a href="http://www.bing.com">www.bing.com</a></sup>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { superOrSubScriptSequence: 'super' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<sup><a href="http://www.bing.com">www.bing.com</a></sup>'
+        );
+    });
 });
