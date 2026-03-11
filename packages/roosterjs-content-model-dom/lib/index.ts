@@ -70,6 +70,7 @@ export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
+export { sanitizeInvisibleUnicode } from './modelApi/common/sanitizeInvisibleUnicode';
 export { isGeneralSegment } from './modelApi/typeCheck/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';

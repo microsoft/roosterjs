@@ -1,4 +1,4 @@
-import { isNodeOfType, stripInvisibleUnicode } from 'roosterjs-content-model-dom';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
 /**
@@ -339,15 +339,12 @@ export function createSanitizedElement(
                 ? value
                 : null;
 
-        if (newValue !== null && newValue !== undefined) {
-            // Defense-in-depth: strip invisible Unicode from href even if already handled elsewhere
-            const valueToSet = name === 'href' ? stripInvisibleUnicode(newValue) : newValue;
-
-            if (
-                !valueToSet.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
-            ) {
-                element.setAttribute(name, valueToSet);
-            }
+        if (
+            newValue !== null &&
+            newValue !== undefined &&
+            !newValue.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
+        ) {
+            element.setAttribute(name, newValue);
         }
     }
 
