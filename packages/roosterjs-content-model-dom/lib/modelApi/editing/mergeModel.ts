@@ -239,13 +239,43 @@ function mergeTables(
             }
         }
 
+        const logicalRowOffsets: number[] = [];
+        let logicalRowCount = 0;
+        for (let i = 0; i < newTableRowCount; i++) {
+            logicalRowOffsets[i] = logicalRowCount;
+            const row = newTable.rows[i];
+            if (row && row.cells.some(cell => !cell.spanAbove)) {
+                logicalRowCount++;
+            }
+        }
+
         for (let i = 0; i < newTable.rows.length; i++) {
-            const targetRowIndex = getTargetRowIndex(table, rowIndex, i, colIndex);
+            const sourceRow = newTable.rows[i];
+            const targetRowIndex = getTargetRowIndex(
+                table,
+                rowIndex,
+                logicalRowOffsets[i],
+                colIndex
+            );
+
+            const logicalColOffsets: number[] = [];
+            let logicalColCount = 0;
+            for (let j = 0; j < sourceRow.cells.length; j++) {
+                logicalColOffsets[j] = logicalColCount;
+                if (!sourceRow.cells[j]?.spanLeft) {
+                    logicalColCount++;
+                }
+            }
 
             for (let j = 0; j < newTable.rows[i].cells.length; j++) {
-                const newCell = newTable.rows[i].cells[j];
+                const newCell = sourceRow.cells[j];
 
-                const targetColIndex = getTargetColIndex(table, targetRowIndex, colIndex, j);
+                const targetColIndex = getTargetColIndex(
+                    table,
+                    targetRowIndex,
+                    colIndex,
+                    logicalColOffsets[j]
+                );
 
                 const oldCell = table.rows[targetRowIndex]?.cells[targetColIndex];
 
