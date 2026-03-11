@@ -584,7 +584,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                       doc,
                       editor.getDOMHelper(),
                       cursorRect.left,
-                      isKeyUp ? rect.top - 1 : rect.top + 1
+                      isKeyUp ? rect.top : rect.top + 1
                   )
                 : null;
         return textOffset;
