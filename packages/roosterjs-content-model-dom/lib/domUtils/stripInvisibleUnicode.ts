@@ -7,8 +7,6 @@ const INVISIBLE_UNICODE_REGEX =
  * This removes zero-width characters, bidirectional marks, Unicode Tags (U+E0001-U+E00FF),
  * interlinear annotation anchors, Mongolian free variation selectors,
  * and other invisible formatting characters that can be used to hide content in links.
- * Percent-encoded invisible characters (e.g. %E2%80%8B for U+200B) are also handled
- * by decoding the string first.
  *
  * @remarks This function strips ZWJ (U+200D) which may affect emoji sequences.
  * It should only be applied to href attributes, not to visible text content.
@@ -16,14 +14,5 @@ const INVISIBLE_UNICODE_REGEX =
  * @returns The string with invisible characters removed
  */
 export function stripInvisibleUnicode(value: string): string {
-    let decoded: string;
-
-    try {
-        decoded = decodeURIComponent(value);
-    } catch {
-        // If decoding fails (malformed percent-encoding), use the original value
-        decoded = value;
-    }
-
-    return decoded.replace(INVISIBLE_UNICODE_REGEX, '');
+    return value.replace(INVISIBLE_UNICODE_REGEX, '');
 }

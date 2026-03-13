@@ -178,7 +178,8 @@ describe('sanitizeInvisibleUnicode', () => {
         expect(model.blocks.length).toBe(0);
     });
 
-    it('should strip URL-encoded invisible Unicode from link href', () => {
+    it('should not modify URL-encoded sequences in link href', () => {
+        const href = 'mailto:%E2%80%8Buser@example.com';
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
@@ -192,7 +193,7 @@ describe('sanitizeInvisibleUnicode', () => {
                             text: 'Click',
                             link: {
                                 format: {
-                                    href: 'mailto:%E2%80%8Buser@example.com',
+                                    href: href,
                                     underline: true,
                                 },
                                 dataset: {},
@@ -205,9 +206,7 @@ describe('sanitizeInvisibleUnicode', () => {
 
         sanitizeInvisibleUnicode(model);
 
-        expect((model.blocks[0] as any).segments[0].link.format.href).toBe(
-            'mailto:user@example.com'
-        );
+        expect((model.blocks[0] as any).segments[0].link.format.href).toBe(href);
     });
 
     it('should handle nested block groups (e.g. list items)', () => {

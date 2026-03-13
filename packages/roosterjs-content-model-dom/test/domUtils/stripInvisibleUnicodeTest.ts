@@ -198,31 +198,9 @@ describe('stripInvisibleUnicode', () => {
         );
     });
 
-    it('should strip URL-encoded zero-width space (%E2%80%8B = U+200B)', () => {
+    it('should not modify URL-encoded sequences (percent-encoded content is preserved as-is)', () => {
+        // %E2%80%8B is URL-encoded U+200B - we do not decode, as the content may be intentional
         const link = 'mailto:%E2%80%8Buser@example.com';
-        expect(stripInvisibleUnicode(link)).toBe('mailto:user@example.com');
-    });
-
-    it('should strip URL-encoded bidirectional override (%E2%80%AE = U+202E)', () => {
-        const link = 'mailto:%E2%80%AEuser@example.com';
-        expect(stripInvisibleUnicode(link)).toBe('mailto:user@example.com');
-    });
-
-    it('should strip mixed raw and URL-encoded invisible characters', () => {
-        const link = 'mailto:\u200B%E2%80%8Cuser@example.com';
-        expect(stripInvisibleUnicode(link)).toBe('mailto:user@example.com');
-    });
-
-    it('should handle malformed percent-encoding gracefully', () => {
-        const link = 'mailto:%E2%80user@example.com';
-        expect(stripInvisibleUnicode(link)).toBe('mailto:%E2%80user@example.com');
-    });
-
-    it('should strip URL-encoded invisible chars from mailto subject and body', () => {
-        const link =
-            'mailto:user@example.com?subject=Hello%E2%80%8BWorld&body=Test%E2%80%8CContent';
-        expect(stripInvisibleUnicode(link)).toBe(
-            'mailto:user@example.com?subject=HelloWorld&body=TestContent'
-        );
+        expect(stripInvisibleUnicode(link)).toBe(link);
     });
 });
