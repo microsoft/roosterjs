@@ -12,7 +12,7 @@ import type {
     TableMetadataFormat,
 } from 'roosterjs-content-model-types';
 
-const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
+const DEFAULT_FORMAT: TableMetadataFormat = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -48,7 +48,7 @@ export function applyTableFormat(
     const { rows } = mutableTable;
 
     updateTableMetadata(mutableTable, format => {
-        const effectiveMetadata = {
+        const effectiveMetadata: TableMetadataFormat = {
             ...DEFAULT_FORMAT,
             ...format,
             ...newFormat,
@@ -169,7 +169,14 @@ function formatCells(
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
-    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven, hasFirstColumn } = format;
+    const {
+        hasBandedRows,
+        hasBandedColumns,
+        bgColorOdd,
+        bgColorEven,
+        hasFirstColumn,
+        hasHeaderRow,
+    } = format;
 
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((readonlyCell, colIndex) => {
@@ -207,18 +214,16 @@ function formatCells(
 
             // Format Background Color
             if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
-                let color: string | null | undefined;
-                if (hasFirstColumn && colIndex == 0 && rowIndex > 0) {
-                    color = null;
-                } else {
-                    color =
-                        hasBandedRows || hasBandedColumns
-                            ? (hasBandedColumns && colIndex % 2 != 0) ||
-                              (hasBandedRows && rowIndex % 2 != 0)
-                                ? bgColorOdd
-                                : bgColorEven
-                            : bgColorEven; /* bgColorEven is the default color */
-                }
+                const bandedColumnMod = hasFirstColumn ? 0 : 1;
+                const bandedRowMod = hasHeaderRow ? 0 : 1;
+                const color =
+                    hasBandedRows || hasBandedColumns
+                        ? (hasBandedColumns && colIndex % 2 != bandedColumnMod) ||
+                          (hasBandedRows && rowIndex % 2 != bandedRowMod)
+                            ? bgColorOdd
+                            : bgColorEven
+                        : bgColorEven; /* bgColorEven is the default color */
+
                 setTableCellBackgroundColor(
                     cell,
                     color,
@@ -247,6 +252,8 @@ export function setFirstColumnFormatBorders(
     rows: ShallowMutableContentModelTableRow[],
     format: Partial<TableMetadataFormat>
 ) {
+    const customStyles = format.hasFirstColumn ? format.firstColumnCustomStyles : undefined;
+
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((readonlyCell, cellIndex) => {
             const cell = mutateBlock(readonlyCell);
@@ -256,13 +263,56 @@ export function setFirstColumnFormatBorders(
                     cell.isHeader = !!format.hasHeaderRow;
                 }
 
+                if (format.hasFirstColumn && customStyles) {
+                    setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
+
+                    setBorderColorIfExists(cell.format, 'borderTop', customStyles.borderTopColor);
+                    setBorderColorIfExists(
+                        cell.format,
+                        'borderRight',
+                        customStyles.borderRightColor
+                    );
+                    setBorderColorIfExists(
+                        cell.format,
+                        'borderBottom',
+                        customStyles.borderBottomColor
+                    );
+                    setBorderColorIfExists(cell.format, 'borderLeft', customStyles.borderLeftColor);
+                    if (customStyles.backgroundColor) {
+                        setTableCellBackgroundColor(
+                            cell,
+                            customStyles.backgroundColor,
+                            false /*isColorOverride*/,
+                            true /*applyToSegments*/
+                        );
+                    }
+                }
+
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {
                         for (const segment of block.segments) {
                             mutateSegment(block, segment, cellSegment => {
                                 if (format.hasFirstColumn) {
-                                    cellSegment.format.fontWeight = 'bold';
-                                    cell.format.fontWeight = 'bold';
+                                    setStyleIfDefined(
+                                        cellSegment.format,
+                                        'fontWeight',
+                                        customStyles?.fontWeight ?? 'bold'
+                                    );
+                                    setStyleIfDefined(
+                                        cell.format,
+                                        'textAlign',
+                                        customStyles?.textAlign
+                                    );
+                                    setStyleIfDefined(
+                                        cell.format,
+                                        'fontWeight',
+                                        customStyles?.fontWeight ?? 'bold'
+                                    );
+                                    setStyleIfDefined(
+                                        cellSegment.format,
+                                        'italic',
+                                        customStyles?.italic
+                                    );
                                 } else if (
                                     cellSegment.format.fontWeight == 'bold' &&
                                     cell.format.fontWeight == 'bold'
@@ -279,23 +329,35 @@ export function setFirstColumnFormatBorders(
     });
 }
 
+function setBorderColorIfExists(format: BorderFormat, key: keyof BorderFormat, value?: string) {
+    if (value !== undefined) {
+        setBorderColor(format, key, value);
+    }
+}
+
+function setStyleIfDefined<T, K extends keyof T>(format: T, key: K, value: T[K] | undefined) {
+    if (value !== undefined) {
+        format[key] = value;
+    }
+}
+
 function setHeaderRowFormat(
     rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
     metaOverrides: MetaOverrides
 ) {
-    // Exit early if hasHeaderRow is not set
     if (!format.hasHeaderRow) {
         return;
     }
 
     const rowIndex = 0;
+    const customStyles = format.headerRowCustomStyles;
 
     rows[rowIndex]?.cells.forEach((readonlyCell, cellIndex) => {
         const cell = mutateBlock(readonlyCell);
 
         cell.isHeader = true;
-        cell.format.fontWeight = 'bold';
+        cell.format.fontWeight = customStyles?.fontWeight ?? 'bold';
 
         if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
@@ -306,10 +368,39 @@ function setHeaderRowFormat(
                     true /*applyToSegments*/
                 );
             }
+            setBorderColor(
+                cell.format,
+                'borderTop',
+                customStyles?.borderTopColor ?? format.headerRowColor
+            );
+            setBorderColor(
+                cell.format,
+                'borderRight',
+                customStyles?.borderRightColor ?? format.headerRowColor
+            );
+            setBorderColor(
+                cell.format,
+                'borderLeft',
+                customStyles?.borderLeftColor ?? format.headerRowColor
+            );
+        }
 
-            setBorderColor(cell.format, 'borderTop', format.headerRowColor);
-            setBorderColor(cell.format, 'borderRight', format.headerRowColor);
-            setBorderColor(cell.format, 'borderLeft', format.headerRowColor);
+        if (customStyles) {
+            setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
+            setBorderColorIfExists(cell.format, 'borderBottom', customStyles.borderBottomColor);
+            for (const block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    for (const segment of block.segments) {
+                        mutateSegment(block, segment, cellSegment => {
+                            if (customStyles.italic) {
+                                cellSegment.format.italic = customStyles.italic;
+                            } else if (cellSegment.format.italic) {
+                                delete cellSegment.format.italic;
+                            }
+                        });
+                    }
+                }
+            }
         }
     });
 }
