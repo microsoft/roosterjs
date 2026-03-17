@@ -109,12 +109,16 @@ const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'fontSize',
 ];
 
-const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+const sizeNeutralElementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'strike',
     'underline',
-    'superOrSubScript',
     'italic',
     'bold',
+];
+
+const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    ...sizeNeutralElementBasedSegmentFormats,
+    'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
@@ -142,7 +146,8 @@ export const defaultFormatKeysPerCategory: {
     listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    elementBasedSegment: elementBasedSegmentFormats,
+    elementBasedSegment: sizeNeutralElementBasedSegmentFormats,
+    superOrSubScript: ['superOrSubScript'],
     segment: [
         ...styleBasedSegmentFormats,
         ...elementBasedSegmentFormats,
