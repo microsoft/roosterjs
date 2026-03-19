@@ -66,6 +66,7 @@ function createModelToDomFormatContext(): ModelToDomFormatContext {
         listFormat: {
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         },
         implicitFormat: {},
     };

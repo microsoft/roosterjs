@@ -217,6 +217,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         });
     });
 
@@ -232,6 +233,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         });
     });
 
@@ -267,6 +269,7 @@ describe('listItemThreadFormatHandler.parse', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -302,6 +305,7 @@ describe('listItemThreadFormatHandler.parse', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -339,6 +343,7 @@ describe('listItemThreadFormatHandler.parse', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -384,6 +389,7 @@ describe('listItemThreadFormatHandler.parse', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -414,6 +420,7 @@ describe('listItemThreadFormatHandler.parse', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 });
