@@ -21,6 +21,7 @@ describe('createModelToDomContext', () => {
             listFormat: {
                 threadItemCounts: [],
                 nodeStack: [],
+                currentLevel: 0,
             },
             implicitFormat: {},
             modelHandlers: defaultContentModelHandlers,
@@ -54,6 +55,7 @@ describe('createModelToDomContext', () => {
             listFormat: {
                 threadItemCounts: [],
                 nodeStack: [],
+                currentLevel: 0,
             },
             implicitFormat: {},
             modelHandlers: defaultContentModelHandlers,
@@ -122,6 +124,7 @@ describe('createModelToDomContext', () => {
             listFormat: {
                 threadItemCounts: [],
                 nodeStack: [],
+                currentLevel: 0,
             },
             implicitFormat: {},
             modelHandlers: {

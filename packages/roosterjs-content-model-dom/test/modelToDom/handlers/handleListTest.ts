@@ -39,6 +39,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -60,6 +61,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -89,6 +91,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -120,6 +123,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -155,6 +159,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -196,6 +201,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -239,6 +245,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -273,6 +280,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -315,6 +323,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -361,6 +370,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 });
@@ -469,6 +479,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -512,6 +523,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(result).toBe(br);
     });
@@ -611,6 +623,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(listItem.levels[0].format.listStyleType).toBe('disc');
     });
@@ -701,6 +714,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(listItem.levels[0].format.listStyleType).toBe('disc');
     });
@@ -748,6 +762,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).not.toHaveBeenCalled();
         expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
@@ -789,6 +804,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).toHaveBeenCalledWith(
             parent,
@@ -836,6 +852,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).toHaveBeenCalledWith(
             parent,
@@ -884,6 +901,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(listItem.levels[0].cachedElement).toBe(cachedUL);
@@ -939,6 +957,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(listItem.levels[0].cachedElement).toBe(cachedOL);
         expect(listItem.levels[1].cachedElement).toBe(cachedUL);
@@ -992,6 +1011,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
         expect(listItem.levels[1].cachedElement).toBe(cachedUL);
@@ -1041,6 +1061,7 @@ describe('handleList with cache', () => {
                     refNode: existingOL2,
                 },
             ],
+            currentLevel: 0,
         });
         expect(newRefNode).toBeNull();
     });
@@ -1094,6 +1115,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(newRefNode).toBeNull();
     });

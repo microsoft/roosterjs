@@ -30,6 +30,13 @@ export interface ModelToDomListContext {
      * A stack of current list element chain, start from the parent node of top level list
      */
     nodeStack: ModelToDomListStackItem[];
+
+    /**
+     * Current level of list item being processed, start from 0
+     * This is used by metadata applier to determine which level of list item is being processed,
+     * so it can apply correct list style for that level. It will be updated by list handler before processing each list item, and reset to 0 when processing a new list.
+     */
+    currentLevel: number;
 }
 
 /**
