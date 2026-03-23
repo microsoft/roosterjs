@@ -1,4 +1,4 @@
-const linkRegex = /(\[([^\[]+)\]\((https?:\/\/[^\)]+)\))|(\!\[([^\[]+)\]\((https?:\/\/[^\)]+)\))/g;
+const linkRegex = /(\[([^\[]+)\]\(([^\)]+)\))|(\!\[([^\[]+)\]\(([^\)]+)\))/g;
 
 /**
  * @internal
@@ -10,6 +10,19 @@ interface MarkdownSegment {
 }
 
 const isValidUrl = (url: string) => {
+    if (!url) return false;
+
+    // Accept common non-http schemes and relative paths
+    if (
+        url.startsWith('data:') ||
+        url.startsWith('blob:') ||
+        url.startsWith('/') ||
+        url.startsWith('./') ||
+        url.startsWith('../')
+    ) {
+        return true;
+    }
+
     try {
         new URL(url);
         return true;
