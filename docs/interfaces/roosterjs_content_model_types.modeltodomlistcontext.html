@@ -88,6 +88,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomlistcontext.html#currentlevel" class="tsd-kind-icon">current<wbr>Level</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomlistcontext.html#nodestack" class="tsd-kind-icon">node<wbr>Stack</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomlistcontext.html#threaditemcounts" class="tsd-kind-icon">thread<wbr>Item<wbr>Counts</a></li>
 							</ul>
@@ -98,12 +99,29 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="currentlevel" class="tsd-anchor"></a>
+					<h3>current<wbr>Level</h3>
+					<div class="tsd-signature tsd-kind-icon">current<wbr>Level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/874712e/packages/roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts#L39">roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts:39</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Current level of list item being processed, start from 0
+								This is used by metadata applier to determine which level of list item is being processed,
+							so it can apply correct list style for that level. It will be updated by list handler before processing each list item, and reset to 0 when processing a new list.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="nodestack" class="tsd-anchor"></a>
 					<h3>node<wbr>Stack</h3>
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Stack<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.modeltodomliststackitem.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomListStackItem</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4b7145c/packages/roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts#L32">roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/874712e/packages/roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts#L32">roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -118,7 +136,7 @@
 					<div class="tsd-signature tsd-kind-icon">thread<wbr>Item<wbr>Counts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4b7145c/packages/roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts#L27">roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/874712e/packages/roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts#L27">roosterjs-content-model-types/lib/context/ModelToDomFormatContext.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -174,6 +192,9 @@
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="roosterjs_content_model_types.modeltodomlistcontext.html" class="tsd-kind-icon">Model<wbr>ToDom<wbr>List<wbr>Context</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_content_model_types.modeltodomlistcontext.html#currentlevel" class="tsd-kind-icon">current<wbr>Level</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_content_model_types.modeltodomlistcontext.html#nodestack" class="tsd-kind-icon">node<wbr>Stack</a>
 							</li>
