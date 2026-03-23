@@ -204,6 +204,18 @@ export function getSelectedParagraphs(
 ): ShallowMutableContentModelParagraph[];
 
 /**
+ * Get any array of selected paragraphs from a content model, return mutable paragraphs
+ * @param model The Content Model to get selection from
+ * @param mutate Set to true to indicate we will mutate the selected paragraphs
+ * @param removeUnmeaningful True to remove unmeaningful selection like only selection marker is selected, or head/tail paragraph is selected with selection marker at the wrong place
+ */
+export function getSelectedParagraphs(
+    model: ReadonlyContentModelDocument,
+    mutate: true,
+    removeUnmeaningful: boolean
+): ShallowMutableContentModelParagraph[];
+
+/**
  * Get any array of selected paragraphs from a content model (Readonly)
  * @param model The Content Model to get selection from
  */
@@ -213,12 +225,15 @@ export function getSelectedParagraphs(
 
 export function getSelectedParagraphs(
     model: ReadonlyContentModelDocument,
-    mutate?: boolean
+    mutate?: boolean,
+    removeUnmeaningful: boolean = true
 ): ReadonlyContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     const result: ReadonlyContentModelParagraph[] = [];
 
-    removeUnmeaningfulSelections(selections);
+    if (removeUnmeaningful) {
+        removeUnmeaningfulSelections(selections);
+    }
 
     selections.forEach(({ block }) => {
         if (block?.blockType == 'Paragraph') {
