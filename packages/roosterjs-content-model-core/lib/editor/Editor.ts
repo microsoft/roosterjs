@@ -6,6 +6,7 @@ import {
     transformColor,
     createDomToModelContextWithConfig,
     domToContentModel,
+    sanitizeInvisibleUnicode,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelDocument,
@@ -51,6 +52,8 @@ export class Editor implements IEditor {
 
         const initialModel =
             options.initialModel ?? createEmptyModel(this.core.format.defaultFormat);
+
+        sanitizeInvisibleUnicode(initialModel);
 
         this.core.api.setContentModel(
             this.core,

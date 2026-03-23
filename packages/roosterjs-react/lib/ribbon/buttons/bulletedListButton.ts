@@ -11,6 +11,6 @@ export const bulletedListButton: RibbonButton<BulletedListButtonStringKey> = {
     iconName: 'BulletedList',
     isChecked: formatState => !!formatState.isBullet,
     onClick: editor => {
-        toggleBullet(editor);
+        toggleBullet(editor, true /*removeMargins*/);
     },
 };

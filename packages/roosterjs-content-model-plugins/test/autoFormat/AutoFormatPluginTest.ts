@@ -423,7 +423,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                                     textColor: undefined,
                                 },
                             },
-                            format: {},
+                            format: { marginBottom: '0px', marginTop: '0px' },
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
