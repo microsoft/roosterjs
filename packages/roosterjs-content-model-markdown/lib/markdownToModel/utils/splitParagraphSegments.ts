@@ -10,7 +10,9 @@ interface MarkdownSegment {
 }
 
 const isValidUrl = (url: string) => {
-    if (!url) return false;
+    if (!url) {
+        return false;
+    }
 
     // Accept common non-http schemes and relative paths
     if (
