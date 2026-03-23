@@ -66,6 +66,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -119,6 +120,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -190,6 +192,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -503,6 +506,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -574,6 +578,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -651,6 +656,7 @@ describe('handleListItem with cache', () => {
                     refNode: cachedLI.nextSibling,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);
@@ -730,6 +736,7 @@ describe('handleListItem with cache', () => {
                     refNode: cachedLI.nextSibling,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);
@@ -799,6 +806,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);

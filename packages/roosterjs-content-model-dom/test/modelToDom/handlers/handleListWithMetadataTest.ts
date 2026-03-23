@@ -39,6 +39,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -63,6 +64,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -88,6 +90,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -119,6 +122,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -156,6 +160,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -199,6 +204,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -253,6 +259,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -287,6 +294,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -325,6 +333,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -374,6 +383,7 @@ describe('handleList with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 

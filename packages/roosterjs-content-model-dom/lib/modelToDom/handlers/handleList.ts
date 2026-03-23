@@ -34,6 +34,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         const stackLevel = nodeStack[layer + 1];
         const itemLevel = listItem.levels[layer];
 
+        context.listFormat.currentLevel = layer;
+
         if (
             stackLevel.listType != itemLevel.listType ||
             stackLevel.dataset?.editingInfo != itemLevel.dataset.editingInfo ||
@@ -78,6 +80,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         let newList: HTMLOListElement | HTMLUListElement;
         let isNewlyCreated = false;
         const levelRefNode = nodeStack[layer].refNode ?? null;
+
+        context.listFormat.currentLevel = layer;
 
         if (context.allowCacheListItem && level.cachedElement) {
             newList = level.cachedElement;
