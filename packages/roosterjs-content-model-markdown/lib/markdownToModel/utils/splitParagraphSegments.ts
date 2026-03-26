@@ -33,6 +33,15 @@ const isValidUrl = (url: string) => {
     }
 };
 
+function pushText(result: MarkdownSegment[], text: string) {
+    const last = result[result.length - 1];
+    if (last && last.type === 'text') {
+        last.text += text;
+    } else {
+        result.push({ type: 'text', text, url: '' });
+    }
+}
+
 /**
  * @internal
  */
@@ -43,28 +52,28 @@ export function splitParagraphSegments(text: string): MarkdownSegment[] {
 
     while ((match = linkRegex.exec(text)) !== null) {
         if (match.index > lastIndex) {
-            result.push({ type: 'text', text: text.slice(lastIndex, match.index), url: '' });
+            pushText(result, text.slice(lastIndex, match.index));
         }
 
         if (match[2] && match[3]) {
-            result.push(
-                isValidUrl(match[3])
-                    ? { type: 'link', text: match[2], url: match[3] }
-                    : { type: 'text', text: match[0], url: '' }
-            );
+            if (isValidUrl(match[3])) {
+                result.push({ type: 'link', text: match[2], url: match[3] });
+            } else {
+                pushText(result, match[0]);
+            }
         } else if (match[5] && match[6]) {
-            result.push(
-                isValidUrl(match[6])
-                    ? { type: 'image', text: match[5], url: match[6] }
-                    : { type: 'text', text: match[0], url: '' }
-            );
+            if (isValidUrl(match[6])) {
+                result.push({ type: 'image', text: match[5], url: match[6] });
+            } else {
+                pushText(result, match[0]);
+            }
         }
 
         lastIndex = linkRegex.lastIndex;
     }
 
     if (lastIndex < text.length) {
-        result.push({ type: 'text', text: text.slice(lastIndex), url: '' });
+        pushText(result, text.slice(lastIndex));
     }
 
     return result;
