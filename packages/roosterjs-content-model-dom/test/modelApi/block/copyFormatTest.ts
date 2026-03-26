@@ -65,6 +65,8 @@ describe('copyFormat', () => {
             direction: 'rtl',
             textAlign: 'end',
             htmlAlign: 'end',
+            marginBottom: '10',
+            marginTop: '10',
         });
 
         expect(sourceFormat).toEqual({
