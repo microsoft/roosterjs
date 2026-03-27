@@ -25,6 +25,7 @@ describe('listItemMetadataApplier', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         });
     });
 
@@ -61,6 +62,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -100,6 +102,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -138,6 +141,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: '"(2) "',
@@ -177,6 +181,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -216,6 +221,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -255,6 +261,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'test',
@@ -296,6 +303,7 @@ describe('listItemMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: '"➢ "',
@@ -318,8 +326,14 @@ describe('listItemMetadataApplier', () => {
                 listType: 'OL',
                 refNode: null,
             },
+            {
+                node: {} as Node,
+                listType: 'OL',
+                refNode: null,
+            },
         ];
         context.listFormat.threadItemCounts = [2, 3, 4];
+        context.listFormat.currentLevel = 1;
 
         listItemMetadataApplier.applierFunction(
             {
@@ -347,7 +361,13 @@ describe('listItemMetadataApplier', () => {
                     listType: 'OL',
                     refNode: null,
                 },
+                {
+                    node: {} as Node,
+                    listType: 'OL',
+                    refNode: null,
+                },
             ],
+            currentLevel: 1,
         });
         expect(format).toEqual({
             listStyleType: '"(3) "',
@@ -547,6 +567,7 @@ describe('listLevelMetadataApplier', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         });
     });
 
@@ -583,6 +604,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'lower-roman',
@@ -624,6 +646,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'lower-roman',
@@ -664,6 +687,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -701,6 +725,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'decimal',
@@ -742,6 +767,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'decimal',
@@ -783,6 +809,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({
             listStyleType: 'test',
@@ -824,6 +851,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });
@@ -874,6 +902,7 @@ describe('listLevelMetadataApplier', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(format).toEqual({});
     });

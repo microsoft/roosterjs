@@ -424,6 +424,62 @@ describe('getSelectedParagraphs', () => {
             [p1]
         );
     });
+
+    it('removeUnmeaningful=false keeps trailing selection marker paragraph', () => {
+        const s1 = createText('test1');
+        const m2 = createSelectionMarker({ fontSize: '20px' });
+        const p1 = createParagraph(false, { lineHeight: '10px' });
+        const p2 = createParagraph(false, { lineHeight: '20px' });
+
+        p1.segments.push(s1);
+        p2.segments.push(m2);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([], undefined, p1, [s1]);
+            callback([], undefined, p2, [m2]);
+            return false;
+        });
+
+        const result = getSelectedParagraphs(null!, true /*mutate*/, false /*removeUnmeaningful*/);
+
+        expect(result).toEqual([p1, p2]);
+    });
+
+    it('removeUnmeaningful=false keeps leading selection marker paragraph', () => {
+        const s2 = createText('test2');
+        const m1 = createSelectionMarker({ fontSize: '10px' });
+        const p1 = createParagraph(false, { lineHeight: '10px' });
+        const p2 = createParagraph(false, { lineHeight: '20px' });
+
+        p1.segments.push(m1);
+        p2.segments.push(s2);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([], undefined, p1, [m1]);
+            callback([], undefined, p2, [s2]);
+            return false;
+        });
+
+        const result = getSelectedParagraphs(null!, true /*mutate*/, false /*removeUnmeaningful*/);
+
+        expect(result).toEqual([p1, p2]);
+    });
+
+    it('mutate=true returns paragraphs as mutable', () => {
+        const p1 = createParagraph(false, { lineHeight: '10px' });
+        const text = createText('hello');
+        p1.segments.push(text);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([], undefined, p1, [text]);
+            return false;
+        });
+
+        const result = getSelectedParagraphs(null!, true /*mutate*/);
+
+        expect(result.length).toBe(1);
+        expect(result[0]).toBe(p1);
+    });
 });
 
 describe('getFirstSelectedTable', () => {
