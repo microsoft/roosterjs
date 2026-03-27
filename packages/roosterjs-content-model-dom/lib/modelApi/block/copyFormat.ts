@@ -20,6 +20,8 @@ export const ListFormatsToKeep: (keyof ContentModelBlockFormat)[] = [
     'direction',
     'textAlign',
     'htmlAlign',
+    'marginBottom',
+    'marginTop',
 ];
 
 /**

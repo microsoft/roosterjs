@@ -190,6 +190,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [],
+            currentLevel: 0,
         });
     });
 
@@ -205,6 +206,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [parent1, parent2],
+            currentLevel: 0,
         });
     });
 
@@ -221,6 +223,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [parent1, parent2],
+            currentLevel: 0,
         });
     });
 
@@ -238,6 +241,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 2],
             nodeStack: [parent1, parent2, parent3],
+            currentLevel: 0,
         });
     });
 
@@ -257,6 +261,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 3],
             nodeStack: [parent1, parent2, parent3],
+            currentLevel: 0,
         });
     });
 
@@ -273,6 +278,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [parent],
+            currentLevel: 0,
         });
     });
 
@@ -290,6 +296,7 @@ describe('listLevelThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [parent],
+            currentLevel: 0,
         });
     });
 });
