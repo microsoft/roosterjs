@@ -1,3 +1,10 @@
+// Matches markdown links and images in a string.
+// Group 1 (full link):  [text](url)       e.g. [Click here](https://example.com)
+//   Group 2: link text  e.g. "Click here"
+//   Group 3: link url   e.g. "https://example.com"
+// Group 4 (full image): ![alt](url)       e.g. ![Logo](https://example.com/logo.png)
+//   Group 5: alt text   e.g. "Logo"
+//   Group 6: image url  e.g. "https://example.com/logo.png"
 const linkRegex = /(\[([^\[]+)\]\(([^\)]+)\))|(\!\[([^\[]+)\]\(([^\)]+)\))/g;
 
 /**
