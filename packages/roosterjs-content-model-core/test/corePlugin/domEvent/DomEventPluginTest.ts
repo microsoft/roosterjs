@@ -618,9 +618,6 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
                     addEventListener: addEventListenerSpy,
                     removeEventListener: () => {},
                 },
-                createElement: () => {
-                    return document.createElement('div');
-                },
             }),
             triggerEvent,
             getEnvironment: () => ({}),
