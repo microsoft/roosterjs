@@ -644,7 +644,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
-                querySelector: () => document.createElement('iframe'),
+                querySelector: (): HTMLIFrameElement => document.createElement('iframe'),
             },
         });
 
@@ -671,7 +671,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
-                querySelector: () => document.createElement('script'),
+                querySelector: (): HTMLScriptElement => document.createElement('script'),
             },
         });
 
@@ -736,7 +736,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
-                querySelector: () => null,
+                querySelector: (): null => null,
             },
         });
 
