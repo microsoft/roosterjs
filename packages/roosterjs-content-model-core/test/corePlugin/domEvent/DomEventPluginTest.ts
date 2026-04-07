@@ -460,6 +460,9 @@ describe('DOMEventPlugin handle other event', () => {
                     addEventListener: addEventListenerSpy,
                     removeEventListener: () => {},
                 },
+                createElement: () => {
+                    return new HTMLDivElement();
+                },
             }),
             triggerEvent,
             getEnvironment: () => ({}),
@@ -618,6 +621,9 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
                     addEventListener: addEventListenerSpy,
                     removeEventListener: () => {},
                 },
+                createElement: () => {
+                    return document.createElement('div');
+                },
             }),
             triggerEvent,
             getEnvironment: () => ({}),
@@ -644,6 +650,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
+                querySelector: () => document.createElement('iframe'),
             },
         });
 
@@ -659,86 +666,6 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
-    });
-
-    it('should prevent drop when sanitized HTML differs from original', () => {
-        initPlugin();
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const html = '<div onclick="alert(1)">test</div>';
-        const sanitizedHtml = '<div>test</div>';
-
-        htmlToDOMSpy.and.returnValue({
-            body: {
-                innerHTML: sanitizedHtml,
-            },
-        });
-
-        const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
-            dataTransfer: {
-                getData: () => html,
-            },
-        } as any;
-
-        eventMap.drop.beforeDispatch(mockedEvent);
-
-        expect(preventDefaultSpy).toHaveBeenCalled();
-        expect(stopPropagationSpy).toHaveBeenCalled();
-    });
-
-    it('should allow drop when HTML is safe and matches sanitized version', () => {
-        initPlugin();
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const html = '<div>safe content</div>';
-
-        htmlToDOMSpy.and.returnValue({
-            body: {
-                innerHTML: html,
-            },
-        });
-
-        const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
-            dataTransfer: {
-                getData: () => html,
-            },
-        } as any;
-
-        eventMap.drop.beforeDispatch(mockedEvent);
-
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
-        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
-            source: ChangeSource.Drop,
-        });
-    });
-
-    it('should not prevent drop when preventDropMaliciousContent is false', () => {
-        initPlugin({ preventDropMaliciousContent: false });
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const html = '<div><iframe src="malicious.com"></iframe></div>';
-
-        const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
-            dataTransfer: {
-                getData: () => html,
-            },
-        } as any;
-
-        eventMap.drop.beforeDispatch(mockedEvent);
-
-        expect(htmlToDOMSpy).not.toHaveBeenCalled();
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
-        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
-            source: ChangeSource.Drop,
-        });
     });
 
     it('should prevent drop with custom forbidden elements', () => {
@@ -750,6 +677,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
+                querySelector: () => document.createElement('script'),
             },
         });
 
@@ -814,6 +742,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         htmlToDOMSpy.and.returnValue({
             body: {
                 innerHTML: html,
+                querySelector: () => null,
             },
         });
 
