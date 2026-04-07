@@ -50,7 +50,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         };
-        this.forbiddenDropElement = options.forbiddenElements ?? ['iframe'];
+        this.forbiddenDropElement = options.forbiddenElements ?? ['iframe', 'script'];
     }
 
     /**
