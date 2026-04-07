@@ -344,6 +344,7 @@ export {
     SelectionOptions,
     PasteOptions,
     EditorBaseOptions,
+    DropOptions,
 } from './editor/EditorOptions';
 export {
     CreateContentModel,

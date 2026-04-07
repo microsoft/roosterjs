@@ -209,7 +209,6 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(triggerEventSpy).toHaveBeenCalled();
     });
 
-
     it('verify input event for non-character value', () => {
         spyOn(eventUtils, 'isCharacterValue').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
@@ -282,7 +281,6 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         expect(stopPropagation).toHaveBeenCalled();
         expect(triggerEventSpy).toHaveBeenCalled();
     });
-
 });
 
 describe('DOMEventPlugin handle mouse down and mouse up event', () => {
@@ -553,8 +551,13 @@ describe('DOMEventPlugin handle other event', () => {
     it('Trigger onDrop event', () => {
         const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
         editor.takeSnapshot = takeSnapshotSpy;
+        const mockedEvent = {
+            dataTransfer: {
+                getData: () => '',
+            },
+        } as any;
 
-        eventMap.drop.beforeDispatch();
+        eventMap.drop.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
             isInIME: false,
             scrollContainer: scrollContainer,
@@ -566,5 +569,265 @@ describe('DOMEventPlugin handle other event', () => {
         expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
             source: ChangeSource.Drop,
         });
+    });
+});
+
+describe('DOMEventPlugin handle drop event with malicious content prevention', () => {
+    let plugin: PluginWithState<DOMEventPluginState>;
+    let addEventListener: jasmine.Spy;
+    let removeEventListener: jasmine.Spy;
+    let triggerEvent: jasmine.Spy;
+    let eventMap: Record<string, any>;
+    let scrollContainer: HTMLElement;
+    let addEventListenerSpy: jasmine.Spy;
+    let editor: IEditor;
+    let getDOMCreatorSpy: jasmine.Spy;
+    let htmlToDOMSpy: jasmine.Spy;
+
+    function initPlugin(options: any = {}) {
+        addEventListener = jasmine.createSpy('addEventListener');
+        removeEventListener = jasmine.createSpy('.removeEventListener');
+        triggerEvent = jasmine.createSpy('triggerEvent');
+        addEventListenerSpy = jasmine.createSpy('addEventListener');
+
+        scrollContainer = {
+            addEventListener: () => {},
+            removeEventListener: () => {},
+        } as any;
+        plugin = createDOMEventPlugin(
+            {
+                scrollContainer,
+                ...options,
+            },
+            null!
+        );
+
+        htmlToDOMSpy = jasmine.createSpy('htmlToDOM');
+        getDOMCreatorSpy = jasmine.createSpy('getDOMCreator').and.returnValue({
+            htmlToDOM: htmlToDOMSpy,
+        });
+
+        editor = <IEditor>(<any>{
+            getDocument: () => ({
+                addEventListener,
+                removeEventListener,
+                defaultView: {
+                    requestAnimationFrame: (callback: Function) => {
+                        callback();
+                    },
+                    addEventListener: addEventListenerSpy,
+                    removeEventListener: () => {},
+                },
+            }),
+            triggerEvent,
+            getEnvironment: () => ({}),
+            attachDomEvent: (map: Record<string, any>) => {
+                eventMap = map;
+                return jasmine.createSpy('disposer');
+            },
+            getDOMCreator: getDOMCreatorSpy,
+            takeSnapshot: jasmine.createSpy('takeSnapshot'),
+        });
+        plugin.initialize(editor);
+    }
+
+    afterEach(() => {
+        plugin.dispose();
+    });
+
+    it('should prevent drop when HTML contains forbidden iframe element', () => {
+        initPlugin();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div><iframe src="malicious.com"></iframe></div>';
+
+        htmlToDOMSpy.and.returnValue({
+            body: {
+                innerHTML: html,
+            },
+        });
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(stopPropagationSpy).toHaveBeenCalled();
+    });
+
+    it('should prevent drop when sanitized HTML differs from original', () => {
+        initPlugin();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div onclick="alert(1)">test</div>';
+        const sanitizedHtml = '<div>test</div>';
+
+        htmlToDOMSpy.and.returnValue({
+            body: {
+                innerHTML: sanitizedHtml,
+            },
+        });
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(stopPropagationSpy).toHaveBeenCalled();
+    });
+
+    it('should allow drop when HTML is safe and matches sanitized version', () => {
+        initPlugin();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div>safe content</div>';
+
+        htmlToDOMSpy.and.returnValue({
+            body: {
+                innerHTML: html,
+            },
+        });
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+            source: ChangeSource.Drop,
+        });
+    });
+
+    it('should not prevent drop when preventDropMaliciousContent is false', () => {
+        initPlugin({ preventDropMaliciousContent: false });
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div><iframe src="malicious.com"></iframe></div>';
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(htmlToDOMSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
+            source: ChangeSource.Drop,
+        });
+    });
+
+    it('should prevent drop with custom forbidden elements', () => {
+        initPlugin({ forbiddenElements: ['script', 'object'] });
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div><script>alert(1)</script></div>';
+
+        htmlToDOMSpy.and.returnValue({
+            body: {
+                innerHTML: html,
+            },
+        });
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(stopPropagationSpy).toHaveBeenCalled();
+    });
+
+    it('should not prevent drop when no HTML in dataTransfer', () => {
+        initPlugin();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => '',
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(htmlToDOMSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not prevent drop when dataTransfer is null', () => {
+        initPlugin();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: null,
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(htmlToDOMSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
+    });
+
+    it('should allow iframe when not in forbidden elements list', () => {
+        initPlugin({ forbiddenElements: ['script'] });
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const html = '<div><iframe src="safe.com"></iframe></div>';
+
+        htmlToDOMSpy.and.returnValue({
+            body: {
+                innerHTML: html,
+            },
+        });
+
+        const mockedEvent = {
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any;
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(stopPropagationSpy).not.toHaveBeenCalled();
     });
 });

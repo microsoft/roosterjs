@@ -35,6 +35,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
     private timer = 0;
+    private forbiddenDropElement: string[] = [];
+    private preventDropMaliciousContent: boolean = true;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -49,6 +51,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         };
+        this.forbiddenDropElement = options.forbiddenElements ?? ['iframe'];
+        this.preventDropMaliciousContent = options.preventDropMaliciousContent ?? true;
     }
 
     /**
@@ -85,7 +89,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
-            drop: { beforeDispatch: this.onDrop },
+            drop: { beforeDispatch: (event: DragEvent) => this.onDrop(event) },
 
             // 5. Pointer event
             pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
@@ -137,8 +141,20 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
 
-    private onDrop = () => {
+    private onDrop = (e: DragEvent) => {
         const doc = this.editor?.getDocument();
+
+        const html = e.dataTransfer?.getData('text/html');
+        if (html && this.preventDropMaliciousContent) {
+            const sanitizedHTML = this.editor?.getDOMCreator().htmlToDOM(html).body.innerHTML;
+            if (
+                sanitizedHTML !== html ||
+                this.forbiddenDropElement.some(element => html.includes(element))
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
 
         doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {

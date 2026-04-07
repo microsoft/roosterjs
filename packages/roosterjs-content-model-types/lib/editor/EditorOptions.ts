@@ -183,6 +183,23 @@ export interface EditorBaseOptions {
 }
 
 /**
+ * Options for drop events
+ */
+export interface DropOptions {
+    /**
+     * Forbidden elements that can be dropped in the editor
+     * @default 'iframe'
+     */
+    forbiddenElements?: string[];
+
+    /**
+     * Prevent drop content that might have malicious content
+     * @default true
+     */
+    preventDropMaliciousContent?: boolean;
+}
+
+/**
  * Options for editor
  */
 export interface EditorOptions
@@ -190,4 +207,5 @@ export interface EditorOptions
         ColorOptions,
         ContentModelOptions,
         SelectionOptions,
+        DropOptions,
         PasteOptions {}
