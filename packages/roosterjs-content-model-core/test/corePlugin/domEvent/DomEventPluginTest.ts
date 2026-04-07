@@ -460,9 +460,6 @@ describe('DOMEventPlugin handle other event', () => {
                     addEventListener: addEventListenerSpy,
                     removeEventListener: () => {},
                 },
-                createElement: () => {
-                    return new HTMLDivElement();
-                },
             }),
             triggerEvent,
             getEnvironment: () => ({}),
