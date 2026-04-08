@@ -1,4 +1,4 @@
-import { cleanForbiddenElements } from '../../lib/utils/cleanForbiddenElements';
+import { cleanForbiddenElements } from '../../../lib/dragAndDrop/utils/cleanForbiddenElements';
 
 describe('cleanForbiddenElements', () => {
     it('should do nothing when forbiddenElements is empty', () => {

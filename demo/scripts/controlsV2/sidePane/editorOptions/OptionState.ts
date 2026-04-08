@@ -26,6 +26,7 @@ export interface BuildInPluginList {
     hiddenProperty: boolean;
     touch: boolean;
     announce: boolean;
+    dragAndDrop: boolean;
 }
 
 export interface OptionState {

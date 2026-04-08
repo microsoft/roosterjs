@@ -360,6 +360,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
                     {this.renderPluginItem('touch', 'Touch')}
                     {this.renderPluginItem('announce', 'Announce')}
+                    {this.renderPluginItem('dragAndDrop', 'DragAndDrop')}
                 </tbody>
             </table>
         );

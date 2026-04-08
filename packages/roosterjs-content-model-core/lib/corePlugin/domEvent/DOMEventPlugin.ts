@@ -1,4 +1,3 @@
-import { handleDroppedContent } from '../../utils/handleDroppedContent';
 import {
     ChangeSource,
     isCharacterValue,
@@ -19,8 +18,6 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keypress: 'keyPress',
 };
 
-const DefaultForbiddenElements = ['iframe'];
-
 /**
  * DOMEventPlugin handles customized DOM events, including:
  * 1. Keyboard event
@@ -38,8 +35,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
     private timer = 0;
-    private forbiddenElements: string[] = [];
-    private isInternalDragging: boolean = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -54,7 +49,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         };
-        this.forbiddenElements = options.forbiddenElements ?? DefaultForbiddenElements;
     }
 
     /**
@@ -119,8 +113,6 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.disposer = null;
         this.editor = null;
         this.pointerEvent = null;
-        this.isInternalDragging = false;
-        this.forbiddenElements = [];
 
         if (this.timer) {
             document?.defaultView?.clearTimeout(this.timer);
@@ -143,31 +135,18 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         if (element && !element.isContentEditable) {
             dragEvent.preventDefault();
         }
-
-        this.isInternalDragging = true;
     };
 
     private onDrop = (e: DragEvent) => {
-        if (!this.editor) {
-            return;
+        if (this.editor) {
+            this.editor.takeSnapshot();
+            this.editor.triggerEvent('contentChanged', {
+                source: ChangeSource.Drop,
+                data: {
+                    rawEvent: e,
+                },
+            });
         }
-        const doc = this.editor.getDocument();
-        const html = e.dataTransfer?.getData('text/html');
-
-        if (html && !this.isInternalDragging) {
-            handleDroppedContent(this.editor, e, html, this.forbiddenElements);
-        }
-
-        this.isInternalDragging = false;
-
-        doc?.defaultView?.requestAnimationFrame(() => {
-            if (this.editor) {
-                this.editor.takeSnapshot();
-                this.editor.triggerEvent('contentChanged', {
-                    source: ChangeSource.Drop,
-                });
-            }
-        });
     };
 
     private onScroll = (e: Event) => {

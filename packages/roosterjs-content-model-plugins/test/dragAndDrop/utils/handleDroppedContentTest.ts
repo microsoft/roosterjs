@@ -1,6 +1,6 @@
-import * as cleanForbiddenElementsFile from '../../lib/utils/cleanForbiddenElements';
+import * as cleanForbiddenElementsFile from '../../../lib/dragAndDrop/utils/cleanForbiddenElements';
 import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/domUtils/event/getNodePositionFromEvent';
-import { handleDroppedContent } from '../../lib/utils/handleDroppedContent';
+import { handleDroppedContent } from '../../../lib/dragAndDrop/utils/handleDroppedContent';
 import {
     ContentModelDocument,
     ContentModelParagraph,

@@ -24,6 +24,7 @@ const initialState: OptionState = {
         hiddenProperty: true,
         touch: true,
         announce: true,
+        dragAndDrop: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
