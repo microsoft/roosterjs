@@ -192,12 +192,10 @@ describe('handleDroppedContent - model verification', () => {
     let getDOMHelperSpy: jasmine.Spy;
     let getDOMCreatorSpy: jasmine.Spy;
     let htmlToDOMSpy: jasmine.Spy;
-    let capturedModel: ContentModelDocument | null;
     let capturedCallback: ((model: ContentModelDocument, context: any) => boolean) | null;
 
     beforeEach(() => {
         doc = document;
-        capturedModel = null;
         capturedCallback = null;
 
         getNodePositionFromEventSpy = spyOn(
