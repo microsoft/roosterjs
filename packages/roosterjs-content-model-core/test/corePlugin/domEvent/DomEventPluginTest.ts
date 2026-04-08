@@ -642,10 +642,7 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, mockedEvent, html, [
-            'iframe',
-            'script',
-        ]);
+        expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, mockedEvent, html, ['iframe']);
     });
 
     it('should call handleDroppedContent with custom forbidden elements', () => {
