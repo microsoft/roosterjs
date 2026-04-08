@@ -19,7 +19,7 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keypress: 'keyPress',
 };
 
-const DefaultForbiddenElements = ['iframe', 'script'];
+const DefaultForbiddenElements = ['iframe'];
 
 /**
  * DOMEventPlugin handles customized DOM events, including:

@@ -188,7 +188,7 @@ export interface EditorBaseOptions {
 export interface DropOptions {
     /**
      * Forbidden elements that cannot be dropped in the editor
-     * @default ['iframe', 'script']
+     * @default ['iframe']
      */
     forbiddenElements?: string[];
 }
