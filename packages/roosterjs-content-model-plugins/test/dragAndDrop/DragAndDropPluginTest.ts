@@ -100,7 +100,7 @@ describe('DragAndDropPlugin', () => {
                 dataTransfer: {
                     getData: () => html,
                 },
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -125,7 +125,7 @@ describe('DragAndDropPlugin', () => {
                 dataTransfer: {
                     getData: () => html,
                 },
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -146,7 +146,7 @@ describe('DragAndDropPlugin', () => {
                 dataTransfer: {
                     getData: () => '',
                 },
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -162,7 +162,7 @@ describe('DragAndDropPlugin', () => {
         it('should not call handleDroppedContent when dataTransfer is null', () => {
             const dropEvent = {
                 dataTransfer: null,
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -185,7 +185,7 @@ describe('DragAndDropPlugin', () => {
                 dataTransfer: {
                     getData: () => html,
                 },
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -251,7 +251,7 @@ describe('DragAndDropPlugin', () => {
                 dataTransfer: {
                     getData: () => html,
                 },
-            };
+            } as any;
 
             plugin.onPluginEvent({
                 eventType: 'contentChanged',
@@ -261,12 +261,7 @@ describe('DragAndDropPlugin', () => {
                 },
             } as any);
 
-            expect(handleDroppedContentSpy).toHaveBeenCalledWith(
-                editor,
-                dropEvent as any,
-                html,
-                []
-            );
+            expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, []);
         });
     });
 });
