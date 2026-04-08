@@ -1,4 +1,5 @@
 import * as eventUtils from 'roosterjs-content-model-dom/lib/domUtils/event/eventUtils';
+import * as handleDroppedContentFile from '../../../lib/utils/handleDroppedContent';
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { createDOMEventPlugin } from '../../../lib/corePlugin/domEvent/DOMEventPlugin';
 import { DOMEventPluginState, IEditor, PluginWithState } from 'roosterjs-content-model-types';
@@ -581,14 +582,14 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
     let scrollContainer: HTMLElement;
     let addEventListenerSpy: jasmine.Spy;
     let editor: IEditor;
-    let getDOMCreatorSpy: jasmine.Spy;
-    let htmlToDOMSpy: jasmine.Spy;
+    let handleDroppedContentSpy: jasmine.Spy;
 
     function initPlugin(options: any = {}) {
         addEventListener = jasmine.createSpy('addEventListener');
         removeEventListener = jasmine.createSpy('.removeEventListener');
         triggerEvent = jasmine.createSpy('triggerEvent');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
+        handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
 
         scrollContainer = {
             addEventListener: () => {},
@@ -601,11 +602,6 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
             },
             null!
         );
-
-        htmlToDOMSpy = jasmine.createSpy('htmlToDOM');
-        getDOMCreatorSpy = jasmine.createSpy('getDOMCreator').and.returnValue({
-            htmlToDOM: htmlToDOMSpy,
-        });
 
         editor = <IEditor>(<any>{
             getDocument: () => ({
@@ -625,7 +621,6 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
-            getDOMCreator: getDOMCreatorSpy,
             takeSnapshot: jasmine.createSpy('takeSnapshot'),
         });
         plugin.initialize(editor);
@@ -635,22 +630,11 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
         plugin.dispose();
     });
 
-    it('should prevent drop when HTML contains forbidden iframe element', () => {
+    it('should call handleDroppedContent when HTML is dropped from external source', () => {
         initPlugin();
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const html = '<div><iframe src="malicious.com"></iframe></div>';
-
-        htmlToDOMSpy.and.returnValue({
-            body: {
-                innerHTML: html,
-                querySelector: (): HTMLIFrameElement => document.createElement('iframe'),
-            },
-        });
+        const html = '<div>test content</div>';
 
         const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
             dataTransfer: {
                 getData: () => html,
             },
@@ -658,26 +642,17 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(preventDefaultSpy).toHaveBeenCalled();
-        expect(stopPropagationSpy).toHaveBeenCalled();
+        expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, mockedEvent, html, [
+            'iframe',
+            'script',
+        ]);
     });
 
-    it('should prevent drop with custom forbidden elements', () => {
+    it('should call handleDroppedContent with custom forbidden elements', () => {
         initPlugin({ forbiddenElements: ['script', 'object'] });
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
         const html = '<div><script>alert(1)</script></div>';
 
-        htmlToDOMSpy.and.returnValue({
-            body: {
-                innerHTML: html,
-                querySelector: (): HTMLScriptElement => document.createElement('script'),
-            },
-        });
-
         const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
             dataTransfer: {
                 getData: () => html,
             },
@@ -685,18 +660,16 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(preventDefaultSpy).toHaveBeenCalled();
-        expect(stopPropagationSpy).toHaveBeenCalled();
+        expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, mockedEvent, html, [
+            'script',
+            'object',
+        ]);
     });
 
-    it('should not prevent drop when no HTML in dataTransfer', () => {
+    it('should not call handleDroppedContent when no HTML in dataTransfer', () => {
         initPlugin();
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
 
         const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
             dataTransfer: {
                 getData: () => '',
             },
@@ -704,45 +677,35 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(htmlToDOMSpy).not.toHaveBeenCalled();
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(handleDroppedContentSpy).not.toHaveBeenCalled();
     });
 
-    it('should not prevent drop when dataTransfer is null', () => {
+    it('should not call handleDroppedContent when dataTransfer is null', () => {
         initPlugin();
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
 
         const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
             dataTransfer: null,
         } as any;
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(htmlToDOMSpy).not.toHaveBeenCalled();
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(handleDroppedContentSpy).not.toHaveBeenCalled();
     });
 
-    it('should allow iframe when not in forbidden elements list', () => {
-        initPlugin({ forbiddenElements: ['script'] });
-        const preventDefaultSpy = jasmine.createSpy('preventDefault');
-        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
-        const html = '<div><iframe src="safe.com"></iframe></div>';
+    it('should not call handleDroppedContent when dragging internally', () => {
+        initPlugin();
+        const html = '<div>dragged content</div>';
 
-        htmlToDOMSpy.and.returnValue({
-            body: {
-                innerHTML: html,
-                querySelector: (): null => null,
+        // First trigger dragstart to set isInternalDragging to true
+        eventMap.dragstart.beforeDispatch({
+            preventDefault: jasmine.createSpy('preventDefault'),
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: true,
             },
-        });
+        } as any);
 
         const mockedEvent = {
-            preventDefault: preventDefaultSpy,
-            stopPropagation: stopPropagationSpy,
             dataTransfer: {
                 getData: () => html,
             },
@@ -750,7 +713,36 @@ describe('DOMEventPlugin handle drop event with malicious content prevention', (
 
         eventMap.drop.beforeDispatch(mockedEvent);
 
-        expect(preventDefaultSpy).not.toHaveBeenCalled();
-        expect(stopPropagationSpy).not.toHaveBeenCalled();
+        expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+    });
+
+    it('should reset isInternalDragging after drop', () => {
+        initPlugin();
+        const html = '<div>content</div>';
+
+        // First trigger dragstart
+        eventMap.dragstart.beforeDispatch({
+            preventDefault: jasmine.createSpy('preventDefault'),
+            target: {
+                nodeType: Node.ELEMENT_NODE,
+                isContentEditable: true,
+            },
+        } as any);
+
+        // First drop - internal drag, should not call handleDroppedContent
+        eventMap.drop.beforeDispatch({
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any);
+        expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+
+        // Second drop without new dragstart - should call handleDroppedContent
+        eventMap.drop.beforeDispatch({
+            dataTransfer: {
+                getData: () => html,
+            },
+        } as any);
+        expect(handleDroppedContentSpy).toHaveBeenCalled();
     });
 });

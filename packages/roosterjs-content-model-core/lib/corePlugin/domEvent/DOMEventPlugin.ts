@@ -1,3 +1,4 @@
+import { handleDroppedContent } from '../../utils/handleDroppedContent';
 import {
     ChangeSource,
     isCharacterValue,
@@ -18,6 +19,8 @@ const EventTypeMap: Record<string, 'keyDown' | 'keyUp' | 'keyPress'> = {
     keypress: 'keyPress',
 };
 
+const DefaultForbiddenElements = ['iframe', 'script'];
+
 /**
  * DOMEventPlugin handles customized DOM events, including:
  * 1. Keyboard event
@@ -35,7 +38,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private state: DOMEventPluginState;
     private pointerEvent: PointerEvent | null = null;
     private timer = 0;
-    private forbiddenDropElement: string[] = [];
+    private forbiddenElements: string[] = [];
+    private isInternalDragging: boolean = false;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -50,7 +54,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         };
-        this.forbiddenDropElement = options.forbiddenElements ?? ['iframe', 'script'];
+        this.forbiddenElements = options.forbiddenElements ?? DefaultForbiddenElements;
     }
 
     /**
@@ -115,6 +119,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         this.disposer = null;
         this.editor = null;
         this.pointerEvent = null;
+        this.isInternalDragging = false;
+        this.forbiddenElements = [];
 
         if (this.timer) {
             document?.defaultView?.clearTimeout(this.timer);
@@ -137,6 +143,8 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         if (element && !element.isContentEditable) {
             dragEvent.preventDefault();
         }
+
+        this.isInternalDragging = true;
     };
 
     private onDrop = (e: DragEvent) => {
@@ -146,17 +154,11 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         const doc = this.editor.getDocument();
         const html = e.dataTransfer?.getData('text/html');
 
-        if (html && this.forbiddenDropElement.length > 0) {
-            const parsedHtml = this.editor.getDOMCreator().htmlToDOM(html);
-            const hasForbiddenElement = !!parsedHtml?.body.querySelector(
-                this.forbiddenDropElement.join(',')
-            );
-
-            if (hasForbiddenElement) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
+        if (html && !this.isInternalDragging) {
+            handleDroppedContent(this.editor, e, html, this.forbiddenElements);
         }
+
+        this.isInternalDragging = false;
 
         doc?.defaultView?.requestAnimationFrame(() => {
             if (this.editor) {
