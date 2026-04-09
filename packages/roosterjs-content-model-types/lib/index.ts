@@ -469,6 +469,7 @@ export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
+export { BeforeDropEvent } from './event/BeforeDropEvent';
 export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
 export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEvent';
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';

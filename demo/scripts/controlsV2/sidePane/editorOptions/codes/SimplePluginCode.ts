@@ -39,3 +39,9 @@ export class ImageEditPluginCode extends SimplePluginCode {
         super('ImageEditPlugin');
     }
 }
+
+export class DragAndDropPluginCode extends SimplePluginCode {
+    constructor() {
+        super('DragAndDropPlugin');
+    }
+}

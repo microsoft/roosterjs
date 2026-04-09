@@ -85,7 +85,7 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
 
             // 4. Drag and Drop event
             dragstart: { beforeDispatch: this.onDragStart },
-            drop: { beforeDispatch: this.onDrop },
+            drop: { beforeDispatch: (event: DragEvent) => this.onDrop(event) },
 
             // 5. Pointer event
             pointerdown: { beforeDispatch: (event: PointerEvent) => this.onPointerDown(event) },
@@ -137,17 +137,23 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
         }
     };
 
-    private onDrop = () => {
-        const doc = this.editor?.getDocument();
-
-        doc?.defaultView?.requestAnimationFrame(() => {
-            if (this.editor) {
-                this.editor.takeSnapshot();
-                this.editor.triggerEvent('contentChanged', {
-                    source: ChangeSource.Drop,
+    private onDrop = (e: DragEvent) => {
+        if (this.editor) {
+            const beforeDropEvent = this.editor.triggerEvent('beforeDrop', {
+                rawEvent: e,
+            });
+            if (!beforeDropEvent?.rawEvent.defaultPrevented) {
+                const doc = this.editor.getDocument();
+                doc?.defaultView?.requestAnimationFrame(() => {
+                    if (this.editor) {
+                        this.editor.takeSnapshot();
+                        this.editor.triggerEvent('contentChanged', {
+                            source: ChangeSource.Drop,
+                        });
+                    }
                 });
             }
-        });
+        }
     };
 
     private onScroll = (e: Event) => {
