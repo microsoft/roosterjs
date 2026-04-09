@@ -166,4 +166,9 @@ export type PluginEventType =
     /**
      * Find result changed event
      */
-    | 'findResultChanged';
+    | 'findResultChanged'
+
+    /**
+     * Let plugin know when a content will be dropped
+     */
+    | 'beforeDrop';
