@@ -62,6 +62,7 @@ import {
     AnnouncePlugin,
     AutoFormatPlugin,
     CustomReplacePlugin,
+    DragAndDropPlugin,
     EditPlugin,
     HiddenPropertyPlugin,
     HyperlinkPlugin,
@@ -577,6 +578,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                 }),
             pluginList.touch && new TouchPlugin(),
             pluginList.announce && new AnnouncePlugin(),
+            pluginList.dragAndDrop && new DragAndDropPlugin(),
         ].filter(x => !!x);
     }
 }

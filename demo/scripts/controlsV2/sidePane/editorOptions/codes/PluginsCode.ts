@@ -5,6 +5,7 @@ import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
 
 import {
+    DragAndDropPluginCode,
     EditPluginCode,
     PastePluginCode,
     TableEditPluginCode,
@@ -45,6 +46,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
             pluginList.imageEditPlugin && new ImageEditPluginCode(),
+            pluginList.dragAndDrop && new DragAndDropPluginCode(),
         ]);
     }
 }
