@@ -555,7 +555,10 @@ describe('DOMEventPlugin handle other event', () => {
             dataTransfer: {
                 getData: () => '',
             },
+            defaultPrevented: false,
         } as any;
+
+        triggerEvent.and.returnValue({ rawEvent: mockedEvent });
 
         eventMap.drop.beforeDispatch(mockedEvent);
         expect(plugin.getState()).toEqual({
@@ -565,12 +568,33 @@ describe('DOMEventPlugin handle other event', () => {
             mouseDownY: null,
             mouseUpEventListerAdded: false,
         });
+        expect(triggerEvent).toHaveBeenCalledWith('beforeDrop', {
+            rawEvent: mockedEvent,
+        });
         expect(takeSnapshotSpy).toHaveBeenCalledWith();
         expect(triggerEvent).toHaveBeenCalledWith('contentChanged', {
             source: ChangeSource.Drop,
-            data: {
-                rawEvent: mockedEvent,
-            },
         });
+    });
+
+    it('Trigger onDrop event with defaultPrevented', () => {
+        const takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+        editor.takeSnapshot = takeSnapshotSpy;
+        const mockedEvent = {
+            dataTransfer: {
+                getData: () => '',
+            },
+            defaultPrevented: true,
+        } as any;
+
+        triggerEvent.and.returnValue({ rawEvent: mockedEvent });
+
+        eventMap.drop.beforeDispatch(mockedEvent);
+
+        expect(triggerEvent).toHaveBeenCalledWith('beforeDrop', {
+            rawEvent: mockedEvent,
+        });
+        expect(takeSnapshotSpy).not.toHaveBeenCalled();
+        expect(triggerEvent).not.toHaveBeenCalledWith('contentChanged', jasmine.anything());
     });
 });

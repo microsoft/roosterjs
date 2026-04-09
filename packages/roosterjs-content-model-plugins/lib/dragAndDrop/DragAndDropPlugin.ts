@@ -1,4 +1,3 @@
-import { ChangeSource } from 'roosterjs-content-model-dom';
 import { handleDroppedContent } from './utils/handleDroppedContent';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
@@ -80,20 +79,17 @@ export class DragAndDropPlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (
-            this.editor &&
-            event.eventType == 'contentChanged' &&
-            event.source == ChangeSource.Drop &&
-            !this.isInternalDragging
-        ) {
-            const dropEvent = event.data.rawEvent as DragEvent;
-            const html = dropEvent.dataTransfer?.getData('text/html');
+        if (this.editor && event.eventType == 'beforeDrop') {
+            if (this.isInternalDragging) {
+                this.isInternalDragging = false;
+            } else {
+                const dropEvent = event.rawEvent;
+                const html = dropEvent.dataTransfer?.getData('text/html');
 
-            if (html) {
-                handleDroppedContent(this.editor, dropEvent, html, this.forbiddenElements);
+                if (html) {
+                    handleDroppedContent(this.editor, dropEvent, html, this.forbiddenElements);
+                }
             }
-
-            this.isInternalDragging = false;
             return;
         }
     }

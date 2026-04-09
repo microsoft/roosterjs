@@ -1,5 +1,4 @@
 import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedContent';
-import { ChangeSource } from 'roosterjs-content-model-dom';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
 import { IEditor } from 'roosterjs-content-model-types';
 
@@ -66,26 +65,23 @@ describe('DragAndDropPlugin', () => {
 
             eventMap.dragstart.beforeDispatch({ target } as any);
 
-            // Verify by checking that drop event with HTML does not call handleDroppedContent
+            // Verify by checking that beforeDrop event with HTML does not call handleDroppedContent
             const handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: {
-                        dataTransfer: {
-                            getData: () => '<div>test</div>',
-                        },
+                eventType: 'beforeDrop',
+                rawEvent: {
+                    dataTransfer: {
+                        getData: () => '<div>test</div>',
                     },
-                },
-            } as any);
+                } as any,
+            });
 
             expect(handleDroppedContentSpy).not.toHaveBeenCalled();
         });
     });
 
-    describe('onPluginEvent - contentChanged with Drop source', () => {
+    describe('onPluginEvent - beforeDrop', () => {
         let handleDroppedContentSpy: jasmine.Spy;
 
         beforeEach(() => {
@@ -103,12 +99,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
                 'iframe',
@@ -128,12 +121,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
                 'script',
@@ -149,12 +139,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).not.toHaveBeenCalled();
         });
@@ -165,12 +152,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).not.toHaveBeenCalled();
         });
@@ -188,22 +172,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
-
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
-        });
-
-        it('should ignore non-Drop contentChanged events', () => {
-            plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.SetContent,
-                data: {},
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).not.toHaveBeenCalled();
         });
@@ -226,16 +197,13 @@ describe('DragAndDropPlugin', () => {
             // Don't initialize, so editor is null
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: {
-                        dataTransfer: {
-                            getData: () => '<div>test</div>',
-                        },
+                eventType: 'beforeDrop',
+                rawEvent: {
+                    dataTransfer: {
+                        getData: () => '<div>test</div>',
                     },
-                },
-            } as any);
+                } as any,
+            });
 
             expect(handleDroppedContentSpy).not.toHaveBeenCalled();
         });
@@ -254,12 +222,9 @@ describe('DragAndDropPlugin', () => {
             } as any;
 
             plugin.onPluginEvent({
-                eventType: 'contentChanged',
-                source: ChangeSource.Drop,
-                data: {
-                    rawEvent: dropEvent,
-                },
-            } as any);
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
 
             expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, []);
         });
