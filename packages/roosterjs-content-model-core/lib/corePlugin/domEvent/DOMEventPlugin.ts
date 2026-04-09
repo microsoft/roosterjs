@@ -138,19 +138,21 @@ class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     };
 
     private onDrop = (e: DragEvent) => {
-        const beforeDropEvent = this.editor?.triggerEvent('beforeDrop', {
-            rawEvent: e,
-        });
-        if (!beforeDropEvent?.rawEvent.defaultPrevented) {
-            const doc = this.editor?.getDocument();
-            doc?.defaultView?.requestAnimationFrame(() => {
-                if (this.editor) {
-                    this.editor.takeSnapshot();
-                    this.editor.triggerEvent('contentChanged', {
-                        source: ChangeSource.Drop,
-                    });
-                }
+        if (this.editor) {
+            const beforeDropEvent = this.editor.triggerEvent('beforeDrop', {
+                rawEvent: e,
             });
+            if (!beforeDropEvent?.rawEvent.defaultPrevented) {
+                const doc = this.editor.getDocument();
+                doc?.defaultView?.requestAnimationFrame(() => {
+                    if (this.editor) {
+                        this.editor.takeSnapshot();
+                        this.editor.triggerEvent('contentChanged', {
+                            source: ChangeSource.Drop,
+                        });
+                    }
+                });
+            }
         }
     };
 
