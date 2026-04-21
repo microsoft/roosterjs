@@ -536,6 +536,7 @@ describe('childProcessor', () => {
             levels: [],
             listParent: undefined,
             threadItemCounts: [1],
+            potentialListType: 'OL',
         });
     });
 

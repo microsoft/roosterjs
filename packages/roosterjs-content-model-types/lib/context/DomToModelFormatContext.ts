@@ -24,6 +24,12 @@ export interface DomToModelListFormat {
      * Current list type stack
      */
     levels: ContentModelListLevel[];
+
+    /**
+     * This is used for handling an abnormal case where list items are not inside a ul or ol tag
+     * It is not common and against the HTML specification, but we need to handle it for robustness
+     */
+    potentialListType?: 'OL' | 'UL';
 }
 
 /**

@@ -2043,7 +2043,7 @@ describe('wordOnlineHandler', () => {
             // .test
             // .test
             // .test
-            it('should process html properly, when list items are not in side ul tag', () => {
+            it('should process html properly, when list items are not inside ul tag', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ul class="BulletListStyle1" role="list"></ul><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
                     '<ul><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li></ul>',
@@ -2363,7 +2363,7 @@ describe('wordOnlineHandler', () => {
             it('should process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ol class="NumberListStyle1" role="list"></ol><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
-                    '<ul><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li></ul>',
+                    '<ol start="1"><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li></ol>',
                     {
                         blockGroupType: 'Document',
                         blocks: [
@@ -2380,7 +2380,7 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
-                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
                                     isSelected: false,
@@ -2401,7 +2401,7 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
-                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
                                     isSelected: false,
@@ -2422,7 +2422,7 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
-                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                levels: [{ listType: 'OL', format: {}, dataset: {} }],
                                 formatHolder: {
                                     segmentType: 'SelectionMarker',
                                     isSelected: false,
