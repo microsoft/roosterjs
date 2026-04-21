@@ -2043,17 +2043,16 @@ describe('wordOnlineHandler', () => {
             // .test
             // .test
             // .test
-            it('shuold process html properly, when list items are not in side ul tag', () => {
+            it('should process html properly, when list items are not in side ul tag', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ul class="BulletListStyle1" role="list"></ul><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
-                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>',
+                    '<ul><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li></ul>',
                     {
                         blockGroupType: 'Document',
                         blocks: [
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2064,12 +2063,17 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2080,12 +2084,17 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2096,6 +2105,12 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                         ],
@@ -2345,17 +2360,16 @@ describe('wordOnlineHandler', () => {
             // result:
             // 1. text
             // 2. text
-            it('shuold process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
+            it('should process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
                 runTest(
                     '<div class="ListContainerWrapper"><ol class="NumberListStyle1" role="list"></ol><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>',
-                    '<li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"><p>test</p></li>',
+                    '<ul><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li><li><p role="presentation">test</p></li></ul>',
                     {
                         blockGroupType: 'Document',
                         blocks: [
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2366,12 +2380,17 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2382,12 +2401,17 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                             {
                                 blockType: 'BlockGroup',
-                                blockGroupType: 'General',
-                                element: jasmine.anything() as any,
+                                blockGroupType: 'ListItem',
                                 blocks: [
                                     {
                                         blockType: 'Paragraph',
@@ -2398,6 +2422,12 @@ describe('wordOnlineHandler', () => {
                                         decorator: { tagName: 'p', format: {} },
                                     },
                                 ],
+                                levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                                formatHolder: {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: false,
+                                    format: {},
+                                },
                                 format: {},
                             },
                         ],
