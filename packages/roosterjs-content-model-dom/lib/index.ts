@@ -70,7 +70,6 @@ export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
 
 export { normalizeContentModel } from './modelApi/common/normalizeContentModel';
-export { sanitizeInvisibleUnicode } from './modelApi/common/sanitizeInvisibleUnicode';
 export { isGeneralSegment } from './modelApi/typeCheck/isGeneralSegment';
 export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
@@ -119,7 +118,6 @@ export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/e
 export { getNodePositionFromEvent } from './domUtils/event/getNodePositionFromEvent';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
-export { stripInvisibleUnicode } from './domUtils/stripInvisibleUnicode';
 export { parseTableCells } from './domUtils/table/parseTableCells';
 export { readFile } from './domUtils/readFile';
 export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
