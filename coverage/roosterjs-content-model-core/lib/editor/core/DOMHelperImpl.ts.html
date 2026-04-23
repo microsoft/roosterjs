@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>62/62</span>
+                <span class='fraction'>59/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.42% </span>
+                <span class="strong">82.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>65/77</span>
+                <span class='fraction'>62/75</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>61/61</span>
+                <span class='fraction'>59/59</span>
             </div>
         
             
@@ -255,8 +255,10 @@
 <a name='L196'></a><a href='#L196'>196</a>
 <a name='L197'></a><a href='#L197'>197</a>
 <a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L199'></a><a href='#L199'>199</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -278,7 +280,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">356x</span>
+<span class="cline-any cline-yes">355x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">417x</span>
@@ -289,7 +291,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">920x</span>
+<span class="cline-any cline-yes">911x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -352,8 +354,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3059x</span>
-<span class="cline-any cline-yes">3059x</span>
+<span class="cline-any cline-yes">4355x</span>
+<span class="cline-any cline-yes">4355x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -381,14 +383,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -451,9 +449,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">581x</span>
+<span class="cline-any cline-yes">710x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">356x</span>
+<span class="cline-any cline-yes">355x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
     getColor,
@@ -473,11 +471,14 @@ import type {
  * @internal
  */
 export interface DOMHelperImplOption {
+    /**
+     * @deprecated This is always treated as true now
+     */
     cloneIndependentRoot?: boolean;
 }
 &nbsp;
 class DOMHelperImpl implements DOMHelper {
-    constructor(private contentDiv: HTMLElement, private options: DOMHelperImplOption) {}
+    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {}
 &nbsp;
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -580,14 +581,10 @@ class DOMHelperImpl implements DOMHelper {
      * Get a deep cloned root element
      */
     getClonedRoot(): HTMLElement {
-        if (this.options.cloneIndependentRoot) {
-            const doc = this.contentDiv.ownerDocument.implementation.createHTMLDocument();
-            const clone = doc.importNode(this.contentDiv, true /*deep*/);
+        const doc = this.contentDiv.ownerDocument.implementation.createHTMLDocument();
+        const clone = doc.importNode(this.contentDiv, true /*deep*/);
 &nbsp;
-            return clone;
-        } else {
-            return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
-        }
+        return clone;
     }
 &nbsp;
     /**
@@ -650,7 +647,7 @@ class DOMHelperImpl implements DOMHelper {
  */
 export function createDOMHelper(
     contentDiv: HTMLElement,
-    options: DOMHelperImplOption = {}
+    <span class="missing-if-branch" title="else path not taken" >E</span>options: DOMHelperImplOption = {}
 ): DOMHelper {
     return new DOMHelperImpl(contentDiv, options);
 }
@@ -661,7 +658,7 @@ export function createDOMHelper(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 23 2026 20:24:08 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 23 2026 20:49:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
