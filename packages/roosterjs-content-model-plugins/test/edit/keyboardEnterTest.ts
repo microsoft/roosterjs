@@ -61,7 +61,7 @@ describe('keyboardEnter', () => {
             expect();
         });
 
-        keyboardEnter(editor, rawEvent, true);
+        keyboardEnter(editor, rawEvent);
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         expect(input).toEqual(output);
@@ -1396,7 +1396,7 @@ describe('keyboardEnter', () => {
 
         const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
 
-        keyboardEnter(editor, {} as any, false, []);
+        keyboardEnter(editor, {} as any, []);
 
         expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
         // Check that the second call to runEditSteps includes steps for handling entity
@@ -1434,7 +1434,7 @@ describe('keyboardEnter', () => {
 
         const runEditStepsSpy = spyOn(runEditSteps, 'runEditSteps');
 
-        keyboardEnter(editor, {} as any, false, []);
+        keyboardEnter(editor, {} as any, []);
 
         expect(runEditStepsSpy).toHaveBeenCalledTimes(2);
         expect(
@@ -1479,7 +1479,6 @@ describe('keyboardEnter', () => {
             keyboardEnter(
                 editor,
                 { preventDefault: () => {}, shiftKey: false } as any,
-                true,
                 formatsToPreserve
             );
 
@@ -1515,7 +1514,7 @@ describe('keyboardEnter', () => {
                 callback(model, context);
             });
 
-            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any, true, []);
+            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any, []);
 
             expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         });
@@ -1549,7 +1548,7 @@ describe('keyboardEnter', () => {
                 callback(model, context);
             });
 
-            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any, true);
+            keyboardEnter(editor, { preventDefault: () => {}, shiftKey: false } as any);
 
             expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
         });

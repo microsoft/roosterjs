@@ -20,7 +20,6 @@ describe('EditPlugin', () => {
     let eventMap: Record<string, any>;
     let attachDOMEventSpy: jasmine.Spy;
     let getEnvironmentSpy: jasmine.Spy;
-    let isExperimentalFeatureEnabledSpy: jasmine.Spy;
 
     beforeEach(() => {
         attachDOMEventSpy = jasmine
@@ -32,9 +31,6 @@ describe('EditPlugin', () => {
         getEnvironmentSpy = jasmine.createSpy('getEnvironment').and.returnValue({
             isAndroid: true,
         });
-        isExperimentalFeatureEnabledSpy = jasmine
-            .createSpy('isExperimentalFeatureEnabled')
-            .and.returnValue(false);
 
         editor = ({
             attachDomEvent: attachDOMEventSpy,
@@ -43,7 +39,6 @@ describe('EditPlugin', () => {
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
-            isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
         } as any) as IEditor;
     });
 
@@ -122,7 +117,7 @@ describe('EditPlugin', () => {
         });
 
         it('handleExpandedSelectionOnDelete with options', () => {
-            plugin = new EditPlugin({ shouldHandleEnterKey: true });
+            plugin = new EditPlugin();
             const rawEvent = { key: 'Delete' } as any;
 
             plugin.initialize(editor);
@@ -135,7 +130,6 @@ describe('EditPlugin', () => {
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent, {
                 handleTabKey: DefaultHandleTabOptions,
                 handleExpandedSelectionOnDelete: true,
-                shouldHandleEnterKey: true,
             });
         });
 
@@ -191,9 +185,7 @@ describe('EditPlugin', () => {
         });
 
         it('Tab - custom options with options', () => {
-            plugin = new EditPlugin({
-                shouldHandleEnterKey: true,
-            });
+            plugin = new EditPlugin();
             const rawEvent = { key: 'Tab' } as any;
 
             plugin.initialize(editor);
@@ -248,14 +240,11 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, false, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Enter, normal enter enabled with experimental feature', () => {
-            isExperimentalFeatureEnabledSpy.and.callFake(
-                (featureName: string) => featureName == 'HandleEnterKey'
-            );
             plugin = new EditPlugin();
             const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
@@ -271,14 +260,12 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Enter, normal enter enabled', () => {
-            plugin = new EditPlugin({
-                shouldHandleEnterKey: true,
-            });
+            plugin = new EditPlugin();
             const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
@@ -293,16 +280,12 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
         it('Enter, normal enter enabled with callback', () => {
-            plugin = new EditPlugin({
-                shouldHandleEnterKey: _editor => {
-                    return true;
-                },
-            });
+            plugin = new EditPlugin();
             const rawEvent = { keyCode: 13, which: 13, key: 'Enter' } as any;
             const addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
@@ -317,7 +300,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -495,10 +478,6 @@ describe('EditPlugin', () => {
 
         beforeEach(() => {
             keyboardEnterSpy = spyOn(keyboardEnter, 'keyboardEnter');
-            // Configure editor to handle Enter key (needed for handleNormalEnter to return true)
-            isExperimentalFeatureEnabledSpy.and.callFake((feature: string) => {
-                return feature === 'HandleEnterKey';
-            });
         });
 
         it('should pass formatsToPreserveOnMerge to keyboardEnter', () => {
@@ -523,7 +502,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, [
                 'className',
                 'fontFamily',
             ]);
@@ -550,7 +529,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
         });
 
         it('should pass empty formatsToPreserveOnMerge array', () => {
@@ -575,7 +554,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, []);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, []);
         });
 
         it('should work with multiple custom format properties', () => {
@@ -600,7 +579,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, [
                 'className',
                 'customProp',
                 'data-testid',

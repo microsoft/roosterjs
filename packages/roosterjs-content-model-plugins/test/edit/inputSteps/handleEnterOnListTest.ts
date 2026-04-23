@@ -1929,7 +1929,7 @@ describe('handleEnterOnList - keyboardEnter', () => {
                     },
                 });
 
-                keyboardEnter(editor, mockedEvent, true);
+                keyboardEnter(editor, mockedEvent);
             },
             input,
             expectedResult,
