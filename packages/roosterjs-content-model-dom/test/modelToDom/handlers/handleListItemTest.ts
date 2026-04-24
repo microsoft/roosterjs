@@ -465,7 +465,6 @@ describe('handleListItem with cache', () => {
                 listItem: { applierFunction: listItemMetadataApplier },
             },
         });
-        context.allowCacheListItem = true;
         context.onNodeCreated = onNodeCreatedSpy;
         spyOn(applyFormat, 'applyFormat').and.callThrough();
     });

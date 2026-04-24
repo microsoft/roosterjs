@@ -3027,4 +3027,41 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             '<sup><a href="http://www.bing.com">www.bing.com</a></sup>'
         );
     });
+
+    it('LI without UL followed by other blocks', () => {
+        runTest(
+            '<li>test</li><div>other</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'other', format: {} }],
+                        format: {},
+                    },
+                ],
+            },
+            'test\r\nother',
+            '<ul><li>test</li></ul><div>other</div>'
+        );
+    });
 });

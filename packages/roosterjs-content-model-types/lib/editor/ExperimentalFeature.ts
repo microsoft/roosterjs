@@ -18,7 +18,32 @@ export type GraduatedExperimentalFeature =
      * Prevent default browser behavior for copy/cut event,
      * and set the clipboard data with custom implementation.
      */
-    | 'CustomCopyCut';
+    | 'CustomCopyCut'
+
+    /**
+     * @deprecated
+     * Export editor content as HTML using HTMLFast option
+     */
+    | 'ExportHTMLFast'
+
+    /**
+     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
+     * Use Content Model handle ENTER key
+     */
+    | 'HandleEnterKey'
+
+    /**
+     * @deprecated
+     * Get cloned root element from an independent HTML document instead of current document.
+     * So any operation to the cloned root won't trigger network request for resources like images
+     */
+    | 'CloneIndependentRoot'
+
+    /**
+     * @deprecated
+     * Allow caching list item elements.
+     */
+    | 'CacheList';
 
 /**
  * Predefined experiment features
@@ -29,34 +54,12 @@ export type ExperimentalFeature =
     | GraduatedExperimentalFeature
 
     /**
-     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
-     * Use Content Model handle ENTER key
-     */
-    | 'HandleEnterKey'
-
-    /**
      * For CJK keyboard input on mobile, if the user toggles bold/italic/underline on an empty div,
      * the pending format will be applied on the selection marker. When typing text, the selection moves to the text node and the
      * selection marker may be recreated during reconciliation, potentially losing its original formatting. This feature ensures
      * the original formatting of the selection marker is kept to match the pending format.
      */
     | 'KeepSelectionMarkerWhenEnteringTextNode'
-
-    /**
-     * Export editor content as HTML using HTMLFast option
-     */
-    | 'ExportHTMLFast'
-
-    /**
-     * Get cloned root element from an independent HTML document instead of current document.
-     * So any operation to the cloned root won't trigger network request for resources like images
-     */
-    | 'CloneIndependentRoot'
-
-    /**
-     * Allow caching list item elements.
-     */
-    | 'CacheList'
 
     /**
      * Transform the table border colors when switching from light to dark mode

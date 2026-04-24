@@ -1,4 +1,5 @@
 import { createListItem } from '../../modelApi/creators/createListItem';
+import { createListLevel } from '../../modelApi/creators/createListLevel';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import type { ElementProcessor } from 'roosterjs-content-model-types';
@@ -8,8 +9,21 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
  */
 export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, element, context) => {
     const { listFormat } = context;
+    const originalListParent = listFormat.listParent;
+    let shouldPopListLevel = false;
 
-    if (listFormat.listParent && listFormat.levels.length > 0) {
+    try {
+        listFormat.listParent = listFormat.listParent ?? group;
+
+        const listParent = listFormat.listParent;
+
+        if (listFormat.levels.length == 0) {
+            listFormat.levels.push(
+                createListLevel(listFormat.potentialListType || 'UL', context.blockFormat)
+            );
+            shouldPopListLevel = true;
+        }
+
         stackFormat(
             context,
             {
@@ -31,7 +45,7 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                     context
                 );
 
-                listFormat.listParent!.blocks.push(listItem);
+                listParent.blocks.push(listItem);
 
                 parseFormat(
                     element,
@@ -54,14 +68,11 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                 }
             }
         );
-    } else {
-        const currentBlocks = listFormat.listParent?.blocks;
-        const lastItem = currentBlocks?.[currentBlocks?.length - 1];
+    } finally {
+        if (shouldPopListLevel) {
+            listFormat.levels.pop();
+        }
 
-        context.elementProcessors['*'](
-            lastItem?.blockType == 'BlockGroup' ? lastItem : group,
-            element,
-            context
-        );
+        listFormat.listParent = originalListParent;
     }
 };

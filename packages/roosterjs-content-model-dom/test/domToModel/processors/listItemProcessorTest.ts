@@ -26,10 +26,21 @@ describe('listItemProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'General',
-                    element: li,
+                    blockGroupType: 'ListItem',
                     blocks: [],
                     format: {},
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
                 },
             ],
         });
@@ -381,10 +392,21 @@ describe('listItemProcessor without format handlers', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'General',
-                    element: li,
+                    blockGroupType: 'ListItem',
                     blocks: [],
                     format: {},
+                    levels: [
+                        {
+                            listType: 'UL',
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: false,
+                        format: {},
+                    },
                 },
             ],
         });

@@ -70,12 +70,7 @@ const initialState: OptionState = {
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
-    experimentalFeatures: new Set<ExperimentalFeature>([
-        'HandleEnterKey',
-        'CloneIndependentRoot',
-        'CacheList',
-        'TransformTableBorderColors',
-    ]),
+    experimentalFeatures: new Set<ExperimentalFeature>(['TransformTableBorderColors']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

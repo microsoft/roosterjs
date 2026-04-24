@@ -55,7 +55,6 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleNormalEnter: (editor: IEditor) => boolean = () => false;
     private options: EditOptions & { handleTabKey: Required<HandleTabOptions> };
 
     /**
@@ -70,23 +69,6 @@ export class EditPlugin implements EditorPlugin {
                 ? DefaultHandleTabOptions
                 : { ...DefaultHandleTabOptions, ...options.handleTabKey };
         this.options = { ...DefaultOptions, ...options, handleTabKey: tabOptions };
-    }
-
-    private createNormalEnterChecker(result: boolean) {
-        return result ? () => true : () => false;
-    }
-
-    private getHandleNormalEnter(editor: IEditor) {
-        switch (typeof this.options.shouldHandleEnterKey) {
-            case 'function':
-                return this.options.shouldHandleEnterKey;
-            case 'boolean':
-                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
-            default:
-                return this.createNormalEnterChecker(
-                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
-                );
-        }
     }
 
     /**
@@ -104,7 +86,6 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleNormalEnter = this.getHandleNormalEnter(editor);
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -224,12 +205,7 @@ export class EditPlugin implements EditorPlugin {
                         !event.rawEvent.isComposing &&
                         event.rawEvent.keyCode !== DEAD_KEY
                     ) {
-                        keyboardEnter(
-                            editor,
-                            rawEvent,
-                            this.handleNormalEnter(editor),
-                            this.options.formatsToPreserveOnMerge
-                        );
+                        keyboardEnter(editor, rawEvent, this.options.formatsToPreserveOnMerge);
                     }
                     break;
 
