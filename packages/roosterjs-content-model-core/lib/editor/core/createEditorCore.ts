@@ -50,9 +50,7 @@ export function createEditorCore(contentDiv: HTMLDivElement, options: EditorOpti
                 ? options.trustedHTMLHandler
                 : createTrustedHTMLHandler(domCreator),
         domCreator: domCreator,
-        domHelper: createDOMHelper(contentDiv, {
-            cloneIndependentRoot: options.experimentalFeatures?.includes('CloneIndependentRoot'),
-        }),
+        domHelper: createDOMHelper(contentDiv),
         ...getPluginState(corePlugins),
         disposeErrorHandler: options.disposeErrorHandler,
         onFixUpModel: options.onFixUpModel,

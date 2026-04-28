@@ -354,13 +354,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
 
         switch (exportMode) {
             case 'HTML':
-                return this.isExperimentalFeatureEnabled('ExportHTMLFast')
-                    ? exportContent(this, 'HTMLFast')
-                    : exportContent(
-                          this,
-                          'HTML',
-                          this.getCore().environment.modelToDomSettings.customized
-                      );
+                return exportContent(this, 'HTMLFast');
 
             case 'PlainText':
                 return exportContent(this, 'PlainText');

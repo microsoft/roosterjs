@@ -26,11 +26,13 @@ describe('Editor', () => {
         updateKnownColorSpy = jasmine.createSpy('updateKnownColor');
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.callThrough();
         setContentModelSpy = jasmine.createSpy('setContentModel');
-        createEmptyModelSpy = spyOn(createEmptyModel, 'createEmptyModel').and.callThrough();
+        createEmptyModelSpy = spyOn(createEmptyModel, 'createEmptyModel');
     });
 
     it('ctor and dispose, no options', () => {
         const div = document.createElement('div');
+
+        createEmptyModelSpy.and.callThrough();
 
         const editor = new Editor(div);
 
@@ -65,7 +67,7 @@ describe('Editor', () => {
         } as any;
         const setContentModelSpy = jasmine.createSpy('setContentModel');
         const disposeErrorHandlerSpy = jasmine.createSpy('disposeErrorHandler');
-        const mockedInitialModel = { blocks: [] } as any;
+        const mockedInitialModel = 'INITMODEL' as any;
         const options: EditorOptions = {
             plugins: [mockedPlugin1, mockedPlugin2],
             disposeErrorHandler: disposeErrorHandlerSpy,
@@ -75,6 +77,8 @@ describe('Editor', () => {
                 setContentModel: setContentModelSpy,
             },
         };
+
+        createEmptyModelSpy.and.callThrough();
 
         const editor = new Editor(div, options);
 
