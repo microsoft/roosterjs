@@ -848,803 +848,341 @@ describe(ID, () => {
         });
     });
 
-    it('E2E bullet with font color', () => {
+    itChromeOnly('E2E bullet with font color', () => {
         paste(editor, wordClipboardContent2);
 
         const model = editor.getContentModelCopy('connected');
-
+        navigator.clipboard.writeText(JSON.stringify(model));
         expect(wordFile.processPastedContentFromWordDesktop).toHaveBeenCalled();
-        expectEqual(
-            model,
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
+                        format: {
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
+                        },
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
                             format: {
+                                startNumberOverride: 1,
+                                marginTop: '1em',
+                                listStyleType: 'decimal',
+                            },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'dsfa',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    startNumberOverride: 1,
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
                         format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
                         },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dsfa',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'dff',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
                         format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
                         },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dff',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'fdsfsd',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
                         format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
                         },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'fdsfsd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                        {
+                            listType: 'OL',
                             format: {
+                                startNumberOverride: 1,
+                                marginTop: '1em',
+                                paddingLeft: '0px',
+                                listStyleType: 'lower-alpha',
+                            },
+                            dataset: { editingInfo: '{"orderedStyleType":5}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%', marginLeft: '72pt' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'dfsfd',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    startNumberOverride: 1,
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'lower-alpha',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":5}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
                         format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '72pt',
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
                         },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dfsfd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                        {
+                            listType: 'OL',
                             format: {
+                                marginTop: '1em',
+                                paddingLeft: '0px',
+                                listStyleType: 'lower-alpha',
+                            },
+                            dataset: { editingInfo: '{"orderedStyleType":5}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%', marginLeft: '72pt' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'fd',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'lower-alpha',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":5}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
+                    ],
+                },
+                {
+                    formatHolder: {
+                        isSelected: false,
+                        segmentType: 'SelectionMarker',
                         format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '72pt',
+                            fontFamily: 'Aptos, sans-serif',
+                            fontSize: '12pt',
+                            textColor: 'rgb(192, 0, 0)',
                         },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'fd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            dataset: { editingInfo: '{"orderedStyleType":1}' },
+                        },
+                    ],
+                    blockType: 'BlockGroup',
+                    format: { lineHeight: '115%' },
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    text: 'sdsd',
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontFamily: 'Aptos, sans-serif',
+                                        fontSize: '12pt',
+                                        textColor: 'rgb(192, 0, 0)',
+                                    },
+                                },
+                            ],
+                            segmentFormat: {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '12pt',
                                 textColor: 'rgb(192, 0, 0)',
                             },
+                            blockType: 'Paragraph',
+                            format: {},
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '8pt',
-                            marginLeft: '36pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'sdsd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: 'Aptos, sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: 'Aptos, sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        segments: [
-                            {
-                                isSelected: true,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Calibri',
-                                    fontSize: '11pt',
-                                    textColor: '#000000',
-                                    backgroundColor: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
-                                },
-                            },
-                            {
-                                segmentType: 'Br',
-                                format: {
-                                    fontFamily: 'Calibri',
-                                    fontSize: '11pt',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                            },
-                        ],
-                        segmentFormat: {
-                            fontFamily: 'Calibri',
-                            fontSize: '11pt',
-                            textColor: 'rgb(0, 0, 0)',
-                        },
-                        blockType: 'Paragraph',
-                        format: {},
-                    },
-                ],
-                format: {},
-            },
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        formatHolder: {
-                            isSelected: false,
+                    ],
+                },
+                {
+                    segments: [
+                        {
+                            isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: '#000000',
+                                backgroundColor: '',
+                                fontWeight: '',
+                                italic: false,
+                                letterSpacing: '',
+                                lineHeight: '',
+                                strikethrough: false,
+                                superOrSubScriptSequence: '',
+                                underline: false,
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    startNumberOverride: 1,
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dsfa',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
+                        {
+                            segmentType: 'Br',
                             format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'rgb(0, 0, 0)',
                             },
                         },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dff',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
+                    ],
+                    segmentFormat: {
+                        fontFamily: 'Calibri',
+                        fontSize: '11pt',
+                        textColor: 'rgb(0, 0, 0)',
                     },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '36pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'fdsfsd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    startNumberOverride: 1,
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'lower-alpha',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":5}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '72pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'dfsfd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'lower-alpha',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":5}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '0cm',
-                            marginLeft: '72pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'fd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        formatHolder: {
-                            isSelected: false,
-                            segmentType: 'SelectionMarker',
-                            format: {
-                                fontFamily: '"Aptos", sans-serif',
-                                fontSize: '12pt',
-                                textColor: 'rgb(192, 0, 0)',
-                            },
-                        },
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    marginTop: '0cm',
-                                    marginRight: '0cm',
-                                    paddingLeft: '0px',
-                                    listStyleType: 'decimal',
-                                },
-                                dataset: { editingInfo: '{"orderedStyleType":1}' },
-                            },
-                        ],
-                        blockType: 'BlockGroup',
-                        format: {
-                            lineHeight: '115%',
-                            marginTop: '0cm',
-                            marginRight: '0cm',
-                            marginBottom: '8pt',
-                            marginLeft: '36pt',
-                        },
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                isImplicit: true,
-                                segments: [
-                                    {
-                                        text: 'sdsd',
-                                        segmentType: 'Text',
-                                        format: {
-                                            fontFamily: '"Aptos", sans-serif',
-                                            fontSize: '12pt',
-                                            textColor: 'rgb(192, 0, 0)',
-                                        },
-                                    },
-                                ],
-                                segmentFormat: {
-                                    fontFamily: '"Aptos", sans-serif',
-                                    fontSize: '12pt',
-                                    textColor: 'rgb(192, 0, 0)',
-                                },
-                                blockType: 'Paragraph',
-                                format: {},
-                            },
-                        ],
-                    },
-                    {
-                        segments: [
-                            {
-                                isSelected: true,
-                                segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Calibri',
-                                    fontSize: '11pt',
-                                    textColor: '#000000',
-                                    backgroundColor: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
-                                },
-                            },
-                            {
-                                segmentType: 'Br',
-                                format: {
-                                    fontFamily: 'Calibri',
-                                    fontSize: '11pt',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                            },
-                        ],
-                        segmentFormat: {
-                            fontFamily: 'Calibri',
-                            fontSize: '11pt',
-                            textColor: 'rgb(0, 0, 0)',
-                        },
-                        blockType: 'Paragraph',
-                        format: {},
-                    },
-                ],
-                format: {},
-            }
-        );
+                    blockType: 'Paragraph',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
     });
 
     itChromeOnly('E2E remove bullet padding if margin is in cm units', () => {
