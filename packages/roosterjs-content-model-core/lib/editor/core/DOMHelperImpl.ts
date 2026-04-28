@@ -16,11 +16,14 @@ import type {
  * @internal
  */
 export interface DOMHelperImplOption {
+    /**
+     * @deprecated This is always treated as true now
+     */
     cloneIndependentRoot?: boolean;
 }
 
 class DOMHelperImpl implements DOMHelper {
-    constructor(private contentDiv: HTMLElement, private options: DOMHelperImplOption) {}
+    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {}
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -123,14 +126,10 @@ class DOMHelperImpl implements DOMHelper {
      * Get a deep cloned root element
      */
     getClonedRoot(): HTMLElement {
-        if (this.options.cloneIndependentRoot) {
-            const doc = this.contentDiv.ownerDocument.implementation.createHTMLDocument();
-            const clone = doc.importNode(this.contentDiv, true /*deep*/);
+        const doc = this.contentDiv.ownerDocument.implementation.createHTMLDocument();
+        const clone = doc.importNode(this.contentDiv, true /*deep*/);
 
-            return clone;
-        } else {
-            return this.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
-        }
+        return clone;
     }
 
     /**

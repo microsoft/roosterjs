@@ -489,7 +489,6 @@ describe('handleBlockGroupChildren', () => {
 
         group.blocks.push(listItem, paragraph);
         context.listFormat.nodeStack = nodeStack;
-        context.allowCacheListItem = true;
 
         expect(parent.outerHTML).toBe('<div><ol><li><br></li></ol><p></p></div>');
 
