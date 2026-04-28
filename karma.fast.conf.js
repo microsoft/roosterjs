@@ -73,7 +73,6 @@ module.exports = function (config) {
             components: components,
             testPathPattern: testPathPattern,
             testNamePattern: testNamePattern,
-            browser: 'Chrome',
             clearContext: false,
             captureConsole: true,
             jasmine: {
