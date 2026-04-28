@@ -10,19 +10,24 @@ import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextInd
 import { setProcessor } from '../utils/setProcessor';
 import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
+import { removeListParagraphMargins } from './removeListParagraphMargins';
 import type { WordMetadata } from './WordMetadata';
-import type { DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
+import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Handles pasted content when the source is Word Desktop.
  * @param domToModelOption Options for DOM to Content Model conversion
  * @param htmlString The HTML string to process
+ * @param globalCssRules Global CSS rules extracted from the pasted document
  */
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
-    htmlString: string
+    htmlString: string,
+    globalCssRules: CssRule[] = []
 ) {
+    removeListParagraphMargins(globalCssRules);
+
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
