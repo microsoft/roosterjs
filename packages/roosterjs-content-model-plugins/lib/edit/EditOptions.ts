@@ -55,7 +55,6 @@ export type EditOptions = {
     handleExpandedSelectionOnDelete?: boolean;
 
     /**
-     * @deprecated This is always treated as true now
      * Callback function to determine whether the Rooster should handle the Enter key press.
      * If the function returns true, the Rooster will handle the Enter key press instead of the browser.
      * @param editor - The editor instance.
