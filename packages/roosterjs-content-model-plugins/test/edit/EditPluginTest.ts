@@ -240,7 +240,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -260,7 +260,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -280,7 +280,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -300,7 +300,7 @@ describe('EditPlugin', () => {
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(keyboardInputSpy).not.toHaveBeenCalled();
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
             expect(keyboardTabSpy).not.toHaveBeenCalled();
         });
 
@@ -502,7 +502,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, [
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
                 'className',
                 'fontFamily',
             ]);
@@ -529,7 +529,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, undefined);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, undefined);
         });
 
         it('should pass empty formatsToPreserveOnMerge array', () => {
@@ -554,7 +554,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, []);
         });
 
         it('should work with multiple custom format properties', () => {
@@ -579,7 +579,7 @@ describe('EditPlugin', () => {
             });
 
             expect(keyboardEnterSpy).toHaveBeenCalledTimes(1);
-            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, [
+            expect(keyboardEnterSpy).toHaveBeenCalledWith(editor, rawEvent, true, [
                 'className',
                 'customProp',
                 'data-testid',
