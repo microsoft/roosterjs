@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.45% </span>
+                <span class="strong">96% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/22</span>
+                <span class='fraction'>24/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>22/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.45% </span>
+                <span class="strong">96% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/22</span>
+                <span class='fraction'>24/25</span>
             </div>
         
             
@@ -120,7 +120,17 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -136,6 +146,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">68x</span>
@@ -158,6 +169,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,6 +196,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { deleteEmptyQuote } from './deleteSteps/deleteEmptyQuote';
 import { handleAutoLink } from './inputSteps/handleAutoLink';
 import { handleEnterOnList } from './inputSteps/handleEnterOnList';
@@ -193,7 +213,7 @@ import {
     normalizeContentModel,
     runEditSteps,
 } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { IEditor, ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 &nbsp;
 /**
  * @internal
@@ -201,6 +221,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
 export function keyboardEnter(
     editor: IEditor,
     rawEvent: KeyboardEvent,
+    handleNormalEnter: boolean,
     formatsToPreserveOnMerge: string[] = []
 ) {
     const selection = editor.getDOMSelection();
@@ -220,7 +241,9 @@ export function keyboardEnter(
                     ? []
                     : [handleAutoLink, handleEnterOnList, deleteEmptyQuote];
 &nbsp;
-                steps.push(handleEnterOnParagraph(formatsToPreserveOnMerge));
+                if (handleNormalEnter || handleEnterForEntity(result.insertPoint<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>aragraph)) {
+                    steps.push(handleEnterOnParagraph(formatsToPreserveOnMerge));
+                }
 &nbsp;
                 runEditSteps(steps, result);
             }
@@ -246,6 +269,13 @@ export function keyboardEnter(
         }
     );
 }
+&nbsp;
+function handleEnterForEntity(paragraph: ReadonlyContentModelParagraph | undefined) {
+    return (
+        paragraph &amp;&amp;
+        (paragraph.isImplicit || paragraph.segments.some(x =&gt; x.segmentType == 'Entity'))
+    );
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -253,7 +283,7 @@ export function keyboardEnter(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 23 2026 20:49:59 GMT+0000 (Coordinated Universal Time)
+                at Wed Apr 29 2026 05:30:20 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
