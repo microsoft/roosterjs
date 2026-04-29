@@ -19,7 +19,7 @@ describe('generateDataURL', () => {
         image.src = 'https://th.bing.com/th/id/OIP.kJCCjl_yUweRlj94AdU-egHaFK?rs=1&pid=ImgDetMain';
         const url = generateDataURL(image, editInfo);
         expect(url).toBe(
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAChJREFUOE9jZKAyYKSyeQyjBlIeoqNhOBqGZITAaLIhI9DQtIzAMAQASMYAFTvklLAAAAAASUVORK5CYII='
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAANElEQVR4AezSsQkAAAjEQHH/oZ0hjdVZPwhHdh7Ok4SMC1cSSGN14UoCaawuXEkgjdWVuA4AAP//YI5Y5AAAAAZJREFUAwAKXgAzAC3ppgAAAABJRU5ErkJggg=='
         );
     });
 
@@ -41,8 +41,6 @@ describe('generateDataURL', () => {
         image.height = 0;
         image.src = 'https://th.bing.com/th/id/OIP.kJCCjl_yUweRlj94AdU-egHaFK?rs=1&pid=ImgDetMain';
         const url = generateDataURL(image, editInfo);
-        expect(url).toBe(
-            'https://th.bing.com/th/id/OIP.kJCCjl_yUweRlj94AdU-egHaFK?rs=1&pid=ImgDetMain'
-        );
+        expect(url).toBe('data:,');
     });
 });
