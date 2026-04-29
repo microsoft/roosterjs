@@ -211,15 +211,17 @@ describe('retrieveHtmlInfo', () => {
                         text: 'color: red;',
                     },
                     {
-                        selectors: ['.b div', ' .c'],
+                        selectors: ['.b div', '.c'],
                         text: 'font-size: 10pt;',
                     },
                     {
                         selectors: ['test'],
-                        text: 'border: none;',
+                        text:
+                            'border-width: medium; border-style: none; border-color: currentcolor; border-image: initial;',
                     },
                 ],
                 metadata: {},
+                containsBlockElements: true,
             },
             {
                 htmlFirstLevelChildTags: ['DIV'],
