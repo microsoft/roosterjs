@@ -20,6 +20,14 @@ export type MergePastedContentFunc = (
 ) => InsertPoint | null;
 
 /**
+ * Represents a single CSS rule parsed from a pasted document's style sheets
+ */
+export interface CssRule {
+    selectors: string[];
+    text: string;
+}
+
+/**
  * Data of BeforePasteEvent
  */
 export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
@@ -67,4 +75,9 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * Whether the current clipboard contains at least a block element.
      */
     readonly containsBlockElements?: boolean;
+
+    /**
+     * Global CSS rules extracted from the pasted document's style sheets
+     */
+    readonly globalCssRules?: CssRule[];
 }
