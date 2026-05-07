@@ -112,7 +112,8 @@ export class PastePlugin implements EditorPlugin {
             case 'wordDesktop':
                 processPastedContentFromWordDesktop(
                     event.domToModelOption,
-                    event.htmlBefore || event.clipboardData.rawHtml || ''
+                    event.htmlBefore || event.clipboardData.rawHtml || '',
+                    event.globalCssRules
                 );
                 break;
             case 'wacComponents':

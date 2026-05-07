@@ -8,6 +8,61 @@ import {
     domToContentModel,
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
+import type { CssRule } from 'roosterjs-content-model-types';
+
+const WORD_DESKTOP_CSS_RULES: CssRule[] = [
+    {
+        selectors: ['p.MsoNormal', 'li.MsoNormal', 'div.MsoNormal'],
+        text:
+            'margin: 0in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: ['h1'],
+        text:
+            'margin: 22pt 0in 0in; break-after: avoid; font-size: 20pt; font-family: "Aptos Display", sans-serif; color: rgb(0, 55, 164); font-weight: normal;',
+    },
+    {
+        selectors: ['p.MsoListParagraph', 'li.MsoListParagraph', 'div.MsoListParagraph'],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpFirst',
+            'li.MsoListParagraphCxSpFirst',
+            'div.MsoListParagraphCxSpFirst',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpMiddle',
+            'li.MsoListParagraphCxSpMiddle',
+            'div.MsoListParagraphCxSpMiddle',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpLast',
+            'li.MsoListParagraphCxSpLast',
+            'div.MsoListParagraphCxSpLast',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: ['span.Heading1Char'],
+        text: 'font-family: "Aptos Display", sans-serif; color: rgb(0, 55, 164);',
+    },
+    { selectors: ['.MsoChpDefault'], text: 'font-family: Aptos, sans-serif;' },
+    { selectors: ['.MsoPapDefault'], text: 'margin-bottom: 8pt; line-height: 115%;' },
+    { selectors: ['div.WordSection1'], text: 'page: WordSection1;' },
+    { selectors: ['ol'], text: 'margin-bottom: 0in;' },
+    { selectors: ['ul'], text: 'margin-bottom: 0in;' },
+];
 
 describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
@@ -27,7 +82,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event.domToModelOption, htmlBefore || source || '');
+        // Pass a deep copy so each test gets a fresh mutable array.
+        processPastedContentFromWordDesktop(
+            event.domToModelOption,
+            htmlBefore || source || '',
+            JSON.parse(JSON.stringify(WORD_DESKTOP_CSS_RULES))
+        );
 
         const model = domToContentModel(
             fragment,

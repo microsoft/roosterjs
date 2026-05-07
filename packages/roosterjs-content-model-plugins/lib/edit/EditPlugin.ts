@@ -205,7 +205,18 @@ export class EditPlugin implements EditorPlugin {
                         !event.rawEvent.isComposing &&
                         event.rawEvent.keyCode !== DEAD_KEY
                     ) {
-                        keyboardEnter(editor, rawEvent, this.options.formatsToPreserveOnMerge);
+                        const { shouldHandleEnterKey } = this.options;
+                        const handleNormalEnter =
+                            typeof shouldHandleEnterKey === 'function'
+                                ? shouldHandleEnterKey(editor)
+                                : shouldHandleEnterKey !== false;
+
+                        keyboardEnter(
+                            editor,
+                            rawEvent,
+                            handleNormalEnter,
+                            this.options.formatsToPreserveOnMerge
+                        );
                     }
                     break;
 

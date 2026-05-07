@@ -471,7 +471,7 @@ export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { BeforeDropEvent } from './event/BeforeDropEvent';
 export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
-export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEvent';
+export { BeforePasteEvent, CssRule, MergePastedContentFunc } from './event/BeforePasteEvent';
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
 export { ContextMenuEvent } from './event/ContextMenuEvent';
