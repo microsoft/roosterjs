@@ -39,6 +39,7 @@ export function generatePasteOptionFromPlugins(
         pasteType: pasteType,
         domToModelOption,
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
+        globalCssRules: htmlFromClipboard.globalCssRules,
     };
 
     return editor.triggerEvent('beforePaste', event, true /* broadcast */);
