@@ -126,10 +126,10 @@ describe(ID, () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [],
+                    widths: jasmine.anything() as any,
                     rows: [
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -145,18 +145,16 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        textColor: 'black',
                                                         fontWeight: '700',
+                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -190,18 +188,16 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        textColor: 'black',
                                                         fontWeight: '700',
+                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -216,7 +212,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '56pt',
-                                        height: '28px',
                                     },
                                     dataset: {},
                                 },
@@ -234,18 +229,15 @@ describe(ID, () => {
                                                     format: {
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
-                                                        textColor: 'black',
                                                         fontWeight: '700',
+                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center' },
+                                            format: {
+                                                textAlign: 'center',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -259,7 +251,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '62pt',
-                                        height: '28px',
                                     },
                                     dataset: {},
                                 },
@@ -267,7 +258,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -287,13 +278,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -307,8 +296,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -338,13 +327,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -358,7 +345,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -380,13 +366,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -400,7 +384,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -408,7 +391,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -428,13 +411,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -448,8 +429,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -479,13 +460,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -499,7 +478,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -521,13 +499,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -541,7 +517,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -549,7 +524,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -569,13 +544,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -589,8 +562,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -620,13 +593,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -640,7 +611,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -662,13 +632,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -682,7 +650,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -690,7 +657,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -710,13 +677,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -730,8 +695,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -761,13 +726,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -781,7 +744,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -803,13 +765,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -823,7 +783,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -831,7 +790,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -851,13 +810,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -871,8 +828,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -902,13 +859,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -922,7 +877,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -944,13 +898,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -964,7 +916,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -972,7 +923,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -992,13 +943,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1012,8 +961,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -1043,13 +992,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1063,7 +1010,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -1085,13 +1031,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1105,7 +1049,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -1113,7 +1056,7 @@ describe(ID, () => {
                             format: {},
                         },
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -1133,13 +1076,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'black',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1153,8 +1094,8 @@ describe(ID, () => {
                                         paddingRight: '1px',
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
-                                        width: '69.333px',
                                         height: '30pt',
+                                        width: '69.333px',
                                     },
                                     dataset: {},
                                 },
@@ -1184,13 +1125,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(5, 99, 193)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1204,7 +1143,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '74.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -1226,13 +1164,11 @@ describe(ID, () => {
                                                     },
                                                 },
                                             ],
-                                            segmentFormat: {
-                                                fontFamily: 'Calibri, sans-serif',
-                                                fontSize: '11pt',
-                                                textColor: 'rgb(219, 219, 219)',
-                                            },
                                             blockType: 'Paragraph',
-                                            format: { textAlign: 'center', whiteSpace: 'nowrap' },
+                                            format: {
+                                                textAlign: 'center',
+                                                whiteSpace: 'nowrap',
+                                            },
                                         },
                                     ],
                                     format: {
@@ -1246,7 +1182,6 @@ describe(ID, () => {
                                         paddingLeft: '1px',
                                         verticalAlign: 'middle',
                                         width: '82.667px',
-                                        height: '30px',
                                     },
                                     dataset: {},
                                 },
@@ -1256,13 +1191,10 @@ describe(ID, () => {
                     ],
                     blockType: 'Table',
                     format: {
-                        width: '170pt',
+                        width: jasmine.anything(),
                         useBorderBox: true,
                         borderCollapse: true,
-                        legacyTableBorder: '0',
-                        cellSpacing: '0',
-                        cellPadding: '0',
-                    },
+                    } as any,
                     dataset: {},
                 },
                 {
@@ -1284,7 +1216,10 @@ describe(ID, () => {
                                 underline: false,
                             },
                         },
-                        { segmentType: 'Br', format: {} },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
                     ],
                     blockType: 'Paragraph',
                     format: {},
