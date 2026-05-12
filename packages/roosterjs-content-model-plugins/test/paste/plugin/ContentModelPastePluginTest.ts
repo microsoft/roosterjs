@@ -49,6 +49,7 @@ describe('Content Model Paste Plugin Test', () => {
                 htmlAttributes: {},
                 pasteType: 'normal',
                 domToModelOption: createDefaultDomToModelContext(),
+                globalCssRules: [],
             };
         });
 
