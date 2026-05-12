@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/26</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -98,16 +98,10 @@
 <a name='L39'></a><a href='#L39'>39</a>
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L42'></a><a href='#L42'>42</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -122,41 +116,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">198x</span>
+<span class="cline-any cline-yes">204x</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">179x</span>
+<span class="cline-any cline-yes">185x</span>
+<span class="cline-any cline-yes">185x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">185x</span>
+<span class="cline-any cline-yes">248x</span>
+<span class="cline-any cline-yes">248x</span>
+<span class="cline-any cline-yes">184x</span>
+<span class="cline-any cline-yes">184x</span>
+<span class="cline-any cline-yes">184x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">246x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">204x</span>
-<span class="cline-any cline-yes">204x</span>
-<span class="cline-any cline-yes">204x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">196x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">196x</span>
-<span class="cline-any cline-yes">196x</span>
-<span class="cline-any cline-yes">194x</span>
-<span class="cline-any cline-yes">194x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">198x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { adjustHeading } from '../utils/adjustHeading';
-import { applyLink } from './applyLink';
-import { applyTextFormatting } from './applyTextFormatting';
-import { createBr, createText } from 'roosterjs-content-model-dom';
-import { createImageSegment } from '../creators/createImageSegment';
-import { splitParagraphSegments } from '../utils/splitParagraphSegments';
+import { createBr } from 'roosterjs-content-model-dom';
+import { parseInlineSegments } from '../utils/parseInlineSegments';
 &nbsp;
 import type {
     ContentModelParagraph,
     ContentModelParagraphDecorator,
+    ContentModelSegment,
 } from 'roosterjs-content-model-types';
 &nbsp;
 /**
@@ -171,22 +161,20 @@ export function applySegmentFormatting(
         const br = createBr();
         paragraph.segments.push(br);
     } else {
-        const textSegments = splitParagraphSegments(text);
-        for (const segment of textSegments) {
-            const formattedSegment = createText(segment.text);
-            if (segment.type === 'image') {
-                const image = createImageSegment(segment.text, segment.url);
-                paragraph.segments.push(image);
-            } else {
-                if (segment.type === 'link') {
-                    applyLink(formattedSegment, segment.text, segment.url);
-                }
-                const segmentWithAdjustedHeading = adjustHeading(formattedSegment, decorator);
-                if (segmentWithAdjustedHeading) {
-                    const formattedSegments = applyTextFormatting(formattedSegment);
-                    paragraph.segments.push(...formattedSegments);
+        const segments: ContentModelSegment[] = [];
+        parseInlineSegments(text, segments);
+&nbsp;
+        // Apply heading adjustment to the first text-bearing segment, if any.
+        let headingAdjusted = false;
+        for (const segment of segments) {
+            if (!headingAdjusted &amp;&amp; segment.segmentType === 'Text') {
+                const adjusted = adjustHeading(segment, decorator);
+                headingAdjusted = true;
+                if (!adjusted) {
+                    continue;
                 }
             }
+            paragraph.segments.push(segment);
         }
     }
 &nbsp;
@@ -199,7 +187,7 @@ export function applySegmentFormatting(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 12 2026 15:08:29 GMT+0000 (Coordinated Universal Time)
+                at Tue May 12 2026 17:21:50 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
