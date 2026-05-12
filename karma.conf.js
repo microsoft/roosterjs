@@ -72,7 +72,6 @@ module.exports = function (config) {
         plugins,
         client: {
             components: components,
-            browser: runChrome ? 'Chrome' : runFirefox ? 'Firefox' : undefined,
             clearContext: false,
             captureConsole: true,
         },
